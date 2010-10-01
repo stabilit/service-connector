@@ -39,9 +39,9 @@ public class SCServerDestroyServerTest {
 	}
 	
 	@Test
-	public void startListeningDestroyServer_500Times_notListening() throws Exception
+	public void startListeningDestroyServer_400Times_notListening() throws Exception
 	{
-		for (int i = 0; i < 500; i++) {
+		for (int i = 0; i < 400; i++) {
 			server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, 1);
 			assertEquals(true, server.isListening());
 			server.destroyServer();

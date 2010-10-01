@@ -154,7 +154,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
-		String expectedScEntry = "P01_logging:0|publish-simulation:0 - publish-simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|P01_BCST_CH_sc1:0|";
+		String expectedScEntry = "P01_logging:0|enableService:0|publish-simulation:0 - publish-simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|P01_BCST_CH_sc1:0|";
 		String scEntry = inspectMap.get("serviceRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 

@@ -50,7 +50,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 	public void manageCommandEnableDisable() throws Exception {
 		// try to create a session on service enableService - should fail
 		SCMPFault fault = (SCMPFault) this.createSession();
-		SCTest.verifyError(fault, SCMPError.NOT_FOUND, " [service not found for enableService]",
+		SCTest.verifyError(fault, SCMPError.SERVICE_DISABLED, " [Service is disabled.]",
 				SCMPMsgType.CLN_CREATE_SESSION);
 
 		// enable enableService by manage call
@@ -81,7 +81,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 
 		// try to create another session on service enableService - should fail
 		fault = (SCMPFault) this.createSession();
-		SCTest.verifyError(fault, SCMPError.NOT_FOUND, " [service not found for enableService]",
+		SCTest.verifyError(fault, SCMPError.SERVICE_DISABLED, " [service not found for enableService]",
 				SCMPMsgType.CLN_CREATE_SESSION);
 
 		// try to send data over first created session - should work
@@ -119,7 +119,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		inspectCall.setRequestBody(Constants.STATE + "=" + this.serviceName);
 		inspectCall.invoke(callback, 1000);
 		result = callback.getMessageSync();
-		Assert.assertEquals("true", result.getBody().toString());
+		Assert.assertEquals("ENABLED", result.getBody().toString());
 
 		// disable enableService by manage call
 		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
