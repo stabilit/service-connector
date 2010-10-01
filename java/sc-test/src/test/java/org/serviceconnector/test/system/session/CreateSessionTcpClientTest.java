@@ -50,10 +50,10 @@ public class CreateSessionTcpClientTest {
 
 	@Before
 	public void setUp() throws Exception {
-		threadCount = Thread.activeCount();
 		client = new SCClient();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
+		threadCount = Thread.activeCount();
 		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
 	}
 
@@ -78,6 +78,7 @@ public class CreateSessionTcpClientTest {
 	@Test
 	public void deleteSession_sessionServiceNameEmpty_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService("");
+		this.threadCount += 1; // need to add 1 thread echo interval timer thread
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
