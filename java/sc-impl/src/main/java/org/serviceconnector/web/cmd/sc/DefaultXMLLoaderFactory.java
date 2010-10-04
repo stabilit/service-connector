@@ -16,10 +16,11 @@
 package org.serviceconnector.web.cmd.sc;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.util.Date;
 import java.util.Enumeration;
 
 import javax.xml.stream.XMLStreamException;
@@ -33,10 +34,10 @@ import org.serviceconnector.factory.Factory;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.service.Service;
+import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
-import org.serviceconnector.web.NotFoundException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -170,17 +171,36 @@ public class DefaultXMLLoaderFactory extends Factory {
 		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
 				throws Exception {
 			writer.writeStartElement("logs");
+			String dateParameter = request.getParameter("date");
+			Date today = new Date();
+			today = new Date(today.getYear(), today.getMonth(), today.getDate());			
+			Date current = today;
+			if (dateParameter != null) {
+				current = this.getXMLDateFromString(dateParameter);				
+			}
+			if (today.before(current)) {
+				current = today;
+			}
+			// get previous and next date
+			String next= this.getXMLNextDateAsString(current);
+			String previous = this.getXMLPreviousDateAsString(current);
+			// set selected date
+			writer.writeAttribute("previous", previous);
+			writer.writeAttribute("current", this.getXMLDateAsString(current));
+			if (current.before(today)) {
+				writer.writeAttribute("next", next);			
+			}
 			Logger rootLogger = LogManager.getRootLogger();
-			writeLogger(writer, rootLogger);
+			writeLogger(writer, rootLogger, today, current);
 			Enumeration currentLoggers = LogManager.getCurrentLoggers();
 			while (currentLoggers.hasMoreElements()) {
 				Logger currentLogger = (Logger) currentLoggers.nextElement();
-				writeLogger(writer, currentLogger);
+				writeLogger(writer, currentLogger, today, current);
 			}			
 			writer.writeEndElement(); // close logs tag
 		}
 
-		private void writeLogger(XMLStreamWriter writer, Logger logger)
+		private void writeLogger(XMLStreamWriter writer, Logger logger, Date today, Date current)
 				throws XMLStreamException {
 			writer.writeStartElement("logger");
 			writer.writeAttribute("name", logger.getName());
@@ -192,9 +212,17 @@ public class DefaultXMLLoaderFactory extends Factory {
 				if (appender instanceof FileAppender) {
 					writer.writeAttribute("type", "file");
 					FileAppender fileAppender = (FileAppender) appender;
-					String file = fileAppender.getFile();
+					String sFile = fileAppender.getFile();
+					if (current.before(today)) {
+						sFile += "." + this.getXMLDateAsString(current);
+					}
 					writer.writeStartElement("file");
-					writer.writeCData(file);
+					File file = new File(sFile);
+					if (file.exists() && file.isFile()) {
+					   long length = file.length();
+					   writer.writeAttribute("size", String.valueOf(length));
+					}
+					writer.writeCData(sFile);
 					writer.writeEndElement();
 				}
 				writer.writeEndElement(); // close appender tag
@@ -230,19 +258,12 @@ public class DefaultXMLLoaderFactory extends Factory {
 		public void loadBody(XMLStreamWriter writer, IWebRequest request)
 				throws Exception {
 			String name = request.getParameter("name");
-			InputStream is = null;
+			InputStream is = loadResource(name);
+			if (is == null) {
+				this.addMeta("exception", "resource for name = " + name + " not found");
+				return;
+			}
 			try {
-				is = ClassLoader.getSystemResourceAsStream(name);
-				if (is == null) {
-					is = this.getClass().getResourceAsStream(name);
-				}
-				if (is == null) {
-					is = new FileInputStream(name);
-				}
-				if (is == null) {
-					this.addMeta("exception", "not found");
-					return;
-				}
 				writer.writeStartElement("resource");
 				writer.writeAttribute("name", name);
 				writer.writeEndElement();
@@ -292,18 +313,12 @@ public class DefaultXMLLoaderFactory extends Factory {
 		public void loadBody(Writer writer, IWebRequest request)
 				throws Exception {
 			String name = request.getParameter("name");
-			InputStream is = null;
+			InputStream is = loadResource(name);
+			if (is == null) {
+				this.addMeta("exception", "resource for name = " + name + " not found");
+				return;
+			}
 			try {
-				is = ClassLoader.getSystemResourceAsStream(name);
-				if (is == null) {
-					is = this.getClass().getResourceAsStream(name);
-				}
-				if (is == null) {
-					is = new FileInputStream(name);
-				}
-				if (is == null) {
-					throw new NotFoundException();
-				}
 				InputStreamReader isr = new InputStreamReader(is);
 				BufferedReader br = new BufferedReader(isr);
 				String line = null;
@@ -317,6 +332,7 @@ public class DefaultXMLLoaderFactory extends Factory {
 				}
 				writer.flush();
 			} catch (Exception e) {
+				this.addMeta("exception", e.toString());
 				return;
 			} finally {
 				if (is != null) {

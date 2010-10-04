@@ -4,7 +4,14 @@
     <xsl:template name="sc_content">
       <div class="sc_table" style="width:800px;">
         <div class="sc_table_title">
-           Log files
+           Log files 
+           <xsl:if test="$body/logs/@previous">
+             <a class="sc_table_title"  alt="{$body/logs/@previous}" title="{$body/logs/@previous}" href="./logs?date={$body/logs/@previous}">&lt;&lt;</a>
+           </xsl:if>
+           &#160;<xsl:value-of select="$body/logs/@current"/>&#160;
+           <xsl:if test="$body/logs/@next">             
+             <a class="sc_table_title" alt="{$body/logs/@next}" title="{$body/logs/@next}" href="./logs?date={$body/logs/@next}">&gt;&gt;</a>
+           </xsl:if>
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">
@@ -32,6 +39,17 @@
 	<xsl:template name="appender_row">
 	    <td class="sc_table"><xsl:value-of select="../@name"/></td>
 	    <td class="sc_table"><xsl:value-of select="@name"/></td>
-	    <td class="sc_table"><a class="sc_table" href="./resource?name={file}"><xsl:value-of select="file"/></a></td>
+	    <td class="sc_table">
+	      <xsl:choose>
+	        <xsl:when test="file/@size">
+  	          <a class="sc_table" href="./resource?id=logs&amp;name={file}"><xsl:value-of select="file"/></a>
+	          &#160;
+	          (<xsl:value-of select="file/@size"/>)
+	        </xsl:when>
+	        <xsl:otherwise>
+	          not found
+	        </xsl:otherwise>
+	      </xsl:choose>
+	    </td>
 	</xsl:template>
 </xsl:stylesheet>

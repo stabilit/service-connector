@@ -15,12 +15,18 @@
  */
 package org.serviceconnector.web;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,11 +50,17 @@ import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
  */
 public abstract class AbstractXMLLoader implements IXMLLoader {
 
+	/** The Constant XMLSDF. */
+	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat("yyyy-MM-dd");
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger
 			.getLogger(DefaultXMLLoaderFactory.class);
 
+	/** The meta map. */
 	private Map<String, String> metaMap;
+	
+	/** The meta map list. */
 	private List<Map<String, String>> metaMapList;
 
 	/**
@@ -59,19 +71,35 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		this.metaMapList = new ArrayList<Map<String, String>>();
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Checks if is text.
+	 *
+	 * @return true, if is text
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isText() {
 		return false;
 	}
 	
-	/** {@inheritDoc} */
+	/**
+	 * Adds the meta.
+	 *
+	 * @param name the name
+	 * @param value the value
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void addMeta(String name, String value) {
 		this.metaMap.put(name, value);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Adds the meta.
+	 *
+	 * @param map the map
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void addMeta(Map<String, String> map) {
 		this.metaMapList.add(map);
@@ -79,17 +107,32 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Load body.
-	 * 
-	 * @param writer
-	 *            the writer
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
 	 */
 	public abstract void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception;
 
+	/**
+	 * Load body.
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
+	 */
 	public void loadBody(Writer writer, IWebRequest request) throws Exception {
 		
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Load.
+	 *
+	 * @param request the request
+	 * @param os the os
+	 * @throws Exception the exception
+	 * {@inheritDoc}
+	 */
 	@Override
 	public final void load(IWebRequest request, OutputStream os)
 			throws Exception {
@@ -167,6 +210,12 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.close();
 	}
 
+	/**
+	 * Write system.
+	 *
+	 * @param writer the writer
+	 * @throws XMLStreamException the xML stream exception
+	 */
 	public void writeSystem(XMLStreamWriter writer) throws XMLStreamException {
 		// write system info
 		SystemInfo systemInfo = new SystemInfo();
@@ -196,6 +245,13 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		
 	}
 
+	/**
+	 * Write bean.
+	 *
+	 * @param writer the writer
+	 * @param obj the obj
+	 * @throws XMLStreamException the xML stream exception
+	 */
 	public void writeBean(XMLStreamWriter writer, Object obj)
 			throws XMLStreamException {
 		if (obj == null) {
@@ -252,6 +308,12 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		}
 	}
 
+	/**
+	 * Write runtime.
+	 *
+	 * @param writer the writer
+	 * @throws XMLStreamException the xML stream exception
+	 */
 	public void writeRuntime(XMLStreamWriter writer) throws XMLStreamException {
 		Runtime runtime = Runtime.getRuntime();
         writer.writeStartElement("availableProcessors");
@@ -267,5 +329,80 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
         writer.writeCData(String.valueOf(runtime.totalMemory()));
         writer.writeEndElement();
 	}
-		
+
+	/**
+	 * Load resource.
+	 *
+	 * @param name the name
+	 * @return the input stream
+	 */
+	public InputStream loadResource(String name) {
+		try {
+			InputStream is = ClassLoader.getSystemResourceAsStream(name);
+			if (is != null) {
+				return is;
+			}
+			is = this.getClass().getResourceAsStream(name);
+			if (is != null) {
+				return is;
+			}
+			is = new FileInputStream(name);
+			if (is != null) {
+				return is;
+			}
+			return null;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	/**
+	 * Gets the xML date as string.
+	 *
+	 * @param date the date
+	 * @return the xML date as string
+	 */
+	public String getXMLDateAsString(Date date) {
+		synchronized (XMLSDF) { // XMLSDF is not thread safe
+			return XMLSDF.format(date);
+		}		
+	}
+
+	/**
+	 * Gets the xML date from string.
+	 *
+	 * @param date the date
+	 * @return the xML date from string
+	 */
+	public Date getXMLDateFromString(String date) {
+		synchronized (XMLSDF) { // XMLSDF is not thread safe
+			try {
+				return XMLSDF.parse(date);
+			} catch (ParseException e) {
+				return new Date();
+			}
+		}		
+	}
+	
+	/**
+	 * Gets the xML next date as string.
+	 *
+	 * @param date the date
+	 * @return the xML next date as string
+	 */
+	public String getXMLNextDateAsString(Date date) {
+		Calendar c = Calendar.getInstance();
+		return this.getXMLDateAsString(new Date(date.getYear(), date.getMonth(), date.getDate()+1));
+	}
+	
+	/**
+	 * Gets the xML previous date as string.
+	 *
+	 * @param date the date
+	 * @return the xML previous date as string
+	 */
+	public String getXMLPreviousDateAsString(Date date) {
+		Calendar c = Calendar.getInstance();
+		return this.getXMLDateAsString(new Date(date.getYear(), date.getMonth(), date.getDate()-1));
+	}
 }

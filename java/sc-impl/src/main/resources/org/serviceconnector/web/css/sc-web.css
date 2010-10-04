@@ -270,6 +270,16 @@ a.sc_table:hover {
 	text-decoration: underline;
 }
 
+a.sc_table_title {
+	color: inherit;
+	text-decoration: underline;
+}
+
+a.sc_table_title:hover {
+	color: #0000FF;
+	text-decoration: underline;
+}
+
 div.sc_table_title {
 	background: #B61F34;
 	color: white;
