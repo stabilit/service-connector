@@ -110,7 +110,6 @@ public class PrematureDestroyOfSCProcessClientTest {
 			sessionService.execute(new SCMessage());
 		} catch (Exception e) {
 			ex = e;
-			e.printStackTrace();
 		}
 		assertEquals(true, ex instanceof SCServiceException);
 	}

@@ -39,8 +39,8 @@ public class ChangeSubscriptionClientTest {
 		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-			srvProcess = ctrl.startServer(TestConstants.publishSrv,
-					TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
+			srvProcess = ctrl.startServer(TestConstants.publishSrv, TestConstants.log4jSrvProperties,
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
 					new String[] { TestConstants.serviceNamePublish });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
@@ -102,8 +102,7 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_afterUnsubscribed_throwsSCException() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		service.unsubscribe();
 		try {
 			service.changeSubscription(TestConstants.mask);
@@ -119,8 +118,7 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_toTheSameMask_passes() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		service.changeSubscription(TestConstants.mask);
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(true, service.isSubscribed());
@@ -132,8 +130,7 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_toMaskNull_throwsValidatorException() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		try {
 			service.changeSubscription(null);
 		} catch (Exception e) {
@@ -148,8 +145,7 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_toMaskEmpty_throwsValidatorException() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		try {
 			service.changeSubscription("");
 		} catch (Exception e) {
@@ -164,8 +160,7 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_toMaskWhiteSpace_passes() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		service.changeSubscription(" ");
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(true, service.isSubscribed());
@@ -175,8 +170,7 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_toMaskOneChar_passes() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		service.changeSubscription("a");
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(true, service.isSubscribed());
@@ -186,8 +180,7 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_toMaskPangram_passes() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		service.changeSubscription(TestConstants.pangram);
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(true, service.isSubscribed());
@@ -197,8 +190,7 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_toMask256LongString_passes() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		service.changeSubscription(TestConstants.stringLength256);
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(true, service.isSubscribed());
@@ -208,8 +200,7 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_toMask257LongString_throwsValidatorException() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		try {
 			service.changeSubscription(TestConstants.stringLength257);
 		} catch (Exception e) {
@@ -224,12 +215,11 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_twice_passes() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
-		
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+
 		service.changeSubscription(TestConstants.mask);
 		service.changeSubscription(TestConstants.mask);
-		
+
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
@@ -238,29 +228,35 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_10000Times_passes() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
-		for (int i = 0; i < 10000; i++) {
-			service.changeSubscription(TestConstants.mask);
-		}
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
-		service.unsubscribe();
-	}
-	
-	@Test
-	public void subscribeChangeSubscriptionUnsubscribe_10000Times_passes() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
-		for (int i = 0; i < 1000; i++) {
-			for (int j = 0; j < 1000; j++) {
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+		int loop = 10000;
+		for (int i = 0; i < loop / 10; i++) {
+			System.out.println("changeSubscription.loop: " + i * 10);
+			for (int j = 0; j < 10; j++) {
 				service.changeSubscription(TestConstants.mask);
+				Thread.sleep(5); // little sleep, Netty has problems sending very fast will be done next version!
 			}
 		}
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
+	}
+
+	@Test
+	public void subscribeChangeSubscriptionUnsubscribe_10000Times_passes() throws Exception {
+		int loop = 10000;
+		for (int i = 0; i < loop / 10; i++) {
+			System.out.println("subscribeChangeSubscriptionUnsubscribe.loop: " + i * 10);
+			for (int j = 0; j < 10; j++) {
+				IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+				service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			//	service.changeSubscription(TestConstants.mask);
+				Thread.sleep(5); // little sleep, Netty has problems sending very fast will be done next version!
+				assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+				assertEquals(true, service.isSubscribed());
+				service.unsubscribe();
+			}
+		}
 	}
 
 	private class DemoPublishClientCallback extends SCMessageCallback {

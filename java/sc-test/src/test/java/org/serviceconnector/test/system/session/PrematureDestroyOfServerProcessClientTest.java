@@ -24,7 +24,6 @@ public class PrematureDestroyOfServerProcessClientTest {
 	private static Process scProcess;
 	private Process srvProcess;
 
-	private int threadCount = 0;
 	private ISCClient client;
 	private Exception ex;
 
@@ -42,7 +41,6 @@ public class PrematureDestroyOfServerProcessClientTest {
 
 	@Before
 	public void setUp() throws Exception {
-		threadCount = Thread.activeCount();
 		try {
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv,
 					TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
@@ -65,7 +63,6 @@ public class PrematureDestroyOfServerProcessClientTest {
 			srvProcess = null;
 			ex = null;
 		}
-		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@AfterClass
@@ -94,7 +91,7 @@ public class PrematureDestroyOfServerProcessClientTest {
 		sessionService.createSession("sessionInfo", 300, 5);
 
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-
+		Thread.sleep(5000); // wait until server has been cleaned up on SC
 		try {
 			sessionService.deleteSession();
 		} catch (Exception e) {
@@ -109,12 +106,11 @@ public class PrematureDestroyOfServerProcessClientTest {
 		sessionService.createSession("sessionInfo", 300, 5);
 
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-
+		Thread.sleep(5000); // wait until server has been cleaned up on SC
 		try {
 			sessionService.execute(new SCMessage());
 		} catch (Exception e) {
 			ex = e;
-			e.printStackTrace();
 		}
 		assertEquals(true, ex instanceof SCServiceException);
 	}

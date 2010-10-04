@@ -28,8 +28,7 @@ public class AsynchronousExecuteClientTest {
 	private static Process scProcess;
 	private static Process srvProcess;
 	private static boolean messageReceived;
-
-	private int threadCount = 0;
+	
 	private ISCClient client;
 	private Exception ex;
 
@@ -50,7 +49,6 @@ public class AsynchronousExecuteClientTest {
 
 	@Before
 	public void setUp() throws Exception {
-		threadCount = Thread.activeCount();
 		client = new SCClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals("available/allocated sessions", "1000/0", client
@@ -65,7 +63,6 @@ public class AsynchronousExecuteClientTest {
 		client = null;
 		ex = null;
 		messageReceived = false;
-		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@AfterClass
@@ -327,12 +324,13 @@ public class AsynchronousExecuteClientTest {
 		while (messageReceived == false)
 			;
 		SCMessage response = callback.response;
+		String sessionId = service.getSessionId();
 		service.deleteSession();
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(service.getSessionId(), response.getSessionId());
+		assertEquals(sessionId, response.getSessionId());
 		assertEquals(message.isFault(), response.isFault());
 	}
 
@@ -352,12 +350,13 @@ public class AsynchronousExecuteClientTest {
 		while (messageReceived == false)
 			;
 		SCMessage response = callback.response;
+		String sessionId = service.getSessionId();
 		service.deleteSession();
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(service.getSessionId(), response.getSessionId());
+		assertEquals(sessionId, response.getSessionId());
 		assertEquals(message.isFault(), response.isFault());
 	}
 
@@ -377,12 +376,13 @@ public class AsynchronousExecuteClientTest {
 		while (messageReceived == false)
 			;
 		SCMessage response = callback.response;
+		String sessionId = service.getSessionId();
 		service.deleteSession();
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(service.getSessionId(), response.getSessionId());
+		assertEquals(sessionId, response.getSessionId());
 		assertEquals(message.isFault(), response.isFault());
 	}
 
@@ -402,12 +402,13 @@ public class AsynchronousExecuteClientTest {
 		while (messageReceived == false)
 			;
 		SCMessage response = callback.response;
+		String sessionId = service.getSessionId();
 		service.deleteSession();
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(service.getSessionId(), response.getSessionId());
+		assertEquals(sessionId, response.getSessionId());
 		assertEquals(message.isFault(), response.isFault());
 	}
 
@@ -428,12 +429,13 @@ public class AsynchronousExecuteClientTest {
 		while (messageReceived == false)
 			;
 		SCMessage response = callback.response;
+		String sessionId = service.getSessionId();
 		service.deleteSession();
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(service.getSessionId(), response.getSessionId());
+		assertEquals(sessionId, response.getSessionId());
 		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
 		assertEquals(message.isFault(), response.isFault());
 	}
@@ -455,12 +457,13 @@ public class AsynchronousExecuteClientTest {
 		while (messageReceived == false)
 			;
 		SCMessage response = callback.response;
+		String sessionId = service.getSessionId();
 		service.deleteSession();
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(service.getSessionId(), response.getSessionId());
+		assertEquals(sessionId, response.getSessionId());
 		assertEquals(message.getSessionId(), response.getSessionId());
 		assertEquals(message.isFault(), response.isFault());
 	}
@@ -486,13 +489,14 @@ public class AsynchronousExecuteClientTest {
 		while (messageReceived == false)
 			;
 		SCMessage response = callback.response;
+		String sessionId0 = service0.getSessionId();
 		service0.deleteSession();
 		service1.deleteSession();
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(service0.getSessionId(), response.getSessionId());
+		assertEquals(sessionId0, response.getSessionId());
 		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
 		assertEquals(message.isFault(), response.isFault());
 	}
@@ -518,13 +522,14 @@ public class AsynchronousExecuteClientTest {
 		while (messageReceived == false)
 			;
 		SCMessage response = callback.response;
+		String sessionId0 = service0.getSessionId();
 		service0.deleteSession();
 		service1.deleteSession();
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(service0.getSessionId(), response.getSessionId());
+		assertEquals(sessionId0, response.getSessionId());
 		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
 		assertEquals(message.isFault(), response.isFault());
 	}

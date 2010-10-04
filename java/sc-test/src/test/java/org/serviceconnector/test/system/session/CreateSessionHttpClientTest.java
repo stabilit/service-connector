@@ -14,8 +14,8 @@ import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.service.SCServiceException;
 
@@ -29,7 +29,6 @@ public class CreateSessionHttpClientTest {
 	private static Process scProcess;
 	private static Process srvProcess;
 
-	private int threadCount = 0;
 	private ISCClient client;
 	private Exception ex;
 
@@ -52,7 +51,6 @@ public class CreateSessionHttpClientTest {
 	public void setUp() throws Exception {
 		client = new SCClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		threadCount = Thread.activeCount();
 		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
 	}
 
@@ -62,7 +60,6 @@ public class CreateSessionHttpClientTest {
 		client.detach();
 		client = null;
 		ex = null;
-		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@AfterClass
@@ -77,7 +74,6 @@ public class CreateSessionHttpClientTest {
 	@Test
 	public void deleteSession_sessionServiceNameEmpty_passes() throws Exception {
 		ISessionService sessionService = client.newSessionService("");
-		this.threadCount += 1; // need to add 1 thread echo interval timer thread
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}

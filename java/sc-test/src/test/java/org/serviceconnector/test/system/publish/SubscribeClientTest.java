@@ -2,6 +2,8 @@ package org.serviceconnector.test.system.publish;
 
 import static org.junit.Assert.assertEquals;
 
+import java.security.InvalidParameterException;
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,12 +17,12 @@ import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.IService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
 public class SubscribeClientTest {
-	
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SubscribeClientTest.class);
 
@@ -38,8 +40,8 @@ public class SubscribeClientTest {
 		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-			srvProcess = ctrl.startServer(TestConstants.publishSrv,
-					TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
+			srvProcess = ctrl.startServer(TestConstants.publishSrv, TestConstants.log4jSrvProperties,
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
 					new String[] { TestConstants.serviceNamePublish });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
@@ -105,8 +107,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void isSubscribed_serviceNameDisabled_false() throws Exception {
-		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionDisabled);
+		IPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		assertEquals(false, service.isSubscribed());
 	}
 
@@ -141,8 +142,7 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameEmptyMaskOneChar_throwsSCExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_serviceNameEmptyMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService("");
 		try {
 			service.subscribe("a", "sessionInfo", 300, new DemoPublishClientCallback(service));
@@ -154,8 +154,7 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameEmptyMaskWhiteSpace_throwsSCExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_serviceNameEmptyMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService("");
 		try {
 			service.subscribe(" ", "sessionInfo", 300, new DemoPublishClientCallback(service));
@@ -167,12 +166,12 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameEmptyMask256LongString_throwsSCExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_serviceNameEmptyMask256LongString_throwsSCExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService("");
 		try {
-			service.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service
+					.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
+							new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -181,12 +180,12 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameEmptyMask257LongString_throwsValidatorExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_serviceNameEmptyMask257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService("");
 		try {
-			service.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service
+					.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
+							new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -211,12 +210,10 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameEmptyMaskSameAsInServer_throwsSCExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_serviceNameEmptyMaskSameAsInServer_throwsSCExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService("");
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -225,8 +222,7 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameNotExistingServiceMaskNull_throwsValidatorException()
-			throws Exception {
+	public void subscribe_serviceNameNotExistingServiceMaskNull_throwsValidatorException() throws Exception {
 		IPublishService service = client.newPublishService("notExistingService");
 		try {
 			service.subscribe(null, "sessionInfo", 300, new DemoPublishClientCallback(service));
@@ -239,8 +235,7 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameNotExistingServiceMaskEmpty_throwsValidatorException()
-			throws Exception {
+	public void subscribe_serviceNameNotExistingServiceMaskEmpty_throwsValidatorException() throws Exception {
 		IPublishService service = client.newPublishService("notExistingService");
 		try {
 			service.subscribe("", "sessionInfo", 300, new DemoPublishClientCallback(service));
@@ -253,8 +248,7 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameNotExistingServiceMaskOneChar_throwsSCExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_serviceNameNotExistingServiceMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService("notExistingService");
 		try {
 			service.subscribe("a", "sessionInfo", 300, new DemoPublishClientCallback(service));
@@ -267,8 +261,7 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameNotExistingServiceMaskWhiteSpace_throwsSCExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_serviceNameNotExistingServiceMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService("notExistingService");
 		try {
 			service.subscribe(" ", "sessionInfo", 300, new DemoPublishClientCallback(service));
@@ -285,8 +278,9 @@ public class SubscribeClientTest {
 			throws Exception {
 		IPublishService service = client.newPublishService("notExistingService");
 		try {
-			service.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service
+					.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
+							new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -300,8 +294,9 @@ public class SubscribeClientTest {
 			throws Exception {
 		IPublishService service = client.newPublishService("notExistingService");
 		try {
-			service.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service
+					.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
+							new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -330,8 +325,7 @@ public class SubscribeClientTest {
 			throws Exception {
 		IPublishService service = client.newPublishService("notExistingService");
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -341,8 +335,7 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameSessionServiceMaskNull_throwsValidatorException()
-			throws Exception {
+	public void subscribe_serviceNameSessionServiceMaskNull_throwsValidatorException() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
 			service.subscribe(null, "sessionInfo", 300, new DemoPublishClientCallback(service));
@@ -355,8 +348,7 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameSessionServiceMaskEmpty_throwsValidatorException()
-			throws Exception {
+	public void subscribe_serviceNameSessionServiceMaskEmpty_throwsValidatorException() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
 			service.subscribe("", "sessionInfo", 300, new DemoPublishClientCallback(service));
@@ -369,8 +361,7 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameSessionServiceMaskOneChar_throwsSCExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_serviceNameSessionServiceMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
 			service.subscribe("a", "sessionInfo", 300, new DemoPublishClientCallback(service));
@@ -383,8 +374,7 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameSessionServiceMaskWhiteSpace_throwsSCExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_serviceNameSessionServiceMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
 			service.subscribe(" ", "sessionInfo", 300, new DemoPublishClientCallback(service));
@@ -397,12 +387,12 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameSessionServiceMask256LongString_throwsSCExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_serviceNameSessionServiceMask256LongString_throwsSCExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
-			service.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service
+					.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
+							new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -416,8 +406,9 @@ public class SubscribeClientTest {
 			throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
-			service.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service
+					.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
+							new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -442,12 +433,10 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameSessionServiceMaskSameAsInServer_throwsSCExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_serviceNameSessionServiceMaskSameAsInServer_throwsSCExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -458,8 +447,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameDisabledMaskNull_throwsValidatorException() throws Exception {
-		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionDisabled);
+		IPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
 			service.subscribe(null, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
@@ -472,8 +460,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameDisabledMaskEmpty_throwsValidatorException() throws Exception {
-		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionDisabled);
+		IPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
 			service.subscribe("", "sessionInfo", 300, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
@@ -485,10 +472,8 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameDisabledMaskOneChar_throwsSCExceptionNotSubscribed()
-			throws Exception {
-		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionDisabled);
+	public void subscribe_serviceNameDisabledMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
 			service.subscribe("a", "sessionInfo", 300, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
@@ -500,10 +485,8 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameDisabledMaskWhiteSpace_throwsSCExceptionNotSubscribed()
-			throws Exception {
-		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionDisabled);
+	public void subscribe_serviceNameDisabledMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
 			service.subscribe(" ", "sessionInfo", 300, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
@@ -515,13 +498,12 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameDisabledMask256LongString_throwsSCExceptionNotSubscribed()
-			throws Exception {
-		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionDisabled);
+	public void subscribe_serviceNameDisabledMask256LongString_throwsSCExceptionNotSubscribed() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
-			service.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service
+					.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
+							new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -531,13 +513,12 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameDisabledMask257LongString_throwsValidatorExceptionNotSubscribed()
-			throws Exception {
-		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionDisabled);
+	public void subscribe_serviceNameDisabledMask257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
-			service.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service
+					.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
+							new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -549,8 +530,7 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_serviceNameDisabledMaskContainingPercentSign_throwsValidatorExceptionNotSubscribed()
 			throws Exception {
-		IPublishService service = client
-				.newPublishService(TestConstants.serviceNameSessionDisabled);
+		IPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
 			service.subscribe("0000121ABCDEFGHIJKLMNO%-----------X-----------", "sessionInfo", 300,
 					new DemoPublishClientCallback(service));
@@ -563,13 +543,10 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameDisabledMaskSameAsInServer_throwsSCExceptionNotSubscribed()
-			throws Exception {
-		IPublishService service = client
-				.newPublishService(TestConstants.serviceNamePublishDisabled);
+	public void subscribe_serviceNameDisabledMaskSameAsInServer_throwsSCExceptionNotSubscribed() throws Exception {
+		IPublishService service = client.newPublishService(TestConstants.serviceNamePublishDisabled);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -605,8 +582,7 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameValidMaskOneChar_isSubscribedSessionIdExists()
-			throws Exception {
+	public void subscribe_serviceNameValidMaskOneChar_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe("a", "sessionInfo", 300, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
@@ -615,8 +591,7 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameValidMaskWhiteSpace_isSubscribedSessionIdExists()
-			throws Exception {
+	public void subscribe_serviceNameValidMaskWhiteSpace_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(" ", "sessionInfo", 300, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
@@ -625,24 +600,21 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameValidMask256LongString_isSubscribedSessionIdExists()
-			throws Exception {
+	public void subscribe_serviceNameValidMask256LongString_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
-				new DemoPublishClientCallback(service));
+		service.subscribe(TestConstants.stringLength256, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
 	}
 
 	@Test
-	public void subscribe_serviceNameValidMask257LongString_throwsValidatorExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_serviceNameValidMask257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			service
+					.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
+							new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -667,17 +639,15 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_serviceNameValidMaskSameAsInServer_isSubscribedSessionIdExists()
-			throws Exception {
+	public void subscribe_serviceNameValidMaskSameAsInServer_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
 	}
 
-	// TODO FJU sessionInfo is supposed to be optional
+	// TODO FJU sessionInfo is supposed to be optional ..JOT no verify with JAN
 	@Test
 	public void subscribe_sessionInfoNull_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
@@ -708,8 +678,7 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_sessionInfoPangram_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, TestConstants.pangram, 300,
-				new DemoPublishClientCallback(service));
+		service.subscribe(TestConstants.mask, TestConstants.pangram, 300, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -726,12 +695,11 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_sessionInfo257LongString_throwsValidatorExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_sessionInfo257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, TestConstants.stringLength257, 300,
-					new DemoPublishClientCallback(service));
+			service.subscribe(TestConstants.mask, TestConstants.stringLength257, 300, new DemoPublishClientCallback(
+					service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -744,8 +712,7 @@ public class SubscribeClientTest {
 	public void subscribe_noDataInterval0_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 0, new DemoPublishClientCallback(
-					service));
+			service.subscribe(TestConstants.mask, "sessionInfo", 0, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -755,12 +722,10 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_noDataIntervalMinus1_throwsValidatorExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_noDataIntervalMinus1_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", -1, new DemoPublishClientCallback(
-					service));
+			service.subscribe(TestConstants.mask, "sessionInfo", -1, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -772,8 +737,7 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_noDataInterval1_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 1, new DemoPublishClientCallback(
-				service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 1, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -782,20 +746,17 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_noDataIntervalMaxAllowed_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 3600, new DemoPublishClientCallback(
-				service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 3600, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
 	}
 
 	@Test
-	public void subscribe_noDataIntervalMaxAllowedPlusOne_throwsValidatorExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_noDataIntervalMaxAllowedPlusOne_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 3601,
-					new DemoPublishClientCallback(service));
+			service.subscribe(TestConstants.mask, "sessionInfo", 3601, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -805,12 +766,11 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_noDataIntervalIntMax_throwsValidatorExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_noDataIntervalIntMax_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", Integer.MAX_VALUE,
-					new DemoPublishClientCallback(service));
+			service.subscribe(TestConstants.mask, "sessionInfo", Integer.MAX_VALUE, new DemoPublishClientCallback(
+					service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -827,7 +787,7 @@ public class SubscribeClientTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCMPValidatorException);
+		assertEquals(true, ex instanceof InvalidParameterException);
 		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(false, service.isSubscribed());
 	}
@@ -835,8 +795,7 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_authenticationIdNull_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, null,
-				new DemoPublishClientCallback(service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, null, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -845,8 +804,7 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_authenticationIdEmpty_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, "",
-				new DemoPublishClientCallback(service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, "", new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -855,8 +813,7 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_authenticationIdWhiteSpace_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, " ",
-				new DemoPublishClientCallback(service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, " ", new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -865,8 +822,7 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_authenticationIdOneChar_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, "a",
-				new DemoPublishClientCallback(service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, "a", new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -875,16 +831,15 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_authenticationIdPangram_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, TestConstants.pangram,
-				new DemoPublishClientCallback(service));
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, TestConstants.pangram, new DemoPublishClientCallback(
+				service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
 	}
 
 	@Test
-	public void subscribe_authenticationId256LongString_isSubscribedSessionIdExists()
-			throws Exception {
+	public void subscribe_authenticationId256LongString_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, TestConstants.stringLength256,
 				new DemoPublishClientCallback(service));
@@ -894,12 +849,11 @@ public class SubscribeClientTest {
 	}
 
 	@Test
-	public void subscribe_authenticationId257LongString_throwsValidatorExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_authenticationId257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 3601,
-					TestConstants.stringLength257, new DemoPublishClientCallback(service));
+			service.subscribe(TestConstants.mask, "sessionInfo", 3601, TestConstants.stringLength257,
+					new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -912,8 +866,7 @@ public class SubscribeClientTest {
 	public void subscribe_timeout0_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300,
-					new DemoPublishClientCallback(service), 0);
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service), 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -926,8 +879,7 @@ public class SubscribeClientTest {
 	public void subscribe_timeoutMinus1_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300,
-					new DemoPublishClientCallback(service), -1);
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service), -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -941,8 +893,7 @@ public class SubscribeClientTest {
 	public void subscribe_timeout1_eitherSubscribedOrTimedOut() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300,
-					new DemoPublishClientCallback(service), 1);
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service), 1);
 		} catch (Exception e) {
 			assertEquals(true, e.getMessage().toLowerCase().contains("timeout"));
 			assertEquals(false, service.isSubscribed());
@@ -957,20 +908,17 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_timeoutMaxAllowed_isSubscribedSessionIdExists() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
-				service), 3600);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service), 3600);
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
 	}
 
 	@Test
-	public void subscribe_timeoutMaxAllowedPlusOne_throwsValidatorExceptionNotSubscribed()
-			throws Exception {
+	public void subscribe_timeoutMaxAllowedPlusOne_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300,
-					new DemoPublishClientCallback(service), 3601);
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service), 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -983,8 +931,8 @@ public class SubscribeClientTest {
 	public void subscribe_timeoutIntMax_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300,
-					new DemoPublishClientCallback(service), Integer.MAX_VALUE);
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service),
+					Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -997,8 +945,8 @@ public class SubscribeClientTest {
 	public void subscribe_timeoutIntMin_throwsValidatorExceptionNotSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300,
-					new DemoPublishClientCallback(service), Integer.MIN_VALUE);
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service),
+					Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1006,7 +954,7 @@ public class SubscribeClientTest {
 		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(false, service.isSubscribed());
 	}
-	
+
 	@Test
 	public void subscribe_twiceInARow_throwsSCExceptionRemainsSubscribed() throws Exception {
 		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);

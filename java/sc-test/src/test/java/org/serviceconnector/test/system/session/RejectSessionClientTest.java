@@ -26,7 +26,6 @@ public class RejectSessionClientTest {
 	private static Process scProcess;
 	private static Process srvProcess;
 
-	private int threadCount = 0;
 	private ISCClient client;
 	private Exception ex;
 
@@ -45,7 +44,6 @@ public class RejectSessionClientTest {
 
 	@Before
 	public void setUp() throws Exception {
-		threadCount = Thread.activeCount();
 		client = new SCClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
@@ -57,7 +55,6 @@ public class RejectSessionClientTest {
 		client.detach();
 		client = null;
 		ex = null;
-		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@AfterClass

@@ -135,7 +135,7 @@ public class PublishClientTest {
 		SCMessage newMessage = null;
 		int counter = 0;
 
-		for (int i = 0; i < 600 && callback.getMessageCounter() < 20; i++) {
+		for (int i = 0; i < 600 && counter < 20; i++) {
 			if (counter == callback.getMessageCounter()) {
 				Thread.sleep(100);
 			} else if (counter < callback.getMessageCounter()) {

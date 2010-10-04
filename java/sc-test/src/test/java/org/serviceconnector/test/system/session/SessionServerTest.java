@@ -15,14 +15,13 @@ import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cln.StartSessionClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 
 public class SessionServerTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SessionServerTest.class);
 
-	private int threadCount = 0;
 	private SrvCallback srvCallback;
 	private ISCSessionServer server;
 
@@ -50,12 +49,11 @@ public class SessionServerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		threadCount = Thread.activeCount();
 		server = new SCSessionServer();
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		srvCallback = new SrvCallback();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP,
-				TestConstants.serviceName, 10, 10, srvCallback);
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 10, 10,
+				srvCallback);
 
 	}
 
@@ -65,13 +63,11 @@ public class SessionServerTest {
 		server.destroyServer();
 		server = null;
 		srvCallback = null;
-		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@Test
 	public void createSession_whiteSpaceSessionInfo_createSessionMessageArrived() throws Exception {
-		StartSessionClient client = new StartSessionClient(
-				"createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty");
+		StartSessionClient client = new StartSessionClient("createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty");
 		client.start();
 		client.join();
 
@@ -82,14 +78,11 @@ public class SessionServerTest {
 		assertEquals(false, srvCallback.createSessionMsg.isFault());
 		assertEquals(null, srvCallback.createSessionMsg.getData());
 		assertEquals(true, srvCallback.createSessionMsg.isCompressed());
-		assertEquals(" ", srvCallback.createSessionMsg.getMessageInfo());
 	}
 
 	@Test
-	public void createSession_arbitrarySpaceSessionInfo_createSessionMessageArrived()
-			throws Exception {
-		StartSessionClient client = new StartSessionClient(
-				"createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty");
+	public void createSession_arbitrarySpaceSessionInfo_createSessionMessageArrived() throws Exception {
+		StartSessionClient client = new StartSessionClient("createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty");
 		client.start();
 		client.join();
 
@@ -100,12 +93,11 @@ public class SessionServerTest {
 		assertEquals(false, srvCallback.createSessionMsg.isFault());
 		assertEquals(null, srvCallback.createSessionMsg.getData());
 		assertEquals(true, srvCallback.createSessionMsg.isCompressed());
-		assertEquals(TestConstants.pangram, srvCallback.createSessionMsg.getMessageInfo());
+		assertEquals(null, srvCallback.createSessionMsg.getMessageInfo());
 	}
 
 	@Test
-	public void createSession_arbitrarySpaceSessionInfoDataOneChar_createSessionMessageArrived()
-			throws Exception {
+	public void createSession_arbitrarySpaceSessionInfoDataOneChar_createSessionMessageArrived() throws Exception {
 		StartSessionClient client = new StartSessionClient(
 				"createSession_arbitrarySpaceSessionInfoDataOneChar_sessionIdIsNotEmpty");
 		client.start();
@@ -118,12 +110,11 @@ public class SessionServerTest {
 		assertEquals("a", srvCallback.createSessionMsg.getData().toString());
 		assertEquals(false, srvCallback.createSessionMsg.isFault());
 		assertEquals(true, srvCallback.createSessionMsg.isCompressed());
-		assertEquals(TestConstants.pangram, srvCallback.createSessionMsg.getMessageInfo());
+		assertEquals(null, srvCallback.createSessionMsg.getMessageInfo());
 	}
 
 	@Test
-	public void createSession_256LongSessionInfoData60kBByteArray_createSessionMessageArrived()
-			throws Exception {
+	public void createSession_256LongSessionInfoData60kBByteArray_createSessionMessageArrived() throws Exception {
 		StartSessionClient client = new StartSessionClient(
 				"createSession_256LongSessionInfoData60kBByteArray_sessionIdIsNotEmpty");
 		client.start();
@@ -134,17 +125,15 @@ public class SessionServerTest {
 		assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
 				|| srvCallback.createSessionMsg.getSessionId().isEmpty());
 		assertEquals(byte[].class, srvCallback.createSessionMsg.getData().getClass());
-		assertEquals(TestConstants.dataLength60kB,
-				((byte[]) srvCallback.createSessionMsg.getData()).length);
+		assertEquals(TestConstants.dataLength60kB, ((byte[]) srvCallback.createSessionMsg.getData()).length);
 		assertEquals(false, srvCallback.createSessionMsg.isFault());
 		assertEquals(true, srvCallback.createSessionMsg.isCompressed());
-		assertEquals(TestConstants.stringLength256, srvCallback.createSessionMsg.getMessageInfo());
+		assertEquals(null, srvCallback.createSessionMsg.getMessageInfo());
 	}
 
 	@Test
 	public void deleteSession_beforeCreateSession_noDeleteSessionArrives() throws Exception {
-		StartSessionClient client = new StartSessionClient(
-				"deleteSession_beforeCreateSession_noSessionId");
+		StartSessionClient client = new StartSessionClient("deleteSession_beforeCreateSession_noSessionId");
 		client.start();
 		client.join();
 
@@ -153,10 +142,8 @@ public class SessionServerTest {
 	}
 
 	@Test
-	public void deleteSession_afterValidNewSessionService_deleteSessionMessageArrives()
-			throws Exception {
-		StartSessionClient client = new StartSessionClient(
-				"deleteSession_afterValidNewSessionService_noSessionId");
+	public void deleteSession_afterValidNewSessionService_deleteSessionMessageArrives() throws Exception {
+		StartSessionClient client = new StartSessionClient("deleteSession_afterValidNewSessionService_noSessionId");
 		client.start();
 		client.join();
 
@@ -167,10 +154,9 @@ public class SessionServerTest {
 		assertEquals(null, srvCallback.deleteSessionMsg.getData());
 		assertEquals(false, srvCallback.deleteSessionMsg.isFault());
 		assertEquals(null, srvCallback.deleteSessionMsg.getMessageInfo());
-		assertEquals(true, srvCallback.deleteSessionMsg.isCompressed());
+		assertEquals(false, srvCallback.deleteSessionMsg.isCompressed());
 	}
 
-	// TODO FJU Should exchange 4 messages in total
 	@Test
 	public void createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_4messagesArrive()
 			throws Exception {
@@ -188,35 +174,30 @@ public class SessionServerTest {
 		assertEquals(false, srvCallback.createSessionMsg.isFault());
 		assertEquals(true, srvCallback.createSessionMsg.isCompressed());
 		assertEquals(true, srvCallback.executeMsg instanceof SCMessage);
-		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg
-				.getSessionId());
+		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg.getSessionId());
 		assertEquals(null, srvCallback.executeMsg.getData());
 		assertEquals(null, srvCallback.executeMsg.getMessageInfo());
 		assertEquals(false, srvCallback.executeMsg.isFault());
 		assertEquals(true, srvCallback.executeMsg.isCompressed());
 		assertEquals(true, srvCallback.deleteSessionMsg instanceof SCMessage);
-		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.deleteSessionMsg
-				.getSessionId());
+		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.deleteSessionMsg.getSessionId());
 		assertEquals(null, srvCallback.deleteSessionMsg.getData());
 		assertEquals(null, srvCallback.deleteSessionMsg.getMessageInfo());
 		assertEquals(false, srvCallback.deleteSessionMsg.isFault());
-		assertEquals(true, srvCallback.deleteSessionMsg.isCompressed());
+		assertEquals(false, srvCallback.deleteSessionMsg.isCompressed());
 		assertEquals(null, srvCallback.abortSessionMsg);
 	}
 
 	@Test
 	public void execute_messageData1MBArray_3messagesArrive() throws Exception {
-		StartSessionClient client = new StartSessionClient(
-				"execute_messageData1MBArray_returnsTheSameMessageData");
+		StartSessionClient client = new StartSessionClient("execute_messageData1MBArray_returnsTheSameMessageData");
 		client.start();
 		client.join();
 
 		assertEquals(3, srvCallback.messagesExchanged);
 		assertEquals(true, srvCallback.executeMsg instanceof SCMessage);
-		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg
-				.getSessionId());
-		assertEquals(TestConstants.dataLength1MB,
-				((byte[]) srvCallback.executeMsg.getData()).length);
+		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg.getSessionId());
+		assertEquals(TestConstants.dataLength1MB, ((byte[]) srvCallback.executeMsg.getData()).length);
 		assertEquals(null, srvCallback.executeMsg.getMessageInfo());
 		assertEquals(false, srvCallback.executeMsg.isFault());
 		assertEquals(false, srvCallback.executeMsg.isCompressed());
@@ -224,8 +205,7 @@ public class SessionServerTest {
 
 	@Test
 	public void createSessionExecuteDeleteSession_twice_6MessagesArrive() throws Exception {
-		StartSessionClient client = new StartSessionClient(
-				"createSessionExecuteDeleteSession_twice_6MessagesArrive");
+		StartSessionClient client = new StartSessionClient("createSessionExecuteDeleteSession_twice_6MessagesArrive");
 		client.start();
 		client.join();
 
@@ -235,8 +215,7 @@ public class SessionServerTest {
 	// TODO FJU how can I access echo messages from the API? probably not...
 	@Test
 	public void echo_waitFor3EchoMessages_5MessagesArrive() throws Exception {
-		StartSessionClient client = new StartSessionClient(
-				"echo_waitFor3EchoMessages_5MessagesArrive");
+		StartSessionClient client = new StartSessionClient("echo_waitFor3EchoMessages_5MessagesArrive");
 		client.start();
 		client.join();
 
@@ -295,13 +274,12 @@ public class SessionServerTest {
 			messagesExchanged++;
 			Object data = request.getData();
 			// watch out for timeout server message
-			if (data.getClass() == String.class) {
+			if (data != null && data.getClass() == String.class) {
 				String dataString = (String) data;
 				if (dataString.startsWith("timeout")) {
 					int millis = Integer.parseInt(dataString.split(" ")[1]);
 					try {
-						logger.info("Sleeping " + dataString.split(" ")[1]
-								+ "ms in order to timeout.");
+						logger.info("Sleeping " + dataString.split(" ")[1] + "ms in order to timeout.");
 						Thread.sleep(millis);
 					} catch (InterruptedException e) {
 						logger.error("sleep in execute", e);
