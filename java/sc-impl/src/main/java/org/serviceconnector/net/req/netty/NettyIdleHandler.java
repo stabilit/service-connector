@@ -62,7 +62,7 @@ public class NettyIdleHandler extends IdleStateHandler {
 	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis) throws Exception {
 		super.channelIdle(ctx, state, lastActivityTimeMillis);
 		IConnection connection = this.connectionContext.getConnection();
-		if (connectionLogger.isDebugEnabled()) {
+		if (connectionLogger.isTraceEnabled()) {
 			connectionLogger.logKeepAlive(this.getClass().getSimpleName(), "", 0, this.connectionContext.getConnection()
 					.getNrOfIdlesInSequence());
 		}

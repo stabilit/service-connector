@@ -19,7 +19,6 @@ package org.serviceconnector.test.sc.timer.excho;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.test.sc.SetupTestCases;
 
 

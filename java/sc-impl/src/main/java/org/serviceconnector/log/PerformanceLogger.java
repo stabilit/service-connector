@@ -41,7 +41,7 @@ public class PerformanceLogger {
 	}
 
 	public synchronized void begin(String className, String methodName) {
-		if (logger.isDebugEnabled()) {
+		if (logger.isTraceEnabled()) {
 			this.threadLocal.set(new PerformanceItem(className, methodName, System.nanoTime()));
 		}
 	}
@@ -51,7 +51,7 @@ public class PerformanceLogger {
 	 * @param methodName
 	 */
 	public synchronized void end(String className, String methodName) {
-		if (logger.isDebugEnabled()) {
+		if (logger.isTraceEnabled()) {
 			PerformanceItem beginItem = this.threadLocal.get();
 			if (beginItem == null) {
 				return;
@@ -64,7 +64,7 @@ public class PerformanceLogger {
 			Formatter format = new Formatter();
 			format.format(END_STR, beginClassName, beginMethodName, className, methodName, String
 					.valueOf((endTime - beginTime) / 1000000), String.valueOf((endTime - beginTime) % 1000000));
-			logger.debug(format.toString());
+			logger.trace(format.toString());
 			format.close();
 		}
 
@@ -73,8 +73,8 @@ public class PerformanceLogger {
 	/**
 	 * @return
 	 */
-	public boolean S() {
-		return logger.isDebugEnabled();
+	public boolean isEnabled() {
+		return logger.isTraceEnabled();
 	}
 
 	private class PerformanceItem {

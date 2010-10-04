@@ -98,7 +98,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			ChannelBuffer content = httpResponse.getContent();
 			byte[] buffer = new byte[content.readableBytes()];
 			content.readBytes(buffer);
-			if (connectionLogger.isDebugEnabled()) {
+			if (connectionLogger.isTraceEnabled()) {
 				connectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
 			}
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);

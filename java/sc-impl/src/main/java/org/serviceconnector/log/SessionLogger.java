@@ -45,10 +45,10 @@ public class SessionLogger {
 	 * @param sessionId
 	 */
 	public synchronized void logCreateSession(String className, String sessionId) {
-		if (logger.isInfoEnabled()) {
+		if (logger.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(CREATE_SESSION_STR, sessionId);
-			logger.info(format.toString());
+			logger.debug(format.toString());
 			format.close();
 		}
 	}
@@ -58,10 +58,10 @@ public class SessionLogger {
 	 * @param sessionId
 	 */
 	public synchronized void logDeleteSession(String className, String sessionId) {
-		if (logger.isInfoEnabled()) {
+		if (logger.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(DELETE_SESSION_STR, sessionId);
-			logger.info(format.toString());
+			logger.debug(format.toString());
 			format.close();
 		}
 	}
@@ -71,10 +71,10 @@ public class SessionLogger {
 	 * @param sessionId
 	 */
 	public synchronized void logAbortSession(String className, String sessionId) {
-		if (logger.isInfoEnabled()) {
+		if (logger.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(ABORT_SESSION_STR, sessionId);
-			logger.info(format.toString());
+			logger.debug(format.toString());
 			format.close();
 		}
 	}
@@ -82,7 +82,7 @@ public class SessionLogger {
 	/**
 	 * @return
 	 */
-	public boolean isInfoEnabled() {
-		return logger.isInfoEnabled();
+	public boolean isEnabled() {
+		return logger.isDebugEnabled();
 	}
 }

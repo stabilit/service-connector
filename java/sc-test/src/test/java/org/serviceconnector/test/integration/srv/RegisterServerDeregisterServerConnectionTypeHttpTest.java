@@ -14,7 +14,6 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.log.Loggers;
-import org.serviceconnector.net.connection.ConnectionFactory;
 
 public class RegisterServerDeregisterServerConnectionTypeHttpTest {
 

@@ -26,7 +26,6 @@ import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPManageCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.net.connection.ConnectionFactory;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;

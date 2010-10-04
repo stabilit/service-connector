@@ -61,7 +61,7 @@ public class NettyTcpRequest extends RequestAdapter {
 	public void load() throws Exception {
 		byte[] buffer = new byte[request.readableBytes()];
 		request.readBytes(buffer);
-		if (connectionLogger.isDebugEnabled()) {
+		if (connectionLogger.isTraceEnabled()) {
 			connectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getLocalSocketAddress().getHostName(), this.getLocalSocketAddress().getPort(), buffer, 0, buffer.length);
 		}
 		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);

@@ -50,7 +50,7 @@ public class ConnectionLogger {
 	public synchronized void logConnect(String className, String hostName, int port) {
 		Formatter format = new Formatter();
 		format.format(CONNECT_STR, className, hostName, String.valueOf(port));
-		logger.info(format.toString());
+		logger.debug(format.toString());
 		format.close();
 	}
 
@@ -64,7 +64,7 @@ public class ConnectionLogger {
 
 		Formatter format = new Formatter();
 		format.format(DISCONNECT_STR, className, hostName, String.valueOf(port));
-		logger.info(format.toString());
+		logger.debug(format.toString());
 		format.close();
 	}
 
@@ -84,7 +84,7 @@ public class ConnectionLogger {
 		} else {
 			format.format(READ_STR, className, hostName, String.valueOf(port), new String(data, offset, length));
 		}
-		logger.debug(format.toString());
+		logger.trace(format.toString());
 		format.close();
 	}
 
@@ -104,7 +104,7 @@ public class ConnectionLogger {
 		} else {
 			format.format(WRITE_STR, className, hostName, String.valueOf(port), new String(data, offset, length));
 		}
-		logger.debug(format.toString());
+		logger.trace(format.toString());
 		format.close();
 	}
 
@@ -118,8 +118,16 @@ public class ConnectionLogger {
 	public synchronized void logKeepAlive(String className, String hostName, int port, int nrOfIdles) {
 		Formatter format = new Formatter();
 		format.format(KEEP_ALIVE_STR, className, hostName, String.valueOf(port), nrOfIdles);
-		logger.debug(format.toString());
+		logger.trace(format.toString());
 		format.close();
+	}
+
+
+	/**
+	 * @return
+	 */
+	public boolean isTraceEnabled() {
+		return logger.isTraceEnabled();
 	}
 
 
@@ -128,13 +136,5 @@ public class ConnectionLogger {
 	 */
 	public boolean isDebugEnabled() {
 		return logger.isDebugEnabled();
-	}
-
-
-	/**
-	 * @return
-	 */
-	public boolean isInfoEnabled() {
-		return logger.isInfoEnabled();
 	}
 }

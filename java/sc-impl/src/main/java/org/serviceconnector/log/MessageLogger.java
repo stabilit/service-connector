@@ -45,17 +45,16 @@ public class MessageLogger {
 	 * @param message
 	 */
 	public synchronized void logMessage(String className, SCMPMessage message) {
-		if (logger.isInfoEnabled()) {
-			// TODO TRN (write out important attributes)
-			Formatter format = new Formatter();
-			format.format(MSG_SHORT_STR, message);
-			logger.info(format.toString());
-			format.close();
-		}
-		if (logger.isDebugEnabled()) {
+		if (logger.isTraceEnabled()) {
 			// TODO TRN (write out all attributes)
 			Formatter format = new Formatter();
 			format.format(MSG_LONG_STR, message);
+			logger.trace(format.toString());
+			format.close();
+		} else if (logger.isDebugEnabled()) {
+			// TODO TRN (write out important attributes)
+			Formatter format = new Formatter();
+			format.format(MSG_SHORT_STR, message);
 			logger.debug(format.toString());
 			format.close();
 		}

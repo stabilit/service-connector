@@ -98,7 +98,7 @@ public class NettyTcpResponse extends ResponseAdapter {
 		ChannelBuffer buffer = this.getBuffer();
 		// Write the response.
 		event.getChannel().write(buffer);
-		if (connectionLogger.isDebugEnabled()) {
+		if (connectionLogger.isTraceEnabled()) {
 			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.event.getChannel()
 					.getLocalAddress()).getHostName(), ((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(),
 					buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
