@@ -20,17 +20,19 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
-import java.util.Map.Entry;
-import java.util.Properties;
+import java.util.Enumeration;
 
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.apache.log4j.Appender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.serviceconnector.factory.Factory;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.service.Service;
-import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
@@ -59,10 +61,14 @@ public class DefaultXMLLoaderFactory extends Factory {
 		this.add("/services", loader);
 		loader = new ResourceXMLLoader();
 		this.add("/resource", loader);
+		loader = new LogsXMLLoader();
+		this.add("/logs", loader);
 		loader = new AjaxResourceXMLLoader();
 		this.add("/ajax/resource", loader);
 		loader = new TimerXMLLoader();
 		this.add("/ajax/timer", loader);
+		loader = new AjaxSystemXMLLoader();
+		this.add("/ajax/system", loader);
 	}
 
 	/**
@@ -103,7 +109,8 @@ public class DefaultXMLLoaderFactory extends Factory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
+				throws Exception {
 		}
 
 		@Override
@@ -126,7 +133,8 @@ public class DefaultXMLLoaderFactory extends Factory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
+				throws Exception {
 			ServiceRegistry serviceRegistry = ServiceRegistry
 					.getCurrentInstance();
 			writer.writeStartElement("services");
@@ -142,6 +150,61 @@ public class DefaultXMLLoaderFactory extends Factory {
 		@Override
 		public IFactoryable newInstance() {
 			return new ServicesXMLLoader();
+		}
+
+	}
+
+	/**
+	 * The Class LogXMLLoader.
+	 */
+	public static class LogsXMLLoader extends AbstractXMLLoader {
+
+		/**
+		 * Instantiates a new default xml loader.
+		 */
+		public LogsXMLLoader() {
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
+				throws Exception {
+			writer.writeStartElement("logs");
+			Logger rootLogger = LogManager.getRootLogger();
+			writeLogger(writer, rootLogger);
+			Enumeration currentLoggers = LogManager.getCurrentLoggers();
+			while (currentLoggers.hasMoreElements()) {
+				Logger currentLogger = (Logger) currentLoggers.nextElement();
+				writeLogger(writer, currentLogger);
+			}			
+			writer.writeEndElement(); // close logs tag
+		}
+
+		private void writeLogger(XMLStreamWriter writer, Logger logger)
+				throws XMLStreamException {
+			writer.writeStartElement("logger");
+			writer.writeAttribute("name", logger.getName());
+			Enumeration appenders = logger.getAllAppenders();
+			while (appenders.hasMoreElements()) {
+				Appender appender = (Appender) appenders.nextElement();
+				writer.writeStartElement("appender");
+				writer.writeAttribute("name", appender.getName());
+				if (appender instanceof FileAppender) {
+					writer.writeAttribute("type", "file");
+					FileAppender fileAppender = (FileAppender) appender;
+					String file = fileAppender.getFile();
+					writer.writeStartElement("file");
+					writer.writeCData(file);
+					writer.writeEndElement();
+				}
+				writer.writeEndElement(); // close appender tag
+			}
+			writer.writeEndElement(); // close logger tag
+		}
+
+		@Override
+		public IFactoryable newInstance() {
+			return new LogsXMLLoader();
 		}
 
 	}
@@ -164,13 +227,14 @@ public class DefaultXMLLoaderFactory extends Factory {
 
 		/** {@inheritDoc} */
 		@Override
-		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+		public void loadBody(XMLStreamWriter writer, IWebRequest request)
+				throws Exception {
 			String name = request.getParameter("name");
 			InputStream is = null;
 			try {
 				is = ClassLoader.getSystemResourceAsStream(name);
 				if (is == null) {
-				   is = this.getClass().getResourceAsStream(name);
+					is = this.getClass().getResourceAsStream(name);
 				}
 				if (is == null) {
 					is = new FileInputStream(name);
@@ -182,12 +246,12 @@ public class DefaultXMLLoaderFactory extends Factory {
 				writer.writeStartElement("resource");
 				writer.writeAttribute("name", name);
 				writer.writeEndElement();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				this.addMeta("exception", e.toString());
 				return;
 			} finally {
 				if (is != null) {
-				   is.close();
+					is.close();
 				}
 			}
 		}
@@ -209,7 +273,7 @@ public class DefaultXMLLoaderFactory extends Factory {
 		public IFactoryable newInstance() {
 			return new AjaxResourceXMLLoader();
 		}
-		
+
 		/** {@inheritDoc} */
 		@Override
 		public boolean isText() {
@@ -218,19 +282,21 @@ public class DefaultXMLLoaderFactory extends Factory {
 
 		/** {@inheritDoc} */
 		@Override
-		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
-            throw new UnsupportedOperationException();
+		public void loadBody(XMLStreamWriter writer, IWebRequest request)
+				throws Exception {
+			throw new UnsupportedOperationException();
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		public void loadBody(Writer writer, IWebRequest request) throws Exception {
+		public void loadBody(Writer writer, IWebRequest request)
+				throws Exception {
 			String name = request.getParameter("name");
 			InputStream is = null;
 			try {
 				is = ClassLoader.getSystemResourceAsStream(name);
 				if (is == null) {
-				   is = this.getClass().getResourceAsStream(name);
+					is = this.getClass().getResourceAsStream(name);
 				}
 				if (is == null) {
 					is = new FileInputStream(name);
@@ -250,11 +316,11 @@ public class DefaultXMLLoaderFactory extends Factory {
 					writer.write("<br/>");
 				}
 				writer.flush();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				return;
 			} finally {
 				if (is != null) {
-				   is.close();
+					is.close();
 				}
 			}
 		}
@@ -278,8 +344,50 @@ public class DefaultXMLLoaderFactory extends Factory {
 
 		/** {@inheritDoc} */
 		@Override
-		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+		public void loadBody(XMLStreamWriter writer, IWebRequest request)
+				throws Exception {
 		}
 
+	}
+
+	/**
+	 * The Class AjaxSystemXMLLoader.
+	 */
+	public static class AjaxSystemXMLLoader extends AbstractXMLLoader {
+		/**
+		 * Instantiates a new system xml loader.
+		 */
+		public AjaxSystemXMLLoader() {
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public IFactoryable newInstance() {
+			return new AjaxSystemXMLLoader();
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public boolean isText() {
+			return true;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void loadBody(XMLStreamWriter writer, IWebRequest request)
+				throws Exception {
+			throw new UnsupportedOperationException();
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void loadBody(Writer writer, IWebRequest request)
+				throws Exception {
+			String action = request.getParameter("action");
+			if ("gc".equals(action)) {
+				System.gc();
+				logger.info("run gc");
+			}
+		}
 	}
 }

@@ -86,10 +86,30 @@
 	    <xsl:value-of select="substring($dateTime,12,8)"/>
 	</xsl:template>
 	<xsl:template name="sc_info">
+	  <xsl:call-template name="sc_status"/>
 	  <xsl:call-template name="sc_runtime"/>
 	  <xsl:call-template name="sc_statistics"/>
 	</xsl:template>
 	<xsl:template name="sc_script">
+	</xsl:template>
+	<xsl:template name="sc_status">
+      <div class="sc_table" style="width:230px;">
+        <div class="sc_table_title">
+           Status
+           <xsl:choose>
+             <xsl:when test="$head/meta/@scstatus = 'success'">
+               <div style="padding:2px; float:right">
+                 <img border="0" width="20" height="20" src="green.png"></img>             
+               </div>
+             </xsl:when>
+             <xsl:otherwise>
+               <div style="padding:2px; float:right">
+                 <img border="0" width="24" height="24" src="red.png"></img>             
+               </div>
+             </xsl:otherwise>
+           </xsl:choose>
+        </div>             
+      </div>
 	</xsl:template>
 	<xsl:template name="sc_runtime">
       <div class="sc_table" style="width:230px;">
@@ -117,6 +137,9 @@
 	  <tr class="sc_table_even">
 	    <td class="sc_table">Max Memory</td>	  
 	    <td class="sc_table"><xsl:value-of select="maxMemory"/></td>	  
+	  </tr>
+	  <tr>
+	    <td colspan="2" class="sc_table"><a class="sc_table" href="javascript:runGC()">Run GC</a></td>
 	  </tr>
 	</xsl:template> 
 	<xsl:template name="sc_statistics">

@@ -114,6 +114,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeAttribute("scversion", SCVersion.CURRENT.toString());
 		writer.writeEndElement(); // close meta tag
 		writer.writeStartElement("meta");
+		writer.writeAttribute("scstatus", "success");
+		writer.writeEndElement(); // close meta tag
+		writer.writeStartElement("meta");
 		writer.writeAttribute("scconfigfile", SystemInfo.getConfigFileName());
 		writer.writeEndElement(); // close meta tag
 		// write current ip host
