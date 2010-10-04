@@ -16,14 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.req;
 
+import java.nio.channels.ClosedChannelException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.connection.IConnectionContext;
-import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.net.req.IRequesterContext;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
@@ -36,11 +35,9 @@ import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
 
-
 /**
- * The Class Requester. Implements a general behavior of a requester in the context of the Client or the Server.
- * Defines how to connect/disconnect, send/receive has to process. 
- * Handling of large request/response is defined on this level.
+ * The Class Requester. Implements a general behavior of a requester in the context of the Client or the Server. Defines
+ * how to connect/disconnect, send/receive has to process. Handling of large request/response is defined on this level.
  * 
  * @author JTraber
  */
@@ -318,7 +315,7 @@ public class SCRequester implements IRequester {
 			this.compositeReceiver = null;
 			this.compositeSender = null;
 			this.scmpCallback.callback(ex);
-			if (ex instanceof IdleTimeoutException) {
+			if (ex instanceof IdleTimeoutException || ex instanceof ClosedChannelException) {
 				// operation timed out - delete this specific connection, prevents race conditions
 				this.disconnectConnection();
 			} else {

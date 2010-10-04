@@ -59,8 +59,8 @@ public class SCSessionService extends SCService implements ISessionService {
 	private ITimerRun timerRun;
 	/** The timer task. */
 	private TimerTask timerTask;
-	/** The session dead, marks state of a session. */
-	private volatile boolean sessionDead;
+	/** The session active, marks state of a session. */
+	private volatile boolean sessionActive;
 
 	private int scResponseTimeMillis;
 
@@ -77,7 +77,7 @@ public class SCSessionService extends SCService implements ISessionService {
 		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.serviceContext = new ServiceContext(context, this);
 		this.timerRun = null;
-		this.sessionDead = false;
+		this.sessionActive = false;
 		this.scResponseTimeMillis = Constants.OPERATION_TIMEOUT_MILLIS_SHORT;
 	}
 
@@ -114,7 +114,9 @@ public class SCSessionService extends SCService implements ISessionService {
 				throw new SCMPValidatorException(SCMPError.HV_ERROR, "data too big - over 60Kb");
 			}
 		}
-		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+		if (sessionInfo != null) {
+			ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+		}
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		ValidatorUtility.validateInt(1, echoIntervalInSeconds, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
 		this.msgId.reset();
@@ -124,6 +126,7 @@ public class SCSessionService extends SCService implements ISessionService {
 		createSessionCall.setSessionInfo(sessionInfo);
 		createSessionCall.setEchoIntervalSeconds(echoIntervalInSeconds);
 		createSessionCall.setRequestBody(data);
+		createSessionCall.setCompressed(true);
 		try {
 			createSessionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
@@ -140,10 +143,11 @@ public class SCSessionService extends SCService implements ISessionService {
 			throw ex;
 		}
 		this.sessionId = reply.getSessionId();
+		this.sessionActive = true;
 		// trigger session timeout
 		this.timerRun = new SessionTimeouter((int) echoIntervalInSeconds);
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		this.timer.schedule(timerTask, (int) (echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR));
+		SCSessionService.timer.schedule(timerTask, (int) (echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR));
 	}
 
 	/** {@inheritDoc} */
@@ -176,7 +180,7 @@ public class SCSessionService extends SCService implements ISessionService {
 			try {
 				deleteSessionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				if (this.sessionDead) {
+				if (this.sessionActive == false) {
 					// ignore errors in state of dead session
 					return;
 				}
@@ -184,7 +188,7 @@ public class SCSessionService extends SCService implements ISessionService {
 			}
 			SCMPMessage reply = this.callback.getMessageSync();
 			if (reply.isFault()) {
-				if (this.sessionDead) {
+				if (this.sessionActive == false) {
 					// ignore errors in state of dead session
 					return;
 				}
@@ -206,8 +210,8 @@ public class SCSessionService extends SCService implements ISessionService {
 
 	@Override
 	public synchronized SCMessage execute(SCMessage requestMsg, int timeoutInSeconds) throws Exception {
-		if (this.sessionDead) {
-			throw new SCServiceException("execute not possible, broken session.");
+		if (this.sessionActive == false) {
+			throw new SCServiceException("execute not possible, no active session.");
 		}
 		if (requestMsg == null) {
 			throw new InvalidParameterException("Message must be set.");
@@ -247,7 +251,7 @@ public class SCSessionService extends SCService implements ISessionService {
 		}
 		// trigger session timeout
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		this.timer.schedule(new TimerTaskWrapper(this.timerRun), (long) this.timerRun.getTimeoutMillis());
+		SCSessionService.timer.schedule(this.timerTask, (long) this.timerRun.getTimeoutMillis());
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
@@ -265,8 +269,8 @@ public class SCSessionService extends SCService implements ISessionService {
 	@Override
 	public synchronized void execute(SCMessage requestMsg, ISCMessageCallback callback, int timeoutInSeconds)
 			throws Exception {
-		if (this.sessionDead) {
-			throw new SCServiceException("execute not possible, broken session.");
+		if (this.sessionActive == false) {
+			throw new SCServiceException("execute not possible, no active session.");
 		}
 		if (callback == null) {
 			throw new InvalidParameterException("Callback must be set.");
@@ -308,7 +312,7 @@ public class SCSessionService extends SCService implements ISessionService {
 		super.setRequestComplete();
 		// trigger session timeout
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		this.timer.schedule(new TimerTaskWrapper(this.timerRun), (long) this.timerRun.getTimeoutMillis());
+		SCSessionService.timer.schedule(this.timerTask, (long) this.timerRun.getTimeoutMillis());
 	}
 
 	/** {@inheritDoc} */
@@ -386,19 +390,18 @@ public class SCSessionService extends SCService implements ISessionService {
 				SCSessionService.this.echo();
 				// trigger session timeout
 				SCSessionService.this.timerTask = new TimerTaskWrapper(SCSessionService.this.timerRun);
-				SCSessionService.this.timer.schedule(new TimerTaskWrapper(SCSessionService.this.timerRun), (long) this
-						.getTimeoutMillis());
+				SCSessionService.timer.schedule(SCSessionService.this.timerTask, (long) this.getTimeoutMillis());
 			} catch (Exception e) {
 				// echo failed - mark session as dead
-				SCSessionService.this.sessionDead = true;
-				SCSessionService.this.timer.cancel();
+				SCSessionService.this.sessionActive = false;
+				SCSessionService.this.timerTask.cancel();
 			}
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
-			return this.timeoutInSeconds;
+			return this.timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR;
 		}
 	}
 }

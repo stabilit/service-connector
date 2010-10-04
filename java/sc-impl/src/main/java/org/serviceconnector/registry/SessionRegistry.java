@@ -31,7 +31,6 @@ import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
 
-
 /**
  * The Class SessionRegistry. Registry stores entries for properly created sessions. Registry is also responsible for
  * observing the session timeout and initiating clean up in case of a broken session.
@@ -212,7 +211,8 @@ public class SessionRegistry extends Registry<String, Session> {
 			// aborts session on server
 			abortMessage.setServiceName(server.getServiceName());
 			abortMessage.setSessionId(session.getId());
-			server.serverAbortSession(abortMessage, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+			server.serverAbortSession(abortMessage, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+					* Constants.SEC_TO_MILLISEC_FACTOR);
 			// removes session on server
 			session.getServer().removeSession(session);
 			SessionLogger sessionLogger = SessionLogger.getInstance();
@@ -222,7 +222,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
-			return this.timeoutSeconds;
+			return this.timeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR;
 		}
 
 		/**

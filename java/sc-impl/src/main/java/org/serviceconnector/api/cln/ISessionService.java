@@ -34,8 +34,7 @@ public interface ISessionService extends IService {
 	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
 	 *            Very important for SC to detect broken sessions.
 	 * @param timeoutInSeconds
-	 *            the echo timeout, time an SC has to observe for receiving echo reply from server. Echo gets executed
-	 *            to prevent session timeout.
+	 *            the echo timeout, time an SC has to observe for receiving echo reply from server.
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -64,8 +63,7 @@ public interface ISessionService extends IService {
 	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
 	 *            Very important for SC to detect broken sessions.
 	 * @param timeoutInSeconds
-	 *            the echo timeout, time an SC has to observe for receiving echo reply from server. Echo gets executed
-	 *            to prevent session timeout.
+	 *            the echo timeout, time an SC has to observe for receiving echo reply from server.
 	 * @param data
 	 *            the data
 	 * @throws Exception

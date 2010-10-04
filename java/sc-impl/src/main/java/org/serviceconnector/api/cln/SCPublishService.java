@@ -26,8 +26,10 @@ import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
-import org.serviceconnector.net.req.SCRequester;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.net.req.SCRequester;
+import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -36,7 +38,6 @@ import org.serviceconnector.service.ISCContext;
 import org.serviceconnector.service.ISCMessageCallback;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
-
 
 /**
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
@@ -47,8 +48,9 @@ public class SCPublishService extends SCService implements IPublishService {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCPublishService.class);
 
-	private boolean subscribed = false;
+	private volatile boolean subscribed = false;
 	private int noDataInterval;
+	private ISCMessageCallback scMessageCallback;
 
 	/**
 	 * Instantiates a new publish service.
@@ -63,6 +65,7 @@ public class SCPublishService extends SCService implements IPublishService {
 		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.serviceContext = new ServiceContext(context, this);
 		this.noDataInterval = 0;
+		this.scMessageCallback = null;
 	}
 
 	/** {@inheritDoc} */
@@ -78,15 +81,16 @@ public class SCPublishService extends SCService implements IPublishService {
 		}
 		ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 		if (mask.indexOf('%') != -1) {
-			throw new InvalidParameterException("Mask contains percent sign, not allowed.");
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "Percent sign not allowed in mask.");
 		}
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.msgId.incrementMsgSequenceNr();
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		changeSubscriptionCall.setMask(mask);
-		changeSubscriptionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		this.callback.getMessageSync();
+		ISCMPSynchronousCallback callback = new ServiceCallback();
+		changeSubscriptionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		callback.getMessageSync();
 	}
 
 	/** {@inheritDoc} */
@@ -112,24 +116,24 @@ public class SCPublishService extends SCService implements IPublishService {
 
 	@Override
 	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
-			ISCMessageCallback callback, int timeoutInSeconds) throws Exception {
+			ISCMessageCallback scMessageCallback, int timeoutInSeconds) throws Exception {
 		if (this.subscribed) {
 			throw new SCServiceException("already subscribed");
 		}
 		ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 		if (mask.indexOf('%') != -1) {
-			throw new InvalidParameterException("Mask contains percent sign, not allowed.");
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "Percent sign not allowed in mask.");
 		}
 		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		ValidatorUtility.validateInt(1, noDataInterval, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
-		if (callback == null) {
+		if (scMessageCallback == null) {
 			throw new InvalidParameterException("Callback must be set.");
 		}
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		this.subscribed = true;
 		this.noDataInterval = noDataInterval;
 		this.msgId.reset();
-		this.callback = new PublishServiceCallback(callback);
+		this.scMessageCallback = scMessageCallback;
+		ISCMPSynchronousCallback callback = new ServiceCallback();
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);
 		subscribeCall.setMask(mask);
@@ -139,16 +143,19 @@ public class SCPublishService extends SCService implements IPublishService {
 			subscribeCall.setAuthenticationId(authenticationId);
 		}
 		try {
-			subscribeCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			subscribeCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
+			this.subscribed = false;
 			throw new SCServiceException("subscribe failed", e);
 		}
-		SCMPMessage reply = this.callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync();
 		if (reply.isFault()) {
+			this.subscribed = false;
 			SCMPFault fault = (SCMPFault) reply;
 			throw new SCServiceException("subscribe failed", fault.getCause());
 		}
 		this.sessionId = reply.getSessionId();
+		this.subscribed = true;
 		this.receivePublication();
 	}
 
@@ -165,11 +172,15 @@ public class SCPublishService extends SCService implements IPublishService {
 	 *             the exception
 	 */
 	private synchronized void receivePublication() throws Exception {
+		if (this.subscribed == false || this.sessionId == null) {
+			return;
+		}
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		this.msgId.incrementMsgSequenceNr();
-		receivePublicationCall.invoke(this.callback, Constants.SEC_TO_MILLISEC_FACTOR
-				* Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataInterval);
+		ISCMPSynchronousCallback callback = new PublishServiceCallback(this.scMessageCallback);
+		receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR
+				* (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataInterval));
 	}
 
 	/** {@inheritDoc} */
@@ -187,24 +198,23 @@ public class SCPublishService extends SCService implements IPublishService {
 		}
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		try {
-			this.subscribed = false;
 			this.msgId.incrementMsgSequenceNr();
 			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
+			ISCMPSynchronousCallback callback = new ServiceCallback(true);
 			try {
-				unsubscribeCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+				unsubscribeCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				throw new SCServiceException("subscribe failed", e);
+				throw new SCServiceException("unsubscribe failed", e);
 			}
-			SCMPMessage reply = this.callback.getMessageSync();
+			SCMPMessage reply = callback.getMessageSync();
 			if (reply.isFault()) {
 				SCMPFault fault = (SCMPFault) reply;
-				throw new SCServiceException("subscribe failed", fault.getCause());
+				throw new SCServiceException("unsubscribe failed", fault.getCause());
 			}
 		} finally {
+			this.subscribed = false;
 			this.sessionId = null;
-			this.msgId = null;
-			this.callback = null;
 		}
 	}
 
@@ -227,11 +237,6 @@ public class SCPublishService extends SCService implements IPublishService {
 		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage reply) {
-			if (this.synchronous) {
-				// interested thread waits for message
-				super.callback(reply);
-				return;
-			}
 			if (SCPublishService.this.subscribed == false) {
 				// client is not subscribed anymore - stop continuing
 				return;

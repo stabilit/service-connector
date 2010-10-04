@@ -24,7 +24,6 @@ import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SCMPClnCreateSessionCall. Call tries creating a session to a backend server over a SC.
  * 
@@ -92,5 +91,17 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	 */
 	public void setEchoIntervalSeconds(int echoInterval) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval);
+	}
+
+	/**
+	 * Sets the compression.
+	 * 
+	 * @param compressed
+	 *            the compression
+	 */
+	public void setCompressed(boolean compressed) {
+		if (compressed) {
+			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+		}
 	}
 }

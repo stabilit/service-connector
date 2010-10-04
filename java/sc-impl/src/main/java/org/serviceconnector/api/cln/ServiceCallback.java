@@ -24,11 +24,12 @@ package org.serviceconnector.api.cln;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCService;
+import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.ISCMessageCallback;
+import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.SynchronousCallback;
-
 
 /**
  * The Class ServiceCallback. Base class for a service callback.
@@ -79,7 +80,20 @@ public class ServiceCallback extends SynchronousCallback {
 	public void callback(SCMPMessage scmpReply) {
 		if (this.synchronous) {
 			// interested thread waits for message
+			if (scmpReply.isFault()) {
+				SCMPFault fault = (SCMPFault) scmpReply;
+				SCServiceException ex = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				super.callback(ex);
+				return;
+			}
 			super.callback(scmpReply);
+			return;
+		}
+		if (scmpReply.isFault()) {
+			SCMPFault fault = (SCMPFault) scmpReply;
+			SCServiceException ex = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			this.service.setRequestComplete();
+			this.messageCallback.callback(ex);
 			return;
 		}
 		SCMessage messageReply = new SCMessage();
