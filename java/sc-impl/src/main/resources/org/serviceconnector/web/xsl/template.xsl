@@ -98,13 +98,23 @@
            Status
            <xsl:choose>
              <xsl:when test="$head/meta/@scstatus = 'success'">
-               <div style="padding:2px; float:right">
-                 <img border="0" width="20" height="20" src="green.png"></img>             
+               <div id="sc_status_area" style="padding:2px; float:right">
+                 <div id="sc_status_area_success" style="visibility:visible; float:right">
+                   <img border="0" width="20" height="20" src="green.png"/>
+                 </div>             
+                 <div id="sc_status_area_error" style="visibility:hidden; float:right">
+                    <img border="0" width="20" height="20" src="red.png"/>             
+                 </div>
                </div>
              </xsl:when>
              <xsl:otherwise>
-               <div style="padding:2px; float:right">
-                 <img border="0" width="24" height="24" src="red.png"></img>             
+               <div id="sc_status_area" style="padding:2px; float:right">
+                 <div id="sc_status_area_success" style="visibility:hidden; float:right">
+                   <img border="0" width="20" height="20" src="green.png"/>
+                 </div>             
+                 <div id="sc_status_area_error" style="visibility:visible; float:right">
+                    <img border="0" width="20" height="20" src="red.png"/>             
+                 </div>
                </div>
              </xsl:otherwise>
            </xsl:choose>
