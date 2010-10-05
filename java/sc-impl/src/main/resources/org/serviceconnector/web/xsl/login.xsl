@@ -3,6 +3,8 @@
     <xsl:import href="template.xsl"/>
     <xsl:variable name="error" select="/sc-web/head/meta[@type = 'error']"/>
     <xsl:variable name="query" select="/sc-web/head/query"/>
+	<xsl:template name="sc_script">
+	</xsl:template>
     <xsl:template name="sc_content">
       <div id="sc_login">
         <div id="sc_login_title">

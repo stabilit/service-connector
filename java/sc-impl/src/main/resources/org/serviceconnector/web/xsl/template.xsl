@@ -93,6 +93,7 @@
 	  <xsl:call-template name="sc_statistics"/>
 	</xsl:template>
 	<xsl:template name="sc_script">
+	   setInterval('infoCall()', 5000);	
 	</xsl:template>
 	<xsl:template name="sc_status">
       <div class="sc_table" style="width:230px;">

@@ -101,8 +101,6 @@ function infoCall(name) {
 
 var ajaxInfo = new AjaxCallObject('Info', 'ajax/info', infoCallback, errorCallback);
 
-setInterval('infoCall()', 5000);
-
 function contentCallback() {
 	var scContent = document.getElementById("sc_content");
 	if (scContent != null) {

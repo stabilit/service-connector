@@ -3,6 +3,7 @@
     <xsl:import href="template.xsl"/>
     <xsl:variable name="body" select="/sc-web/body"/>
     <xsl:template name="sc_script">
+      setInterval('infoCall()', 5000);	    
       setInterval("contentCall('services')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
