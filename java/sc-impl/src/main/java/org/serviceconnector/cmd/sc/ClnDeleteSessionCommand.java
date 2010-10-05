@@ -33,7 +33,6 @@ import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
 
-
 /**
  * The Class ClnDeleteSessionCommand. Responsible for validation and execution of delete session command. Deleting a
  * session means: Free up backend server from session and delete session entry in SC session registry.
@@ -71,8 +70,8 @@ public class ClnDeleteSessionCommand extends CommandAdapter implements IPassThro
 		Server server = session.getServer();
 		SCMPMessage reply = null;
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		server.deleteSession(message, callback,
-				((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		server.deleteSession(message, callback, ((Integer) request
+				.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		reply = callback.getMessageSync();
 
 		if (reply.isFault()) {

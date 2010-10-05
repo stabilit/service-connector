@@ -31,7 +31,6 @@ import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;
 import org.serviceconnector.util.TimerTaskWrapper;
 
-
 /**
  * The Class SubscriptionQueue. The SubscriptionQueue is responsible for queuing incoming data from server, to inform
  * subscriptions about new arrived messages, to observe there timeouts and to know there current position in queue
@@ -103,6 +102,9 @@ public class SubscriptionQueue<E> {
 	 */
 	public E getMessage(String sessionId) {
 		TimeAwareDataPointer ptr = this.pointerMap.get(sessionId);
+		if (ptr == null) {
+			return null;
+		}
 		LinkedNode<E> node = ptr.getNode();
 		if (node == null) {
 			// nothing to poll data pointer points to null - return null
@@ -389,6 +391,10 @@ public class SubscriptionQueue<E> {
 			this.cancel();
 			if (node != null) {
 				this.node.dereference();
+			}
+			if (this.listening) {
+				// necessary for responding CRP to client! Very important!
+				this.timerRun.timeout();
 			}
 			this.node = null;
 			this.timerRun = null;

@@ -22,8 +22,7 @@ public class ProcessesController {
 	}
 
 	public String getLog4jPath(String log4jSCProperties) {
-		String log4jPath = userDir + fs + "src" + fs + "main" + fs + "resources" + fs
-				+ log4jSCProperties;
+		String log4jPath = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSCProperties;
 
 		return log4jPath;
 	}
@@ -70,6 +69,15 @@ public class ProcessesController {
 			File file = new File(fileName);
 			if (file.exists()) {
 				file.delete();
+				for (int i = 0; i < 10; i++) {
+
+					if (file.exists() == false) {
+						return;
+					}
+					Thread.sleep(500);
+				}
+				logger.error("deleteFile");
+				throw new TimeoutException("File was not deleted within allowed wait time.");
 			}
 		} catch (Exception e) {
 			logger.error("deleteFile", e);
@@ -77,7 +85,7 @@ public class ProcessesController {
 		}
 	}
 
-	public boolean existsFile(String fileName) throws Exception {
+	public synchronized boolean existsFile(String fileName) throws Exception {
 		for (int i = 0; i < 10; i++) {
 			File file = new File(fileName);
 			if (file.exists()) {
@@ -94,9 +102,9 @@ public class ProcessesController {
 		String fileName = getPidLogPath(log4jSCProperties);
 		deleteFile(fileName);
 
-		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs
-				+ ".." + fs + "service-connector" + fs + "target" + fs + "sc.jar -sc.configuration " + userDir + fs
-				+ "src" + fs + "main" + fs + "resources" + fs + scProperties;
+		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs + ".." + fs
+				+ "service-connector" + fs + "target" + fs + "sc.jar -sc.configuration " + userDir + fs + "src" + fs
+				+ "main" + fs + "resources" + fs + scProperties;
 		Process scProcess = Runtime.getRuntime().exec(command);
 
 		existsFile(fileName);
@@ -104,21 +112,23 @@ public class ProcessesController {
 		return scProcess;
 	}
 
-	public Process restartSC(Process scProcess, String log4jSCProperties, String scProperties)
-			throws Exception {
+	public Process restartSC(Process scProcess, String log4jSCProperties, String scProperties) throws Exception {
 		scProcess.destroy();
+		scProcess.waitFor();
 		return startSC(log4jSCProperties, scProperties);
 	}
 
 	public void stopProcess(Process p, String log4jProperties) throws Exception {
 		p.destroy();
+		p.waitFor();
 		deleteFile(getPidLogPath(log4jProperties));
 	}
 
 	/**
 	 * Creates a new JVM and starts a SCServer process in that JVM
 	 * 
-	 * @param serverType "session" or "publish"
+	 * @param serverType
+	 *            "session" or "publish"
 	 * @param log4jSrvProperties
 	 * @param listenerPort
 	 * @param port
@@ -127,8 +137,8 @@ public class ProcessesController {
 	 * @return Process with JVM in which the server is started
 	 * @throws Exception
 	 */
-	public Process startServer(String serverType, String log4jSrvProperties, int listenerPort,
-			int port, int maxConnections, String[] serviceNames) throws Exception {
+	public Process startServer(String serverType, String log4jSrvProperties, int listenerPort, int port,
+			int maxConnections, String[] serviceNames) throws Exception {
 		String log4jPath = getLog4jPath(log4jSrvProperties);
 		String fileName = getPidLogPath(log4jSrvProperties);
 		deleteFile(fileName);
@@ -137,16 +147,16 @@ public class ProcessesController {
 			services += " " + service;
 		}
 
-		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs
-				+ "target" + fs + "test-server.jar " + serverType + " " + listenerPort + " " + port + " "
-				+ maxConnections + " " + fileName + services;
+		String command = "java -Dlog4j.configuration=file:" + log4jPath + " -jar " + userDir + fs + "target" + fs
+				+ "test-server.jar " + serverType + " " + listenerPort + " " + port + " " + maxConnections + " "
+				+ fileName + services;
 		Process srvProcess = Runtime.getRuntime().exec(command);
 
 		existsFile(fileName);
 
 		return srvProcess;
 	}
-	
+
 	public Process restartServer(Process srvProcess, String serverType, String log4jSrvProperties, int listenerPort,
 			int port, int maxConnections, String[] serviceNames) throws Exception {
 		stopProcess(srvProcess, log4jSrvProperties);

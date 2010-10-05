@@ -250,7 +250,7 @@ public class ChangeSubscriptionClientTest {
 			for (int j = 0; j < 10; j++) {
 				IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 				service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
-			//	service.changeSubscription(TestConstants.mask);
+				service.changeSubscription(TestConstants.mask);
 				Thread.sleep(5); // little sleep, Netty has problems sending very fast will be done next version!
 				assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 				assertEquals(true, service.isSubscribed());
@@ -272,6 +272,7 @@ public class ChangeSubscriptionClientTest {
 
 		@Override
 		public void callback(Exception e) {
+			System.err.println(e);
 		}
 	}
 }

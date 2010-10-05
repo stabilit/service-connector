@@ -88,7 +88,7 @@ public class SCPublishService extends SCService implements IPublishService {
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		changeSubscriptionCall.setMask(mask);
-		ISCMPSynchronousCallback callback = new ServiceCallback();
+		ISCMPSynchronousCallback callback = new ServiceCallback(true);
 		changeSubscriptionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		callback.getMessageSync();
 	}
@@ -133,7 +133,7 @@ public class SCPublishService extends SCService implements IPublishService {
 		this.noDataInterval = noDataInterval;
 		this.msgId.reset();
 		this.scMessageCallback = scMessageCallback;
-		ISCMPSynchronousCallback callback = new ServiceCallback();
+		ISCMPSynchronousCallback callback = new ServiceCallback(true);
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);
 		subscribeCall.setMask(mask);

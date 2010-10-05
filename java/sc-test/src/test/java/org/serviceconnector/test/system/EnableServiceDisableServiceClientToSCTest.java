@@ -17,13 +17,11 @@ import org.serviceconnector.service.SCServiceException;
 
 public class EnableServiceDisableServiceClientToSCTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(EnableServiceDisableServiceClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(EnableServiceDisableServiceClientToSCTest.class);
 
 	private static Process scProcess;
 	private Process srvProcess;
 
-	private int threadCount = 0;
 	private ISCClient client;
 	private Exception ex;
 
@@ -41,11 +39,9 @@ public class EnableServiceDisableServiceClientToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
-		threadCount = Thread.activeCount();
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] {
-						TestConstants.serviceName, TestConstants.serviceNameAlt,
-						TestConstants.serviceNameSessionDisabled });
+				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
+						TestConstants.serviceNameAlt, TestConstants.serviceNameSessionDisabled });
 
 		client = new SCClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
@@ -59,9 +55,10 @@ public class EnableServiceDisableServiceClientToSCTest {
 		}
 		client = null;
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
+		//TODO JOT .. still necessary??
+		Thread.sleep(50); // little sleep because of stopping process
 		srvProcess = null;
 		ex = null;
-		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@AfterClass
@@ -79,33 +76,28 @@ public class EnableServiceDisableServiceClientToSCTest {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
-		assertEquals(false, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
 	@Test
-	public void createSession_onInitiallyDisabledServiceThatIsEnabledByClient_sessionIsCreated()
-			throws Exception {
+	public void createSession_onInitiallyDisabledServiceThatIsEnabledByClient_sessionIsCreated() throws Exception {
 		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
 		client.enableService(TestConstants.serviceNameSessionDisabled);
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
 
-		ISessionService sessionService = client
-				.newSessionService(TestConstants.serviceNameSessionDisabled);
+		ISessionService sessionService = client.newSessionService(TestConstants.serviceNameSessionDisabled);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
-		assertEquals(false, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 		client.disableService(TestConstants.serviceNameSessionDisabled);
 	}
 
 	@Test
-	public void createSession_onInitiallyEnabledServiceThatIsDisabledByClient_throwsException()
-			throws Exception {
+	public void createSession_onInitiallyEnabledServiceThatIsDisabledByClient_throwsException() throws Exception {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 
 		client.disableService(TestConstants.serviceName);
@@ -119,15 +111,13 @@ public class EnableServiceDisableServiceClientToSCTest {
 		}
 		assertEquals(true, ex instanceof SCServiceException);
 		assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
-		assertEquals(true, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 
 		client.enableService(TestConstants.serviceName);
 	}
 
 	@Test
-	public void createSession_onEnabledServiceThatIsDisabledAndThenEnabledAgain_sessionIsCreated()
-			throws Exception {
+	public void createSession_onEnabledServiceThatIsDisabledAndThenEnabledAgain_sessionIsCreated() throws Exception {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 		client.disableService(TestConstants.serviceName);
 		client.enableService(TestConstants.serviceName);
@@ -135,8 +125,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
-		assertEquals(false, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -153,8 +142,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 
 		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
-		assertEquals(false, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -169,8 +157,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 
 			ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
 			sessionService.createSession("sessionInfo", 300, 60);
-			assertEquals(false, sessionService.getSessionId() == null
-					|| sessionService.getSessionId().isEmpty());
+			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 			sessionService.deleteSession();
 		}
 	}

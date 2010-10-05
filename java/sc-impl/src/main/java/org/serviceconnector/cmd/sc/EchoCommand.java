@@ -27,6 +27,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
 
 
@@ -57,12 +58,15 @@ public class EchoCommand extends CommandAdapter implements IPassThroughPartMsg {
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();
-		// refreshes the session timeout
-		this.getSessionById(sessionId);
+		String sessionId = message.getSessionId();		
+		Session session = this.getSessionById(sessionId);
+		// cancel session timeout
+		this.sessionRegistry.cancelSessionTimeout(session);
 		message.removeHeader(SCMPHeaderAttributeKey.CLN_REQ_ID);
 		message.setIsReply(true);
 		response.setSCMP(message);
+		// schedule session timeout
+		this.sessionRegistry.scheduleSessionTimeout(session);
 	}
 
 	/**

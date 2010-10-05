@@ -1,7 +1,5 @@
 package org.serviceconnector.test.integration.srv;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -13,15 +11,14 @@ import org.serviceconnector.api.srv.ISCPublishServer;
 import org.serviceconnector.api.srv.ISCServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
 public class PublishConnectionTypeTcpTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PublishConnectionTypeTcpTest.class);
 
-	private int threadCount = 0;
 	private ISCPublishServer server;
 	private Exception ex;
 
@@ -47,7 +44,6 @@ public class PublishConnectionTypeTcpTest {
 
 	@Before
 	public void setUp() throws Exception {
-		threadCount = Thread.activeCount();
 		server = new SCPublishServer();
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP,
@@ -60,7 +56,6 @@ public class PublishConnectionTypeTcpTest {
 		server.destroyServer();
 		server = null;
 		ex = null;
-		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@Test(expected = SCMPValidatorException.class)

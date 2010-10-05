@@ -114,9 +114,7 @@ public class SCSessionService extends SCService implements ISessionService {
 				throw new SCMPValidatorException(SCMPError.HV_ERROR, "data too big - over 60Kb");
 			}
 		}
-		if (sessionInfo != null) {
-			ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
-		}
+		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		ValidatorUtility.validateInt(1, echoIntervalInSeconds, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
 		this.msgId.reset();

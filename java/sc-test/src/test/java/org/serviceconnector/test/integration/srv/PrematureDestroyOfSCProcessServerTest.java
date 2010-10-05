@@ -97,6 +97,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 10, 10,
 				new CallBack());
 		scProcess.destroy();
+		scProcess.waitFor();
 		try {
 			server.deregisterServer(TestConstants.serviceName);
 		} catch (SCServiceException ex) {
@@ -109,6 +110,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 10, 10,
 				new CallBack());
 		scProcess.destroy();
+		scProcess.waitFor();
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameAlt, 10, 10,
 				new CallBack());
 	}
@@ -118,6 +120,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 10, 10,
 				new CallBack());
 		scProcess.destroy();
+		scProcess.waitFor();
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 	}
 
@@ -126,6 +129,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 10, 10,
 				new CallBack());
 		scProcess.destroy();
+		scProcess.waitFor();
 		server.setImmediateConnect(false);
 	}
 

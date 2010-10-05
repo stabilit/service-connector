@@ -1,7 +1,5 @@
 package org.serviceconnector.test.integration.srv;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -13,15 +11,14 @@ import org.serviceconnector.api.srv.ISCPublishServer;
 import org.serviceconnector.api.srv.ISCServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
 public class PublishConnectionTypeHttpTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PublishConnectionTypeHttpTest.class);
 
-	private int threadCount = 0;
 	private ISCPublishServer server;
 	private Exception ex;
 
@@ -47,7 +44,6 @@ public class PublishConnectionTypeHttpTest {
 
 	@Before
 	public void setUp() throws Exception {
-		threadCount = Thread.activeCount();
 		server = new SCPublishServer();
 		((SCPublishServer) server).setConnectionType("netty.http");
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
@@ -61,7 +57,6 @@ public class PublishConnectionTypeHttpTest {
 		server.destroyServer();
 		server = null;
 		ex = null;
-		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@Test(expected = SCMPValidatorException.class)
@@ -226,11 +221,13 @@ public class PublishConnectionTypeHttpTest {
 	}
 
 	// TODO FJU I don't know the intended behavior of this
+	// TODO JOT verify with jan .. object not possible only byte & string
 	@Test
 	public void publish_dataEmptyObject_passes() throws Exception {
 		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new Object());
 	}
 
+	// TODO JOT verify with jan .. object not possible only byte & string
 	@Test
 	public void publish_dataSCMessage_passes() throws Exception {
 		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new SCMessage());

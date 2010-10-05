@@ -30,7 +30,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
 
-
 /**
  * The Class SCRequester. Defines behavior of requester in the context of Service Connector.
  * 
@@ -56,14 +55,19 @@ public class Requester implements IRequester {
 		// return an already connected live instance
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		IConnectionContext connectionContext = connection.getContext();
-		ISCMPCallback requesterCallback = new RequesterSCMPCallback(callback, connectionContext);
-		// setting up operation timeout after successful send
-		TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
-		RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
-		reqCallback.setOperationTimeoutTask(task);
-		reqCallback.setTimeoutMillis(timeoutInMillis);
-		timer.schedule(task, (long) timeoutInMillis);
-		connection.send(message, requesterCallback);
+		try {
+			ISCMPCallback requesterCallback = new RequesterSCMPCallback(callback, connectionContext);
+			// setting up operation timeout after successful send
+			TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
+			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
+			reqCallback.setOperationTimeoutTask(task);
+			reqCallback.setTimeoutMillis(timeoutInMillis);
+			timer.schedule(task, (long) timeoutInMillis);
+			connection.send(message, requesterCallback);
+		} catch (Exception ex) {
+			this.reqContext.getConnectionPool().freeConnection(connection);
+			throw ex;
+		}
 	}
 
 	/** {@inheritDoc} */

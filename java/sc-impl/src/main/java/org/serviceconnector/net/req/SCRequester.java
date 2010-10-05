@@ -67,47 +67,51 @@ public class SCRequester implements IRequester {
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		IConnectionContext connectionContext = connection.getContext();
 		SCMPMessageId msgId = this.reqContext.getSCMPMessageId();
-
-		ISCMPCallback requesterCallback = null;
-		// differ if message is large or not, sending procedure is different
-		if (message.isLargeMessage()) {
-			// SCMPCompositeSender handles splitting, works like an iterator
-			SCMPCompositeSender compositeSender = new SCMPCompositeSender(message);
-			requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, compositeSender,
-					msgId);
-			// setting up operation timeout after successful send
-			TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
-			SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
-			reqCallback.setOperationTimeoutTask(task);
-			reqCallback.setTimeoutMillis(timeoutInMillis);
-			timer.schedule(task, (long) timeoutInMillis);
-			// extract first part message & send
-			SCMPMessage part = compositeSender.getFirst();
-			// handling messageId
-			if (SCMPMessageId.necessaryToWrite(part.getMessageType())) {
-				msgId.incrementPartSequenceNr();
-				part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgId.getCurrentMessageID());
+		try {
+			ISCMPCallback requesterCallback = null;
+			// differ if message is large or not, sending procedure is different
+			if (message.isLargeMessage()) {
+				// SCMPCompositeSender handles splitting, works like an iterator
+				SCMPCompositeSender compositeSender = new SCMPCompositeSender(message);
+				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext,
+						compositeSender, msgId);
+				// setting up operation timeout after successful send
+				TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
+				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
+				reqCallback.setOperationTimeoutTask(task);
+				reqCallback.setTimeoutMillis(timeoutInMillis);
+				timer.schedule(task, (long) timeoutInMillis);
+				// extract first part message & send
+				SCMPMessage part = compositeSender.getFirst();
+				// handling messageId
+				if (SCMPMessageId.necessaryToWrite(part.getMessageType())) {
+					msgId.incrementPartSequenceNr();
+					part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgId.getCurrentMessageID());
+				}
+				// send
+				connection.send(part, requesterCallback);
+			} else {
+				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, msgId);
+				// setting up operation timeout after successful send
+				TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
+				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
+				reqCallback.setOperationTimeoutTask(task);
+				reqCallback.setTimeoutMillis(timeoutInMillis);
+				timer.schedule(task, (long) timeoutInMillis);
+				if (message.isGroup()) {
+					// increment messageId in case of group call
+					msgId.incrementPartSequenceNr();
+				}
+				// handling messageId
+				if (SCMPMessageId.necessaryToWrite(message.getMessageType())) {
+					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgId.getCurrentMessageID());
+				}
+				// process send
+				connection.send(message, requesterCallback);
 			}
-			// send
-			connection.send(part, requesterCallback);
-		} else {
-			requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, msgId);
-			// setting up operation timeout after successful send
-			TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
-			SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
-			reqCallback.setOperationTimeoutTask(task);
-			reqCallback.setTimeoutMillis(timeoutInMillis);
-			timer.schedule(task, (long) timeoutInMillis);
-			if (message.isGroup()) {
-				// increment messageId in case of group call
-				msgId.incrementPartSequenceNr();
-			}
-			// handling messageId
-			if (SCMPMessageId.necessaryToWrite(message.getMessageType())) {
-				message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgId.getCurrentMessageID());
-			}
-			// process send
-			connection.send(message, requesterCallback);
+		} catch (Exception ex) {
+			this.reqContext.getConnectionPool().freeConnection(connection);
+			throw ex;
 		}
 	}
 

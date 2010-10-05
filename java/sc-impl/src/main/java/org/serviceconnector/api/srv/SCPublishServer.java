@@ -23,11 +23,14 @@ package org.serviceconnector.api.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.api.srv.ISCPublishServer;
-import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPPublishCall;
-
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class SCPublishServer. A Server that publishes messages to an SC.
@@ -40,14 +43,24 @@ public class SCPublishServer extends SCSessionServer implements ISCPublishServer
 	/** {@inheritDoc} */
 	@Override
 	public void publish(String serviceName, String mask, Object data) throws Exception {
+		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 		SrvService srvService = this.srvServiceRegistry.getSrvService(serviceName);
+		if (srvService == null) {
+			throw new SCServiceException("Service not found, service name: " + serviceName);
+		}
 		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(srvService
 				.getRequester(), serviceName);
 		publishCall.setRequestBody(data);
 		publishCall.setMask(mask);
-		publishCall
-				.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
-		this.callback.getMessageSync();
+		publishCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+				* Constants.SEC_TO_MILLISEC_FACTOR);
+		SCMPMessage message = this.callback.getMessageSync();
+		if(message.isFault()) {
+			SCMPFault fault = (SCMPFault) message;
+			throw new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+		}
 	}
 
 	/** {@inheritDoc} */

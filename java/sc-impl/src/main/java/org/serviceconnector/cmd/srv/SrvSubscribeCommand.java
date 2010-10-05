@@ -33,12 +33,11 @@ import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.ValidatorUtility;
 
-
 public class SrvSubscribeCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SrvSubscribeCommand.class);
-	
+
 	public SrvSubscribeCommand() {
 		this.commandValidator = new SrvSubscribeCommandValidator();
 	}
@@ -63,6 +62,7 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 		scMessage.setData(scmpMessage.getBody());
 		scMessage.setCompressed(scmpMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		scMessage.setSessionInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 		scMessage.setOperationTimeout(Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		scMessage.setSessionId(sessionId);
 

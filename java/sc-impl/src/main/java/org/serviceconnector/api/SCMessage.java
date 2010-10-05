@@ -20,28 +20,31 @@ import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
 
-
+// TODO: Auto-generated Javadoc
 /**
  * The Class SCMessage. A SCMessage is the basic transport unit to communicate with a Service Connector.
  * 
  * @author JTraber
  */
-public class SCMessage{
+public class SCMessage {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMessage.class);
-	
+
 	/** The message info. */
 	private String messageInfo;
+	/** The session info. */
+	private String sessionInfo;
 	/** The compressed - regards data part of the message. */
 	private boolean compressed;
 	/** The data. */
 	private Object data;
 	/** The session id - identifies session context of communication. */
 	private String sessionId;
-	/** The operation timeout in milliseconds - time to execute */
+
+	/** The operation timeout in milliseconds - time to execute. */
 	private int operationTimeout;
-	
+
 	/**
 	 * Instantiates a new SCMessage.
 	 */
@@ -51,6 +54,7 @@ public class SCMessage{
 		this.compressed = true;
 		this.data = null;
 		this.sessionId = null;
+		this.sessionInfo = null;
 	}
 
 	/**
@@ -81,6 +85,32 @@ public class SCMessage{
 			}
 		}
 		this.messageInfo = messageInfo;
+	}
+
+	/**
+	 * Gets the session info.
+	 * 
+	 * @return the session info
+	 */
+	public String getSessionInfo() {
+		return sessionInfo;
+	}
+
+	/**
+	 * Sets the session info.
+	 * 
+	 * @param sessionInfo
+	 *            Optional information passed together with the message body
+	 *            Any printable character, length > 0 and < 256 Byte<br>
+	 */
+	public void setSessionInfo(String sessionInfo) {
+		if (sessionInfo != null) {
+			int sessionInfoLength = sessionInfo.getBytes().length;
+			if (sessionInfoLength < 1 || sessionInfoLength > 256) {
+				throw new InvalidParameterException("Session info not within 1 to 256 bytes.");
+			}
+		}
+		this.sessionInfo = sessionInfo;
 	}
 
 	/**
@@ -157,15 +187,22 @@ public class SCMessage{
 	public boolean isFault() {
 		return false;
 	}
-	
+
 	/**
-	 * Gets the operation timeout, equals to the time accepted for request execution
-	 * @return
+	 * Gets the operation timeout, equals to the time accepted for request execution.
+	 * 
+	 * @return the operation timeout
 	 */
 	public int getOperationTimeout() {
 		return operationTimeout;
 	}
 
+	/**
+	 * Sets the operation timeout.
+	 * 
+	 * @param operationTimeout
+	 *            the new operation timeout
+	 */
 	public void setOperationTimeout(int operationTimeout) {
 		this.operationTimeout = operationTimeout;
 	}

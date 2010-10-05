@@ -110,19 +110,14 @@ public class SessionRegistry extends Registry<String, Session> {
 	}
 
 	/**
-	 * Gets the session. Session timeout resets if session is requested.
+	 * Gets the session.
 	 * 
 	 * @param key
 	 *            the key
 	 * @return the session
 	 */
 	public Session getSession(String key) {
-		Session session = super.get(key);
-		if (session != null && session.getEchoIntervalSeconds() != 0) {
-			// rescheduling session timeout - cancel an old timeouter is done inside
-			this.scheduleSessionTimeout(session);
-		}
-		return session;
+		return super.get(key);
 	}
 
 	/**
@@ -131,7 +126,11 @@ public class SessionRegistry extends Registry<String, Session> {
 	 * @param session
 	 *            the session
 	 */
-	private void scheduleSessionTimeout(Session session) {
+	public void scheduleSessionTimeout(Session session) {
+		if (session == null || session.getEchoIntervalSeconds() == 0) {
+			// no scheduling of session timeout
+			return;
+		}
 		// always cancel old timeouter before setting up a new one
 		this.cancelSessionTimeout(session);
 		TimerTaskWrapper sessionTimeouter = session.getSessionTimeouter();
@@ -149,7 +148,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 * @param session
 	 *            the session
 	 */
-	private void cancelSessionTimeout(Session session) {
+	public void cancelSessionTimeout(Session session) {
 		if (session == null) {
 			return;
 		}

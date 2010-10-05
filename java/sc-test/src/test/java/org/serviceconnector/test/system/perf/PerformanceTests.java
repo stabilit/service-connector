@@ -51,7 +51,8 @@ public class PerformanceTests {
 	public void tearDown() throws Exception {
 		try {
 			client.detach();
-		} catch (Exception e){}
+		} catch (Exception e) {
+		}
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
 		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
 		client = null;
@@ -78,12 +79,11 @@ public class PerformanceTests {
 		}
 		long stop = System.currentTimeMillis();
 
-		testLogger
-				.info("Time to execute 10000 messages with 128 byte body was:\t" + (stop - start));
+		testLogger.info("Time to execute 10000 messages with 128 byte body was:\t" + (stop - start));
 		assertEquals(true, stop - start < 25000);
 	}
-	
-	//TODO FJU after some time has broken session
+
+	// TODO FJU after some time has broken session
 	@Test
 	public void execute_1000000MessagesWith128BytesLongBody_outputsTime() throws Exception {
 
@@ -101,14 +101,12 @@ public class PerformanceTests {
 		}
 		long stop = System.currentTimeMillis();
 
-		testLogger
-				.info("Time to execute 10000 messages with 128 byte body was:\t" + (stop - start) + "ms.");
-		assertEquals(true, stop - start < 25000);
+		testLogger.info("Time to execute 1000000 messages with 128 byte body was:\t" + (stop - start) + "ms.");
+		assertEquals(true, stop - start < 1500000);
 	}
 
 	@Test
-	public void execute_10MBDataUsingDifferentBodyLength_outputsBestTimeAndBodyLength()
-			throws Exception {
+	public void execute_10MBDataUsingDifferentBodyLength_outputsBestTimeAndBodyLength() throws Exception {
 		long previousResult = Long.MAX_VALUE;
 		long result = Long.MAX_VALUE - 1;
 		int dataLength = 10 * TestConstants.dataLength1MB;
@@ -118,20 +116,19 @@ public class PerformanceTests {
 			previousResult = result;
 			messages++;
 
-			ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1,
-					messages, dataLength / messages);
+			ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength
+					/ messages);
 
 			result = clientCtrl.perform();
 
 			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
-					TestConstants.serviceNameAlt });
+							TestConstants.serviceNameAlt });
 		}
 
-		testLogger.info("Best performance to execute roughly 10MB of data messages was "
-				+ previousResult + "ms using " + --messages + " messages of " + dataLength / messages
-				+ "B data each.");
+		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
+				+ --messages + " messages of " + dataLength / messages + "B data each.");
 		assertEquals(true, previousResult < 25000);
 	}
 
@@ -147,20 +144,19 @@ public class PerformanceTests {
 			previousResult = result;
 			messages--;
 
-			ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1,
-					messages, dataLength / messages);
+			ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength
+					/ messages);
 
 			result = clientCtrl.perform();
-			
+
 			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
-					TestConstants.serviceNameAlt });
+							TestConstants.serviceNameAlt });
 		}
 
-		testLogger.info("Best performance to execute roughly 10MB of data messages was "
-				+ previousResult + "ms using " + ++messages + " messages of " + dataLength / messages
-				+ "B data each.");
+		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
+				+ ++messages + " messages of " + dataLength / messages + "B data each.");
 		assertEquals(true, previousResult < 25000);
 	}
 
@@ -177,8 +173,7 @@ public class PerformanceTests {
 			throws Exception {
 		int threadCount = Thread.activeCount();
 
-		ClientThreadController clientCtrl = new ClientThreadController(false, true, 10, 10, 100,
-				128);
+		ClientThreadController clientCtrl = new ClientThreadController(false, true, 10, 10, 100, 128);
 		long result = clientCtrl.perform();
 
 		testLogger.info("Threads before initializing clients:\t" + threadCount);
@@ -187,12 +182,10 @@ public class PerformanceTests {
 	}
 
 	@Test
-	public void createSessionExecuteDeleteSession_10000ExecuteMessagesSentByOneClient_outputsTime()
-			throws Exception {
+	public void createSessionExecuteDeleteSession_10000ExecuteMessagesSentByOneClient_outputsTime() throws Exception {
 		int threadCount = Thread.activeCount();
 
-		ClientThreadController clientCtrl = new ClientThreadController(false, false, 1, 100, 100,
-				128);
+		ClientThreadController clientCtrl = new ClientThreadController(false, false, 1, 100, 100, 128);
 		long result = clientCtrl.perform();
 
 		testLogger.info("Threads before initializing clients:\t" + threadCount);
@@ -211,19 +204,19 @@ public class PerformanceTests {
 			previousResult = result;
 			clientsCount++;
 
-			ClientThreadController clientCtrl = new ClientThreadController(false, true,
-					clientsCount, 100000 / (1000 * clientsCount), 1000, 128);
+			ClientThreadController clientCtrl = new ClientThreadController(false, true, clientsCount,
+					100000 / (1000 * clientsCount), 1000, 128);
 
 			result = clientCtrl.perform();
-			
+
 			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
-					TestConstants.serviceNameAlt });
+							TestConstants.serviceNameAlt });
 		}
 
-		testLogger.info("Best performance to execute roughly 100000 messages was " + previousResult
-				+ "ms using " + --clientsCount + " parallel clients");
+		testLogger.info("Best performance to execute roughly 100000 messages was " + previousResult + "ms using "
+				+ --clientsCount + " parallel clients");
 		assertEquals(true, previousResult < 25000);
 	}
 }

@@ -54,12 +54,14 @@ public class PrematureDestroyOfSCProcessClientTest {
 	@Test(expected = SCServiceException.class)
 	public void attach_afterSCDestroy_throwsException() throws Exception {
 		scProcess.destroy();
+		scProcess.waitFor();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 	}
 
 	@Test
 	public void detach_beforeAttachAfterSCDestroy_passes() throws Exception {
 		scProcess.destroy();
+		scProcess.waitFor();
 		client.detach();
 	}
 
@@ -67,6 +69,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	public void detach_afterSCDestroy_passes() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
+		scProcess.waitFor();
 		// TODO very with jan
 		try {
 			client.detach();
@@ -79,6 +82,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	public void enableService_afterSCDestroy_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
+		scProcess.waitFor();
 		client.enableService(TestConstants.serviceName);
 	}
 
@@ -86,6 +90,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	public void disableService_afterSCDestroy_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
+		scProcess.waitFor();
 		client.enableService(TestConstants.serviceName);
 	}
 
@@ -93,6 +98,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	public void workload_afterSCDestroy_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
+		scProcess.waitFor();
 		client.workload(TestConstants.serviceName);
 	}
 
@@ -100,6 +106,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	public void setMaxConnection_afterAttachAfterSCDestroy_passes() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
+		scProcess.waitFor();
 		client.setMaxConnections(10);
 	}
 }

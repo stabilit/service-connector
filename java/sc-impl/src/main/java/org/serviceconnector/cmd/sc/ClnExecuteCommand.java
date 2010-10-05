@@ -25,6 +25,7 @@ import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
+import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -36,7 +37,6 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
-
 
 /**
  * The Class ClnExecuteCommand. Responsible for validation and execution of execute command. Execute command sends any
@@ -65,14 +65,22 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
-		ClnExecuteCommandCallback callback = new ClnExecuteCommandCallback(request, response, responderCallback);
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
+		ClnExecuteCommandCallback callback = new ClnExecuteCommandCallback(request, response, responderCallback,
+				sessionId);
 		Session session = this.getSessionById(sessionId);
-
-		Server server = session.getServer();
-		// try sending to the server
-		server.execute(message, callback, ((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		// cancel session timeout
+		this.sessionRegistry.cancelSessionTimeout(session);
+		try {
+			Server server = session.getServer();
+			// try sending to the server
+			server.execute(message, callback,
+					((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		} catch (Exception ex) {
+			// schedule session timeout
+			this.sessionRegistry.scheduleSessionTimeout(session);
+		}
 		return;
 	}
 
@@ -143,7 +151,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 		private IRequest request;
 		/** The response. */
 		private IResponse response;
-
+		/** The session id. */
+		private String sessionId;
 		/** The Constant ERROR_STRING. */
 		private static final String ERROR_STRING_TIMEOUT = "executing command timed out";
 		/** The Constant ERROR_STRING_CONNECTION. */
@@ -161,10 +170,12 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 		 * @param callback
 		 *            the callback
 		 */
-		public ClnExecuteCommandCallback(IRequest request, IResponse response, IResponderCallback callback) {
+		public ClnExecuteCommandCallback(IRequest request, IResponse response, IResponderCallback callback,
+				String sessionId) {
 			this.callback = callback;
 			this.request = request;
 			this.response = response;
+			this.sessionId = sessionId;
 		}
 
 		/** {@inheritDoc} */
@@ -173,6 +184,9 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 			scmpReply.setMessageType(getKey());
 			this.response.setSCMP(scmpReply);
 			this.callback.callback(request, response);
+			// schedule session timeout
+			Session session = SessionRegistry.getCurrentInstance().getSession(this.sessionId);
+			SessionRegistry.getCurrentInstance().scheduleSessionTimeout(session);
 		}
 
 		/** {@inheritDoc} */
@@ -188,6 +202,9 @@ public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPar
 				fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
 			}
 			this.callback(fault);
+			// schedule session timeout
+			Session session = SessionRegistry.getCurrentInstance().getSession(this.sessionId);
+			SessionRegistry.getCurrentInstance().scheduleSessionTimeout(session);
 		}
 	}
 }
