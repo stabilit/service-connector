@@ -152,6 +152,9 @@ public abstract class Service {
 		return sb.toString();
 	}
 
+	public int getCountServers() {
+		return listOfServers.size();
+	}
 	/**
 	 * Gets the count allocated sessions.
 	 * 

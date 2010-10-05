@@ -37,6 +37,8 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
+import org.serviceconnector.web.InvalidParameterException;
+import org.serviceconnector.web.NotFoundException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -69,6 +71,8 @@ public class DefaultXMLLoaderFactory extends Factory {
 		this.add("/ajax/timer", loader);
 		loader = new AjaxSystemXMLLoader();
 		this.add("/ajax/system", loader);
+		loader = new AjaxContentXMLLoader();
+		this.add("/ajax/content", loader);
 	}
 
 	/**
@@ -145,6 +149,15 @@ public class DefaultXMLLoaderFactory extends Factory {
 				writer.writeEndElement(); // close services tag
 			}
 			writer.writeEndElement(); // close services tag
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public final void loadBody(Writer writer, IWebRequest request)
+				throws Exception {
+			if (writer instanceof XMLStreamWriter) {
+				this.loadBody((XMLStreamWriter)writer, request);
+			}
 		}
 
 		@Override
@@ -405,4 +418,43 @@ public class DefaultXMLLoaderFactory extends Factory {
 			}
 		}
 	}
+	/**
+	 * The Class AjaxContentXMLLoader.
+	 */
+	public static class AjaxContentXMLLoader extends AbstractXMLLoader {
+		/**
+		 * Instantiates a new system xml loader.
+		 */
+		public AjaxContentXMLLoader() {
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public IFactoryable newInstance() {
+			return new AjaxContentXMLLoader();
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public boolean isText() {
+			return false;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void loadBody(XMLStreamWriter writer, IWebRequest request)
+				throws Exception {
+			String id = request.getParameter("id");
+			if (id == null) {
+				throw new InvalidParameterException("id parameter missing");
+			}
+            IXMLLoader loader = DefaultXMLLoaderFactory.getXMLLoader("/" + id);
+            if (loader == null) {
+            	throw new NotFoundException();
+            }
+            loader.loadBody(writer, request);
+           
+		} 
+	}
+	
 }

@@ -472,7 +472,17 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 * @return the xSL path
 		 */
 		private String getXSLPath(String url) {
+			if (url == null) {
+				url = this.request.getURL();				
+			}
 			String rootPath = "/org/serviceconnector/web/xsl/";
+			String rootAjaxPath = "/org/serviceconnector/web/xsl/ajax/";
+			if (this.isAjax(url)) {
+				String id = request.getParameter("id");
+				if (id != null) {
+					return rootAjaxPath + id+ ".xsl";
+				}
+			}
 			if (this.accessibleContext == null) {
 				return rootPath + "login.xsl";
 			}
@@ -506,8 +516,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 */
 		public void transform(InputStream xmlInputStream,
 				OutputStream resultOutputStream) throws Exception {
-			String url = this.request.getURL();
-			String xslPath = this.getXSLPath(url);
+			String xslPath = this.getXSLPath(null);
 			// load xsl input stream for given request
 			xslInputStream = this.getClass().getResourceAsStream(xslPath);
 			if (xslInputStream == null) {

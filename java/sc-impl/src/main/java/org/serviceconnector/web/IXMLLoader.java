@@ -16,7 +16,10 @@
 package org.serviceconnector.web;
 
 import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Map;
+
+import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.factory.IFactoryable;
 
@@ -41,6 +44,24 @@ public interface IXMLLoader extends IFactoryable{
 	 * @throws Exception 
 	 */
 	public abstract void load(IWebRequest request, OutputStream os) throws Exception;
+
+	/**
+	 * Load body.
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
+	 */
+	public abstract void loadBody(Writer writer, IWebRequest request) throws Exception;
+	
+	/**
+	 * Load body.
+	 *
+	 * @param writer the writer
+	 * @param request the request
+	 * @throws Exception the exception
+	 */
+	public abstract void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception;
 
 	/**
 	 * Adds the meta.
