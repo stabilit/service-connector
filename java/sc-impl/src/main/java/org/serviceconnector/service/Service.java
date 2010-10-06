@@ -97,6 +97,14 @@ public abstract class Service {
 	}
 
 	/**
+	 * Gets the server list.
+	 *
+	 * @return the server list
+	 */
+	public List<Server> getServerList() {
+		return Collections.unmodifiableList(this.listOfServers);
+	}
+	/**
 	 * Gets the location.
 	 * 
 	 * @return the location

@@ -289,3 +289,12 @@ div.sc_table_title {
 	height: 28px;
 	text-align: center;
 }
+
+.sc_separator {
+	background:white;
+	height:1px;
+}
+
+.sc_table_details {
+	border:2px solid #B61F34;
+}

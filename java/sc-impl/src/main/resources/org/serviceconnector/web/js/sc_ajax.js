@@ -108,8 +108,9 @@ function contentCallback() {
 	}
 }
 
-function contentCall(id) {
-	ajaxContent.ajaxCall('ajax/content?id='+id);
+function contentCall(id, query) {
+//	alert('ajax/content?id='+id + '&' + query);
+	ajaxContent.ajaxCall('ajax/content?id='+id + '&' + query);
 }
 
 var ajaxContent = new AjaxCallObject('Content', 'ajax/content', contentCallback, errorCallback);

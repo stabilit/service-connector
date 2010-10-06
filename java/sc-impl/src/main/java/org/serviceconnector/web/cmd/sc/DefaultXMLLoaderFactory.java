@@ -20,9 +20,9 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
-import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -34,10 +34,12 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.factory.Factory;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
+import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
+import org.serviceconnector.web.InvalidParameterException;
 import org.serviceconnector.web.NotFoundException;
 
 // TODO: Auto-generated Javadoc
@@ -142,10 +144,24 @@ public class DefaultXMLLoaderFactory extends Factory {
 			ServiceRegistry serviceRegistry = ServiceRegistry
 					.getCurrentInstance();
 			writer.writeStartElement("services");
+			String serviceParameter = request.getParameter("service");
 			Service[] services = serviceRegistry.getServices();
 			for (Service service : services) {
 				writer.writeStartElement("service");
 				this.writeBean(writer, service);
+				if (service.getServiceName().equals(serviceParameter)) {
+					// take a look into
+					writer.writeStartElement("details");
+					List<Server> serverList = service.getServerList();
+					writer.writeStartElement("servers");
+					for (Server server : serverList) {
+						writer.writeStartElement("server");
+					    this.writeBean(writer, server);
+						writer.writeEndElement(); // close servers tag				
+					}
+					writer.writeEndElement(); // close servers tag				
+					writer.writeEndElement(); // close details tag				
+				}
 				writer.writeEndElement(); // close services tag
 			}
 			writer.writeEndElement(); // close services tag

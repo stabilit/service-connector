@@ -299,7 +299,15 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 				}
 				if (value != null) {
 					writer.writeStartElement(name);
-					writer.writeCData(value.toString());
+					if (value instanceof List<?>) {
+						List<?> list = (List<?>)value;
+						for (Object listObj : list) {
+							writer.writeStartElement(listObj.getClass().getSimpleName());
+							writer.writeEndElement();
+						}
+					} else {
+					    writer.writeCData(value.toString());
+					}
 					writer.writeEndElement();
 				}
 			} catch (Exception e) {
