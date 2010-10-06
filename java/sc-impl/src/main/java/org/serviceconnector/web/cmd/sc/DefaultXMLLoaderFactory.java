@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.Enumeration;
 
@@ -37,7 +38,6 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
-import org.serviceconnector.web.InvalidParameterException;
 import org.serviceconnector.web.NotFoundException;
 
 // TODO: Auto-generated Javadoc
