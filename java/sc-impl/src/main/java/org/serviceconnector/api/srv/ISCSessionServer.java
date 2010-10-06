@@ -18,7 +18,7 @@ package org.serviceconnector.api.srv;
 
 import java.security.InvalidParameterException;
 
-import org.serviceconnector.service.ISC;
+import org.serviceconnector.service.ISCCommunicator;
 
 
 /**
@@ -26,7 +26,7 @@ import org.serviceconnector.service.ISC;
  * 
  * @author JTraber
  */
-public interface ISCSessionServer extends ISC {
+public interface ISCSessionServer extends ISCCommunicator {
 
 	/**
 	 * Register service on SC.

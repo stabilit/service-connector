@@ -18,7 +18,6 @@ package org.serviceconnector.api.cln;
 
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.service.ISCMessageCallback;
-import org.serviceconnector.service.IServiceContext;
 
 /**
  * The Interface ISessionService. Basic interface for session services.
@@ -158,7 +157,7 @@ public interface ISessionService extends IService {
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract IServiceContext getContext();
+	public abstract ServiceContext getServiceContext();
 
 	/** {@inheritDoc} */
 	@Override

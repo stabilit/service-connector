@@ -27,10 +27,9 @@ import org.jboss.netty.handler.timeout.IdleState;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.Timer;
 import org.serviceconnector.log.ConnectionLogger;
+import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.IConnection;
-import org.serviceconnector.net.connection.IConnectionContext;
 import org.serviceconnector.net.connection.IIdleConnectionCallback;
-
 
 /**
  * @author JTraber
@@ -43,7 +42,7 @@ public class NettyIdleHandler extends IdleStateHandler {
 	/** The Constant connectionLogger. */
 	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 
-	private IConnectionContext connectionContext;
+	private ConnectionContext connectionContext;
 
 	/**
 	 * @param timer
@@ -51,7 +50,7 @@ public class NettyIdleHandler extends IdleStateHandler {
 	 * @param writerIdleTimeSeconds
 	 * @param allIdleTimeSeconds
 	 */
-	public NettyIdleHandler(IConnectionContext connectionContext, Timer timer, int readerIdleTimeSeconds,
+	public NettyIdleHandler(ConnectionContext connectionContext, Timer timer, int readerIdleTimeSeconds,
 			int writerIdleTimeSeconds, int allIdleTimeSeconds) {
 		super(timer, readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds);
 		this.connectionContext = connectionContext;
@@ -59,12 +58,13 @@ public class NettyIdleHandler extends IdleStateHandler {
 
 	/** {@inheritDoc} */
 	@Override
-	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis) throws Exception {
+	protected void channelIdle(ChannelHandlerContext ctx, IdleState state, long lastActivityTimeMillis)
+			throws Exception {
 		super.channelIdle(ctx, state, lastActivityTimeMillis);
 		IConnection connection = this.connectionContext.getConnection();
 		if (connectionLogger.isTraceEnabled()) {
-			connectionLogger.logKeepAlive(this.getClass().getSimpleName(), "", 0, this.connectionContext.getConnection()
-					.getNrOfIdlesInSequence());
+			connectionLogger.logKeepAlive(this.getClass().getSimpleName(), "", 0, this.connectionContext
+					.getConnection().getNrOfIdlesInSequence());
 		}
 		IIdleConnectionCallback callback = this.connectionContext.getIdleCallback();
 		callback.connectionIdle(connection);

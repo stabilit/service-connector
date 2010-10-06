@@ -69,6 +69,12 @@ public abstract class SrvCommandAdapter implements ICommand {
 	public boolean isAsynchronous() {
 		return false;
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public boolean isPassThroughPartMsg() {
+		return false;
+	}
 
 	/** {@inheritDoc} */
 	@Override

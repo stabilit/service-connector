@@ -22,7 +22,6 @@
 package org.serviceconnector.api.cln;
 
 import org.serviceconnector.service.ISCMessageCallback;
-import org.serviceconnector.service.IServiceContext;
 
 /**
  * The Interface IPublishService.
@@ -156,7 +155,7 @@ public interface IPublishService extends IService {
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract IServiceContext getContext();
+	public abstract ServiceContext getServiceContext();
 
 	/** {@inheritDoc} */
 	@Override

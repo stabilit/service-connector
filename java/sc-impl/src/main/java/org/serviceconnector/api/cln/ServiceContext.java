@@ -18,22 +18,19 @@ package org.serviceconnector.api.cln;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCService;
-import org.serviceconnector.service.ISC;
-import org.serviceconnector.service.ISCContext;
-import org.serviceconnector.service.IServiceContext;
-
+import org.serviceconnector.service.ISCCommunicator;
 
 /**
  * The Class ServiceContext. Context of a service. Holds information about the service himself and the
  * serviceConnectorContext which uses service.
  */
-public class ServiceContext implements IServiceContext {
+public class ServiceContext {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ServiceContext.class);
-	
+
 	/** The service connector context. */
-	private ISCContext serviceConnectorContext;
+	private ServiceConnectorContext serviceConnectorContext;
 	/** The service. */
 	private SCService service;
 
@@ -45,19 +42,15 @@ public class ServiceContext implements IServiceContext {
 	 * @param service
 	 *            the service
 	 */
-	public ServiceContext(ISCContext serviceConnectorContext, SCService service) {
+	public ServiceContext(ServiceConnectorContext serviceConnectorContext, SCService service) {
 		this.serviceConnectorContext = serviceConnectorContext;
 		this.service = service;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public ISC getServiceConnector() {
+	public ISCCommunicator getServiceConnector() {
 		return this.serviceConnectorContext.getServiceConnector();
 	}
 
-	/** {@inheritDoc} */
-	@Override
 	public SCService getService() {
 		return this.service;
 	}

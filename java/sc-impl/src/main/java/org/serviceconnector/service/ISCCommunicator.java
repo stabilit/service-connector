@@ -1,4 +1,5 @@
-/*-----------------------------------------------------------------------------*
+/*
+ *-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -13,37 +14,45 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*/
-package org.serviceconnector.net.connection;
-
-import org.serviceconnector.ctx.IContext;
-
+ *-----------------------------------------------------------------------------*
+/*
+/**
+ * 
+ */
+package org.serviceconnector.service;
 
 /**
- * The Interface IConnectionContext. Represents context of a connection.
+ * The Interface ISCCommunicator. Top interface for any kind of communication part (client, server) to an SC.
  * 
  * @author JTraber
  */
-public interface IConnectionContext extends IContext {
+public interface ISCCommunicator {
 
 	/**
-	 * Gets the connection.
+	 * Gets the connection type. Possible values {netty.http, netty.tcp}.
 	 * 
-	 * @return the connection
+	 * @return the connection type which identifies low level communication technology
 	 */
-	public abstract IConnection getConnection();
+	public abstract String getConnectionType();
 
 	/**
-	 * Gets the idle timeout.
+	 * Gets the host.
 	 * 
-	 * @return the idle timeout
+	 * @return the host
 	 */
-	public abstract int getIdleTimeout();
+	public abstract String getHost();
 
 	/**
-	 * Gets the idle callback.
+	 * Gets the port.
 	 * 
-	 * @return the idle callback
+	 * @return the port
 	 */
-	public abstract IIdleConnectionCallback getIdleCallback();
+	public abstract int getPort();
+
+	/**
+	 * Gets the keep alive interval in seconds.
+	 * 
+	 * @return the keep alive interval in seconds
+	 */
+	public abstract int getKeepAliveIntervalInSeconds();
 }

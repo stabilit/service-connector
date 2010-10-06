@@ -53,5 +53,5 @@ public interface IRequester {
 	 * 
 	 * @return the context
 	 */
-	public abstract IRequesterContext getContext();
+	public abstract RequesterContext getContext();
 }

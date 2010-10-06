@@ -21,7 +21,6 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommandValidator;
-import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -44,7 +43,7 @@ import org.serviceconnector.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class ClnExecuteCommand extends CommandAdapter implements IPassThroughPartMsg, IAsyncCommand {
+public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnExecuteCommand.class);

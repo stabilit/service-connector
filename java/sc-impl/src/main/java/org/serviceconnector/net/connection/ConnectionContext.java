@@ -17,16 +17,13 @@
 package org.serviceconnector.net.connection;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.net.connection.IConnection;
-import org.serviceconnector.net.connection.IConnectionContext;
-
 
 /**
  * The Class ConnectionContext.
  * 
  * @author JTraber
  */
-public class ConnectionContext implements IConnectionContext {
+public class ConnectionContext {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ConnectionContext.class);
@@ -54,20 +51,29 @@ public class ConnectionContext implements IConnectionContext {
 		this.idleCallback = idleCallback;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the connection.
+	 *
+	 * @return the connection
+	 */
 	public IConnection getConnection() {
 		return this.connection;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the idle timeout.
+	 *
+	 * @return the idle timeout
+	 */
 	public int getIdleTimeout() {
 		return this.idleTimeout;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the idle callback.
+	 *
+	 * @return the idle callback
+	 */
 	public IIdleConnectionCallback getIdleCallback() {
 		return this.idleCallback;
 	}

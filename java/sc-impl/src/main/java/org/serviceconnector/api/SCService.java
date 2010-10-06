@@ -17,12 +17,11 @@
 package org.serviceconnector.api;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.api.cln.ServiceConnectorContext;
+import org.serviceconnector.api.cln.ServiceContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPMessageId;
-import org.serviceconnector.service.ISCContext;
-import org.serviceconnector.service.IServiceContext;
-
 
 /**
  * The Class Service. Provides basic stuff for every kind of remote service interfaces.
@@ -37,7 +36,7 @@ public abstract class SCService {
 	/** The session id, identifies current session context. */
 	protected String sessionId;
 	/** The service context. */
-	protected IServiceContext serviceContext;
+	protected ServiceContext serviceContext;
 	/** The requester to communicate. */
 	protected IRequester requester;
 	/** The callback to use by service. */
@@ -46,21 +45,24 @@ public abstract class SCService {
 	protected volatile boolean pendingRequest;
 	/** The message id. */
 	protected SCMPMessageId msgId;
+	/** The service connector context. */
+	private ServiceConnectorContext serviceConnectorContext;
 
 	/**
 	 * Instantiates a new service.
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @param context
+	 * @param serviceConnectorContext
 	 *            the context
 	 */
-	public SCService(String serviceName, ISCContext context) {
+	public SCService(String serviceName, ServiceConnectorContext serviceConnectorContext) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
 		this.callback = null;
 		this.pendingRequest = false;
 		this.msgId = new SCMPMessageId();
+		this.serviceConnectorContext = serviceConnectorContext;
 	}
 
 	/**
@@ -75,7 +77,7 @@ public abstract class SCService {
 	 * 
 	 * @return the context
 	 */
-	public IServiceContext getContext() {
+	public ServiceContext getServiceContext() {
 		return this.serviceContext;
 	}
 

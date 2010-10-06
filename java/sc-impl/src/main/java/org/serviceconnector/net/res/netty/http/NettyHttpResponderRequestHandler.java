@@ -32,7 +32,6 @@ import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.ICommandValidator;
-import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.log.PerformanceLogger;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.ResponderRegistry;
@@ -55,7 +54,6 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
-
 
 /**
  * The Class NettyHttpResponderRequestHandler. This class is responsible for handling Http requests. Is called from the
@@ -109,13 +107,13 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			request.read();
 
 			// gets the command
-			ICommand command = CommandFactory.getCurrentCommandFactory().getCommand(request);
+			ICommand command = CommandFactory.getCurrentCommandFactory().getCommand(request.getKey());
 			if (command == null) {
 				this.sendUnknownRequestError(response, scmpReq);
 				return;
 			}
 
-			if ((command instanceof IPassThroughPartMsg) == false) {
+			if (command.isPassThroughPartMsg() == false) {
 				// large messages needs to be handled
 				SCMPCompositeSender compositeSender = NettyHttpResponderRequestHandler.compositeRegistry
 						.getSCMPCompositeSender(sessionId);
@@ -178,7 +176,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				performanceLogger.end(this.getClass().getSimpleName(), "run");
 			} catch (HasFaultResponseException ex) {
 				// exception carries response inside
-				logger.info("messageReceived "+ex.getMessage());
+				logger.info("messageReceived " + ex.getMessage());
 				ex.setFaultResponse(response);
 			}
 			if (response.isLarge()) {

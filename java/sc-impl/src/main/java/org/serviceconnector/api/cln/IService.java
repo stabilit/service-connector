@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.cln;
 
-import org.serviceconnector.ctx.IContext;
-
 /**
  * The Interface IService. Top interface for services.
  * 
@@ -30,7 +28,7 @@ public interface IService {
 	 * 
 	 * @return the context
 	 */
-	public abstract IContext getContext();
+	public abstract ServiceContext getServiceContext();
 
 	/**
 	 * Gets the session id.

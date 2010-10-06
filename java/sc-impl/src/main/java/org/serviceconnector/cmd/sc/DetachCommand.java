@@ -18,7 +18,6 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
-import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -32,7 +31,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class DetachCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class DetachCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DetachCommand.class);

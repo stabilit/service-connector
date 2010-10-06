@@ -22,7 +22,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommandValidator;
-import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -42,7 +41,7 @@ import org.serviceconnector.service.Session;
  * 
  * @author JTraber
  */
-public class DeRegisterServerCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class DeRegisterServerCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DeRegisterServerCommand.class);

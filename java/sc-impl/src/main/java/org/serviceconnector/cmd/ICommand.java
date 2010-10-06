@@ -59,4 +59,7 @@ public interface ICommand extends IFactoryable {
 	 * @return true, if command is asynchronous
 	 */
 	public boolean isAsynchronous();
+	
+	
+	public boolean isPassThroughPartMsg();
 }

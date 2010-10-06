@@ -19,8 +19,7 @@ package org.serviceconnector.api.cln;
 import java.security.InvalidParameterException;
 
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.service.ISC;
-import org.serviceconnector.service.ISCContext;
+import org.serviceconnector.service.ISCCommunicator;
 import org.serviceconnector.service.SCServiceException;
 
 
@@ -29,7 +28,7 @@ import org.serviceconnector.service.SCServiceException;
  * 
  * @author JTraber
  */
-public interface ISCClient extends ISC {
+public interface ISCClient extends ISCCommunicator {
 
 	/**
 	 * Attach client to SC.
@@ -185,7 +184,7 @@ public interface ISCClient extends ISC {
 	 * 
 	 * @return the context
 	 */
-	public abstract ISCContext getContext();
+	public abstract ServiceConnectorContext getContext();
 
 	/** {@inheritDoc} */
 	@Override

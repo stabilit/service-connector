@@ -34,7 +34,6 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.ISCContext;
 import org.serviceconnector.service.ISCMessageCallback;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
@@ -60,7 +59,7 @@ public class SCPublishService extends SCService implements IPublishService {
 	 * @param context
 	 *            the context
 	 */
-	public SCPublishService(String serviceName, ISCContext context) {
+	public SCPublishService(String serviceName, ServiceConnectorContext context) {
 		super(serviceName, context);
 		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.serviceContext = new ServiceContext(context, this);

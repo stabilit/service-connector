@@ -20,8 +20,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.IConnection;
-import org.serviceconnector.net.connection.IConnectionContext;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
@@ -41,11 +41,11 @@ public class Requester implements IRequester {
 	protected final static Logger logger = Logger.getLogger(Requester.class);
 
 	/** The context. */
-	private IRequesterContext reqContext;
+	private RequesterContext reqContext;
 	/** The Constant timer, triggers all operation timeout for sending. */
 	protected final static Timer timer = new Timer("OperationTimerRequester");
 
-	public Requester(IRequesterContext context) {
+	public Requester(RequesterContext context) {
 		this.reqContext = context;
 	}
 
@@ -54,7 +54,7 @@ public class Requester implements IRequester {
 	public void send(SCMPMessage message, int timeoutInMillis, ISCMPCallback callback) throws Exception {
 		// return an already connected live instance
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
-		IConnectionContext connectionContext = connection.getContext();
+		ConnectionContext connectionContext = connection.getContext();
 		try {
 			ISCMPCallback requesterCallback = new RequesterSCMPCallback(callback, connectionContext);
 			// setting up operation timeout after successful send
@@ -78,7 +78,7 @@ public class Requester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public IRequesterContext getContext() {
+	public RequesterContext getContext() {
 		return reqContext;
 	}
 
@@ -91,13 +91,13 @@ public class Requester implements IRequester {
 		/** The scmp callback, callback to inform next layer. */
 		private ISCMPCallback scmpCallback;
 		/** The connection context. */
-		private IConnectionContext connectionCtx;
+		private ConnectionContext connectionCtx;
 		/** The operation timeout task. */
 		private TimerTask operationTimeoutTask;
 		/** The timeout in milliseconds. */
 		private int timeoutInMillis;
 
-		public RequesterSCMPCallback(ISCMPCallback scmpCallback, IConnectionContext connectionCtx) {
+		public RequesterSCMPCallback(ISCMPCallback scmpCallback, ConnectionContext connectionCtx) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = connectionCtx;
 			this.operationTimeoutTask = null;

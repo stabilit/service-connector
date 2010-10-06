@@ -19,7 +19,6 @@ package org.serviceconnector.cmd.sc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.ICommandValidator;
-import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -43,7 +42,7 @@ import org.serviceconnector.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class ClnCreateSessionCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class ClnCreateSessionCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnCreateSessionCommand.class);

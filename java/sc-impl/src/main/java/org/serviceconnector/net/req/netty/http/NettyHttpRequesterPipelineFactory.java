@@ -25,7 +25,7 @@ import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
 import org.jboss.netty.util.Timer;
 import org.serviceconnector.Constants;
-import org.serviceconnector.net.connection.IConnectionContext;
+import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.req.netty.NettyIdleHandler;
 
 
@@ -41,12 +41,12 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 	
 	/** The timer to observe timeouts. */
 	private Timer timer;
-	private IConnectionContext context;
+	private ConnectionContext context;
 
 	/**
 	 * Instantiates a new NettyHttpRequesterPipelineFactory.
 	 */
-	public NettyHttpRequesterPipelineFactory(IConnectionContext context, Timer timer) {
+	public NettyHttpRequesterPipelineFactory(ConnectionContext context, Timer timer) {
 		this.timer = timer;
 		this.context = context;
 	}

@@ -18,7 +18,6 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
-import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.registry.SubscriptionQueue;
@@ -48,7 +47,7 @@ import org.serviceconnector.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class ClnSubscribeCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class ClnSubscribeCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnSubscribeCommand.class);

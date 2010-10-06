@@ -23,32 +23,40 @@ package org.serviceconnector.net.req;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.connection.ConnectionPool;
-import org.serviceconnector.net.req.IRequesterContext;
 import org.serviceconnector.scmp.SCMPMessageId;
 
-
 /**
+ * The Class RequesterContext.
+ * 
  * @author JTraber
  */
-public class RequesterContext implements IRequesterContext {
+public class RequesterContext {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RequesterContext.class);
-	
-	private ConnectionPool connectionPool;
-	private SCMPMessageId msgId;
+
+	protected ConnectionPool connectionPool;
+	protected SCMPMessageId msgId;
 
 	public RequesterContext(ConnectionPool connectionPool, SCMPMessageId msgId) {
 		this.connectionPool = connectionPool;
 		this.msgId = msgId;
 	}
 
-	@Override
+	/**
+	 * Gets the connection pool.
+	 * 
+	 * @return the connection pool
+	 */
 	public ConnectionPool getConnectionPool() {
 		return this.connectionPool;
 	}
 
-	@Override
+	/**
+	 * Gets the sCMP message id.
+	 * 
+	 * @return the sCMP message id
+	 */
 	public SCMPMessageId getSCMPMessageId() {
 		return this.msgId;
 	}

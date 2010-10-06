@@ -32,7 +32,6 @@ import org.serviceconnector.call.SCMPSrvExecuteCall;
 import org.serviceconnector.call.SCMPSrvSubscribeCall;
 import org.serviceconnector.call.SCMPSrvUnsubscribeCall;
 import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.ctx.IContext;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
@@ -377,9 +376,6 @@ public class Server {
 	 */
 	public List<Session> getSessions() {
 		return sessions;
-	}
-
-	public class ServerContext implements IContext {
 	}
 
 	@Override

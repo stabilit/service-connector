@@ -34,8 +34,8 @@ import org.serviceconnector.net.CommunicationException;
 import org.serviceconnector.net.EncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.SCMPCommunicationException;
+import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.IConnection;
-import org.serviceconnector.net.connection.IConnectionContext;
 import org.serviceconnector.net.req.netty.NettyOperationListener;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
@@ -70,7 +70,7 @@ public class NettyTcpConnection implements IConnection {
 	/** The channel pipeline factory. */
 	private ChannelPipelineFactory pipelineFactory;
 	/** The connection context. */
-	private IConnectionContext connectionContext;
+	private ConnectionContext connectionContext;
 	/** state of connection. */
 	private boolean isConnected;
 	/** The idle timeout. */
@@ -112,13 +112,13 @@ public class NettyTcpConnection implements IConnection {
 
 	/** {@inheritDoc} */
 	@Override
-	public IConnectionContext getContext() {
+	public ConnectionContext getContext() {
 		return this.connectionContext;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setContext(IConnectionContext connectionContext) {
+	public void setContext(ConnectionContext connectionContext) {
 		this.connectionContext = connectionContext;
 	}
 

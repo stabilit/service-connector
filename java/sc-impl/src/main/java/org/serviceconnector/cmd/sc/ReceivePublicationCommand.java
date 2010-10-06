@@ -19,7 +19,6 @@ package org.serviceconnector.cmd.sc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommandValidator;
-import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.SubscriptionQueue;
@@ -39,7 +38,7 @@ import org.serviceconnector.scmp.SCMPPart;
  * 
  * @author JTraber
  */
-public class ReceivePublicationCommand extends CommandAdapter implements IPassThroughPartMsg, IAsyncCommand {
+public class ReceivePublicationCommand extends CommandAdapter implements IAsyncCommand {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ReceivePublicationCommand.class);

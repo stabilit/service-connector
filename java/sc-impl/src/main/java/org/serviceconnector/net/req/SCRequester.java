@@ -21,8 +21,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.IConnection;
-import org.serviceconnector.net.connection.IConnectionContext;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
@@ -48,7 +48,7 @@ public class SCRequester implements IRequester {
 	/** The Constant timer, triggers all operation timeout for sending. */
 	protected final static Timer timer = new Timer("OperationTimerSCRequester");
 	/** The context. */
-	protected IRequesterContext reqContext;
+	protected RequesterContext reqContext;
 
 	/**
 	 * Instantiates a new requester.
@@ -56,7 +56,7 @@ public class SCRequester implements IRequester {
 	 * @param context
 	 *            the context
 	 */
-	public SCRequester(IRequesterContext outerContext) {
+	public SCRequester(RequesterContext outerContext) {
 		this.reqContext = outerContext;
 	}
 
@@ -65,7 +65,7 @@ public class SCRequester implements IRequester {
 	public void send(SCMPMessage message, int timeoutInMillis, ISCMPCallback scmpCallback) throws Exception {
 		// return an already connected live instance
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
-		IConnectionContext connectionContext = connection.getContext();
+		ConnectionContext connectionContext = connection.getContext();
 		SCMPMessageId msgId = this.reqContext.getSCMPMessageId();
 		try {
 			ISCMPCallback requesterCallback = null;
@@ -117,7 +117,7 @@ public class SCRequester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public IRequesterContext getContext() {
+	public RequesterContext getContext() {
 		return reqContext;
 	}
 
@@ -137,7 +137,7 @@ public class SCRequester implements IRequester {
 		/** The scmp callback, callback to inform next layer. */
 		private ISCMPCallback scmpCallback;
 		/** The connection context. */
-		private IConnectionContext connectionCtx;
+		private ConnectionContext connectionCtx;
 		/** The request message, initial message sent by requester. */
 		private SCMPMessage requestMsg;
 		/** The composite receiver. */
@@ -151,12 +151,12 @@ public class SCRequester implements IRequester {
 		/** The timeout in milliseconds. */
 		private int timeoutInMillis;
 
-		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, IConnectionContext conCtx,
+		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, ConnectionContext conCtx,
 				SCMPMessageId msgId) {
 			this(reqMsg, scmpCallback, conCtx, null, msgId);
 		}
 
-		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, IConnectionContext conCtx,
+		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, ConnectionContext conCtx,
 				SCMPCompositeSender compositeSender, SCMPMessageId msgId) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = conCtx;

@@ -231,6 +231,12 @@ public abstract class CommandAdapter implements ICommand {
 	public boolean isAsynchronous() {
 		return false;
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public boolean isPassThroughPartMsg() {
+		return true;
+	}
 
 	/** {@inheritDoc} */
 	@Override

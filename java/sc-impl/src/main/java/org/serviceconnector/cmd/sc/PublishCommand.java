@@ -20,7 +20,6 @@ import java.net.SocketAddress;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommandValidator;
-import org.serviceconnector.cmd.IPassThroughPartMsg;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -41,7 +40,7 @@ import org.serviceconnector.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class PublishCommand extends CommandAdapter implements IPassThroughPartMsg {
+public class PublishCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PublishCommand.class);

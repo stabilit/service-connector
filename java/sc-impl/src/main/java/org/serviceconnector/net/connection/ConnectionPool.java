@@ -22,8 +22,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.net.connection.IConnection;
-import org.serviceconnector.net.connection.IConnectionContext;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.util.SynchronousCallback;
 
@@ -181,8 +179,7 @@ public class ConnectionPool {
 		connection.setPort(this.port);
 		connection.setIdleTimeout(this.keepAliveInterval);
 		IIdleConnectionCallback idleCallback = new IdleCallback();
-		//TODO FJU odd context construction
-		IConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, this.keepAliveInterval);
+		ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, this.keepAliveInterval);
 		connection.setContext(connectionContext);
 		try {
 			connection.connect(); // can throw an exception

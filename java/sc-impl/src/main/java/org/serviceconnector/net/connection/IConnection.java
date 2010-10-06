@@ -20,7 +20,6 @@ import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 
-
 /**
  * The Interface IConnection abstracts any connection to a responder.
  * 
@@ -28,9 +27,20 @@ import org.serviceconnector.scmp.SCMPMessage;
  */
 public interface IConnection extends IFactoryable {
 
-	public abstract IConnectionContext getContext();
+	/**
+	 * Gets the context.
+	 * 
+	 * @return the context
+	 */
+	public abstract ConnectionContext getContext();
 
-	public abstract void setContext(IConnectionContext connectionContext);
+	/**
+	 * Sets the context.
+	 * 
+	 * @param connectionContext
+	 *            the new context
+	 */
+	public abstract void setContext(ConnectionContext connectionContext);
 
 	/**
 	 * Sets the host.
@@ -38,7 +48,7 @@ public interface IConnection extends IFactoryable {
 	 * @param host
 	 *            the host
 	 */
-	
+
 	public void setHost(String host);
 
 	/**
@@ -48,7 +58,7 @@ public interface IConnection extends IFactoryable {
 	 *            the port
 	 */
 	public void setPort(int port);
-	
+
 	/**
 	 * Connect.
 	 * 
@@ -100,9 +110,20 @@ public interface IConnection extends IFactoryable {
 	 */
 	public abstract void setIdleTimeout(int idleTimeout);
 
+	/**
+	 * Increment nr of idles.
+	 */
 	public abstract void incrementNrOfIdles();
 
+	/**
+	 * Reset nr of idles.
+	 */
 	public abstract void resetNrOfIdles();
 
+	/**
+	 * Gets the nr of idles in sequence.
+	 * 
+	 * @return the nr of idles in sequence
+	 */
 	public abstract int getNrOfIdlesInSequence();
 }

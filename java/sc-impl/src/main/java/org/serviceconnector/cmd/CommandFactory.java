@@ -16,24 +16,27 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.log4j.Logger;
-import org.serviceconnector.factory.Factory;
 import org.serviceconnector.factory.IFactoryable;
-import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 
 /**
  * A factory for creating Command objects.
  */
-public abstract class CommandFactory extends Factory {
+public abstract class CommandFactory {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(CommandFactory.class);
 	
 	/** The command factory. */
 	protected static CommandFactory commandFactory = null;
-
+	/** The map stores base instances by a key. */
+	protected Map<String, IFactoryable> baseInstances = new ConcurrentHashMap<String, IFactoryable>();
+	
 	/**
 	 * Instantiates a new command factory.
 	 */
@@ -60,6 +63,18 @@ public abstract class CommandFactory extends Factory {
 	}
 
 	/**
+	 * Adds the.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param factoryInstance
+	 *            the factory instance
+	 */
+	protected void add(String key, IFactoryable factoryInstance) {
+		baseInstances.put(key, factoryInstance);
+	}
+	
+	/**
 	 * Adds the command.
 	 * 
 	 * @param messageType
@@ -68,21 +83,7 @@ public abstract class CommandFactory extends Factory {
 	 *            the factory instance
 	 */
 	public void addCommand(SCMPMsgType messageType, IFactoryable factoryInstance) {
-		super.add(messageType.getValue(), factoryInstance);
-	}
-
-	/**
-	 * Get command.
-	 * 
-	 * @param request
-	 *            the request
-	 * @return the command
-	 * @throws Exception
-	 *             the exception
-	 */
-	public ICommand getCommand(IRequest request) throws Exception {
-		SCMPMsgType key = request.getKey();
-		return this.getCommand(key);
+		this.add(messageType.getValue(), factoryInstance);
 	}
 
 	/**
@@ -97,5 +98,20 @@ public abstract class CommandFactory extends Factory {
 	public ICommand getCommand(SCMPMsgType key) {
 		IFactoryable factoryInstance = this.newInstance(key.getValue());
 		return (ICommand) factoryInstance;
+	}
+	
+	public IFactoryable newInstance(Object key) {
+		IFactoryable factoryInstance = this.getInstance(key);
+		if (factoryInstance == null) {
+			// if key is not found return default TODO TRN => throw exception !! -> DONE by JOT
+			logger.fatal("key : " + key + " not found in baseInstances of factory, returned default instance");
+		}
+		// invoke the base instance constructor
+		return factoryInstance.newInstance();
+	}
+	
+	public IFactoryable getInstance(Object key) {
+		IFactoryable factoryInstance = baseInstances.get(key);
+		return factoryInstance;
 	}
 }
