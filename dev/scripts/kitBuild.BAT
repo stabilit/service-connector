@@ -2,8 +2,8 @@
 del ..\..\sc.zip
 
 rem Build Kit
-rem kick-off maven to build all
-call mvn-all.bat
+rem kick-off maven to build kit
+call mvn-kit.bat
 
 cd C:\stabilit\projects\EUREX\SC\dev
 rem Create Installation Kit

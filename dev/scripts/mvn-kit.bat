@@ -8,7 +8,6 @@ call mvn-source-test-install-cmd.bat ..\..\java\service-connector
 call mvn-source-test-install-cmd.bat ..\..\java\sc-console
 call mvn-source-test-install-cmd.bat ..\..\java\sc-server
 call mvn-source-test-install-cmd.bat ..\..\java\sc-client
-call mvn-source-test-install-cmd.bat ..\..\java\sc-test
 
 rem create service-connector sc.jar and copy to bin dir
 call mvn-assembly-cmd.bat ..\..\java\service-connector
@@ -18,16 +17,13 @@ rem create sc-cosole scconsole.jar and copy to bin dir
 call mvn-assembly-cmd.bat ..\..\java\sc-console
 copy ..\..\java\sc-console\target\scconsole.jar ..\bin /y
 
-rem create Sc-server.jar and copy to bin dir
+rem create server.jar and copy to bin dir
 call mvn-assembly-cmd.bat ..\..\java\sc-server
 copy ..\..\java\sc-server\target\server.jar ..\bin /y
 
-rem create sc-unit client.jar and copy to bin dir
+rem create client.jar and copy to bin dir
 call mvn-assembly-cmd.bat ..\..\java\sc-client
 copy ..\..\java\sc-client\target\client.jar ..\bin /y
-
-rem create sc-test
-call mvn-assembly-cmd.bat ..\..\java\sc-test
 
 rem create javadoc and copies everything to documentation
 call mvn-javadoc-cmd.bat ..\..\java\service-connector
