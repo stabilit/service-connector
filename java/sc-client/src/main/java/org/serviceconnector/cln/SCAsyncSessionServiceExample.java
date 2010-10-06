@@ -28,9 +28,9 @@ import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.IService;
 import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.service.ISC;
+import org.serviceconnector.api.cln.ServiceContext;
+import org.serviceconnector.service.ISCCommunicator;
 import org.serviceconnector.service.ISCMessageCallback;
-import org.serviceconnector.service.IServiceContext;
 
 
 /**
@@ -95,8 +95,8 @@ public class SCAsyncSessionServiceExample {
 
 		@Override
 		public void callback(SCMessage msg) {
-			IServiceContext serviceContext = (IServiceContext) this.getService().getContext();
-			ISC serviceConnector = serviceContext.getServiceConnector();
+			ServiceContext serviceContext = this.getService().getServiceContext();
+			ISCCommunicator serviceConnector = serviceContext.getServiceConnector();
 			System.out.println(msg);
 			SCAsyncSessionServiceExample.messageReceived = true;
 		}
