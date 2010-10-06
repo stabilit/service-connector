@@ -23,7 +23,6 @@ import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionFactory;
 import org.serviceconnector.net.connection.IConnection;
-import org.serviceconnector.net.connection.IConnectionContext;
 import org.serviceconnector.net.connection.IIdleConnectionCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -31,8 +30,6 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.sc.SetupTestCases;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.SynchronousCallback;
-
-
 
 public class NettyConnectTestCase {
 
@@ -48,7 +45,7 @@ public class NettyConnectTestCase {
 		connection.setPort(TestConstants.PORT_HTTP);
 		connection.setIdleTimeout(0);
 		IIdleConnectionCallback idleCallback = new IdleCallback();
-		IConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
+		ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
 		connection.setContext(connectionContext);
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
 
@@ -78,7 +75,7 @@ public class NettyConnectTestCase {
 			connection.setPort(TestConstants.PORT_HTTP);
 			connection.setIdleTimeout(0);
 			IIdleConnectionCallback idleCallback = new IdleCallback();
-			IConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
+			ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
 			connection.setContext(connectionContext);
 			String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
 

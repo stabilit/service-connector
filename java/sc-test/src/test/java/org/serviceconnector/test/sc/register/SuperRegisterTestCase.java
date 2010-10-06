@@ -25,7 +25,7 @@ import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.conf.RequesterConfigPool;
 import org.serviceconnector.conf.ResponderConfigPool;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.net.req.IRequesterContext;
+import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.test.sc.SCTest;
@@ -40,7 +40,7 @@ import org.serviceconnector.test.sc.connectionPool.TestContext;
 public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 
 	protected IRequester registerRequester;
-	private IRequesterContext registerContext;
+	private RequesterContext registerContext;
 	private String registerFileName = "session-server.properties";
 	private RequesterConfigPool registerConfig = null;
 	private ResponderConfigPool responderConfig = null;

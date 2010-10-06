@@ -28,7 +28,7 @@ import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.net.req.IRequesterContext;
+import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
@@ -131,7 +131,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 	public void registerServerCall() throws Exception {
 		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", TestConstants.HOST, TestConstants.PORT_TCP,
 				"netty.tcp", 1000, 60, 10);
-		IRequesterContext context = new TestContext(config, this.msgId);
+		RequesterContext context = new TestContext(config, this.msgId);
 		IRequester req = new SCRequester(context);
 
 		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL
@@ -182,7 +182,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 	public void secondRegisterServerCall() throws Exception {
 		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", TestConstants.HOST, TestConstants.PORT_TCP,
 				"netty.tcp", 1, 60, 10);
-		IRequesterContext context = new TestContext(config, this.msgId);
+		RequesterContext context = new TestContext(config, this.msgId);
 		IRequester req = new SCRequester(context);
 		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL
 				.newInstance(req, "publish-simulation");

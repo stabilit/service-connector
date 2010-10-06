@@ -23,26 +23,22 @@ package org.serviceconnector.test.sc.connectionPool;
 
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.net.connection.ConnectionPool;
-import org.serviceconnector.net.req.IRequesterContext;
+import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.scmp.SCMPMessageId;
-
 
 /**
  * @author JTraber
  */
-public class TestContext implements IRequesterContext {
-
-	protected ConnectionPool connectionPool;
-	private SCMPMessageId msgId;
+public class TestContext extends RequesterContext {
 
 	public TestContext(CommunicatorConfig config, SCMPMessageId msgId) {
-		this.connectionPool = new ConnectionPool(config.getHost(), config.getPort(), config.getConnectionType());
+		super(new ConnectionPool(config.getHost(), config.getPort(), config.getConnectionType()), msgId);
 		this.connectionPool.setMinConnections(1);
-		this.msgId = msgId;
 	}
 
 	public TestContext(String host, int port, String conType) {
-		this.connectionPool = new ConnectionPool(host, port, conType);
+		super(new ConnectionPool(host, port, conType), null);
+
 	}
 
 	@Override
