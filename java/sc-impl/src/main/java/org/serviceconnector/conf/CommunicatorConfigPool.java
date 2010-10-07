@@ -16,18 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.conf;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.scmp.SCMPError;
 
 
@@ -42,7 +39,7 @@ public abstract class CommunicatorConfigPool {
 	protected final static Logger logger = Logger.getLogger(CommunicatorConfigPool.class);
 
 	/** The properties. */
-	private Properties props;
+	private CompositeConfiguration configurations;
 	/** The requester configuration list. */
 	private List<CommunicatorConfig> comConfigList;
 	/** The writePID flag. */
@@ -53,7 +50,7 @@ public abstract class CommunicatorConfigPool {
 	 */
 	public CommunicatorConfigPool() {
 		this.comConfigList = null;
-		this.props = null;
+		this.configurations = null;
 		this.writePIDFlag = false;
 	}
 
@@ -66,33 +63,20 @@ public abstract class CommunicatorConfigPool {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private void load(String fileName, String topLevelPropsKey) throws Exception {
-		InputStream inputStream = null;
+		this.configurations = new CompositeConfiguration();
 		try {
-			// try to find file outside of jar archive
-			inputStream = new FileInputStream(fileName);
-		} catch (FileNotFoundException e) {
-			// try to find file inside jar archive
-			inputStream = ClassLoader.getSystemResourceAsStream(fileName);
-		}
-
-		if (inputStream == null) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "could not find property file: "
-					+ fileName);
-		}
-		props = new Properties();
-		props.load(inputStream);
-
-		String respNames = props.getProperty(topLevelPropsKey);
-
-		if (respNames == null) {
+			this.configurations.addConfiguration(new PropertiesConfiguration(fileName));
+		} catch(Exception e) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.toString());
+		}		
+		@SuppressWarnings("unchecked")
+		List<String> communicators = this.configurations.getList(topLevelPropsKey);
+		if (communicators == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "top level key not found: "
 					+ topLevelPropsKey);
 		}
-
-		String[] communicators = respNames.split(Constants.COMMA_OR_SEMICOLON);
 		comConfigList = new ArrayList<CommunicatorConfig>();
-
-		String operationTimeoutString = props.getProperty(Constants.ROOT_OPERATION_TIMEOUT_QUALIFIER);
+		String operationTimeoutString = this.configurations.getString(Constants.ROOT_OPERATION_TIMEOUT_QUALIFIER);
 		double operationTimeoutMultiplier = Constants.OPERATION_TIMEOUT_MULTIPLIER;
 		if (operationTimeoutString != null) {
 			operationTimeoutMultiplier = Double.parseDouble(operationTimeoutString);
@@ -104,15 +88,15 @@ public abstract class CommunicatorConfigPool {
 
 			comConfigList.add(commConfig);
 
-			int port = Integer.parseInt((String) props.get(commName + Constants.PORT_QUALIFIER));
-			String maxPoolSizeValue = (String) props.get(commName + Constants.MAX_CONNECTION_POOL_SIZE);
+			int port = Integer.parseInt((String) this.configurations.getString(commName + Constants.PORT_QUALIFIER));
+			String maxPoolSizeValue = (String) this.configurations.getString(commName + Constants.MAX_CONNECTION_POOL_SIZE);
 
 			if (maxPoolSizeValue != null) {
 				int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
 				commConfig.setMaxPoolSize(maxPoolSize);
 			}
 
-			String keepAliveIntervalValue = (String) props.get(commName + Constants.KEEP_ALIVE_INTERVAL);
+			String keepAliveIntervalValue = (String) this.configurations.getString(commName + Constants.KEEP_ALIVE_INTERVAL);
 			int keepAliveInterval = 0;
 			if (keepAliveIntervalValue != null) {
 				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
@@ -120,25 +104,25 @@ public abstract class CommunicatorConfigPool {
 			commConfig.setKeepAliveInterval(keepAliveInterval);
 
 			commConfig.setPort(port);
-			commConfig.setHost((String) props.get(commName + Constants.HOST_QUALIFIER));
-			commConfig.setConnectionType((String) props.get(commName + Constants.CONNECTION_TYPE_QUALIFIER));
-			commConfig.setUserid((String) props.get(commName + Constants.CONNECTION_USERNAME));
-			commConfig.setPassword((String) props.get(commName + Constants.CONNECTION_PASSWORD));
+			commConfig.setHost((String) this.configurations.getString(commName + Constants.HOST_QUALIFIER));
+			commConfig.setConnectionType((String) this.configurations.getString(commName + Constants.CONNECTION_TYPE_QUALIFIER));
+			commConfig.setUserid((String) this.configurations.getString(commName + Constants.CONNECTION_USERNAME));
+			commConfig.setPassword((String) this.configurations.getString(commName + Constants.CONNECTION_PASSWORD));
 			commConfig.setOperationTimeoutMultiplier(operationTimeoutMultiplier);
 		}
 
-		String largeMsgLimitValue = props.getProperty(Constants.ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER);
+		String largeMsgLimitValue = this.configurations.getString(Constants.ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER);
 		if (largeMsgLimitValue != null) {
 			int largeMsgLimit = Integer.parseInt(largeMsgLimitValue);
 			Constants.setLargeMessageLimit(largeMsgLimit);
 		}
 
-		String writePIDFlag = props.getProperty(Constants.ROOT_WRITEPID_QUALIFIER);
+		String writePIDFlag = this.configurations.getString(Constants.ROOT_WRITEPID_QUALIFIER);
 		if (writePIDFlag != null) {
 			this.writePIDFlag = true;
 		}
 
-		String echoIntervalString = props.getProperty(Constants.ROOT_ECHO_INTERVAL_QUALIFIER);
+		String echoIntervalString = this.configurations.getString(Constants.ROOT_ECHO_INTERVAL_QUALIFIER);
 		if (operationTimeoutString != null) {
 			double echoIntervalMultiplier = Double.parseDouble(echoIntervalString);
 			Constants.setEchoIntervalMultiplier(echoIntervalMultiplier);

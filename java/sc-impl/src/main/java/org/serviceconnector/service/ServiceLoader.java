@@ -21,13 +21,12 @@
  */
 package org.serviceconnector.service;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.InvalidParameterException;
-import java.util.Properties;
+import java.util.List;
 
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -52,30 +51,21 @@ public class ServiceLoader {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public static void load(String fileName) throws Exception {
-		InputStream is = null;
+		CompositeConfiguration config = new CompositeConfiguration();
 		try {
-			// try to find file outside of jar archive
-			is = new FileInputStream(fileName);
-		} catch (FileNotFoundException e) {
-			// try to find file inside jar archive
-			is = ClassLoader.getSystemResourceAsStream(fileName);
-		}
-
-		if (is == null) {
+			config.addConfiguration(new PropertiesConfiguration(fileName));
+		} catch(Exception e) {
 			throw new InvalidParameterException("could not find property file : " + fileName);
 		}
-		Properties props = new Properties();
-		props.load(is);
-
-		String serviceNamesString = props.getProperty(Constants.SERVICE_NAMES);
-		String[] serviceNames = serviceNamesString.split(Constants.COMMA_OR_SEMICOLON);
+		@SuppressWarnings("unchecked")
+		List<String> serviceNames = config.getList(Constants.SERVICE_NAMES);
 
 		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
 
 		for (String serviceName : serviceNames) {
 			// remove blanks in serviceName
 			serviceName = serviceName.trim();
-			String serviceTypeString = (String) props.get(serviceName + Constants.TYPE_QUALIFIER);
+			String serviceTypeString = (String) config.getString(serviceName + Constants.TYPE_QUALIFIER);
 			ServiceType serviceType = ServiceType.getServiceType(serviceTypeString);
 
 			// instantiate right type of service
@@ -97,7 +87,7 @@ public class ServiceLoader {
 			}
 
 			// set service state
-			String enable = props.getProperty(serviceName + Constants.ENABLE_QUALIFIER);
+			String enable = config.getString(serviceName + Constants.ENABLE_QUALIFIER);
 			if (enable == null || enable.equals("true")) {
 				service.setState(ServiceState.ENABLED);		// default is enabled
 				logger.debug("state enable for service: " + serviceName);

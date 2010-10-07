@@ -296,5 +296,6 @@ div.sc_table_title {
 }
 
 .sc_table_details {
+	padding:2px;
 	border:2px solid #B61F34;
 }
