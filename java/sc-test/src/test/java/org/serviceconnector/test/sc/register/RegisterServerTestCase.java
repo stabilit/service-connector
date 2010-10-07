@@ -147,7 +147,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		this.registerCallback.getMessageSync();
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		inspectCall.invoke(this.registerCallback, 3);
+		inspectCall.invoke(this.registerCallback, 3000);
 		SCMPMessage inspect = this.registerCallback.getMessageSync();
 
 		/*********************************** Verify registry entries in SC ********************************/

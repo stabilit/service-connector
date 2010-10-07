@@ -29,7 +29,6 @@ import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.sc.SCVersionTestCase;
 import org.serviceconnector.test.sc.attach.AttachTestCase;
 import org.serviceconnector.test.sc.attach.DetachTestCase;
 import org.serviceconnector.test.sc.connectionPool.ConnectionPoolTestCase;
@@ -57,6 +56,7 @@ import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteLargeAsyncTestCas
 import org.serviceconnector.test.sc.srvExecute.synch.SrvExecuteLargeSyncTestCase;
 import org.serviceconnector.test.sc.srvExecute.synch.SrvExecuteSyncTestCase;
 import org.serviceconnector.test.sc.util.LinkedQueueTestCase;
+import org.serviceconnector.test.sc.util.SCVersionTestCase;
 import org.serviceconnector.test.sc.util.ValidatorUtilityTestCase;
 
 
@@ -105,7 +105,7 @@ public class SCTest {
 		Assert.assertEquals(msgType.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		// TODO TRN refine SCMPErrors
 		/*
-		 * text must not be compared! It may be chinese
+		 * text must not be compared! It may be Chinese
 		Assert.assertEquals(error.getErrorText() + additionalInfo, result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		*/
 		Assert.assertEquals(error.getErrorCode(), result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));

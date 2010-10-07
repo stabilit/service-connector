@@ -140,7 +140,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 				// operation timeout
 				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);	//TODO TRN why is this set?
 				// ipAddressList
 				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
 				ValidatorUtility.validateIpAddressList(ipAddressList);
@@ -151,7 +151,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 				String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());
 				int echoInterval = ValidatorUtility.validateInt(1, echoIntervalValue, 3600,
 						SCMPError.HV_WRONG_ECHO_INTERVAL);
-				request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval);
+				request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval); //TODO TRN why is this set?
 			} catch (HasFaultResponseException ex) {
 				// needs to set message type at this point
 				ex.setMessageType(getKey());
