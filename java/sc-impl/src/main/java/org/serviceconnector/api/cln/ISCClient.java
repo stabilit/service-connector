@@ -22,7 +22,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.service.ISCCommunicator;
 import org.serviceconnector.service.SCServiceException;
 
-
+//TODO eliminieren
 /**
  * The Interface ISCClient. Interface for any kind of client.
  * 
@@ -184,7 +184,7 @@ public interface ISCClient extends ISCCommunicator {
 	 * 
 	 * @return the context
 	 */
-	public abstract ServiceConnectorContext getContext();
+	public abstract SCContext getSCContext();
 
 	/** {@inheritDoc} */
 	@Override

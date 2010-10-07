@@ -35,9 +35,9 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.util.Timer;
 import org.serviceconnector.Constants;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.CommunicationException;
-import org.serviceconnector.net.EncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.connection.ConnectionContext;
@@ -47,14 +47,12 @@ import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 
-
 /**
- * The Class NettyHttpClientConnection. Concrete connection implementation with
- * JBoss Netty for Http.
+ * The Class NettyHttpClientConnection. Concrete connection implementation with JBoss Netty for Http.
  * 
  * @author JTraber
  */
-public class NettyHttpConnection implements IConnection { 
+public class NettyHttpConnection implements IConnection {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpConnection.class);
@@ -91,9 +89,8 @@ public class NettyHttpConnection implements IConnection {
 	/** The timer to observe timeouts, static because should be shared. */
 	private static Timer timer;
 	/*
-	 * The channel factory. Configures client with Thread Pool, Boss Threads and
-	 * Worker Threads. A boss thread accepts incoming connections on a socket. A
-	 * worker thread performs non-blocking read and write on a channel.
+	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts
+	 * incoming connections on a socket. A worker thread performs non-blocking read and write on a channel.
 	 */
 	private static NioClientSocketChannelFactory channelFactory;
 
@@ -150,7 +147,8 @@ public class NettyHttpConnection implements IConnection {
 		future.addListener(this.operationListener);
 		try {
 			// waits until operation is done
-			this.channel = this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS).getChannel();
+			this.channel = this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS)
+					.getChannel();
 			// complete localSocketAdress
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
@@ -199,7 +197,7 @@ public class NettyHttpConnection implements IConnection {
 	@Override
 	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
+		encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory().createEncoderDecoder(scmp);
 		encoderDecoder.encode(baos, scmp);
 		url = new URL(Constants.HTTP, host, port, Constants.HTTP_FILE);
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath());
@@ -223,7 +221,8 @@ public class NettyHttpConnection implements IConnection {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			logger.error("send", ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on " + this.localSocketAddress);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on "
+					+ this.localSocketAddress);
 		}
 		if (connectionLogger.isTraceEnabled()) {
 			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
@@ -248,12 +247,6 @@ public class NettyHttpConnection implements IConnection {
 	@Override
 	public void setIdleTimeout(int idleTimeout) {
 		this.idleTimeout = idleTimeout;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IConnection newInstance() {
-		return new NettyHttpConnection();
 	}
 
 	/** {@inheritDoc} */

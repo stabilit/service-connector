@@ -14,44 +14,68 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.api.cln;
+package org.serviceconnector.registry;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.SCService;
-import org.serviceconnector.service.ISCCommunicator;
+import org.serviceconnector.log.SessionLogger;
+import org.serviceconnector.service.Session;
+
 
 /**
- * The Class ServiceContext. Context of a service. Holds information about the service himself and the
- * serviceConnectorContext which uses service.
+ * The Class SubscriptionRegistry. Registry stores entries for properly created subscriptions.
+ * 
+ * @author JTraber
  */
-public class ServiceContext {
+public class SubscriptionRegistry extends Registry<String, Session> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ServiceContext.class);
-
-	/** The service connector context. */
-	private ServiceConnectorContext serviceConnectorContext;
-	/** The service. */
-	private SCService service;
+	protected static final Logger logger = Logger.getLogger(SubscriptionRegistry.class);
+	/** The Constant sessionLogger. */
+	private final static SessionLogger sessionLogger = SessionLogger.getInstance();
 
 	/**
-	 * Instantiates a new service context.
+	 * Adds the session.
 	 * 
-	 * @param serviceConnectorContext
-	 *            the service connector context
-	 * @param service
-	 *            the service
+	 * @param key
+	 *            the key
+	 * @param session
+	 *            the session
 	 */
-	public ServiceContext(ServiceConnectorContext serviceConnectorContext, SCService service) {
-		this.serviceConnectorContext = serviceConnectorContext;
-		this.service = service;
+	public void addSession(String key, Session session) {
+		sessionLogger.logCreateSession(this.getClass().getName(), session.getId());
+		this.put(key, session);
 	}
 
-	public ISCCommunicator getServiceConnector() {
-		return this.serviceConnectorContext.getServiceConnector();
+	/**
+	 * Removes the session.
+	 * 
+	 * @param session
+	 *            the session
+	 */
+	public void removeSession(Session session) {
+		this.removeSession(session.getId());
 	}
 
-	public SCService getService() {
-		return this.service;
+	/**
+	 * Removes the session.
+	 * 
+	 * @param key
+	 *            the key
+	 */
+	public void removeSession(String key) {
+		super.remove(key);
+		sessionLogger.logDeleteSession(this.getClass().getName(), key);
+	}
+
+	/**
+	 * Gets the session.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the session
+	 */
+	public Session getSession(String key) {
+		Session session = super.get(key);
+		return session;
 	}
 }

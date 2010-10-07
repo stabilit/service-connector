@@ -112,10 +112,6 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 			// mask
 			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-			if (mask.indexOf("%") != -1) {
-				// percent sign in mask not allowed
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "percent sign not allowed");
-			}
 			// ipAddressList
 			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);

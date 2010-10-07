@@ -30,9 +30,9 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.ServiceConnectorContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPError;
-
 
 /**
  * @author JTraber
@@ -60,7 +60,7 @@ public class ServiceLoader {
 		@SuppressWarnings("unchecked")
 		List<String> serviceNames = config.getList(Constants.SERVICE_NAMES);
 
-		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
+		ServiceRegistry serviceRegistry = ServiceConnectorContext.getCurrentContext().getServiceRegistry();
 
 		for (String serviceName : serviceNames) {
 			// remove blanks in serviceName
@@ -89,9 +89,9 @@ public class ServiceLoader {
 			// set service state
 			String enable = config.getString(serviceName + Constants.ENABLE_QUALIFIER);
 			if (enable == null || enable.equals("true")) {
-				service.setState(ServiceState.ENABLED);		// default is enabled
+				service.setState(ServiceState.ENABLED); // default is enabled
 				logger.debug("state enable for service: " + serviceName);
-				
+
 			} else {
 				service.setState(ServiceState.DISABLED);
 				logger.debug("state disable for service: " + serviceName);

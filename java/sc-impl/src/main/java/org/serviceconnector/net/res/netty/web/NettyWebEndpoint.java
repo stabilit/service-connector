@@ -26,6 +26,7 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.serviceconnector.Constants;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.res.EndpointAdapter;
@@ -100,7 +101,7 @@ public class NettyWebEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 			// adds responder to registry
-			ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
+			ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
 			responderRegistry.addResponder(this.channel.getId(), this.resp);
 		} catch (Exception ex) {
 			this.answer.add(Boolean.FALSE);

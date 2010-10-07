@@ -22,9 +22,6 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.registry.Registry;
-import org.serviceconnector.registry.ServerRegistry;
-import org.serviceconnector.registry.ServiceRegistry;
-import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
@@ -34,7 +31,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceState;
-
 
 /**
  * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used for
@@ -62,13 +58,9 @@ public class InspectCommand extends CommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-		SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
-		
+
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		InetAddress localHost = InetAddress.getLocalHost();
@@ -76,9 +68,9 @@ public class InspectCommand extends CommandAdapter {
 		scmpReply.setMessageType(getKey());
 
 		if (bodyString == null) {
-			String inspectString = "serviceRegistry&" + this.getRegistryInspectString(serviceRegistry);
-			inspectString += "sessionRegistry&" + this.getRegistryInspectString(sessionRegistry);
-			inspectString += "serverRegistry&" + this.getRegistryInspectString(serverRegistry);
+			String inspectString = "serviceRegistry&" + this.getRegistryInspectString(this.serviceRegistry);
+			inspectString += "sessionRegistry&" + this.getRegistryInspectString(this.sessionRegistry);
+			inspectString += "serverRegistry&" + this.getRegistryInspectString(this.serverRegistry);
 
 			// dump internal registries
 			scmpReply.setBody(inspectString);
@@ -91,11 +83,11 @@ public class InspectCommand extends CommandAdapter {
 			String serviceName = bodyString.substring(6);
 			logger.debug("state request for service:" + serviceName);
 
-			if (serviceRegistry.containsKey(serviceName)) {
-				if (serviceRegistry.getService(serviceName).getState() == ServiceState.ENABLED) {
+			if (this.serviceRegistry.containsKey(serviceName)) {
+				if (this.serviceRegistry.getService(serviceName).getState() == ServiceState.ENABLED) {
 					scmpReply.setBody(ServiceState.ENABLED.toString());
 					logger.debug("service:" + serviceName + "is enabled");
-				} else if (serviceRegistry.getService(serviceName).getState() == ServiceState.DISABLED) {
+				} else if (this.serviceRegistry.getService(serviceName).getState() == ServiceState.DISABLED) {
 					scmpReply.setBody(ServiceState.DISABLED.toString());
 					logger.debug("service:" + serviceName + "is disabled");
 				} else {
@@ -103,8 +95,8 @@ public class InspectCommand extends CommandAdapter {
 					logger.debug("service:" + serviceName + "is state unknown");
 				}
 			} else {
-				logger.debug("service:" + serviceName+" not found");
-				scmpReply = new SCMPFault(SCMPError.NOT_FOUND, "service:" + serviceName+" not found");
+				logger.debug("service:" + serviceName + " not found");
+				scmpReply = new SCMPFault(SCMPError.NOT_FOUND, "service:" + serviceName + " not found");
 			}
 			response.setSCMP(scmpReply);
 			return;
@@ -114,8 +106,8 @@ public class InspectCommand extends CommandAdapter {
 			// state for service requested
 			String serviceName = bodyString.substring(9);
 			logger.debug("sessions request for service:" + serviceName);
-			if (serviceRegistry.containsKey(serviceName)) {
-				Service service = serviceRegistry.getService(serviceName);
+			if (this.serviceRegistry.containsKey(serviceName)) {
+				Service service = this.serviceRegistry.getService(serviceName);
 				scmpReply.setBody(service.getCountAvailableSessions() + "/" + service.getCountAllocatedSessions());
 			}
 			response.setSCMP(scmpReply);
@@ -128,7 +120,6 @@ public class InspectCommand extends CommandAdapter {
 	public void validate(IRequest request) throws SCMPValidatorException {
 		// no validation necessary in case of inspect command
 	}
-
 
 	/**
 	 * Gets the registry inspect string.

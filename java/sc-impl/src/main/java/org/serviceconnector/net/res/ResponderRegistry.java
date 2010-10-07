@@ -29,16 +29,14 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ResponderRegistry.class);
 
-	/** The instance. */
-	private static ResponderRegistry instance = new ResponderRegistry();
 	/** The thread local. Space to store any data for a single thread. */
 	private ThreadLocal<Object> threadLocal;
 
 	/**
 	 * Instantiates a new responder registry.
 	 */
-	private ResponderRegistry() {
-		threadLocal = new ThreadLocal<Object>();
+	public ResponderRegistry() {
+		this.threadLocal = new ThreadLocal<Object>();
 	}
 
 	/**
@@ -50,15 +48,6 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 	 */
 	public void setThreadLocal(Object obj) {
 		this.threadLocal.set(obj);
-	}
-
-	/**
-	 * Gets the current instance of responder registry.
-	 * 
-	 * @return the current instance
-	 */
-	public static ResponderRegistry getCurrentInstance() {
-		return instance;
 	}
 
 	/**

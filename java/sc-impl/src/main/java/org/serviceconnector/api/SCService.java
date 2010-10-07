@@ -17,8 +17,8 @@
 package org.serviceconnector.api;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.cln.ServiceConnectorContext;
-import org.serviceconnector.api.cln.ServiceContext;
+import org.serviceconnector.api.cln.SCContext;
+import org.serviceconnector.api.cln.SCServiceContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPMessageId;
@@ -35,8 +35,6 @@ public abstract class SCService {
 	protected String serviceName;
 	/** The session id, identifies current session context. */
 	protected String sessionId;
-	/** The service context. */
-	protected ServiceContext serviceContext;
 	/** The requester to communicate. */
 	protected IRequester requester;
 	/** The callback to use by service. */
@@ -46,23 +44,25 @@ public abstract class SCService {
 	/** The message id. */
 	protected SCMPMessageId msgId;
 	/** The service connector context. */
-	private ServiceConnectorContext serviceConnectorContext;
+	private SCContext scContext;
+	/** The sc service context. */
+	protected SCServiceContext scServiceContext;
 
 	/**
 	 * Instantiates a new service.
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @param serviceConnectorContext
+	 * @param scContext
 	 *            the context
 	 */
-	public SCService(String serviceName, ServiceConnectorContext serviceConnectorContext) {
+	public SCService(String serviceName, SCContext scContext) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
 		this.callback = null;
 		this.pendingRequest = false;
 		this.msgId = new SCMPMessageId();
-		this.serviceConnectorContext = serviceConnectorContext;
+		this.scContext = scContext;
 	}
 
 	/**
@@ -73,12 +73,21 @@ public abstract class SCService {
 	}
 
 	/**
-	 * Gets the context.
+	 * Gets the scServiceContext.
 	 * 
-	 * @return the context
+	 * @return the scServiceContext
 	 */
-	public ServiceContext getServiceContext() {
-		return this.serviceContext;
+	public SCServiceContext getSCServiceContext() {
+		return this.scServiceContext;
+	}
+
+	/**
+	 * Gets the scContext.
+	 * 
+	 * @return the scContext
+	 */
+	public SCContext getSCContext() {
+		return scContext;
 	}
 
 	/**

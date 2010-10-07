@@ -25,9 +25,9 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
-import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.srv.ServerCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.ctx.SCServerContext;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
@@ -55,8 +55,6 @@ public class SCSessionServer implements ISCSessionServer {
 
 	/** Identifies low level component to use for communication default for severs is {netty.tcp}. */
 	private String conType;
-	/** The srv service registry. */
-	protected SrvServiceRegistry srvServiceRegistry;
 	/** The message id. */
 	private SCMPMessageId msgId;
 	/** The server listening state. */
@@ -84,13 +82,11 @@ public class SCSessionServer implements ISCSessionServer {
 		this.localServerPort = -1;
 		this.responder = null;
 		this.msgId = new SCMPMessageId();
-		this.srvServiceRegistry = SrvServiceRegistry.getCurrentInstance();
 		this.callback = new SrvServerCallback();
 
-		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
-		if (commandFactory == null) {
-			CommandFactory.setCurrentCommandFactory(new ServerCommandFactory());
-		}
+		// Initialize server command factory
+		SCServerContext scServerContext = SCServerContext.getCurrentContext();
+		scServerContext.initContext(new ServerCommandFactory());
 	}
 
 	/** {@inheritDoc} */
@@ -102,13 +98,15 @@ public class SCSessionServer implements ISCSessionServer {
 	/** {@inheritDoc} */
 	@Override
 	public int getMaxSessions(String serviceName) {
-		return this.srvServiceRegistry.getSrvService(serviceName).getMaxSessions();
+		SrvServiceRegistry srvServiceRegistry = SCServerContext.getCurrentContext().getSrvServiceRegistry();
+		return srvServiceRegistry.getSrvService(serviceName).getMaxSessions();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public int getMaxConnections(String serviceName) {
-		return this.srvServiceRegistry.getSrvService(serviceName).getMaxConnections();
+		SrvServiceRegistry srvServiceRegistry = SCServerContext.getCurrentContext().getSrvServiceRegistry();
+		return srvServiceRegistry.getSrvService(serviceName).getMaxConnections();
 	}
 
 	/** {@inheritDoc} */
@@ -159,21 +157,23 @@ public class SCSessionServer implements ISCSessionServer {
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}
 		// creating srvService & adding to registry
+		SrvServiceRegistry srvServiceRegistry = SCServerContext.getCurrentContext().getSrvServiceRegistry();
 		SrvService srvService = new SrvService(serviceName, maxSessions, maxConnections, requester, scCallback);
-		this.srvServiceRegistry.addSrvService(serviceName, srvService);
+		srvServiceRegistry.addSrvService(serviceName, srvService);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void deregisterServer(String serviceName) throws Exception {
-		if (this.srvServiceRegistry.containsKey(serviceName) == false) {
+		SrvServiceRegistry srvServiceRegistry = SCServerContext.getCurrentContext().getSrvServiceRegistry();
+		if (srvServiceRegistry.containsKey(serviceName) == false) {
 			// sc server not registered - deregister not necessary
 			return;
 		}
 		IRequester req = null;
 		try {
 			// remove srvService from registry
-			SrvService srvService = this.srvServiceRegistry.removeSrvService(serviceName);
+			SrvService srvService = srvServiceRegistry.removeSrvService(serviceName);
 			req = srvService.getRequester();
 			SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 					.newInstance(req, serviceName);
@@ -252,7 +252,8 @@ public class SCSessionServer implements ISCSessionServer {
 	/** {@inheritDoc} */
 	@Override
 	public boolean isRegistered(String serviceName) {
-		return this.srvServiceRegistry.containsKey(serviceName);
+		SrvServiceRegistry srvServiceRegistry = SCServerContext.getCurrentContext().getSrvServiceRegistry();
+		return srvServiceRegistry.containsKey(serviceName);
 	}
 
 	/** {@inheritDoc} */
@@ -270,15 +271,15 @@ public class SCSessionServer implements ISCSessionServer {
 	/** {@inheritDoc} */
 	@Override
 	public String getSCHost(String serviceName) {
-		return this.srvServiceRegistry.getSrvService(serviceName).getRequester().getContext().getConnectionPool()
-				.getHost();
+		SrvServiceRegistry srvServiceRegistry = SCServerContext.getCurrentContext().getSrvServiceRegistry();
+		return srvServiceRegistry.getSrvService(serviceName).getRequester().getContext().getConnectionPool().getHost();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public int getSCPort(String serviceName) {
-		return this.srvServiceRegistry.getSrvService(serviceName).getRequester().getContext().getConnectionPool()
-				.getPort();
+		SrvServiceRegistry srvServiceRegistry = SCServerContext.getCurrentContext().getSrvServiceRegistry();
+		return srvServiceRegistry.getSrvService(serviceName).getRequester().getContext().getConnectionPool().getPort();
 	}
 
 	/** {@inheritDoc} */
@@ -311,6 +312,10 @@ public class SCSessionServer implements ISCSessionServer {
 	 */
 	public void setConnectionType(String conType) {
 		this.conType = conType;
+	}
+
+	public SCServerContext getSCServerContext() {
+		return (SCServerContext) SCServerContext.getCurrentContext();
 	}
 
 	/**

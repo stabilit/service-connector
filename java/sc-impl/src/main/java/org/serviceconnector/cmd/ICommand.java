@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd;
 
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -25,7 +24,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 /**
  * The Interface ICommand.
  */
-public interface ICommand extends IFactoryable {
+public interface ICommand {
 
 	/**
 	 * Gets the key.

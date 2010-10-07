@@ -17,17 +17,15 @@
 package org.serviceconnector.net;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.factory.Factory;
-import org.serviceconnector.net.IEncoderDecoder;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPMessage;
-
 
 /**
  * A factory for creating EncoderDecoder objects.
  * 
  * @author JTraber
  */
-public final class EncoderDecoderFactory extends Factory {
+public final class EncoderDecoderFactory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(EncoderDecoderFactory.class);
@@ -35,31 +33,17 @@ public final class EncoderDecoderFactory extends Factory {
 	private static final String LARGE = "large";
 	private static final String KEEP_ALIVE = "keepAlive";
 	private static final String DEFAULT = "default";
-	/** The encoder decoder factory. */
-	private static EncoderDecoderFactory encoderDecoderFactory = new EncoderDecoderFactory();
 
-	/**
-	 * Gets the current encoder decoder factory.
-	 * 
-	 * @return the current encoder decoder factory
-	 */
-	public static EncoderDecoderFactory getCurrentEncoderDecoderFactory() {
-		return encoderDecoderFactory;
-	}
-
-	/**
-	 * Instantiates a new encoder decoder factory.
-	 */
-	private EncoderDecoderFactory() {
+	private AppContext appContext;
+	
+	public void initEncoders(AppContext appContext) {
+		this.appContext = appContext;
 		IEncoderDecoder encoderDecoder = new DefaultMessageEncoderDecoder();
-		this.add(DefaultMessageEncoderDecoder.class.getName(), encoderDecoder);
-		this.add(DEFAULT, encoderDecoder);
+		this.addEncoderDecoder(DEFAULT, encoderDecoder);
 		encoderDecoder = new LargeMessageEncoderDecoder();
-		this.add(LargeMessageEncoderDecoder.class.getName(), encoderDecoder);
-		this.add(LARGE, encoderDecoder);
+		this.addEncoderDecoder(LARGE, encoderDecoder);
 		encoderDecoder = new KeepAliveMessageEncoderDecoder();
-		this.add(KeepAliveMessageEncoderDecoder.class.getName(), encoderDecoder);
-		this.add(KEEP_ALIVE, encoderDecoder);
+		this.addEncoderDecoder(KEEP_ALIVE, encoderDecoder);	
 	}
 
 	/**
@@ -70,7 +54,6 @@ public final class EncoderDecoderFactory extends Factory {
 	 * @return true, if is large
 	 */
 	public boolean isLarge(SCMPMessage message) {
-
 		if (message.isPart() || message.isBodyOffset()) {
 			// message is a part or has offset for reading body - message is part of large message
 			return true;
@@ -89,19 +72,19 @@ public final class EncoderDecoderFactory extends Factory {
 	 *            the scmp message
 	 * @return the i encoder decoder
 	 */
-	public IEncoderDecoder newInstance(SCMPMessage message) {
+	public IEncoderDecoder createEncoderDecoder(SCMPMessage message) {
 		if (message.isKeepAlive()) {
-			return newInstance(KEEP_ALIVE);
+			return createEncoderDecoder(KEEP_ALIVE);
 		}
 		if (message.isPart() || message.isBodyOffset()) {
 			// message is a part or has offset for reading body - message is part of large message take large instance
-			return newInstance(LARGE);
+			return createEncoderDecoder(LARGE);
 		}
 		if (message.isLargeMessage()) {
 			// message size is large - take large instance
-			return newInstance(LARGE);
+			return createEncoderDecoder(LARGE);
 		}
-		return newInstance(DEFAULT);
+		return createEncoderDecoder(DEFAULT);
 	}
 
 	/**
@@ -111,16 +94,16 @@ public final class EncoderDecoderFactory extends Factory {
 	 *            the scmp message buffer
 	 * @return the i encoder decoder
 	 */
-	public IEncoderDecoder newInstance(byte[] scmpBuffer) {
+	public IEncoderDecoder createEncoderDecoder(byte[] scmpBuffer) {
 		if (scmpBuffer[0] == 'P') {
 			// headline key start with 'P' means message must be of type part - take large instance
-			return newInstance(LARGE);
+			return createEncoderDecoder(LARGE);
 		}
 		if (scmpBuffer[0] == 'K') {
 			// headline key start with 'K' means message must be of type keep alive
-			return newInstance(KEEP_ALIVE);
+			return createEncoderDecoder(KEEP_ALIVE);
 		}
-		return newInstance(DEFAULT);
+		return createEncoderDecoder(DEFAULT);
 	}
 
 	/**
@@ -130,17 +113,18 @@ public final class EncoderDecoderFactory extends Factory {
 	 *            the key
 	 * @return the i encoder decoder
 	 */
-	public IEncoderDecoder newInstance(String key) {
-		IEncoderDecoder encoderDecoder = (IEncoderDecoder) super.newInstance(key);
+	public IEncoderDecoder createEncoderDecoder(String key) {
+		IEncoderDecoder encoderDecoder = AppContext.getCurrentContext().getEncodersDecoders().get(key);
 		return encoderDecoder;
 	}
 
 	/**
-	 * Gets the encoder decoders.
-	 * 
-	 * @return the encoder decoders
+	 * Adds the encoder decoder.
+	 *
+	 * @param key the key
+	 * @param encoderDecoder the encoder decoder
 	 */
-	public Object[] getEncoderDecoders() {
-		return this.baseInstances.keySet().toArray();
+	private void addEncoderDecoder(String key, IEncoderDecoder encoderDecoder) {
+		this.appContext.getEncodersDecoders().put(key, encoderDecoder);
 	}
 }

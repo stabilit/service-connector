@@ -155,7 +155,7 @@ public interface IPublishService extends IService {
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract ServiceContext getServiceContext();
+	public abstract SCServiceContext getSCServiceContext();
 
 	/** {@inheritDoc} */
 	@Override

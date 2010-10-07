@@ -29,24 +29,6 @@ public class SrvServiceRegistry extends Registry<String, SrvService> {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SrvServiceRegistry.class);
-	
-	/** The instance. */
-	private static SrvServiceRegistry instance = new SrvServiceRegistry();
-
-	/**
-	 * Instantiates a new SrvServiceRegistry.
-	 */
-	private SrvServiceRegistry() {
-	}
-
-	/**
-	 * Gets the current instance.
-	 * 
-	 * @return the current instance
-	 */
-	public static SrvServiceRegistry getCurrentInstance() {
-		return instance;
-	}
 
 	/**
 	 * Adds the server service.

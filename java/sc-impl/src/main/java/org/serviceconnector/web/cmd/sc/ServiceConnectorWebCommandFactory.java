@@ -19,8 +19,8 @@ package org.serviceconnector.web.cmd.sc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.conf.SystemConfigurationException;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.IResponder;
-import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebSession;
 import org.serviceconnector.web.LoginException;
@@ -31,16 +31,15 @@ import org.serviceconnector.web.cmd.WebCommandFactory;
 
 // TODO: Auto-generated Javadoc
 /**
- * A factory for creating ServiceConnectorWebCommand objects. Provides access to
- * concrete instances of Service Connector Web commands.
+ * A factory for creating ServiceConnectorWebCommand objects. Provides access to concrete instances of Service Connector
+ * Web commands.
  * 
  * @author JTraber
  */
 public class ServiceConnectorWebCommandFactory extends WebCommandFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(ServiceConnectorWebCommandFactory.class);
+	protected final static Logger logger = Logger.getLogger(ServiceConnectorWebCommandFactory.class);
 
 	/**
 	 * Instantiates a new service connector command factory.
@@ -51,8 +50,9 @@ public class ServiceConnectorWebCommandFactory extends WebCommandFactory {
 
 	/**
 	 * Instantiates a new service connector web command factory.
-	 *
-	 * @param webCommandFactory the web command factory
+	 * 
+	 * @param webCommandFactory
+	 *            the web command factory
 	 */
 	public ServiceConnectorWebCommandFactory(WebCommandFactory webCommandFactory) {
 		init(webCommandFactory);
@@ -60,33 +60,32 @@ public class ServiceConnectorWebCommandFactory extends WebCommandFactory {
 
 	/**
 	 * Initialize the web command factory.
-	 *
-	 * @param webCommandFactory the web command factory
+	 * 
+	 * @param webCommandFactory
+	 *            the web command factory
 	 */
 	private void init(WebCommandFactory webCommandFactory) {
 		IWebCommand defaultWebCommand = new DefaultWebCommand();
 		IWebCommandAccessible serviceConnectorWebAccessible = new ServiceConnectorWebAccessible();
 		defaultWebCommand.setCommandAccessible(serviceConnectorWebAccessible);
-		webCommandFactory.addWebCommand(defaultWebCommand.getKey(),
-				defaultWebCommand);
+		webCommandFactory.addWebCommand(defaultWebCommand.getKey(), defaultWebCommand);
 	}
 
 	/**
 	 * The Class ServiceConnectorWebAccessible.
 	 */
-	private class ServiceConnectorWebAccessible implements
-			IWebCommandAccessible {
+	private class ServiceConnectorWebAccessible implements IWebCommandAccessible {
 
 		/** The accessible context. */
 		private IWebCommandAccessibleContext accessibleContext;
-		
+
 		/**
 		 * Instantiates a new service connector web accessible.
 		 */
 		public ServiceConnectorWebAccessible() {
 			this.accessibleContext = new ServiceConnectorWebAccessibleContext();
 		}
-		
+
 		/** {@inheritDoc} */
 		@Override
 		public void login(IWebRequest request) throws Exception {
@@ -95,26 +94,26 @@ public class ServiceConnectorWebCommandFactory extends WebCommandFactory {
 			String contextUserid = this.getAccessibleContext().getUserid();
 			String contextPassword = this.getAccessibleContext().getPassword();
 			if (contextUserid == null || contextPassword == null) {
-				throw new SystemConfigurationException("system configuration has no credentials");			
+				throw new SystemConfigurationException("system configuration has no credentials");
 			}
 			if (userid == null || password == null) {
 				throw new LoginException("not authorized");
 			}
 			if (userid.equals(contextUserid) == false) {
-				throw new LoginException("not authorized");			
+				throw new LoginException("not authorized");
 			}
 			if (password.equals(contextPassword) == false) {
-				throw new LoginException("not authorized");			
+				throw new LoginException("not authorized");
 			}
 			IWebSession webSession = request.getSession(false);
 			if (webSession == null) {
 				// check if has been created before
-				throw new LoginException("internal error, no session");						
+				throw new LoginException("internal error, no session");
 			}
 			webSession.setAttribute("userid", userid);
 			return;
 		}
-		
+
 		/** {@inheritDoc} */
 		@Override
 		public boolean isAccessible(IWebRequest request) throws Exception {
@@ -144,29 +143,31 @@ public class ServiceConnectorWebCommandFactory extends WebCommandFactory {
 				return;
 			}
 			webSession.removeAttribute("userid");
-			
+
 		}
+
 		/** {@inheritDoc} */
 		@Override
 		public IWebCommandAccessibleContext getAccessibleContext() {
 			return accessibleContext;
 		}
-		
+
 		/**
 		 * The Class ServiceConnectorWebAccessibleContext.
 		 */
 		private class ServiceConnectorWebAccessibleContext implements IWebCommandAccessibleContext {
-			
+
 			/**
 			 * Instantiates a new service connector web accessible context.
 			 */
 			public ServiceConnectorWebAccessibleContext() {
 			}
-			
+
 			/** {@inheritDoc} */
 			@Override
 			public String getUserid() {
-				IResponder responder = ResponderRegistry.getCurrentInstance().getCurrentResponder();
+				IResponder responder = AppContext.getCurrentContext().getResponderRegistry()
+						.getCurrentResponder();
 				CommunicatorConfig respConfig = responder.getResponderConfig();
 				return respConfig.getUserid();
 			}
@@ -174,7 +175,8 @@ public class ServiceConnectorWebCommandFactory extends WebCommandFactory {
 			/** {@inheritDoc} */
 			@Override
 			public String getPassword() {
-				IResponder responder = ResponderRegistry.getCurrentInstance().getCurrentResponder();
+				IResponder responder = AppContext.getCurrentContext().getResponderRegistry()
+						.getCurrentResponder();
 				CommunicatorConfig respConfig = responder.getResponderConfig();
 				return respConfig.getPassword();
 			}

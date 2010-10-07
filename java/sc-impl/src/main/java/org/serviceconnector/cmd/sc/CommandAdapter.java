@@ -20,11 +20,12 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.ServiceConnectorContext;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionQueue;
-import org.serviceconnector.registry.SubscriptionSessionRegistry;
+import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
@@ -49,17 +50,14 @@ public abstract class CommandAdapter implements ICommand {
 	protected final static Logger logger = Logger.getLogger(CommandAdapter.class);
 
 	/** The session registry. */
-	protected SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
+	protected SessionRegistry sessionRegistry = ServiceConnectorContext.getCurrentContext().getSessionRegistry();
 	/** The subscription registry. */
-	protected SubscriptionSessionRegistry subscriptionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
+	protected SubscriptionRegistry subscriptionRegistry = ServiceConnectorContext.getCurrentContext()
+			.getSubscriptionRegistry();
 	/** The server registry. */
-	protected ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-
-	/**
-	 * Instantiates a new command adapter.
-	 */
-	public CommandAdapter() {
-	}
+	protected ServerRegistry serverRegistry = ServiceConnectorContext.getCurrentContext().getServerRegistry();
+	/** The service registry. */
+	protected ServiceRegistry serviceRegistry = ServiceConnectorContext.getCurrentContext().getServiceRegistry();
 
 	/**
 	 * Gets the session by id. Checks properness of session, if session is null given session id is wrong - no session
@@ -95,8 +93,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *             the sCMP command exception
 	 */
 	protected Session getSubscriptionSessionById(String sessionId) throws SCMPCommandException {
-		SubscriptionSessionRegistry sessionRegistry = SubscriptionSessionRegistry.getCurrentInstance();
-		Session session = sessionRegistry.getSession(sessionId);
+		Session session = this.subscriptionRegistry.getSession(sessionId);
 
 		if (session == null) {
 			// incoming session not found
@@ -133,8 +130,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *             the SCMP command exception
 	 */
 	protected Service validateServiceName(String serviceName) throws SCMPCommandException {
-		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-		Service service = serviceRegistry.getService(serviceName);
+		Service service = this.serviceRegistry.getService(serviceName);
 		if (service == null) {
 			// no service known with incoming serviceName
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service: "
@@ -215,16 +211,10 @@ public abstract class CommandAdapter implements ICommand {
 
 	/** {@inheritDoc} */
 	@Override
-	public ICommand newInstance() {
-		return this;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public boolean isAsynchronous() {
 		return false;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean isPassThroughPartMsg() {

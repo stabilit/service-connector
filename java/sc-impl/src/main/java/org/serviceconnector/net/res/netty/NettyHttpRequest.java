@@ -22,8 +22,8 @@ import java.net.InetSocketAddress;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
-import org.serviceconnector.net.EncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.RequestAdapter;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -66,7 +66,7 @@ public class NettyHttpRequest extends RequestAdapter {
 		if (connectionLogger.isTraceEnabled()) {
 			connectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getLocalSocketAddress().getHostName(), this.getLocalSocketAddress().getPort(), buffer, 0, buffer.length);
 		}
-		IEncoderDecoder encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(buffer);
+		IEncoderDecoder encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory().createEncoderDecoder(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);
 		this.setMessage(message);

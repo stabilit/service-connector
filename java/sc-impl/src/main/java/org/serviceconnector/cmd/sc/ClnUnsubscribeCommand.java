@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.registry.SubscriptionQueue;
-import org.serviceconnector.registry.SubscriptionSessionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -32,7 +31,6 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
-
 
 /**
  * The Class ClnUnsubscribeCommand. Responsible for validation and execution of unsubscribe command. Allows
@@ -60,7 +58,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String sessionId = reqMessage.getSessionId();
-		SubscriptionSessionRegistry.getCurrentInstance().getSession(sessionId);
+		this.subscriptionRegistry.getSession(sessionId);
 
 		// lookup session and checks properness
 		Session session = this.getSubscriptionSessionById(sessionId);
@@ -76,8 +74,8 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		Server server = session.getServer();
 		SCMPMessage reply = null;
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		server.unsubscribe(reqMessage, callback,
-				((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		server.unsubscribe(reqMessage, callback, ((Integer) request
+				.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		reply = callback.getMessageSync();
 		// no specific error handling in case of fault - everything is done anyway
 

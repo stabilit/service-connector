@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
@@ -65,8 +64,6 @@ public class ManageCommand extends CommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		ServiceRegistry serviceRegistry = ServiceRegistry.getCurrentInstance();
-
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
 		
@@ -94,16 +91,16 @@ public class ManageCommand extends CommandAdapter {
 		String stateString = m.group(1);
 		String serviceName = m.group(2);
 
-		if (serviceRegistry.containsKey(serviceName)) {
+		if (this.serviceRegistry.containsKey(serviceName)) {
 			// service exists
 			if (stateString.equalsIgnoreCase(Constants.ENABLE)) {
 				// enable service
 				logger.info("enable service:" + serviceName);
-				serviceRegistry.getService(serviceName).setState(ServiceState.ENABLED);
+				this.serviceRegistry.getService(serviceName).setState(ServiceState.ENABLED);
 			} else {
 				// disable service
 				logger.info("disable service:" + serviceName);
-				serviceRegistry.getService(serviceName).setState(ServiceState.DISABLED);
+				this.serviceRegistry.getService(serviceName).setState(ServiceState.DISABLED);
 			}
 		} else {
 			logger.debug("service:" + serviceName + " not found");

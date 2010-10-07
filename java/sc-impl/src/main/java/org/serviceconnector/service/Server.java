@@ -32,6 +32,7 @@ import org.serviceconnector.call.SCMPSrvExecuteCall;
 import org.serviceconnector.call.SCMPSrvSubscribeCall;
 import org.serviceconnector.call.SCMPSrvUnsubscribeCall;
 import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
@@ -40,7 +41,6 @@ import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPMessage;
-
 
 /**
  * The Class Server. Represents a server instance on a backend Server. Serves a service. Has control over the max of
@@ -69,8 +69,6 @@ public class Server {
 	private int maxConnections;
 	/** The requester. */
 	private IRequester requester;
-	/** The connectionPool. */
-	private ConnectionPool connectionPool;
 	/** The sessions, list of sessions allocated to the server. */
 	private List<Session> sessions;
 	/** The operation timeout multiplier. */
@@ -95,15 +93,15 @@ public class Server {
 		this.portNr = portNr;
 		this.maxSessions = maxSessions;
 		this.maxConnections = maxConnections;
-		ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
+		ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
 		IResponder responder = responderRegistry.getCurrentResponder();
 		CommunicatorConfig respConfig = responder.getResponderConfig();
 		String connectionType = respConfig.getConnectionType();
 		this.operationTimeoutMultiplier = respConfig.getOperationTimeoutMultiplier();
 		this.host = socketAddress.getHostName();
-		this.connectionPool = new ConnectionPool(host, portNr, connectionType, keepAliveInterval);
-		this.connectionPool.setMaxConnections(maxConnections);
-		this.requester = new Requester(new RequesterContext(this.connectionPool, null));
+		ConnectionPool connectionPool = new ConnectionPool(host, portNr, connectionType, keepAliveInterval);
+		connectionPool.setMaxConnections(maxConnections);
+		this.requester = new Requester(new RequesterContext(connectionPool, null));
 	}
 
 	/**
@@ -122,11 +120,12 @@ public class Server {
 	 *             the exception
 	 */
 	public void immediateConnect() throws Exception {
+		ConnectionPool connectionPool = this.requester.getContext().getConnectionPool();
 		// set minimum connections to max for initial process
-		this.connectionPool.setMinConnections(connectionPool.getMaxConnections());
-		this.connectionPool.initMinConnections();
+		connectionPool.setMinConnections(connectionPool.getMaxConnections());
+		connectionPool.initMinConnections();
 		// initial done - set it back to 0
-		this.connectionPool.setMinConnections(0);
+		connectionPool.setMinConnections(0);
 	}
 
 	/**
@@ -270,7 +269,7 @@ public class Server {
 	 * Destroy server.
 	 */
 	public void destroy() {
-		this.connectionPool.destroy();
+		this.requester.getContext().getConnectionPool().destroy();
 		this.sessions = null;
 		this.requester = null;
 		this.service = null;

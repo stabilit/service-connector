@@ -23,8 +23,8 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelEvent;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
-import org.serviceconnector.net.EncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.ResponseAdapter;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -76,7 +76,7 @@ public class NettyTcpResponse extends ResponseAdapter {
 	 */
 	public ChannelBuffer getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(this.scmp);
+		encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory().createEncoderDecoder(this.scmp);
 		encoderDecoder.encode(baos, scmp);
 		byte[] buf = baos.toByteArray();
 		return ChannelBuffers.copiedBuffer(buf);

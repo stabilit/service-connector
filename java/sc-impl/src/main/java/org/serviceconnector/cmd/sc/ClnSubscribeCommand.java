@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.registry.SubscriptionQueue;
-import org.serviceconnector.registry.SubscriptionSessionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -38,7 +37,6 @@ import org.serviceconnector.service.SCMPMessageFilterMask;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
-
 
 /**
  * The Class ClnSubscribeCommand. Responsible for validation and execution of subscribe command. Allows subscribing to a
@@ -93,9 +91,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				// session has not been rejected, add server to session
 				session.setServer(server);
 				// finally add subscription to the registry
-				SubscriptionSessionRegistry subscriptionSessionRegistry = SubscriptionSessionRegistry
-						.getCurrentInstance();
-				subscriptionSessionRegistry.addSession(session.getId(), session);
+				this.subscriptionRegistry.addSession(session.getId(), session);
 
 				SubscriptionQueue<SCMPMessage> subscriptionQueue = service.getSubscriptionQueue();
 
@@ -135,10 +131,6 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			// mask
 			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-			if (mask.indexOf("%") != -1) {
-				// percent sign in mask not allowed
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "percent sign not allowed " + mask);
-			}
 			// operation timeout
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
@@ -151,8 +143,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 			// noDataInterval
 			String noDataIntervalValue = message.getHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
-			int noi = ValidatorUtility
-					.validateInt(1, noDataIntervalValue, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
+			int noi = ValidatorUtility.validateInt(1, noDataIntervalValue, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
 			request.setAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noi);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point

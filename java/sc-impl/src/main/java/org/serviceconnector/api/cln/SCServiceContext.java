@@ -14,49 +14,40 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
+package org.serviceconnector.api.cln;
 
-package org.serviceconnector.api.srv;
+import org.apache.log4j.Logger;
+import org.serviceconnector.api.SCService;
 
-import java.security.InvalidParameterException;
-
-//TODO elminieren
 /**
- * The Interface ISCPublishServer. Top interface for any publish service.
- * 
- * @author JTraber
+ * The Class ServiceContext. Context of a service. Holds information about the service himself and the
+ * serviceConnectorContext which uses service.
  */
-public interface ISCPublishServer extends ISCSessionServer {
+public class SCServiceContext {
+
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCServiceContext.class);
+	/** The service. */
+	private SCService scService;
 
 	/**
-	 * Publish data.
+	 * Instantiates a new service context.
 	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @param mask
-	 *            the mask
-	 * @param data
-	 *            the data
-	 * @throws Exception
-	 *             the exception
+	 * @param serviceConnectorContext
+	 *            the service connector context
+	 * @param service
+	 *            the service
 	 */
-	public abstract void publish(String serviceName, String mask, Object data) throws Exception;
+	public SCServiceContext(SCService service) {
+		this.scService = service;
+	}
 
 	/**
-	 * Register server for a service.
+	 * Gets the sC service.
 	 * 
-	 * @param scHost
-	 *            the sc host
-	 * @param scPort
-	 *            the sc port
-	 * @param serviceName
-	 *            the service name
-	 * @param scCallback
-	 *            the sc callback
-	 * @throws Exception
-	 *             the exception
-	 * @throws InvalidParameterException
-	 *             port is not within limits 0 to 0xFFFF, host unset
+	 * @return the sC service
 	 */
-	public abstract void registerServer(String scHost, int scPort, String serviceName, int maxSessions,
-			int maxConnections, ISCPublishServerCallback scCallback) throws Exception;
+	public SCService getSCService() {
+		return this.scService;
+	}
 }

@@ -16,14 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.connection;
 
+import java.security.InvalidParameterException;
 import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
-import org.serviceconnector.factory.Factory;
-import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.Constants;
 import org.serviceconnector.net.req.netty.http.NettyHttpConnection;
 import org.serviceconnector.net.req.netty.tcp.NettyTcpConnection;
 
@@ -31,17 +31,10 @@ import org.serviceconnector.net.req.netty.tcp.NettyTcpConnection;
  * A factory for creating connection objects. Provides access to concrete client instances. Possible connection types
  * are shown as constants below.
  */
-public class ConnectionFactory extends Factory {
+public class ConnectionFactory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ConnectionFactory.class);
-
-	/** The Constant NETTY_TCP. */
-	private static final String NETTY_TCP = "netty.tcp";
-	/** The Constant NETTY_HTTP. */
-	private static final String NETTY_HTTP = "netty.http";
-	/** ConnectionFactory instance */
-	private static final ConnectionFactory instance = new ConnectionFactory();
 
 	/**
 	 * NETTY stuff<br>
@@ -58,39 +51,15 @@ public class ConnectionFactory extends Factory {
 		ConnectionFactory.timer = new HashedWheelTimer();
 	}
 
-	/**
-	 * Gets the current instance.
-	 * 
-	 * @return the current instance
-	 */
-	public static ConnectionFactory getCurrentInstance() {
-		return ConnectionFactory.instance;
-	}
-
-	/**
-	 * Instantiates a new ConnectionFactory.
-	 */
-	private ConnectionFactory() {
-		// jboss netty http client
-		IConnection nettyHttpConnection = new NettyHttpConnection(ConnectionFactory.channelFactory,
-				ConnectionFactory.timer);
-		add(NETTY_HTTP, nettyHttpConnection);
-		// jboss netty tcp client
-		IConnection nettyTCPConnection = new NettyTcpConnection(ConnectionFactory.channelFactory,
-				ConnectionFactory.timer);
-		add(NETTY_TCP, nettyTCPConnection);
-	}
-
-	/**
-	 * New instance.
-	 * 
-	 * @param key
-	 *            the key designating the connection type
-	 * @return the i client connection
-	 */
-	public IConnection newInstance(String key) {
-		IFactoryable factoryInstance = super.newInstance(key);
-		return (IConnection) factoryInstance; // should be a clone if implemented
+	public IConnection createConnection(String key) {
+		if (key.equalsIgnoreCase(Constants.NETTY_HTTP)) {
+			return new NettyHttpConnection(ConnectionFactory.channelFactory, ConnectionFactory.timer);
+		} else if (key.equalsIgnoreCase(Constants.NETTY_TCP)) {
+			return new NettyTcpConnection(ConnectionFactory.channelFactory, ConnectionFactory.timer);
+		} else {
+			logger.fatal("key : " + key + " not found!");
+			throw new InvalidParameterException("key : " + key + " not found!");
+		}
 	}
 
 	// TODO FJU this shutdown is never called

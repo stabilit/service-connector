@@ -21,15 +21,15 @@ import java.io.InputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.EncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPPart;
 
-
 public class DecodeSCMPVersionTestCase {
 
 	/** The coder factory. */
-	private EncoderDecoderFactory coderFactory = EncoderDecoderFactory.getCurrentEncoderDecoderFactory();
+	private EncoderDecoderFactory coderFactory = AppContext.getCurrentContext().getEncoderDecoderFactory();
 
 	@Test
 	public void invalidSCMPVersionFormatTest() {
@@ -37,7 +37,7 @@ public class DecodeSCMPVersionTestCase {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
 		try {
 			coder.decode(is);
@@ -52,7 +52,7 @@ public class DecodeSCMPVersionTestCase {
 		String requestString = "REQ 0000053 00053 2.0\nldt=2010-08-02T11:24:52.093+0200\nver=1.0-000\nmty=ATT";
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
 		try {
 			coder.decode(is);
@@ -68,7 +68,7 @@ public class DecodeSCMPVersionTestCase {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
 		try {
 			coder.decode(is);
@@ -84,7 +84,7 @@ public class DecodeSCMPVersionTestCase {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
 		try {
 			coder.decode(is);
@@ -100,7 +100,7 @@ public class DecodeSCMPVersionTestCase {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPPart());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
 		try {
 			coder.decode(is);

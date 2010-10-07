@@ -44,9 +44,6 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/** The Constant sessionLogger. */
 	private final static SessionLogger sessionLogger = SessionLogger.getInstance();
-
-	/** The instance. */
-	private static SessionRegistry instance = new SessionRegistry();
 	/** The timer. Timer instance is responsible to observe session timeouts. */
 	private Timer timer;
 
@@ -55,15 +52,6 @@ public class SessionRegistry extends Registry<String, Session> {
 	 */
 	public SessionRegistry() {
 		this.timer = new Timer("SessionRegistryTimer");
-	}
-
-	/**
-	 * Gets the current instance.
-	 * 
-	 * @return the current instance
-	 */
-	public static SessionRegistry getCurrentInstance() {
-		return instance;
 	}
 
 	/**

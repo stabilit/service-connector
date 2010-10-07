@@ -29,10 +29,10 @@ import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCSessionServer;
-import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.ResponderConfigPool;
 import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.ctx.AppContext;
 
 
 /**
@@ -82,7 +82,8 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new TestServerCommandFactory());
+				AppContext appContext = AppContext.getCurrentContext();
+				appContext.initContext(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 				SetupTestCases.startSessionServer10Connections();
 			} catch (Exception e) {
@@ -96,7 +97,8 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new TestServerCommandFactory());
+				AppContext appContext = AppContext.getCurrentContext();
+				appContext.initContext(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, propertyFileName });
 				SetupTestCases.startSessionServer10Connections();
 			} catch (Exception e) {
@@ -110,7 +112,8 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new TestServerCommandFactory());
+				AppContext appContext = AppContext.getCurrentContext();
+				appContext.initContext(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, propertyFileName });
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -123,7 +126,8 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new TestServerCommandFactory());
+				AppContext appContext = AppContext.getCurrentContext();
+				appContext.initContext(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 				SetupTestCases.startSessionServer1Connections();
 			} catch (Exception e) {
@@ -137,7 +141,8 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new TestServerCommandFactory());
+				AppContext appContext = AppContext.getCurrentContext();
+				appContext.initContext(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 				SetupTestCases.startSessionServer10Connections();
 				SetupTestCases.startPublishServer();
@@ -152,7 +157,8 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				CommandFactory.setCurrentCommandFactory(new TestServerCommandFactory());
+				AppContext appContext = AppContext.getCurrentContext();
+				appContext.initContext(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 			} catch (Exception e) {
 				e.printStackTrace();

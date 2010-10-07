@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
 
@@ -29,6 +30,8 @@ public class AttachToMultipleSCTest {
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
+		// needed to init AppContext
+		new SCSessionServer();
 		ctrl = new ProcessesController();
 		try {
 			scProcess0 = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);

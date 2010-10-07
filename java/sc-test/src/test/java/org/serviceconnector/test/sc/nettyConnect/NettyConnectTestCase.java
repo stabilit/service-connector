@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionFactory;
 import org.serviceconnector.net.connection.IConnection;
@@ -40,7 +41,8 @@ public class NettyConnectTestCase {
 
 	@Test
 	public void connectDisconnect50000() throws Exception {
-		IConnection connection = ConnectionFactory.getCurrentInstance().newInstance("netty.http");
+		ConnectionFactory connectionFactory = AppContext.getCurrentContext().getConnectionFactory();
+		IConnection connection = connectionFactory.createConnection("netty.http");
 		connection.setHost(TestConstants.HOST);
 		connection.setPort(TestConstants.PORT_HTTP);
 		connection.setIdleTimeout(0);
@@ -69,7 +71,8 @@ public class NettyConnectTestCase {
 	public void connect1000WithoutDisconnect() throws Exception {
 		IConnection[] connections = new IConnection[1000];
 		for (int i = 0; i < 1000; i++) {
-			IConnection connection = ConnectionFactory.getCurrentInstance().newInstance("netty.http");
+			ConnectionFactory connectionFactory = AppContext.getCurrentContext().getConnectionFactory();
+			IConnection connection = connectionFactory.createConnection("netty.http");
 			connections[i] = connection;
 			connection.setHost(TestConstants.HOST);
 			connection.setPort(TestConstants.PORT_HTTP);

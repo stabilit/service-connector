@@ -19,7 +19,7 @@ package org.serviceconnector.cmd.srv;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.ICommand;
-
+import org.serviceconnector.ctx.AppContext;
 
 /**
  * A factory for creating UnitServerCommand objects. Unifies all commands used by publish and session server.
@@ -27,48 +27,28 @@ import org.serviceconnector.cmd.ICommand;
  * @author JTraber
  */
 public class ServerCommandFactory extends CommandFactory {
-	
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ServerCommandFactory.class);
-	
-	/**
-	 * Instantiates a new session server command factory.
-	 */
-	public ServerCommandFactory() {
-		init(this);
-	}
 
-	/**
-	 * Instantiates a new session server command factory.
-	 * 
-	 * @param commandFactory
-	 *            the command factory
-	 */
-	public ServerCommandFactory(CommandFactory commandFactory) {
-		init(commandFactory);
-	}
-
-	/**
-	 * Initialize factory.
-	 * 
-	 * @param commandFactory
-	 *            the command factory
-	 */
-	private void init(CommandFactory commandFactory) {
+	/** @{inheritDoc **/
+	@Override
+	public void initCommands(AppContext appContext) {
+		this.appContext = appContext;
 		ICommand srvCreateSessionCommand = new SrvCreateSessionCommand();
-		commandFactory.addCommand(srvCreateSessionCommand.getKey(), srvCreateSessionCommand);
+		this.addCommand(srvCreateSessionCommand.getKey(), srvCreateSessionCommand);
 		ICommand srvDeleteSessionCommand = new SrvDeleteSessionCommand();
-		commandFactory.addCommand(srvDeleteSessionCommand.getKey(), srvDeleteSessionCommand);
+		this.addCommand(srvDeleteSessionCommand.getKey(), srvDeleteSessionCommand);
 		ICommand srvExecuteCommand = new SrvExecuteCommand();
-		commandFactory.addCommand(srvExecuteCommand.getKey(), srvExecuteCommand);
+		this.addCommand(srvExecuteCommand.getKey(), srvExecuteCommand);
 		ICommand srvAbortSessionCommand = new SrvAbortSessionCommand();
-		commandFactory.addCommand(srvAbortSessionCommand.getKey(), srvAbortSessionCommand);
-		
+		this.addCommand(srvAbortSessionCommand.getKey(), srvAbortSessionCommand);
+
 		ICommand srvSubscribeCommand = new SrvSubscribeCommand();
-		commandFactory.addCommand(srvSubscribeCommand.getKey(), srvSubscribeCommand);
+		this.addCommand(srvSubscribeCommand.getKey(), srvSubscribeCommand);
 		ICommand srvUnsubscribeCommand = new SrvUnsubscribeCommand();
-		commandFactory.addCommand(srvUnsubscribeCommand.getKey(), srvUnsubscribeCommand);
+		this.addCommand(srvUnsubscribeCommand.getKey(), srvUnsubscribeCommand);
 		ICommand srvChangeSubscriptionCommand = new SrvChangeSubscriptionCommand();
-		commandFactory.addCommand(srvChangeSubscriptionCommand.getKey(), srvChangeSubscriptionCommand);
+		this.addCommand(srvChangeSubscriptionCommand.getKey(), srvChangeSubscriptionCommand);
 	}
 }

@@ -60,7 +60,7 @@ public class SCSessionService extends SCService implements ISessionService {
 	private TimerTask timerTask;
 	/** The session active, marks state of a session. */
 	private volatile boolean sessionActive;
-
+	/** The sc response time millis. */
 	private int scResponseTimeMillis;
 
 	/**
@@ -71,10 +71,10 @@ public class SCSessionService extends SCService implements ISessionService {
 	 * @param context
 	 *            the context
 	 */
-	public SCSessionService(String serviceName, ServiceConnectorContext context) {
+	public SCSessionService(String serviceName, SCContext context) {
 		super(serviceName, context);
 		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
-		this.serviceContext = new ServiceContext(context, this);
+		this.scServiceContext = new SCServiceContext(this);
 		this.timerRun = null;
 		this.sessionActive = false;
 		this.scResponseTimeMillis = Constants.OPERATION_TIMEOUT_MILLIS_SHORT;

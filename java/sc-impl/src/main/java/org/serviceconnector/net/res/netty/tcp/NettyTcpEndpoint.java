@@ -27,6 +27,7 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.serviceconnector.Constants;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.CommunicationException;
 import org.serviceconnector.net.SCMPCommunicationException;
@@ -107,8 +108,8 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 			// adds server to registry
-			ResponderRegistry serverRegistry = ResponderRegistry.getCurrentInstance();
-			serverRegistry.addResponder(this.channel.getId(), this.resp);
+			ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+			responderRegistry.addResponder(this.channel.getId(), this.resp);
 		} catch (Exception ex) {
 			this.answer.add(Boolean.FALSE);
 			throw ex;
@@ -143,7 +144,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			if (this.channel != null) {
 				// removes responder to registry
-				ResponderRegistry responderRegistry = ResponderRegistry.getCurrentInstance();
+				ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
 				responderRegistry.removeResponder(this.channel.getId());
 				ChannelFuture future = this.channel.close();
 				NettyOperationListener operationListener = new NettyOperationListener();

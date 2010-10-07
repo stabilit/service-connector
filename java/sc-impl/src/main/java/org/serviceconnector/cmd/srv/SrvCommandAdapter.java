@@ -22,13 +22,12 @@ import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.ctx.SCServerContext;
 import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMsgType;
-
 
 /**
  * The Class SrvCommandAdapter. Command adapter for every kind of command on server.
@@ -37,7 +36,7 @@ public abstract class SrvCommandAdapter implements ICommand {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SrvCommandAdapter.class);
-	
+
 	/** The session composite registry. */
 	protected SCMPSessionCompositeRegistry sessionCompositeRegistry;
 
@@ -61,23 +60,17 @@ public abstract class SrvCommandAdapter implements ICommand {
 	public void validate(IRequest request) throws Exception {
 		throw new SCMPValidatorException(SCMPError.HV_ERROR, "no validator implemented");
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean isAsynchronous() {
 		return false;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean isPassThroughPartMsg() {
 		return false;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
 	}
 
 	/**
@@ -90,7 +83,7 @@ public abstract class SrvCommandAdapter implements ICommand {
 	 *             the sCMP command exception
 	 */
 	protected SrvService getSrvServiceByServiceName(String serviceName) throws SCMPCommandException {
-		SrvServiceRegistry srvServiceRegistry = SrvServiceRegistry.getCurrentInstance();
+		SrvServiceRegistry srvServiceRegistry = SCServerContext.getCurrentContext().getSrvServiceRegistry();
 		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
 
 		if (srvService == null) {

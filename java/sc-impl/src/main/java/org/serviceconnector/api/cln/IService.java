@@ -28,7 +28,7 @@ public interface IService {
 	 * 
 	 * @return the context
 	 */
-	public abstract ServiceContext getServiceContext();
+	public abstract SCServiceContext getSCServiceContext();
 
 	/**
 	 * Gets the session id.

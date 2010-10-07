@@ -22,7 +22,6 @@ import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.serviceconnector.registry.Registry;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class WebSessionRegistry.
  */

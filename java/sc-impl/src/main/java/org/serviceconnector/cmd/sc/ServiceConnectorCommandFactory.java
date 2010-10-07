@@ -19,7 +19,7 @@ package org.serviceconnector.cmd.sc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.ICommand;
-
+import org.serviceconnector.ctx.AppContext;
 
 /**
  * A factory for creating ServiceConnectorCommand objects. Provides access to concrete instances of Service Connector
@@ -31,61 +31,41 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ServiceConnectorCommandFactory.class);
-	
-	/**
-	 * Instantiates a new service connector command factory.
-	 */
-	public ServiceConnectorCommandFactory() {
-		init(this);
-	}
 
-	/**
-	 * Instantiates a new service connector command factory.
-	 * 
-	 * @param commandFactory
-	 *            the command factory
-	 */
-	public ServiceConnectorCommandFactory(CommandFactory commandFactory) {
-		init(commandFactory);
-	}
-
-	/**
-	 * Initialize the command factory.
-	 * 
-	 * @param commandFactory
-	 *            the command factory
-	 */
-	private void init(CommandFactory commandFactory) {
+	/** @{inheritDoc **/
+	@Override
+	public void initCommands(AppContext appContext) {
+		this.appContext = appContext;
 		ICommand attachCommand = new AttachCommand();
-		commandFactory.addCommand(attachCommand.getKey(), attachCommand);
+		this.addCommand(attachCommand.getKey(), attachCommand);
 		ICommand detachCommand = new DetachCommand();
-		commandFactory.addCommand(detachCommand.getKey(), detachCommand);
+		this.addCommand(detachCommand.getKey(), detachCommand);
 		ICommand inspectCommand = new InspectCommand();
-		commandFactory.addCommand(inspectCommand.getKey(), inspectCommand);
+		this.addCommand(inspectCommand.getKey(), inspectCommand);
 		ICommand manageCommand = new ManageCommand();
-		commandFactory.addCommand(manageCommand.getKey(), manageCommand);
+		this.addCommand(manageCommand.getKey(), manageCommand);
 		ICommand clnCreateSessionCommand = new ClnCreateSessionCommand();
-		commandFactory.addCommand(clnCreateSessionCommand.getKey(), clnCreateSessionCommand);
+		this.addCommand(clnCreateSessionCommand.getKey(), clnCreateSessionCommand);
 		ICommand clnDeleteSessionCommand = new ClnDeleteSessionCommand();
-		commandFactory.addCommand(clnDeleteSessionCommand.getKey(), clnDeleteSessionCommand);
+		this.addCommand(clnDeleteSessionCommand.getKey(), clnDeleteSessionCommand);
 		ICommand registerServerCommand = new RegisterServerCommand();
-		commandFactory.addCommand(registerServerCommand.getKey(), registerServerCommand);
+		this.addCommand(registerServerCommand.getKey(), registerServerCommand);
 		ICommand deRegisterServerCommand = new DeRegisterServerCommand();
-		commandFactory.addCommand(deRegisterServerCommand.getKey(), deRegisterServerCommand);
+		this.addCommand(deRegisterServerCommand.getKey(), deRegisterServerCommand);
 		ICommand clnEchoCommand = new EchoCommand();
-		commandFactory.addCommand(clnEchoCommand.getKey(), clnEchoCommand);
+		this.addCommand(clnEchoCommand.getKey(), clnEchoCommand);
 		ICommand clnExecuteCommand = new ClnExecuteCommand();
-		commandFactory.addCommand(clnExecuteCommand.getKey(), clnExecuteCommand);
+		this.addCommand(clnExecuteCommand.getKey(), clnExecuteCommand);
 		// publish subscribe commands
 		ICommand clnSubscribeCommand = new ClnSubscribeCommand();
-		commandFactory.addCommand(clnSubscribeCommand.getKey(), clnSubscribeCommand);
+		this.addCommand(clnSubscribeCommand.getKey(), clnSubscribeCommand);
 		ICommand clnUnsubscribeCommand = new ClnUnsubscribeCommand();
-		commandFactory.addCommand(clnUnsubscribeCommand.getKey(), clnUnsubscribeCommand);
+		this.addCommand(clnUnsubscribeCommand.getKey(), clnUnsubscribeCommand);
 		ICommand clnChangeSubscriptionCommand = new ClnChangeSubscriptionCommand();
-		commandFactory.addCommand(clnChangeSubscriptionCommand.getKey(), clnChangeSubscriptionCommand);
+		this.addCommand(clnChangeSubscriptionCommand.getKey(), clnChangeSubscriptionCommand);
 		ICommand receivePublicationCommand = new ReceivePublicationCommand();
-		commandFactory.addCommand(receivePublicationCommand.getKey(), receivePublicationCommand);
+		this.addCommand(receivePublicationCommand.getKey(), receivePublicationCommand);
 		ICommand publishCommand = new PublishCommand();
-		commandFactory.addCommand(publishCommand.getKey(), publishCommand);
+		this.addCommand(publishCommand.getKey(), publishCommand);
 	}
 }

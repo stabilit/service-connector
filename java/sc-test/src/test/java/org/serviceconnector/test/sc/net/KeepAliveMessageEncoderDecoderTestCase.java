@@ -23,6 +23,7 @@ import java.io.OutputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.EncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
@@ -38,7 +39,7 @@ import org.serviceconnector.test.sc.SCImplTest;
 public class KeepAliveMessageEncoderDecoderTestCase {
 
 	/** The coder factory. */
-	private EncoderDecoderFactory coderFactory = EncoderDecoderFactory.getCurrentEncoderDecoderFactory();
+	private EncoderDecoderFactory coderFactory = AppContext.getCurrentContext().getEncoderDecoderFactory();
 	/** The head key. */
 	private SCMPHeadlineKey headKey;
 	/** The encode scmp. */
@@ -52,7 +53,7 @@ public class KeepAliveMessageEncoderDecoderTestCase {
 		
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPKeepAlive());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
 
 		SCMPMessage message = null;
 		try {
@@ -70,7 +71,7 @@ public class KeepAliveMessageEncoderDecoderTestCase {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPKeepAlive());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
 
 		SCMPMessage message = null;
 		try {
@@ -85,7 +86,7 @@ public class KeepAliveMessageEncoderDecoderTestCase {
 	public void encodeKRQTest() {
 		this.headKey = SCMPHeadlineKey.KRQ;
 		this.encodeScmp = new SCMPKeepAlive();
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPKeepAlive());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
 
 		String expectedString = this.headKey.name() + " 0000000 00000 1.0\n";
 
@@ -102,7 +103,7 @@ public class KeepAliveMessageEncoderDecoderTestCase {
 	public void encodeKRSTest() {
 		this.headKey = SCMPHeadlineKey.KRS;
 		this.encodeScmp = new SCMPKeepAlive();
-		IEncoderDecoder coder = coderFactory.newInstance(new SCMPKeepAlive());
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
 
 		String expectedString = this.headKey.name() + " 0000000 00000 1.0\n";
 

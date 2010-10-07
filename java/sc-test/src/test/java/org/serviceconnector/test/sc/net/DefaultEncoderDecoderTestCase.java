@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.EncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPBodyType;
@@ -42,7 +43,7 @@ import org.serviceconnector.test.sc.SCImplTest;
 public class DefaultEncoderDecoderTestCase {
 
 	/** The coder factory. */
-	private EncoderDecoderFactory coderFactory = EncoderDecoderFactory.getCurrentEncoderDecoderFactory();
+	private EncoderDecoderFactory coderFactory = AppContext.getCurrentContext().getEncoderDecoderFactory();
 	/** The head key. */
 	private SCMPHeadlineKey headKey;
 	/** The msg type. */
@@ -88,7 +89,7 @@ public class DefaultEncoderDecoderTestCase {
 		String requestString = SCImplTest.getSCMPString(headKey, header, body);
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(buffer);
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(buffer);
 
 		SCMPMessage message = null;
 		try {
@@ -113,7 +114,7 @@ public class DefaultEncoderDecoderTestCase {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(buffer);
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(buffer);
 
 		SCMPMessage message = null;
 		try {
@@ -138,7 +139,7 @@ public class DefaultEncoderDecoderTestCase {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(buffer);
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(buffer);
 
 		SCMPMessage message = null;
 		try {
@@ -162,7 +163,7 @@ public class DefaultEncoderDecoderTestCase {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(buffer);
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(buffer);
 
 		try {
 			coder.decode(is);
@@ -184,7 +185,7 @@ public class DefaultEncoderDecoderTestCase {
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
-		IEncoderDecoder coder = coderFactory.newInstance(buffer);
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(buffer);
 
 		SCMPMessage message = null;
 		try {
@@ -201,7 +202,7 @@ public class DefaultEncoderDecoderTestCase {
 
 		buffer = requestString.getBytes();
 		is = new ByteArrayInputStream(buffer);
-		coder = coderFactory.newInstance(buffer);
+		coder = coderFactory.createEncoderDecoder(buffer);
 
 		message = null;
 		try {
@@ -217,7 +218,7 @@ public class DefaultEncoderDecoderTestCase {
 	 */
 	@Test
 	public void encodeREQTest() {
-		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(encodeScmp);
 
 		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
 				+ "\n";
@@ -238,7 +239,7 @@ public class DefaultEncoderDecoderTestCase {
 	 */
 	@Test
 	public void encodeRESTest() {
-		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(encodeScmp);
 
 		this.headKey = SCMPHeadlineKey.RES;
 		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
@@ -265,7 +266,7 @@ public class DefaultEncoderDecoderTestCase {
 	 */
 	@Test
 	public void encodeEXCTest() {
-		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(encodeScmp);
 
 		this.headKey = SCMPHeadlineKey.EXC;
 		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
@@ -291,7 +292,7 @@ public class DefaultEncoderDecoderTestCase {
 	 */
 	@Test
 	public void encodeBodyTypesTest() {
-		IEncoderDecoder coder = coderFactory.newInstance(encodeScmp);
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(encodeScmp);
 
 		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
 				+ "\n";
@@ -306,7 +307,7 @@ public class DefaultEncoderDecoderTestCase {
 		}
 		Assert.assertEquals(expectedString, os.toString());
 
-		coder = coderFactory.newInstance(encodeScmp);
+		coder = coderFactory.createEncoderDecoder(encodeScmp);
 		bodyType = SCMPBodyType.TEXT;
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getValue());
 

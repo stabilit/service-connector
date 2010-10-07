@@ -59,10 +59,10 @@ public class SCPublishService extends SCService implements IPublishService {
 	 * @param context
 	 *            the context
 	 */
-	public SCPublishService(String serviceName, ServiceConnectorContext context) {
+	public SCPublishService(String serviceName, SCContext context) {
 		super(serviceName, context);
 		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
-		this.serviceContext = new ServiceContext(context, this);
+		this.scServiceContext = new SCServiceContext(this);
 		this.noDataInterval = 0;
 		this.scMessageCallback = null;
 	}

@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -36,6 +37,8 @@ public class CreateSessionHttpClientTest {
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
+		// needed to init AppContext
+		new SCSessionServer();
 		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);

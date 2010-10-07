@@ -46,12 +46,6 @@ public class CommunicatorConfig {
 	/** The password. */
 	private String password;
 
-	/**
-	 * Instantiates a new communicator configuration.
-	 */
-	CommunicatorConfig() {
-	}
-
 	public CommunicatorConfig(String communicatorName, String host, int port, String connectionType, int maxPoolSize,
 			int keepAliveInterval, int keepAliveTimeout) {
 		super();

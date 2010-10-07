@@ -62,7 +62,7 @@ public class SCClient implements ISCClient {
 	/** The requester. */
 	private IRequester requester;
 	/** The context. */
-	private ServiceConnectorContext serviceConnectorCtx;
+	private SCContext scContext;
 	/** The callback. */
 	private ServiceCallback callback;
 
@@ -77,7 +77,7 @@ public class SCClient implements ISCClient {
 		this.port = -1;
 		this.conType = Constants.DEFAULT_CLIENT_CON;
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
-		this.serviceConnectorCtx = null;
+		this.scContext = new SCContext(this);
 		this.callback = null;
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTIONS;
 		this.connectionPool = null;
@@ -85,8 +85,8 @@ public class SCClient implements ISCClient {
 
 	/** {@inheritDoc} */
 	@Override
-	public ServiceConnectorContext getContext() {
-		return this.serviceConnectorCtx;
+	public SCContext getSCContext() {
+		return this.scContext;
 	}
 
 	/** {@inheritDoc} */
@@ -114,7 +114,7 @@ public class SCClient implements ISCClient {
 		this.connectionPool.setMaxConnections(this.maxConnections);
 		// keep always one connection active from client to SC
 		this.connectionPool.setMinConnections(1);
-		this.serviceConnectorCtx = new ServiceConnectorContext(this.connectionPool, this);
+		this.scContext.setConnectionPool(this.connectionPool);
 		this.requester = new SCRequester(new RequesterContext(this.connectionPool, null));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 		this.callback = new ServiceCallback(true);
@@ -165,7 +165,6 @@ public class SCClient implements ISCClient {
 			}
 		} finally {
 			this.callback = null;
-			this.serviceConnectorCtx = null;
 			// destroy connection pool
 			this.connectionPool.destroy();
 		}
@@ -230,7 +229,7 @@ public class SCClient implements ISCClient {
 		if (this.callback == null) {
 			throw new SCServiceException("newSessionService not possible - client not attached.");
 		}
-		return new SCSessionService(serviceName, this.serviceConnectorCtx);
+		return new SCSessionService(serviceName, this.scContext);
 	}
 
 	/** {@inheritDoc} */
@@ -242,7 +241,7 @@ public class SCClient implements ISCClient {
 		if (this.callback == null) {
 			throw new SCServiceException("newPublishService not possible - client not attached.");
 		}
-		return new SCPublishService(serviceName, this.serviceConnectorCtx);
+		return new SCPublishService(serviceName, this.scContext);
 	}
 
 	/** {@inheritDoc} */

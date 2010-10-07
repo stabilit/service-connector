@@ -28,9 +28,10 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommand;
+import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.ctx.ServiceConnectorContext;
 import org.serviceconnector.log.PerformanceLogger;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.ResponderRegistry;
@@ -68,7 +69,6 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 	/** The Constant performanceLogger. */
 	private final static PerformanceLogger performanceLogger = PerformanceLogger.getInstance();
-
 	private final static SCMPSessionCompositeRegistry compositeRegistry = SCMPSessionCompositeRegistry
 			.getCurrentInstance();
 
@@ -100,13 +100,14 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			}
 
 			// needs to set a key in thread local to identify thread later and get access to the responder
-			ResponderRegistry respRegistry = ResponderRegistry.getCurrentInstance();
-			respRegistry.setThreadLocal(channel.getParent().getId());
+			ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+			responderRegistry.setThreadLocal(channel.getParent().getId());
 
 			request.read();
-
+			AppContext appContext = AppContext.getCurrentContext();
+			ICommand command = appContext.getCommand(request.getKey());
 			// gets the command
-			ICommand command = CommandFactory.getCurrentCommandFactory().getCommand(request.getKey());
+			// ICommand command = CommandFactory.getCurrentCommandFactory().getCommand(request.getKey());
 			if (command == null) {
 				this.sendUnknownRequestError(response, scmpReq);
 				return;
@@ -345,24 +346,29 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 	private void cleanUpDeadServer(String host, int port) {
 		String wildKey = "_" + host + "/" + port;
-		// TODO JOT ??
-		ServerRegistry serverRegistry = ServerRegistry.getCurrentInstance();
-		Set<String> keySet = serverRegistry.keySet();
+		// TODO JOT ?? key!
 
-		for (String key : keySet) {
-			if (key.endsWith(wildKey)) {
-				Server server = serverRegistry.getServer(key);
-				// deregister server from service
-				server.getService().removeServer(server);
-				List<Session> serverSessions = server.getSessions();
+		if (AppContext.getCurrentContext() instanceof ServiceConnectorContext) {
+			ServerRegistry serverRegistry = ServiceConnectorContext.getCurrentContext().getServerRegistry();
+			SessionRegistry sessionRegistry = ServiceConnectorContext.getCurrentContext().getSessionRegistry();
+			Set<String> keySet = serverRegistry.keySet();
 
-				// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
-				for (Session session : serverSessions) {
-					SessionRegistry.getCurrentInstance().removeSession(session);
+			for (String key : keySet) {
+				if (key.endsWith(wildKey)) {
+					Server server = serverRegistry.getServer(key);
+					// deregister server from service
+					server.getService().removeServer(server);
+					List<Session> serverSessions = server.getSessions();
+
+					// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
+					for (Session session : serverSessions) {
+						sessionRegistry.removeSession(session);
+						this.compositeRegistry.removeSession(session.getId());
+					}
+					// release all resources used by server, disconnects requester
+					server.destroy();
+					serverRegistry.removeServer(key);
 				}
-				// release all resources used by server, disconnects requester
-				server.destroy();
-				serverRegistry.removeServer(key);
 			}
 		}
 	}

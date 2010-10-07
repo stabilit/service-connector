@@ -31,17 +31,14 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.Category;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
-import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.conf.ResponderConfigPool;
+import org.serviceconnector.ctx.ServiceConnectorContext;
 import org.serviceconnector.log.ILoggingManagerMXBean;
 import org.serviceconnector.log.JMXLoggingManager;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
-import org.serviceconnector.registry.ServerRegistry;
-import org.serviceconnector.registry.ServiceRegistry;
-import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
@@ -49,7 +46,6 @@ import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.cmd.WebCommandFactory;
 import org.serviceconnector.web.cmd.sc.ServiceConnectorWebCommandFactory;
-
 
 /**
  * The Class SC. Starts the core (responders) of the Service Connector.
@@ -60,7 +56,7 @@ public final class SC {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SC.class);
-	
+
 	/**
 	 * Instantiates a new service connector.
 	 */
@@ -92,33 +88,33 @@ public final class SC {
 	 *             the exception
 	 */
 	private static void run(String configFileName) throws Exception {
-		
+
 		if (configFileName == null) {
 			throw new SCServiceException("Configuration file is missing");
 		}
-		
+
 		SystemInfo.setConfigFileName(configFileName);
-		
+
 		ResponderConfigPool config = new ResponderConfigPool();
 		config.load(configFileName);
+
+		// Initialize service connector command factory
+		ServiceConnectorContext serviceConnectorContext = ServiceConnectorContext.getCurrentContext();
+		serviceConnectorContext.initContext(new ServiceConnectorCommandFactory());
 
 		// initialize JMX
 		SC.initializeJMX();
 
 		// initialize statistics
-		Statistics statistics =  Statistics.getInstance();
+		Statistics statistics = Statistics.getInstance();
 		statistics.setStartupDateTime(new Timestamp(Calendar.getInstance().getTime().getTime()));
-		
+
 		// load services
 		ServiceLoader.load(configFileName);
-		
-		// clean up and initialize cache
-		//Cache cache = Cache.initialize();
 
-		CommandFactory commandFactory = CommandFactory.getCurrentCommandFactory();
-		if (commandFactory == null) {
-			CommandFactory.setCurrentCommandFactory(new ServiceConnectorCommandFactory());
-		}
+		// clean up and initialize cache
+		// Cache cache = Cache.initialize();
+
 
 		// init web command factory
 		WebCommandFactory webCommandFactory = WebCommandFactory.getCurrentWebCommandFactory();
@@ -151,6 +147,8 @@ public final class SC {
 	 */
 	private static void initializeJMX() {
 		try {
+
+			ServiceConnectorContext serviceConnectorContext = ServiceConnectorContext.getCurrentContext();
 			// Necessary to make access for JMX client available
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			ObjectName mxbeanNameSessReg = new ObjectName("org.serviceconnector.registry:type=SessionRegistry");
@@ -159,9 +157,9 @@ public final class SC {
 			ObjectName mxbeanNameLoggingManager = new ObjectName("org.serviceconnector.logging:type=LoggingManager");
 
 			// Register the Queue Sampler MXBean
-			mbs.registerMBean(SessionRegistry.getCurrentInstance(), mxbeanNameSessReg);
-			mbs.registerMBean(ServiceRegistry.getCurrentInstance(), mxbeanNameServiceReg);
-			mbs.registerMBean(ServerRegistry.getCurrentInstance(), mxbeanNameServerReg);
+			mbs.registerMBean(serviceConnectorContext.getSessionRegistry(), mxbeanNameSessReg);
+			mbs.registerMBean(serviceConnectorContext.getServiceRegistry(), mxbeanNameServiceReg);
+			mbs.registerMBean(serviceConnectorContext.getServerRegistry(), mxbeanNameServerReg);
 			ILoggingManagerMXBean loggingManager = new JMXLoggingManager();
 			mbs.registerMBean(loggingManager, mxbeanNameLoggingManager);
 		} catch (Throwable th) {

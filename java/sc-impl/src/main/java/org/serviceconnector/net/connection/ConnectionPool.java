@@ -22,9 +22,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.util.SynchronousCallback;
-
 
 /**
  * The Class ConnectionPool. Concrete implementation of connection pooling.<br>
@@ -93,7 +93,7 @@ public class ConnectionPool {
 		this.minConnections = 1;
 		this.freeConnections = Collections.synchronizedList(new ArrayList<IConnection>());
 		this.usedConnections = Collections.synchronizedList(new ArrayList<IConnection>());
-		this.connectionFactory = ConnectionFactory.getCurrentInstance();
+		this.connectionFactory = AppContext.getCurrentContext().getConnectionFactory();
 		this.keepAliveInterval = keepAliveInterval;
 	}
 
@@ -174,7 +174,7 @@ public class ConnectionPool {
 					+ " reached!");
 		}
 		// we create a new one
-		connection = connectionFactory.newInstance(this.connectionType);
+		connection = connectionFactory.createConnection(this.connectionType);
 		connection.setHost(this.host);
 		connection.setPort(this.port);
 		connection.setIdleTimeout(this.keepAliveInterval);

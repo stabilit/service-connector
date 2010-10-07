@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.connection;
 
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -25,7 +24,7 @@ import org.serviceconnector.scmp.SCMPMessage;
  * 
  * @author JTraber
  */
-public interface IConnection extends IFactoryable {
+public interface IConnection {
 
 	/**
 	 * Gets the context.

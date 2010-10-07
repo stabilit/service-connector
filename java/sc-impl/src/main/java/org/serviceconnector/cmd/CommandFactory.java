@@ -16,13 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.log4j.Logger;
-import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPMsgType;
-
 
 /**
  * A factory for creating Command objects.
@@ -31,12 +27,9 @@ public abstract class CommandFactory {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(CommandFactory.class);
-	
-	/** The command factory. */
-	protected static CommandFactory commandFactory = null;
-	/** The map stores base instances by a key. */
-	protected Map<String, IFactoryable> baseInstances = new ConcurrentHashMap<String, IFactoryable>();
-	
+	/** The app context. */
+	protected AppContext appContext;
+
 	/**
 	 * Instantiates a new command factory.
 	 */
@@ -44,36 +37,13 @@ public abstract class CommandFactory {
 	}
 
 	/**
-	 * Gets the current command factory.
-	 * 
-	 * @return the current command factory
-	 */
-	public static CommandFactory getCurrentCommandFactory() {
-		return commandFactory;
-	}
-
-	/**
-	 * Sets the current command factory.
+	 * Initialize factory.
 	 * 
 	 * @param commandFactory
-	 *            the new current command factory
+	 *            the command factory
 	 */
-	public static void setCurrentCommandFactory(CommandFactory commandFactory) {
-		CommandFactory.commandFactory = commandFactory;
-	}
+	public abstract void initCommands(AppContext appContext);
 
-	/**
-	 * Adds the.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param factoryInstance
-	 *            the factory instance
-	 */
-	protected void add(String key, IFactoryable factoryInstance) {
-		baseInstances.put(key, factoryInstance);
-	}
-	
 	/**
 	 * Adds the command.
 	 * 
@@ -82,36 +52,11 @@ public abstract class CommandFactory {
 	 * @param factoryInstance
 	 *            the factory instance
 	 */
-	public void addCommand(SCMPMsgType messageType, IFactoryable factoryInstance) {
-		this.add(messageType.getValue(), factoryInstance);
+	public void addCommand(SCMPMsgType messageType, ICommand command) {
+		this.appContext.getCommands().put(messageType.getValue(), command);
 	}
 
-	/**
-	 * Get command.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return the command
-	 * @throws Exception
-	 *             the exception
-	 */
-	public ICommand getCommand(SCMPMsgType key) {
-		IFactoryable factoryInstance = this.newInstance(key.getValue());
-		return (ICommand) factoryInstance;
-	}
-	
-	public IFactoryable newInstance(Object key) {
-		IFactoryable factoryInstance = this.getInstance(key);
-		if (factoryInstance == null) {
-			// if key is not found return default TODO TRN => throw exception !! -> DONE by JOT
-			logger.fatal("key : " + key + " not found in baseInstances of factory, returned default instance");
-		}
-		// invoke the base instance constructor
-		return factoryInstance.newInstance();
-	}
-	
-	public IFactoryable getInstance(Object key) {
-		IFactoryable factoryInstance = baseInstances.get(key);
-		return factoryInstance;
+	public void setAppContext(AppContext appContext) {
+		this.appContext = appContext;
 	}
 }

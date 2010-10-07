@@ -19,7 +19,6 @@ package org.serviceconnector.registry;
 import org.apache.log4j.Logger;
 import org.serviceconnector.service.Server;
 
-
 /**
  * The Class ServerRegistry. Stores an entry for every registered server in system.
  * 
@@ -29,24 +28,6 @@ public class ServerRegistry extends Registry<String, Server> {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ServerRegistry.class);
-	
-	/** The instance. */
-	private static ServerRegistry instance = new ServerRegistry();
-
-	/**
-	 * Instantiates a new server registry.
-	 */
-	private ServerRegistry() {
-	}
-
-	/**
-	 * Gets the current instance of server registry.
-	 * 
-	 * @return the current instance
-	 */
-	public static ServerRegistry getCurrentInstance() {
-		return instance;
-	}
 
 	/**
 	 * Adds an entry of a server.

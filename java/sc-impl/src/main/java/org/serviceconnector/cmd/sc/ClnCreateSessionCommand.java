@@ -19,7 +19,6 @@ package org.serviceconnector.cmd.sc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -32,7 +31,6 @@ import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.SessionService;
 import org.serviceconnector.util.ValidatorUtility;
-
 
 /**
  * The Class ClnCreateSessionCommand. Responsible for validation and execution of creates session command. Command runs
@@ -65,7 +63,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		SessionService service = this.validateSessionService(serviceName);
-		
+
 		// create session
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
@@ -76,8 +74,8 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
 		Server server = null;
 		try {
-			server = service.allocateServerAndCreateSession(reqMessage, callback, session, 
-					((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+			server = service.allocateServerAndCreateSession(reqMessage, callback, session, ((Integer) request
+					.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 			SCMPMessage reply = callback.getMessageSync();
 
 			if (reply.isFault() == false) {
@@ -88,8 +86,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 					session.setEchoIntervalSeconds((int) ((Integer) request
 							.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL) * Constants.ECHO_INTERVAL_MULTIPLIER));
 					// finally add session to the registry
-					SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
-					sessionRegistry.addSession(session.getId(), session);
+					this.sessionRegistry.addSession(session.getId(), session);
 				} else {
 					// session has been rejected - remove session id from header
 					reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
@@ -133,7 +130,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			// operation timeout
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);	//TODO TRN why is this set?
+			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti); // TODO TRN why is this set?
 			// ipAddressList
 			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
 			ValidatorUtility.validateIpAddressList(ipAddressList);
@@ -144,7 +141,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());
 			int echoInterval = ValidatorUtility.validateInt(1, echoIntervalValue, 3600,
 					SCMPError.HV_WRONG_ECHO_INTERVAL);
-			request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval); //TODO TRN why is this set?
+			request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval); // TODO TRN why is this set?
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
@@ -157,4 +154,3 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		}
 	}
 }
-

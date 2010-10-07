@@ -21,6 +21,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.ServiceConnectorContext;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.SessionRegistry;
@@ -151,6 +152,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		/** The Constant ERROR_STRING_FAIL. */
 		private static final String ERROR_STRING_FAIL = "executing command failed";
 
+		private SessionRegistry sessionRegistry = ServiceConnectorContext.getCurrentContext().getSessionRegistry();
+
 		/**
 		 * Instantiates a new ClnExecuteCommandCallback.
 		 * 
@@ -176,8 +179,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			this.response.setSCMP(scmpReply);
 			this.callback.callback(request, response);
 			// schedule session timeout
-			Session session = SessionRegistry.getCurrentInstance().getSession(this.sessionId);
-			SessionRegistry.getCurrentInstance().scheduleSessionTimeout(session);
+			Session session = this.sessionRegistry.getSession(this.sessionId);
+			this.sessionRegistry.scheduleSessionTimeout(session);
 		}
 
 		/** {@inheritDoc} */
@@ -194,8 +197,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			}
 			this.callback(fault);
 			// schedule session timeout
-			Session session = SessionRegistry.getCurrentInstance().getSession(this.sessionId);
-			SessionRegistry.getCurrentInstance().scheduleSessionTimeout(session);
+			Session session = this.sessionRegistry.getSession(this.sessionId);
+			this.sessionRegistry.scheduleSessionTimeout(session);
 		}
 	}
 }

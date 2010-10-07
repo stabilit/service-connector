@@ -29,9 +29,9 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.Timer;
 import org.serviceconnector.Constants;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.CommunicationException;
-import org.serviceconnector.net.EncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.connection.ConnectionContext;
@@ -182,7 +182,7 @@ public class NettyTcpConnection implements IConnection {
 	@Override
 	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		encoderDecoder = EncoderDecoderFactory.getCurrentEncoderDecoderFactory().newInstance(scmp);
+		encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory().createEncoderDecoder(scmp);
 		encoderDecoder.encode(baos, scmp);
 
 		NettyTcpRequesterResponseHandler handler = channel.getPipeline().get(NettyTcpRequesterResponseHandler.class);
@@ -204,12 +204,6 @@ public class NettyTcpConnection implements IConnection {
 					this.localSocketAddress.getPort(), chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);
 		}
 		return;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IConnection newInstance() {
-		return new NettyTcpConnection();
 	}
 
 	/** {@inheritDoc} */
