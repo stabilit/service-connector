@@ -302,13 +302,17 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					if (value instanceof List<?>) {
 						List<?> list = (List<?>)value;
 						for (Object listObj : list) {
-							writer.writeStartElement(listObj.getClass().getSimpleName());
+							writer.writeStartElement(listObj.getClass().getSimpleName().toLowerCase());
+							this.writeBean(writer, listObj);
 							writer.writeEndElement();
 						}
 					} else {
 					    writer.writeCData(value.toString());
 					}
 					writer.writeEndElement();
+				} else {
+					writer.writeStartElement(name);
+					writer.writeEndElement();			
 				}
 			} catch (Exception e) {
 				logger.error("writeObject", e);

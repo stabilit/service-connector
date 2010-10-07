@@ -288,7 +288,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		if (url == null) {
 			return false;
 		}
-		return url.endsWith(".png") || url.endsWith(".jpg");
+		return url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".gif");
 	}
 
 	/**

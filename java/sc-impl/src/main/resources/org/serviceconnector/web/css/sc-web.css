@@ -248,6 +248,28 @@ tr.sc_table_even_over {
 	color:#FFFFFF;
 }
 
+tr.sc_sub_table_even {
+	background: #FFAAAA;
+	color:#000000;
+	padding: 0px;
+}
+
+tr.sc_sub_table_odd {
+	background: #FFEEEE;
+	color:#000000;
+	padding: 0px;
+}
+
+tr.sc_sub_table_odd_over {
+	background-color: #1FB634;
+	color:#FFFFFF;
+}
+
+tr.sc_sub_table_even_over {
+	background-color: #1FB634;
+	color:#FFFFFF;
+}
+
 th.sc_table {
 	border-bottom: 1px solid #666666;
 	border-right: 1px solid #666666;

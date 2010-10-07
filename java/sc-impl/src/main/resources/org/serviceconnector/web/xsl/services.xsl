@@ -29,11 +29,17 @@
 	<xsl:template match="service">
 	  <xsl:if test="position() mod 2 = 0">
 	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
+	        <xsl:if test="details">
+	          <xsl:attribute name="style">height:40px;</xsl:attribute>
+	        </xsl:if>
 	        <xsl:call-template name="service_row"/>
 	     </tr>	    
 	  </xsl:if>
 	  <xsl:if test="position() mod 2 != 0">
 	     <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
+	        <xsl:if test="details">
+	          <xsl:attribute name="style">height:40px;</xsl:attribute>
+	        </xsl:if>
 	        <xsl:call-template name="service_row"/>
 	     </tr>	    
 	  </xsl:if>
@@ -46,7 +52,12 @@
 	<xsl:template name="service_row">
 	    <td class="sc_table"><xsl:value-of select="state"/></td>
 	    <td class="sc_table"><xsl:value-of select="type"/></td>
-	    <td class="sc_table"><a class="sc_table" href="services?service={serviceName}"><xsl:value-of select="serviceName"/></a></td>
+	    <xsl:if test="countServers &gt; 0">
+	       <td class="sc_table"><a class="sc_table" href="services?service={serviceName}"><xsl:value-of select="serviceName"/></a></td>
+        </xsl:if>	       
+	    <xsl:if test="countServers &lt;= 0">
+	       <td class="sc_table"><xsl:value-of select="serviceName"/></td>
+        </xsl:if>	       
 	    <td class="sc_table"><xsl:value-of select="countServers"/></td>
 	    <td class="sc_table"><xsl:value-of select="countAllocatedSessions"/></td>
 	    <td class="sc_table"><xsl:value-of select="countAvailableSessions"/></td>	
@@ -88,6 +99,31 @@
 	    <td class="sc_table"><xsl:value-of select="host"/></td>
 	    <td class="sc_table"><xsl:value-of select="portNr"/></td>
 	    <td class="sc_table"><xsl:value-of select="maxConnections"/></td>
-	    <td class="sc_table"><xsl:value-of select="sessions"/></td>
+	    <xsl:choose>
+	       <xsl:when test="sessions/session">
+	          <td class="sc_table">
+	            <table class="sc_table">
+	              <xsl:apply-templates select="sessions/session"/>
+	            </table>
+	          </td>	         
+	       </xsl:when>
+	       <xsl:otherwise>
+	          <td class="sc_table">-</td>	         
+	       </xsl:otherwise>
+	    </xsl:choose>
+	</xsl:template>
+	<xsl:template match="session">
+	  <xsl:if test="position() mod 2 = 0">
+	    <tr class="sc_sub_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
+	      <td class="sc_table"><img width="20" height="20" src="rightarrow.png"/></td>
+	      <td class="sc_table"><xsl:value-of select="id"/></td>
+	    </tr>	    
+	  </xsl:if>
+	  <xsl:if test="position() mod 2 != 0">
+	     <tr class="sc_sub_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
+	      <td class="sc_table"><img width="20" height="20" src="rightarrow.png"/></td>
+	      <td class="sc_table"><xsl:value-of select="id"/></td>
+	     </tr>	    
+	  </xsl:if>
 	</xsl:template>
 </xsl:stylesheet>
