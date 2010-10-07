@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.registry;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -62,6 +63,23 @@ public class SubscriptionQueue<E> {
 		this.timer = new Timer("SubscriptionQueueTimer");
 	}
 
+	/**
+	 * Iterator.
+	 *
+	 * @return the iterator
+	 */
+	public Iterator<E> iterator() {
+		return this.dataQueue.iterator();
+	}
+	
+	/**
+	 * Gets the size.
+	 *
+	 * @return the size
+	 */
+	public int getSize() {
+		return this.dataQueue.getSize();
+	}
 	/**
 	 * Inserts a new message into the queue.
 	 * 

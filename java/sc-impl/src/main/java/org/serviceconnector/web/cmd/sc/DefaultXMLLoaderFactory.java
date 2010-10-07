@@ -22,7 +22,10 @@ import java.io.InputStreamReader;
 import java.io.Writer;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -34,6 +37,9 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.factory.Factory;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
+import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.web.AbstractXMLLoader;
@@ -148,7 +154,14 @@ public class DefaultXMLLoaderFactory extends Factory {
 			Service[] services = serviceRegistry.getServices();
 			for (Service service : services) {
 				writer.writeStartElement("service");
-				this.writeBean(writer, service);
+			    this.writeBean(writer, service);
+				if (service instanceof PublishService) {
+					PublishService publishService = (PublishService) service;
+					SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService.getSubscriptionQueue();
+					writer.writeStartElement("subscriptionQueueSize");
+					writer.writeCData(String.valueOf(subscriptionQueue.getSize()));
+					writer.writeEndElement();					
+				}
 				if (service.getServiceName().equals(serviceParameter)) {
 					// take a look into
 					writer.writeStartElement("details");
@@ -160,6 +173,26 @@ public class DefaultXMLLoaderFactory extends Factory {
 						writer.writeEndElement(); // close servers tag				
 					}
 					writer.writeEndElement(); // close servers tag				
+					if (service instanceof PublishService) {
+						PublishService publishService = (PublishService) service;
+						SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService.getSubscriptionQueue();
+						writer.writeStartElement("subscriptionQueue");
+						Iterator<SCMPMessage> sqIter = subscriptionQueue.iterator();
+						while(sqIter.hasNext()) {
+							SCMPMessage scmpMessage = sqIter.next();
+							writer.writeStartElement("scmpMessage");
+							writer.writeStartElement("header");					
+							Map<String, String> header = scmpMessage.getHeader();
+							for (Entry headerEntry : header.entrySet()) {
+								writer.writeStartElement((String) headerEntry.getKey());
+								writer.writeCData((String) headerEntry.getValue());
+								writer.writeEndElement();
+							}
+							writer.writeEndElement();
+							writer.writeEndElement();
+						}
+						writer.writeEndElement();					
+					}
 					writer.writeEndElement(); // close details tag				
 				}
 				writer.writeEndElement(); // close services tag

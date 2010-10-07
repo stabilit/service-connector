@@ -16,8 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.util;
 
+import java.util.Iterator;
+
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class LinkedQueue. Base Queue to implement consumer/producer modules.
  * 
@@ -28,10 +31,10 @@ public class LinkedQueue<E> {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(LinkedQueue.class);
-	
+
 	/**
-	 * The first actual node, if it exists, is always at this.head.next. After each take, the old first node becomes the
-	 * this.head.
+	 * The first actual node, if it exists, is always at this.head.next. After
+	 * each take, the old first node becomes the this.head.
 	 */
 	private LinkedNode<E> head;
 	/** The this.last node of list. Put() appends to list, so modifies this.last */
@@ -68,6 +71,15 @@ public class LinkedQueue<E> {
 	}
 
 	/**
+	 * Iterator.
+	 *
+	 * @return the iterator
+	 */
+	public Iterator<E> iterator() {
+		return new LinkedQueueIterator<E>();
+	}
+
+	/**
 	 * Gets the this.size.
 	 * 
 	 * @return the this.size
@@ -94,7 +106,8 @@ public class LinkedQueue<E> {
 	}
 
 	/**
-	 * Main mechanics for extract from queue. If no message in queue null will be returned.
+	 * Main mechanics for extract from queue. If no message in queue null will
+	 * be returned.
 	 * 
 	 * @return the object
 	 */
@@ -113,7 +126,8 @@ public class LinkedQueue<E> {
 	}
 
 	/**
-	 * Peek. Returns first value - if there is no first node null will be returned.
+	 * Peek. Returns first value - if there is no first node null will be
+	 * returned.
 	 * 
 	 * @return the object
 	 */
@@ -136,6 +150,51 @@ public class LinkedQueue<E> {
 	public boolean isEmpty() {
 		synchronized (this.head) {
 			return this.head.next == null;
+		}
+	}
+
+	/**
+	 * The Class LinkedQueueIterator.
+	 *
+	 * @param <E> the element type
+	 */
+	private class LinkedQueueIterator<E> implements Iterator<E> {
+
+		/** The node. */
+		private LinkedNode<E> node;
+
+		/**
+		 * Instantiates a new linked queue iterator.
+		 */
+		public LinkedQueueIterator() {
+			this.node = (LinkedNode<E>) LinkedQueue.this.getFirst();
+		}
+
+		/* (non-Javadoc)
+		 * @see java.util.Iterator#hasNext()
+		 */
+		@Override
+		public boolean hasNext() {
+			return this.node != null;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.util.Iterator#next()
+		 */
+		@Override
+		public E next() {
+			LinkedNode<E> next = this.node.getNext();
+			E value = this.node.getValue();
+			this.node = next;
+			return value;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.util.Iterator#remove()
+		 */
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
 		}
 	}
 }

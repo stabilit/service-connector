@@ -24,14 +24,15 @@ public class DemoPublishClient extends Thread {
 		ISCClient sc = new SCClient();
 		IPublishService publishService = null;
 		try {
-			((SCClient) sc).setConnectionType("netty.tcp");
+			((SCClient) sc).setConnectionType("netty.http");
 			sc.attach("localhost", 7000);
 			publishService = sc.newPublishService("publish-simulation");
 			publishService.subscribe("0000121ABCDEFGHIJKLMNO-----------X-----------", "sessionInfo", 300,
 					new DemoSessionClientCallback(publishService));
 
-			while (true)
-				;
+			while (true) {
+				Thread.sleep(10000);
+			}
 		} catch (Exception e) {
 			logger.error("run", e);
 		} finally {
@@ -53,6 +54,11 @@ public class DemoPublishClient extends Thread {
 		@Override
 		public void callback(SCMessage reply) {
 			System.out.println("Publish client received: " + reply.getData());
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 		@Override
