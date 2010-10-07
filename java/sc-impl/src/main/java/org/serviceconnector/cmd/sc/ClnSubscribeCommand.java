@@ -17,7 +17,6 @@
 package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.registry.SubscriptionQueue;
@@ -59,7 +58,6 @@ public class ClnSubscribeCommand extends CommandAdapter {
 	 * Instantiates a ClnSubscribeCommand.
 	 */
 	public ClnSubscribeCommand() {
-		this.commandValidator = new ClnSubscribeCommandValidator();
 	}
 
 	/** {@inheritDoc} */
@@ -118,59 +116,53 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		response.setSCMP(reply);
 	}
 
-	/**
-	 * The Class ClnSubscribeCommandValidator.
-	 */
-	private class ClnSubscribeCommandValidator implements ICommandValidator {
+	/** {@inheritDoc} */
+	@Override
+	public void validate(IRequest request) throws Exception {
+		SCMPMessage message = request.getMessage();
 
-		/** {@inheritDoc} */
-		@Override
-		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
-
-			try {
-				// messageId
-				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-				if (messageId == null || messageId.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
-				}
-				// serviceName
-				String serviceName = message.getServiceName();
-				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-				}
-				// mask
-				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
-				ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-				if (mask.indexOf("%") != -1) {
-					// percent sign in mask not allowed
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "percent sign not allowed " + mask);
-				}
-				// operation timeout
-				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
-				// ipAddressList
-				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-				ValidatorUtility.validateIpAddressList(ipAddressList);
-				// sessionInfo
-				String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
-				// noDataInterval
-				String noDataIntervalValue = message.getHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
-				int noi = ValidatorUtility
-						.validateInt(1, noDataIntervalValue, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
-				request.setAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noi);
-			} catch (HasFaultResponseException ex) {
-				// needs to set message type at this point
-				ex.setMessageType(getKey());
-				throw ex;
-			} catch (Throwable ex) {
-				logger.error("validate", ex);
-				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey());
-				throw validatorException;
+		try {
+			// messageId
+			String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+			if (messageId == null || messageId.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 			}
+			// serviceName
+			String serviceName = message.getServiceName();
+			if (serviceName == null || serviceName.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
+			}
+			// mask
+			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
+			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+			if (mask.indexOf("%") != -1) {
+				// percent sign in mask not allowed
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "percent sign not allowed " + mask);
+			}
+			// operation timeout
+			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
+			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+			// ipAddressList
+			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+			ValidatorUtility.validateIpAddressList(ipAddressList);
+			// sessionInfo
+			String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
+			ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+			// noDataInterval
+			String noDataIntervalValue = message.getHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+			int noi = ValidatorUtility
+					.validateInt(1, noDataIntervalValue, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
+			request.setAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noi);
+		} catch (HasFaultResponseException ex) {
+			// needs to set message type at this point
+			ex.setMessageType(getKey());
+			throw ex;
+		} catch (Throwable ex) {
+			logger.error("validate", ex);
+			SCMPValidatorException validatorException = new SCMPValidatorException();
+			validatorException.setMessageType(getKey());
+			throw validatorException;
 		}
 	}
 

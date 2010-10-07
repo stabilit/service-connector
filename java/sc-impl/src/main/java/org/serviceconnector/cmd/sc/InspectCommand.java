@@ -20,7 +20,6 @@ import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.registry.Registry;
 import org.serviceconnector.registry.ServerRegistry;
@@ -52,7 +51,6 @@ public class InspectCommand extends CommandAdapter {
 	 * Instantiates a new InspectCommand.
 	 */
 	public InspectCommand() {
-		this.commandValidator = new InspectCommandValidator();
 	}
 
 	/** {@inheritDoc} */
@@ -125,6 +123,13 @@ public class InspectCommand extends CommandAdapter {
 		}
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void validate(IRequest request) throws SCMPValidatorException {
+		// no validation necessary in case of inspect command
+	}
+
+
 	/**
 	 * Gets the registry inspect string.
 	 * 
@@ -138,17 +143,5 @@ public class InspectCommand extends CommandAdapter {
 			string += "@";
 		}
 		return string;
-	}
-
-	/**
-	 * The Class InspectCommandValidator.
-	 */
-	private class InspectCommandValidator implements ICommandValidator {
-
-		/** {@inheritDoc} */
-		@Override
-		public void validate(IRequest request) throws SCMPValidatorException {
-			// no validation necessary in case of inspect command
-		}
 	}
 }

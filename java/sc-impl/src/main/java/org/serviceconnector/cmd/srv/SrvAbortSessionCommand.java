@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SrvService;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -47,7 +46,6 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 	 * Instantiates a new SrvAbortSessionCommand.
 	 */
 	public SrvAbortSessionCommand() {
-		this.commandValidator = new SrvAbortSessionCommandValidator();
 	}
 
 	/** {@inheritDoc} */
@@ -90,47 +88,41 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		this.sessionCompositeRegistry.removeSession(sessionId);
 	}
 
-	/**
-	 * The Class SrvAbortSessionCommandValidator.
-	 */
-	public class SrvAbortSessionCommandValidator implements ICommandValidator {
+	/** {@inheritDoc} */
+	@Override
+	public void validate(IRequest request) throws Exception {
+		SCMPMessage message = request.getMessage();
 
-		/** {@inheritDoc} */
-		@Override
-		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
-
-			try {
-				// serviceName
-				String serviceName = (String) message.getServiceName();
-				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-				}
-				// sessionId
-				String sessionId = message.getSessionId();
-				if (sessionId == null || sessionId.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
-				}
-				// sc error code
-				String sec = (String) message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
-				if (sec == null || sec.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_ERROR_CODE, "sc error code must be set");
-				}
-				// sc error text
-				String set = (String) message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT);
-				if (set == null || set.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_ERROR_TEXT, "sc error text must be set");
-				}
-			} catch (HasFaultResponseException ex) {
-				// needs to set message type at this point
-				ex.setMessageType(getKey());
-				throw ex;
-			} catch (Throwable th) {
-				logger.error("validate", th);
-				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey());
-				throw validatorException;
+		try {
+			// serviceName
+			String serviceName = (String) message.getServiceName();
+			if (serviceName == null || serviceName.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
+			// sessionId
+			String sessionId = message.getSessionId();
+			if (sessionId == null || sessionId.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
+			}
+			// sc error code
+			String sec = (String) message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
+			if (sec == null || sec.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_ERROR_CODE, "sc error code must be set");
+			}
+			// sc error text
+			String set = (String) message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT);
+			if (set == null || set.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_ERROR_TEXT, "sc error text must be set");
+			}
+		} catch (HasFaultResponseException ex) {
+			// needs to set message type at this point
+			ex.setMessageType(getKey());
+			throw ex;
+		} catch (Throwable th) {
+			logger.error("validate", th);
+			SCMPValidatorException validatorException = new SCMPValidatorException();
+			validatorException.setMessageType(getKey());
+			throw validatorException;
 		}
 	}
 }

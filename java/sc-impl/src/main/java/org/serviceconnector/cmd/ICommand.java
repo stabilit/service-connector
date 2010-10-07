@@ -35,13 +35,6 @@ public interface ICommand extends IFactoryable {
 	public SCMPMsgType getKey();
 
 	/**
-	 * Gets the command validator.
-	 * 
-	 * @return the command validator
-	 */
-	public ICommandValidator getCommandValidator();
-
-	/**
 	 * Run command.
 	 * 
 	 * @param request
@@ -54,11 +47,28 @@ public interface ICommand extends IFactoryable {
 	public void run(IRequest request, IResponse response) throws Exception;
 
 	
-
+	/**
+	 * Validate request.
+	 * 
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void validate(IRequest request) throws Exception;
+	
+		
 	/**
 	 * Checks if command is asynchronous.
 	 * 
 	 * @return true, if command is asynchronous
 	 */
 	public boolean isAsynchronous();
+	
+	/**
+	 * Checks if command passes through message parts
+	 * 
+	 * @return
+	 */
+	public boolean isPassThroughPartMsg();
 }

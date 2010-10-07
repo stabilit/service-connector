@@ -20,8 +20,8 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.api.srv.SrvService;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cmd.ICommand;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPCommandException;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
 import org.serviceconnector.scmp.IRequest;
@@ -38,8 +38,6 @@ public abstract class SrvCommandAdapter implements ICommand {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SrvCommandAdapter.class);
 	
-	/** The command validator. */
-	protected ICommandValidator commandValidator;
 	/** The session composite registry. */
 	protected SCMPSessionCompositeRegistry sessionCompositeRegistry;
 
@@ -52,18 +50,18 @@ public abstract class SrvCommandAdapter implements ICommand {
 
 	/** {@inheritDoc} */
 	@Override
-	public ICommandValidator getCommandValidator() {
-		return this.commandValidator;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public abstract SCMPMsgType getKey();
 
 	/** {@inheritDoc} */
 	@Override
 	public abstract void run(IRequest request, IResponse response) throws Exception;
 
+	/** {@inheritDoc} */
+	@Override
+	public void validate(IRequest request) throws Exception {
+		throw new SCMPValidatorException(SCMPError.HV_ERROR, "no validator implemented");
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public boolean isAsynchronous() {

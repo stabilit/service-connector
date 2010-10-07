@@ -18,7 +18,6 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -51,7 +50,6 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 	 * Instantiates a new ClnCreateSessionCommand.
 	 */
 	public ClnCreateSessionCommand() {
-		this.commandValidator = new ClnCreateSessionCommandValidator();
 	}
 
 	/** {@inheritDoc} */
@@ -117,51 +115,46 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		}
 	}
 
-	/**
-	 * The Class ClnCreateSessionCommandValidator.
-	 */
-	private class ClnCreateSessionCommandValidator implements ICommandValidator {
-
-		/** {@inheritDoc} */
-		@Override
-		public void validate(IRequest request) throws Exception {
-			try {
-				SCMPMessage message = request.getMessage();
-				// messageId
-				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
-				if (messageId == null || messageId.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
-				}
-				// serviceName
-				String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
-				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-				}
-				// operation timeout
-				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);	//TODO TRN why is this set?
-				// ipAddressList
-				String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
-				ValidatorUtility.validateIpAddressList(ipAddressList);
-				// sessionInfo
-				String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
-				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
-				// echoInterval
-				String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());
-				int echoInterval = ValidatorUtility.validateInt(1, echoIntervalValue, 3600,
-						SCMPError.HV_WRONG_ECHO_INTERVAL);
-				request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval); //TODO TRN why is this set?
-			} catch (HasFaultResponseException ex) {
-				// needs to set message type at this point
-				ex.setMessageType(getKey());
-				throw ex;
-			} catch (Throwable ex) {
-				logger.error("validate", ex);
-				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey());
-				throw validatorException;
+	/** {@inheritDoc} */
+	@Override
+	public void validate(IRequest request) throws Exception {
+		try {
+			SCMPMessage message = request.getMessage();
+			// messageId
+			String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
+			if (messageId == null || messageId.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 			}
+			// serviceName
+			String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME.getValue());
+			if (serviceName == null || serviceName.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
+			}
+			// operation timeout
+			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
+			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);	//TODO TRN why is this set?
+			// ipAddressList
+			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
+			ValidatorUtility.validateIpAddressList(ipAddressList);
+			// sessionInfo
+			String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
+			ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+			// echoInterval
+			String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());
+			int echoInterval = ValidatorUtility.validateInt(1, echoIntervalValue, 3600,
+					SCMPError.HV_WRONG_ECHO_INTERVAL);
+			request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval); //TODO TRN why is this set?
+		} catch (HasFaultResponseException ex) {
+			// needs to set message type at this point
+			ex.setMessageType(getKey());
+			throw ex;
+		} catch (Throwable ex) {
+			logger.error("validate", ex);
+			SCMPValidatorException validatorException = new SCMPValidatorException();
+			validatorException.setMessageType(getKey());
+			throw validatorException;
 		}
 	}
 }
+

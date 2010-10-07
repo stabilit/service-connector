@@ -19,7 +19,6 @@ package org.serviceconnector.cmd.sc;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -46,7 +45,6 @@ public class AttachCommand extends CommandAdapter {
 	 * Instantiates a new AttachCommand.
 	 */
 	public AttachCommand() {
-		this.commandValidator = new AttachCommandValidator();
 	}
 
 	/** {@inheritDoc} */
@@ -66,38 +64,33 @@ public class AttachCommand extends CommandAdapter {
 		response.setSCMP(scmpReply);
 	}
 
-	/**
-	 * The Class AttachCommandValidator.
-	 */
-	private class AttachCommandValidator implements ICommandValidator {
+	/** {@inheritDoc} */
+	@Override
+	public void validate(IRequest request) throws Exception {
+		SCMPMessage message = request.getMessage();
 
-		/** {@inheritDoc} */
-		@Override
-		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
+		try {
+			// scVersion
+			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
+			SCMPMessage.SC_VERSION.isSupported(scVersion);
 
-			try {
-				// scVersion
-				String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
-				SCMPMessage.SC_VERSION.isSupported(scVersion);
+			// localDateTime
+			Date localDateTime = ValidatorUtility.validateLocalDateTime(message
+					.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
+			request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 
-				// localDateTime
-				Date localDateTime = ValidatorUtility.validateLocalDateTime(message
-						.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
-				request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
-
-			} catch (HasFaultResponseException ex) {
-				// needs to set message type at this point
-				ex.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
-				ex.setMessageType(getKey());
-				throw ex;
-			} catch (Throwable ex) {
-				logger.error("validate", ex);
-				SCMPValidatorException valExc = new SCMPValidatorException();
-				valExc.setMessageType(getKey());
-				valExc.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
-				throw valExc;
-			}
+		} catch (HasFaultResponseException ex) {
+			// needs to set message type at this point
+			ex.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
+			ex.setMessageType(getKey());
+			throw ex;
+		} catch (Throwable ex) {
+			logger.error("validate", ex);
+			SCMPValidatorException valExc = new SCMPValidatorException();
+			valExc.setMessageType(getKey());
+			valExc.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
+			throw valExc;
 		}
 	}
+
 }

@@ -17,7 +17,6 @@
 package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -44,7 +43,6 @@ public class EchoCommand extends CommandAdapter {
 	 * Instantiates a new EchoCommand.
 	 */
 	public EchoCommand() {
-		this.commandValidator = new EchoCommandValidator();
 	}
 
 	/** {@inheritDoc} */
@@ -68,46 +66,40 @@ public class EchoCommand extends CommandAdapter {
 		this.sessionRegistry.scheduleSessionTimeout(session);
 	}
 
-	/**
-	 * The Class EchoCommandValidator.
-	 */
-	private class EchoCommandValidator implements ICommandValidator {
-
-		/** {@inheritDoc} */
-		@Override
-		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
-			try {
-				// messageId
-				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-				if (messageId == null || messageId.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
-				}
-				// serviceName
-				String serviceName = message.getServiceName();
-				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-				}
-				// operation timeout
-				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
-				// sessionId
-				String sessionId = message.getSessionId();
-				if (sessionId == null || sessionId.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
-				}
-			} catch (HasFaultResponseException ex) {
-				logger.error("validate", ex);
-				// needs to set message type at this point
-				ex.setMessageType(getKey());
-				throw ex;
-			} catch (Throwable ex) {
-				logger.error("validate", ex);
-				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey());
-				throw validatorException;
+	/** {@inheritDoc} */
+	@Override
+	public void validate(IRequest request) throws Exception {
+		SCMPMessage message = request.getMessage();
+		try {
+			// messageId
+			String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+			if (messageId == null || messageId.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 			}
+			// serviceName
+			String serviceName = message.getServiceName();
+			if (serviceName == null || serviceName.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
+			}
+			// operation timeout
+			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
+			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+			// sessionId
+			String sessionId = message.getSessionId();
+			if (sessionId == null || sessionId.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
+			}
+		} catch (HasFaultResponseException ex) {
+			logger.error("validate", ex);
+			// needs to set message type at this point
+			ex.setMessageType(getKey());
+			throw ex;
+		} catch (Throwable ex) {
+			logger.error("validate", ex);
+			SCMPValidatorException validatorException = new SCMPValidatorException();
+			validatorException.setMessageType(getKey());
+			throw validatorException;
 		}
 	}
 }

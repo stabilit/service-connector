@@ -31,7 +31,6 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.serviceconnector.cmd.CommandFactory;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommand;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.log.PerformanceLogger;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.ResponderRegistry;
@@ -158,9 +157,8 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				NettyHttpResponderRequestHandler.compositeRegistry.removeSCMPCompositeReceiver(scmpReq.getSessionId());
 			}
 			// validate request and run command
-			ICommandValidator commandValidator = command.getCommandValidator();
 			try {
-				commandValidator.validate(request);
+				command.validate(request);
 				performanceLogger.begin(this.getClass().getSimpleName(), "run");
 				if (command.isAsynchronous()) {
 					if (logger.isDebugEnabled()) {

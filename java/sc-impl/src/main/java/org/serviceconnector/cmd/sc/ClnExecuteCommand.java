@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.IAsyncCommand;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -52,7 +51,6 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 	 * Instantiates a new ClnExecuteCommand.
 	 */
 	public ClnExecuteCommand() {
-		this.commandValidator = new ClnExecuteCommandValidator();
 	}
 
 	/** {@inheritDoc} */
@@ -85,58 +83,52 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean isAsynchronous() {
-		return true;
+	public void validate(IRequest request) throws Exception {
+		try {
+			SCMPMessage message = request.getMessage();
+			// messageId
+			String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+			if (messageId == null || messageId.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
+			}
+			// serviceName
+			String serviceName = message.getServiceName();
+			if (serviceName == null || serviceName.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
+			}
+			// operation timeout
+			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
+			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+			// sessionId
+			String sessionId = message.getSessionId();
+			if (sessionId == null || sessionId.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
+			}
+			// message info
+			String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+			if (messageInfo != null) {
+				ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
+			}
+			// compression
+			boolean compression = message.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+			request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION, compression);
+		} catch (HasFaultResponseException ex) {
+			// needs to set message type at this point
+			ex.setMessageType(getKey());
+			throw ex;
+		} catch (Throwable ex) {
+			logger.error("validate", ex);
+			SCMPValidatorException validatorException = new SCMPValidatorException();
+			validatorException.setMessageType(getKey());
+			throw validatorException;
+		}
 	}
 
-	/**
-	 * The Class ClnExecuteCommandValidator.
-	 */
-	private class ClnExecuteCommandValidator implements ICommandValidator {
-
-		/** {@inheritDoc} */
-		@Override
-		public void validate(IRequest request) throws Exception {
-			try {
-				SCMPMessage message = request.getMessage();
-				// messageId
-				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-				if (messageId == null || messageId.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
-				}
-				// serviceName
-				String serviceName = message.getServiceName();
-				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-				}
-				// operation timeout
-				String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-				int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-				request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
-				// sessionId
-				String sessionId = message.getSessionId();
-				if (sessionId == null || sessionId.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
-				}
-				// message info
-				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-				if (messageInfo != null) {
-					ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
-				}
-				// compression
-				boolean compression = message.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
-				request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION, compression);
-			} catch (HasFaultResponseException ex) {
-				// needs to set message type at this point
-				ex.setMessageType(getKey());
-				throw ex;
-			} catch (Throwable ex) {
-				logger.error("validate", ex);
-				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey());
-				throw validatorException;
-			}
-		}
+	/** {@inheritDoc} */
+	@Override
+	public boolean isAsynchronous() {
+		return true;
 	}
 
 	/**

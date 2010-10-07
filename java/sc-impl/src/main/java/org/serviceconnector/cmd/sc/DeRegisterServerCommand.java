@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -53,7 +52,6 @@ public class DeRegisterServerCommand extends CommandAdapter {
 	 * Instantiates a new DeRegisterServerCommand.
 	 */
 	public DeRegisterServerCommand() {
-		this.commandValidator = new DeRegisterServerCommandValidator();
 	}
 
 	/** {@inheritDoc} */
@@ -100,6 +98,29 @@ public class DeRegisterServerCommand extends CommandAdapter {
 		response.setSCMP(scmpReply);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void validate(IRequest request) throws Exception {
+		SCMPMessage message = request.getMessage();
+
+		try {
+			// serviceName
+			String serviceName = (String) message.getServiceName();
+			if (serviceName == null || serviceName.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
+			}
+		} catch (HasFaultResponseException ex) {
+			// needs to set message type at this point
+			ex.setMessageType(getKey());
+			throw ex;
+		} catch (Throwable ex) {
+			logger.error("validate", ex);
+			SCMPValidatorException validatorException = new SCMPValidatorException();
+			validatorException.setMessageType(getKey());
+			throw validatorException;
+		}
+	}
+
 	/**
 	 * Validate server. Checks properness of allocated server. If server null no free server available.
 	 * 
@@ -122,34 +143,6 @@ public class DeRegisterServerCommand extends CommandAdapter {
 		return server;
 	}
 
-	/**
-	 * The Class DeRegisterServerCommandValidator.
-	 */
-	private class DeRegisterServerCommandValidator implements ICommandValidator {
-
-		/** {@inheritDoc} */
-		@Override
-		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
-
-			try {
-				// serviceName
-				String serviceName = (String) message.getServiceName();
-				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-				}
-			} catch (HasFaultResponseException ex) {
-				// needs to set message type at this point
-				ex.setMessageType(getKey());
-				throw ex;
-			} catch (Throwable ex) {
-				logger.error("validate", ex);
-				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey());
-				throw validatorException;
-			}
-		}
-	}
 
 	/**
 	 * The Class DeRegisterServerCommmandCallback. It's used as callback for abort sessions. Callback can be ignored.

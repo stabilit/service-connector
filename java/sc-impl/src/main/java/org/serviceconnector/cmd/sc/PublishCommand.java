@@ -19,7 +19,6 @@ package org.serviceconnector.cmd.sc;
 import java.net.SocketAddress;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -49,7 +48,6 @@ public class PublishCommand extends CommandAdapter {
 	 * Instantiates a new PublishCommand.
 	 */
 	public PublishCommand() {
-		this.commandValidator = new PublishCommandValidator();
 	}
 
 	/** {@inheritDoc} */
@@ -87,44 +85,38 @@ public class PublishCommand extends CommandAdapter {
 		response.setSCMP(reply);
 	}
 
-	/**
-	 * The Class PublishCommandValidator.
-	 */
-	private class PublishCommandValidator implements ICommandValidator {
-
-		/** {@inheritDoc} */
-		@Override
-		public void validate(IRequest request) throws Exception {
-			SCMPMessage message = request.getMessage();
-			try {
-				// messageId
-				String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-				if (messageId == null || messageId.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
-				}
-				// serviceName
-				String serviceName = message.getServiceName();
-				if (serviceName == null || serviceName.equals("")) {
-					throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-				}
-				// message info
-				String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-				if (messageInfo != null) {
-					ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
-				}
-				// mask
-				String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
-				ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-			} catch (HasFaultResponseException ex) {
-				// needs to set message type at this point
-				ex.setMessageType(getKey());
-				throw ex;
-			} catch (Throwable ex) {
-				logger.error("validate", ex);
-				SCMPValidatorException validatorException = new SCMPValidatorException();
-				validatorException.setMessageType(getKey());
-				throw validatorException;
+	/** {@inheritDoc} */
+	@Override
+	public void validate(IRequest request) throws Exception {
+		SCMPMessage message = request.getMessage();
+		try {
+			// messageId
+			String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+			if (messageId == null || messageId.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
 			}
+			// serviceName
+			String serviceName = message.getServiceName();
+			if (serviceName == null || serviceName.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
+			}
+			// message info
+			String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+			if (messageInfo != null) {
+				ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
+			}
+			// mask
+			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
+			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+		} catch (HasFaultResponseException ex) {
+			// needs to set message type at this point
+			ex.setMessageType(getKey());
+			throw ex;
+		} catch (Throwable ex) {
+			logger.error("validate", ex);
+			SCMPValidatorException validatorException = new SCMPValidatorException();
+			validatorException.setMessageType(getKey());
+			throw validatorException;
 		}
 	}
 }

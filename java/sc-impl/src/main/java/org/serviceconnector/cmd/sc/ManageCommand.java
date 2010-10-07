@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.IRequest;
@@ -55,7 +54,6 @@ public class ManageCommand extends CommandAdapter {
 	 * Instantiates a new manage command.
 	 */
 	public ManageCommand() {
-		this.commandValidator = new ManageCommandValidator();
 	}
 
 	/** {@inheritDoc} */
@@ -114,15 +112,9 @@ public class ManageCommand extends CommandAdapter {
 		response.setSCMP(scmpReply);
 	}
 
-	/**
-	 * The Class ManageCommandValidator.
-	 */
-	private class ManageCommandValidator implements ICommandValidator {
-
-		/** {@inheritDoc} */
-		@Override
-		public void validate(IRequest request) throws SCMPValidatorException {
-			// no validation necessary in case of manage command
-		}
+	/** {@inheritDoc} */
+	@Override
+	public void validate(IRequest request) throws SCMPValidatorException {
+		// no validation necessary in case of manage command
 	}
 }

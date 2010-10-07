@@ -27,6 +27,7 @@ import org.serviceconnector.cmd.srv.ServerCommandFactory;
  * @author JTraber
  */
 public class TestServerCommandFactory extends CommandFactory {
+	
 	@SuppressWarnings("unused")
 	public TestServerCommandFactory() {
 		ServiceConnectorCommandFactory serviceConnectorCommandFactory = new ServiceConnectorCommandFactory(this);

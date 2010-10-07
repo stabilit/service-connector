@@ -18,9 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommand;
-import org.serviceconnector.cmd.ICommandValidator;
-import org.serviceconnector.cmd.NullCommandValidator;
 import org.serviceconnector.cmd.SCMPCommandException;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
@@ -49,8 +48,6 @@ public abstract class CommandAdapter implements ICommand {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CommandAdapter.class);
 
-	/** The command validator. */
-	protected ICommandValidator commandValidator;
 	/** The session registry. */
 	protected SessionRegistry sessionRegistry = SessionRegistry.getCurrentInstance();
 	/** The subscription registry. */
@@ -62,10 +59,6 @@ public abstract class CommandAdapter implements ICommand {
 	 * Instantiates a new command adapter.
 	 */
 	public CommandAdapter() {
-		this.commandValidator = NullCommandValidator.newInstance(); // www.refactoring.com
-		// Introduce
-		// NULL
-		// Object
 	}
 
 	/**
@@ -216,8 +209,8 @@ public abstract class CommandAdapter implements ICommand {
 
 	/** {@inheritDoc} */
 	@Override
-	public ICommandValidator getCommandValidator() {
-		return commandValidator;
+	public void validate(IRequest request) throws Exception {
+		throw new SCMPValidatorException(SCMPError.HV_ERROR, "no validator implemented");
 	}
 
 	/** {@inheritDoc} */

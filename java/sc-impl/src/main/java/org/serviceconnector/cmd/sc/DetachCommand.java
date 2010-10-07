@@ -17,7 +17,6 @@
 package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cmd.ICommandValidator;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -40,7 +39,6 @@ public class DetachCommand extends CommandAdapter {
 	 * Instantiates a new DetachCommand.
 	 */
 	public DetachCommand() {
-		this.commandValidator = new DetachCommandValidator();
 	}
 
 	/** {@inheritDoc} */
@@ -59,15 +57,9 @@ public class DetachCommand extends CommandAdapter {
 		response.setSCMP(scmpReply);
 	}
 
-	/**
-	 * The Class DetachCommandValidator.
-	 */
-	private class DetachCommandValidator implements ICommandValidator {
-
-		/** {@inheritDoc} */
-		@Override
-		public void validate(IRequest request) throws SCMPValidatorException {
-			// no validation in case of detach command
-		}
+	/** {@inheritDoc} */
+	@Override
+	public void validate(IRequest request) throws SCMPValidatorException {
+		// no validation in case of detach command
 	}
 }

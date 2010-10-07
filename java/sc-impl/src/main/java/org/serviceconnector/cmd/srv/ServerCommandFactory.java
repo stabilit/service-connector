@@ -54,7 +54,7 @@ public class ServerCommandFactory extends CommandFactory {
 	 * @param commandFactory
 	 *            the command factory
 	 */
-	public void init(CommandFactory commandFactory) {
+	private void init(CommandFactory commandFactory) {
 		ICommand srvCreateSessionCommand = new SrvCreateSessionCommand();
 		commandFactory.addCommand(srvCreateSessionCommand.getKey(), srvCreateSessionCommand);
 		ICommand srvDeleteSessionCommand = new SrvDeleteSessionCommand();

@@ -55,7 +55,7 @@ public class ServiceConnectorCommandFactory extends CommandFactory {
 	 * @param commandFactory
 	 *            the command factory
 	 */
-	public void init(CommandFactory commandFactory) {
+	private void init(CommandFactory commandFactory) {
 		ICommand attachCommand = new AttachCommand();
 		commandFactory.addCommand(attachCommand.getKey(), attachCommand);
 		ICommand detachCommand = new DetachCommand();
