@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.conf.ResponderConfigPool;
-import org.serviceconnector.ctx.ServiceConnectorContext;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ILoggingManagerMXBean;
 import org.serviceconnector.log.JMXLoggingManager;
 import org.serviceconnector.net.res.IResponder;
@@ -99,8 +99,8 @@ public final class SC {
 		config.load(configFileName);
 
 		// Initialize service connector command factory
-		ServiceConnectorContext serviceConnectorContext = ServiceConnectorContext.getCurrentContext();
-		serviceConnectorContext.initContext(new ServiceConnectorCommandFactory());
+		AppContext appContext = AppContext.getCurrentContext();
+		appContext.initContext(new ServiceConnectorCommandFactory());
 
 		// initialize JMX
 		SC.initializeJMX();
@@ -114,7 +114,6 @@ public final class SC {
 
 		// clean up and initialize cache
 		// Cache cache = Cache.initialize();
-
 
 		// init web command factory
 		WebCommandFactory webCommandFactory = WebCommandFactory.getCurrentWebCommandFactory();
@@ -148,7 +147,7 @@ public final class SC {
 	private static void initializeJMX() {
 		try {
 
-			ServiceConnectorContext serviceConnectorContext = ServiceConnectorContext.getCurrentContext();
+			AppContext appContext = AppContext.getCurrentContext();
 			// Necessary to make access for JMX client available
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			ObjectName mxbeanNameSessReg = new ObjectName("org.serviceconnector.registry:type=SessionRegistry");
@@ -157,9 +156,9 @@ public final class SC {
 			ObjectName mxbeanNameLoggingManager = new ObjectName("org.serviceconnector.logging:type=LoggingManager");
 
 			// Register the Queue Sampler MXBean
-			mbs.registerMBean(serviceConnectorContext.getSessionRegistry(), mxbeanNameSessReg);
-			mbs.registerMBean(serviceConnectorContext.getServiceRegistry(), mxbeanNameServiceReg);
-			mbs.registerMBean(serviceConnectorContext.getServerRegistry(), mxbeanNameServerReg);
+			mbs.registerMBean(appContext.getSessionRegistry(), mxbeanNameSessReg);
+			mbs.registerMBean(appContext.getServiceRegistry(), mxbeanNameServiceReg);
+			mbs.registerMBean(appContext.getServerRegistry(), mxbeanNameServerReg);
 			ILoggingManagerMXBean loggingManager = new JMXLoggingManager();
 			mbs.registerMBean(loggingManager, mxbeanNameLoggingManager);
 		} catch (Throwable th) {

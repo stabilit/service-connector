@@ -50,6 +50,11 @@ public class SetupTestCases {
 	private static ISCSessionServer scSim10ConSrv;
 	private static ISCSessionServer scSimEnableSrv;
 
+	static {
+		AppContext appContext = AppContext.getCurrentContext();
+		appContext.initContext(new TestServerCommandFactory());
+	}
+	
 	private SetupTestCases() {
 	}
 
@@ -82,8 +87,6 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				AppContext appContext = AppContext.getCurrentContext();
-				appContext.initContext(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 				SetupTestCases.startSessionServer10Connections();
 			} catch (Exception e) {
@@ -97,8 +100,6 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				AppContext appContext = AppContext.getCurrentContext();
-				appContext.initContext(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, propertyFileName });
 				SetupTestCases.startSessionServer10Connections();
 			} catch (Exception e) {
@@ -112,8 +113,6 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				AppContext appContext = AppContext.getCurrentContext();
-				appContext.initContext(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, propertyFileName });
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -126,8 +125,6 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				AppContext appContext = AppContext.getCurrentContext();
-				appContext.initContext(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 				SetupTestCases.startSessionServer1Connections();
 			} catch (Exception e) {
@@ -141,8 +138,6 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				AppContext appContext = AppContext.getCurrentContext();
-				appContext.initContext(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 				SetupTestCases.startSessionServer10Connections();
 				SetupTestCases.startPublishServer();
@@ -157,8 +152,6 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				AppContext appContext = AppContext.getCurrentContext();
-				appContext.initContext(new TestServerCommandFactory());
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPPublishCall;
-import org.serviceconnector.ctx.SCServerContext;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -47,7 +47,7 @@ public class SCPublishServer extends SCSessionServer implements ISCPublishServer
 		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-		SrvServiceRegistry srvServiceRegistry = SCServerContext.getCurrentContext().getSrvServiceRegistry();
+		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
 		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
 		if (srvService == null) {
 			throw new SCServiceException("Service not found, service name: " + serviceName);

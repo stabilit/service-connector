@@ -18,7 +18,7 @@ package org.serviceconnector.net.res;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.conf.CommunicatorConfig;
-
+import org.serviceconnector.ctx.AppContext;
 
 /**
  * The Class Responder. Abstracts responder functionality from a application view. It is not the technical
@@ -29,8 +29,8 @@ import org.serviceconnector.conf.CommunicatorConfig;
 public class Responder implements IResponder {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(Responder.class);	
-	
+	protected final static Logger logger = Logger.getLogger(Responder.class);
+
 	/** The responder configuration. */
 	private CommunicatorConfig respConfig;
 	/** The endpoint connection. */
@@ -46,8 +46,8 @@ public class Responder implements IResponder {
 	/** {@inheritDoc} */
 	@Override
 	public void create() throws Exception {
-		EndpointFactory endpointFactory = EndpointFactory.getCurrentInstance();
-		this.endpoint = endpointFactory.newInstance(this.respConfig.getConnectionType());
+		EndpointFactory endpointFactory = AppContext.getCurrentContext().getEndpointFactory();
+		this.endpoint = endpointFactory.createEndpoint(this.respConfig.getConnectionType());
 		this.endpoint.setResponder(this);
 		this.endpoint.setHost(this.respConfig.getHost());
 		this.endpoint.setPort(this.respConfig.getPort());
@@ -65,7 +65,7 @@ public class Responder implements IResponder {
 	public void startListenSync() throws Exception {
 		this.endpoint.startListenSync();
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void stopListening() {

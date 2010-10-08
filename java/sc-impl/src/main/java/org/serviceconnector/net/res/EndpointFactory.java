@@ -16,59 +16,33 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
+import java.security.InvalidParameterException;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.factory.Factory;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.res.netty.http.NettyHttpEndpoint;
 import org.serviceconnector.net.res.netty.tcp.NettyTcpEndpoint;
 import org.serviceconnector.net.res.netty.web.NettyWebEndpoint;
-
 
 /**
  * A factory for creating Endpoint objects. Provides access to concrete endpoint instances. Possible endpoints are shown
  * in key string constants below.
  */
-public class EndpointFactory extends Factory {
+public class EndpointFactory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(EndpointFactory.class);
-	/** EndpointFactory instance */
-	private static final EndpointFactory instance = new EndpointFactory();
 
-	/**
-	 * Gets the current instance.
-	 * 
-	 * @return the current instance
-	 */
-	public static EndpointFactory getCurrentInstance() {
-		return EndpointFactory.instance;
-	}
-
-	/**
-	 * Instantiates a new EnpointFactory.
-	 */
-	private EndpointFactory() {
-		// jboss netty http endpoint
-		IEndpoint nettyHttpEndpoint = new NettyHttpEndpoint();
-		add(Constants.NETTY_HTTP, nettyHttpEndpoint);
-		// jboss netty tcp endpoint
-		IEndpoint nettyTCPEndpoint = new NettyTcpEndpoint();
-		add(Constants.NETTY_TCP, nettyTCPEndpoint);
-		// jboss netty web endpoint
-		IEndpoint nettyWebEndpoint = new NettyWebEndpoint();
-		add(Constants.NETTY_WEB, nettyWebEndpoint);
-	}
-
-	/**
-	 * New instance.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return the endpoint
-	 */
-	public IEndpoint newInstance(String key) {
-		IFactoryable factoryInstance = super.newInstance(key);
-		return (IEndpoint) factoryInstance; // should be a clone if implemented
+	public IEndpoint createEndpoint(String key) {
+		if (Constants.NETTY_HTTP.equalsIgnoreCase(key)) {
+			return new NettyHttpEndpoint();
+		} else if (Constants.NETTY_TCP.equalsIgnoreCase(key)) {
+			return new NettyTcpEndpoint();
+		} else if (Constants.NETTY_WEB.equalsIgnoreCase(key)) {
+			return new NettyWebEndpoint();
+		} else {
+			logger.fatal("key : " + key + " not found!");
+			throw new InvalidParameterException("key : " + key + " not found!");
+		}
 	}
 }

@@ -31,7 +31,6 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.ctx.ServiceConnectorContext;
 import org.serviceconnector.log.PerformanceLogger;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.ResponderRegistry;
@@ -347,28 +346,25 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	private void cleanUpDeadServer(String host, int port) {
 		String wildKey = "_" + host + "/" + port;
 		// TODO JOT ?? key!
+		ServerRegistry serverRegistry = AppContext.getCurrentContext().getServerRegistry();
+		SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
+		Set<String> keySet = serverRegistry.keySet();
 
-		if (AppContext.getCurrentContext() instanceof ServiceConnectorContext) {
-			ServerRegistry serverRegistry = ServiceConnectorContext.getCurrentContext().getServerRegistry();
-			SessionRegistry sessionRegistry = ServiceConnectorContext.getCurrentContext().getSessionRegistry();
-			Set<String> keySet = serverRegistry.keySet();
+		for (String key : keySet) {
+			if (key.endsWith(wildKey)) {
+				Server server = serverRegistry.getServer(key);
+				// deregister server from service
+				server.getService().removeServer(server);
+				List<Session> serverSessions = server.getSessions();
 
-			for (String key : keySet) {
-				if (key.endsWith(wildKey)) {
-					Server server = serverRegistry.getServer(key);
-					// deregister server from service
-					server.getService().removeServer(server);
-					List<Session> serverSessions = server.getSessions();
-
-					// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
-					for (Session session : serverSessions) {
-						sessionRegistry.removeSession(session);
-						this.compositeRegistry.removeSession(session.getId());
-					}
-					// release all resources used by server, disconnects requester
-					server.destroy();
-					serverRegistry.removeServer(key);
+				// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
+				for (Session session : serverSessions) {
+					sessionRegistry.removeSession(session);
+					NettyHttpResponderRequestHandler.compositeRegistry.removeSession(session.getId());
 				}
+				// release all resources used by server, disconnects requester
+				server.destroy();
+				serverRegistry.removeServer(key);
 			}
 		}
 	}

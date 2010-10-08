@@ -18,7 +18,6 @@ package org.serviceconnector.net;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.factory.IFactoryable;
 
 
 /**
@@ -35,12 +34,6 @@ public class HttpFrameDecoder extends DefaultFrameDecoder {
 	 * Instantiates a new http frame decoder.
 	 */
 	protected HttpFrameDecoder() {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
 	}
 
 	/** {@inheritDoc} */

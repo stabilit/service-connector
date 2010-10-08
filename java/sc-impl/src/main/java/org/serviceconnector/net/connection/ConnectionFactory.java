@@ -52,9 +52,9 @@ public class ConnectionFactory {
 	}
 
 	public IConnection createConnection(String key) {
-		if (key.equalsIgnoreCase(Constants.NETTY_HTTP)) {
+		if (Constants.NETTY_HTTP.equalsIgnoreCase(key)) {
 			return new NettyHttpConnection(ConnectionFactory.channelFactory, ConnectionFactory.timer);
-		} else if (key.equalsIgnoreCase(Constants.NETTY_TCP)) {
+		} else if (Constants.NETTY_TCP.equalsIgnoreCase(key)) {
 			return new NettyTcpConnection(ConnectionFactory.channelFactory, ConnectionFactory.timer);
 		} else {
 			logger.fatal("key : " + key + " not found!");

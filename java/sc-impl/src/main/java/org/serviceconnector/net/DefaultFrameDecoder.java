@@ -18,8 +18,6 @@ package org.serviceconnector.net;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.factory.IFactoryable;
-import org.serviceconnector.net.IFrameDecoder;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 
 
@@ -37,12 +35,6 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 	 * Instantiates a new default frame decoder.
 	 */
 	protected DefaultFrameDecoder() {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return this; // singleton
 	}
 
 	/** {@inheritDoc} */

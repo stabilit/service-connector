@@ -19,7 +19,6 @@ package org.serviceconnector.test.sc.net;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.Constants;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.FrameDecoderException;
 import org.serviceconnector.net.FrameDecoderFactory;
 import org.serviceconnector.net.IFrameDecoder;
@@ -35,14 +34,6 @@ public class HttpFrameDecoderTestCase {
 	/** The decoder. */
 	private IFrameDecoder decoder = FrameDecoderFactory.getFrameDecoder(Constants.HTTP);
 
-	/**
-	 * Singelton test.
-	 */
-	@Test
-	public void singeltonTest() {
-		IFactoryable decoder2 = decoder.newInstance();
-		Assert.assertEquals(decoder, decoder2);
-	}
 
 	/**
 	 * Parses the frame size test.

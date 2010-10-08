@@ -34,6 +34,7 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.Factory;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
@@ -48,7 +49,6 @@ import org.serviceconnector.web.IXMLLoader;
 import org.serviceconnector.web.InvalidParameterException;
 import org.serviceconnector.web.NotFoundException;
 
-// TODO: Auto-generated Javadoc
 /**
  * A factory for creating DefaultXMLLoader objects.
  */
@@ -147,8 +147,7 @@ public class DefaultXMLLoaderFactory extends Factory {
 		@Override
 		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
 				throws Exception {
-			ServiceRegistry serviceRegistry = ServiceRegistry
-					.getCurrentInstance();
+			ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
 			writer.writeStartElement("services");
 			String serviceParameter = request.getParameter("service");
 			Service[] services = serviceRegistry.getServices();

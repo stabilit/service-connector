@@ -21,7 +21,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctx.ServiceConnectorContext;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.SessionRegistry;
@@ -152,7 +152,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		/** The Constant ERROR_STRING_FAIL. */
 		private static final String ERROR_STRING_FAIL = "executing command failed";
 
-		private SessionRegistry sessionRegistry = ServiceConnectorContext.getCurrentContext().getSessionRegistry();
+		private SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
 
 		/**
 		 * Instantiates a new ClnExecuteCommandCallback.

@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctx.ServiceConnectorContext;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
@@ -50,14 +50,14 @@ public abstract class CommandAdapter implements ICommand {
 	protected final static Logger logger = Logger.getLogger(CommandAdapter.class);
 
 	/** The session registry. */
-	protected SessionRegistry sessionRegistry = ServiceConnectorContext.getCurrentContext().getSessionRegistry();
+	protected SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
 	/** The subscription registry. */
-	protected SubscriptionRegistry subscriptionRegistry = ServiceConnectorContext.getCurrentContext()
+	protected SubscriptionRegistry subscriptionRegistry = AppContext.getCurrentContext()
 			.getSubscriptionRegistry();
 	/** The server registry. */
-	protected ServerRegistry serverRegistry = ServiceConnectorContext.getCurrentContext().getServerRegistry();
+	protected ServerRegistry serverRegistry = AppContext.getCurrentContext().getServerRegistry();
 	/** The service registry. */
-	protected ServiceRegistry serviceRegistry = ServiceConnectorContext.getCurrentContext().getServiceRegistry();
+	protected ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
 
 	/**
 	 * Gets the session by id. Checks properness of session, if session is null given session id is wrong - no session

@@ -22,7 +22,7 @@ import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctx.SCServerContext;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -83,7 +83,7 @@ public abstract class SrvCommandAdapter implements ICommand {
 	 *             the sCMP command exception
 	 */
 	protected SrvService getSrvServiceByServiceName(String serviceName) throws SCMPCommandException {
-		SrvServiceRegistry srvServiceRegistry = SCServerContext.getCurrentContext().getSrvServiceRegistry();
+		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
 		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
 
 		if (srvService == null) {

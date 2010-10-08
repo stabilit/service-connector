@@ -30,7 +30,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctx.ServiceConnectorContext;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPError;
 
@@ -60,7 +60,7 @@ public class ServiceLoader {
 		@SuppressWarnings("unchecked")
 		List<String> serviceNames = config.getList(Constants.SERVICE_NAMES);
 
-		ServiceRegistry serviceRegistry = ServiceConnectorContext.getCurrentContext().getServiceRegistry();
+		ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
 
 		for (String serviceName : serviceNames) {
 			// remove blanks in serviceName

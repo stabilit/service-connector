@@ -16,41 +16,30 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net;
 
+import java.security.InvalidParameterException;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.factory.Factory;
-import org.serviceconnector.net.IFrameDecoder;
-
+import org.serviceconnector.ctx.AppContext;
 
 /**
  * The Class FrameDecoderFactory. Provides access to concrete frame decoders.
  * 
  * @author JTraber
  */
-public final class FrameDecoderFactory extends Factory {
+public final class FrameDecoderFactory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(FrameDecoderFactory.class);
-	/** The decoder factory. */
-	private static FrameDecoderFactory decoderFactory = new FrameDecoderFactory();
 
-	/**
-	 * Gets the current instance.
-	 * 
-	 * @return the current instance
-	 */
-	public static FrameDecoderFactory getCurrentInstance() {
-		return decoderFactory;
-	}
+	private AppContext appContext;
 
-	/**
-	 * Instantiates a new frame decoder factory.
-	 */
-	private FrameDecoderFactory() {
+	public void initFrameDecoders(AppContext appContext) {
+		this.appContext = appContext;
 		IFrameDecoder frameDecoder = new DefaultFrameDecoder();
-		this.add(Constants.TCP, frameDecoder);
+		this.addFrameDecoder(Constants.TCP, frameDecoder);
 		frameDecoder = new HttpFrameDecoder();
-		this.add(Constants.HTTP, frameDecoder);
+		this.addFrameDecoder(Constants.HTTP, frameDecoder);
 	}
 
 	/**
@@ -61,6 +50,17 @@ public final class FrameDecoderFactory extends Factory {
 	 * @return the frame decoder
 	 */
 	public static IFrameDecoder getFrameDecoder(String key) {
-		return (IFrameDecoder) decoderFactory.newInstance(key);
+		if (Constants.HTTP.equalsIgnoreCase(key)) {
+			return new HttpFrameDecoder();
+		} else if (Constants.TCP.equalsIgnoreCase(key)) {
+			return new DefaultFrameDecoder();
+		} else {
+			logger.fatal("key : " + key + " not found!");
+			throw new InvalidParameterException("key : " + key + " not found!");
+		}
+	}
+
+	private void addFrameDecoder(String key, IFrameDecoder frameDecoder) {
+		this.appContext.getFrameDecoders().put(key, frameDecoder);
 	}
 }

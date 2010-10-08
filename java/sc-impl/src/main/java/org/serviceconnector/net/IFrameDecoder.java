@@ -16,14 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net;
 
-import org.serviceconnector.factory.IFactoryable;
 
 /**
  * The Interface IFrameDecoder. Abstracts FrameDecoder implementations.
  * 
  * @author JTraber
  */
-public interface IFrameDecoder extends IFactoryable {
+public interface IFrameDecoder {
 
 	/**
 	 * Parses the frame size.
