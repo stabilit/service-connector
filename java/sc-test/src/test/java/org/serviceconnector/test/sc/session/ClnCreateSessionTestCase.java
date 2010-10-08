@@ -105,7 +105,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 				.newInstance(req, "simulation");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(3000);
-		createSessionCall.invoke(this.attachCallback, 1000);
+		createSessionCall.invoke(this.attachCallback, 3000);
 		SCMPMessage responseMessage = this.attachCallback.getMessageSync();
 		String sessId = responseMessage.getSessionId();
 		/*************************** verify create session **********************************/

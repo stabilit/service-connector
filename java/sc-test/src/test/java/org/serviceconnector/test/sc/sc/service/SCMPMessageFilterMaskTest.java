@@ -25,7 +25,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.SCMPMessageFilterMask;
+import org.serviceconnector.service.SubscriptionMask;
 
 
 public class SCMPMessageFilterMaskTest {
@@ -33,7 +33,7 @@ public class SCMPMessageFilterMaskTest {
 	@Test
 	public void maskDoesntMatchTest() {
 		String clientMask = "000012100012832102FADF-----------X-----------";
-		SCMPMessageFilterMask clnMask = new SCMPMessageFilterMask(clientMask);
+		SubscriptionMask clnMask = new SubscriptionMask(clientMask);
 		SCMPMessage publishMsg = new SCMPMessage();
 
 		// missing X in mask
@@ -48,7 +48,7 @@ public class SCMPMessageFilterMaskTest {
 	@Test
 	public void maskDoesMatchTest() {
 		String clientMask = "000012100012832102FADF-----------X-----------";
-		SCMPMessageFilterMask clnMask = new SCMPMessageFilterMask(clientMask);
+		SubscriptionMask clnMask = new SubscriptionMask(clientMask);
 		SCMPMessage publishMsg = new SCMPMessage();
 
 		// wild card match
