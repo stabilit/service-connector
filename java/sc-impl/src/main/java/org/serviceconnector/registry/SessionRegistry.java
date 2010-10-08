@@ -16,8 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.registry;
 
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -27,6 +29,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Server;
+import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
@@ -108,6 +111,28 @@ public class SessionRegistry extends Registry<String, Session> {
 		return super.get(key);
 	}
 
+	/**
+	 * Gets all sessions.
+	 *
+	 * @return the sessions
+	 */
+	public Session[] getSessions() {
+		try {
+			Set<Entry<String, Session>> entries = this.registryMap.entrySet();
+			Session[] sessions = new Session[entries.size()];
+			int index = 0;
+			for (Entry<String, Session> entry : entries) {
+				String key = entry.getKey();
+				Session session = entry.getValue();
+				sessions[index++] = session;
+			}
+			return sessions;
+		} catch (Exception e) {
+			logger.error("getSessions", e);
+		}
+		return null;
+	}
+	
 	/**
 	 * Schedule session timeout.
 	 * 

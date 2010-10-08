@@ -87,4 +87,5 @@ public class Responder implements IResponder {
 	public void setResponderConfig(CommunicatorConfig respConfig) {
 		this.respConfig = respConfig;
 	}
+	
 }

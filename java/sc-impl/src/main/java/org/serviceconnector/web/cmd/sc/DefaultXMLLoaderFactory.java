@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -35,24 +36,28 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.factory.Factory;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.registry.ServiceRegistry;
+import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Service;
+import org.serviceconnector.service.Session;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
 import org.serviceconnector.web.InvalidParameterException;
 import org.serviceconnector.web.NotFoundException;
+import org.serviceconnector.web.WebUtil;
+import org.serviceconnector.web.ctx.WebContext;
 
+// TODO: Auto-generated Javadoc
 /**
  * A factory for creating DefaultXMLLoader objects.
  */
-public class DefaultXMLLoaderFactory extends Factory {
+public class DefaultXMLLoaderFactory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger
@@ -61,26 +66,40 @@ public class DefaultXMLLoaderFactory extends Factory {
 	/** The loader factory. */
 	protected static DefaultXMLLoaderFactory loaderFactory = new DefaultXMLLoaderFactory();
 
+	private Map<String, IXMLLoader> loaderMap = new ConcurrentHashMap<String, IXMLLoader>();
+
 	/**
 	 * Instantiates a new default xml loader factory.
 	 */
-	private DefaultXMLLoaderFactory() {
+	public DefaultXMLLoaderFactory() {
 		IXMLLoader loader = new DefaultXMLLoader();
-		this.add("default", loader);
+		this.addXMLLoader("default", loader);
 		loader = new ServicesXMLLoader();
-		this.add("/services", loader);
+		this.addXMLLoader("/services", loader);
+		loader = new SessionsXMLLoader();
+		this.addXMLLoader("/sessions", loader);
 		loader = new ResourceXMLLoader();
-		this.add("/resource", loader);
+		this.addXMLLoader("/resource", loader);
 		loader = new LogsXMLLoader();
-		this.add("/logs", loader);
+		this.addXMLLoader("/logs", loader);
 		loader = new AjaxResourceXMLLoader();
-		this.add("/ajax/resource", loader);
+		this.addXMLLoader("/ajax/resource", loader);
 		loader = new TimerXMLLoader();
-		this.add("/ajax/timer", loader);
+		this.addXMLLoader("/ajax/timer", loader);
 		loader = new AjaxSystemXMLLoader();
-		this.add("/ajax/system", loader);
+		this.addXMLLoader("/ajax/system", loader);
 		loader = new AjaxContentXMLLoader();
-		this.add("/ajax/content", loader);
+		this.addXMLLoader("/ajax/content", loader);
+	}
+
+	/**
+	 * Adds the xml loader.
+	 *
+	 * @param key the key
+	 * @param loader the loader
+	 */
+	public void addXMLLoader(String key, IXMLLoader loader) {
+		this.loaderMap.put(key, loader);
 	}
 
 	/**
@@ -89,18 +108,18 @@ public class DefaultXMLLoaderFactory extends Factory {
 	 * @param url
 	 *            the url
 	 * @return the xML loader
-	 */
-	public static IXMLLoader getXMLLoader(String url) {
+	 */ 
+	public IXMLLoader getXMLLoader(String url) {
 		if (url == null) {
-			return (IXMLLoader) loaderFactory.getInstance("default");
+			return this.loaderMap.get("default");
 		}
 		int questionMarkPos = url.indexOf("?");
 		if (questionMarkPos > 0) {
 			url = url.substring(0, questionMarkPos);
 		}
-		IXMLLoader xmlLoader = (IXMLLoader) loaderFactory.getInstance(url);
+		IXMLLoader xmlLoader = this.loaderMap.get(url);
 		if (xmlLoader == null) {
-			xmlLoader = (IXMLLoader) loaderFactory.getInstance("default");
+			xmlLoader = this.loaderMap.get("default");
 		}
 		if (xmlLoader == null) {
 			return null;
@@ -147,19 +166,22 @@ public class DefaultXMLLoaderFactory extends Factory {
 		@Override
 		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
 				throws Exception {
-			ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
+			ServiceRegistry serviceRegistry = AppContext.getCurrentContext()
+					.getServiceRegistry();
 			writer.writeStartElement("services");
 			String serviceParameter = request.getParameter("service");
 			Service[] services = serviceRegistry.getServices();
 			for (Service service : services) {
 				writer.writeStartElement("service");
-			    this.writeBean(writer, service);
+				this.writeBean(writer, service);
 				if (service instanceof PublishService) {
 					PublishService publishService = (PublishService) service;
-					SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService.getSubscriptionQueue();
+					SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService
+							.getSubscriptionQueue();
 					writer.writeStartElement("subscriptionQueueSize");
-					writer.writeCData(String.valueOf(subscriptionQueue.getSize()));
-					writer.writeEndElement();					
+					writer.writeCData(String.valueOf(subscriptionQueue
+							.getSize()));
+					writer.writeEndElement();
 				}
 				if (service.getServiceName().equals(serviceParameter)) {
 					// take a look into
@@ -168,31 +190,36 @@ public class DefaultXMLLoaderFactory extends Factory {
 					writer.writeStartElement("servers");
 					for (Server server : serverList) {
 						writer.writeStartElement("server");
-					    this.writeBean(writer, server);
-						writer.writeEndElement(); // close servers tag				
+						this.writeBean(writer, server);
+						writer.writeEndElement(); // close servers tag
 					}
-					writer.writeEndElement(); // close servers tag				
+					writer.writeEndElement(); // close servers tag
 					if (service instanceof PublishService) {
 						PublishService publishService = (PublishService) service;
-						SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService.getSubscriptionQueue();
+						SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService
+								.getSubscriptionQueue();
 						writer.writeStartElement("subscriptionQueue");
-						Iterator<SCMPMessage> sqIter = subscriptionQueue.iterator();
-						while(sqIter.hasNext()) {
+						Iterator<SCMPMessage> sqIter = subscriptionQueue
+								.iterator();
+						while (sqIter.hasNext()) {
 							SCMPMessage scmpMessage = sqIter.next();
 							writer.writeStartElement("scmpMessage");
-							writer.writeStartElement("header");					
-							Map<String, String> header = scmpMessage.getHeader();
+							writer.writeStartElement("header");
+							Map<String, String> header = scmpMessage
+									.getHeader();
 							for (Entry headerEntry : header.entrySet()) {
-								writer.writeStartElement((String) headerEntry.getKey());
-								writer.writeCData((String) headerEntry.getValue());
+								writer.writeStartElement((String) headerEntry
+										.getKey());
+								writer.writeCData((String) headerEntry
+										.getValue());
 								writer.writeEndElement();
 							}
 							writer.writeEndElement();
 							writer.writeEndElement();
 						}
-						writer.writeEndElement();					
+						writer.writeEndElement();
 					}
-					writer.writeEndElement(); // close details tag				
+					writer.writeEndElement(); // close details tag
 				}
 				writer.writeEndElement(); // close services tag
 			}
@@ -204,13 +231,56 @@ public class DefaultXMLLoaderFactory extends Factory {
 		public final void loadBody(Writer writer, IWebRequest request)
 				throws Exception {
 			if (writer instanceof XMLStreamWriter) {
-				this.loadBody((XMLStreamWriter)writer, request);
+				this.loadBody((XMLStreamWriter) writer, request);
 			}
 		}
 
 		@Override
 		public IFactoryable newInstance() {
 			return new ServicesXMLLoader();
+		}
+
+	}
+
+	/**
+	 * The Class SessionsXMLLoader.
+	 */
+	public static class SessionsXMLLoader extends AbstractXMLLoader {
+
+		/**
+		 * Instantiates a new default xml loader.
+		 */
+		public SessionsXMLLoader() {
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
+				throws Exception {
+			SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
+			writer.writeStartElement("sessions");
+			String serviceParameter = request.getParameter("session");
+			Session[] sessions = sessionRegistry.getSessions();
+			for (Session session : sessions) {
+				writer.writeStartElement("session");
+				this.writeBean(writer, session);
+				writer.writeEndElement();
+			}
+			writer.writeEndElement(); // close sessions tag
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public final void loadBody(Writer writer, IWebRequest request)
+				throws Exception {
+			if (writer instanceof XMLStreamWriter) {
+				this.loadBody((XMLStreamWriter) writer, request);
+			}
+		}
+
+		@Override
+		public IFactoryable newInstance() {
+			return new SessionsXMLLoader();
 		}
 
 	}
@@ -233,22 +303,22 @@ public class DefaultXMLLoaderFactory extends Factory {
 			writer.writeStartElement("logs");
 			String dateParameter = request.getParameter("date");
 			Date today = new Date();
-			today = new Date(today.getYear(), today.getMonth(), today.getDate());			
+			today = new Date(today.getYear(), today.getMonth(), today.getDate());
 			Date current = today;
 			if (dateParameter != null) {
-				current = this.getXMLDateFromString(dateParameter);				
+				current = WebUtil.getXMLDateFromString(dateParameter);
 			}
 			if (today.before(current)) {
 				current = today;
 			}
 			// get previous and next date
-			String next= this.getXMLNextDateAsString(current);
-			String previous = this.getXMLPreviousDateAsString(current);
+			String next = WebUtil.getXMLNextDateAsString(current);
+			String previous = WebUtil.getXMLPreviousDateAsString(current);
 			// set selected date
 			writer.writeAttribute("previous", previous);
-			writer.writeAttribute("current", this.getXMLDateAsString(current));
+			writer.writeAttribute("current", WebUtil.getXMLDateAsString(current));
 			if (current.before(today)) {
-				writer.writeAttribute("next", next);			
+				writer.writeAttribute("next", next);
 			}
 			Logger rootLogger = LogManager.getRootLogger();
 			writeLogger(writer, rootLogger, today, current);
@@ -256,12 +326,12 @@ public class DefaultXMLLoaderFactory extends Factory {
 			while (currentLoggers.hasMoreElements()) {
 				Logger currentLogger = (Logger) currentLoggers.nextElement();
 				writeLogger(writer, currentLogger, today, current);
-			}			
+			}
 			writer.writeEndElement(); // close logs tag
 		}
 
-		private void writeLogger(XMLStreamWriter writer, Logger logger, Date today, Date current)
-				throws XMLStreamException {
+		private void writeLogger(XMLStreamWriter writer, Logger logger,
+				Date today, Date current) throws XMLStreamException {
 			writer.writeStartElement("logger");
 			writer.writeAttribute("name", logger.getName());
 			Enumeration appenders = logger.getAllAppenders();
@@ -274,13 +344,13 @@ public class DefaultXMLLoaderFactory extends Factory {
 					FileAppender fileAppender = (FileAppender) appender;
 					String sFile = fileAppender.getFile();
 					if (current.before(today)) {
-						sFile += "." + this.getXMLDateAsString(current);
+						sFile += "." + WebUtil.getXMLDateAsString(current);
 					}
 					writer.writeStartElement("file");
 					File file = new File(sFile);
 					if (file.exists() && file.isFile()) {
-					   long length = file.length();
-					   writer.writeAttribute("size", String.valueOf(length));
+						long length = file.length();
+						writer.writeAttribute("size", String.valueOf(length));
 					}
 					writer.writeCData(sFile);
 					writer.writeEndElement();
@@ -318,9 +388,10 @@ public class DefaultXMLLoaderFactory extends Factory {
 		public void loadBody(XMLStreamWriter writer, IWebRequest request)
 				throws Exception {
 			String name = request.getParameter("name");
-			InputStream is = loadResource(name);
+			InputStream is = WebUtil.loadResource(name);
 			if (is == null) {
-				this.addMeta("exception", "resource for name = " + name + " not found");
+				this.addMeta("exception", "resource for name = " + name
+						+ " not found");
 				return;
 			}
 			try {
@@ -373,9 +444,10 @@ public class DefaultXMLLoaderFactory extends Factory {
 		public void loadBody(Writer writer, IWebRequest request)
 				throws Exception {
 			String name = request.getParameter("name");
-			InputStream is = loadResource(name);
+			InputStream is = WebUtil.loadResource(name);
 			if (is == null) {
-				this.addMeta("exception", "resource for name = " + name + " not found");
+				this.addMeta("exception", "resource for name = " + name
+						+ " not found");
 				return;
 			}
 			try {
@@ -466,6 +538,7 @@ public class DefaultXMLLoaderFactory extends Factory {
 			}
 		}
 	}
+
 	/**
 	 * The Class AjaxContentXMLLoader.
 	 */
@@ -496,13 +569,13 @@ public class DefaultXMLLoaderFactory extends Factory {
 			if (id == null) {
 				throw new InvalidParameterException("id parameter missing");
 			}
-            IXMLLoader loader = DefaultXMLLoaderFactory.getXMLLoader("/" + id);
-            if (loader == null) {
-            	throw new NotFoundException();
-            }
-            loader.loadBody(writer, request);
-           
-		} 
+			IXMLLoader loader = WebContext.getCurrentContext().getXMLLoader("/" + id);
+			if (loader == null) {
+				throw new NotFoundException();
+			}
+			loader.loadBody(writer, request);
+
+		}
 	}
-	
+
 }

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:import href="template.xsl"/>
+    <xsl:template name="sc_script">
+      setInterval('infoCall()', 5000);	    
+      setInterval("contentCall('logs', 'date=<xsl:value-of select="$head/query/param/@date"/>')", 10000);      
+    </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table" style="width:800px;">
         <div class="sc_table_title">

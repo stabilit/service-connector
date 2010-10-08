@@ -1,7 +1,7 @@
 package org.serviceconnector.ctx;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cmd.CommandFactory;
@@ -44,9 +44,9 @@ public class AppContext {
 	private static final SubscriptionRegistry subscriptionRegistry = new SubscriptionRegistry();
 
 	public AppContext() {
-		AppContext.commands = new HashMap<String, ICommand>();
-		AppContext.encoderDecoders = new HashMap<String, IEncoderDecoder>();
-		AppContext.frameDecoders = new HashMap<String, IFrameDecoder>();
+		AppContext.commands = new ConcurrentHashMap<String, ICommand>();
+		AppContext.encoderDecoders = new ConcurrentHashMap<String, IEncoderDecoder>();
+		AppContext.frameDecoders = new ConcurrentHashMap<String, IFrameDecoder>();
 		AppContext.commandFactory = null;
 		AppContext.encoderDecoderFactory.initEncoders(this);
 		AppContext.frameDecoderFactory.initFrameDecoders(this);

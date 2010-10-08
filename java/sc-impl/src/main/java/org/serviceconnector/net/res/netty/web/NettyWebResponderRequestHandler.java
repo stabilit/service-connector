@@ -37,6 +37,7 @@ import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
 import org.serviceconnector.web.cmd.IWebCommand;
 import org.serviceconnector.web.cmd.WebCommandFactory;
+import org.serviceconnector.web.ctx.WebContext;
 import org.serviceconnector.web.netty.NettyWebRequest;
 import org.serviceconnector.web.netty.NettyWebResponse;
 
@@ -57,10 +58,10 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 		responderRegistry.setThreadLocal(channel.getParent().getId());
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-		WebCommandFactory webCommandFactory = WebCommandFactory.getCurrentWebCommandFactory();
+		WebContext webContext = WebContext.getCurrentContext();
 		IWebRequest webRequest = new NettyWebRequest(httpRequest);
 		IWebResponse webResponse = new NettyWebResponse(httpResponse);
-		IWebCommand webCommand = webCommandFactory.getWebCommand(webRequest);
+		IWebCommand webCommand = webContext.getWebCommand(webRequest);
 		webCommand.run(webRequest, webResponse);
 		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(webResponse.getBytes());
 		httpResponse.setContent(buffer);

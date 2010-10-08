@@ -46,6 +46,7 @@ import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.cmd.WebCommandFactory;
 import org.serviceconnector.web.cmd.sc.ServiceConnectorWebCommandFactory;
+import org.serviceconnector.web.ctx.WebContext;
 
 /**
  * The Class SC. Starts the core (responders) of the Service Connector.
@@ -101,7 +102,9 @@ public final class SC {
 		// Initialize service connector command factory
 		AppContext appContext = AppContext.getCurrentContext();
 		appContext.initContext(new ServiceConnectorCommandFactory());
-
+		WebContext webContext = WebContext.getCurrentContext();
+		webContext.initContext(new ServiceConnectorWebCommandFactory());
+		
 		// initialize JMX
 		SC.initializeJMX();
 
@@ -114,12 +117,6 @@ public final class SC {
 
 		// clean up and initialize cache
 		// Cache cache = Cache.initialize();
-
-		// init web command factory
-		WebCommandFactory webCommandFactory = WebCommandFactory.getCurrentWebCommandFactory();
-		if (webCommandFactory == null) {
-			WebCommandFactory.setCurrentWebCommandFactory(new ServiceConnectorWebCommandFactory());
-		}
 
 		List<CommunicatorConfig> respConfigList = config.getResponderConfigList();
 

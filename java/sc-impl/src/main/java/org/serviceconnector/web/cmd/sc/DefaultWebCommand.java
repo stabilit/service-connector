@@ -42,7 +42,9 @@ import org.serviceconnector.web.IWebSession;
 import org.serviceconnector.web.IXMLLoader;
 import org.serviceconnector.web.LoginException;
 import org.serviceconnector.web.NotFoundException;
+import org.serviceconnector.web.WebUtil;
 import org.serviceconnector.web.cmd.IWebCommandAccessibleContext;
+import org.serviceconnector.web.ctx.WebContext;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -84,7 +86,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		OutputStream responseOutputStream = response.getOutputStream();
 		if (isResource(url)) {
 			String resourcePath = getResourcePath(url);
-			InputStream is = this.getClass().getResourceAsStream(resourcePath);
+			InputStream is = WebUtil.loadResource(resourcePath);
 			if (is == null) {
 				throw new NotFoundException(url);
 			}
@@ -322,8 +324,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			this.exceptionList = new ArrayList<Exception>();
 			this.messageList = new ArrayList<Message>();
 			this.accessibleContext = null;
-			this.loader = DefaultXMLLoaderFactory.getXMLLoader(this.request
-					.getURL());
+			this.loader = WebContext.getCurrentContext().getXMLLoader(this.request.getURL());
 		}
 
 		public boolean isText() {
@@ -518,10 +519,10 @@ public class DefaultWebCommand extends WebCommandAdapter {
 				OutputStream resultOutputStream) throws Exception {
 			String xslPath = this.getXSLPath(null);
 			// load xsl input stream for given request
-			xslInputStream = this.getClass().getResourceAsStream(xslPath);
+			xslInputStream = WebUtil.loadResource(xslPath);
 			if (xslInputStream == null) {
 				xslPath = this.getXSLPath("");
-				xslInputStream = this.getClass().getResourceAsStream(xslPath);
+				xslInputStream = WebUtil.loadResource(xslPath);
 			}
 			TransformerFactory tFactory = TransformerFactory.newInstance();
 			tFactory.setURIResolver(new XSLURIResolver());
@@ -545,8 +546,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			 */
 			public Source resolve(String href, String base)
 					throws TransformerException {
-				InputStream is = getClass().getResourceAsStream(
-						"/org/serviceconnector/web/xsl/" + href);
+				InputStream is = WebUtil.loadResource("/org/serviceconnector/web/xsl/" + href);
 				return new StreamSource(is);
 			}
 		}

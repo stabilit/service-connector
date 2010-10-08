@@ -39,6 +39,8 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.SCVersion;
+import org.serviceconnector.service.Server;
+import org.serviceconnector.service.Session;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
@@ -298,17 +300,34 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					continue;
 				}
 				if (value != null) {
-					writer.writeStartElement(name);
 					if (value instanceof List<?>) {
+						writer.writeStartElement(name);
 						List<?> list = (List<?>)value;
 						for (Object listObj : list) {
 							writer.writeStartElement(listObj.getClass().getSimpleName().toLowerCase());
 							this.writeBean(writer, listObj);
 							writer.writeEndElement();
 						}
-					} else {
-					    writer.writeCData(value.toString());
+						writer.writeEndElement();
+						continue;
 					}
+					if (value instanceof Server) {
+						writer.writeStartElement(name);
+						Server server = (Server)value;
+						writer.writeStartElement("host");
+						writer.writeCData(server.getHost());
+						writer.writeEndElement();					
+						writer.writeStartElement("port");
+						writer.writeCData(String.valueOf(server.getPortNr()));
+						writer.writeEndElement();					
+						writer.writeStartElement("socketAddress");
+						writer.writeCData(String.valueOf(server.getSocketAddress()));
+						writer.writeEndElement();					
+						writer.writeEndElement();					
+						continue;
+					}
+					writer.writeStartElement(name);
+					writer.writeCData(value.toString());
 					writer.writeEndElement();
 				} else {
 					writer.writeStartElement(name);
@@ -342,79 +361,4 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
         writer.writeEndElement();
 	}
 
-	/**
-	 * Load resource.
-	 *
-	 * @param name the name
-	 * @return the input stream
-	 */
-	public InputStream loadResource(String name) {
-		try {
-			InputStream is = ClassLoader.getSystemResourceAsStream(name);
-			if (is != null) {
-				return is;
-			}
-			is = this.getClass().getResourceAsStream(name);
-			if (is != null) {
-				return is;
-			}
-			is = new FileInputStream(name);
-			if (is != null) {
-				return is;
-			}
-			return null;
-		} catch (Exception e) {
-			return null;
-		}
-	}
-	
-	/**
-	 * Gets the xML date as string.
-	 *
-	 * @param date the date
-	 * @return the xML date as string
-	 */
-	public String getXMLDateAsString(Date date) {
-		synchronized (XMLSDF) { // XMLSDF is not thread safe
-			return XMLSDF.format(date);
-		}		
-	}
-
-	/**
-	 * Gets the xML date from string.
-	 *
-	 * @param date the date
-	 * @return the xML date from string
-	 */
-	public Date getXMLDateFromString(String date) {
-		synchronized (XMLSDF) { // XMLSDF is not thread safe
-			try {
-				return XMLSDF.parse(date);
-			} catch (ParseException e) {
-				return new Date();
-			}
-		}		
-	}
-	
-	/**
-	 * Gets the xML next date as string.
-	 *
-	 * @param date the date
-	 * @return the xML next date as string
-	 */
-	public String getXMLNextDateAsString(Date date) {
-		Calendar c = Calendar.getInstance();
-		return this.getXMLDateAsString(new Date(date.getYear(), date.getMonth(), date.getDate()+1));
-	}
-	
-	/**
-	 * Gets the xML previous date as string.
-	 *
-	 * @param date the date
-	 * @return the xML previous date as string
-	 */
-	public String getXMLPreviousDateAsString(Date date) {
-		Calendar c = Calendar.getInstance();
-		return this.getXMLDateAsString(new Date(date.getYear(), date.getMonth(), date.getDate()-1));
-	}
 }
