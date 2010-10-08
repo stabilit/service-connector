@@ -44,7 +44,6 @@ import org.serviceconnector.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
-import org.serviceconnector.web.cmd.WebCommandFactory;
 import org.serviceconnector.web.cmd.sc.ServiceConnectorWebCommandFactory;
 import org.serviceconnector.web.ctx.WebContext;
 
