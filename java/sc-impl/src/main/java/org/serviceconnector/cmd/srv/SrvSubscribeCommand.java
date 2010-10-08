@@ -49,19 +49,19 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
 		// look up srvService
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
-		SCMPMessage scmpMessage = request.getMessage();
-		String sessionId = scmpMessage.getSessionId();
+		String sessionId = reqMessage.getSessionId();
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
-		scMessage.setData(scmpMessage.getBody());
-		scMessage.setCompressed(scmpMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
-		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setSessionInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
-		scMessage.setOperationTimeout(Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		scMessage.setData(reqMessage.getBody());
+		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		scMessage.setSessionInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
+		scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages

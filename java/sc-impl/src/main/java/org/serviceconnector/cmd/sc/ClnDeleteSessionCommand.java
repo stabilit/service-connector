@@ -67,8 +67,8 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		Server server = session.getServer();
 		SCMPMessage reply = null;
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		server.deleteSession(message, callback, ((Integer) request
-				.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		server.deleteSession(message, callback, oti);
 		reply = callback.getMessageSync();
 
 		if (reply.isFault()) {
@@ -112,8 +112,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			}
 			// operation timeout
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sessionId
 			String sessionId = message.getSessionId();
 			if (sessionId == null || sessionId.equals("")) {

@@ -28,12 +28,10 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.IFilterMask;
-import org.serviceconnector.service.SCMPMessageFilterMask;
 import org.serviceconnector.service.Server;
-import org.serviceconnector.service.Session;
+import org.serviceconnector.service.Subscription;
+import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ValidatorUtility;
-
 
 /**
  * The Class ClnChangeSubscriptionCommand. Responsible for validation and execution of change subscription command.
@@ -65,15 +63,15 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
-		String sessionId = reqMessage.getSessionId();
+		String subscriptionId = reqMessage.getSessionId();
 		String serviceName = reqMessage.getServiceName();
 
-		Session session = this.getSubscriptionSessionById(sessionId);
-		Server server = session.getServer();
+		Subscription subscription = this.getSubscriptionById(subscriptionId);
+		Server server = subscription.getServer();
 
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		server.changeSubscription(reqMessage, callback, ((Integer) request
-				.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		server.changeSubscription(reqMessage, callback, oti);
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault() == false) {
@@ -81,10 +79,10 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 			if (Boolean.FALSE.equals(rejectSessionFlag)) {
 				// session has not been rejected
 				String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
-				SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(sessionId);
-				IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(newMask);
-				subscriptionLogger.logChangeSubscribe(serviceName, sessionId, newMask);
-				queue.changeSubscription(sessionId, filterMask);
+				SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(subscriptionId);
+				SubscriptionMask mask = new SubscriptionMask(newMask);
+				subscriptionLogger.logChangeSubscribe(serviceName, subscriptionId, newMask);
+				queue.changeSubscription(subscriptionId, mask);
 			} else {
 				// session has been rejected - remove session id from header
 				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
@@ -115,8 +113,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 			}
 			// operation timeout
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// mask
 			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);

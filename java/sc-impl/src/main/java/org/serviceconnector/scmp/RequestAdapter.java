@@ -17,8 +17,6 @@
 package org.serviceconnector.scmp;
 
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -34,8 +32,6 @@ public abstract class RequestAdapter implements IRequest {
 	
 	/** The scmp message. */
 	private SCMPMessage message;
-	/** The map bean. MapBean to store any data. */
-	private Map<String, Object> attrMap;
 	/** The local socket address. */
 	private InetSocketAddress localSocketAddress;
 	/** The remote socket address. */
@@ -48,7 +44,6 @@ public abstract class RequestAdapter implements IRequest {
 		this.localSocketAddress = localAddress;
 		this.remoteSocketAddress = remoteAddress;
 		this.message = null;
-		this.attrMap = new HashMap<String, Object>();
 	}
 
 	/** {@inheritDoc} */
@@ -64,33 +59,6 @@ public abstract class RequestAdapter implements IRequest {
 	@Override
 	public void setMessage(SCMPMessage message) {
 		this.message = message;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public Object getAttribute(String key) {
-		// looks up the attribute in request map and in received message map
-		if (this.attrMap.containsKey(key)) {
-			return this.attrMap.get(key);
-		}
-		return this.message.getHeader(key);
-	}
-
-	@Override
-	public Object getAttribute(SCMPHeaderAttributeKey key) {
-		return this.getAttribute(key.getValue());
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setAttribute(String key, Object value) {
-		this.attrMap.put(key, value);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setAttribute(SCMPHeaderAttributeKey key, Object value) {
-		this.setAttribute(key.getValue(), value);
 	}
 
 	/** {@inheritDoc} */
@@ -115,13 +83,6 @@ public abstract class RequestAdapter implements IRequest {
 
 	/** {@inheritDoc} */
 	@Override
-	public void readNext() throws Exception {
-		this.message = null;
-		read();
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public SCMPMsgType getKey() throws Exception {
 		SCMPMessage message = this.getMessage();
 		if (message == null) {
@@ -129,11 +90,5 @@ public abstract class RequestAdapter implements IRequest {
 		}
 		String messageType = message.getMessageType();
 		return SCMPMsgType.getMsgType(messageType);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String toString() {
-		return this.message + " Attributes: " + this.attrMap;
 	}
 }

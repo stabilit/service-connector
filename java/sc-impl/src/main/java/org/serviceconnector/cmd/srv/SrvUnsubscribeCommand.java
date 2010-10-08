@@ -30,7 +30,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SrvUnsubscribeCommand. Responsible for validation and execution of server unsubscribe command. Allows
  * unsubscribing from service.
@@ -41,7 +40,7 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SrvUnsubscribeCommand.class);
-	
+
 	/**
 	 * Instantiates a new SrvUnsubscribeCommand.
 	 */
@@ -57,16 +56,17 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
 		// look up srvService
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
-		SCMPMessage scmpMessage = request.getMessage();
-		String sessionId = scmpMessage.getSessionId();
+		String sessionId = reqMessage.getSessionId();
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
-		scMessage.setData(scmpMessage.getBody());
-		scMessage.setOperationTimeout(Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		scMessage.setData(reqMessage.getBody());
+		scMessage
+				.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
@@ -78,7 +78,7 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 		SCMPMessage reply = new SCMPMessage();
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setServiceName(serviceName);
-		reply.setSessionId(scmpMessage.getSessionId());
+		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(this.getKey());
 		response.setSCMP(reply);
 		// delete session in SCMPSessionCompositeRegistry

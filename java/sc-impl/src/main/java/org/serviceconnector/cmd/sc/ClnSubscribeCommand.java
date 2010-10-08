@@ -18,8 +18,10 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -30,12 +32,11 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
-import org.serviceconnector.service.IFilterMask;
 import org.serviceconnector.service.IPublishTimerRun;
 import org.serviceconnector.service.PublishService;
-import org.serviceconnector.service.SCMPMessageFilterMask;
 import org.serviceconnector.service.Server;
-import org.serviceconnector.service.Session;
+import org.serviceconnector.service.Subscription;
+import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -69,36 +70,36 @@ public class ClnSubscribeCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
-		String mask = (String) request.getAttribute(SCMPHeaderAttributeKey.MASK);
+		String mask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
 		// check service is present
 		PublishService service = this.validatePublishService(serviceName);
 
+		SubscriptionMask filterMask = new SubscriptionMask(mask);
 		// create session
-		Session session = new Session();
-		reqMessage.setSessionId(session.getId());
+		Subscription subscription = new Subscription(filterMask);
+		reqMessage.setSessionId(subscription.getId());
 
-		int noDataInterval = (Integer) request.getAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+		int noDataInterval = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		Server server = service.allocateServerAndSubscribe(reqMessage, callback, session, ((Integer) request
-				.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		Server server = service.allocateServerAndSubscribe(reqMessage, callback, subscription, oti);
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault() == false) {
-			boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-			if (Boolean.FALSE.equals(rejectSessionFlag)) {
+			boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+			if (Boolean.FALSE.equals(rejectSubscriptionFlag)) {
 				// session has not been rejected, add server to session
-				session.setServer(server);
+				subscription.setServer(server);
 				// finally add subscription to the registry
-				this.subscriptionRegistry.addSession(session.getId(), session);
+				this.subscriptionRegistry.addSubscription(subscription.getId(), subscription);
 
 				SubscriptionQueue<SCMPMessage> subscriptionQueue = service.getSubscriptionQueue();
 
 				IPublishTimerRun timerRun = new PublishTimerRun(subscriptionQueue, noDataInterval);
-				subscriptionLogger.logSubscribe(serviceName, session.getId(), mask);
-				IFilterMask<SCMPMessage> filterMask = new SCMPMessageFilterMask(mask);
-				subscriptionQueue.subscribe(session.getId(), filterMask, timerRun);
+				subscriptionLogger.logSubscribe(serviceName, subscription.getId(), mask);
+				subscriptionQueue.subscribe(subscription.getId(), filterMask, timerRun);
 			} else {
 				// session has been rejected - remove session id from header
 				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
@@ -133,8 +134,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 			// operation timeout
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// ipAddressList
 			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
@@ -143,8 +143,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 			// noDataInterval
 			String noDataIntervalValue = message.getHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
-			int noi = ValidatorUtility.validateInt(1, noDataIntervalValue, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
-			request.setAttribute(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noi);
+			ValidatorUtility.validateInt(1, noDataIntervalValue, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
@@ -207,7 +206,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		/** {@inheritDoc} */
 		@Override
 		public void timeout() {
-			// extracting sessionId from request message
+			// extracting subscriptionId from request message
 			SCMPMessage reqMsg;
 			try {
 				reqMsg = request.getMessage();
@@ -222,10 +221,10 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				}
 				return;
 			}
-			String sessionId = reqMsg.getSessionId();
+			String subscriptionId = reqMsg.getSessionId();
 
 			// tries polling from queue
-			SCMPMessage message = this.subscriptionQueue.getMessage(sessionId);
+			SCMPMessage message = this.subscriptionQueue.getMessage(subscriptionId);
 			if (message == null) {
 				// no message found on queue - subscription timeout set up no data message
 				reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
@@ -240,9 +239,9 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				} else {
 					reply = new SCMPMessage();
 				}
-				reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
-				reply.setSessionId(sessionId);
-				reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
+				reply.setServiceName(reqMsg.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+				reply.setSessionId(subscriptionId);
+				reply.setMessageType(reqMsg.getMessageType());
 				reply.setIsReply(true);
 
 				// message polling successful
@@ -267,6 +266,9 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			} catch (Exception ex) {
 				logger.error("timeout", ex);
 			}
+			// set up subscription timeout
+			SubscriptionRegistry subscriptionRegistry = AppContext.getCurrentContext().getSubscriptionRegistry();
+			subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
 		}
 	}
 }

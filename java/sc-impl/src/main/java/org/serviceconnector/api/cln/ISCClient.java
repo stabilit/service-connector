@@ -22,7 +22,6 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.service.ISCCommunicator;
 import org.serviceconnector.service.SCServiceException;
 
-//TODO eliminieren
 /**
  * The Interface ISCClient. Interface for any kind of client.
  * 

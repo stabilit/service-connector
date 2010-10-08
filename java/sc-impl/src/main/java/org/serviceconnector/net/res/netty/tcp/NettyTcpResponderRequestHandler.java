@@ -50,6 +50,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
+import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
 
@@ -334,11 +335,11 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 				Server server = serverRegistry.getServer(key);
 				// deregister server from service
 				server.getService().removeServer(server);
-				List<Session> serverSessions = server.getSessions();
+				List<AbstractSession> serverSessions = server.getSessions();
 
 				// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
-				for (Session session : serverSessions) {
-					sessionRegistry.removeSession(session);
+				for (AbstractSession session : serverSessions) {
+					sessionRegistry.removeSession((Session) session);
 					NettyTcpResponderRequestHandler.compositeRegistry.removeSession(session.getId());
 				}
 				// release all resources used by server, disconnects requester

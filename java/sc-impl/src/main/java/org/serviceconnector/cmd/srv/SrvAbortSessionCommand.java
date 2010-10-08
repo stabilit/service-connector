@@ -57,18 +57,18 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
 		// look up srvService
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
-		SCMPMessage scmpMessage = request.getMessage();
-		String sessionId = scmpMessage.getSessionId();
+		String sessionId = reqMessage.getSessionId();
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
-		scMessage.setData(scmpMessage.getBody());
-		scMessage.setCompressed(scmpMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
-		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setOperationTimeout(Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		scMessage.setData(reqMessage.getBody());
+		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
@@ -80,7 +80,7 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);
-		reply.setSessionId(scmpMessage.getSessionId());
+		reply.setSessionId(reqMessage.getSessionId());
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setMessageType(this.getKey());
 		response.setSCMP(reply);

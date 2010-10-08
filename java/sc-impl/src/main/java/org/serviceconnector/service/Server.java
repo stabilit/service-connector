@@ -70,7 +70,7 @@ public class Server {
 	/** The requester. */
 	private IRequester requester;
 	/** The sessions, list of sessions allocated to the server. */
-	private List<Session> sessions;
+	private List<AbstractSession> sessions;
 	/** The operation timeout multiplier. */
 	private double operationTimeoutMultiplier;
 
@@ -87,7 +87,7 @@ public class Server {
 	public Server(InetSocketAddress socketAddress, String serviceName, int portNr, int maxSessions, int maxConnections,
 			int keepAliveInterval) {
 		this.service = null;
-		this.sessions = Collections.synchronizedList(new ArrayList<Session>());
+		this.sessions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 		this.serviceName = serviceName;
 		this.socketAddress = socketAddress;
 		this.portNr = portNr;
@@ -354,7 +354,7 @@ public class Server {
 	 * @param session
 	 *            the session
 	 */
-	public void addSession(Session session) {
+	public void addSession(AbstractSession session) {
 		this.sessions.add(session);
 	}
 
@@ -364,7 +364,7 @@ public class Server {
 	 * @param session
 	 *            the session
 	 */
-	public void removeSession(Session session) {
+	public void removeSession(AbstractSession session) {
 		this.sessions.remove(session);
 	}
 
@@ -373,7 +373,7 @@ public class Server {
 	 * 
 	 * @return the sessions
 	 */
-	public List<Session> getSessions() {
+	public List<AbstractSession> getSessions() {
 		return sessions;
 	}
 

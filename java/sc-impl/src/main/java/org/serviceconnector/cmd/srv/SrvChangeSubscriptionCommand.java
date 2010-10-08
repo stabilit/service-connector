@@ -58,21 +58,21 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
 		// look up srvService
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
-		SCMPMessage scmpMessage = request.getMessage();
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionId(scmpMessage.getSessionId());
-		scMessage.setOperationTimeout(Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
-		scmpMessage.setServiceName(serviceName);
+		scMessage.setSessionId(reqMessage.getSessionId());
+		scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		reqMessage.setServiceName(serviceName);
 
 		// inform callback with scMessages
 		SCMessage scReply = ((ISCPublishServerCallback) srvService.getCallback()).changeSubscription(scMessage);
 		// handling messageId
-		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(scmpMessage.getSessionId());
+		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(reqMessage.getSessionId());
 		messageId.incrementMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();

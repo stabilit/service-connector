@@ -50,44 +50,6 @@ public interface IRequest {
 	public void setMessage(SCMPMessage message);
 
 	/**
-	 * Sets an attribute in attribute map.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
-	 */
-	public void setAttribute(String key, Object value);
-
-	/**
-	 * Sets the attribute.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
-	 */
-	public void setAttribute(SCMPHeaderAttributeKey key, Object value);
-
-	/**
-	 * Gets an attribute of the attribute map.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return the attribute
-	 */
-	public Object getAttribute(String key);
-
-	/**
-	 * Gets the attribute.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return the attribute
-	 */
-	public Object getAttribute(SCMPHeaderAttributeKey key);
-
-	/**
 	 * Gets the socket address.
 	 * 
 	 * @return the socket address
@@ -108,14 +70,6 @@ public interface IRequest {
 	 *             the exception
 	 */
 	public void read() throws Exception;
-
-	/**
-	 * Reads next part.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void readNext() throws Exception;
 
 	/**
 	 * Load content on socket to the request. Decodes network frame into an scmp.

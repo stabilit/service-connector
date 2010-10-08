@@ -23,7 +23,6 @@ import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 
-
 /**
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
  * communication functions.
@@ -65,8 +64,8 @@ public class PublishService extends Service {
 	 *            the message to forward
 	 * @param callback
 	 *            the callback
-	 * @param session
-	 *            the session
+	 * @param subscription
+	 *            the subscription
 	 * @param timeoutMillis
 	 *            the timeout milliseconds
 	 * @return the server
@@ -74,7 +73,7 @@ public class PublishService extends Service {
 	 *             the exception
 	 */
 	public synchronized Server allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPCallback callback,
-			Session session, int timeoutMillis) throws Exception {
+			Subscription subscription, int timeoutMillis) throws Exception {
 		for (int i = 0; i < listOfServers.size(); i++) {
 			serverIndex++;
 			if (serverIndex >= listOfServers.size()) {
@@ -84,7 +83,7 @@ public class PublishService extends Service {
 			Server server = listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
 				server.subscribe(msgToForward, callback, timeoutMillis);
-				server.addSession(session);
+				server.addSession(subscription);
 				return server;
 			}
 		}

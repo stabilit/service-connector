@@ -19,7 +19,6 @@ package org.serviceconnector.api.srv;
 
 import java.security.InvalidParameterException;
 
-//TODO elminieren
 /**
  * The Interface ISCPublishServer. Top interface for any publish service.
  * 

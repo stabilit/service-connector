@@ -58,29 +58,29 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		String serviceName = (String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME);
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
 		// look up srvService
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
-		SCMPMessage scmpMessage = request.getMessage();
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
-		scMessage.setData(scmpMessage.getBody());
-		scMessage.setCompressed(scmpMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
-		scMessage.setMessageInfo(scmpMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setOperationTimeout(Integer.parseInt(scmpMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
-		scMessage.setSessionId(scmpMessage.getSessionId());
+		scMessage.setData(reqMessage.getBody());
+		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		scMessage.setSessionId(reqMessage.getSessionId());
 
 		// inform callback with scMessages
 		SCMessage scReply = ((ISCSessionServerCallback) srvService.getCallback()).execute(scMessage);
 
 		// handling messageId
-		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(scmpMessage.getSessionId());
+		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(reqMessage.getSessionId());
 		messageId.incrementMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);
-		reply.setSessionId(scmpMessage.getSessionId());
+		reply.setSessionId(reqMessage.getSessionId());
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setMessageType(this.getKey());
 		if (scReply.isCompressed()) {
@@ -127,8 +127,7 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 				ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 			}
 			// compression
-			boolean compression = message.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
-			request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION, compression);
+			message.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

@@ -16,67 +16,22 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import java.util.UUID;
-
 import org.apache.log4j.Logger;
-import org.serviceconnector.util.TimerTaskWrapper;
-
 
 /**
- * The Class Session. Provides unique id and an attribute map to store data. 
- * A session represents virtual relation between a client and a server.
+ * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation
+ * between a client and a server.
  */
-public class Session {
+public class Session extends AbstractSession {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(Session.class);
-	
-	/** The id. */
-	private String id;
-	/** The server. */
-	private Server server;
-	/** The echo interval. */
-	private int echoIntervalSeconds;
-	/** The session timeouter - observes session timeout. */
-	private TimerTaskWrapper sessionTimeouter;
 
-	/**
-	 * Instantiates a new session.
-	 */
+	private double echoIntervalSeconds;
+
 	public Session() {
-		UUID uuid = UUID.randomUUID();
-		this.id = uuid.toString();
-		this.server = null;
+		super();
 		this.echoIntervalSeconds = 0;
-		this.sessionTimeouter = null;
-	}
-
-	/**
-	 * Gets the id.
-	 * 
-	 * @return the id
-	 */
-	public String getId() {
-		return this.id;
-	}
-
-	/**
-	 * Sets the server.
-	 * 
-	 * @param server
-	 *            the new server
-	 */
-	public void setServer(Server server) {
-		this.server = server;
-	}
-
-	/**
-	 * Gets the server.
-	 * 
-	 * @return the server
-	 */
-	public Server getServer() {
-		return this.server;
 	}
 
 	/**
@@ -85,7 +40,7 @@ public class Session {
 	 * @param echoIntervalSeconds
 	 *            the new echo interval
 	 */
-	public void setEchoIntervalSeconds(int echoIntervalSeconds) {
+	public void setEchoIntervalSeconds(double echoIntervalSeconds) {
 		this.echoIntervalSeconds = echoIntervalSeconds;
 	}
 
@@ -94,32 +49,7 @@ public class Session {
 	 * 
 	 * @return the echo interval in seconds
 	 */
-	public int getEchoIntervalSeconds() {
+	public double getEchoIntervalSeconds() {
 		return echoIntervalSeconds;
-	}
-
-	/**
-	 * Gets the session timeouter.
-	 * 
-	 * @return the session timeouter
-	 */
-	public TimerTaskWrapper getSessionTimeouter() {
-		return sessionTimeouter;
-	}
-
-	/**
-	 * Sets the session timeouter.
-	 * 
-	 * @param sessionTimeouter
-	 *            the new session timeouter
-	 */
-	public void setSessionTimeouter(TimerTaskWrapper sessionTimeouter) {
-		this.sessionTimeouter = sessionTimeouter;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String toString() {
-		return id + ":" + server;
 	}
 }

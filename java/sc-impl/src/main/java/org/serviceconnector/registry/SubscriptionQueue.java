@@ -25,8 +25,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.service.IFilterMask;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.IPublishTimerRun;
+import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;
@@ -65,21 +66,22 @@ public class SubscriptionQueue<E> {
 
 	/**
 	 * Iterator.
-	 *
+	 * 
 	 * @return the iterator
 	 */
 	public Iterator<E> iterator() {
 		return this.dataQueue.iterator();
 	}
-	
+
 	/**
 	 * Gets the size.
-	 *
+	 * 
 	 * @return the size
 	 */
 	public int getSize() {
 		return this.dataQueue.getSize();
 	}
+
 	/**
 	 * Inserts a new message into the queue.
 	 * 
@@ -210,13 +212,13 @@ public class SubscriptionQueue<E> {
 	 * 
 	 * @param sessionId
 	 *            the session id
-	 * @param filterMask
+	 * @param mask
 	 *            the filter mask
 	 * @param timerRun
 	 *            the timer run
 	 */
-	public void subscribe(String sessionId, IFilterMask<E> filterMask, IPublishTimerRun timerRun) {
-		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(filterMask, timerRun);
+	public void subscribe(String sessionId, SubscriptionMask mask, IPublishTimerRun timerRun) {
+		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(mask, timerRun);
 		// Stores sessionId and dataPointer in map
 		this.pointerMap.put(sessionId, dataPointer);
 	}
@@ -229,10 +231,10 @@ public class SubscriptionQueue<E> {
 	 * @param filterMask
 	 *            the filter mask
 	 */
-	public void changeSubscription(String sessionId, IFilterMask<E> filterMask) {
+	public void changeSubscription(String sessionId, SubscriptionMask mask) {
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		if (dataPointer != null) {
-			dataPointer.changeFilterMask(filterMask);
+			dataPointer.changeFilterMask(mask);
 		}
 	}
 
@@ -257,8 +259,8 @@ public class SubscriptionQueue<E> {
 		private LinkedNode<E> node;
 		/** The timer run. */
 		private IPublishTimerRun timerRun;
-		/** The filter mask. */
-		private IFilterMask<E> filterMask;
+		/** The subscription mask. */
+		private SubscriptionMask mask;
 		/** The listen state. */
 		private boolean listening;
 		/** The subscription timeouter. */
@@ -267,15 +269,15 @@ public class SubscriptionQueue<E> {
 		/**
 		 * Instantiates a new TimeAwareDataPointer.
 		 * 
-		 * @param filterMask
+		 * @param mask
 		 *            the filter mask
 		 * @param timerRun
 		 *            the timer run
 		 */
-		public TimeAwareDataPointer(IFilterMask<E> filterMask, IPublishTimerRun timerRun) {
+		public TimeAwareDataPointer(SubscriptionMask mask, IPublishTimerRun timerRun) {
 			this.timerRun = timerRun;
 			this.listening = false;
-			this.filterMask = filterMask;
+			this.mask = mask;
 			this.subscriptionTimeouter = null;
 		}
 
@@ -293,7 +295,7 @@ public class SubscriptionQueue<E> {
 					// last possible node reached - no next move possible
 					return;
 				}
-				if (this.filterMask.matches(this.node.getValue())) {
+				if (this.mask.matches((SCMPMessage) this.node.getValue())) {
 					this.node.reference();
 					// reached node matches mask keep current position
 					return;
@@ -307,12 +309,12 @@ public class SubscriptionQueue<E> {
 		 * @param filterMask
 		 *            the filter mask
 		 */
-		public void changeFilterMask(IFilterMask<E> filterMask) {
-			this.filterMask = filterMask;
+		public void changeFilterMask(SubscriptionMask mask) {
+			this.mask = mask;
 			if (this.node == null) {
 				return;
 			}
-			if (this.filterMask.matches(this.node.getValue())) {
+			if (this.mask.matches((SCMPMessage) this.node.getValue())) {
 				// current node matches new mask keep current position
 				return;
 			} else {
@@ -370,7 +372,7 @@ public class SubscriptionQueue<E> {
 		 * @return true, if successful
 		 */
 		public boolean setNode(LinkedNode<E> node) {
-			if (this.filterMask.matches(node.getValue()) == false) {
+			if (this.mask.matches((SCMPMessage) node.getValue()) == false) {
 				// mask doesn't match - don't set the node
 				return false;
 			}
@@ -417,7 +419,7 @@ public class SubscriptionQueue<E> {
 			this.node = null;
 			this.timerRun = null;
 			this.listening = false;
-			this.filterMask = null;
+			this.mask = null;
 			this.subscriptionTimeouter = null;
 		}
 

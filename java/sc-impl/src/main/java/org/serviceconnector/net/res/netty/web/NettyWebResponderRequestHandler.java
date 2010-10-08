@@ -36,7 +36,6 @@ import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
 import org.serviceconnector.web.cmd.IWebCommand;
-import org.serviceconnector.web.cmd.WebCommandFactory;
 import org.serviceconnector.web.ctx.WebContext;
 import org.serviceconnector.web.netty.NettyWebRequest;
 import org.serviceconnector.web.netty.NettyWebResponse;

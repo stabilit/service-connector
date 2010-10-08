@@ -37,6 +37,7 @@ import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.SessionService;
+import org.serviceconnector.service.Subscription;
 
 /**
  * The Class CommandAdapter. Adapter for every kind of command. Provides basic functions that is used by executions of
@@ -52,8 +53,7 @@ public abstract class CommandAdapter implements ICommand {
 	/** The session registry. */
 	protected SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
 	/** The subscription registry. */
-	protected SubscriptionRegistry subscriptionRegistry = AppContext.getCurrentContext()
-			.getSubscriptionRegistry();
+	protected SubscriptionRegistry subscriptionRegistry = AppContext.getCurrentContext().getSubscriptionRegistry();
 	/** The server registry. */
 	protected ServerRegistry serverRegistry = AppContext.getCurrentContext().getServerRegistry();
 	/** The service registry. */
@@ -83,41 +83,32 @@ public abstract class CommandAdapter implements ICommand {
 		return session;
 	}
 
-	/**
-	 * Gets the subscription session by id.
-	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @return the subscription session by id
-	 * @throws SCMPCommandException
-	 *             the sCMP command exception
-	 */
-	protected Session getSubscriptionSessionById(String sessionId) throws SCMPCommandException {
-		Session session = this.subscriptionRegistry.getSession(sessionId);
+	protected Subscription getSubscriptionById(String subscriptionId) throws SCMPCommandException {
+		Subscription subscription = this.subscriptionRegistry.getSubscription(subscriptionId);
 
-		if (session == null) {
+		if (subscription == null) {
 			// incoming session not found
-			logger.warn("command error: no subscription session found for id :" + sessionId);
+			logger.warn("command error: no subscription session found for id :" + subscriptionId);
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
-					"subscriptionQueue not found for " + sessionId);
+					"subscriptionQueue not found for " + subscriptionId);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
-		return session;
+		return subscription;
 	}
 
 	/**
-	 * Gets the subscription place by id.
+	 * Gets the subscription queue by id.
 	 * 
-	 * @param sessionId
-	 *            the session id
-	 * @return the subscription place by id
+	 * @param subscriptionId
+	 *            the subscription id
+	 * @return the subscription queue by id
 	 * @throws Exception
 	 *             the exception
 	 */
-	protected SubscriptionQueue<SCMPMessage> getSubscriptionQueueById(String sessionId) throws Exception {
-		Session session = this.getSubscriptionSessionById(sessionId);
-		return ((PublishService) session.getServer().getService()).getSubscriptionQueue();
+	protected SubscriptionQueue<SCMPMessage> getSubscriptionQueueById(String subscriptionId) throws Exception {
+		Subscription subscription = this.getSubscriptionById(subscriptionId);
+		return ((PublishService) subscription.getServer().getService()).getSubscriptionQueue();
 	}
 
 	/**

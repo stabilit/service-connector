@@ -29,7 +29,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Server;
-import org.serviceconnector.service.Session;
+import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -40,12 +40,8 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnUnsubscribeCommand.class);
-
 	/** The Constant subscriptionLogger. */
 	private final static SubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
-
-	public ClnUnsubscribeCommand() {
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -57,29 +53,29 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
-		String sessionId = reqMessage.getSessionId();
-		this.subscriptionRegistry.getSession(sessionId);
-
+		String subscriptionId = reqMessage.getSessionId();
+		this.subscriptionRegistry.getSubscription(subscriptionId);
+		
 		// lookup session and checks properness
-		Session session = this.getSubscriptionSessionById(sessionId);
+		Subscription subscription = this.getSubscriptionById(subscriptionId);
 		// looks up subscription queue and stops publish mechanism
-		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(sessionId);
-		subscriptionQueue.unsubscribe(sessionId);
+		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(subscriptionId);
+		subscriptionQueue.unsubscribe(subscriptionId);
 		String serviceName = reqMessage.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
-		subscriptionLogger.logUnsubscribe(serviceName, sessionId);
+		subscriptionLogger.logUnsubscribe(serviceName, subscriptionId);
 		// delete entry from session registry
-		this.subscriptionRegistry.removeSession(session);
+		this.subscriptionRegistry.removeSubscription(subscription);
 
 		// unsubscribe on backend server
-		Server server = session.getServer();
+		Server server = subscription.getServer();
 		SCMPMessage reply = null;
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
-		server.unsubscribe(reqMessage, callback, ((Integer) request
-				.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		server.unsubscribe(reqMessage, callback, oti);
 		reply = callback.getMessageSync();
 		// no specific error handling in case of fault - everything is done anyway
 
-		server.removeSession(session);
+		server.removeSession(subscription);
 		// forward reply to client
 		reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 		reply.setIsReply(true);
@@ -104,8 +100,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 			}
 			// operation timeout
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sessionId
 			String sessionId = message.getSessionId();
 			if (sessionId == null || sessionId.equals("")) {

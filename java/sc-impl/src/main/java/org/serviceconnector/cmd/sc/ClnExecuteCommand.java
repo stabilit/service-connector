@@ -73,8 +73,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		try {
 			Server server = session.getServer();
 			// try sending to the server
-			server.execute(message, callback,
-					((Integer) request.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+			server.execute(message, callback, oti);
 		} catch (Exception ex) {
 			// schedule session timeout
 			this.sessionRegistry.scheduleSessionTimeout(session);
@@ -99,8 +99,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			}
 			// operation timeout
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sessionId
 			String sessionId = message.getSessionId();
 			if (sessionId == null || sessionId.equals("")) {
@@ -112,8 +111,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 			}
 			// compression
-			boolean compression = message.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
-			request.setAttribute(SCMPHeaderAttributeKey.COMPRESSION, compression);
+			message.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

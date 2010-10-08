@@ -31,6 +31,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
 
@@ -73,7 +74,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 		// deregister server from service
 		server.getService().removeServer(server);
 
-		List<Session> serverSessions = server.getSessions();
+		List<AbstractSession> serverSessions = server.getSessions();
 		ISCMPCallback callback = new DeRegisterServerCommmandCallback();
 		// set up abort message
 		SCMPMessage abortMsg = new SCMPMessage();
@@ -82,8 +83,8 @@ public class DeRegisterServerCommand extends CommandAdapter {
 		abortMsg.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, DeRegisterServerCommand.ABORT_SESSION_ERROR_STRING);
 
 		// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
-		for (Session session : serverSessions) {
-			this.sessionRegistry.removeSession(session);
+		for (AbstractSession session : serverSessions) {
+			this.sessionRegistry.removeSession((Session) session);
 			abortMsg.setSessionId(session.getId());
 			server.serverAbortSession(abortMsg, callback, Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
 		}

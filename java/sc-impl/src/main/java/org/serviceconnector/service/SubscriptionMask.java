@@ -16,21 +16,52 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
+import org.apache.log4j.Logger;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+
 /**
- * The Interface IFilterMask.
- * 
- * @param <T>
- *            the generic type
+ * The Class SubscriptionMask.
  */
-public interface IFilterMask<T> {
+public class SubscriptionMask {
+
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SubscriptionMask.class);
+	/** The mask in bytes. */
+	private byte[] mask;
+
+	/**
+	 * Instantiates a new filter mask.
+	 * 
+	 * @param mask
+	 *            the mask
+	 */
+	public SubscriptionMask(String mask) {
+		this.mask = mask.getBytes();
+	}
 
 	/**
 	 * Matches.
 	 * 
-	 * @param obj
-	 *            the object
+	 * @param message
+	 *            the message
 	 * @return true, if successful
 	 */
-	public boolean matches(T obj);
+	public boolean matches(SCMPMessage message) {
+		String msgMask = message.getHeader(SCMPHeaderAttributeKey.MASK);
+		byte[] msgMaskByte = msgMask.getBytes();
 
+		if (mask.length != msgMaskByte.length) {
+			return false;
+		}
+		for (int byteIndex = 0; byteIndex < mask.length; byteIndex++) {
+			if (msgMaskByte[byteIndex] == 0x25) {
+				continue;
+			}
+			if (mask[byteIndex] != msgMaskByte[byteIndex]) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

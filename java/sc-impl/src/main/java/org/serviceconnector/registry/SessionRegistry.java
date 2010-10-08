@@ -152,7 +152,8 @@ public class SessionRegistry extends Registry<String, Session> {
 		sessionTimeouter = new TimerTaskWrapper(new SessionTimerRun(session));
 		session.setSessionTimeouter(sessionTimeouter);
 		// schedule sessionTimeouter in registry timer
-		this.timer.schedule(sessionTimeouter, session.getEchoIntervalSeconds() * Constants.SEC_TO_MILLISEC_FACTOR);
+		this.timer
+				.schedule(sessionTimeouter, (int) session.getEchoIntervalSeconds() * Constants.SEC_TO_MILLISEC_FACTOR);
 	}
 
 	/**
@@ -186,7 +187,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		/** The session. */
 		private Session session;
 		/** The timeout. */
-		private int timeoutSeconds;
+		private double timeoutSeconds;
 		/** The callback, callback to send abort session. */
 		private ISCMPCallback callback;
 		/** The abort message, message to send to server in case of a session abortion. */
@@ -234,7 +235,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
-			return this.timeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR;
+			return (int) (this.timeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		}
 
 		/**

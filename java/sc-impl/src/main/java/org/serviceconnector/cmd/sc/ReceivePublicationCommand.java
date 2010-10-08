@@ -30,7 +30,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
 
-
 /**
  * The Class ReceivePublicationCommand. Tries polling messages from subscription queue. If no message is available a
  * listen is set up. Receive publication command runs asynchronously and passes through any parts messages.
@@ -41,7 +40,7 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ReceivePublicationCommand.class);
-	
+
 	/**
 	 * Instantiates a new ReceivePublicationCommand.
 	 */
@@ -64,12 +63,14 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 	@Override
 	public void run(IRequest request, IResponse response, IResponderCallback communicatorCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
-		String sessionId = reqMessage.getSessionId();
+		String subscriptionId = reqMessage.getSessionId();
+		// cancel subscription timeout
+		this.subscriptionRegistry.cancelSubscriptionTimeout(subscriptionId);
 
 		// looks up subscription queue
-		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(sessionId);
+		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(subscriptionId);
 		// tries polling message
-		SCMPMessage message = subscriptionQueue.getMessage(sessionId);
+		SCMPMessage message = subscriptionQueue.getMessage(subscriptionId);
 		if (message != null) {
 			// message found in subscription queue set up reply
 			SCMPMessage reply = new SCMPMessage();
@@ -77,9 +78,9 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 				// message is part
 				reply = new SCMPPart();
 			}
-			reply.setServiceName((String) request.getAttribute(SCMPHeaderAttributeKey.SERVICE_NAME));
-			reply.setSessionId((String) request.getAttribute(SCMPHeaderAttributeKey.SESSION_ID));
-			reply.setMessageType((String) request.getAttribute(SCMPHeaderAttributeKey.MSG_TYPE));
+			reply.setServiceName(reqMessage.getServiceName());
+			reply.setSessionId(reqMessage.getSessionId());
+			reply.setMessageType(reqMessage.getMessageType());
 			reply.setIsReply(true);
 			reply.setBody(message.getBody());
 			reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
@@ -93,10 +94,12 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 			response.setSCMP(reply);
 			// message already gotten from queue no asynchronous process necessary call callback right away
 			communicatorCallback.callback(request, response);
+			// set up subscription timeout again
+			this.subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
 			return;
 		}
 		// no message available, start listening for new message
-		subscriptionQueue.listen(sessionId, request, response);
+		subscriptionQueue.listen(subscriptionId, request, response);
 	}
 
 	/** {@inheritDoc} */
@@ -131,4 +134,3 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 		}
 	}
 }
-

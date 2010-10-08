@@ -59,32 +59,32 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		// check service is present
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
+		// check service is present
 		SessionService service = this.validateSessionService(serviceName);
 
 		// create session
 		Session session = new Session();
 		reqMessage.setSessionId(session.getId());
 		// no need to forward echo attributes
+		int eci = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 
 		// tries allocating a server for this session
 		ISCMPSynchronousCallback callback = new CommandCallback(true);
 		Server server = null;
 		try {
-			server = service.allocateServerAndCreateSession(reqMessage, callback, session, ((Integer) request
-					.getAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+			server = service.allocateServerAndCreateSession(reqMessage, callback, session, oti);
 			SCMPMessage reply = callback.getMessageSync();
 
 			if (reply.isFault() == false) {
 				boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 				if (Boolean.FALSE.equals(rejectSessionFlag)) {
 					// session has not been rejected, add server to session
-					session.setServer(server);
-					session.setEchoIntervalSeconds((int) ((Integer) request
-							.getAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL) * Constants.ECHO_INTERVAL_MULTIPLIER));
+					session.setServer(server);					
+					session.setEchoIntervalSeconds(eci * Constants.ECHO_INTERVAL_MULTIPLIER);
 					// finally add session to the registry
 					this.sessionRegistry.addSession(session.getId(), session);
 				} else {
@@ -129,8 +129,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			}
 			// operation timeout
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti); // TODO TRN why is this set?
+			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// ipAddressList
 			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
 			ValidatorUtility.validateIpAddressList(ipAddressList);
@@ -139,9 +138,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 			// echoInterval
 			String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());
-			int echoInterval = ValidatorUtility.validateInt(1, echoIntervalValue, 3600,
-					SCMPError.HV_WRONG_ECHO_INTERVAL);
-			request.setAttribute(SCMPHeaderAttributeKey.ECHO_INTERVAL, echoInterval); // TODO TRN why is this set?
+			ValidatorUtility.validateInt(1, echoIntervalValue, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

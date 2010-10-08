@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import java.util.Date;
-
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -29,7 +27,6 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ValidatorUtility;
 
-
 /**
  * The Class AttachCommand. Responsible for validation and execution of attach command. Allows attaching (virtual
  * attach) to SC.
@@ -40,7 +37,7 @@ public class AttachCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachCommand.class);
-	
+
 	/**
 	 * Instantiates a new AttachCommand.
 	 */
@@ -73,12 +70,8 @@ public class AttachCommand extends CommandAdapter {
 			// scVersion
 			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
 			SCMPMessage.SC_VERSION.isSupported(scVersion);
-
 			// localDateTime
-			Date localDateTime = ValidatorUtility.validateLocalDateTime(message
-					.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
-			request.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
-
+			ValidatorUtility.validateLocalDateTime(message.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());

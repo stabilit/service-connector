@@ -28,7 +28,6 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
 
-
 /**
  * The Class EchoCommand. Responsible for validation and execution of echo command. Used to refresh session on SC.
  * 
@@ -55,7 +54,7 @@ public class EchoCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();		
+		String sessionId = message.getSessionId();
 		Session session = this.getSessionById(sessionId);
 		// cancel session timeout
 		this.sessionRegistry.cancelSessionTimeout(session);
@@ -83,8 +82,7 @@ public class EchoCommand extends CommandAdapter {
 			}
 			// operation timeout
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			int oti = ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			request.setAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sessionId
 			String sessionId = message.getSessionId();
 			if (sessionId == null || sessionId.equals("")) {
