@@ -37,6 +37,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionQueue;
@@ -78,6 +79,8 @@ public class DefaultXMLLoaderFactory {
 		this.addXMLLoader("/services", loader);
 		loader = new SessionsXMLLoader();
 		this.addXMLLoader("/sessions", loader);
+		loader = new ServersXMLLoader();
+		this.addXMLLoader("/servers", loader);
 		loader = new ResourceXMLLoader();
 		this.addXMLLoader("/resource", loader);
 		loader = new LogsXMLLoader();
@@ -281,6 +284,49 @@ public class DefaultXMLLoaderFactory {
 		@Override
 		public IFactoryable newInstance() {
 			return new SessionsXMLLoader();
+		}
+
+	}
+
+	/**
+	 * The Class ServersXMLLoader.
+	 */
+	public static class ServersXMLLoader extends AbstractXMLLoader {
+
+		/**
+		 * Instantiates a new default xml loader.
+		 */
+		public ServersXMLLoader() {
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
+				throws Exception {
+			ServerRegistry serverRegistry = AppContext.getCurrentContext().getServerRegistry();
+			writer.writeStartElement("servers");
+			String serviceParameter = request.getParameter("server");
+			Server[] servers = serverRegistry.getServers();
+			for (Server server : servers) {
+				writer.writeStartElement("server");
+				this.writeBean(writer, server);
+				writer.writeEndElement();
+			}
+			writer.writeEndElement(); // close sessions tag
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public final void loadBody(Writer writer, IWebRequest request)
+				throws Exception {
+			if (writer instanceof XMLStreamWriter) {
+				this.loadBody((XMLStreamWriter) writer, request);
+			}
+		}
+
+		@Override
+		public IFactoryable newInstance() {
+			return new ServersXMLLoader();
 		}
 
 	}

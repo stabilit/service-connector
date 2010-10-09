@@ -16,8 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.registry;
 
+import java.util.Set;
+import java.util.Map.Entry;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.service.Server;
+import org.serviceconnector.service.Session;
 
 /**
  * The Class ServerRegistry. Stores an entry for every registered server in system.
@@ -50,6 +54,29 @@ public class ServerRegistry extends Registry<String, Server> {
 	 */
 	public Server getServer(String key) {
 		return super.get(key);
+	}
+
+	
+	/**
+	 * Gets all servers.
+	 *
+	 * @return the servers
+	 */
+	public Server[] getServers() {
+		try {
+			Set<Entry<String, Server>> entries = this.registryMap.entrySet();
+			Server[] servers = new Server[entries.size()];
+			int index = 0;
+			for (Entry<String, Server> entry : entries) {
+				String key = entry.getKey();
+				Server server = entry.getValue();
+				servers[index++] = server;
+			}
+			return servers;
+		} catch (Exception e) {
+			logger.error("getServers", e);
+		}
+		return null;
 	}
 
 	/**
