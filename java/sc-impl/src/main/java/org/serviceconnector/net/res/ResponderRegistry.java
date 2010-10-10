@@ -16,8 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
+import java.util.Set;
+import java.util.Map.Entry;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.registry.Registry;
+import org.serviceconnector.service.Server;
 
 /**
  * The Class ResponderRegistry. Responder registry stores every responder which completed register process correctly.
@@ -81,6 +85,27 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 		return super.get(key);
 	}
 
+	/**
+	 * Gets all responders.
+	 *
+	 * @return the responders
+	 */
+	public IResponder[] getResponders() {
+		try {
+			Set<Entry<Object, IResponder>> entries = this.registryMap.entrySet();
+			IResponder[] responders = new IResponder[entries.size()];
+			int index = 0;
+			for (Entry<Object, IResponder> entry : entries) {
+				IResponder responder = entry.getValue();
+				responders[index++] = responder;
+			}
+			return responders;
+		} catch (Exception e) {
+			logger.error("getResponders", e);
+		}
+		return null;
+	}
+	
 	/**
 	 * Gets the current responder.
 	 * 

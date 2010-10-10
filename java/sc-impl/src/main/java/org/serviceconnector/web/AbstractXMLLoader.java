@@ -15,18 +15,13 @@
  */
 package org.serviceconnector.web;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +34,10 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.SCVersion;
+import org.serviceconnector.net.connection.ConnectionPool;
+import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.service.Server;
-import org.serviceconnector.service.Session;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
@@ -323,6 +320,22 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						writer.writeStartElement("socketAddress");
 						writer.writeCData(String.valueOf(server.getSocketAddress()));
 						writer.writeEndElement();					
+						writer.writeEndElement();					
+						continue;
+					}
+					if (value instanceof IRequester) {
+						writer.writeStartElement(name);
+						IRequester requester = (IRequester) value;
+						writer.writeStartElement("context");
+						this.writeBean(writer, requester.getContext());
+						writer.writeEndElement();					
+						writer.writeEndElement();					
+						continue;
+					}
+					if (value instanceof ConnectionPool) {
+						ConnectionPool connectionPool = (ConnectionPool) value;
+						writer.writeStartElement("connectionPool");
+						this.writeBean(writer, connectionPool);
 						writer.writeEndElement();					
 						continue;
 					}

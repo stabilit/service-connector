@@ -349,6 +349,15 @@ public class Server {
 	}
 
 	/**
+	 * Gets the requester.
+	 *
+	 * @return the requester
+	 */
+	public IRequester getRequester() {
+		return requester;
+	}
+	
+	/**
 	 * Adds an allocated session to the server.
 	 * 
 	 * @param session

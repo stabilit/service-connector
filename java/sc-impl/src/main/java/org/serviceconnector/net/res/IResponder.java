@@ -76,4 +76,12 @@ public interface IResponder {
 	 * @return the responder configuration
 	 */
 	public CommunicatorConfig getResponderConfig();
+	
+	/**
+	 * Gets the endpoint.
+	 *
+	 * @return the endpoint
+	 */
+	public IEndpoint getEndpoint();
+
 }

@@ -45,6 +45,7 @@ public abstract class EndpointAdapter implements IEndpoint {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void setResponder(IResponder resp) {
 		this.resp = resp;
 	}	

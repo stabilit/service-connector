@@ -37,6 +37,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.net.res.IResponder;
+import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
@@ -81,6 +83,8 @@ public class DefaultXMLLoaderFactory {
 		this.addXMLLoader("/sessions", loader);
 		loader = new ServersXMLLoader();
 		this.addXMLLoader("/servers", loader);
+		loader = new RespondersXMLLoader();
+		this.addXMLLoader("/responders", loader);
 		loader = new ResourceXMLLoader();
 		this.addXMLLoader("/resource", loader);
 		loader = new LogsXMLLoader();
@@ -305,7 +309,6 @@ public class DefaultXMLLoaderFactory {
 				throws Exception {
 			ServerRegistry serverRegistry = AppContext.getCurrentContext().getServerRegistry();
 			writer.writeStartElement("servers");
-			String serviceParameter = request.getParameter("server");
 			Server[] servers = serverRegistry.getServers();
 			for (Server server : servers) {
 				writer.writeStartElement("server");
@@ -327,6 +330,53 @@ public class DefaultXMLLoaderFactory {
 		@Override
 		public IFactoryable newInstance() {
 			return new ServersXMLLoader();
+		}
+
+	}
+
+	/**
+	 * The Class RespondersXMLLoader.
+	 */
+	public static class RespondersXMLLoader extends AbstractXMLLoader {
+
+		/**
+		 * Instantiates a new default xml loader.
+		 */
+		public RespondersXMLLoader() {
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
+				throws Exception {
+			ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+			writer.writeStartElement("responders");
+			IResponder[] responders = responderRegistry.getResponders();
+			for (IResponder responder : responders) {
+				writer.writeStartElement("responder");
+				writer.writeStartElement("responderConfig");
+				this.writeBean(writer, responder.getResponderConfig());
+				writer.writeEndElement();
+				writer.writeStartElement("endPoint");
+				this.writeBean(writer, responder.getEndpoint());
+				writer.writeEndElement();
+				writer.writeEndElement();
+			}
+			writer.writeEndElement(); // close sessions tag
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public final void loadBody(Writer writer, IWebRequest request)
+				throws Exception {
+			if (writer instanceof XMLStreamWriter) {
+				this.loadBody((XMLStreamWriter) writer, request);
+			}
+		}
+
+		@Override
+		public IFactoryable newInstance() {
+			return new RespondersXMLLoader();
 		}
 
 	}

@@ -17,7 +17,10 @@
             <th class="sc_table">Session ID</th>
             <th class="sc_table">Echo Interval</th>
             <th class="sc_table">Server</th>
-          </tr>          
+          </tr>
+          <xsl:if test="not($body/sessions/session)">
+            <tr class="sc_table_even"><td colspan="3" class="sc_table">no sessions</td></tr>
+          </xsl:if>          
           <xsl:apply-templates select="$body/sessions/session"/>
         </table>
       </div>

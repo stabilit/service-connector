@@ -88,4 +88,12 @@ public class Responder implements IResponder {
 		this.respConfig = respConfig;
 	}
 	
+	/**
+	 * Gets the endpoint.
+	 *
+	 * @return the endpoint
+	 */
+	public IEndpoint getEndpoint() {
+		return endpoint;
+	}
 }
