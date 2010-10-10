@@ -41,8 +41,6 @@ public class SCConsole {
 		if (host == null) {
 			showError("Host argument is missing");
 			System.exit(1);
-		} else {
-			ValidatorUtility.validateIpAddressList(host);
 		}
 		
 		//check port
