@@ -435,6 +435,24 @@ public class ConnectionPool {
 	}
 
 	/**
+	 * Gets the free connections.
+	 *
+	 * @return the free connections
+	 */
+	public List<IConnection> getFreeConnections() {
+		return Collections.unmodifiableList(freeConnections);
+	}
+	
+	/**
+	 * Gets the used connections.
+	 *
+	 * @return the used connections
+	 */
+	public List<IConnection> getUsedConnections() {
+		return Collections.unmodifiableList(usedConnections);
+	}
+
+	/**
 	 * The Class IdleCallback. Gets informed when connection runs into an idle timeout.
 	 */
 	private class IdleCallback implements IIdleConnectionCallback {

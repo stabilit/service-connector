@@ -77,6 +77,8 @@
             <th class="sc_table">keepAliveInterval</th>
             <th class="sc_table">maxConnections</th>
             <th class="sc_table">busyConnections</th>            
+            <th class="sc_table">usedConnections</th>            
+            <th class="sc_table">freeConnections</th>            
           </tr>
           <tr>
             <xsl:call-template name="connectionPool_row"/>
@@ -88,5 +90,44 @@
 	    <td class="sc_table"><xsl:value-of select="keepAliveInterval"/></td>
 	    <td class="sc_table"><xsl:value-of select="maxConnections"/></td>
 	    <td class="sc_table"><xsl:value-of select="busyConnections"/></td>
-	</xsl:template>	
+	    <td class="sc_table"><xsl:call-template name="usedConnections"/></td>
+	    <td class="sc_table"><xsl:call-template name="freeConnections"/></td>
+	</xsl:template>
+	<xsl:template name="usedConnections">
+	  <table class="sc_table">
+	  <xsl:for-each select="usedConnections/*">
+	    <xsl:if test="position() mod 2 = 0">
+	      <tr class="sc_sub_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
+	        <td class="sc_table"><img width="20" height="20" src="rightarrow.png"/></td>
+	        <td class="sc_table"><xsl:value-of select="local-name()"/></td>
+	      </tr>	    
+	    </xsl:if>
+	    <xsl:if test="position() mod 2 != 0">
+	       <tr class="sc_sub_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
+	        <td class="sc_table"><img width="20" height="20" src="rightarrow.png"/></td>
+	        <td class="sc_table"><xsl:value-of select="local-name()"/></td>
+	       </tr>	    
+	    </xsl:if>
+	  </xsl:for-each>
+	  </table>
+	</xsl:template>
+	<xsl:template name="freeConnections">
+	  <table class="sc_table">
+	  <xsl:for-each select="freeConnections/*">
+	    <xsl:if test="position() mod 2 = 0">
+	      <tr class="sc_sub_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
+	        <td class="sc_table"><img width="20" height="20" src="rightarrow.png"/></td>
+	        <td class="sc_table"><xsl:value-of select="local-name()"/></td>
+	      </tr>	    
+	    </xsl:if>
+	    <xsl:if test="position() mod 2 != 0">
+	       <tr class="sc_sub_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
+	        <td class="sc_table"><img width="20" height="20" src="rightarrow.png"/></td>
+	        <td class="sc_table"><xsl:value-of select="local-name()"/></td>
+	       </tr>	    
+	    </xsl:if>
+	  </xsl:for-each>
+	  </table>
+	</xsl:template>
+		
 </xsl:stylesheet>

@@ -34,9 +34,10 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.SCVersion;
+import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionPool;
+import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
@@ -50,7 +51,8 @@ import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
 public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/** The Constant XMLSDF. */
-	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat("yyyy-MM-dd");
+	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat(
+			"yyyy-MM-dd");
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger
@@ -58,7 +60,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/** The meta map. */
 	private Map<String, String> metaMap;
-	
+
 	/** The meta map list. */
 	private List<Map<String, String>> metaMapList;
 
@@ -72,21 +74,21 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Checks if is text.
-	 *
-	 * @return true, if is text
-	 * {@inheritDoc}
+	 * 
+	 * @return true, if is text {@inheritDoc}
 	 */
 	@Override
 	public boolean isText() {
 		return false;
 	}
-	
+
 	/**
 	 * Adds the meta.
-	 *
-	 * @param name the name
-	 * @param value the value
-	 * {@inheritDoc}
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value {@inheritDoc}
 	 */
 	@Override
 	public void addMeta(String name, String value) {
@@ -95,9 +97,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Adds the meta.
-	 *
-	 * @param map the map
-	 * {@inheritDoc}
+	 * 
+	 * @param map
+	 *            the map {@inheritDoc}
 	 */
 	@Override
 	public void addMeta(Map<String, String> map) {
@@ -106,31 +108,40 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Load body.
-	 *
-	 * @param writer the writer
-	 * @param request the request
-	 * @throws Exception the exception
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception
 	 */
-	public abstract void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception;
+	public abstract void loadBody(XMLStreamWriter writer, IWebRequest request)
+			throws Exception;
 
 	/**
 	 * Load body.
-	 *
-	 * @param writer the writer
-	 * @param request the request
-	 * @throws Exception the exception
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception
 	 */
 	public void loadBody(Writer writer, IWebRequest request) throws Exception {
-		
+
 	}
 
 	/**
 	 * Load.
-	 *
-	 * @param request the request
-	 * @param os the os
-	 * @throws Exception the exception
-	 * {@inheritDoc}
+	 * 
+	 * @param request
+	 *            the request
+	 * @param os
+	 *            the os
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
 	 */
 	@Override
 	public final void load(IWebRequest request, OutputStream os)
@@ -139,7 +150,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			OutputStreamWriter writer = new OutputStreamWriter(os);
 			this.loadBody(writer, request);
 			return;
-		
+
 		}
 		IWebSession webSession = request.getSession(false);
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
@@ -211,9 +222,11 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Write system.
-	 *
-	 * @param writer the writer
-	 * @throws XMLStreamException the xML stream exception
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws XMLStreamException
+	 *             the xML stream exception
 	 */
 	public void writeSystem(XMLStreamWriter writer) throws XMLStreamException {
 		// write system info
@@ -225,54 +238,57 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		// write runtime info
 		writer.writeStartElement("runtime");
 		this.writeRuntime(writer);
-		writer.writeEndElement();  // end of runtime
+		writer.writeEndElement(); // end of runtime
 		// write statistics info
 		writer.writeStartElement("statistics");
 		this.writeBean(writer, Statistics.getInstance());
-		writer.writeEndElement();  // end of statistics
+		writer.writeEndElement(); // end of statistics
 		Properties properties = System.getProperties();
 		writer.writeStartElement("properties");
 		for (Entry<Object, Object> entry : properties.entrySet()) {
-		   String name = (String) entry.getKey();
-		   String value = (String) entry.getValue();
-		   writer.writeStartElement(name);
-		   writer.writeCData(value);
-		   writer.writeEndElement();
+			String name = (String) entry.getKey();
+			String value = (String) entry.getValue();
+			writer.writeStartElement(name);
+			writer.writeCData(value);
+			writer.writeEndElement();
 		}
 		writer.writeEndElement(); // close properties tag
-		writer.writeEndElement(); // close system tag			
-		
+		writer.writeEndElement(); // close system tag
+
 	}
 
 	/**
 	 * Write bean.
-	 *
-	 * @param writer the writer
-	 * @param obj the obj
-	 * @throws XMLStreamException the xML stream exception
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param obj
+	 *            the obj
+	 * @throws XMLStreamException
+	 *             the xML stream exception
 	 */
 	public void writeBean(XMLStreamWriter writer, Object obj)
 			throws XMLStreamException {
 		if (obj == null) {
 			return;
 		}
-//		Field[] fields = obj.getClass().getDeclaredFields();
-//		for (Field field : fields) {
-//			String name = field.getName();
-//			try {
-//				writer.writeStartElement(name);
-//				try {
-//					Object value = BeanUtils.getProperty(obj, name);
-//					if (value != null) {
-//						writer.writeCData(value.toString());
-//					}
-//				} catch (Exception e) {
-//					// we ignore this exception
-//				}
-//				writer.writeEndElement();
-//			} catch (Exception e) {
-//			}
-//		}
+		// Field[] fields = obj.getClass().getDeclaredFields();
+		// for (Field field : fields) {
+		// String name = field.getName();
+		// try {
+		// writer.writeStartElement(name);
+		// try {
+		// Object value = BeanUtils.getProperty(obj, name);
+		// if (value != null) {
+		// writer.writeCData(value.toString());
+		// }
+		// } catch (Exception e) {
+		// // we ignore this exception
+		// }
+		// writer.writeEndElement();
+		// } catch (Exception e) {
+		// }
+		// }
 		Method[] methods = obj.getClass().getMethods();
 		for (Method method : methods) {
 			Class<?>[] parameterTypes = method.getParameterTypes();
@@ -291,6 +307,11 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			if ("class".equals(name)) {
 				continue;
 			}
+			if ("context".equals(name)) {
+                if(obj instanceof IConnection) {
+                	continue;
+                }
+			}
 			try {
 				Object value = method.invoke(obj);
 				if (value == obj) {
@@ -299,9 +320,10 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 				if (value != null) {
 					if (value instanceof List<?>) {
 						writer.writeStartElement(name);
-						List<?> list = (List<?>)value;
+						List<?> list = (List<?>) value;
 						for (Object listObj : list) {
-							writer.writeStartElement(listObj.getClass().getSimpleName().toLowerCase());
+							writer.writeStartElement(listObj.getClass()
+									.getSimpleName().toLowerCase());
 							this.writeBean(writer, listObj);
 							writer.writeEndElement();
 						}
@@ -310,17 +332,18 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					}
 					if (value instanceof Server) {
 						writer.writeStartElement(name);
-						Server server = (Server)value;
+						Server server = (Server) value;
 						writer.writeStartElement("host");
 						writer.writeCData(server.getHost());
-						writer.writeEndElement();					
+						writer.writeEndElement();
 						writer.writeStartElement("port");
 						writer.writeCData(String.valueOf(server.getPortNr()));
-						writer.writeEndElement();					
+						writer.writeEndElement();
 						writer.writeStartElement("socketAddress");
-						writer.writeCData(String.valueOf(server.getSocketAddress()));
-						writer.writeEndElement();					
-						writer.writeEndElement();					
+						writer.writeCData(String.valueOf(server
+								.getSocketAddress()));
+						writer.writeEndElement();
+						writer.writeEndElement();
 						continue;
 					}
 					if (value instanceof IRequester) {
@@ -328,15 +351,29 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						IRequester requester = (IRequester) value;
 						writer.writeStartElement("context");
 						this.writeBean(writer, requester.getContext());
-						writer.writeEndElement();					
-						writer.writeEndElement();					
+						writer.writeEndElement();
+						writer.writeEndElement();
 						continue;
 					}
 					if (value instanceof ConnectionPool) {
 						ConnectionPool connectionPool = (ConnectionPool) value;
 						writer.writeStartElement("connectionPool");
 						this.writeBean(writer, connectionPool);
-						writer.writeEndElement();					
+						writer.writeEndElement();
+						continue;
+					}
+					if (value instanceof ConnectionContext) {
+						ConnectionContext connectionContext = (ConnectionContext) value;
+						writer.writeStartElement("connectionContext");
+						this.writeBean(writer, connectionContext);
+						writer.writeEndElement();
+						continue;
+					}
+					if (value instanceof IConnection) {
+						IConnection connection = (IConnection) value;
+						writer.writeStartElement("connection");
+						this.writeBean(writer, connection);
+						writer.writeEndElement();
 						continue;
 					}
 					writer.writeStartElement(name);
@@ -344,7 +381,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					writer.writeEndElement();
 				} else {
 					writer.writeStartElement(name);
-					writer.writeEndElement();			
+					writer.writeEndElement();
 				}
 			} catch (Exception e) {
 				logger.error("writeObject", e);
@@ -354,24 +391,26 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/**
 	 * Write runtime.
-	 *
-	 * @param writer the writer
-	 * @throws XMLStreamException the xML stream exception
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws XMLStreamException
+	 *             the xML stream exception
 	 */
 	public void writeRuntime(XMLStreamWriter writer) throws XMLStreamException {
 		Runtime runtime = Runtime.getRuntime();
-        writer.writeStartElement("availableProcessors");
-        writer.writeCData(String.valueOf(runtime.availableProcessors()));
-        writer.writeEndElement();
-        writer.writeStartElement("freeMemory");
-        writer.writeCData(String.valueOf(runtime.freeMemory()));
-        writer.writeEndElement();
-        writer.writeStartElement("maxMemory");
-        writer.writeCData(String.valueOf(runtime.maxMemory()));
-        writer.writeEndElement();
-        writer.writeStartElement("totalMemory");
-        writer.writeCData(String.valueOf(runtime.totalMemory()));
-        writer.writeEndElement();
+		writer.writeStartElement("availableProcessors");
+		writer.writeCData(String.valueOf(runtime.availableProcessors()));
+		writer.writeEndElement();
+		writer.writeStartElement("freeMemory");
+		writer.writeCData(String.valueOf(runtime.freeMemory()));
+		writer.writeEndElement();
+		writer.writeStartElement("maxMemory");
+		writer.writeCData(String.valueOf(runtime.maxMemory()));
+		writer.writeEndElement();
+		writer.writeStartElement("totalMemory");
+		writer.writeCData(String.valueOf(runtime.totalMemory()));
+		writer.writeEndElement();
 	}
 
 }
