@@ -38,14 +38,8 @@ public abstract class SrvCommandAdapter implements ICommand {
 	protected final static Logger logger = Logger.getLogger(SrvCommandAdapter.class);
 
 	/** The session composite registry. */
-	protected SCMPSessionCompositeRegistry sessionCompositeRegistry;
-
-	/**
-	 * Instantiates a new SrvCommandAdapter.
-	 */
-	public SrvCommandAdapter() {
-		this.sessionCompositeRegistry = SCMPSessionCompositeRegistry.getCurrentInstance();
-	}
+	protected static SCMPSessionCompositeRegistry sessionCompositeRegistry = AppContext.getCurrentContext()
+			.getSCMPSessionCompositeRegistry();
 
 	/** {@inheritDoc} */
 	@Override

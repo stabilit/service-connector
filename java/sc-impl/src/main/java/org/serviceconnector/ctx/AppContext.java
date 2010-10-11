@@ -7,11 +7,16 @@ import org.serviceconnector.net.FlyweightFrameDecoderFactory;
 import org.serviceconnector.net.connection.ConnectionFactory;
 import org.serviceconnector.net.res.EndpointFactory;
 import org.serviceconnector.net.res.ResponderRegistry;
+import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionRegistry;
 
+/**
+ * The Class AppContext. The AppContext is singelton and holds all factories and registries. Its the top context in a
+ * service connector, server or even in clients. Its a superset of the specific contexts and unifies the data.
+ */
 public class AppContext {
 
 	private static final AppContext instance = new AppContext();
@@ -30,6 +35,7 @@ public class AppContext {
 	private static final ServiceRegistry serviceRegistry = new ServiceRegistry();
 	private static final SessionRegistry sessionRegistry = new SessionRegistry();
 	private static final SubscriptionRegistry subscriptionRegistry = new SubscriptionRegistry();
+	private static final SCMPSessionCompositeRegistry scmpSessionCompositeRegistry = new SCMPSessionCompositeRegistry();
 
 	/**
 	 * Instantiates a new AppContext. Singelton.
@@ -48,7 +54,7 @@ public class AppContext {
 	public static AppContext getCurrentContext() {
 		return AppContext.instance;
 	}
-	
+
 	public FlyweightCommandFactory getCommandFactory() {
 		return AppContext.commandFactory;
 	}
@@ -91,5 +97,9 @@ public class AppContext {
 
 	public SubscriptionRegistry getSubscriptionRegistry() {
 		return AppContext.subscriptionRegistry;
+	}
+
+	public SCMPSessionCompositeRegistry getSCMPSessionCompositeRegistry() {
+		return AppContext.scmpSessionCompositeRegistry;
 	}
 }

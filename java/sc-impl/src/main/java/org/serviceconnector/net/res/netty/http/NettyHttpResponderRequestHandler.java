@@ -66,11 +66,11 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpResponderRequestHandler.class);
-
 	/** The Constant performanceLogger. */
 	private final static PerformanceLogger performanceLogger = PerformanceLogger.getInstance();
-	private final static SCMPSessionCompositeRegistry compositeRegistry = SCMPSessionCompositeRegistry
-			.getCurrentInstance();
+
+	private static SCMPSessionCompositeRegistry compositeRegistry = AppContext.getCurrentContext()
+			.getSCMPSessionCompositeRegistry();
 
 	/** {@inheritDoc} */
 	@Override
@@ -86,6 +86,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			IRequest request = new NettyHttpRequest(httpRequest, localSocketAddress, remoteSocketAddress);
 			SCMPMessage scmpReq = request.getMessage();
 			String sessionId = scmpReq.getSessionId();
+
 			SCMPMessageId messageId = NettyHttpResponderRequestHandler.compositeRegistry.getSCMPMessageId(sessionId);
 
 			if (scmpReq == null) {

@@ -68,9 +68,9 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 
 	/** The Constant performanceLogger. */
 	private final static PerformanceLogger performanceLogger = PerformanceLogger.getInstance();
-
-	private final static SCMPSessionCompositeRegistry compositeRegistry = SCMPSessionCompositeRegistry
-			.getCurrentInstance();
+	
+	private static SCMPSessionCompositeRegistry compositeRegistry = AppContext.getCurrentContext()
+			.getSCMPSessionCompositeRegistry();
 
 	/** {@inheritDoc} */
 	@Override

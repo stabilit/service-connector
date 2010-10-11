@@ -33,24 +33,6 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPSessionCompositeRegistry.class);	
-	
-	/** The instance. */
-	private final static SCMPSessionCompositeRegistry instance = new SCMPSessionCompositeRegistry();
-
-	/**
-	 * Instantiates a new sCMP session composite registry.
-	 */
-	private SCMPSessionCompositeRegistry() {
-	}
-
-	/**
-	 * Gets the current instance.
-	 * 
-	 * @return the current instance
-	 */
-	public static SCMPSessionCompositeRegistry getCurrentInstance() {
-		return instance;
-	}
 
 	/**
 	 * Adds the session.
