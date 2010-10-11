@@ -178,12 +178,6 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 
 	/** {@inheritDoc} */
 	@Override
-	public IFactoryable newInstance() {
-		return new NettyTcpProxyEndpoint();
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void setHost(String host) {
 		this.host = host;
 	}
