@@ -18,7 +18,7 @@ package org.serviceconnector.web.ctx;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
 import org.serviceconnector.web.cmd.IWebCommand;
-import org.serviceconnector.web.cmd.WebCommandFactory;
+import org.serviceconnector.web.cmd.FlyweightWebCommandFactory;
 import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
 
 // TODO: Auto-generated Javadoc
@@ -35,7 +35,7 @@ public class WebContext {
 	private static DefaultXMLLoaderFactory loaderFactory = new DefaultXMLLoaderFactory();
 
 	/** The web command factory. */
-	private static WebCommandFactory webCommandFactory;
+	private static FlyweightWebCommandFactory webCommandFactory;
 
 	/**
 	 * Instantiates a new web context.
@@ -49,7 +49,7 @@ public class WebContext {
 	 * @param webCommandFactory
 	 *            the web command factory
 	 */
-	public void initContext(WebCommandFactory webCommandFactory) {
+	public void initContext(FlyweightWebCommandFactory webCommandFactory) {
 		if (WebContext.webCommandFactory != null) {
 			// set only one time
 			return;

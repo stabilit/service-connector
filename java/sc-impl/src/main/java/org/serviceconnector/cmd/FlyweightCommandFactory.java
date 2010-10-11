@@ -33,12 +33,9 @@ public abstract class FlyweightCommandFactory {
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(FlyweightCommandFactory.class);
 	/** The map stores base instances by a key. */
-	protected static Map<String, ICommand> commands;
+	protected static Map<String, ICommand> commands = new ConcurrentHashMap<String, ICommand>();
 
 	public FlyweightCommandFactory() {
-		if (FlyweightCommandFactory.commands == null) {
-			FlyweightCommandFactory.commands = new ConcurrentHashMap<String, ICommand>();
-		}
 	}
 
 	/**

@@ -26,14 +26,14 @@ import org.serviceconnector.web.IWebRequest;
 /**
  * A factory for creating Command objects.
  */
-public abstract class WebCommandFactory {
+public abstract class FlyweightWebCommandFactory {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger
-			.getLogger(WebCommandFactory.class);
+			.getLogger(FlyweightWebCommandFactory.class);
 
 	/** The command factory. */
-	protected static WebCommandFactory webCommandFactory = null;
+	protected static FlyweightWebCommandFactory webCommandFactory = null;
 
 	/** The web command map. */
 	private Map<String, IWebCommand> webCommandMap = new ConcurrentHashMap<String, IWebCommand>();
@@ -41,7 +41,7 @@ public abstract class WebCommandFactory {
 	/**
 	 * Instantiates a new command factory.
 	 */
-	public WebCommandFactory() {
+	public FlyweightWebCommandFactory() {
 	}
 
 	/**

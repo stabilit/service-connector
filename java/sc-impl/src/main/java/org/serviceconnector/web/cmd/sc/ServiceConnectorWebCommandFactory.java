@@ -27,7 +27,7 @@ import org.serviceconnector.web.LoginException;
 import org.serviceconnector.web.cmd.IWebCommand;
 import org.serviceconnector.web.cmd.IWebCommandAccessible;
 import org.serviceconnector.web.cmd.IWebCommandAccessibleContext;
-import org.serviceconnector.web.cmd.WebCommandFactory;
+import org.serviceconnector.web.cmd.FlyweightWebCommandFactory;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -36,7 +36,7 @@ import org.serviceconnector.web.cmd.WebCommandFactory;
  * 
  * @author JTraber
  */
-public class ServiceConnectorWebCommandFactory extends WebCommandFactory {
+public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ServiceConnectorWebCommandFactory.class);
@@ -54,7 +54,7 @@ public class ServiceConnectorWebCommandFactory extends WebCommandFactory {
 	 * @param webCommandFactory
 	 *            the web command factory
 	 */
-	public ServiceConnectorWebCommandFactory(WebCommandFactory webCommandFactory) {
+	public ServiceConnectorWebCommandFactory(FlyweightWebCommandFactory webCommandFactory) {
 		init(webCommandFactory);
 	}
 
@@ -64,7 +64,7 @@ public class ServiceConnectorWebCommandFactory extends WebCommandFactory {
 	 * @param webCommandFactory
 	 *            the web command factory
 	 */
-	private void init(WebCommandFactory webCommandFactory) {
+	private void init(FlyweightWebCommandFactory webCommandFactory) {
 		IWebCommand defaultWebCommand = new DefaultWebCommand();
 		IWebCommandAccessible serviceConnectorWebAccessible = new ServiceConnectorWebAccessible();
 		defaultWebCommand.setCommandAccessible(serviceConnectorWebAccessible);
