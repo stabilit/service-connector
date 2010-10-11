@@ -22,14 +22,14 @@ import java.io.InputStream;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.net.EncoderDecoderFactory;
+import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPPart;
 
 public class DecodeSCMPVersionTestCase {
 
 	/** The coder factory. */
-	private EncoderDecoderFactory coderFactory = AppContext.getCurrentContext().getEncoderDecoderFactory();
+	private FlyweightEncoderDecoderFactory coderFactory = AppContext.getCurrentContext().getEncoderDecoderFactory();
 
 	@Test
 	public void invalidSCMPVersionFormatTest() {

@@ -24,7 +24,7 @@ import java.io.OutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.net.EncoderDecoderFactory;
+import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
@@ -39,7 +39,7 @@ import org.serviceconnector.test.sc.SCImplTest;
 public class KeepAliveMessageEncoderDecoderTestCase {
 
 	/** The coder factory. */
-	private EncoderDecoderFactory coderFactory = AppContext.getCurrentContext().getEncoderDecoderFactory();
+	private FlyweightEncoderDecoderFactory coderFactory = AppContext.getCurrentContext().getEncoderDecoderFactory();
 	/** The head key. */
 	private SCMPHeadlineKey headKey;
 	/** The encode scmp. */

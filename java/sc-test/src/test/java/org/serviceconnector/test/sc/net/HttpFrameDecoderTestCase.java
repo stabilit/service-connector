@@ -19,10 +19,9 @@ package org.serviceconnector.test.sc.net;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.Constants;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.FrameDecoderException;
-import org.serviceconnector.net.FrameDecoderFactory;
 import org.serviceconnector.net.IFrameDecoder;
-
 
 /**
  * The Class HttpFrameDecoderTest.
@@ -32,8 +31,8 @@ import org.serviceconnector.net.IFrameDecoder;
 public class HttpFrameDecoderTestCase {
 
 	/** The decoder. */
-	private IFrameDecoder decoder = FrameDecoderFactory.getFrameDecoder(Constants.HTTP);
-
+	private IFrameDecoder decoder = AppContext.getCurrentContext().getFrameDecoderFactory().getFrameDecoder(
+			Constants.HTTP);
 
 	/**
 	 * Parses the frame size test.

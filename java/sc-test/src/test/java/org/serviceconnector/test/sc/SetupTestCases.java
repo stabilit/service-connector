@@ -49,11 +49,6 @@ public class SetupTestCases {
 	private static ISCSessionServer scSim1ConSrv;
 	private static ISCSessionServer scSim10ConSrv;
 	private static ISCSessionServer scSimEnableSrv;
-
-	static {
-		AppContext appContext = AppContext.getCurrentContext();
-		appContext.initContext(new TestServerCommandFactory());
-	}
 	
 	private SetupTestCases() {
 	}
