@@ -1,35 +1,9 @@
 @echo off
-rem Build Kit
 rem kick-off maven to build all
 
-rem first create sources and install all projects to local repository
-call mvn-source-test-install-cmd.bat ..\..\java\sc-impl
-call mvn-source-test-install-cmd.bat ..\..\java\service-connector
-call mvn-source-test-install-cmd.bat ..\..\java\sc-console
-call mvn-source-test-install-cmd.bat ..\..\java\sc-server
-call mvn-source-test-install-cmd.bat ..\..\java\sc-client
-call mvn-source-test-install-cmd.bat ..\..\java\sc-test
-
-rem create service-connector sc.jar and copy to bin dir
-call mvn-assembly-cmd.bat ..\..\java\service-connector
-copy ..\..\java\service-connector\target\sc.jar ..\bin /y
-
-rem create sc-cosole scconsole.jar and copy to bin dir
-call mvn-assembly-cmd.bat ..\..\java\sc-console
-copy ..\..\java\sc-console\target\scconsole.jar ..\bin /y
-
-rem create Sc-server.jar and copy to bin dir
-call mvn-assembly-cmd.bat ..\..\java\sc-server
-copy ..\..\java\sc-server\target\server.jar ..\bin /y
-
-rem create sc-unit client.jar and copy to bin dir
-call mvn-assembly-cmd.bat ..\..\java\sc-client
-copy ..\..\java\sc-client\target\client.jar ..\bin /y
-
-rem create sc-test
-call mvn-assembly-cmd.bat ..\..\java\sc-test
-
-rem create javadoc and copies everything to documentation
-call mvn-javadoc-cmd.bat ..\..\java\service-connector
-xcopy ..\..\java\service-connector\target\site ..\documentation\ /y /e
-
+call mvn-sc.bat
+call mvn-sc-console.bat
+call mvn-sc-server.bat
+call mvn-sc-client.bat
+call mvn-sc-test.bat
+call mvn-javadoc.bat
