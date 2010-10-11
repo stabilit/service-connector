@@ -83,6 +83,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 				SubscriptionMask mask = new SubscriptionMask(newMask);
 				subscriptionLogger.logChangeSubscribe(serviceName, subscriptionId, newMask);
 				queue.changeSubscription(subscriptionId, mask);
+				subscription.setMask(mask);
 			} else {
 				// session has been rejected - remove session id from header
 				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);

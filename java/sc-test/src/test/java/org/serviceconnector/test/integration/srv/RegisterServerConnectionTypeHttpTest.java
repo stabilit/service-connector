@@ -16,8 +16,8 @@ import org.serviceconnector.api.srv.ISCServerCallback;
 import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.service.SCServiceException;
 
@@ -26,8 +26,7 @@ public class RegisterServerConnectionTypeHttpTest {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RegisterServerConnectionTypeHttpTest.class);
-	
-	private int threadCount = 0;	
+		
 	private ISCSessionServer server;
 	private Exception ex;
 
@@ -53,7 +52,6 @@ public class RegisterServerConnectionTypeHttpTest {
 
 	@Before
 	public void setUp() throws Exception {
-//		threadCount = Thread.activeCount();
 		server = new SCSessionServer();
 		((SCSessionServer) server).setConnectionType("netty.http");
 	}
@@ -692,6 +690,26 @@ public class RegisterServerConnectionTypeHttpTest {
 		}
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, ex instanceof SCServiceException);
+	}
+	
+	@Test
+	public void multipleRegisterServer_differentServiceNames() throws Exception {
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.serviceName, 1, 1,
+				new CallBack());
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.serviceNameSessionDisabled, 1,
+				1, new CallBack());
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, "P01_RTXS_sc1", 1, 1, new CallBack());
+
+		assertEquals(true, server.isRegistered(TestConstants.serviceName));
+		assertEquals(true, server.isRegistered(TestConstants.serviceNameSessionDisabled));
+		assertEquals(true, server.isRegistered("P01_RTXS_sc1"));
+		server.deregisterServer(TestConstants.serviceName);
+		server.deregisterServer(TestConstants.serviceNameSessionDisabled);
+		server.deregisterServer("P01_RTXS_sc1");
+		assertEquals(false, server.isRegistered(TestConstants.serviceName));
+		assertEquals(false, server.isRegistered(TestConstants.serviceNameSessionDisabled));
+		assertEquals(false, server.isRegistered("P01_RTXS_sc1"));
 	}
 
 	private class CallBack implements ISCServerCallback {

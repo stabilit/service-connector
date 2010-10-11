@@ -135,6 +135,12 @@ public abstract class CommunicatorConfigPool {
 			int connectionTimeout = Integer.parseInt(connectionTimeoutString);
 			Constants.setConnectionTimeout(connectionTimeout);
 		}
+
+		String subscriptionTimeoutString = this.configurations.getString(Constants.ROOT_SUBSCRIPTION_TIMEOUT_QUALIFIER);
+		if (subscriptionTimeoutString != null) {
+			int subscriptionTimeout = Integer.parseInt(subscriptionTimeoutString);
+			Constants.setSubscriptionTimeout(subscriptionTimeout);
+		}
 	}
 
 	/**

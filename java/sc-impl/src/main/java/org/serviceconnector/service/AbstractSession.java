@@ -10,7 +10,10 @@ public abstract class AbstractSession {
 	private String id;
 	/** The server. */
 	private Server server;
-	/** The echo interval. */
+	/** The ip address list. */
+	private String ipAddressList;
+	/** The session info. */
+	private String sessionInfo;
 
 	/** The session timeouter - observes session timeout. */
 	private TimerTaskWrapper sessionTimeouter;
@@ -18,11 +21,13 @@ public abstract class AbstractSession {
 	/**
 	 * Instantiates a new session.
 	 */
-	public AbstractSession() {
+	public AbstractSession(String sessionInfo, String ipAddressList) {
 		UUID uuid = UUID.randomUUID();
 		this.id = uuid.toString();
 		this.server = null;
 		this.sessionTimeouter = null;
+		this.ipAddressList = ipAddressList;
+		this.sessionInfo = sessionInfo;
 	}
 
 	/**
@@ -70,6 +75,14 @@ public abstract class AbstractSession {
 	 */
 	public void setSessionTimeouter(TimerTaskWrapper sessionTimeouter) {
 		this.sessionTimeouter = sessionTimeouter;
+	}
+
+	public String getIpAddressList() {
+		return ipAddressList;
+	}
+
+	public String getSessionInfo() {
+		return sessionInfo;
 	}
 
 	/** {@inheritDoc} */

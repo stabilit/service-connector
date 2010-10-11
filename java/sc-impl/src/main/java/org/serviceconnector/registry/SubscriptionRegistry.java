@@ -45,14 +45,21 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	private final static SessionLogger sessionLogger = SessionLogger.getInstance();
 	/** The timer. Timer instance is responsible to observe subscription timeouts. */
 	private Timer timer;
-
-	// TODO JOT verify with JAN
-	private int subscriptionTimeout = 3600000; // 1 hour in milliseconds
+	/** The subscription timeout. */
+	private int subscriptionTimeout = Constants.SUBSCRIPTION_TIMEOUT_MILLIS;
 
 	public SubscriptionRegistry() {
 		this.timer = new Timer("SubscriptionRegistryTimer");
 	}
 
+	/**
+	 * Adds the subscription.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param subscription
+	 *            the subscription
+	 */
 	public void addSubscription(String key, Subscription subscription) {
 		sessionLogger.logCreateSession(this.getClass().getName(), subscription.getId());
 		this.put(key, subscription);

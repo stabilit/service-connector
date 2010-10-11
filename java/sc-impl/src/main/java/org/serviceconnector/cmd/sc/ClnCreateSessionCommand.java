@@ -64,8 +64,10 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		// check service is present
 		SessionService service = this.validateSessionService(serviceName);
 
+		String ipAddressList = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		String sessionInfo = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 		// create session
-		Session session = new Session();
+		Session session = new Session(sessionInfo, ipAddressList);
 		reqMessage.setSessionId(session.getId());
 		// no need to forward echo attributes
 		int eci = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL);
@@ -83,7 +85,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 				boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 				if (Boolean.FALSE.equals(rejectSessionFlag)) {
 					// session has not been rejected, add server to session
-					session.setServer(server);					
+					session.setServer(server);
 					session.setEchoIntervalSeconds(eci * Constants.ECHO_INTERVAL_MULTIPLIER);
 					// finally add session to the registry
 					this.sessionRegistry.addSession(session.getId(), session);

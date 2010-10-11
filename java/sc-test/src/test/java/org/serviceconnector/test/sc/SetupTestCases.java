@@ -32,7 +32,6 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.ResponderConfigPool;
 import org.serviceconnector.ctrl.util.TestConstants;
-import org.serviceconnector.ctx.AppContext;
 
 
 /**
@@ -248,6 +247,8 @@ public class SetupTestCases {
 				return fault;
 			} else if (message.getData().toString().startsWith("reflect")) {
 				return message;
+			} else if (message.getData().toString().startsWith("excOnServer")) {
+				throw new NullPointerException("test purposes");
 			}
 			message.setData("message data test case");
 			return message;

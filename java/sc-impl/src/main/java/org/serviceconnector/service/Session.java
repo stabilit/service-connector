@@ -29,8 +29,8 @@ public class Session extends AbstractSession {
 
 	private double echoIntervalSeconds;
 
-	public Session() {
-		super();
+	public Session(String sessionInfo, String ipAdressList) {
+		super(sessionInfo, ipAdressList);
 		this.echoIntervalSeconds = 0;
 	}
 

@@ -74,9 +74,11 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		// check service is present
 		PublishService service = this.validatePublishService(serviceName);
 
-		SubscriptionMask filterMask = new SubscriptionMask(mask);
-		// create session
-		Subscription subscription = new Subscription(filterMask);
+		SubscriptionMask subscriptionMask = new SubscriptionMask(mask);
+		String ipAddressList = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		String sessionInfo = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
+		// create subscription
+		Subscription subscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList);
 		reqMessage.setSessionId(subscription.getId());
 
 		int noDataInterval = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
@@ -90,7 +92,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		if (reply.isFault() == false) {
 			boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 			if (Boolean.FALSE.equals(rejectSubscriptionFlag)) {
-				// session has not been rejected, add server to session
+				// subscription has not been rejected, add server to subscription
 				subscription.setServer(server);
 				// finally add subscription to the registry
 				this.subscriptionRegistry.addSubscription(subscription.getId(), subscription);
@@ -99,9 +101,9 @@ public class ClnSubscribeCommand extends CommandAdapter {
 
 				IPublishTimerRun timerRun = new PublishTimerRun(subscriptionQueue, noDataInterval);
 				subscriptionLogger.logSubscribe(serviceName, subscription.getId(), mask);
-				subscriptionQueue.subscribe(subscription.getId(), filterMask, timerRun);
+				subscriptionQueue.subscribe(subscription.getId(), subscriptionMask, timerRun);
 			} else {
-				// session has been rejected - remove session id from header
+				// subscription has been rejected - remove subscription id from header
 				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 			}
 		} else {

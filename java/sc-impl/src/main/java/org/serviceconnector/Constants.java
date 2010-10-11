@@ -33,7 +33,7 @@ public final class Constants {
 	}
 
 	/** The Constant LARGE_MESSAGE_LIMIT. */
-	public static final int DEFAULT_LARGE_MESSAGE_LIMIT = 60 << 10; // 64Kb
+	private static final int DEFAULT_LARGE_MESSAGE_LIMIT = 60 << 10; // 64Kb
 	/** The Constant LARGE_MESSAGE_LIMIT. */
 	public static int LARGE_MESSAGE_LIMIT = DEFAULT_LARGE_MESSAGE_LIMIT;
 	/** File qualifier for command line argument configuration file. */
@@ -47,7 +47,7 @@ public final class Constants {
 	/**
 	 * DEFAULT_ECHO_TIMEOUT_MULTIPLIER: Default value if no ECHO_TIMEOUT_MULTIPLIER will be set by configuration.
 	 */
-	public static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
+	private static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
 	/**
 	 * ECHO_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the echo timeout of a session. E.g. SC needs to
 	 * adapt echo timeout interval from client to get right interval for echo messages.
@@ -74,9 +74,13 @@ public final class Constants {
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
 	/** The Constant CONNECT_TIMEOUT_MILLIS_DEFAULT. */
-	public static final int CONNECT_TIMEOUT_MILLIS_DEFAULT = 5000;
+	private static final int CONNECT_TIMEOUT_MILLIS_DEFAULT = 5000;
 	/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
 	public static int CONNECT_TIMEOUT_MILLIS = CONNECT_TIMEOUT_MILLIS_DEFAULT;
+	/** The SUBSCRIPTION_TIMEOUT_MILLIS_DEFAULT, time after a subscription is marked as dead. */
+	private static final int SUBSCRIPTION_TIMEOUT_MILLIS_DEFAULT = 300000;
+	/** The SUBSCRIPTION_TIMEOUT_MILLIS, time after a subscription is marked as dead. */
+	public static int SUBSCRIPTION_TIMEOUT_MILLIS = SUBSCRIPTION_TIMEOUT_MILLIS_DEFAULT;
 	/** The Constant SEC_TO_MILISEC_FACTOR. */
 	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
 	/** The REGEX. */
@@ -91,6 +95,8 @@ public final class Constants {
 	public static final String ROOT_ECHO_INTERVAL_QUALIFIER = "root.echoIntervalMultiplier";
 	/** The Constant ROOT_CONNECTION_TIMEOUT_QUALIFIER. */
 	public static final String ROOT_CONNECTION_TIMEOUT_QUALIFIER = "root.connectionTimeout";
+	/** The Constant ROOT_SUBSCRIPTION_TIMEOUT_QUALIFIER. */
+	public static final String ROOT_SUBSCRIPTION_TIMEOUT_QUALIFIER = "root.subscriptionTimeout";
 	/** The CON. */
 	public static final String CONNECTION_TYPE_QUALIFIER = ".connectionType";
 	/** The USERID. */
@@ -217,5 +223,14 @@ public final class Constants {
 			return;
 		}
 		Constants.CONNECT_TIMEOUT_MILLIS = connectionTimeout;
+	}
+	
+	public static void setSubscriptionTimeout(int subscriptionTimeout) {
+		if (Constants.SUBSCRIPTION_TIMEOUT_MILLIS != Constants.SUBSCRIPTION_TIMEOUT_MILLIS_DEFAULT) {
+			// setting SUBSCRIPTION_TIMEOUT_MILLIS only allowed one time
+			logger.error("setSubscriptionTimeout called two times - not allowed.");
+			return;
+		}
+		Constants.SUBSCRIPTION_TIMEOUT_MILLIS = subscriptionTimeout;
 	}
 }
