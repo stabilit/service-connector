@@ -21,7 +21,6 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.registry.Registry;
-import org.serviceconnector.service.Server;
 
 /**
  * The Class ResponderRegistry. Responder registry stores every responder which completed register process correctly.
