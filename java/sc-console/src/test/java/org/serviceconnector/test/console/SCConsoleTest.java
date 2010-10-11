@@ -249,33 +249,37 @@ public class SCConsoleTest {
 		}
 	}
 	
+	// SC must be running !!
 	@Test
-	public void main_validShowCommandPortHTTP_exitCode0State() throws Exception {
+	public void main_validShowCommandPortHTTP_exitCode5State() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_HTTP, ConsoleCommand.STATE.getKey() + "=something" });
 		} catch (ExitException e) {
-			assertEquals(0, e.status);
+			assertEquals(5, e.status);
 		}
 	}
 	
+	// SC must be running !!
 	@Test
-	public void main_validShowCommandPortMGMT_exitCode0State() throws Exception {
+	public void main_validShowCommandPortMGMT_exitCode5State() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_MGMT, ConsoleCommand.STATE.getKey() + "=something"});
 		} catch (ExitException e) {
-			assertEquals(0, e.status);
+			assertEquals(5, e.status);
 		}
 	}
 	
+	// SC must be running !!
 	@Test
-	public void main_validShowCommandPortTCP_exitCode0State() throws Exception {
+	public void main_validShowCommandPortTCP_NonExistingService_exitCode4State() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.STATE.getKey() + "=something"});
 		} catch (ExitException e) {
-			assertEquals(0, e.status);
+			assertEquals(4, e.status);
 		}
 	}
 	
+	// SC must be running !!
 	@Test
 	public void main_validShowCommandPortTCP_ServiceSimulation_exitCode0State() throws Exception {
 		try {
@@ -285,6 +289,7 @@ public class SCConsoleTest {
 		}
 	}
 	
+	// SC must be running !!
 	@Test
 	public void main_validEnableCommand_exitCode0State() throws Exception {
 		try {
@@ -293,11 +298,13 @@ public class SCConsoleTest {
 			assertEquals(0, e.status);
 		}
 		SCClient client = new SCClient();
+		client.setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP));
 		assertEquals(true, client.isServiceEnabled("simulation"));
 		client.detach();
 	}
 	
+	// SC must be running !!
 	@Test
 	public void main_enableDisable_changesState() throws Exception {
 		try {
@@ -306,6 +313,7 @@ public class SCConsoleTest {
 			assertEquals(0, e.status);
 		}
 		SCClient client = new SCClient();
+		client.setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP));
 		assertEquals(false, client.isServiceEnabled("simulation"));
 		
@@ -318,6 +326,7 @@ public class SCConsoleTest {
 		client.detach();
 	}
 	
+	// SC must be running !!
 	@Test
 	public void main_validSessionsCommand_exitCode0State() throws Exception {
 		try {
@@ -327,6 +336,7 @@ public class SCConsoleTest {
 		}
 	}
 	
+	// SC must be running !!
 	@Test
 	public void main_validSessionsCommandOnPublishService_exitCode0State() throws Exception {
 		try {
@@ -336,6 +346,7 @@ public class SCConsoleTest {
 		}
 	}
 	
+	// SC must be running !!
 	@Test
 	public void main_validSessionsCommandOnNotExistingService_exitCode0State() throws Exception {
 		try {

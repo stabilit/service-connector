@@ -54,14 +54,14 @@ public class SCConsole {
 		
 		ConsoleCommand consoleCommand = ConsoleCommand.UNDEFINED;
 		String commandKey = "";
-		String commandValue = "";
+		String serviceName = "";
 		for (int i = 0; i < args.length; i++) {
 			String[] splitted = args[i].split("=");
 			if (splitted.length != 2) {
 				continue;
 			}
 			commandKey = splitted[0];
-			commandValue = splitted[1];
+			serviceName = splitted[1];
 			consoleCommand = ConsoleCommand.getCommand(commandKey);
 			if (consoleCommand != ConsoleCommand.UNDEFINED) {
 				break;
@@ -72,8 +72,8 @@ public class SCConsole {
 			System.exit(3);
 		}
 		// fileName extracted from vm arguments
-		SCConsole.run(host, port, consoleCommand, commandValue);
-		System.exit(0);
+		int status = SCConsole.run(host, port, consoleCommand, serviceName);
+		System.exit(status);
 	}
 
 	/**
@@ -82,48 +82,51 @@ public class SCConsole {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private static void run(String host, String port, ConsoleCommand cmd, String commandValue) throws Exception {
-
+	private static int run(String host, String port, ConsoleCommand cmd, String serviceName) throws Exception {
+		int status = 0;
 		try {
 			SCClient client = new SCClient();
 			client.setConnectionType("netty.tcp");
 			client.attach(host, Integer.parseInt(port));
 			switch (cmd) {
 			case DISABLE:
-				client.disableService(commandValue);
-				System.out.println("Service [" + commandValue + "] has been disabled");
+				client.disableService(serviceName);
+				System.out.println("Service [" + serviceName + "] has been disabled");
 				break;
 			case ENABLE:
-				client.enableService(commandValue);
-				System.out.println("Service [" + commandValue + "] has been enabled");
+				client.enableService(serviceName);
+				System.out.println("Service [" + serviceName + "] has been enabled");
 				break;
 			case STATE:
 				try {
-					boolean enabled = client.isServiceEnabled(commandValue);
+					boolean enabled = client.isServiceEnabled(serviceName);
 					if (enabled) {
-						System.out.println("Service [" + commandValue + "] is enabled");
+						System.out.println("Service [" + serviceName + "] is enabled");
 					} else {
-						System.out.println("Service [" + commandValue + "] is disabled");
+						System.out.println("Service [" + serviceName + "] is disabled");
 					}
 				} catch (Exception e) {
-					System.out.println("Serivce [" + commandValue + "] does not exist!");
+					System.out.println("Serivce [" + serviceName + "] does not exist!");
+					status = 4;
 				}
 				break;
 			case SESSIONS:
 				try {
-					String sessions = client.workload(commandValue);
-					System.out.println("Service [" + commandValue + "] has " + sessions + " Sessions");
+					String sessions = client.workload(serviceName);
+					System.out.println("Service [" + serviceName + "] has " + sessions + " Sessions");
 				} catch (Exception e) {
-					System.out.println("Serivce [" + commandValue + "] does not exist!");
+					System.out.println("Serivce [" + serviceName + "] does not exist!");
+					status = 4;
 				}
 				break;
 			}
 			client.detach();
-			return;
+			return status;
 		} catch (Exception e) {
 			e.printStackTrace();
+			status = 5;
 		}
-
+		return status;
 	}
 
 	private static void showError(String msg) {

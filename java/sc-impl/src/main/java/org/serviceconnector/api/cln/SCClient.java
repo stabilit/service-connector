@@ -124,13 +124,13 @@ public class SCClient implements ISCClient {
 		} catch (Exception e) {
 			this.callback = null;
 			this.connectionPool.destroy();
-			throw new SCServiceException("attach client failed", e);
+			throw new SCServiceException("attach to "+host+":"+port+" failed", e);
 		}
 		SCMPMessage reply = this.callback.getMessageSync();
 		if (reply.isFault()) {
 			this.callback = null;
 			this.connectionPool.destroy();
-			throw new SCServiceException("attach client failed : "
+			throw new SCServiceException("attach to "+host+":"+port+" failed : "
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 
 		}

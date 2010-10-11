@@ -123,7 +123,7 @@ public final class SC {
 			IResponder responder = new Responder(respConfig);
 			try {
 				responder.create();
-				logger.info("Run server " + respConfig.getCommunicatorName() + " on " + respConfig.getHost() + ":"
+				logger.info("Start listener " + respConfig.getCommunicatorName() + " on " + respConfig.getHost() + ":"
 						+ respConfig.getPort());
 				responder.startListenAsync();
 			} catch (Exception ex) {
