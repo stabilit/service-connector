@@ -14,53 +14,58 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.net;
+package org.serviceconnector.cmd;
 
 import java.security.InvalidParameterException;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
-import org.serviceconnector.ctx.AppContext;
+import org.jboss.netty.util.internal.ConcurrentHashMap;
+import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
- * The Class FrameDecoderFactory. Provides access to concrete frame decoders.
- * 
- * @author JTraber
+ * A factory for creating FlyweightCommand objects. Factory is based on the Flyweight pattern
+ * (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). Commands are only instantiated one time.
+ * Factory is always returning the same instance from a map.
  */
-public final class FrameDecoderFactory {
+public abstract class FlyweightCommandFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(FrameDecoderFactory.class);
+	protected static final Logger logger = Logger.getLogger(FlyweightCommandFactory.class);
+	/** The map stores base instances by a key. */
+	protected static Map<String, ICommand> commands;
 
-	private AppContext appContext;
-
-	public void initFrameDecoders(AppContext appContext) {
-		this.appContext = appContext;
-		IFrameDecoder frameDecoder = new DefaultFrameDecoder();
-		this.addFrameDecoder(Constants.TCP, frameDecoder);
-		frameDecoder = new HttpFrameDecoder();
-		this.addFrameDecoder(Constants.HTTP, frameDecoder);
-	}
-
-	/**
-	 * Gets the frame decoder.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return the frame decoder
-	 */
-	public static IFrameDecoder getFrameDecoder(String key) {
-		if (Constants.HTTP.equalsIgnoreCase(key)) {
-			return new HttpFrameDecoder();
-		} else if (Constants.TCP.equalsIgnoreCase(key)) {
-			return new DefaultFrameDecoder();
-		} else {
-			logger.fatal("key : " + key + " not found!");
-			throw new InvalidParameterException("key : " + key + " not found!");
+	public FlyweightCommandFactory() {
+		if (FlyweightCommandFactory.commands == null) {
+			FlyweightCommandFactory.commands = new ConcurrentHashMap<String, ICommand>();
 		}
 	}
 
-	private void addFrameDecoder(String key, IFrameDecoder frameDecoder) {
-		this.appContext.getFrameDecoders().put(key, frameDecoder);
+	/**
+	 * Adds the command.
+	 * 
+	 * @param messageType
+	 *            the message type
+	 * @param factoryInstance
+	 *            the factory instance
+	 */
+	public void addCommand(SCMPMsgType messageType, ICommand command) {
+		FlyweightCommandFactory.commands.put(messageType.getValue(), command);
+	}
+
+	/**
+	 * Gets the command.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the command
+	 */
+	public ICommand getCommand(SCMPMsgType key) {
+		ICommand command = FlyweightCommandFactory.commands.get(key.getValue());
+		if (command == null) {
+			logger.fatal("key : " + key + " not found!");
+			throw new InvalidParameterException("key : " + key + " not found!");
+		}
+		return command;
 	}
 }

@@ -103,7 +103,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			request.read();
 
 			AppContext appContext = AppContext.getCurrentContext();
-			ICommand command = appContext.getCommand(request.getKey());
+			ICommand command = appContext.getCommandFactory().getCommand(request.getKey());
 			// gets the command
 			// ICommand command = CommandFactory.getCurrentCommandFactory().getCommand(request.getKey());
 			if (command == null) {

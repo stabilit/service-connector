@@ -17,24 +17,20 @@
 package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cmd.CommandFactory;
+import org.serviceconnector.cmd.FlyweightCommandFactory;
 import org.serviceconnector.cmd.ICommand;
-import org.serviceconnector.ctx.AppContext;
 
 /**
  * A factory for creating UnitServerCommand objects. Unifies all commands used by publish and session server.
  * 
  * @author JTraber
  */
-public class ServerCommandFactory extends CommandFactory {
+public class ServerCommandFactory extends FlyweightCommandFactory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ServerCommandFactory.class);
 
-	/** @{inheritDoc **/
-	@Override
-	public void initCommands(AppContext appContext) {
-		this.appContext = appContext;
+	public ServerCommandFactory() {
 		ICommand srvCreateSessionCommand = new SrvCreateSessionCommand();
 		this.addCommand(srvCreateSessionCommand.getKey(), srvCreateSessionCommand);
 		ICommand srvDeleteSessionCommand = new SrvDeleteSessionCommand();

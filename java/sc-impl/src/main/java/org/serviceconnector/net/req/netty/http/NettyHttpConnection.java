@@ -147,8 +147,7 @@ public class NettyHttpConnection implements IConnection {
 		future.addListener(this.operationListener);
 		try {
 			// waits until operation is done
-			this.channel = this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS)
-					.getChannel();
+			this.channel = this.operationListener.awaitUninterruptibly(Constants.CONNECT_TIMEOUT_MILLIS).getChannel();
 			// complete localSocketAdress
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
@@ -169,7 +168,7 @@ public class NettyHttpConnection implements IConnection {
 		ChannelFuture future = this.channel.disconnect();
 		future.addListener(this.operationListener);
 		try {
-			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
+			this.operationListener.awaitUninterruptibly(Constants.CONNECT_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			logger.error("disconnect", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "

@@ -32,9 +32,8 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
-import org.serviceconnector.net.IEncoderDecoder;
-import org.serviceconnector.net.IFrameDecoder;
 import org.serviceconnector.scmp.SCMPBodyType;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -42,7 +41,6 @@ import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPPart;
-
 
 /**
  * @author JTraber
@@ -57,7 +55,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.FORMAT_OF_MSG_SIZE);
 	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.FORMAT_OF_HEADER_SIZE);
-	protected IFrameDecoder defaultFrameDecoder = FrameDecoderFactory.getFrameDecoder(Constants.TCP);
+	protected IFrameDecoder defaultFrameDecoder = AppContext.getCurrentContext().getFrameDecoderFactory()
+			.getFrameDecoder(Constants.TCP);
 
 	/** {@inheritDoc} */
 	@Override

@@ -30,7 +30,7 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
-import org.serviceconnector.net.EncoderDecoderFactory;
+import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.ResponseAdapter;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -81,7 +81,7 @@ public class NettyHttpResponse extends ResponseAdapter {
 	 */
 	public ChannelBuffer getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		EncoderDecoderFactory encoderDecoderFactory = AppContext.getCurrentContext().getEncoderDecoderFactory();
+		FlyweightEncoderDecoderFactory encoderDecoderFactory = AppContext.getCurrentContext().getEncoderDecoderFactory();
 		encoderDecoder = encoderDecoderFactory.createEncoderDecoder(this.scmp);
 		encoderDecoder.encode(baos, this.scmp);
 		byte[] buf = baos.toByteArray();

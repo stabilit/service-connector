@@ -16,34 +16,43 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net;
 
+import java.security.InvalidParameterException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.log4j.Logger;
-import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPMessage;
 
 /**
- * A factory for creating EncoderDecoder objects.
- * 
- * @author JTraber
+ * A factory for creating FlyweightEncoderDecoder objects. Factory is based on the Flyweight pattern
+ * (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). EncoderDecoders are only instantiated one
+ * time. Factory is always returning the same instance from a map.
  */
-public final class EncoderDecoderFactory {
+public final class FlyweightEncoderDecoderFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(EncoderDecoderFactory.class);
+	private final static Logger logger = Logger.getLogger(FlyweightEncoderDecoderFactory.class);
+	/** The encoder decoders. */
+	private static Map<String, IEncoderDecoder> encoderDecoders;
+
 	/** The Constant LARGE, key for large encoder decoder. */
 	private static final String LARGE = "large";
+	/** The Constant KEEP_ALIVE. */
 	private static final String KEEP_ALIVE = "keepAlive";
+	/** The Constant DEFAULT. */
 	private static final String DEFAULT = "default";
 
-	private AppContext appContext;
-	
-	public void initEncoders(AppContext appContext) {
-		this.appContext = appContext;
+	/**
+	 * Instantiates a new FlyweightEncoderDecoderFactory.
+	 */
+	public FlyweightEncoderDecoderFactory() {
+		FlyweightEncoderDecoderFactory.encoderDecoders = new ConcurrentHashMap<String, IEncoderDecoder>();
 		IEncoderDecoder encoderDecoder = new DefaultMessageEncoderDecoder();
 		this.addEncoderDecoder(DEFAULT, encoderDecoder);
 		encoderDecoder = new LargeMessageEncoderDecoder();
 		this.addEncoderDecoder(LARGE, encoderDecoder);
 		encoderDecoder = new KeepAliveMessageEncoderDecoder();
-		this.addEncoderDecoder(KEEP_ALIVE, encoderDecoder);	
+		this.addEncoderDecoder(KEEP_ALIVE, encoderDecoder);
 	}
 
 	/**
@@ -113,18 +122,24 @@ public final class EncoderDecoderFactory {
 	 *            the key
 	 * @return the i encoder decoder
 	 */
-	public IEncoderDecoder createEncoderDecoder(String key) {
-		IEncoderDecoder encoderDecoder = AppContext.getCurrentContext().getEncodersDecoders().get(key);
+	private IEncoderDecoder createEncoderDecoder(String key) {
+		IEncoderDecoder encoderDecoder = FlyweightEncoderDecoderFactory.encoderDecoders.get(key);
+		if (encoderDecoder == null) {
+			logger.fatal("key : " + key + " not found!");
+			throw new InvalidParameterException("key : " + key + " not found!");
+		}
 		return encoderDecoder;
 	}
 
 	/**
 	 * Adds the encoder decoder.
-	 *
-	 * @param key the key
-	 * @param encoderDecoder the encoder decoder
+	 * 
+	 * @param key
+	 *            the key
+	 * @param encoderDecoder
+	 *            the encoder decoder
 	 */
 	private void addEncoderDecoder(String key, IEncoderDecoder encoderDecoder) {
-		this.appContext.getEncodersDecoders().put(key, encoderDecoder);
+		FlyweightEncoderDecoderFactory.encoderDecoders.put(key, encoderDecoder);
 	}
 }

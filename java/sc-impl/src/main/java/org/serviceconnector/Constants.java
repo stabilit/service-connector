@@ -73,8 +73,10 @@ public final class Constants {
 	 * WRITE/READ/CLOSE/OPEN can have. Should be low/short.
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
-		/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
-	public static final int CONNECT_TIMEOUT_MILLIS = 5000;
+	/** The Constant CONNECT_TIMEOUT_MILLIS_DEFAULT. */
+	public static final int CONNECT_TIMEOUT_MILLIS_DEFAULT = 5000;
+	/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
+	public static int CONNECT_TIMEOUT_MILLIS = CONNECT_TIMEOUT_MILLIS_DEFAULT;
 	/** The Constant SEC_TO_MILISEC_FACTOR. */
 	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
 	/** The REGEX. */
@@ -87,6 +89,8 @@ public final class Constants {
 	public static final String ROOT_OPERATION_TIMEOUT_QUALIFIER = "root.operationTimeoutMultiplier";
 	/** The Constant ROOT_ECHO_TIMEOUT_QUALIFIER. */
 	public static final String ROOT_ECHO_INTERVAL_QUALIFIER = "root.echoIntervalMultiplier";
+	/** The Constant ROOT_CONNECTION_TIMEOUT_QUALIFIER. */
+	public static final String ROOT_CONNECTION_TIMEOUT_QUALIFIER = "root.connectionTimeout";
 	/** The CON. */
 	public static final String CONNECTION_TYPE_QUALIFIER = ".connectionType";
 	/** The USERID. */
@@ -204,5 +208,14 @@ public final class Constants {
 			return;
 		}
 		Constants.ECHO_INTERVAL_MULTIPLIER = echoInteralMultiplier;
+	}
+
+	public static void setConnectionTimeout(int connectionTimeout) {
+		if (Constants.CONNECT_TIMEOUT_MILLIS != Constants.CONNECT_TIMEOUT_MILLIS_DEFAULT) {
+			// setting CONNECT_TIMEOUT_MILLIS only allowed one time
+			logger.error("setConnectionTimeout called two times - not allowed.");
+			return;
+		}
+		Constants.CONNECT_TIMEOUT_MILLIS = connectionTimeout;
 	}
 }

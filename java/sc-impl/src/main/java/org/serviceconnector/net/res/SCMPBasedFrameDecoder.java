@@ -23,11 +23,10 @@ import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.serviceconnector.Constants;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.FrameDecoderException;
-import org.serviceconnector.net.FrameDecoderFactory;
 import org.serviceconnector.net.IFrameDecoder;
 import org.serviceconnector.scmp.SCMPError;
-
 
 /**
  * The Class SCMPBasedFrameDecoder. Decodes a SCMP frame.
@@ -53,7 +52,7 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 		this.scmpFrameSize = 0;
 		this.decodeState = DecodeState.READY;
 		// warning, returns always the same instance, singleton
-		this.scmpFrameDecoder = FrameDecoderFactory.getFrameDecoder(Constants.TCP);
+		this.scmpFrameDecoder = AppContext.getCurrentContext().getFrameDecoderFactory().getFrameDecoder(Constants.TCP);
 	}
 
 	/** {@inheritDoc} */

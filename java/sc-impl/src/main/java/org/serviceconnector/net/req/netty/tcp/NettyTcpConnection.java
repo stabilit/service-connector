@@ -128,13 +128,14 @@ public class NettyTcpConnection implements IConnection {
 		this.bootstrap = new ClientBootstrap(NettyTcpConnection.channelFactory);
 		this.pipelineFactory = new NettyTcpRequesterPipelineFactory(this.connectionContext, NettyTcpConnection.timer);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
+		this.bootstrap.setOption("connectTimeoutMillis", Constants.CONNECT_TIMEOUT_MILLIS);
 		// Start the connection attempt.
 		this.localSocketAddress = new InetSocketAddress(host, port);
 		ChannelFuture future = bootstrap.connect(this.localSocketAddress);
 		operationListener = new NettyOperationListener();
 		future.addListener(operationListener);
 		try {
-			this.channel = operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS)
+			this.channel = operationListener.awaitUninterruptibly(Constants.CONNECT_TIMEOUT_MILLIS)
 					.getChannel();
 			// complete localSocketAdress
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
@@ -155,7 +156,7 @@ public class NettyTcpConnection implements IConnection {
 		ChannelFuture future = this.channel.disconnect();
 		future.addListener(operationListener);
 		try {
-			operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
+			operationListener.awaitUninterruptibly(Constants.CONNECT_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			logger.error("disconnect", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "

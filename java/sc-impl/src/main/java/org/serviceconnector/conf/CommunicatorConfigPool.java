@@ -27,7 +27,6 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
-
 /**
  * The Class CommunicatorConfigPool. Processes scm property files.
  * 
@@ -66,9 +65,9 @@ public abstract class CommunicatorConfigPool {
 		this.configurations = new CompositeConfiguration();
 		try {
 			this.configurations.addConfiguration(new PropertiesConfiguration(fileName));
-		} catch(Exception e) {
+		} catch (Exception e) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.toString());
-		}		
+		}
 		@SuppressWarnings("unchecked")
 		List<String> communicators = this.configurations.getList(topLevelPropsKey);
 		if (communicators == null) {
@@ -89,14 +88,16 @@ public abstract class CommunicatorConfigPool {
 			comConfigList.add(commConfig);
 
 			int port = Integer.parseInt((String) this.configurations.getString(commName + Constants.PORT_QUALIFIER));
-			String maxPoolSizeValue = (String) this.configurations.getString(commName + Constants.MAX_CONNECTION_POOL_SIZE);
+			String maxPoolSizeValue = (String) this.configurations.getString(commName
+					+ Constants.MAX_CONNECTION_POOL_SIZE);
 
 			if (maxPoolSizeValue != null) {
 				int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
 				commConfig.setMaxPoolSize(maxPoolSize);
 			}
 
-			String keepAliveIntervalValue = (String) this.configurations.getString(commName + Constants.KEEP_ALIVE_INTERVAL);
+			String keepAliveIntervalValue = (String) this.configurations.getString(commName
+					+ Constants.KEEP_ALIVE_INTERVAL);
 			int keepAliveInterval = 0;
 			if (keepAliveIntervalValue != null) {
 				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
@@ -105,7 +106,8 @@ public abstract class CommunicatorConfigPool {
 
 			commConfig.setPort(port);
 			commConfig.setHost((String) this.configurations.getString(commName + Constants.HOST_QUALIFIER));
-			commConfig.setConnectionType((String) this.configurations.getString(commName + Constants.CONNECTION_TYPE_QUALIFIER));
+			commConfig.setConnectionType((String) this.configurations.getString(commName
+					+ Constants.CONNECTION_TYPE_QUALIFIER));
 			commConfig.setUserid((String) this.configurations.getString(commName + Constants.CONNECTION_USERNAME));
 			commConfig.setPassword((String) this.configurations.getString(commName + Constants.CONNECTION_PASSWORD));
 			commConfig.setOperationTimeoutMultiplier(operationTimeoutMultiplier);
@@ -126,6 +128,12 @@ public abstract class CommunicatorConfigPool {
 		if (operationTimeoutString != null) {
 			double echoIntervalMultiplier = Double.parseDouble(echoIntervalString);
 			Constants.setEchoIntervalMultiplier(echoIntervalMultiplier);
+		}
+
+		String connectionTimeoutString = this.configurations.getString(Constants.ROOT_CONNECTION_TIMEOUT_QUALIFIER);
+		if (connectionTimeoutString != null) {
+			int connectionTimeout = Integer.parseInt(connectionTimeoutString);
+			Constants.setConnectionTimeout(connectionTimeout);
 		}
 	}
 

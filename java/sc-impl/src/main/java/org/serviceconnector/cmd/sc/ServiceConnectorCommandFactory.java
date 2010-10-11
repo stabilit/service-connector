@@ -17,9 +17,8 @@
 package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cmd.CommandFactory;
+import org.serviceconnector.cmd.FlyweightCommandFactory;
 import org.serviceconnector.cmd.ICommand;
-import org.serviceconnector.ctx.AppContext;
 
 /**
  * A factory for creating ServiceConnectorCommand objects. Provides access to concrete instances of Service Connector
@@ -27,15 +26,12 @@ import org.serviceconnector.ctx.AppContext;
  * 
  * @author JTraber
  */
-public class ServiceConnectorCommandFactory extends CommandFactory {
+public class ServiceConnectorCommandFactory extends FlyweightCommandFactory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ServiceConnectorCommandFactory.class);
 
-	/** @{inheritDoc **/
-	@Override
-	public void initCommands(AppContext appContext) {
-		this.appContext = appContext;
+	public ServiceConnectorCommandFactory() {
 		ICommand attachCommand = new AttachCommand();
 		this.addCommand(attachCommand.getKey(), attachCommand);
 		ICommand detachCommand = new DetachCommand();
