@@ -159,7 +159,7 @@ public class SetupTestCases {
 		scSim1ConSrv.setImmediateConnect(true);
 		scSim1ConSrv.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim1ConSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "simulation", 10, 10, srvCallback);
+		scSim1ConSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "simulation", 10, 1, srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {

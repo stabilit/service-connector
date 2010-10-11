@@ -16,14 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
-import org.serviceconnector.factory.IFactoryable;
 
 /**
  * The Interface IEndpoint.
  * 
  * @author JTraber
  */
-public interface IEndpoint extends IFactoryable {
+public interface IEndpoint {
 
 	/**
 	 * Sets the host.

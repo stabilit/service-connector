@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.log.MessageLogger;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPInternalStatus;
@@ -47,12 +46,6 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 	 * Instantiates a new default encoder decoder.
 	 */
 	DefaultMessageEncoderDecoder() {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
 	}
 
 	/** {@inheritDoc} */

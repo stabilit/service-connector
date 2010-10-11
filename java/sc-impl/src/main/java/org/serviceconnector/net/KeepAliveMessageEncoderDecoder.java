@@ -21,8 +21,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.factory.IFactoryable;
-import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 
@@ -41,12 +39,6 @@ public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter
 	 * Instantiates a new default encoder decoder.
 	 */
 	KeepAliveMessageEncoderDecoder() {
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return this;
 	}
 
 	/** {@inheritDoc} */

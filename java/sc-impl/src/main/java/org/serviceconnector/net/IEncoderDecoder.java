@@ -19,13 +19,11 @@ package org.serviceconnector.net;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.serviceconnector.factory.IFactoryable;
-
 
 /**
  * The Interface IEncoderDecoder. Abstracts EncoderDecoder implementations.
  */
-public interface IEncoderDecoder extends IFactoryable {
+public interface IEncoderDecoder {
 	/** The Constant EQUAL_SIGN. */
 	public static final String EQUAL_SIGN = "=";
 	/** The Constant CHARSET. */

@@ -28,7 +28,6 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.CommunicationException;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.req.netty.NettyOperationListener;
@@ -162,12 +161,6 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 			logger.error("stopListening", ex);
 			return;
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IFactoryable newInstance() {
-		return new NettyTcpEndpoint();
 	}
 
 	/** {@inheritDoc} */

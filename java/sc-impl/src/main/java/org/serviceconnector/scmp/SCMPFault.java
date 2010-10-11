@@ -19,7 +19,6 @@ package org.serviceconnector.scmp;
 import org.apache.log4j.Logger;
 import org.serviceconnector.util.DateTimeUtility;
 
-
 /**
  * The Class SCMPFault. Indicates an error and causes the <code>SCMPHeadlineKey.EXC</code> on the wire protocol.
  */
@@ -27,7 +26,7 @@ public class SCMPFault extends SCMPMessage {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPFault.class);
-	
+
 	private Exception exception;
 
 	public SCMPFault(Exception exception) {
@@ -52,6 +51,21 @@ public class SCMPFault extends SCMPMessage {
 	 */
 	public SCMPFault(SCMPError error, String additionalInfo) {
 		this.setError(error, additionalInfo);
+	}
+
+	/**
+	 * Instantiates a new SCMP fault.
+	 * 
+	 * @param e
+	 *            the e
+	 * @param error
+	 *            the error
+	 * @param additionalInfo
+	 *            the additional info
+	 */
+	public SCMPFault(Exception e, SCMPError error, String additionalInfo) {
+		this.setError(error, additionalInfo);
+		this.exception = e;
 	}
 
 	/**

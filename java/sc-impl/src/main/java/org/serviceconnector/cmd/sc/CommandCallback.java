@@ -3,12 +3,12 @@ package org.serviceconnector.cmd.sc;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.SynchronousCallback;
-
 
 /**
  * The Class CommandCallback. CommandCallback might be used in a command if executing the command jobs needs a callback.
@@ -43,6 +43,8 @@ public class CommandCallback extends SynchronousCallback {
 			fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, ERROR_STRING_TIMEOUT);
 		} else if (ex instanceof IOException) {
 			fault = new SCMPFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
+		} else if (ex instanceof ConnectionPoolBusyException) {
+			fault = new SCMPFault(ex, SCMPError.SC_ERROR, ERROR_STRING_FAIL);
 		} else {
 			fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
 		}

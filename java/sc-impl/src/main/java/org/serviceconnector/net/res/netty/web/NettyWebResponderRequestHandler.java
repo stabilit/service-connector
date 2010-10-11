@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty.web;
 
+import java.nio.channels.ClosedChannelException;
+
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -33,6 +35,9 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.ResponderRegistry;
+import org.serviceconnector.net.res.netty.NettyHttpResponse;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
 import org.serviceconnector.web.cmd.IWebCommand;
@@ -81,8 +86,15 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		logger.error(e.toString());
-		// e.getChannel().write("Hello Error World!");
+		NettyHttpResponse response = new NettyHttpResponse(e);
+		logger.error("exceptionCaught", e.getCause());
+		Throwable th = e.getCause();
+		if (th instanceof ClosedChannelException) {
+			// never reply in case of channel closed exception
+			return;
+		}
+		SCMPFault fault = new SCMPFault(SCMPError.SC_ERROR, th.getMessage());
+		response.setSCMP(fault);
+		response.write();
 	}
-
 }

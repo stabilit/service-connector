@@ -19,11 +19,13 @@ package org.serviceconnector.cmd.sc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -78,8 +80,25 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		Server server = null;
 		try {
 			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			server = service.allocateServerAndCreateSession(reqMessage, callback, session, oti);
-			SCMPMessage reply = callback.getMessageSync();
+
+			SCMPMessage reply = null;
+			
+			// Following loop implements the wait mechanism in case of a busy connection pool
+			for (int i = 0; i < 10; i++) {
+				server = service.allocateServerAndCreateSession(reqMessage, callback, session, oti);
+				reply = callback.getMessageSync();
+				if (reply.isFault() == false) {
+					// response is good - no wait mechanism necessary
+					break;
+				}
+				SCMPFault fault = (SCMPFault) reply;
+				if ((fault.getCause() instanceof ConnectionPoolBusyException) == false) {
+					// response is bad - but no because of no ConnectionPoolBusyException so no wait mechanism necessary
+					break;
+				}
+				// sleep for a while and then try again
+				Thread.sleep(200);
+			}
 
 			if (reply.isFault() == false) {
 				boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
