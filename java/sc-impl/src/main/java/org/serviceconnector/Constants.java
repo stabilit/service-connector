@@ -103,6 +103,9 @@ public final class Constants {
 	public static final String CONNECTION_USERNAME = ".username";
 	/** The PASSWORD. */
 	public static final String CONNECTION_PASSWORD = ".password";
+	
+	/** The Constant REMOTE_URI. */
+	public static final String REMOTE_URI = ".remoteURI";
 	/** The HOST. */
 	public static final String HOST_QUALIFIER = ".host";
 	/** The PORT. */
@@ -136,6 +139,8 @@ public final class Constants {
 	public static final String NETTY_HTTP = "netty.http";
 	/** The Constant NETTY_WEB. */
 	public static final String NETTY_WEB = "netty.web";
+	/** The Constant NETTY_TCP_PROXY. */
+	public static final String NETTY_TCP_PROXY = "netty.tcp.proxy";	
 	/** The DEFAULT_CLIENT_CON. */
 	public static final String DEFAULT_CLIENT_CON = NETTY_HTTP;
 	/** The DEFAULT_SERVER_CON. */

@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.net.res.netty.http.NettyHttpEndpoint;
 import org.serviceconnector.net.res.netty.tcp.NettyTcpEndpoint;
+import org.serviceconnector.net.res.netty.tcp.proxy.NettyTcpProxyEndpoint;
 import org.serviceconnector.net.res.netty.web.NettyWebEndpoint;
 
 /**
@@ -40,6 +41,8 @@ public class EndpointFactory {
 			return new NettyTcpEndpoint();
 		} else if (Constants.NETTY_WEB.equalsIgnoreCase(key)) {
 			return new NettyWebEndpoint();
+		} else if (Constants.NETTY_TCP_PROXY.equalsIgnoreCase(key)) {
+			return new NettyTcpProxyEndpoint();
 		} else {
 			logger.fatal("key : " + key + " not found!");
 			throw new InvalidParameterException("key : " + key + " not found!");

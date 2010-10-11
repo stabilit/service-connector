@@ -35,7 +35,7 @@ public class CommunicatorConfig {
 	/** The host. */
 	private String host;
 	/** The connectionKey. */
-	private String connectionType;
+	private String connectionType;	
 	/** The max pool size. */
 	private int maxPoolSize;
 	/** The keep alive interval. */
@@ -45,6 +45,8 @@ public class CommunicatorConfig {
 	private String userid;
 	/** The password. */
 	private String password;
+	/** The remote uri. */
+	private String remoteURI;
 
 	public CommunicatorConfig(String communicatorName, String host, int port, String connectionType, int maxPoolSize,
 			int keepAliveInterval, int keepAliveTimeout) {
@@ -172,7 +174,24 @@ public class CommunicatorConfig {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	/**
+	 * Sets the remote uri.
+	 *
+	 * @param remoteURI the new remote uri
+	 */
+	public void setRemoteURI(String remoteURI) {
+		this.remoteURI = remoteURI;
+	}
 
+	/**
+	 * Gets the remote uri.
+	 *
+	 * @return the remote uri
+	 */
+	public String getRemoteURI() {
+		return remoteURI;
+	}
 	/**
 	 * Gets the password.
 	 * 

@@ -110,6 +110,7 @@ public abstract class CommunicatorConfigPool {
 					+ Constants.CONNECTION_TYPE_QUALIFIER));
 			commConfig.setUserid((String) this.configurations.getString(commName + Constants.CONNECTION_USERNAME));
 			commConfig.setPassword((String) this.configurations.getString(commName + Constants.CONNECTION_PASSWORD));
+			commConfig.setRemoteURI((String) this.configurations.getString(commName + Constants.REMOTE_URI));
 			commConfig.setOperationTimeoutMultiplier(operationTimeoutMultiplier);
 		}
 
