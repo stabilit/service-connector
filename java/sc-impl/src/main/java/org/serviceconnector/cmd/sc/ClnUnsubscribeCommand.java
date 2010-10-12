@@ -23,7 +23,6 @@ import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -69,7 +68,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		// unsubscribe on backend server
 		Server server = subscription.getServer();
 		SCMPMessage reply = null;
-		ISCMPSynchronousCallback callback = new CommandCallback(true);
+		CommandCallback callback = new CommandCallback(true);
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		server.unsubscribe(reqMessage, callback, oti);
 		reply = callback.getMessageSync();

@@ -23,7 +23,6 @@ import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -84,7 +83,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 			// Following loop implements the wait mechanism in case of a busy connection pool
 			for (int i = 0; i < tries; i++) {
-				ISCMPSynchronousCallback callback = new CommandCallback(true);
+				CommandCallback callback = new CommandCallback(true);
 				server = service.allocateServerAndCreateSession(reqMessage, callback, session, oti
 						- (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
 				reply = callback.getMessageSync();

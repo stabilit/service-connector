@@ -75,7 +75,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 		server.getService().removeServer(server);
 
 		List<AbstractSession> serverSessions = server.getSessions();
-		ISCMPCallback callback = new DeRegisterServerCommmandCallback();
+		DeRegisterServerCommmandCallback callback = new DeRegisterServerCommmandCallback();
 		// set up abort message
 		SCMPMessage abortMsg = new SCMPMessage();
 		abortMsg.setServiceName(serviceName);
