@@ -23,33 +23,33 @@ package org.serviceconnector.api.cln;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.ISCMessageCallback;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.SynchronousCallback;
 
 /**
- * The Class ServiceCallback. Base class for a service callback.
+ * The Class SCServiceCallback. Base class for a service callback.
  * 
  * @author JTraber
  */
-public class ServiceCallback extends SynchronousCallback {
+public class SCServiceCallback extends SynchronousCallback {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ServiceCallback.class);
+	protected final static Logger logger = Logger.getLogger(SCServiceCallback.class);
 
 	/** The message callback. */
-	private ISCMessageCallback messageCallback;
+	private SCMessageCallback messageCallback;
 	/** The service which is using the callback. */
 	private SCService service;
 
 	/**
 	 * Instantiates a new ServiceCallback.
 	 */
-	public ServiceCallback() {
+	public SCServiceCallback() {
 		this(null, null);
 	}
 
@@ -59,7 +59,7 @@ public class ServiceCallback extends SynchronousCallback {
 	 * @param synchronous
 	 *            the synchronous
 	 */
-	public ServiceCallback(boolean synchronous) {
+	public SCServiceCallback(boolean synchronous) {
 		this();
 		this.synchronous = synchronous;
 	}
@@ -70,7 +70,7 @@ public class ServiceCallback extends SynchronousCallback {
 	 * @param messageCallback
 	 *            the message callback
 	 */
-	public ServiceCallback(SCService service, ISCMessageCallback messageCallback) {
+	public SCServiceCallback(SCService service, SCMessageCallback messageCallback) {
 		this.service = service;
 		this.messageCallback = messageCallback;
 	}

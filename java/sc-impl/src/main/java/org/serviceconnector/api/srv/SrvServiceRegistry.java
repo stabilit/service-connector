@@ -56,16 +56,6 @@ public class SrvServiceRegistry extends Registry<String, SrvService> {
 	/**
 	 * Removes the server service.
 	 * 
-	 * @param srvService
-	 *            the server service
-	 */
-	public void removeSrvService(SrvService srvService) {
-		this.removeSrvService(srvService.getServiceName());
-	}
-
-	/**
-	 * Removes the server service.
-	 * 
 	 * @param key
 	 *            the key
 	 */

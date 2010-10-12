@@ -19,8 +19,7 @@ package org.serviceconnector.cmd.srv;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
-import org.serviceconnector.api.srv.ISCPublishServerCallback;
-import org.serviceconnector.api.srv.SrvService;
+import org.serviceconnector.api.srv.SrvPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -52,7 +51,7 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// look up srvService
-		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
+		SrvPublishService srvService = this.getSrvPublishServiceByServiceName(serviceName);
 
 		String sessionId = reqMessage.getSessionId();
 		// create scMessage
@@ -65,12 +64,12 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
-		SCMessage scReply = ((ISCPublishServerCallback) srvService.getCallback()).subscribe(scMessage);
+		SCMessage scReply = srvService.getCallback().subscribe(scMessage);
 
 		// create session in SCMPSessionCompositeRegistry
-		this.sessionCompositeRegistry.addSession(sessionId);
+		SrvCommandAdapter.sessionCompositeRegistry.addSession(sessionId);
 		// handling messageId
-		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(sessionId);
+		SCMPMessageId messageId = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMessageId(sessionId);
 
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();

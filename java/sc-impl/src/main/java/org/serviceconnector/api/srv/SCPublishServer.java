@@ -21,6 +21,8 @@
  */
 package org.serviceconnector.api.srv;
 
+import java.security.InvalidParameterException;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
@@ -36,13 +38,23 @@ import org.serviceconnector.util.ValidatorUtility;
 /**
  * The Class SCPublishServer. A Server that publishes messages to an SC.
  */
-public class SCPublishServer extends SCSessionServer implements ISCPublishServer {
+public class SCPublishServer extends SCSessionServer {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCPublishServer.class);
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Publish data.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @param mask
+	 *            the mask
+	 * @param data
+	 *            the data
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void publish(String serviceName, String mask, Object data) throws Exception {
 		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
@@ -65,8 +77,22 @@ public class SCPublishServer extends SCSessionServer implements ISCPublishServer
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Register server for a service.
+	 * 
+	 * @param scHost
+	 *            the sc host
+	 * @param scPort
+	 *            the sc port
+	 * @param serviceName
+	 *            the service name
+	 * @param scCallback
+	 *            the sc callback
+	 * @throws Exception
+	 *             the exception
+	 * @throws InvalidParameterException
+	 *             port is not within limits 0 to 0xFFFF, host unset
+	 */
 	public void registerServer(String scHost, int scPort, String serviceName, int maxSessions, int maxConnections,
 			ISCPublishServerCallback scCallback) throws Exception {
 		super.registerServer(scHost, scPort, serviceName, maxSessions, maxConnections, scCallback);

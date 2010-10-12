@@ -19,7 +19,6 @@ package org.serviceconnector.util;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.util.ITimerRun;
 
 
 /**

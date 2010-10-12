@@ -23,6 +23,7 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
@@ -36,7 +37,6 @@ import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.ISCMessageCallback;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
@@ -48,7 +48,7 @@ import org.serviceconnector.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class SCSessionService extends SCService implements ISessionService {
+public class SCSessionService extends SCService {
 
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(SCSessionService.class);
@@ -80,27 +80,71 @@ public class SCSessionService extends SCService implements ISessionService {
 		this.scResponseTimeMillis = Constants.OPERATION_TIMEOUT_MILLIS_SHORT;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Creates the session.
+	 * 
+	 * @param sessionInfo
+	 *            the session info
+	 * @param echoIntervalInSeconds
+	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
+	 *            Very important for SC to detect broken sessions.
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds) throws Exception {
 		this.createSession(sessionInfo, echoIntervalInSeconds, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, null);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Creates the session.
+	 * 
+	 * @param sessionInfo
+	 *            the session info
+	 * @param echoIntervalInSeconds
+	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
+	 *            Very important for SC to detect broken sessions.
+	 * @param timeoutInSeconds
+	 *            the echo timeout, time an SC has to observe for receiving echo reply from server.
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds)
 			throws Exception {
 		this.createSession(sessionInfo, echoIntervalInSeconds, timeoutInSeconds, null);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Creates the session.
+	 * 
+	 * @param sessionInfo
+	 *            the session info
+	 * @param echoIntervalInSeconds
+	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
+	 *            Very important for SC to detect broken sessions.
+	 * @param data
+	 *            the data
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, Object data) throws Exception {
 		this.createSession(sessionInfo, echoIntervalInSeconds, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, data);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Creates the session.
+	 * 
+	 * @param sessionInfo
+	 *            the session info
+	 * @param echoIntervalInSeconds
+	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
+	 *            Very important for SC to detect broken sessions.
+	 * @param timeoutInSeconds
+	 *            the echo timeout, time an SC has to observe for receiving echo reply from server.
+	 * @param data
+	 *            the data
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds,
 			Object data) throws Exception {
 		if (this.sessionActive) {
@@ -117,7 +161,7 @@ public class SCSessionService extends SCService implements ISessionService {
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		ValidatorUtility.validateInt(1, echoIntervalInSeconds, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
 		this.msgId.reset();
-		ServiceCallback callback = new ServiceCallback(true);
+		SCServiceCallback callback = new SCServiceCallback(true);
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName);
 		createSessionCall.setSessionInfo(sessionInfo);
@@ -145,14 +189,24 @@ public class SCSessionService extends SCService implements ISessionService {
 		SCSessionService.timer.schedule(timerTask, (int) (echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR));
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Delete session.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void deleteSession() throws Exception {
 		this.deleteSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Delete session.
+	 * 
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void deleteSession(int timeoutInSeconds) throws Exception {
 		if (this.sessionActive == false) {
 			// delete session not possible - no session on this service just ignore
@@ -167,7 +221,7 @@ public class SCSessionService extends SCService implements ISessionService {
 		this.pendingRequest = true;
 		// cancel session timeout
 		this.timerTask.cancel();
-		ServiceCallback callback = new ServiceCallback(true);
+		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			this.msgId.incrementMsgSequenceNr();
 			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
@@ -197,13 +251,30 @@ public class SCSessionService extends SCService implements ISessionService {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Execute.
+	 * 
+	 * @param requestMsg
+	 *            the request message
+	 * @return the ISCMessage
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized SCMessage execute(SCMessage requestMsg) throws Exception {
 		return this.execute(requestMsg, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
-	@Override
+	/**
+	 * Execute.
+	 * 
+	 * @param requestMsg
+	 *            the request message
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @return the SCMessage
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized SCMessage execute(SCMessage requestMsg, int timeoutInSeconds) throws Exception {
 		if (this.sessionActive == false) {
 			throw new SCServiceException("execute not possible, no active session.");
@@ -231,7 +302,7 @@ public class SCSessionService extends SCService implements ISessionService {
 		clnExecuteCall.setCompressed(requestMsg.isCompressed());
 		clnExecuteCall.setRequestBody(requestMsg.getData());
 		// invoke asynchronous
-		ServiceCallback callback = new ServiceCallback(true);
+		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			clnExecuteCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
@@ -255,14 +326,33 @@ public class SCSessionService extends SCService implements ISessionService {
 		return replyToClient;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public synchronized void execute(SCMessage requestMsg, ISCMessageCallback callback) throws Exception {
+	/**
+	 * Execute.
+	 * 
+	 * @param requestMsg
+	 *            the request SCMessage
+	 * @param callback
+	 *            the callback
+	 * @throws Exception
+	 *             the exception
+	 */
+	public synchronized void execute(SCMessage requestMsg, SCMessageCallback callback) throws Exception {
 		this.execute(requestMsg, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
-	@Override
-	public synchronized void execute(SCMessage requestMsg, ISCMessageCallback callback, int timeoutInSeconds)
+	/**
+	 * Execute.
+	 * 
+	 * @param requestMsg
+	 *            the request SCMessage
+	 * @param callback
+	 *            the callback
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
+	public synchronized void execute(SCMessage requestMsg, SCMessageCallback callback, int timeoutInSeconds)
 			throws Exception {
 		if (this.sessionActive == false) {
 			throw new SCServiceException("execute not possible, no active session.");
@@ -292,7 +382,7 @@ public class SCSessionService extends SCService implements ISessionService {
 		}
 		clnExecuteCall.setCompressed(requestMsg.isCompressed());
 		clnExecuteCall.setRequestBody(requestMsg.getData());
-		ISCMPCallback scmpCallback = new ServiceCallback(this, callback);
+		ISCMPCallback scmpCallback = new SCServiceCallback(this, callback);
 		try {
 			clnExecuteCall.invoke(scmpCallback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
@@ -301,8 +391,6 @@ public class SCSessionService extends SCService implements ISessionService {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
 	public void setRequestComplete() {
 		super.setRequestComplete();
 		// trigger session timeout
@@ -310,14 +398,11 @@ public class SCSessionService extends SCService implements ISessionService {
 		SCSessionService.timer.schedule(this.timerTask, (long) this.timerRun.getTimeoutMillis());
 	}
 
-	/** {@inheritDoc} */
-	@Override
 	public void setSCResponseTimeMillis(int scResponseTimeMillis) {
 		this.scResponseTimeMillis = scResponseTimeMillis;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	
 	public int getSCResponseTimeMillis() {
 		return this.scResponseTimeMillis;
 	}
@@ -337,7 +422,7 @@ public class SCSessionService extends SCService implements ISessionService {
 		this.msgId.incrementMsgSequenceNr();
 		SCMPEchoCall clnEchoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
-		ServiceCallback callback = new ServiceCallback(true);
+		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			clnEchoCall.invoke(callback, this.scResponseTimeMillis);
 		} catch (Exception e) {

@@ -18,8 +18,7 @@ package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.ISCSessionServerCallback;
-import org.serviceconnector.api.srv.SrvService;
+import org.serviceconnector.api.srv.SrvSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -29,7 +28,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
-
 
 /**
  * The Class SrvAbortSessionCommand. Responsible for validation and execution of abort session command. Aborts an active
@@ -41,7 +39,7 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SrvAbortSessionCommand.class);
-	
+
 	/**
 	 * Instantiates a new SrvAbortSessionCommand.
 	 */
@@ -60,7 +58,7 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// look up srvService
-		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
+		SrvSessionService srvService = this.getSrvSessionServiceByServiceName(serviceName);
 
 		String sessionId = reqMessage.getSessionId();
 		// create scMessage
@@ -72,10 +70,10 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
-		((ISCSessionServerCallback) srvService.getCallback()).abortSession(scMessage);
+		srvService.getCallback().abortSession(scMessage);
 
 		// handling messageId
-		SCMPMessageId messageId = this.sessionCompositeRegistry.getSCMPMessageId(sessionId);
+		SCMPMessageId messageId = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMessageId(sessionId);
 		messageId.incrementMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
@@ -85,7 +83,7 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		reply.setMessageType(this.getKey());
 		response.setSCMP(reply);
 		// delete session in SCMPSessionCompositeRegistry
-		this.sessionCompositeRegistry.removeSession(sessionId);
+		SrvCommandAdapter.sessionCompositeRegistry.removeSession(sessionId);
 	}
 
 	/** {@inheritDoc} */

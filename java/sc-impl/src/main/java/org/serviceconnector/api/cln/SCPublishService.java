@@ -20,6 +20,7 @@ import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
@@ -33,7 +34,6 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.ISCMessageCallback;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -41,14 +41,14 @@ import org.serviceconnector.util.ValidatorUtility;
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
  * communication functions.
  */
-public class SCPublishService extends SCService implements IPublishService {
+public class SCPublishService extends SCService {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCPublishService.class);
 
 	private volatile boolean subscribed = false;
 	private int noDataInterval;
-	private ISCMessageCallback scMessageCallback;
+	private SCMessageCallback scMessageCallback;
 
 	/**
 	 * Instantiates a new publish service.
@@ -66,13 +66,28 @@ public class SCPublishService extends SCService implements IPublishService {
 		this.scMessageCallback = null;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Change subscription.
+	 * 
+	 * @param mask
+	 *            the mask
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void changeSubscription(String mask) throws Exception {
 		this.changeSubscription(mask, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
-	@Override
+	/**
+	 * Change subscription.
+	 * 
+	 * @param mask
+	 *            the mask
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void changeSubscription(String mask, int timeoutInSeconds) throws Exception {
 		if (this.subscribed == false) {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
@@ -86,35 +101,93 @@ public class SCPublishService extends SCService implements IPublishService {
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		changeSubscriptionCall.setMask(mask);
-		ServiceCallback callback = new ServiceCallback(true);
+		SCServiceCallback callback = new SCServiceCallback(true);
 		changeSubscriptionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		callback.getMessageSync();
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, ISCMessageCallback callback)
+	/**
+	 * Subscribe.
+	 * 
+	 * @param mask
+	 *            the mask
+	 * @param sessionInfo
+	 *            the session info
+	 * @param noDataInterval
+	 *            the no data interval
+	 * @param callback
+	 *            the callback
+	 * @throws Exception
+	 *             the exception
+	 */
+	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, SCMessageCallback callback)
 			throws Exception {
 		this.subscribe(mask, sessionInfo, noDataInterval, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
-	@Override
+	/**
+	 * Subscribe.
+	 * 
+	 * @param mask
+	 *            the mask
+	 * @param sessionInfo
+	 *            the session info
+	 * @param noDataInterval
+	 *            the no data interval
+	 * @param callback
+	 *            the callback
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval,
-			ISCMessageCallback callback, int timeoutInSeconds) throws Exception {
+			SCMessageCallback callback, int timeoutInSeconds) throws Exception {
 		this.subscribe(mask, sessionInfo, noDataInterval, null, callback, timeoutInSeconds);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Subscribe.
+	 * 
+	 * @param mask
+	 *            the mask
+	 * @param sessionInfo
+	 *            the session info
+	 * @param noDataInterval
+	 *            the no data interval
+	 * @param authenticationId
+	 *            the authentication id
+	 * @param callback
+	 *            the callback
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
-			ISCMessageCallback callback) throws Exception {
+			SCMessageCallback callback) throws Exception {
 		this.subscribe(mask, sessionInfo, noDataInterval, authenticationId, callback,
 				Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
-	@Override
+	/**
+	 * Subscribe.
+	 * 
+	 * @param mask
+	 *            the mask
+	 * @param sessionInfo
+	 *            the session info
+	 * @param noDataInterval
+	 *            the no data interval
+	 * @param authenticationId
+	 *            the authentication id
+	 * @param callback
+	 *            the callback
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
-			ISCMessageCallback scMessageCallback, int timeoutInSeconds) throws Exception {
+			SCMessageCallback scMessageCallback, int timeoutInSeconds) throws Exception {
 		if (this.subscribed) {
 			throw new SCServiceException("already subscribed");
 		}
@@ -131,7 +204,7 @@ public class SCPublishService extends SCService implements IPublishService {
 		this.noDataInterval = noDataInterval;
 		this.msgId.reset();
 		this.scMessageCallback = scMessageCallback;
-		ServiceCallback callback = new ServiceCallback(true);
+		SCServiceCallback callback = new SCServiceCallback(true);
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);
 		subscribeCall.setMask(mask);
@@ -157,8 +230,11 @@ public class SCPublishService extends SCService implements IPublishService {
 		this.receivePublication();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Checks if is subscribed.
+	 * 
+	 * @return true, if is subscribed
+	 */
 	public boolean isSubscribed() {
 		return this.subscribed;
 	}
@@ -181,14 +257,25 @@ public class SCPublishService extends SCService implements IPublishService {
 				* (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataInterval));
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Unsubscribe.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void unsubscribe() throws Exception {
 		this.unsubscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+
+	/**
+	 * Unsubscribe.
+	 * 
+	 * @param timeoutInSeconds
+	 *            the timeout in seconds
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void unsubscribe(int timeoutInSeconds) throws Exception {
 		if (this.subscribed == false) {
 			// unsubscribe not possible - not subscribed on this service just ignore
@@ -199,7 +286,7 @@ public class SCPublishService extends SCService implements IPublishService {
 			this.msgId.incrementMsgSequenceNr();
 			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
-			ServiceCallback callback = new ServiceCallback(true);
+			SCServiceCallback callback = new SCServiceCallback(true);
 			try {
 				unsubscribeCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
@@ -220,7 +307,7 @@ public class SCPublishService extends SCService implements IPublishService {
 	 * The Class PublishServiceCallback. Responsible for handling the right communication sequence for publish subscribe
 	 * protocol.
 	 */
-	private class PublishServiceCallback extends ServiceCallback {
+	private class PublishServiceCallback extends SCServiceCallback {
 
 		/**
 		 * Instantiates a new publish service callback.
@@ -228,7 +315,7 @@ public class SCPublishService extends SCService implements IPublishService {
 		 * @param messageCallback
 		 *            the message callback
 		 */
-		public PublishServiceCallback(ISCMessageCallback messageCallback) {
+		public PublishServiceCallback(SCMessageCallback messageCallback) {
 			super(SCPublishService.this, messageCallback);
 		}
 

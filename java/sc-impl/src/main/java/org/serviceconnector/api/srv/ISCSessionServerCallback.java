@@ -26,7 +26,7 @@ import org.serviceconnector.api.SCMessage;
 /**
  * @author JTraber
  */
-public interface ISCSessionServerCallback extends ISCServerCallback {
+public interface ISCSessionServerCallback {
 
 	public abstract SCMessage createSession(SCMessage message);
 

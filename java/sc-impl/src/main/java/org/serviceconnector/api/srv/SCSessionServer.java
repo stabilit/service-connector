@@ -25,6 +25,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.srv.ServerCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.ctx.AppContext;
@@ -47,7 +48,7 @@ import org.serviceconnector.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class SCSessionServer implements ISCSessionServer {
+public class SCSessionServer {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCSessionServer.class);
@@ -70,6 +71,9 @@ public class SCSessionServer implements ISCSessionServer {
 	/** The local server port. */
 	private int localServerPort;
 
+	/**
+	 * Instantiates a new SCSessionServer.
+	 */
 	public SCSessionServer() {
 		this.listening = false;
 		this.conType = Constants.DEFAULT_SERVER_CON;
@@ -86,30 +90,116 @@ public class SCSessionServer implements ISCSessionServer {
 		appContext.initContext(new ServerCommandFactory());
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the keep alive interval in seconds.
+	 * 
+	 * @return the keep alive interval in seconds
+	 */
 	public int getKeepAliveIntervalInSeconds() {
 		return this.keepAliveIntervalInSeconds;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the max sessions.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the max sessions
+	 */
 	public int getMaxSessions(String serviceName) {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
 		return srvServiceRegistry.getSrvService(serviceName).getMaxSessions();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the max connections.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the max connections
+	 */
 	public int getMaxConnections(String serviceName) {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
 		return srvServiceRegistry.getSrvService(serviceName).getMaxConnections();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Register service on SC.
+	 * 
+	 * @param scHost
+	 *            the sc host
+	 * @param scPort
+	 *            the sc port
+	 * @param serviceName
+	 *            the service name
+	 * @param scCallback
+	 *            the sc callback
+	 * @throws Exception
+	 *             the exception
+	 * @throws InvalidParameterException
+	 *             port is not within limits 0 to 0xFFFF, host unset
+	 */
 	public synchronized void registerServer(String scHost, int scPort, String serviceName, int maxSessions,
-			int maxConnections, ISCServerCallback scCallback) throws Exception {
+			int maxConnections, ISCSessionServerCallback scCallback) throws Exception {
+		if (scCallback == null) {
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "callback must be set");
+		}
+		IRequester requester = this.doRegisterServer(scHost, scPort, serviceName, maxSessions, maxConnections);
+		// creating srvService & adding to registry
+		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvService srvService = new SrvSessionService(serviceName, maxSessions, maxConnections, requester, scCallback);
+		srvServiceRegistry.addSrvService(serviceName, srvService);
+	}
+
+	/**
+	 * Register server.
+	 * 
+	 * @param scHost
+	 *            the sc host
+	 * @param scPort
+	 *            the sc port
+	 * @param serviceName
+	 *            the service name
+	 * @param maxSessions
+	 *            the max sessions
+	 * @param maxConnections
+	 *            the max connections
+	 * @param scCallback
+	 *            the sc callback
+	 * @throws Exception
+	 *             the exception
+	 */
+	protected synchronized void registerServer(String scHost, int scPort, String serviceName, int maxSessions,
+			int maxConnections, ISCPublishServerCallback scCallback) throws Exception {
+		if (scCallback == null) {
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "callback must be set");
+		}
+		IRequester requester = this.doRegisterServer(scHost, scPort, serviceName, maxSessions, maxConnections);
+		// creating srvService & adding to registry
+		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvService srvService = new SrvPublishService(serviceName, maxSessions, maxConnections, requester, scCallback);
+		srvServiceRegistry.addSrvService(serviceName, srvService);
+	}
+
+	/**
+	 * Do register server.
+	 * 
+	 * @param scHost
+	 *            the sc host
+	 * @param scPort
+	 *            the sc port
+	 * @param serviceName
+	 *            the service name
+	 * @param maxSessions
+	 *            the max sessions
+	 * @param maxConnections
+	 *            the max connections
+	 * @return the i requester
+	 * @throws Exception
+	 *             the exception
+	 */
+	private synchronized IRequester doRegisterServer(String scHost, int scPort, String serviceName, int maxSessions,
+			int maxConnections) throws Exception {
 		if (this.listening == false) {
 			throw new InvalidActivityException("listener should first be started before register service is allowed.");
 		}
@@ -122,10 +212,7 @@ public class SCSessionServer implements ISCSessionServer {
 		ValidatorUtility.validateInt(1, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
 		ValidatorUtility.validateInt(1, maxConnections, 1024, SCMPError.HV_WRONG_MAX_SESSIONS);
 		ValidatorUtility.validateInt(1, maxConnections, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
-		if (scCallback == null) {
-			throw new InvalidParameterException("callback must be set");
-		}
-		// register called first time - initialize connection pool & requester
+		// initialize connection pool & requester
 		ConnectionPool connectionPool = new ConnectionPool(scHost, scPort, this.conType,
 				this.keepAliveIntervalInSeconds);
 		// register server only needs one connection
@@ -154,14 +241,17 @@ public class SCSessionServer implements ISCSessionServer {
 			throw new SCServiceException("register server failed : "
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}
-		// creating srvService & adding to registry
-		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
-		SrvService srvService = new SrvService(serviceName, maxSessions, maxConnections, requester, scCallback);
-		srvServiceRegistry.addSrvService(serviceName, srvService);
+		return requester;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Deregister server.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void deregisterServer(String serviceName) throws Exception {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
 		if (srvServiceRegistry.containsKey(serviceName) == false) {
@@ -194,8 +284,21 @@ public class SCSessionServer implements ISCSessionServer {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Start server.
+	 * 
+	 * @param host
+	 *            the host to bind the listener
+	 * @param port
+	 *            the port to bin the listener
+	 * @param keepAliveIntervalInSeconds
+	 *            the keep alive interval in seconds
+	 * @throws Exception
+	 *             the exception
+	 * @throws InvalidParameterException
+	 *             port is not within limits 0 to 0xFFFF, host unset<br>
+	 *             keepAliveIntervalInSeconds not within limits 0 to 3600
+	 */
 	public synchronized void startListener(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
 		if (this.listening == true) {
 			throw new InvalidActivityException("listener is already started not allowed to start again.");
@@ -230,8 +333,9 @@ public class SCSessionServer implements ISCSessionServer {
 		this.listening = true;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Destroy server. Stop listening and clean up.
+	 */
 	public void destroyServer() {
 		if (this.listening == false) {
 			// server is not listening
@@ -243,53 +347,83 @@ public class SCSessionServer implements ISCSessionServer {
 		this.responder.destroy();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Checks if is listening.
+	 * 
+	 * @return true, if is listening
+	 */
 	public boolean isListening() {
 		return this.listening;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Checks if is registered.
+	 * 
+	 * @return true, if is registered
+	 */
 	public boolean isRegistered(String serviceName) {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
 		return srvServiceRegistry.containsKey(serviceName);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes
+	 * connection to server at the time registerServer is received.
+	 * 
+	 * @param immediateConnect
+	 *            the new immediate connect
+	 */
 	public void setImmediateConnect(boolean immediateConnect) {
 		this.immediateConnect = immediateConnect;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Checks if is immediate connect.
+	 * 
+	 * @return true, if is immediate connect
+	 */
 	public boolean isImmediateConnect() {
 		return this.immediateConnect;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the host of the SC.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the SC host
+	 */
 	public String getSCHost(String serviceName) {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
 		return srvServiceRegistry.getSrvService(serviceName).getRequester().getContext().getConnectionPool().getHost();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the port of SC.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the SC port
+	 */
 	public int getSCPort(String serviceName) {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
 		return srvServiceRegistry.getSrvService(serviceName).getRequester().getContext().getConnectionPool().getPort();
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
 	public String getHost() {
 		return this.localServerHost;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
 	public int getPort() {
 		return this.localServerPort;
 	}
@@ -299,7 +433,6 @@ public class SCSessionServer implements ISCSessionServer {
 	 * 
 	 * @return the connection type in use
 	 */
-	@Override
 	public String getConnectionType() {
 		return this.conType;
 	}
@@ -314,6 +447,11 @@ public class SCSessionServer implements ISCSessionServer {
 		this.conType = conType;
 	}
 
+	/**
+	 * Gets the sC server context.
+	 * 
+	 * @return the sC server context
+	 */
 	public AppContext getSCServerContext() {
 		return (AppContext) AppContext.getCurrentContext();
 	}
@@ -322,6 +460,13 @@ public class SCSessionServer implements ISCSessionServer {
 	 * The Class SCServerCallback.
 	 */
 	protected class SCServerCallback extends SynchronousCallback {
+
+		/**
+		 * Instantiates a new sC server callback.
+		 * 
+		 * @param synchronous
+		 *            the synchronous
+		 */
 		public SCServerCallback(boolean synchronous) {
 			this.synchronous = synchronous;
 		}

@@ -42,7 +42,7 @@ import org.serviceconnector.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class SCClient implements ISCClient {
+public class SCClient {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCClient.class);
@@ -83,20 +83,46 @@ public class SCClient implements ISCClient {
 		this.connectionPool = null;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the context.
+	 * 
+	 * @return the context
+	 */
 	public SCContext getSCContext() {
 		return this.scContext;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Attach client to SC.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @throws Exception
+	 *             the exception
+	 * @throws InvalidParameterException
+	 *             scPort is not within limits 0 to 0xFFFF, scHost unset
+	 */
 	public synchronized void attach(String host, int port) throws Exception {
 		this.attach(host, port, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Attach client to SC.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param keepAliveIntervalInSeconds
+	 *            the keep alive interval in seconds
+	 * @throws Exception
+	 *             the exception
+	 * @throws InvalidParameterException
+	 *             port is not within limits 0 to 0xFFFF, host unset<br>
+	 *             keepAliveIntervalInSeconds not within limits 0 to 3600
+	 */
 	public synchronized void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
 		if (this.attached) {
 			throw new SCServiceException(
@@ -117,7 +143,7 @@ public class SCClient implements ISCClient {
 		this.scContext.setConnectionPool(this.connectionPool);
 		this.requester = new SCRequester(new RequesterContext(this.connectionPool, null));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
-		ServiceCallback callback = new ServiceCallback(true);
+		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			attachCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
@@ -134,20 +160,27 @@ public class SCClient implements ISCClient {
 		this.attached = true;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Checks if client is attached to SC.
+	 * 
+	 * @return true, if is attached
+	 */
 	public boolean isAttached() {
 		return this.attached;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Detach from SC.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void detach() throws Exception {
 		if (this.attached == false) {
 			// detach not possible - client not attached just ignore
 			return;
 		}
-		ServiceCallback callback = new ServiceCallback(true);
+		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 			try {
@@ -173,7 +206,6 @@ public class SCClient implements ISCClient {
 	 * 
 	 * @return the connection type in use
 	 */
-	@Override
 	public String getConnectionType() {
 		return conType;
 	}
@@ -188,27 +220,41 @@ public class SCClient implements ISCClient {
 		this.conType = conType;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the host.
+	 * 
+	 * @return the host
+	 */
 	public String getHost() {
 		return host;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the port.
+	 * 
+	 * @return the port
+	 */
 	public int getPort() {
 		return port;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the keep alive interval in seconds.
+	 * 
+	 * @return the keep alive interval in seconds
+	 */
 	public int getKeepAliveIntervalInSeconds() {
 		return this.keepAliveIntervalInSeconds;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public IFileService newFileService(String serviceName) throws Exception {
+	/**
+	 * Creates a new file service.
+	 * 
+	 * @param serviceName
+	 *            the service name of the file service to use
+	 * @return the file service
+	 */
+	public SCFileService newFileService(String serviceName) throws Exception {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
@@ -218,9 +264,14 @@ public class SCClient implements ISCClient {
 		return null;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public ISessionService newSessionService(String serviceName) throws Exception {
+	/**
+	 * Creates a new session service.
+	 * 
+	 * @param serviceName
+	 *            the service name of the session service to use
+	 * @return the session service
+	 */
+	public SCSessionService newSessionService(String serviceName) throws Exception {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
@@ -230,9 +281,14 @@ public class SCClient implements ISCClient {
 		return new SCSessionService(serviceName, this.scContext);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public IPublishService newPublishService(String serviceName) throws Exception {
+	/**
+	 * Creates a new publish service.
+	 * 
+	 * @param serviceName
+	 *            the service name of the publish service to use
+	 * @return the publish service
+	 */
+	public SCPublishService newPublishService(String serviceName) throws Exception {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
@@ -242,21 +298,35 @@ public class SCClient implements ISCClient {
 		return new SCPublishService(serviceName, this.scContext);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Sets the max connections. If client is already connected to the SC and max connections is lower than default
+	 * value or value set earlier connection pool is not reducing the connections immediately.
+	 * 
+	 * @param maxConnections
+	 *            the new max connections used by connection pool.
+	 * @throws InvalidParameterException
+	 *             maxConnections smaller one
+	 */
 	public void setMaxConnections(int maxConnections) throws SCMPValidatorException {
 		ValidatorUtility.validateInt(1, maxConnections, SCMPError.HV_WRONG_MAX_CONNECTIONS);
 		this.maxConnections = maxConnections;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Gets the max connections.
+	 * 
+	 * @return the max connections used in pool
+	 */
 	public int getMaxConnections() {
 		return this.maxConnections;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Disable service on SC.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 */
 	public void disableService(String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			// disableService not possible - client not attached
@@ -268,8 +338,12 @@ public class SCClient implements ISCClient {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Enable service on SC.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 */
 	public void enableService(String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			// enableService not possible - client not attached
@@ -281,8 +355,13 @@ public class SCClient implements ISCClient {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Checks if service is enabled on SC.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return true, if is service enabled
+	 */
 	public boolean isServiceEnabled(String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			// isServiceEnabled not possible - client not attached
@@ -295,8 +374,15 @@ public class SCClient implements ISCClient {
 		return false;
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Workload. Returns the number of available and allocated sessions for given service name. e.g 4/2.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the string
+	 * @throws SCServiceException
+	 *             the SC service exception
+	 */
 	public String workload(String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			// isServiceEnabled not possible - client not attached
@@ -305,8 +391,12 @@ public class SCClient implements ISCClient {
 		return this.inspectCall(Constants.SESSIONS + Constants.EQUAL_SIGN + serviceName);
 	}
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Kill SC.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void killSC() throws SCServiceException {
 		if (this.attached == false) {
 			// killSC not possible - client not attached
@@ -315,9 +405,18 @@ public class SCClient implements ISCClient {
 		this.manageCall(Constants.KILL);
 	}
 
+	/**
+	 * Inspect call.
+	 * 
+	 * @param instruction
+	 *            the instruction
+	 * @return the string
+	 * @throws SCServiceException
+	 *             the sC service exception
+	 */
 	private String inspectCall(String instruction) throws SCServiceException {
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(this.requester);
-		ServiceCallback callback = new ServiceCallback(true);
+		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			inspectCall.setRequestBody(instruction);
 			inspectCall
@@ -347,7 +446,7 @@ public class SCClient implements ISCClient {
 	 */
 	private String manageCall(String instruction) throws SCServiceException {
 		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(this.requester);
-		ServiceCallback callback = new ServiceCallback(true);
+		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			manageCall.setRequestBody(instruction);
 			manageCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);

@@ -17,8 +17,6 @@
 package org.serviceconnector.api;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.cln.IService;
-import org.serviceconnector.service.ISCMessageCallback;
 
 
 /**
@@ -26,13 +24,13 @@ import org.serviceconnector.service.ISCMessageCallback;
  * 
  * @author JTraber
  */
-public abstract class SCMessageCallback implements ISCMessageCallback {
+public abstract class SCMessageCallback {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMessageCallback.class);
 	
 	/** The service which is using the message callback. */
-	private IService service;
+	private SCService service;
 
 	/**
 	 * Instantiates a new SCMessageCallback.
@@ -40,21 +38,32 @@ public abstract class SCMessageCallback implements ISCMessageCallback {
 	 * @param service
 	 *            the service
 	 */
-	public SCMessageCallback(IService service) {
+	public SCMessageCallback(SCService service) {
 		this.service = service;
 	}
 	
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Callback. Method gets called when reply arrives.
+	 * 
+	 * @param reply
+	 *            the reply
+	 */
 	public abstract void callback(SCMessage reply);
 
-	/** {@inheritDoc} */
-	@Override
+	/**
+	 * Callback. Method gets called when an error shows up in communication process.
+	 * 
+	 * @param ex
+	 *            the exception
+	 */
 	public abstract void callback(Exception ex);
 
-	/** {@inheritDoc} */
-	@Override
-	public IService getService() {
+	/**
+	 * Gets the service which is using the message callback.
+	 * 
+	 * @return the service
+	 */
+	public SCService getService() {
 		return service;
 	}
 }

@@ -10,7 +10,7 @@ public class SCContext {
 	/** The connection pool. */
 	private ConnectionPool connectionPool;
 	/** The sc client. */
-	private ISCClient scClient;
+	private SCClient scClient;
 
 	/**
 	 * Instantiates a new SCContext.
@@ -20,7 +20,7 @@ public class SCContext {
 	 * @param scClient
 	 *            the sc client
 	 */
-	public SCContext(ISCClient scClient) {
+	public SCContext(SCClient scClient) {
 		this.scClient = scClient;
 	}
 
@@ -47,7 +47,7 @@ public class SCContext {
 	 * 
 	 * @return the sC client
 	 */
-	public ISCClient getSCClient() {
+	public SCClient getSCClient() {
 		return this.scClient;
 	}
 }

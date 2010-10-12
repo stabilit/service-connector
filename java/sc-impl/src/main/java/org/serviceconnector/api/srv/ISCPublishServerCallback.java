@@ -26,7 +26,7 @@ import org.serviceconnector.api.SCMessage;
 /**
  * @author JTraber
  */
-public interface ISCPublishServerCallback extends ISCServerCallback {
+public interface ISCPublishServerCallback {
 
 	public abstract SCMessage subscribe(SCMessage message);
 

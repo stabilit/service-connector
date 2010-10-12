@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.util.DateTimeUtility;
 
 
 /**

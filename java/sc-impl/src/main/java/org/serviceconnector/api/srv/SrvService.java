@@ -22,26 +22,22 @@
 package org.serviceconnector.api.srv;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.srv.ISCServerCallback;
 import org.serviceconnector.net.req.IRequester;
-
 
 /**
  * The Class SrvService. Represent of a service on backend server.
  * 
  * @author JTraber
  */
-public class SrvService {
+public abstract class SrvService {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SrvService.class);
-	
+
 	/** The requester which connects to SC. */
 	private IRequester requester;
 	/** The service name. */
 	private String serviceName;
-	/** The callback. */
-	private ISCServerCallback callback;
 	/** The max sessions. */
 	private int maxSessions;
 	/** The max connections. */
@@ -63,12 +59,10 @@ public class SrvService {
 	 * @param callback
 	 *            the callback
 	 */
-	public SrvService(String serviceName, int maxSessions, int maxConnections, IRequester requester,
-			ISCServerCallback callback) {
+	public SrvService(String serviceName, int maxSessions, int maxConnections, IRequester requester) {
 		super();
 		this.requester = requester;
 		this.serviceName = serviceName;
-		this.callback = callback;
 		this.maxConnections = maxConnections;
 		this.maxSessions = maxSessions;
 	}
@@ -107,14 +101,5 @@ public class SrvService {
 	 */
 	public int getMaxConnections() {
 		return this.maxConnections;
-	}
-
-	/**
-	 * Gets the callback.
-	 * 
-	 * @return the callback
-	 */
-	public ISCServerCallback getCallback() {
-		return this.callback;
 	}
 }

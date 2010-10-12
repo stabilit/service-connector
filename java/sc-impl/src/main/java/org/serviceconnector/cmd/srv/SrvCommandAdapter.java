@@ -17,8 +17,10 @@
 package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.api.srv.SrvPublishService;
 import org.serviceconnector.api.srv.SrvService;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
+import org.serviceconnector.api.srv.SrvSessionService;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -68,19 +70,19 @@ public abstract class SrvCommandAdapter implements ICommand {
 	}
 
 	/**
-	 * Gets the server service by service name.
+	 * Gets the srv session service by service name.
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @return the server service by service name
+	 * @return the srv session service by service name
 	 * @throws SCMPCommandException
 	 *             the sCMP command exception
 	 */
-	protected SrvService getSrvServiceByServiceName(String serviceName) throws SCMPCommandException {
+	protected SrvSessionService getSrvSessionServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
 		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
 
-		if (srvService == null) {
+		if (srvService == null || (srvService instanceof SrvSessionService == false)) {
 			// incoming srvService not found
 			logger.warn("command error: no srvService found for serviceName :" + serviceName);
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
@@ -88,6 +90,30 @@ public abstract class SrvCommandAdapter implements ICommand {
 			scmpCommandException.setMessageType(this.getKey());
 			throw scmpCommandException;
 		}
-		return srvService;
+		return (SrvSessionService) srvService;
+	}
+
+	/**
+	 * Gets the srv publish service by service name.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the srv publish service by service name
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
+	protected SrvPublishService getSrvPublishServiceByServiceName(String serviceName) throws SCMPCommandException {
+		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
+
+		if (srvService == null || (srvService instanceof SrvPublishService == false)) {
+			// incoming srvService not found
+			logger.warn("command error: no srvService found for serviceName :" + serviceName);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
+					"no service found for " + serviceName);
+			scmpCommandException.setMessageType(this.getKey());
+			throw scmpCommandException;
+		}
+		return (SrvPublishService) srvService;
 	}
 }
