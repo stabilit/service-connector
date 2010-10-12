@@ -10,11 +10,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.cln.IFileService;
-import org.serviceconnector.api.cln.IPublishService;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCFileService;
+import org.serviceconnector.api.cln.SCPublishService;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 
@@ -23,7 +22,7 @@ public class NewServicesTest {
 	protected final static Logger logger = Logger.getLogger(NewServicesTest.class);
 
 	private int threadCount = 0;
-	private ISCClient client;
+	private SCClient client;
 	private static Process scProcess;
 
 	private static ProcessesController ctrl;
@@ -65,51 +64,51 @@ public class NewServicesTest {
 	}
 
 	@Test
-	public void newSessionService_emptyStringParam_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService("") instanceof ISessionService);
+	public void newSessionService_emptyStringParam_returnsSCSessionService() throws Exception {
+		assertEquals(true, client.newSessionService("") instanceof SCSessionService);
 		this.threadCount += 1; // one thread for session timeout in SessionService
 
 	}
 
 	@Test
-	public void newSessionService_whiteSpaceStringParam_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService(" ") instanceof ISessionService);
+	public void newSessionService_whiteSpaceStringParam_returnsSCSessionService() throws Exception {
+		assertEquals(true, client.newSessionService(" ") instanceof SCSessionService);
 	}
 
 	@Test
-	public void newSessionService_ArbitraryStringParam_returnsISessionService() throws Exception {
+	public void newSessionService_ArbitraryStringParam_returnsSCSessionService() throws Exception {
 		assertEquals(true,
-				client.newSessionService("The quick brown fox jumps over a lazy dog.") instanceof ISessionService);
+				client.newSessionService("The quick brown fox jumps over a lazy dog.") instanceof SCSessionService);
 	}
 
 	@Test
-	public void newSessionService_validServiceName_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof ISessionService);
+	public void newSessionService_validServiceName_returnsSCSessionService() throws Exception {
+		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof SCSessionService);
 	}
 
 	@Test
-	public void newSessionService_validDisabledServiceName_returnsISessionService() throws Exception {
+	public void newSessionService_validDisabledServiceName_returnsSCSessionService() throws Exception {
 		assertEquals(true,
-				client.newSessionService(TestConstants.serviceNameSessionDisabled) instanceof ISessionService);
+				client.newSessionService(TestConstants.serviceNameSessionDisabled) instanceof SCSessionService);
 	}
 
 	@Test
-	public void newSessionService_twice_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof ISessionService);
-		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof ISessionService);
+	public void newSessionService_twice_returnsSCSessionService() throws Exception {
+		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof SCSessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof SCSessionService);
 	}
 
 	@Test
-	public void newSessionService_twiceDifferentServiceName_returnsISessionService() throws Exception {
-		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof ISessionService);
-		assertEquals(true, client.newSessionService(TestConstants.serviceNameAlt) instanceof ISessionService);
+	public void newSessionService_twiceDifferentServiceName_returnsSCSessionService() throws Exception {
+		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof SCSessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceNameAlt) instanceof SCSessionService);
 	}
 
 	@Test
-	public void newSessionService_1000TimesDifferentServiceName_returnsISessionService() throws Exception {
+	public void newSessionService_1000TimesDifferentServiceName_returnsSCSessionService() throws Exception {
 		for (int i = 0; i < 500; i++) {
-			assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof ISessionService);
-			assertEquals(true, client.newSessionService(TestConstants.serviceNameAlt) instanceof ISessionService);
+			assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof SCSessionService);
+			assertEquals(true, client.newSessionService(TestConstants.serviceNameAlt) instanceof SCSessionService);
 		}
 	}
 
@@ -119,54 +118,54 @@ public class NewServicesTest {
 	}
 
 	@Test
-	public void newPublishService_emptyStringParam_returnsIPublishService() throws Exception {
-		assertEquals(true, client.newPublishService("") instanceof IPublishService);
+	public void newPublishService_emptyStringParam_returnsSCPublishService() throws Exception {
+		assertEquals(true, client.newPublishService("") instanceof SCPublishService);
 	}
 
 	@Test
-	public void newPublishService_whiteSpaceStringParam_returnsIPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(" ") instanceof IPublishService);
+	public void newPublishService_whiteSpaceStringParam_returnsSCPublishService() throws Exception {
+		assertEquals(true, client.newPublishService(" ") instanceof SCPublishService);
 	}
 
 	@Test
-	public void newPublishService_ArbitraryStringParam_returnsIPublishService() throws Exception {
+	public void newPublishService_ArbitraryStringParam_returnsSCPublishService() throws Exception {
 		assertEquals(true,
-				client.newPublishService("The quick brown fox jumps over a lazy dog.") instanceof IPublishService);
+				client.newPublishService("The quick brown fox jumps over a lazy dog.") instanceof SCPublishService);
 	}
 
 	@Test
-	public void newPublishService_serviceNameInSCPropertiesNotPublish_returnsIPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
+	public void newPublishService_serviceNameInSCPropertiesNotPublish_returnsSCPublishService() throws Exception {
+		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof SCPublishService);
 	}
 
 	@Test
-	public void newPublishService_serviceNameInSCPropertiesPublish_returnsIPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
+	public void newPublishService_serviceNameInSCPropertiesPublish_returnsSCPublishService() throws Exception {
+		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof SCPublishService);
 	}
 
 	@Test
-	public void newPublishService_validDisabledServiceName_returnsIPublishService() throws Exception {
+	public void newPublishService_validDisabledServiceName_returnsSCPublishService() throws Exception {
 		assertEquals(true,
-				client.newPublishService(TestConstants.serviceNameSessionDisabled) instanceof IPublishService);
+				client.newPublishService(TestConstants.serviceNameSessionDisabled) instanceof SCPublishService);
 	}
 
 	@Test
-	public void newPublishService_twice_returnsIPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
-		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
+	public void newPublishService_twice_returnsSCPublishService() throws Exception {
+		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof SCPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof SCPublishService);
 	}
 
 	@Test
-	public void newPublishService_twiceDifferentServiceName_returnsIPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
-		assertEquals(true, client.newPublishService(TestConstants.serviceNameAlt) instanceof IPublishService);
+	public void newPublishService_twiceDifferentServiceName_returnsSCPublishService() throws Exception {
+		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof SCPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceNameAlt) instanceof SCPublishService);
 	}
 
 	@Test
-	public void newPublishService_1000TimesDifferentServiceName_returnsIPublishService() throws Exception {
+	public void newPublishService_1000TimesDifferentServiceName_returnsSCPublishService() throws Exception {
 		for (int i = 0; i < 500; i++) {
-			assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof IPublishService);
-			assertEquals(true, client.newPublishService(TestConstants.serviceNameAlt) instanceof IPublishService);
+			assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof SCPublishService);
+			assertEquals(true, client.newPublishService(TestConstants.serviceNameAlt) instanceof SCPublishService);
 		}
 	}
 
@@ -176,47 +175,47 @@ public class NewServicesTest {
 	}
 
 	@Test
-	public void newFileService_emptyStringParam_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService("") instanceof IFileService);
+	public void newFileService_emptyStringParam_returnsSCFileService() throws Exception {
+		assertEquals(true, client.newFileService("") instanceof SCFileService);
 	}
 
 	@Test
-	public void newFileService_whiteSpaceStringParam_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService(" ") instanceof IFileService);
+	public void newFileService_whiteSpaceStringParam_returnsSCFileService() throws Exception {
+		assertEquals(true, client.newFileService(" ") instanceof SCFileService);
 	}
 
 	@Test
-	public void newFileService_ArbitraryStringParam_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService("The quick brown fox jumps over a lazy dog.") instanceof IFileService);
+	public void newFileService_ArbitraryStringParam_returnsSCFileService() throws Exception {
+		assertEquals(true, client.newFileService("The quick brown fox jumps over a lazy dog.") instanceof SCFileService);
 	}
 
 	@Test
-	public void newFileService_validServiceName_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof IFileService);
+	public void newFileService_validServiceName_returnsSCFileService() throws Exception {
+		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof SCFileService);
 	}
 
 	@Test
-	public void newFileService_validDisabledServiceName_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService(TestConstants.serviceNameSessionDisabled) instanceof IFileService);
+	public void newFileService_validDisabledServiceName_returnsSCFileService() throws Exception {
+		assertEquals(true, client.newFileService(TestConstants.serviceNameSessionDisabled) instanceof SCFileService);
 	}
 
 	@Test
-	public void newFileService_twice_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof IFileService);
-		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof IFileService);
+	public void newFileService_twice_returnsSCFileService() throws Exception {
+		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof SCFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof SCFileService);
 	}
 
 	@Test
-	public void newFileService_twiceDifferentServiceName_returnsIFileService() throws Exception {
-		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof IFileService);
-		assertEquals(true, client.newFileService(TestConstants.serviceNameAlt) instanceof IFileService);
+	public void newFileService_twiceDifferentServiceName_returnsSCFileService() throws Exception {
+		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof SCFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceNameAlt) instanceof SCFileService);
 	}
 
 	@Test
-	public void newFileService_1000TimesDifferentServiceName_returnsIFileService() throws Exception {
+	public void newFileService_1000TimesDifferentServiceName_returnsSCFileService() throws Exception {
 		for (int i = 0; i < 500; i++) {
-			assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof IFileService);
-			assertEquals(true, client.newFileService(TestConstants.serviceNameAlt) instanceof IFileService);
+			assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof SCFileService);
+			assertEquals(true, client.newFileService(TestConstants.serviceNameAlt) instanceof SCFileService);
 		}
 	}
 }

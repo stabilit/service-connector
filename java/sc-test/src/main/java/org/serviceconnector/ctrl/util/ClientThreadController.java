@@ -4,8 +4,8 @@ import java.util.concurrent.CountDownLatch;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cln.PerformanceSessionClient;
 import org.serviceconnector.log.Loggers;
 
@@ -94,7 +94,7 @@ public class ClientThreadController {
 		try {
 			SCClient client = new SCClient();
 			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-			ISessionService service = client.newSessionService(TestConstants.serviceName);
+			SCSessionService service = client.newSessionService(TestConstants.serviceName);
 			service.createSession("sessionInfo", 300);
 			response = service.execute(new SCMessage("executed"));
 			service.deleteSession();

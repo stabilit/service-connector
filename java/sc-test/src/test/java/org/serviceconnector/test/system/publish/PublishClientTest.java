@@ -10,10 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.cln.IPublishService;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.IService;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 
@@ -24,7 +23,7 @@ public class PublishClientTest {
 	private static Process scProcess;
 	private static Process srvProcess;
 
-	private ISCClient client;
+	private SCClient client;
 
 	private static ProcessesController ctrl;
 
@@ -64,7 +63,7 @@ public class PublishClientTest {
 
 	@Test
 	public void publish_waitForAMessageToBePublished_incomesAMessage() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, TestConstants.pangram, callback);
 		for (int i = 0; i < 30; i++) {
@@ -88,7 +87,7 @@ public class PublishClientTest {
 	@Test
 	public void publish_waitFor2MessagesToBePublished_bodyEndsWithConsequentNumbers()
 			throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, TestConstants.pangram, callback);
 
@@ -127,7 +126,7 @@ public class PublishClientTest {
 	@Test
 	public void publish_waitFor20MessagesToBePublished_bodysEndWithConsequentNumbers()
 			throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, TestConstants.pangram, callback);
 
@@ -183,7 +182,7 @@ public class PublishClientTest {
 			this.lastMessage = lastMessage;
 		}
 
-		public DemoPublishClientCallback(IService service) {
+		public DemoPublishClientCallback(SCService service) {
 			super(service);
 		}
 

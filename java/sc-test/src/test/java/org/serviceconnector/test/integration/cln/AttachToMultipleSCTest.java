@@ -8,11 +8,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.srv.SCSessionServer;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 
 
 public class AttachToMultipleSCTest {
@@ -21,8 +20,8 @@ public class AttachToMultipleSCTest {
 	protected final static Logger logger = Logger.getLogger(AttachToMultipleSCTest.class);
 	
 	private int threadCount = 0;
-	private ISCClient client1;
-	private ISCClient client2;
+	private SCClient client1;
+	private SCClient client2;
 	private static Process scProcess0;
 	private static Process scProcess1;
 

@@ -10,7 +10,6 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.Constants;
-import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -22,7 +21,7 @@ import org.serviceconnector.ctrl.util.TestConstants;
  */
 public class SCClientTest {
 
-	private ISCClient client;
+	private SCClient client;
 
 	/**
 	 * @throws java.lang.Exception

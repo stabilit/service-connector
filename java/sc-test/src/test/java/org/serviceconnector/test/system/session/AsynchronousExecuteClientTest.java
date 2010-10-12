@@ -10,10 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.IService;
-import org.serviceconnector.api.cln.ISessionService;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -29,7 +28,7 @@ public class AsynchronousExecuteClientTest {
 	private static Process srvProcess;
 	private static boolean messageReceived;
 	
-	private ISCClient client;
+	private SCClient client;
 	private Exception ex;
 
 	private static ProcessesController ctrl;
@@ -76,7 +75,7 @@ public class AsynchronousExecuteClientTest {
 
 	@Test(expected = SCServiceException.class)
 	public void execute_beforeCreateSession_throwsException() throws Exception {
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.execute(new SCMessage(), new CallBack(service));
 	}
 
@@ -85,7 +84,7 @@ public class AsynchronousExecuteClientTest {
 
 		SCMessage message = new SCMessage(null);
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -107,7 +106,7 @@ public class AsynchronousExecuteClientTest {
 
 		SCMessage message = new SCMessage("");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -129,7 +128,7 @@ public class AsynchronousExecuteClientTest {
 
 		SCMessage message = new SCMessage("a");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -151,7 +150,7 @@ public class AsynchronousExecuteClientTest {
 
 		SCMessage message = new SCMessage("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -173,7 +172,7 @@ public class AsynchronousExecuteClientTest {
 
 		SCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -196,7 +195,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo(" ");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -219,7 +218,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("a");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -242,7 +241,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -266,7 +265,7 @@ public class AsynchronousExecuteClientTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		message.setCompressed(true);
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -290,7 +289,7 @@ public class AsynchronousExecuteClientTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		message.setCompressed(false);
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -315,7 +314,7 @@ public class AsynchronousExecuteClientTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		message.setSessionId("");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -341,7 +340,7 @@ public class AsynchronousExecuteClientTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		message.setSessionId(" ");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -367,7 +366,7 @@ public class AsynchronousExecuteClientTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		message.setSessionId("a");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -393,7 +392,7 @@ public class AsynchronousExecuteClientTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -420,7 +419,7 @@ public class AsynchronousExecuteClientTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -446,7 +445,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		((SCMessage) message).setSessionId(service.getSessionId());
@@ -475,10 +474,10 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service0 = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service0 = client.newSessionService(TestConstants.serviceName);
 		service0.createSession("sessionInfo", 300, 60);
 
-		ISessionService service1 = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service1 = client.newSessionService(TestConstants.serviceName);
 		service1.createSession("sessionInfo", 300, 60);
 
 		((SCMessage) message).setSessionId(service1.getSessionId());
@@ -508,10 +507,10 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service0 = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service0 = client.newSessionService(TestConstants.serviceName);
 		service0.createSession("sessionInfo", 300, 60);
 
-		ISessionService service1 = client.newSessionService(TestConstants.serviceNameAlt);
+		SCSessionService service1 = client.newSessionService(TestConstants.serviceNameAlt);
 		service1.createSession("sessionInfo", 300, 60);
 
 		((SCMessage) message).setSessionId(service1.getSessionId());
@@ -539,7 +538,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -563,7 +562,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -587,7 +586,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = null;
@@ -609,7 +608,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = null;
@@ -630,7 +629,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = null;
@@ -651,7 +650,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = null;
@@ -672,7 +671,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -694,7 +693,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = null;
@@ -715,7 +714,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -737,7 +736,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -759,7 +758,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -781,7 +780,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		try {
@@ -800,7 +799,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		try {
@@ -819,7 +818,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		try {
@@ -838,7 +837,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		try {
@@ -857,7 +856,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		try {
@@ -874,7 +873,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeoutExpiresOnServer_throwsException() throws Exception {
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -891,7 +890,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeoutCloselyExpires_throwsException() throws Exception {
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -908,7 +907,7 @@ public class AsynchronousExecuteClientTest {
 	public void execute_timeoutIsEnough_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("timeout 1500");
 
-		ISessionService service = client.newSessionService(TestConstants.serviceName);
+		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		service.createSession("sessionInfo", 300, 60);
 
 		CallBack callback = new CallBack(service);
@@ -929,7 +928,7 @@ public class AsynchronousExecuteClientTest {
 		private SCMessage response = null;
 		private volatile Exception exc = null;
 
-		public CallBack(IService service) {
+		public CallBack(SCService service) {
 			super(service);
 		}
 

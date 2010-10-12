@@ -9,12 +9,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
 
@@ -29,7 +28,7 @@ public class ExecuteClientToSCTest {
 	private static Process srvProcess;
 
 	private int threadCount = 0;
-	private ISCClient client;
+	private SCClient client;
 	private Exception ex;
 
 	private static ProcessesController ctrl;
@@ -76,7 +75,7 @@ public class ExecuteClientToSCTest {
 
 	@Test(expected = SCServiceException.class)
 	public void execute_beforeCreateSession_throwsException() throws Exception {
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.execute(new SCMessage());
 	}
 
@@ -85,7 +84,7 @@ public class ExecuteClientToSCTest {
 
 		SCMessage message = new SCMessage(null);
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -102,7 +101,7 @@ public class ExecuteClientToSCTest {
 
 		SCMessage message = new SCMessage("");
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -119,7 +118,7 @@ public class ExecuteClientToSCTest {
 
 		SCMessage message = new SCMessage("a");
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -136,7 +135,7 @@ public class ExecuteClientToSCTest {
 
 		SCMessage message = new SCMessage("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -153,7 +152,7 @@ public class ExecuteClientToSCTest {
 
 		SCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -171,7 +170,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo(" ");
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -189,7 +188,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("a");
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -207,7 +206,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -226,7 +225,7 @@ public class ExecuteClientToSCTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		message.setCompressed(true);
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -245,7 +244,7 @@ public class ExecuteClientToSCTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		message.setCompressed(false);
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -264,7 +263,7 @@ public class ExecuteClientToSCTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId("");
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -284,7 +283,7 @@ public class ExecuteClientToSCTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId(" ");
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -304,7 +303,7 @@ public class ExecuteClientToSCTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId("a");
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -324,7 +323,7 @@ public class ExecuteClientToSCTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -345,7 +344,7 @@ public class ExecuteClientToSCTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message);
@@ -366,7 +365,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		((SCMessage) message).setSessionId(sessionService.getSessionId());
@@ -389,10 +388,10 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
 		sessionService0.createSession("sessionInfo", 300, 60);
 
-		ISessionService sessionService1 = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceName);
 		sessionService1.createSession("sessionInfo", 300, 60);
 		
 		((SCMessage) message).setSessionId(sessionService1.getSessionId());
@@ -416,10 +415,10 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
-		ISessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
 		sessionService0.createSession("sessionInfo", 300, 60);
 
-		ISessionService sessionService1 = client.newSessionService(TestConstants.serviceNameAlt);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNameAlt);
 		sessionService1.createSession("sessionInfo", 300, 60);
 		
 		((SCMessage) message).setSessionId(sessionService1.getSessionId());
@@ -441,7 +440,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message, 1);
@@ -460,7 +459,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message, 2);
@@ -479,7 +478,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = null;
@@ -499,7 +498,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = null;
@@ -519,7 +518,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = null;
@@ -539,7 +538,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = null;
@@ -559,7 +558,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message, 3600);
@@ -576,7 +575,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = null;
@@ -596,7 +595,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message, 1);
@@ -613,7 +612,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message, 2);
@@ -630,7 +629,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message, 3600);
@@ -647,7 +646,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		try {
@@ -665,7 +664,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		try {
@@ -683,7 +682,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		try {
@@ -701,7 +700,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		try {
@@ -719,7 +718,7 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		try {
@@ -735,7 +734,7 @@ public class ExecuteClientToSCTest {
 	@Test
 	public void execute_timeoutExpiresOnServer_throwsException() throws Exception {
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		try {
@@ -750,7 +749,7 @@ public class ExecuteClientToSCTest {
 	@Test
 	public void execute_timeoutCloselyExpires_throwsException() throws Exception {
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		try {
@@ -766,7 +765,7 @@ public class ExecuteClientToSCTest {
 	public void execute_timeoutIsEnough_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("timeout 1500");
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		SCMessage response = sessionService.execute(message, 2);

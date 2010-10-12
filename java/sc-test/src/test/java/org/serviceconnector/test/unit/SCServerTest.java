@@ -5,13 +5,12 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.Constants;
-import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 
 
 public class SCServerTest {
 
-	private ISCSessionServer server;
+	private SCSessionServer server;
 
 	/**
 	 * @throws java.lang.Exception

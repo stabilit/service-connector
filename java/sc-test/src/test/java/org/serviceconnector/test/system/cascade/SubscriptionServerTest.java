@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.ISCPublishServer;
 import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.cln.StartPublishClient;
@@ -24,7 +23,7 @@ public class SubscriptionServerTest {
 
 	private int threadCount = 0;
 	private SrvCallback srvCallback;
-	private ISCPublishServer server;
+	private SCPublishServer server;
 
 	private static Process sc0Process;
 	private static Process scCascadedProcess;

@@ -10,13 +10,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
-import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cln.StartSessionClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 
 public class SessionServerTest {
 	/** The Constant logger. */
@@ -24,7 +23,7 @@ public class SessionServerTest {
 
 	private int threadCount = 0;
 	private SrvCallback srvCallback;
-	private ISCSessionServer server;
+	private SCSessionServer server;
 
 	private static Process sc0Process;
 	private static Process scProcessCascaded;

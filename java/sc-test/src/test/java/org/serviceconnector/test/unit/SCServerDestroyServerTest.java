@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.ctrl.util.TestConstants;
 
@@ -12,7 +11,7 @@ import org.serviceconnector.ctrl.util.TestConstants;
 
 public class SCServerDestroyServerTest {
 
-	ISCSessionServer server;
+	SCSessionServer server;
 	
 	/**
 	 * @throws java.lang.Exception

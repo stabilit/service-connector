@@ -8,7 +8,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -19,7 +18,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfSCProcessClientTest.class);
 
-	private ISCClient client;
+	private SCClient client;
 	private Process scProcess;
 
 	private static ProcessesController ctrl;

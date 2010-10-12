@@ -8,10 +8,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.service.SCServiceException;
 
@@ -25,7 +24,7 @@ public class EnableDisableServiceTest {
 
 	private static Process scProcess;
 
-	private ISCClient client;
+	private SCClient client;
 
 	private Exception ex;
 
@@ -171,7 +170,7 @@ public class EnableDisableServiceTest {
 	
 	@Test
 	public void enableDisableService_twoClients_seeChangesOfTheOther() throws Exception {
-		ISCClient client2 = new SCClient();
+		SCClient client2 = new SCClient();
 		client2.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceName));
@@ -186,7 +185,7 @@ public class EnableDisableServiceTest {
 	
 	@Test
 	public void enableDisableService_twoClientsDifferentConnectionTypes_seeChangesOfTheOther() throws Exception {
-		ISCClient client2 = new SCClient();
+		SCClient client2 = new SCClient();
 		((SCClient) client2).setConnectionType("netty.tcp");
 		client2.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));

@@ -3,11 +3,10 @@ package org.serviceconnector.cln;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.cln.IPublishService;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.IService;
-import org.serviceconnector.api.cln.ISessionService;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCPublishService;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.TestConstants;
 
 public class StartPublishClient extends Thread {
@@ -32,33 +31,33 @@ public class StartPublishClient extends Thread {
 
 	@Override
 	public void run() {
-		ISCClient client = new SCClient();
+		SCClient client = new SCClient();
 
 		try {
 			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 			if (getMethodName() == "subscribe_serviceNameValidMaskSameAsInServer_isSubscribedSessionIdExists") {
-				IPublishService service = client
+				SCPublishService service = client
 						.newPublishService(TestConstants.serviceNamePublish);
 				service.subscribe(TestConstants.mask, "sessionInfo", 300,
 						new DemoPublishClientCallback(service));
 				service.unsubscribe();
 
 			} else if (getMethodName() == "subscribe_timeoutMaxAllowed_isSubscribedSessionIdExists") {
-				IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 				service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
 						service), 3600);
 				service.unsubscribe();
 
 			} else if (getMethodName() == "changeSubscription_toMaskWhiteSpace_passes") {
-				IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 				service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
 						service));
 				service.changeSubscription(" ");
 				service.unsubscribe();
 
 			} else if (getMethodName() == "subscribeUnsubscribe_twice_isSubscribedThenNot") {
-				IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 				service.subscribe(TestConstants.mask, "sessionInfo", 300,
 						new DemoPublishClientCallback(service));
 				service.unsubscribe();
@@ -67,7 +66,7 @@ public class StartPublishClient extends Thread {
 				service.unsubscribe();
 
 			} else if (getMethodName() == "changeSubscription_twice_passes") {
-				IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 				service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(
 						service));
 				
@@ -77,11 +76,11 @@ public class StartPublishClient extends Thread {
 				service.unsubscribe();
 
 			} else if (getMethodName() == "unsubscribe_serviceNameValid_notSubscribedEmptySessionId") {
-				IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 				service.unsubscribe();
 
 			} else if (getMethodName() == "createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes") {
-				ISessionService sessionService = client
+				SCSessionService sessionService = client
 						.newSessionService(TestConstants.serviceName);
 
 				try {
@@ -94,7 +93,7 @@ public class StartPublishClient extends Thread {
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "execute_messageData1MBArray_returnsTheSameMessageData") {
-				ISessionService sessionService = client
+				SCSessionService sessionService = client
 						.newSessionService(TestConstants.serviceName);
 				sessionService.createSession("sessionInfo", 300, 60);
 
@@ -127,7 +126,7 @@ public class StartPublishClient extends Thread {
 	
 	private class DemoPublishClientCallback extends SCMessageCallback {
 
-		public DemoPublishClientCallback(IService service) {
+		public DemoPublishClientCallback(SCService service) {
 			super(service);
 		}
 

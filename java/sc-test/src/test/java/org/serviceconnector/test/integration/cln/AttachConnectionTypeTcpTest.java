@@ -10,7 +10,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -22,7 +21,7 @@ public class AttachConnectionTypeTcpTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachConnectionTypeTcpTest.class);
 	
-	private ISCClient client;
+	private SCClient client;
 	private Exception ex;
 
 	private static ProcessesController ctrl;

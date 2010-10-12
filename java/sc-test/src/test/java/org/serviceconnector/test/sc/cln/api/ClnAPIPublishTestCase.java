@@ -22,12 +22,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.cln.IPublishService;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.IService;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.TestConstants;
-import org.serviceconnector.service.ISCMessageCallback;
 import org.serviceconnector.test.sc.SetupTestCases;
 
 
@@ -43,8 +41,8 @@ public class ClnAPIPublishTestCase {
 
 	@Test
 	public void testSubscribeUnsubscribe() throws Exception {
-		ISCClient sc = null;
-		IPublishService publishServiceA = null;
+		SCClient sc = null;
+		SCPublishService publishServiceA = null;
 		try {
 			sc = new SCClient();
 			sc.setMaxConnections(100);
@@ -53,7 +51,7 @@ public class ClnAPIPublishTestCase {
 			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 			publishServiceA = sc.newPublishService("publish-simulation");
-			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
+			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
 			publishServiceA.subscribe("000012100012832102FADF-----------X-----------", "sessionInfo", 300, callback);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -70,8 +68,8 @@ public class ClnAPIPublishTestCase {
 
 	@Test
 	public void testSubscribePublishUnsubscribe() throws Exception {
-		ISCClient sc = null;
-		IPublishService publishServiceA = null;
+		SCClient sc = null;
+		SCPublishService publishServiceA = null;
 		try {
 			sc = new SCClient();
 			sc.setMaxConnections(100);
@@ -80,7 +78,7 @@ public class ClnAPIPublishTestCase {
 			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 			publishServiceA = sc.newPublishService("publish-simulation");
-			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
+			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
 			publishServiceA.subscribe("AEC----", "sessionInfo", 300, callback);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,7 +95,7 @@ public class ClnAPIPublishTestCase {
 
 	class TestPublishCallback extends SCMessageCallback {
 
-		public TestPublishCallback(IService service) {
+		public TestPublishCallback(SCService service) {
 			super(service);
 		}
 

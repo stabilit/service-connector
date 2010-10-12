@@ -32,12 +32,12 @@ public class ClnAPIFileTestCase {
 	@Test
 	public void testClnAPI() throws Exception {
 
-//		ISCClient sc = null;
+//		SCClient sc = null;
 		try {
 //			sc = ServiceConnectorFactory.newInstance(TestConstants.HOST, TestConstants.PORT_HTTP);
 //			sc.attach();	// connects to SC, starts observing connection
 //			
-//			IFileService fileServiceA = sc.newFileService("logs");
+//			SCFileService fileServiceA = sc.newFileService("logs");
 //			
 //			String targetFileName = "";
 //			InputStream inStream = null;

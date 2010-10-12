@@ -8,10 +8,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.service.SCServiceException;
 
@@ -25,7 +24,7 @@ public class AttachDetachTest {
 	
 	private int threadCount = 0;
 
-	private ISCClient client;
+	private SCClient client;
 
 	private static ProcessesController ctrl;
 	private static Process scProcess;
@@ -205,7 +204,7 @@ public class AttachDetachTest {
 	@Test
 	public void attach_500ClientsAttachedBeforeDetach_allAttached() throws Exception {
 		int clientsCount = 500;
-		ISCClient[] clients = new SCClient[clientsCount];
+		SCClient[] clients = new SCClient[clientsCount];
 		int i = 0;
 		for (; i < clientsCount / 10; i++) {
 			testLogger.info("Attaching client " + i*10);

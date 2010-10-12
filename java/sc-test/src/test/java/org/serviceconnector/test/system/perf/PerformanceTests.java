@@ -9,9 +9,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ClientThreadController;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -27,7 +26,7 @@ public class PerformanceTests {
 	private Process scProcess;
 	private Process srvProcess;
 
-	private ISCClient client;
+	private SCClient client;
 
 	private static ProcessesController ctrl;
 
@@ -70,7 +69,7 @@ public class PerformanceTests {
 
 		SCMessage message = new SCMessage(new byte[128]);
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		long start = System.currentTimeMillis();
@@ -89,7 +88,7 @@ public class PerformanceTests {
 
 		SCMessage message = new SCMessage(new byte[128]);
 
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		long start = System.currentTimeMillis();

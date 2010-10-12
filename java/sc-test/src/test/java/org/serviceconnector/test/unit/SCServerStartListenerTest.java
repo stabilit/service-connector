@@ -9,7 +9,6 @@ import javax.activity.InvalidActivityException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -18,7 +17,7 @@ import org.serviceconnector.net.SCMPCommunicationException;
 
 public class SCServerStartListenerTest {
 
-	private ISCSessionServer server;
+	private SCSessionServer server;
 	private Exception ex;
 	
 	private static final String googleIP = "74.125.43.104"; 

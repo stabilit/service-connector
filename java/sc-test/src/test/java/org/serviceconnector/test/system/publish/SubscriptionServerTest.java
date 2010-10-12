@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.ISCPublishServer;
 import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.cln.StartPublishClient;
@@ -21,7 +20,7 @@ public class SubscriptionServerTest {
 	protected final static Logger logger = Logger.getLogger(SubscriptionServerTest.class);
 
 	private SrvCallback srvCallback;
-	private ISCPublishServer server;
+	private SCPublishServer server;
 
 	private static Process scProcess;
 

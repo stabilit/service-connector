@@ -19,9 +19,8 @@ package org.serviceconnector.test.sc.cln.api;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.test.sc.SetupTestCases;
 
@@ -41,7 +40,7 @@ public class PerformanceSessionServiceTestCase {
 
 	@Test
 	public void performanceSessionService() throws Exception {
-		ISCClient sc = null;
+		SCClient sc = null;
 		try {
 			sc = new SCClient();
 			sc.setMaxConnections(100);
@@ -49,7 +48,7 @@ public class PerformanceSessionServiceTestCase {
 			// connects to SC, checks connection to SC
 			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
-			ISessionService sessionServiceA = sc.newSessionService("simulation");
+			SCSessionService sessionServiceA = sc.newSessionService("simulation");
 			sessionServiceA.createSession("sessionInfo", 10, 60);
 
 			SCMessage requestMsg = new SCMessage();

@@ -26,7 +26,6 @@ import java.io.FileWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.ISCPublishServer;
 import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -37,7 +36,7 @@ public class StartPublishServer {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(StartPublishServer.class);
 
-	private ISCPublishServer publishSrv = null;
+	private SCPublishServer publishSrv = null;
 	private String startFile = null;
 	private String[] serviceNames;
 	private int port = TestConstants.PORT_TCP;
@@ -109,10 +108,10 @@ public class StartPublishServer {
 	}
 
 	private static class PublishRun implements Runnable {
-		ISCPublishServer server;
+		SCPublishServer server;
 		String serviceName;
 
-		public PublishRun(ISCPublishServer server, String serviceName) {
+		public PublishRun(SCPublishServer server, String serviceName) {
 			this.server = server;
 			this.serviceName = serviceName;
 		}
@@ -192,7 +191,7 @@ public class StartPublishServer {
 	}
 
 	private class PublishServerContext {
-		public ISCPublishServer getServer() {
+		public SCPublishServer getServer() {
 			return publishSrv;
 		}
 	}

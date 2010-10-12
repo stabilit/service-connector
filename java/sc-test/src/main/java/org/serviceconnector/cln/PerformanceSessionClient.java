@@ -4,9 +4,8 @@ import java.util.concurrent.CountDownLatch;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.Loggers;
@@ -44,7 +43,7 @@ public class PerformanceSessionClient implements Runnable {
 
 	@Override
 	public void run() {
-		ISCClient client = new SCClient();
+		SCClient client = new SCClient();
 		((SCClient) client).setConnectionType("netty.tcp");
 		long start = System.currentTimeMillis();
 
@@ -63,7 +62,7 @@ public class PerformanceSessionClient implements Runnable {
 			afterAttachSignal.await();
 
 			for (int i = 0; i < sessionCycles; i++) {
-				ISessionService service = client.newSessionService(TestConstants.serviceName);
+				SCSessionService service = client.newSessionService(TestConstants.serviceName);
 				service.createSession("sessionInfo", 300);
 				for (int j = 0; j < executeCycles; j++) {
 					service.execute(new SCMessage(new byte[messageSize]));

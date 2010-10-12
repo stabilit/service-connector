@@ -10,11 +10,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
 
@@ -24,7 +23,7 @@ public class AttachConnectionTypeHttpTest {
 	protected final static Logger logger = Logger.getLogger(AttachConnectionTypeHttpTest.class);
 
 	private int threadCount = 0;
-	private ISCClient client;
+	private SCClient client;
 	private Exception ex;
 
 	private static Process scProcess;

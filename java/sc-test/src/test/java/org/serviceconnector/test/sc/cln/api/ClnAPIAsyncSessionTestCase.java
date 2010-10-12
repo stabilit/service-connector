@@ -22,12 +22,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.IService;
-import org.serviceconnector.api.cln.ISessionService;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.TestConstants;
-import org.serviceconnector.service.ISCMessageCallback;
 import org.serviceconnector.test.sc.SetupTestCases;
 
 
@@ -44,21 +42,21 @@ public class ClnAPIAsyncSessionTestCase {
 
 	@Test
 	public void testClnAPI() throws Exception {
-		ISCClient sc = null;
+		SCClient sc = null;
 		try {
 			sc = new SCClient();
 			sc.setMaxConnections(100);
 			// set environment, e.g. keepAliveInterval
 			// connects to SC, checks connection to SC
 			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-			ISessionService sessionServiceA = sc.newSessionService("simulation");
+			SCSessionService sessionServiceA = sc.newSessionService("simulation");
 			sessionServiceA.createSession("sessionInfo", 60, 360);
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];
 			requestMsg.setData(buffer);
 			requestMsg.setCompressed(false);
 			requestMsg.setMessageInfo("test");
-			ISCMessageCallback callback = new TestCallback(sessionServiceA);
+			SCMessageCallback callback = new TestCallback(sessionServiceA);
 			sessionServiceA.execute(requestMsg, callback);
 			Thread.sleep(100000);
 			// deletes the session
@@ -77,7 +75,7 @@ public class ClnAPIAsyncSessionTestCase {
 
 	private class TestCallback extends SCMessageCallback {
 
-		public TestCallback(IService service) {
+		public TestCallback(SCService service) {
 			super(service);
 		}
 

@@ -10,7 +10,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
-import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cln.StartSessionClient;
@@ -23,7 +22,7 @@ public class SessionServerTest {
 	protected final static Logger logger = Logger.getLogger(SessionServerTest.class);
 
 	private SrvCallback srvCallback;
-	private ISCSessionServer server;
+	private SCSessionServer server;
 
 	private static Process scProcess;
 

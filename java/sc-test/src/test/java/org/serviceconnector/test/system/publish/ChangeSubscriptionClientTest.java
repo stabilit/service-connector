@@ -10,10 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.cln.IPublishService;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.IService;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -28,7 +27,7 @@ public class ChangeSubscriptionClientTest {
 	private static Process scProcess;
 	private static Process srvProcess;
 
-	private ISCClient client;
+	private SCClient client;
 
 	private Exception ex;
 
@@ -72,7 +71,7 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_serviceNameEmptyNotEstablishedPreviousSubscription_throwsSCException()
 			throws Exception {
-		IPublishService service = client.newPublishService("");
+		SCPublishService service = client.newPublishService("");
 		try {
 			service.changeSubscription(TestConstants.mask);
 		} catch (Exception e) {
@@ -87,7 +86,7 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_serviceNameValidNotEstablishedPreviousSubscription_throwsSCException()
 			throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
 			service.changeSubscription(TestConstants.mask);
 		} catch (Exception e) {
@@ -101,7 +100,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_afterUnsubscribed_throwsSCException() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		service.unsubscribe();
 		try {
@@ -117,7 +116,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toTheSameMask_passes() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		service.changeSubscription(TestConstants.mask);
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
@@ -129,7 +128,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMaskNull_throwsValidatorException() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		try {
 			service.changeSubscription(null);
@@ -144,7 +143,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMaskEmpty_throwsValidatorException() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		try {
 			service.changeSubscription("");
@@ -159,7 +158,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMaskWhiteSpace_passes() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		service.changeSubscription(" ");
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
@@ -169,7 +168,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMaskOneChar_passes() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		service.changeSubscription("a");
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
@@ -179,7 +178,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMaskPangram_passes() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		service.changeSubscription(TestConstants.pangram);
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
@@ -189,7 +188,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMask256LongString_passes() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		service.changeSubscription(TestConstants.stringLength256);
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
@@ -199,7 +198,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMask257LongString_throwsValidatorException() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		try {
 			service.changeSubscription(TestConstants.stringLength257);
@@ -214,7 +213,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_twice_passes() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 
 		service.changeSubscription(TestConstants.mask);
@@ -227,7 +226,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_10000Times_passes() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		int loop = 10000;
 		for (int i = 0; i < loop / 10; i++) {
@@ -248,7 +247,7 @@ public class ChangeSubscriptionClientTest {
 		for (int i = 0; i < loop / 10; i++) {
 			System.out.println("subscribeChangeSubscriptionUnsubscribe.loop: " + i * 10);
 			for (int j = 0; j < 10; j++) {
-				IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 				service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 				service.changeSubscription(TestConstants.mask);
 				Thread.sleep(5); // little sleep, Netty has problems sending very fast will be done next version!
@@ -261,7 +260,7 @@ public class ChangeSubscriptionClientTest {
 
 	private class DemoPublishClientCallback extends SCMessageCallback {
 
-		public DemoPublishClientCallback(IService service) {
+		public DemoPublishClientCallback(SCService service) {
 			super(service);
 		}
 

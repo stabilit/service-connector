@@ -8,11 +8,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.srv.ISCServerCallback;
-import org.serviceconnector.api.srv.ISCSessionServer;
+import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 
 
 public class RegisterServerToMultipleSCTest {
@@ -21,7 +21,7 @@ public class RegisterServerToMultipleSCTest {
 	protected final static Logger logger = Logger.getLogger(RegisterServerToMultipleSCTest.class);
 	
 	private int threadCount = 0;
-	private ISCSessionServer server;
+	private SCSessionServer server;
 
 	private static ProcessesController ctrl;
 	private static Process scProcess;
@@ -226,7 +226,25 @@ public class RegisterServerToMultipleSCTest {
 			assertEquals(false, server.isRegistered(TestConstants.serviceNameAlt));
 		}
 	}
-	
-	private class CallBack implements ISCServerCallback {
+
+	private class CallBack implements ISCSessionServerCallback {
+
+		@Override
+		public void abortSession(SCMessage message) {
+		}
+
+		@Override
+		public SCMessage createSession(SCMessage message) {
+			return null;
+		}
+
+		@Override
+		public void deleteSession(SCMessage message) {
+		}
+
+		@Override
+		public SCMessage execute(SCMessage message) {
+			return null;
+		}
 	}
 }

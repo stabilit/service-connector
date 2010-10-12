@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
-import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -19,7 +18,7 @@ public class StartSessionServer {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(StartSessionServer.class);
 
-	private ISCSessionServer scSrv = null;
+	private SCSessionServer scSrv = null;
 	private String startFile = null;
 	private String[] serviceNames;
 	private int port = TestConstants.PORT_TCP;
@@ -220,16 +219,16 @@ public class StartSessionServer {
 	}
 
 	private class SessionServerContext {
-		public ISCSessionServer getServer() {
+		public SCSessionServer getServer() {
 			return scSrv;
 		}
 	}
 
 	private class KillThread extends Thread {
 
-		private ISCSessionServer server;
+		private SCSessionServer server;
 
-		public KillThread(ISCSessionServer server) {
+		public KillThread(SCSessionServer server) {
 			this.server = server;
 		}
 

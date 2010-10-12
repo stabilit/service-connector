@@ -8,10 +8,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.cln.ISCClient;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
 
@@ -20,7 +19,7 @@ public class RestartOfSCProcessClientTest {
 	protected final static Logger logger = Logger
 			.getLogger(RestartOfSCProcessClientTest.class);
 
-	private ISCClient client;
+	private SCClient client;
 	private Process scProcess;
 
 	private static ProcessesController ctrl;

@@ -23,9 +23,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.SC;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
-import org.serviceconnector.api.srv.ISCPublishServer;
 import org.serviceconnector.api.srv.ISCPublishServerCallback;
-import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCSessionServer;
@@ -45,9 +43,9 @@ public class SetupTestCases {
 	private static SetupTestCases setupTestCases = null;
 	private static boolean killPublishServer = false;
 	private static boolean large = false;
-	private static ISCSessionServer scSim1ConSrv;
-	private static ISCSessionServer scSim10ConSrv;
-	private static ISCSessionServer scSimEnableSrv;
+	private static SCSessionServer scSim1ConSrv;
+	private static SCSessionServer scSim10ConSrv;
+	private static SCSessionServer scSimEnableSrv;
 	
 	private SetupTestCases() {
 	}
@@ -266,7 +264,7 @@ public class SetupTestCases {
 
 	public static void startPublishServer() throws Exception {
 		String serviceName = "publish-simulation";
-		ISCPublishServer publishSrv = new SCPublishServer();
+		SCPublishServer publishSrv = new SCPublishServer();
 		// connect to SC as server
 		publishSrv.setImmediateConnect(true);
 		publishSrv.startListener(TestConstants.HOST, 51000, 0);
@@ -303,10 +301,10 @@ public class SetupTestCases {
 	}
 
 	private static class PublishRun implements Runnable {
-		ISCPublishServer server;
+		SCPublishServer server;
 		String serviceName;
 
-		public PublishRun(ISCPublishServer server, String serviceName) {
+		public PublishRun(SCPublishServer server, String serviceName) {
 			this.server = server;
 			this.serviceName = serviceName;
 		}

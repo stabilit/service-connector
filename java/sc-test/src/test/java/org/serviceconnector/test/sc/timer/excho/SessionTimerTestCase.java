@@ -18,7 +18,7 @@ package org.serviceconnector.test.sc.timer.excho;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.api.cln.ISCClient;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.test.sc.SetupTestCases;
 
 
@@ -34,7 +34,7 @@ public class SessionTimerTestCase {
 
 	@Test
 	public void testClnAPI() throws Exception {
-		ISCClient sc = null;
+		SCClient sc = null;
 		/* TODO ISessionListener sessionListener = new ISessionListener() {
 
 			@Override
@@ -60,7 +60,7 @@ public class SessionTimerTestCase {
 			// connects to SC, checks connection to SC
 			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
-			ISessionService sessionServiceA = sc.newSessionService("simulation");
+			SCSessionService sessionServiceA = sc.newSessionService("simulation");
 			sessionServiceA.createSession("sessionInfo", 60, 1);
 
 			Thread.sleep(8000);

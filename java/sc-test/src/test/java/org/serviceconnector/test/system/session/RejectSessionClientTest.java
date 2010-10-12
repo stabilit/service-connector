@@ -9,11 +9,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
 
@@ -26,7 +25,7 @@ public class RejectSessionClientTest {
 	private static Process scProcess;
 	private static Process srvProcess;
 
-	private ISCClient client;
+	private SCClient client;
 	private Exception ex;
 
 	private static ProcessesController ctrl;
@@ -69,7 +68,7 @@ public class RejectSessionClientTest {
 	
 	@Test
 	public void createSession_rejectTheSession_sessionIdIsNotSetThrowsExceptionWithAppErrorCodeAndText() throws Exception {
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		
 		assertEquals(true, sessionService.getSessionId() == null
 				|| sessionService.getSessionId().isEmpty());
@@ -90,7 +89,7 @@ public class RejectSessionClientTest {
 	
 	@Test
 	public void createSession_rejectTheSessionAndTryToDeleteSession_sessionIdIsNotSetPasses() throws Exception {
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		
 		try {
 			sessionService.createSession("sessionInfo", 300, 10, "reject");
@@ -104,7 +103,7 @@ public class RejectSessionClientTest {
 	//TODO FJU throws NullPointerException
 	@Test(expected = SCServiceException.class)
 	public void createSession_rejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetExecuteThrowsException() throws Exception {
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		
 		try {
 			sessionService.createSession("sessionInfo", 300, 10, "reject");
@@ -118,7 +117,7 @@ public class RejectSessionClientTest {
 	
 	@Test
 	public void createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes() throws Exception {
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		
 		try {
 			sessionService.createSession("sessionInfo", 300, 10, "reject");
@@ -141,7 +140,7 @@ public class RejectSessionClientTest {
 		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		
 		try {
 			// message "reject" translates on the server to reject the session
@@ -161,7 +160,7 @@ public class RejectSessionClientTest {
 		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		
 		try {
 			sessionService.createSession("sessionInfo", 300, 10, "reject");
@@ -176,7 +175,7 @@ public class RejectSessionClientTest {
 		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		
 		try {
 			sessionService.createSession("sessionInfo", 300, 10, "reject");
@@ -194,7 +193,7 @@ public class RejectSessionClientTest {
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		
-		ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		
 		try {
 			sessionService.createSession("sessionInfo", 300, 10, "reject");

@@ -10,10 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.cln.IPublishService;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.IService;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
@@ -28,7 +27,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	private Process srvProcess;
 
 	private int threadCount = 0;
-	private ISCClient client;
+	private SCClient client;
 
 	private Exception ex;
 
@@ -76,7 +75,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	@Test
 	public void subscribe_withoutSC_throwsException() throws Exception {
 		ctrl.stopProcess(scProcess, TestConstants.log4jSrvProperties);
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
 			service.subscribe(TestConstants.mask, "sessionInfo", 300,
 					new DemoPublishClientCallback(service));
@@ -89,7 +88,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test
 	public void unsubscribe_withoutSC_throwsException() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300,
 				new DemoPublishClientCallback(service));
 
@@ -105,7 +104,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test
 	public void publish_withoutSC_noMessagesReceived() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service); 
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, callback);
 
@@ -126,7 +125,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test
 	public void publish_afterReceivingAMessageWaitFor5Seconds_noOtherMessagesReceived() throws Exception {
-		IPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service); 
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, callback);
 
@@ -166,7 +165,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 			this.lastMessage = lastMessage;
 		}
 
-		public DemoPublishClientCallback(IService service) {
+		public DemoPublishClientCallback(SCService service) {
 			super(service);
 		}
 

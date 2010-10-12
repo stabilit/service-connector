@@ -2,9 +2,8 @@ package org.serviceconnector.cln;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.TestConstants;
 
 
@@ -30,50 +29,50 @@ public class StartSessionClient extends Thread {
 
 	@Override
 	public void run() {
-		ISCClient client = new SCClient();
+		SCClient client = new SCClient();
 
 		try {
 			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 			if (getMethodName() == "createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty") {
-				ISessionService sessionService = client
+				SCSessionService sessionService = client
 						.newSessionService(TestConstants.serviceName);
 				sessionService.createSession(" ", 300, 60);
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSession_arbitrarySpaceSessionInfo_sessionIdIsNotEmpty") {
-				ISessionService sessionService = client
+				SCSessionService sessionService = client
 						.newSessionService(TestConstants.serviceName);
 				sessionService.createSession("The quick brown fox jumps over a lazy dog.", 300, 60);
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSession_arbitrarySpaceSessionInfoDataOneChar_sessionIdIsNotEmpty") {
-				ISessionService sessionService = client
+				SCSessionService sessionService = client
 						.newSessionService(TestConstants.serviceName);
 				sessionService.createSession("The quick brown fox jumps over a lazy dog.", 300, 10,
 						"a");
 				sessionService.deleteSession();
 				
 			} else if (getMethodName() == "createSession_256LongSessionInfoData60kBByteArray_sessionIdIsNotEmpty") {
-				ISessionService sessionService = client
+				SCSessionService sessionService = client
 						.newSessionService(TestConstants.serviceName);
 				sessionService.createSession(TestConstants.stringLength256, 300, 10,
 						new byte[TestConstants.dataLength60kB]);
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "deleteSession_beforeCreateSession_noSessionId") {
-				ISessionService sessionService = client
+				SCSessionService sessionService = client
 						.newSessionService(TestConstants.serviceName);
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "deleteSession_afterValidNewSessionService_noSessionId") {
-				ISessionService sessionService = client
+				SCSessionService sessionService = client
 						.newSessionService(TestConstants.serviceName);
 				sessionService.createSession("sessionInfo", 300, 60);
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes") {
-				ISessionService sessionService = client
+				SCSessionService sessionService = client
 						.newSessionService(TestConstants.serviceName);
 
 				try {
@@ -86,7 +85,7 @@ public class StartSessionClient extends Thread {
 				sessionService.deleteSession();
 				
 			} else if (getMethodName() == "execute_messageData1MBArray_returnsTheSameMessageData") {
-				ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 				sessionService.createSession("sessionInfo", 300, 60);
 
 				SCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
@@ -96,7 +95,7 @@ public class StartSessionClient extends Thread {
 				sessionService.deleteSession();
 				
 			} else if (getMethodName() == "createSessionExecuteDeleteSession_twice_6MessagesArrive") {
-				ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 
 				sessionService.createSession("sessionInfo", 300, 60);
 				sessionService.execute(new SCMessage(new byte[128]));
@@ -107,7 +106,7 @@ public class StartSessionClient extends Thread {
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "echo_waitFor3EchoMessages_5MessagesArrive") {
-				ISessionService sessionService = client.newSessionService(TestConstants.serviceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 				sessionService.createSession("sessionInfo", 2, 1);
 				Thread.sleep(6000);
 				sessionService.deleteSession();

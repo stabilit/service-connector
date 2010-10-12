@@ -8,12 +8,12 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.srv.ISCServerCallback;
-import org.serviceconnector.api.srv.ISCSessionServer;
+import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
 
@@ -22,7 +22,7 @@ public class RestartSCProcessTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RestartSCProcessTest.class);
 	
-	private ISCSessionServer server;
+	private SCSessionServer server;
 	private Process scProcess;
 
 	private static ProcessesController ctrl;
@@ -119,7 +119,25 @@ public class RestartSCProcessTest {
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		server.deregisterServer(TestConstants.serviceName);
 	}
-	
-	private class CallBack implements ISCServerCallback {
+
+	private class CallBack implements ISCSessionServerCallback {
+
+		@Override
+		public void abortSession(SCMessage message) {
+		}
+
+		@Override
+		public SCMessage createSession(SCMessage message) {
+			return null;
+		}
+
+		@Override
+		public void deleteSession(SCMessage message) {
+		}
+
+		@Override
+		public SCMessage execute(SCMessage message) {
+			return null;
+		}
 	}
 }

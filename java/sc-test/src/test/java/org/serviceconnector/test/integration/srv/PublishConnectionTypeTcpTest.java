@@ -7,8 +7,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.ISCPublishServer;
-import org.serviceconnector.api.srv.ISCServerCallback;
+import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -19,7 +18,7 @@ public class PublishConnectionTypeTcpTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PublishConnectionTypeTcpTest.class);
 
-	private ISCPublishServer server;
+	private SCPublishServer server;
 	private Exception ex;
 
 	private static Process scProcess;
@@ -240,6 +239,20 @@ public class PublishConnectionTypeTcpTest {
 		}
 	}
 
-	private class CallBack implements ISCServerCallback {
+	private class CallBack implements ISCPublishServerCallback {
+
+		@Override
+		public SCMessage changeSubscription(SCMessage message) {
+			return null;
+		}
+
+		@Override
+		public SCMessage subscribe(SCMessage message) {
+			return null;
+		}
+
+		@Override
+		public void unsubscribe(SCMessage message) {
+		}
 	}
 }
