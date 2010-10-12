@@ -1,5 +1,0 @@
-logs\*.*
-scripts\kit*.*
-scripts\mvn*.*
-documentation\*.bak
-config\*.bak
