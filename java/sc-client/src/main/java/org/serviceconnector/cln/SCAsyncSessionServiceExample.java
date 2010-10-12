@@ -24,12 +24,10 @@ package org.serviceconnector.cln;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.IService;
-import org.serviceconnector.api.cln.ISessionService;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCServiceContext;
-import org.serviceconnector.service.ISCMessageCallback;
+import org.serviceconnector.api.cln.SCSessionService;
 
 
 /**
@@ -48,7 +46,7 @@ public class SCAsyncSessionServiceExample {
 	}
 
 	public void runExample() {
-		ISCClient sc = null;
+		SCClient sc = null;
 		try {
 			sc = new SCClient();
 			sc.setMaxConnections(100);
@@ -56,14 +54,14 @@ public class SCAsyncSessionServiceExample {
 			// connects to SC, checks connection to SC
 			sc.attach("localhost", 7000);
 
-			ISessionService sessionServiceA = sc.newSessionService("simulation");
+			SCSessionService sessionServiceA = sc.newSessionService("simulation");
 			// creates a session
 			sessionServiceA.createSession("sessionInfo", 300, 60);
 
 			SCMessage requestMsg = new SCMessage();
 			requestMsg.setData("Hello World");
 			requestMsg.setCompressed(false);
-			ISCMessageCallback callback = new ExampleCallback(sessionServiceA);
+			SCMessageCallback callback = new ExampleCallback(sessionServiceA);
 			sessionServiceA.execute(requestMsg, callback);
 
 			// wait until message received
@@ -88,7 +86,7 @@ public class SCAsyncSessionServiceExample {
 	 */
 	private class ExampleCallback extends SCMessageCallback {
 
-		public ExampleCallback(IService service) {
+		public ExampleCallback(SCService service) {
 			super(service);
 		}
 

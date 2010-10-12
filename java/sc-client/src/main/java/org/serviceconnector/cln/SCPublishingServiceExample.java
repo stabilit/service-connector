@@ -23,11 +23,9 @@ package org.serviceconnector.cln;
 
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.cln.IPublishService;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.IService;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.service.ISCMessageCallback;
+import org.serviceconnector.api.cln.SCPublishService;
 
 
 public class SCPublishingServiceExample {
@@ -40,8 +38,8 @@ public class SCPublishingServiceExample {
 	}
 
 	public void runExample() {
-		ISCClient sc = null;
-		IPublishService publishServiceA = null;
+		SCClient sc = null;
+		SCPublishService publishServiceA = null;
 		try {
 			sc = new SCClient();
 			sc.setMaxConnections(100);
@@ -50,7 +48,7 @@ public class SCPublishingServiceExample {
 			sc.attach("localhost", 7000);
 
 			publishServiceA = sc.newPublishService("publish-simulation");
-			ISCMessageCallback callback = new TestPublishCallback(publishServiceA);
+			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
 			publishServiceA.subscribe("000012100012832102FADF-----------X-----------", "sessionInfo", 300, callback);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -67,7 +65,7 @@ public class SCPublishingServiceExample {
 
 	class TestPublishCallback extends SCMessageCallback {
 
-		public TestPublishCallback(IService service) {
+		public TestPublishCallback(SCService service) {
 			super(service);
 		}
 

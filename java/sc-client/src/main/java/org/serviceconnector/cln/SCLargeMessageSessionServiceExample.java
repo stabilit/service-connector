@@ -22,9 +22,8 @@
 package org.serviceconnector.cln;
 
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.ISessionService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCSessionService;
 
 
 public class SCLargeMessageSessionServiceExample {
@@ -34,7 +33,7 @@ public class SCLargeMessageSessionServiceExample {
 	}
 
 	public static void runExample() {
-		ISCClient sc = null;
+		SCClient sc = null;
 		try {
 			sc = new SCClient();
 			sc.setMaxConnections(100);
@@ -42,7 +41,7 @@ public class SCLargeMessageSessionServiceExample {
 			// connects to SC, checks connection to SC
 			sc.attach("localhost", 7000);
 
-			ISessionService sessionServiceA = sc.newSessionService("simulation");
+			SCSessionService sessionServiceA = sc.newSessionService("simulation");
 			// creates a session
 			sessionServiceA.createSession("sessionInfo", 300, 60);
 

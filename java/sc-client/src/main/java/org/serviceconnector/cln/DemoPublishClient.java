@@ -3,10 +3,9 @@ package org.serviceconnector.cln;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.cln.IPublishService;
-import org.serviceconnector.api.cln.ISCClient;
-import org.serviceconnector.api.cln.IService;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCPublishService;
 
 
 public class DemoPublishClient extends Thread {
@@ -21,8 +20,8 @@ public class DemoPublishClient extends Thread {
 
 	@Override
 	public void run() {
-		ISCClient sc = new SCClient();
-		IPublishService publishService = null;
+		SCClient sc = new SCClient();
+		SCPublishService publishService = null;
 		try {
 			((SCClient) sc).setConnectionType("netty.http");
 			sc.attach("localhost", 7000);
@@ -47,7 +46,7 @@ public class DemoPublishClient extends Thread {
 
 	private class DemoSessionClientCallback extends SCMessageCallback {
 
-		public DemoSessionClientCallback(IService service) {
+		public DemoSessionClientCallback(SCService service) {
 			super(service);
 		}
 
