@@ -103,7 +103,7 @@ public class SCSessionService extends SCService implements ISessionService {
 	@Override
 	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds,
 			Object data) throws Exception {
-		if (this.callback != null) {
+		if (this.sessionActive) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
 		if (data != null) {
@@ -117,7 +117,7 @@ public class SCSessionService extends SCService implements ISessionService {
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		ValidatorUtility.validateInt(1, echoIntervalInSeconds, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
 		this.msgId.reset();
-		this.callback = new ServiceCallback(true);
+		ServiceCallback callback = new ServiceCallback(true);
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName);
 		createSessionCall.setSessionInfo(sessionInfo);
@@ -125,14 +125,12 @@ public class SCSessionService extends SCService implements ISessionService {
 		createSessionCall.setRequestBody(data);
 		createSessionCall.setCompressed(true);
 		try {
-			createSessionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			createSessionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			this.callback = null;
 			throw new SCServiceException("create session failed", e);
 		}
-		SCMPMessage reply = this.callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync();
 		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
-			this.callback = null;
 			SCServiceException ex = new SCServiceException("create session failed"
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE));
@@ -156,12 +154,12 @@ public class SCSessionService extends SCService implements ISessionService {
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void deleteSession(int timeoutInSeconds) throws Exception {
-		if (this.callback == null) {
+		if (this.sessionActive == false) {
 			// delete session not possible - no session on this service just ignore
 			return;
 		}
 		if (this.pendingRequest) {
-			// already executed before - reply still outstanding
+			// pending request - reply still outstanding
 			throw new SCServiceException(
 					"execute not possible, there is a pending request - two pending request are not allowed.");
 		}
@@ -169,13 +167,13 @@ public class SCSessionService extends SCService implements ISessionService {
 		this.pendingRequest = true;
 		// cancel session timeout
 		this.timerTask.cancel();
-		this.callback = new ServiceCallback(true);
+		ServiceCallback callback = new ServiceCallback(true);
 		try {
 			this.msgId.incrementMsgSequenceNr();
 			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
 			try {
-				deleteSessionCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+				deleteSessionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				if (this.sessionActive == false) {
 					// ignore errors in state of dead session
@@ -183,7 +181,7 @@ public class SCSessionService extends SCService implements ISessionService {
 				}
 				throw new SCServiceException("delete session failed", e);
 			}
-			SCMPMessage reply = this.callback.getMessageSync();
+			SCMPMessage reply = callback.getMessageSync();
 			if (reply.isFault()) {
 				if (this.sessionActive == false) {
 					// ignore errors in state of dead session
@@ -195,7 +193,7 @@ public class SCSessionService extends SCService implements ISessionService {
 		} finally {
 			this.pendingRequest = false;
 			this.sessionId = null;
-			this.callback = null;
+			this.sessionActive = false;
 		}
 	}
 
@@ -214,7 +212,7 @@ public class SCSessionService extends SCService implements ISessionService {
 			throw new InvalidParameterException("Message must be set.");
 		}
 		if (this.pendingRequest) {
-			// already executed before - reply still outstanding
+			// pending Request - reply still outstanding
 			throw new SCServiceException(
 					"execute not possible, there is a pending request - two pending request are not allowed.");
 		}
@@ -233,15 +231,15 @@ public class SCSessionService extends SCService implements ISessionService {
 		clnExecuteCall.setCompressed(requestMsg.isCompressed());
 		clnExecuteCall.setRequestBody(requestMsg.getData());
 		// invoke asynchronous
-		this.callback = new ServiceCallback(true);
+		ServiceCallback callback = new ServiceCallback(true);
 		try {
-			clnExecuteCall.invoke(this.callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			clnExecuteCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);
 		}
 		// wait for message in callback
-		SCMPMessage reply = this.callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync();
 		this.pendingRequest = false;
 		if (reply.isFault()) {
 			throw new SCServiceException("execute failed" + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
@@ -339,15 +337,15 @@ public class SCSessionService extends SCService implements ISessionService {
 		this.msgId.incrementMsgSequenceNr();
 		SCMPEchoCall clnEchoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
-		this.callback = new ServiceCallback(true);
+		ServiceCallback callback = new ServiceCallback(true);
 		try {
-			clnEchoCall.invoke(this.callback, this.scResponseTimeMillis);
+			clnEchoCall.invoke(callback, this.scResponseTimeMillis);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute failed", e);
 		}
 		// wait for message in callback
-		SCMPMessage reply = this.callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync();
 		this.pendingRequest = false;
 		if (reply.isFault()) {
 			throw new SCServiceException("echo failed" + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));

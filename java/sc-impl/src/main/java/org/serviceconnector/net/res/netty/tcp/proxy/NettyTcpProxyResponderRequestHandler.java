@@ -31,8 +31,6 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
-import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.net.res.ResponderRegistry;
 
 public class NettyTcpProxyResponderRequestHandler extends
 		SimpleChannelUpstreamHandler {

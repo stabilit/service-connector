@@ -20,7 +20,6 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LinkedQueue. Base Queue to implement consumer/producer modules.
  * 

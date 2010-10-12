@@ -696,11 +696,11 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void multipleRegisterServer_differentServiceNames() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.serviceName, 1, 1,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1,
 				new CallBack());
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.serviceNameSessionDisabled, 1,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSessionDisabled, 1,
 				1, new CallBack());
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, "P01_RTXS_sc1", 1, 1, new CallBack());
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "P01_RTXS_sc1", 1, 1, new CallBack());
 
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, server.isRegistered(TestConstants.serviceNameSessionDisabled));

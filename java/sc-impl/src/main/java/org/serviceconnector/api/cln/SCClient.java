@@ -63,8 +63,8 @@ public class SCClient implements ISCClient {
 	private IRequester requester;
 	/** The context. */
 	private SCContext scContext;
-	/** The callback. */
-	private ServiceCallback callback;
+
+	private boolean attached;
 
 	/**
 	 * Instantiates a new SC client.
@@ -78,7 +78,7 @@ public class SCClient implements ISCClient {
 		this.conType = Constants.DEFAULT_CLIENT_CON;
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 		this.scContext = new SCContext(this);
-		this.callback = null;
+		this.attached = false;
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTIONS;
 		this.connectionPool = null;
 	}
@@ -98,7 +98,7 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
-		if (this.callback != null) {
+		if (this.attached) {
 			throw new SCServiceException(
 					"already attached before - detach first, attaching in sequence is not allowed.");
 		}
@@ -117,54 +117,52 @@ public class SCClient implements ISCClient {
 		this.scContext.setConnectionPool(this.connectionPool);
 		this.requester = new SCRequester(new RequesterContext(this.connectionPool, null));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
-		this.callback = new ServiceCallback(true);
+		ServiceCallback callback = new ServiceCallback(true);
 		try {
-			attachCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-					* Constants.SEC_TO_MILLISEC_FACTOR);
+			attachCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			this.callback = null;
 			this.connectionPool.destroy();
-			throw new SCServiceException("attach to "+host+":"+port+" failed", e);
+			throw new SCServiceException("attach to " + host + ":" + port + " failed", e);
 		}
-		SCMPMessage reply = this.callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync();
 		if (reply.isFault()) {
-			this.callback = null;
 			this.connectionPool.destroy();
-			throw new SCServiceException("attach to "+host+":"+port+" failed : "
+			throw new SCServiceException("attach to " + host + ":" + port + " failed : "
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 
 		}
+		this.attached = true;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean isAttached() {
-		return this.callback != null;
+		return this.attached;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public synchronized void detach() throws Exception {
-		if (this.callback == null) {
+		if (this.attached == false) {
 			// detach not possible - client not attached just ignore
 			return;
 		}
-		this.callback = new ServiceCallback(true);
+		ServiceCallback callback = new ServiceCallback(true);
 		try {
 			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 			try {
-				detachCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+				detachCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
 						* Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("detach client failed", e);
 			}
-			SCMPMessage reply = this.callback.getMessageSync();
+			SCMPMessage reply = callback.getMessageSync();
 			if (reply.isFault()) {
 				throw new SCServiceException("detach client failed : "
 						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			}
 		} finally {
-			this.callback = null;
+			this.attached = false;
 			// destroy connection pool
 			this.connectionPool.destroy();
 		}
@@ -214,7 +212,7 @@ public class SCClient implements ISCClient {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		if (this.callback == null) {
+		if (this.attached == false) {
 			throw new SCServiceException("newFileService not possible - client not attached.");
 		}
 		return null;
@@ -226,7 +224,7 @@ public class SCClient implements ISCClient {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		if (this.callback == null) {
+		if (this.attached == false) {
 			throw new SCServiceException("newSessionService not possible - client not attached.");
 		}
 		return new SCSessionService(serviceName, this.scContext);
@@ -238,7 +236,7 @@ public class SCClient implements ISCClient {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		if (this.callback == null) {
+		if (this.attached == false) {
 			throw new SCServiceException("newPublishService not possible - client not attached.");
 		}
 		return new SCPublishService(serviceName, this.scContext);
@@ -260,7 +258,7 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public void disableService(String serviceName) throws SCServiceException {
-		if (this.callback == null) {
+		if (this.attached == false) {
 			// disableService not possible - client not attached
 			throw new SCServiceException("client not attached - disableService not possible.");
 		}
@@ -273,7 +271,7 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public void enableService(String serviceName) throws SCServiceException {
-		if (this.callback == null) {
+		if (this.attached == false) {
 			// enableService not possible - client not attached
 			throw new SCServiceException("client not attached - enableService not possible.");
 		}
@@ -286,7 +284,7 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public boolean isServiceEnabled(String serviceName) throws SCServiceException {
-		if (this.callback == null) {
+		if (this.attached == false) {
 			// isServiceEnabled not possible - client not attached
 			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
 		}
@@ -300,7 +298,7 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public String workload(String serviceName) throws SCServiceException {
-		if (this.callback == null) {
+		if (this.attached == false) {
 			// isServiceEnabled not possible - client not attached
 			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
 		}
@@ -310,7 +308,7 @@ public class SCClient implements ISCClient {
 	/** {@inheritDoc} */
 	@Override
 	public void killSC() throws SCServiceException {
-		if (this.callback == null) {
+		if (this.attached == false) {
 			// killSC not possible - client not attached
 			throw new SCServiceException("client not attached - killSC not possible.");
 		}
@@ -319,13 +317,12 @@ public class SCClient implements ISCClient {
 
 	private String inspectCall(String instruction) throws SCServiceException {
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(this.requester);
-		this.callback = new ServiceCallback(true);
+		ServiceCallback callback = new ServiceCallback(true);
 		try {
 			inspectCall.setRequestBody(instruction);
-			inspectCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-					* Constants.SEC_TO_MILLISEC_FACTOR);
+			inspectCall
+					.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			this.callback = null;
 			this.connectionPool.destroy();
 			throw new SCServiceException("kill SC failed", e);
 		}
@@ -333,7 +330,7 @@ public class SCClient implements ISCClient {
 			// kill sc doesn't reply a message
 			return null;
 		}
-		SCMPMessage reply = this.callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync();
 		if (reply.isFault()) {
 			throw new SCServiceException("inspect failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}
@@ -350,13 +347,11 @@ public class SCClient implements ISCClient {
 	 */
 	private String manageCall(String instruction) throws SCServiceException {
 		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(this.requester);
-		this.callback = new ServiceCallback(true);
+		ServiceCallback callback = new ServiceCallback(true);
 		try {
 			manageCall.setRequestBody(instruction);
-			manageCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-					* Constants.SEC_TO_MILLISEC_FACTOR);
+			manageCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			this.callback = null;
 			this.connectionPool.destroy();
 			throw new SCServiceException("kill SC failed", e);
 		}
@@ -364,7 +359,7 @@ public class SCClient implements ISCClient {
 			// kill sc doesn't reply a message
 			return null;
 		}
-		SCMPMessage reply = this.callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync();
 		if (reply.isFault()) {
 			throw new SCServiceException("manage failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}

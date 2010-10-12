@@ -22,7 +22,6 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -66,7 +65,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 
 		Server server = session.getServer();
 		SCMPMessage reply = null;
-		ISCMPSynchronousCallback callback = new CommandCallback(true);
+		CommandCallback callback = new CommandCallback(true);
 		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		server.deleteSession(message, callback, oti);
 		reply = callback.getMessageSync();

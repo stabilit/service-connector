@@ -114,7 +114,7 @@ public class SetupTestCases {
 		}
 	}
 
-	public static void setupSCSessionServer1Connections() {
+	public static void setupSCSessionServer1Connections() throws Exception {
 		if (setupTestCases == null) {
 			try {
 				init();
@@ -134,6 +134,7 @@ public class SetupTestCases {
 				setupTestCases = new SetupTestCases();
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 				SetupTestCases.startSessionServer10Connections();
+				SetupTestCases.startSessionServer1Connections();
 				SetupTestCases.startPublishServer();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -157,9 +158,9 @@ public class SetupTestCases {
 		scSim1ConSrv = new SCSessionServer();
 		// connect to SC as server
 		scSim1ConSrv.setImmediateConnect(true);
-		scSim1ConSrv.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
+		scSim1ConSrv.startListener(TestConstants.HOST, 41000, 0);
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim1ConSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "simulation", 10, 1, srvCallback);
+		scSim1ConSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "1conn", 10, 1, srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
@@ -268,7 +269,7 @@ public class SetupTestCases {
 		ISCPublishServer publishSrv = new SCPublishServer();
 		// connect to SC as server
 		publishSrv.setImmediateConnect(true);
-		publishSrv.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
+		publishSrv.startListener(TestConstants.HOST, 51000, 0);
 		PublishServerCallback publishCallback = new PublishServerCallback();
 		publishSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, serviceName, 10, 10, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);

@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.api.cln.SCContext;
 import org.serviceconnector.api.cln.SCServiceContext;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPMessageId;
 
 /**
@@ -37,8 +36,6 @@ public abstract class SCService {
 	protected String sessionId;
 	/** The requester to communicate. */
 	protected IRequester requester;
-	/** The callback to use by service. */
-	protected ISCMPSynchronousCallback callback;
 	/** The pending request, marks if a reply is outstanding or if service is ready for next. */
 	protected volatile boolean pendingRequest;
 	/** The message id. */
@@ -59,7 +56,6 @@ public abstract class SCService {
 	public SCService(String serviceName, SCContext scContext) {
 		this.serviceName = serviceName;
 		this.sessionId = null;
-		this.callback = null;
 		this.pendingRequest = false;
 		this.msgId = new SCMPMessageId();
 		this.scContext = scContext;

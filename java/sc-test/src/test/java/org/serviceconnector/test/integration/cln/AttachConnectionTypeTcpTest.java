@@ -22,7 +22,6 @@ public class AttachConnectionTypeTcpTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachConnectionTypeTcpTest.class);
 	
-	private int threadCount = 0;
 	private ISCClient client;
 	private Exception ex;
 

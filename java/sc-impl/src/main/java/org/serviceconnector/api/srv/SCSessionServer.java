@@ -34,7 +34,6 @@ import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
-import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -62,7 +61,6 @@ public class SCSessionServer implements ISCSessionServer {
 	/** The responder. */
 	private IResponder responder;
 	// fields for register server
-	protected ISCMPSynchronousCallback callback;
 	/** The immediate connect. */
 	private boolean immediateConnect;
 	/** The keep alive interval. */
@@ -82,7 +80,6 @@ public class SCSessionServer implements ISCSessionServer {
 		this.localServerPort = -1;
 		this.responder = null;
 		this.msgId = new SCMPMessageId();
-		this.callback = new SrvServerCallback();
 
 		// Initialize server command factory
 		AppContext appContext = AppContext.getCurrentContext();
@@ -143,6 +140,7 @@ public class SCSessionServer implements ISCSessionServer {
 		registerServerCall.setPortNumber(this.localServerPort);
 		registerServerCall.setImmediateConnect(this.immediateConnect);
 		registerServerCall.setKeepAliveInterval(this.keepAliveIntervalInSeconds);
+		SCServerCallback callback = new SCServerCallback(true);
 		try {
 			registerServerCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
 					* Constants.SEC_TO_MILLISEC_FACTOR);
@@ -150,7 +148,7 @@ public class SCSessionServer implements ISCSessionServer {
 			connectionPool.destroy();
 			throw new SCServiceException("register server failed", e);
 		}
-		SCMPMessage reply = this.callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync();
 		if (reply.isFault()) {
 			connectionPool.destroy();
 			throw new SCServiceException("register server failed : "
@@ -177,13 +175,15 @@ public class SCSessionServer implements ISCSessionServer {
 			req = srvService.getRequester();
 			SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 					.newInstance(req, serviceName);
+			SCServerCallback callback = new SCServerCallback(true);
+
 			try {
-				deRegisterServerCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+				deRegisterServerCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
 						* Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("deregister server failed", e);
 			}
-			SCMPMessage reply = this.callback.getMessageSync();
+			SCMPMessage reply = callback.getMessageSync();
 			if (reply.isFault()) {
 				throw new SCServiceException("deregister server failed : "
 						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
@@ -319,9 +319,12 @@ public class SCSessionServer implements ISCSessionServer {
 	}
 
 	/**
-	 * The Class SrvServerCallback.
+	 * The Class SCServerCallback.
 	 */
-	protected class SrvServerCallback extends SynchronousCallback {
+	protected class SCServerCallback extends SynchronousCallback {
+		public SCServerCallback(boolean synchronous) {
+			this.synchronous = synchronous;
+		}
 		// nothing to implement in this case - everything is done by super-class
 	}
 }

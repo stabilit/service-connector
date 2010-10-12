@@ -32,7 +32,6 @@ import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.sc.SCTest;
@@ -139,7 +138,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
-		registerServerCall.setPortNumber(TestConstants.PORT_LISTENER);
+		registerServerCall.setPortNumber(51000);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
 
@@ -154,18 +153,18 @@ public class RegisterServerTestCase extends SuperTestCase {
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
-		String expectedScEntry = "P01_logging:0|enableService:0|publish-simulation:0 - publish-simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|P01_BCST_CH_sc1:0|";
+		String expectedScEntry = "P01_logging:0|publish-simulation:0 - publish-simulation_localhost/:51000 : 10 - publish-simulation_localhost/:51000 : 10|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:30000 : 10|P01_BCST_CH_sc1:0|";
 		String scEntry = inspectMap.get("serviceRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
-		expectedScEntry = "publish-simulation_localhost/:publish-simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|simulation_localhost/:simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|";
+		expectedScEntry = "1conn_localhost/:1conn_localhost/:41000 : 10|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|simulation_localhost/:simulation_localhost/:30000 : 10|";
 		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 				.newInstance(req, "publish-simulation");
 		deRegisterServerCall.invoke(this.registerCallback, 1000);
-		this.registerCallback.getMessageSync();
+		SCTest.checkReply(this.registerCallback.getMessageSync());
 
 		/*********************************** Verify registry entries in SC ********************************/
 		inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
@@ -173,48 +172,9 @@ public class RegisterServerTestCase extends SuperTestCase {
 		inspect = this.registerCallback.getMessageSync();
 		inspectMsg = (String) inspect.getBody();
 		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		expectedScEntry = "simulation_localhost/:simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|";
+		expectedScEntry = "publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|1conn_localhost/:1conn_localhost/:41000 : 10|simulation_localhost/:simulation_localhost/:30000 : 10|";
 		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
-	}
-
-	@Test
-	public void secondRegisterServerCall() throws Exception {
-		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", TestConstants.HOST, TestConstants.PORT_TCP,
-				"netty.tcp", 1, 60, 10);
-		RequesterContext context = new TestContext(config, this.msgId);
-		IRequester req = new SCRequester(context);
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL
-				.newInstance(req, "publish-simulation");
-
-		registerServerCall.setMaxSessions(10);
-		registerServerCall.setMaxConnections(10);
-		registerServerCall.setPortNumber(TestConstants.PORT_LISTENER);
-		registerServerCall.setImmediateConnect(true);
-		registerServerCall.setKeepAliveInterval(360);
-		registerServerCall.invoke(this.registerCallback, 1000);
-		this.registerCallback.getMessageSync();
-
-		registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(req,
-				"publish-simulation");
-		registerServerCall.setMaxSessions(10);
-		registerServerCall.setMaxConnections(10);
-		registerServerCall.setPortNumber(TestConstants.PORT_LISTENER);
-		registerServerCall.setImmediateConnect(true);
-		registerServerCall.setKeepAliveInterval(360);
-
-		registerServerCall.invoke(this.registerCallback, 1000);
-		SCMPFault message = (SCMPFault) this.registerCallback.getMessageSync();
-		Assert
-				.assertEquals(SCMPMsgType.REGISTER_SERVER.getValue(), message
-						.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
-		Assert.assertEquals(SCMPError.SERVER_ALREADY_REGISTERED.getErrorCode(), message
-				.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-
-		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
-				.newInstance(req, "publish-simulation");
-		deRegisterServerCall.invoke(this.registerCallback, 3000);
-		this.registerCallback.getMessageSync();
 	}
 
 	protected class RegisterServerCallback extends SynchronousCallback {

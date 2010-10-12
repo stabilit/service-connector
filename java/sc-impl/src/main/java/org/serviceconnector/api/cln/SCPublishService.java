@@ -29,7 +29,6 @@ import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -87,7 +86,7 @@ public class SCPublishService extends SCService implements IPublishService {
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		changeSubscriptionCall.setMask(mask);
-		ISCMPSynchronousCallback callback = new ServiceCallback(true);
+		ServiceCallback callback = new ServiceCallback(true);
 		changeSubscriptionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		callback.getMessageSync();
 	}
@@ -132,7 +131,7 @@ public class SCPublishService extends SCService implements IPublishService {
 		this.noDataInterval = noDataInterval;
 		this.msgId.reset();
 		this.scMessageCallback = scMessageCallback;
-		ISCMPSynchronousCallback callback = new ServiceCallback(true);
+		ServiceCallback callback = new ServiceCallback(true);
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
 				this.requester, this.serviceName);
 		subscribeCall.setMask(mask);
@@ -177,7 +176,7 @@ public class SCPublishService extends SCService implements IPublishService {
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		this.msgId.incrementMsgSequenceNr();
-		ISCMPSynchronousCallback callback = new PublishServiceCallback(this.scMessageCallback);
+		PublishServiceCallback callback = new PublishServiceCallback(this.scMessageCallback);
 		receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR
 				* (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataInterval));
 	}
@@ -200,7 +199,7 @@ public class SCPublishService extends SCService implements IPublishService {
 			this.msgId.incrementMsgSequenceNr();
 			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
-			ISCMPSynchronousCallback callback = new ServiceCallback(true);
+			ServiceCallback callback = new ServiceCallback(true);
 			try {
 				unsubscribeCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
@@ -246,12 +245,6 @@ public class SCPublishService extends SCService implements IPublishService {
 				super.callback(fault.getCause());
 				return;
 			}
-			// check if reply is real answer
-			boolean noData = reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
-			if (noData == false) {
-				// data reply received - give to application
-				super.callback(reply);
-			}
 			if (SCPublishService.this.subscribed) {
 				// client is still subscribed - CRP again
 				try {
@@ -262,6 +255,12 @@ public class SCPublishService extends SCService implements IPublishService {
 					super.callback(fault);
 					return;
 				}
+			}
+			// check if reply is real answer
+			boolean noData = reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
+			if (noData == false) {
+				// data reply received - give to application
+				super.callback(reply);
 			}
 		}
 	}

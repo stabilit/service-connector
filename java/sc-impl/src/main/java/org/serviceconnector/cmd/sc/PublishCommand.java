@@ -30,7 +30,6 @@ import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.util.ValidatorUtility;
 
-
 /**
  * The Class PublishCommand. Responsible for validation and execution of publish command. Allows publishing messages to
  * clients.
@@ -41,7 +40,7 @@ public class PublishCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PublishCommand.class);
-	
+
 	/**
 	 * Instantiates a new PublishCommand.
 	 */
@@ -64,7 +63,7 @@ public class PublishCommand extends CommandAdapter {
 		SubscriptionQueue<SCMPMessage> queue = service.getSubscriptionQueue();
 		// throws an exception if failed
 		queue.insert(message);
-
+		
 		// reply to server
 		SCMPMessage reply = null;
 		if (message.isPart()) {

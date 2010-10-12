@@ -61,8 +61,7 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
 		String scEntry = (String) inspectMap.get("serviceRegistry");
-		String expectedEntry = "P01_logging:0|publish-simulation:0|enableService:0|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:"
-				+ TestConstants.PORT_LISTENER + " : 10|P01_BCST_CH_sc1:0|";
+		String expectedEntry = "P01_logging:0|publish-simulation:0 - publish-simulation_localhost/:51000 : 10|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:30000 : 10|P01_BCST_CH_sc1:0|";
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedEntry, scEntry);
 		super.registerServerBefore();
 	}

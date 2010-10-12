@@ -49,6 +49,7 @@ import org.serviceconnector.test.sc.scmp.internal.SCMPLargeRequestTestCase;
 import org.serviceconnector.test.sc.scmp.internal.SCMPLargeResponseTestCase;
 import org.serviceconnector.test.sc.scmpVersion.DecodeSCMPVersionTestCase;
 import org.serviceconnector.test.sc.session.ClnCreateSessionTestCase;
+import org.serviceconnector.test.sc.session.ClnCreateSessionWaitMechanismTestCase;
 import org.serviceconnector.test.sc.session.ClnDeleteSessionTestCase;
 import org.serviceconnector.test.sc.sessionTimeout.SessionTimeoutTestCase;
 import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteAsyncTestCase;
@@ -59,8 +60,6 @@ import org.serviceconnector.test.sc.util.LinkedQueueTestCase;
 import org.serviceconnector.test.sc.util.SCVersionTestCase;
 import org.serviceconnector.test.sc.util.ValidatorUtilityTestCase;
 
-
-
 /**
  * @author JTraber
  */
@@ -68,7 +67,8 @@ import org.serviceconnector.test.sc.util.ValidatorUtilityTestCase;
 @SuiteClasses( { AttachTestCase.class, //
 		DetachTestCase.class, // 
 		ClnCreateSessionTestCase.class, // 
-		ClnDeleteSessionTestCase.class, // 
+		ClnDeleteSessionTestCase.class, //
+		ClnCreateSessionWaitMechanismTestCase.class, //
 		RegisterServerTestCase.class, // 
 		DeRegisterServerTestCase.class, // 
 		SrvExecuteSyncTestCase.class, // 
@@ -105,9 +105,9 @@ public class SCTest {
 		Assert.assertEquals(msgType.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		// TODO TRN refine SCMPErrors
 		/*
-		 * text must not be compared! It may be Chinese
-		Assert.assertEquals(error.getErrorText() + additionalInfo, result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-		*/
+		 * text must not be compared! It may be Chinese Assert.assertEquals(error.getErrorText() + additionalInfo,
+		 * result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+		 */
 		Assert.assertEquals(error.getErrorCode(), result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 	}
 
@@ -124,16 +124,16 @@ public class SCTest {
 	}
 
 	public static void assertEqualsUnorderedStringIgnorePorts(String expected, String actual) {
-		//actual = actual.replaceAll("127.0.0.1/", "localhost/");
+		// actual = actual.replaceAll("127.0.0.1/", "localhost/");
 		actual = actual.replaceAll("localhost/\\d*:", "localhost/:");
 
 		Map<String, String> expectedMap = splitStringToMap(expected, "\\|", "\\:");
 		Map<String, String> actualMap = splitStringToMap(actual, "\\|", "\\:");
 
-		// if (expectedMap.equals(actualMap) == false) {
-		// System.out.println("actual : " + actual);
-		// System.out.println("expected : " + expected);
-		// }
+		 if (expectedMap.equals(actualMap) == false) {
+		 System.out.println("actual : " + actual);
+		 System.out.println("expected : " + expected);
+		 }
 		Assert.assertEquals(expectedMap, actualMap);
 	}
 

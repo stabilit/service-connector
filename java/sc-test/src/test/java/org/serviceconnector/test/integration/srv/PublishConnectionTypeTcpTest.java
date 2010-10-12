@@ -46,8 +46,8 @@ public class PublishConnectionTypeTcpTest {
 	public void setUp() throws Exception {
 		server = new SCPublishServer();
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP,
-				TestConstants.serviceNamePublish, 1, 1, new CallBack());
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNamePublish, 1, 1,
+				new CallBack());
 	}
 
 	@After
@@ -104,16 +104,14 @@ public class PublishConnectionTypeTcpTest {
 	}
 
 	@Test(expected = SCServiceException.class)
-	public void publish_serviceNameSessionServiceWithoutRegistering_throwsSCException()
-			throws Exception {
+	public void publish_serviceNameSessionServiceWithoutRegistering_throwsSCException() throws Exception {
 		server.publish(TestConstants.serviceName, TestConstants.mask, "something");
 	}
 
 	@Test(expected = SCServiceException.class)
-	public void publish_serviceNameSessionServiceWithRegistering_throwsSCException()
-			throws Exception {
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP,
-				TestConstants.serviceName, 1, 1, new CallBack());
+	public void publish_serviceNameSessionServiceWithRegistering_throwsSCException() throws Exception {
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1,
+				new CallBack());
 		try {
 			server.publish(TestConstants.serviceName, TestConstants.mask, "something");
 		} catch (Exception e) {
@@ -153,16 +151,12 @@ public class PublishConnectionTypeTcpTest {
 
 	@Test
 	public void publish_mask256LongString_passes() throws Exception {
-		server
-				.publish(TestConstants.serviceNamePublish, TestConstants.stringLength256,
-						"something");
+		server.publish(TestConstants.serviceNamePublish, TestConstants.stringLength256, "something");
 	}
 
 	@Test(expected = SCMPValidatorException.class)
 	public void publish_mask257LongString_throwsValidatorException() throws Exception {
-		server
-				.publish(TestConstants.serviceNamePublish, TestConstants.stringLength257,
-						"something");
+		server.publish(TestConstants.serviceNamePublish, TestConstants.stringLength257, "something");
 	}
 
 	@Test
@@ -172,8 +166,7 @@ public class PublishConnectionTypeTcpTest {
 
 	@Test
 	public void publish_maskValidWithPercentSign_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish,
-				"0000121%%%%%%%%%%%%%%%-----------X-----------", "something");
+		server.publish(TestConstants.serviceNamePublish, "0000121%%%%%%%%%%%%%%%-----------X-----------", "something");
 	}
 
 	@Test
@@ -232,16 +225,14 @@ public class PublishConnectionTypeTcpTest {
 
 	@Test
 	public void publish_data60kBArray_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask,
-				new byte[TestConstants.dataLength60kB]);
+		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new byte[TestConstants.dataLength60kB]);
 	}
 
 	@Test
 	public void publish_data1MBArray_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask,
-				new byte[TestConstants.dataLength1MB]);
+		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new byte[TestConstants.dataLength1MB]);
 	}
-	
+
 	@Test
 	public void publish_10000Messages_passes() throws Exception {
 		for (int i = 0; i < 10000; i++) {

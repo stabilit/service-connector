@@ -81,6 +81,8 @@ public final class Constants {
 	private static final int SUBSCRIPTION_TIMEOUT_MILLIS_DEFAULT = 300000;
 	/** The SUBSCRIPTION_TIMEOUT_MILLIS, time after a subscription is marked as dead. */
 	public static int SUBSCRIPTION_TIMEOUT_MILLIS = SUBSCRIPTION_TIMEOUT_MILLIS_DEFAULT;
+	/** The WAIT_FOR_CONNECTION_INTERVAL_MILLIS. */
+	public static final int WAIT_FOR_CONNECTION_INTERVAL_MILLIS = 200;
 	/** The Constant SEC_TO_MILISEC_FACTOR. */
 	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
 	/** The REGEX. */
@@ -229,7 +231,7 @@ public final class Constants {
 		}
 		Constants.CONNECT_TIMEOUT_MILLIS = connectionTimeout;
 	}
-	
+
 	public static void setSubscriptionTimeout(int subscriptionTimeout) {
 		if (Constants.SUBSCRIPTION_TIMEOUT_MILLIS != Constants.SUBSCRIPTION_TIMEOUT_MILLIS_DEFAULT) {
 			// setting SUBSCRIPTION_TIMEOUT_MILLIS only allowed one time

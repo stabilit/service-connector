@@ -76,28 +76,33 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 
 		// tries allocating a server for this session
-		ISCMPSynchronousCallback callback = new CommandCallback(true);
 		Server server = null;
 		try {
 			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-
 			SCMPMessage reply = null;
-			
+
+			int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 			// Following loop implements the wait mechanism in case of a busy connection pool
-			for (int i = 0; i < 10; i++) {
-				server = service.allocateServerAndCreateSession(reqMessage, callback, session, oti);
+			for (int i = 0; i < tries; i++) {
+				ISCMPSynchronousCallback callback = new CommandCallback(true);
+				server = service.allocateServerAndCreateSession(reqMessage, callback, session, oti
+						- (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
 				reply = callback.getMessageSync();
+
 				if (reply.isFault() == false) {
-					// response is good - no wait mechanism necessary
+					// no error, response is good - no wait mechanism necessary
 					break;
 				}
+				// creation failed remove from server
+				server.removeSession(session);
+
 				SCMPFault fault = (SCMPFault) reply;
 				if ((fault.getCause() instanceof ConnectionPoolBusyException) == false) {
-					// response is bad - but no because of no ConnectionPoolBusyException so no wait mechanism necessary
+					// error - but not because of ConnectionPoolBusyException so no wait mechanism necessary
 					break;
 				}
 				// sleep for a while and then try again
-				Thread.sleep(200);
+				Thread.sleep(Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 			}
 
 			if (reply.isFault() == false) {

@@ -56,10 +56,10 @@ public class SCPublishServer extends SCSessionServer implements ISCPublishServer
 				.getRequester(), serviceName);
 		publishCall.setRequestBody(data);
 		publishCall.setMask(mask);
-		publishCall.invoke(this.callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-				* Constants.SEC_TO_MILLISEC_FACTOR);
-		SCMPMessage message = this.callback.getMessageSync();
-		if(message.isFault()) {
+		SCServerCallback callback = new SCServerCallback(true);
+		publishCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+		SCMPMessage message = callback.getMessageSync();
+		if (message.isFault()) {
 			SCMPFault fault = (SCMPFault) message;
 			throw new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}

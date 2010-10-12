@@ -62,7 +62,7 @@ public abstract class SuperTestCase {
 
 	@Before
 	public void setup() throws Exception {
-		SetupTestCases.setupSCSessionServer10Connections();
+		SetupTestCases.setupAll();
 		try {
 			this.config = new RequesterConfigPool();
 			this.config.load(fileName);
