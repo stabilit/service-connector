@@ -25,7 +25,6 @@ import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -84,7 +83,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		int noDataInterval = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 
-		ISCMPSynchronousCallback callback = new CommandCallback(true);
+		CommandCallback callback = new CommandCallback(true);
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		Server server = service.allocateServerAndSubscribe(reqMessage, callback, subscription, oti);
 		SCMPMessage reply = callback.getMessageSync();
