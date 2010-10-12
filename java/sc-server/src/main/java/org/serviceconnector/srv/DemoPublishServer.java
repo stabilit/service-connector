@@ -23,7 +23,6 @@ package org.serviceconnector.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.ISCPublishServer;
 import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 
@@ -33,7 +32,7 @@ public class DemoPublishServer {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DemoPublishServer.class);
 	
-	private ISCPublishServer publishSrv = null;
+	private SCPublishServer publishSrv = null;
 	private String serviceName = "publish-simulation";
 	private static boolean killPublishServer = false;
 
@@ -60,10 +59,10 @@ public class DemoPublishServer {
 	}
 
 	private static class PublishRun implements Runnable {
-		ISCPublishServer server;
+		SCPublishServer server;
 		String serviceName;
 
-		public PublishRun(ISCPublishServer server, String serviceName) {
+		public PublishRun(SCPublishServer server, String serviceName) {
 			this.server = server;
 			this.serviceName = serviceName;
 		}
@@ -143,7 +142,7 @@ public class DemoPublishServer {
 	}
 
 	private class PublishServerContext {
-		public ISCPublishServer getServer() {
+		public SCPublishServer getServer() {
 			return publishSrv;
 		}
 	}

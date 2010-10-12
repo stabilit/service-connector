@@ -23,7 +23,6 @@ package org.serviceconnector.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.ISCSessionServer;
 import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 
@@ -32,7 +31,7 @@ public class DemoSessionServer {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DemoSessionServer.class);
 	
-	private ISCSessionServer scSrv = null;
+	private SCSessionServer scSrv = null;
 	private String serviceName = "simulation";
 
 	public static void main(String[] args) throws Exception {
@@ -115,16 +114,16 @@ public class DemoSessionServer {
 	}
 
 	private class SessionServerContext {
-		public ISCSessionServer getServer() {
+		public SCSessionServer getServer() {
 			return scSrv;
 		}
 	}
 
 	private class KillThread extends Thread {
 
-		private ISCSessionServer server;
+		private SCSessionServer server;
 
-		public KillThread(ISCSessionServer server) {
+		public KillThread(SCSessionServer server) {
 			this.server = server;
 		}
 
