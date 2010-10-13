@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.ISCPublishServerCallback;
+import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.cln.StartPublishClient;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -183,7 +183,7 @@ public class SubscriptionServerTest {
 		assertEquals(0, srvCallback.messagesExchanged);
 	}
 
-	private class SrvCallback implements ISCPublishServerCallback {
+	private class SrvCallback extends SCPublishServerCallback {
 
 		private int messagesExchanged = 0;
 		private SCMessage subscribeMsg = null;

@@ -94,7 +94,7 @@ public class SCPublishServer extends SCSessionServer {
 	 *             port is not within limits 0 to 0xFFFF, host unset
 	 */
 	public void registerServer(String scHost, int scPort, String serviceName, int maxSessions, int maxConnections,
-			ISCPublishServerCallback scCallback) throws Exception {
+			SCPublishServerCallback scCallback) throws Exception {
 		super.registerServer(scHost, scPort, serviceName, maxSessions, maxConnections, scCallback);
 	}
 }

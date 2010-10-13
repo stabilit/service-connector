@@ -6,8 +6,8 @@ import java.io.FileWriter;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
-import org.serviceconnector.api.srv.ISCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
+import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -95,7 +95,7 @@ public class StartSessionServer {
 		}
 	}
 
-	class SrvCallback implements ISCSessionServerCallback {
+	class SrvCallback extends SCSessionServerCallback {
 
 		private SessionServerContext outerContext;
 

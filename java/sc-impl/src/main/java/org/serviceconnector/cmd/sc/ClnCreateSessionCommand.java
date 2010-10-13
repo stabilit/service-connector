@@ -28,6 +28,7 @@ import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.NoFreeSessionException;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.SessionService;
@@ -84,12 +85,24 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			// Following loop implements the wait mechanism in case of a busy connection pool
 			for (int i = 0; i < tries; i++) {
 				CommandCallback callback = new CommandCallback(true);
-				server = service.allocateServerAndCreateSession(reqMessage, callback, session, oti
-						- (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
+
+				try {
+					server = service.allocateServerAndCreateSession(reqMessage, callback, session, oti
+							- (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
+				} catch (NoFreeSessionException ex) {
+					if (i == (tries - 1)) {
+						// only one loop outstanding - don't continue throw current exception
+						throw ex;
+					}
+					// No free session available - wait and try again
+					Thread.sleep(Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
+					continue;
+				}
+
 				reply = callback.getMessageSync();
 
 				if (reply.isFault() == false) {
-					// no error, response is good - no wait mechanism necessary
+					// no error, response is good - wait not necessary anymore
 					break;
 				}
 				// creation failed remove from server
@@ -97,7 +110,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 
 				SCMPFault fault = (SCMPFault) reply;
 				if ((fault.getCause() instanceof ConnectionPoolBusyException) == false) {
-					// error - but not because of ConnectionPoolBusyException so no wait mechanism necessary
+					// error - but not because of ConnectionPoolBusyException so wait not necessary anymore
 					break;
 				}
 				// sleep for a while and then try again

@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
+import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -47,7 +47,7 @@ public class PublishConnectionTypeHttpTest {
 		((SCPublishServer) server).setConnectionType("netty.http");
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP,
-				TestConstants.serviceNamePublish, 1, 1, new CallBack());
+				TestConstants.serviceNamePublish, 1, 1, new SCPublishServerCallback());
 	}
 
 	@After
@@ -113,7 +113,7 @@ public class PublishConnectionTypeHttpTest {
 	public void publish_serviceNameSessionServiceWithRegistering_throwsSCException()
 			throws Exception {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP,
-				TestConstants.serviceName, 1, 1, new CallBack());
+				TestConstants.serviceName, 1, 1, new SCPublishServerCallback());
 		try {
 			server.publish(TestConstants.serviceName, TestConstants.mask, "something");
 		} catch (Exception e) {
@@ -248,23 +248,6 @@ public class PublishConnectionTypeHttpTest {
 	public void publish_10000Messages_passes() throws Exception {
 		for (int i = 0; i < 10000; i++) {
 			server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new byte[128]);
-		}
-	}
-
-	private class CallBack implements ISCPublishServerCallback {
-
-		@Override
-		public SCMessage changeSubscription(SCMessage message) {
-			return null;
-		}
-
-		@Override
-		public SCMessage subscribe(SCMessage message) {
-			return null;
-		}
-
-		@Override
-		public void unsubscribe(SCMessage message) {
 		}
 	}
 }

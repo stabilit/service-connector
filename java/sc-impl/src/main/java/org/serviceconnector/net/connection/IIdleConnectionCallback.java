@@ -21,8 +21,6 @@
  */
 package org.serviceconnector.net.connection;
 
-
-
 /**
  * @author JTraber
  *

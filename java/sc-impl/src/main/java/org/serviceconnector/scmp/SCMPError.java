@@ -33,7 +33,7 @@ public enum SCMPError {
 	/** The REQUEST_TIMEOUT. */
 	REQUEST_TIMEOUT("408",
 			"Request Timeout. The client did not produce a request within the time that the server was prepared to wait."),
-			
+
 	/** 420 Validation errors */
 	/** The header validation error. */
 	HV_ERROR("420", "Validation error occured."),
@@ -103,9 +103,11 @@ public enum SCMPError {
 	/** 6xx errors caused by service connector */
 	SC_ERROR("600", "Service connector error."),
 	/** The NO_FREE_SERVER. */
-	NO_FREE_SERVER("601", "No free server."),
+	NO_SERVER("601", "No server."),
 	/** The SERVER_ALREADY_REGISTERED for this service. */
 	SERVER_ALREADY_REGISTERED("602", "Server already registered for the service."),
+	/** The NO_FREE_SESSION. */
+	NO_FREE_SESSION("603", "No free session."),
 	/** The FRAME_DECODER. */
 	FRAME_DECODER("606", "Not possible to decode frame, scmp header line wrong."),
 	/** The SESSION_ABORT. */

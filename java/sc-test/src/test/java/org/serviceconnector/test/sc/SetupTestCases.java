@@ -23,9 +23,9 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.SC;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
-import org.serviceconnector.api.srv.ISCPublishServerCallback;
-import org.serviceconnector.api.srv.ISCSessionServerCallback;
+import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
+import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.ResponderConfigPool;
@@ -46,6 +46,7 @@ public class SetupTestCases {
 	private static SCSessionServer scSim1ConSrv;
 	private static SCSessionServer scSim10ConSrv;
 	private static SCSessionServer scSimEnableSrv;
+	private static SCSessionServer scSim1Sess;
 	
 	private SetupTestCases() {
 	}
@@ -118,7 +119,7 @@ public class SetupTestCases {
 				init();
 				setupTestCases = new SetupTestCases();
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
-				SetupTestCases.startSessionServer1Connections();
+				SetupTestCases.startSessionServer1Connection();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -132,7 +133,8 @@ public class SetupTestCases {
 				setupTestCases = new SetupTestCases();
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
 				SetupTestCases.startSessionServer10Connections();
-				SetupTestCases.startSessionServer1Connections();
+				SetupTestCases.startSessionServer1Connection();
+				SetupTestCases.startSessionServer1Session();
 				SetupTestCases.startPublishServer();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -152,7 +154,16 @@ public class SetupTestCases {
 		}
 	}
 
-	private static void startSessionServer1Connections() throws Exception {
+	private static void startSessionServer1Session() throws Exception {
+		scSim1Sess = new SCSessionServer();
+		// connect to SC as server
+		scSim1Sess.setImmediateConnect(true);
+		scSim1Sess.startListener(TestConstants.HOST, 42000, 0);
+		SessionServerCallback srvCallback = new SessionServerCallback();
+		scSim1Sess.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "1sess", 1, 1, srvCallback);
+	}
+	
+	private static void startSessionServer1Connection() throws Exception {
 		scSim1ConSrv = new SCSessionServer();
 		// connect to SC as server
 		scSim1ConSrv.setImmediateConnect(true);
@@ -179,7 +190,7 @@ public class SetupTestCases {
 		scSimEnableSrv.deregisterServer("enableService");
 	}
 
-	private static class SessionServerCallback implements ISCSessionServerCallback {
+	private static class SessionServerCallback extends SCSessionServerCallback {
 
 		private static int count = 100;
 
@@ -275,7 +286,7 @@ public class SetupTestCases {
 		thread.start();
 	}
 
-	private static class PublishServerCallback implements ISCPublishServerCallback {
+	private static class PublishServerCallback extends SCPublishServerCallback {
 
 		@Override
 		public SCMessage changeSubscription(SCMessage message) {

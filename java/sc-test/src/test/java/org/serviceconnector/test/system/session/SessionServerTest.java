@@ -10,7 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
-import org.serviceconnector.api.srv.ISCSessionServerCallback;
+import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cln.StartSessionClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -221,7 +221,7 @@ public class SessionServerTest {
 		assertEquals(5, srvCallback.messagesExchanged);
 	}
 
-	private class SrvCallback implements ISCSessionServerCallback {
+	private class SrvCallback extends SCSessionServerCallback {
 
 		private int messagesExchanged = 0;
 		private SCMessage createSessionMsg = null;

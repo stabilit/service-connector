@@ -23,7 +23,7 @@ package org.serviceconnector.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.ISCPublishServerCallback;
+import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 
 
@@ -98,7 +98,7 @@ public class DemoPublishServer {
 		}
 	}
 
-	private class SrvCallback implements ISCPublishServerCallback {
+	private class SrvCallback extends SCPublishServerCallback {
 
 		private PublishServerContext outerContext;
 

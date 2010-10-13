@@ -51,7 +51,7 @@ import org.serviceconnector.test.sc.scmpVersion.DecodeSCMPVersionTestCase;
 import org.serviceconnector.test.sc.session.ClnCreateSessionTestCase;
 import org.serviceconnector.test.sc.session.ClnCreateSessionWaitMechanismTestCase;
 import org.serviceconnector.test.sc.session.ClnDeleteSessionTestCase;
-import org.serviceconnector.test.sc.sessionTimeout.SessionTimeoutTestCase;
+import org.serviceconnector.test.sc.session.SessionTimeoutTestCase;
 import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteAsyncTestCase;
 import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteLargeAsyncTestCase;
 import org.serviceconnector.test.sc.srvExecute.synch.SrvExecuteLargeSyncTestCase;

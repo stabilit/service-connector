@@ -39,8 +39,6 @@ import org.serviceconnector.test.sc.SuperTestCase;
 import org.serviceconnector.test.sc.connectionPool.TestContext;
 import org.serviceconnector.util.SynchronousCallback;
 
-
-
 public class RegisterServerTestCase extends SuperTestCase {
 
 	protected RegisterServerCallback registerCallback;
@@ -153,11 +151,11 @@ public class RegisterServerTestCase extends SuperTestCase {
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
-		String expectedScEntry = "P01_logging:0|publish-simulation:0 - publish-simulation_localhost/:51000 : 10 - publish-simulation_localhost/:51000 : 10|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:30000 : 10|P01_BCST_CH_sc1:0|";
+		String expectedScEntry = "1sess:0 - 1sess_localhost/:42000 : 1|P01_logging:0|publish-simulation:0 - publish-simulation_localhost/:51000 : 10 - publish-simulation_localhost/:51000 : 10|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:30000 : 10|P01_BCST_CH_sc1:0|";
 		String scEntry = inspectMap.get("serviceRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
-		expectedScEntry = "1conn_localhost/:1conn_localhost/:41000 : 10|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|simulation_localhost/:simulation_localhost/:30000 : 10|";
+		expectedScEntry = "1conn_localhost/:1conn_localhost/:41000 : 10|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|1sess_localhost/:1sess_localhost/:42000 : 1|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|simulation_localhost/:simulation_localhost/:30000 : 10|";
 		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
@@ -172,7 +170,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		inspect = this.registerCallback.getMessageSync();
 		inspectMsg = (String) inspect.getBody();
 		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		expectedScEntry = "publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|1conn_localhost/:1conn_localhost/:41000 : 10|simulation_localhost/:simulation_localhost/:30000 : 10|";
+		expectedScEntry = "1conn_localhost/:1conn_localhost/:41000 : 10|1sess_localhost/:1sess_localhost/:42000 : 1|simulation_localhost/:simulation_localhost/:30000 : 10|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|";
 		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 	}

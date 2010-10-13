@@ -23,7 +23,7 @@ package org.serviceconnector.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.ISCSessionServerCallback;
+import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 
 
@@ -63,7 +63,7 @@ public class DemoSessionServer {
 		}
 	}
 
-	class SrvCallback implements ISCSessionServerCallback {
+	class SrvCallback extends SCSessionServerCallback {
 
 		private SessionServerContext outerContext;
 

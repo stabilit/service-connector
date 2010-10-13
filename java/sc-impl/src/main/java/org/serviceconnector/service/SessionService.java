@@ -27,7 +27,6 @@ import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 
-
 /**
  * The Class SessionService. SessionService is a remote interface to a session service and provides communication
  * functions.
@@ -64,13 +63,21 @@ public class SessionService extends Service {
 	 */
 	public synchronized Server allocateServerAndCreateSession(SCMPMessage msgToForward, ISCMPCallback callback,
 			Session session, int timeoutInMillis) throws Exception {
-		for (int i = 0; i < listOfServers.size(); i++) {
-			serverIndex++;
-			if (serverIndex >= listOfServers.size()) {
+
+		if (this.listOfServers.size() == 0) {
+			// no server registered for this service
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SERVER, "for service "
+					+ msgToForward.getServiceName());
+			scmpCommandException.setMessageType(msgToForward.getMessageType());
+			throw scmpCommandException;
+		}
+		for (int i = 0; i < this.listOfServers.size(); i++) {
+			this.serverIndex++;
+			if (this.serverIndex >= this.listOfServers.size()) {
 				// serverIndex reached the end of list no more servers
-				serverIndex = 0;
+				this.serverIndex = 0;
 			}
-			Server server = listOfServers.get(serverIndex);
+			Server server = this.listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
 				server.createSession(msgToForward, callback, timeoutInMillis);
 				// store session - successful creation is not done here remove in command if not successful!!
@@ -78,10 +85,10 @@ public class SessionService extends Service {
 				return server;
 			}
 		}
-		// no available server for this service
-		SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_SERVER, "for service "
+		// no free session available
+		NoFreeSessionException noFreeSessionExc = new NoFreeSessionException(SCMPError.NO_FREE_SESSION, "for service "
 				+ msgToForward.getServiceName());
-		scmpCommandException.setMessageType(msgToForward.getMessageType());
-		throw scmpCommandException;
+		noFreeSessionExc.setMessageType(msgToForward.getMessageType());
+		throw noFreeSessionExc;
 	}
 }

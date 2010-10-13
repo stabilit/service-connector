@@ -26,8 +26,8 @@ import java.io.FileWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.ISCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
+import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 
@@ -150,7 +150,7 @@ public class StartPublishServer {
 		}
 	}
 
-	private class SrvCallback implements ISCPublishServerCallback {
+	private class SrvCallback extends SCPublishServerCallback {
 
 		private PublishServerContext outerContext;
 
