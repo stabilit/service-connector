@@ -18,13 +18,13 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -77,45 +77,41 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 
 		// tries allocating a server for this session
 		Server server = null;
+		CommandCallback callback = null;
 		try {
 			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			SCMPMessage reply = null;
-
+			
 			int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 			// Following loop implements the wait mechanism in case of a busy connection pool
-			for (int i = 0; i < tries; i++) {
-				CommandCallback callback = new CommandCallback(true);
-
+			int i = 0;
+			do {
+				callback = new CommandCallback(true);
 				try {
 					server = service.allocateServerAndCreateSession(reqMessage, callback, session, oti
 							- (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
+					// no exception has been thrown - get out of wait loop
+					break;
 				} catch (NoFreeSessionException ex) {
-					if (i == (tries - 1)) {
+					if (i >= (tries - 1)) {
 						// only one loop outstanding - don't continue throw current exception
 						throw ex;
 					}
-					// No free session available - wait and try again
-					Thread.sleep(Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
-					continue;
-				}
-
-				reply = callback.getMessageSync();
-
-				if (reply.isFault() == false) {
-					// no error, response is good - wait not necessary anymore
-					break;
-				}
-				// creation failed remove from server
-				server.removeSession(session);
-
-				SCMPFault fault = (SCMPFault) reply;
-				if ((fault.getCause() instanceof ConnectionPoolBusyException) == false) {
-					// error - but not because of ConnectionPoolBusyException so wait not necessary anymore
-					break;
+				} catch (ConnectionPoolBusyException ex) {
+					if (i >= (tries - 1)) {
+						// only one loop outstanding - don't continue throw current exception
+						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SC_ERROR,
+								"no free connection on server for service " + reqMessage.getServiceName());
+						scmpCommandException.setMessageType(this.getKey());
+						throw scmpCommandException;
+					}
+				} catch (Exception ex) {
+					throw ex;
 				}
 				// sleep for a while and then try again
 				Thread.sleep(Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
-			}
+			} while (++i < tries);
+			
+			SCMPMessage reply = callback.getMessageSync();
 
 			if (reply.isFault() == false) {
 				boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);

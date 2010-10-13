@@ -17,9 +17,12 @@
 package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
+import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -32,6 +35,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.IPublishTimerRun;
+import org.serviceconnector.service.NoFreeSessionException;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Subscription;
@@ -83,35 +87,74 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		int noDataInterval = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 
-		CommandCallback callback = new CommandCallback(true);
-		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-		Server server = service.allocateServerAndSubscribe(reqMessage, callback, subscription, oti);
-		SCMPMessage reply = callback.getMessageSync();
+		Server server = null;
+		CommandCallback callback = null;
+		try {
+			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
-		if (reply.isFault() == false) {
-			boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-			if (Boolean.FALSE.equals(rejectSubscriptionFlag)) {
-				// subscription has not been rejected, add server to subscription
-				subscription.setServer(server);
-				// finally add subscription to the registry
-				this.subscriptionRegistry.addSubscription(subscription.getId(), subscription);
+			int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
+			// Following loop implements the wait mechanism in case of a busy connection pool
+			int i = 0;
+			do {
+				callback = new CommandCallback(true);
+				try {
+					server = service.allocateServerAndSubscribe(reqMessage, callback, subscription, oti
+							- (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
+					// no exception has been thrown - get out of wait loop
+					break;
+				} catch (NoFreeSessionException ex) {
+					if (i >= (tries - 1)) {
+						// only one loop outstanding - don't continue throw current exception
+						throw ex;
+					}
+				} catch (ConnectionPoolBusyException ex) {
+					if (i >= (tries - 1)) {
+						// only one loop outstanding - don't continue throw current exception
+						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SC_ERROR,
+								"no free connection on server for service " + reqMessage.getServiceName());
+						scmpCommandException.setMessageType(this.getKey());
+						throw scmpCommandException;
+					}
+				} catch (Exception ex) {
+					throw ex;
+				}
+				// sleep for a while and then try again
+				Thread.sleep(Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
+			} while (++i < tries);
 
-				SubscriptionQueue<SCMPMessage> subscriptionQueue = service.getSubscriptionQueue();
+			SCMPMessage reply = callback.getMessageSync();
 
-				IPublishTimerRun timerRun = new PublishTimerRun(subscriptionQueue, noDataInterval);
-				subscriptionLogger.logSubscribe(serviceName, subscription.getId(), mask);
-				subscriptionQueue.subscribe(subscription.getId(), subscriptionMask, timerRun);
+			if (reply.isFault() == false) {
+				boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+				if (Boolean.FALSE.equals(rejectSubscriptionFlag)) {
+					// subscription has not been rejected, add server to subscription
+					subscription.setServer(server);
+					// finally add subscription to the registry
+					this.subscriptionRegistry.addSubscription(subscription.getId(), subscription);
+
+					SubscriptionQueue<SCMPMessage> subscriptionQueue = service.getSubscriptionQueue();
+
+					IPublishTimerRun timerRun = new PublishTimerRun(subscriptionQueue, noDataInterval);
+					subscriptionLogger.logSubscribe(serviceName, subscription.getId(), mask);
+					subscriptionQueue.subscribe(subscription.getId(), subscriptionMask, timerRun);
+				} else {
+					// subscription has been rejected - remove subscription id from header
+					reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+				}
 			} else {
-				// subscription has been rejected - remove subscription id from header
 				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 			}
-		} else {
-			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+			// forward reply to client
+			reply.setIsReply(true);
+			reply.setMessageType(getKey());
+			response.setSCMP(reply);
+		} catch (Exception e) {
+			if (server != null) {
+				// creation failed remove from server
+				server.removeSession(subscription);
+			}
+			throw e;
 		}
-		// forward reply to client
-		reply.setIsReply(true);
-		reply.setMessageType(getKey());
-		response.setSCMP(reply);
 	}
 
 	/** {@inheritDoc} */

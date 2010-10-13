@@ -126,13 +126,13 @@ public class RegisterServerTestCase extends SuperTestCase {
 
 	@Test
 	public void registerServerCall() throws Exception {
-		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", TestConstants.HOST, TestConstants.PORT_TCP,
-				"netty.tcp", 1000, 60, 10);
+		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", TestConstants.HOST,
+				TestConstants.PORT_TCP, "netty.tcp", 1000, 60, 10);
 		RequesterContext context = new TestContext(config, this.msgId);
 		IRequester req = new SCRequester(context);
 
 		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL
-				.newInstance(req, "publish-simulation");
+				.newInstance(req, "publish");
 
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
@@ -141,7 +141,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.setKeepAliveInterval(360);
 
 		registerServerCall.invoke(this.registerCallback, 1000);
-		this.registerCallback.getMessageSync();
+		SCTest.checkReply(this.registerCallback.getMessageSync());
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		inspectCall.invoke(this.registerCallback, 3000);
@@ -151,16 +151,16 @@ public class RegisterServerTestCase extends SuperTestCase {
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
-		String expectedScEntry = "1sess:0 - 1sess_localhost/:42000 : 1|P01_logging:0|publish-simulation:0 - publish-simulation_localhost/:51000 : 10 - publish-simulation_localhost/:51000 : 10|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|P01_RTXS_sc1:0|simulation:0 - simulation_localhost/:30000 : 10|P01_BCST_CH_sc1:0|";
+		String expectedScEntry = "P01_logging:0|publish-simulation:0 - publish-simulation_localhost/:51000 : 1|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|P01_RTXS_sc1:0|publish:0 - publish_localhost/:51000 : 10|simulation:0 - simulation_localhost/:30000 : 10|1sess:0 - 1sess_localhost/:42000 : 1|P01_BCST_CH_sc1:0|";
 		String scEntry = inspectMap.get("serviceRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
-		expectedScEntry = "1conn_localhost/:1conn_localhost/:41000 : 10|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|1sess_localhost/:1sess_localhost/:42000 : 1|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|simulation_localhost/:simulation_localhost/:30000 : 10|";
+		expectedScEntry = "publish-simulation_localhost/:publish-simulation_localhost/:51000 : 1|1conn_localhost/:1conn_localhost/:41000 : 10|1sess_localhost/:1sess_localhost/:42000 : 1|publish_localhost/:publish_localhost/:51000 : 10|simulation_localhost/:simulation_localhost/:30000 : 10|";
 		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
-				.newInstance(req, "publish-simulation");
+				.newInstance(req, "publish");
 		deRegisterServerCall.invoke(this.registerCallback, 1000);
 		SCTest.checkReply(this.registerCallback.getMessageSync());
 
@@ -170,7 +170,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		inspect = this.registerCallback.getMessageSync();
 		inspectMsg = (String) inspect.getBody();
 		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		expectedScEntry = "1conn_localhost/:1conn_localhost/:41000 : 10|1sess_localhost/:1sess_localhost/:42000 : 1|simulation_localhost/:simulation_localhost/:30000 : 10|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 10|";
+		expectedScEntry = "1conn_localhost/:1conn_localhost/:41000 : 10|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 1|1sess_localhost/:1sess_localhost/:42000 : 1|simulation_localhost/:simulation_localhost/:30000 : 10|";
 		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 	}

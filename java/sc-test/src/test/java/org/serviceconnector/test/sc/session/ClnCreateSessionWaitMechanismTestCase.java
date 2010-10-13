@@ -68,7 +68,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		SCTest.checkReply(responseMessage);
 		Assert.assertFalse(responseMessage.isFault());
 		Assert.assertTrue(responseMessage1.isFault());
-		SCTest.verifyError(responseMessage1, SCMPError.SC_ERROR, "[executing command failed]",
+		SCTest.verifyError(responseMessage1, SCMPError.SC_ERROR, "[no free connection on server for service 1conn]",
 				SCMPMsgType.CLN_CREATE_SESSION);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL

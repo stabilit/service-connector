@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
+import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.conf.RequesterConfigPool;
 import org.serviceconnector.net.req.SCRequester;
@@ -35,8 +36,6 @@ import org.serviceconnector.test.sc.SetupTestCases;
 import org.serviceconnector.test.sc.SuperTestCase;
 import org.serviceconnector.test.sc.connectionPool.TestContext;
 import org.serviceconnector.util.SynchronousCallback;
-
-
 
 public class ClnSubscribeTestCase extends SuperTestCase {
 
@@ -74,7 +73,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 				"publish-simulation");
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		subscribeCall.setNoDataIntervalSeconds(2);
+		subscribeCall.setNoDataIntervalSeconds(5);
 		subscribeCall.setMask("000012100012832102FADF-----------X-----------");
 		subscribeCall.invoke(this.callback, 3000);
 		SCMPMessage reply = this.callback.getMessageSync();
@@ -94,8 +93,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		receivePublicationCall.invoke(this.callback, 3000);
 		reply = this.callback.getMessageSync();
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
-		Assert.assertEquals("publish message nr " + ClnSubscribeTestCase.index, reply.getBody());
-		Thread.sleep(3000);
+
 		for (int i = 1; i < 3; i++) {
 			// receive publication first message
 			receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION.newInstance(
@@ -103,8 +101,12 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 			receivePublicationCall.invoke(this.callback, 3000);
 			reply = this.callback.getMessageSync();
 			Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
-			Assert.assertEquals("publish message nr " + (ClnSubscribeTestCase.index + i), reply.getBody());
 		}
+		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
+				.newInstance(req, "publish-simulation", sessionId);
+		unSubscribeCall.invoke(this.callback, 3000);
+		reply = this.callback.getMessageSync();
+		SCTest.checkReply(reply);
 	}
 
 	@Test
@@ -117,15 +119,6 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		subscribeCall.setNoDataIntervalSeconds(50);
 		subscribeCall.invoke(this.callback, 3000);
 		SCMPMessage fault = this.callback.getMessageSync();
-		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_ERROR, " [IntValue must be set]", SCMPMsgType.CLN_SUBSCRIBE);
-
-		// mask not valid
-		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		subscribeCall.setNoDataIntervalSeconds(50);
-		subscribeCall.setMask("%%%ACSD");
-		subscribeCall.invoke(this.callback, 3000);
-		fault = this.callback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_ERROR, " [IntValue must be set]", SCMPMsgType.CLN_SUBSCRIBE);
 

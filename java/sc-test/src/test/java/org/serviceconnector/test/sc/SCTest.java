@@ -40,6 +40,7 @@ import org.serviceconnector.test.sc.net.DefaultFrameDecoderTestCase;
 import org.serviceconnector.test.sc.net.HttpFrameDecoderTestCase;
 import org.serviceconnector.test.sc.net.KeepAliveMessageEncoderDecoderTestCase;
 import org.serviceconnector.test.sc.net.LargeMessageEncoderDecoderTestCase;
+import org.serviceconnector.test.sc.publish.PublishLargeMessagesTestCase;
 import org.serviceconnector.test.sc.register.DeRegisterServerTestCase;
 import org.serviceconnector.test.sc.register.RegisterServerTestCase;
 import org.serviceconnector.test.sc.scVersion.SCVersionToSCTestCase;
@@ -56,6 +57,9 @@ import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteAsyncTestCase;
 import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteLargeAsyncTestCase;
 import org.serviceconnector.test.sc.srvExecute.synch.SrvExecuteLargeSyncTestCase;
 import org.serviceconnector.test.sc.srvExecute.synch.SrvExecuteSyncTestCase;
+import org.serviceconnector.test.sc.subscribe.ClnSubscribeTestCase;
+import org.serviceconnector.test.sc.subscribe.ClnSubscribeWaitMechanismTestCase;
+import org.serviceconnector.test.sc.subscriptionChange.ClnChangeSubscriptionTestCase;
 import org.serviceconnector.test.sc.util.LinkedQueueTestCase;
 import org.serviceconnector.test.sc.util.SCVersionTestCase;
 import org.serviceconnector.test.sc.util.ValidatorUtilityTestCase;
@@ -75,6 +79,10 @@ import org.serviceconnector.test.sc.util.ValidatorUtilityTestCase;
 		SrvExecuteLargeSyncTestCase.class, // 
 		SrvExecuteAsyncTestCase.class,// 
 		SrvExecuteLargeAsyncTestCase.class, //
+		ClnSubscribeTestCase.class, //
+		ClnSubscribeWaitMechanismTestCase.class, //
+		ClnChangeSubscriptionTestCase.class, //
+		PublishLargeMessagesTestCase.class, //
 		ManageTestCase.class, //
 		ConnectionPoolTestCase.class, // 
 		MessageIdTestCase.class,// 
@@ -130,10 +138,10 @@ public class SCTest {
 		Map<String, String> expectedMap = splitStringToMap(expected, "\\|", "\\:");
 		Map<String, String> actualMap = splitStringToMap(actual, "\\|", "\\:");
 
-		 if (expectedMap.equals(actualMap) == false) {
-		 System.out.println("actual : " + actual);
-		 System.out.println("expected : " + expected);
-		 }
+		if (expectedMap.equals(actualMap) == false) {
+			System.out.println("actual : " + actual);
+			System.out.println("expected : " + expected);
+		}
 		Assert.assertEquals(expectedMap, actualMap);
 	}
 

@@ -21,7 +21,6 @@ import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SCMPClnDeleteSessionCall. Call deletes a session.
  * 
@@ -31,7 +30,7 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPClnDeleteSessionCall.class);
-	
+
 	/**
 	 * Instantiates a new SCMPClnDeleteSessionCall.
 	 */
@@ -73,5 +72,11 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 	 */
 	public void setServiceName(String serviceName) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setRequestBody(Object obj) {
+		throw new UnsupportedOperationException();
 	}
 }

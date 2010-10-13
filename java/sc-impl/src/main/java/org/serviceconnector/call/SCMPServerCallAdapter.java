@@ -18,8 +18,6 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.scmp.ISCMPCallback;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 
 
@@ -64,12 +62,4 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public abstract ISCMPCall newInstance(IRequester req, SCMPMessage message);
-
-	/** {@inheritDoc} */
-	@Override
-	public void invoke(ISCMPCallback callback, int timeoutInMillis) throws Exception {
-		super.invoke(callback, timeoutInMillis);
-		// no OP_TIMEOUT needed to send to server
-		this.requestMessage.removeHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-	}
 }

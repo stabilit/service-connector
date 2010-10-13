@@ -34,6 +34,7 @@ import org.serviceconnector.call.SCMPSrvUnsubscribeCall;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionPool;
+import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
@@ -133,14 +134,18 @@ public class Server {
 	 * 
 	 * @param msgToForward
 	 *            the message to forward
+	 * @throws ConnectionPoolBusyException
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void createSession(SCMPMessage msgToForward, ISCMPCallback callback, int timeoutMillis) {
+	public void createSession(SCMPMessage msgToForward, ISCMPCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
 		SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL
 				.newInstance(requester, msgToForward);
 		try {
 			createSessionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+		} catch (ConnectionPoolBusyException ex) {
+			throw ex;
 		} catch (Exception e) {
 			// create session failed
 			callback.callback(e);
@@ -154,13 +159,17 @@ public class Server {
 	 *            the message
 	 * @param callback
 	 *            the callback
+	 * @throws ConnectionPoolBusyException
 	 */
-	public void deleteSession(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) {
+	public void deleteSession(SCMPMessage message, ISCMPCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
 		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL
 				.newInstance(requester, message);
 
 		try {
 			deleteSessionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+		} catch (ConnectionPoolBusyException ex) {
+			throw ex;
 		} catch (Exception e) {
 			// delete session failed
 			callback.callback(e);
@@ -174,12 +183,15 @@ public class Server {
 	 *            the message to forward
 	 * @param callback
 	 *            the callback
+	 * @throws ConnectionPoolBusyException 
 	 */
-	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback, int timeoutMillis) {
+	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		SCMPSrvSubscribeCall subscribeCall = (SCMPSrvSubscribeCall) SCMPCallFactory.SRV_SUBSCRIBE_CALL.newInstance(
 				requester, msgToForward);
 		try {
 			subscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+		} catch (ConnectionPoolBusyException ex) {
+			throw ex;
 		} catch (Exception e) {
 			// subscribe failed
 			callback.callback(e);
@@ -193,13 +205,16 @@ public class Server {
 	 *            the message
 	 * @param callback
 	 *            the callback
+	 * @throws ConnectionPoolBusyException 
 	 */
-	public void unsubscribe(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) {
+	public void unsubscribe(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		SCMPSrvUnsubscribeCall unsubscribeCall = (SCMPSrvUnsubscribeCall) SCMPCallFactory.SRV_UNSUBSCRIBE_CALL
 				.newInstance(requester, message);
 
 		try {
 			unsubscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+		} catch (ConnectionPoolBusyException ex) {
+			throw ex;
 		} catch (Exception e) {
 			// unsubscribe failed
 			callback.callback(e);
@@ -215,13 +230,16 @@ public class Server {
 	 *            the callback
 	 * @param timeoutMillis
 	 *            the timeout milliseconds
+	 * @throws ConnectionPoolBusyException 
 	 */
-	public void changeSubscription(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) {
+	public void changeSubscription(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		SCMPSrvChangeSubscriptionCall changeSubscriptionCall = (SCMPSrvChangeSubscriptionCall) SCMPCallFactory.SRV_CHANGE_SUBSCRIPTION_CALL
 				.newInstance(requester, message);
 
 		try {
 			changeSubscriptionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+		} catch (ConnectionPoolBusyException ex) {
+			throw ex;
 		} catch (Exception e) {
 			// changeSubscription failed
 			callback.callback(e);
@@ -235,12 +253,16 @@ public class Server {
 	 *            the message
 	 * @param callback
 	 *            the callback
+	 * @throws ConnectionPoolBusyException
 	 */
-	public void execute(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) {
+	public void execute(SCMPMessage message, ISCMPCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
 		SCMPSrvExecuteCall srvExecuteCall = (SCMPSrvExecuteCall) SCMPCallFactory.SRV_EXECUTE_CALL.newInstance(
 				requester, message);
 		try {
 			srvExecuteCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+		} catch (ConnectionPoolBusyException ex) {
+			throw ex;
 		} catch (Exception th) {
 			// send data failed
 			callback.callback(th);
@@ -350,13 +372,13 @@ public class Server {
 
 	/**
 	 * Gets the requester.
-	 *
+	 * 
 	 * @return the requester
 	 */
 	public IRequester getRequester() {
 		return requester;
 	}
-	
+
 	/**
 	 * Adds an allocated session to the server.
 	 * 

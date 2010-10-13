@@ -23,14 +23,13 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.SC;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
-import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
+import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.ResponderConfigPool;
 import org.serviceconnector.ctrl.util.TestConstants;
-
 
 /**
  * @author JTraber
@@ -47,7 +46,7 @@ public class SetupTestCases {
 	private static SCSessionServer scSim10ConSrv;
 	private static SCSessionServer scSimEnableSrv;
 	private static SCSessionServer scSim1Sess;
-	
+
 	private SetupTestCases() {
 	}
 
@@ -80,7 +79,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
+				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties" });
 				SetupTestCases.startSessionServer10Connections();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -118,7 +117,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
+				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties" });
 				SetupTestCases.startSessionServer1Connection();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -131,7 +130,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
+				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties" });
 				SetupTestCases.startSessionServer10Connections();
 				SetupTestCases.startSessionServer1Connection();
 				SetupTestCases.startSessionServer1Session();
@@ -147,7 +146,7 @@ public class SetupTestCases {
 			try {
 				init();
 				setupTestCases = new SetupTestCases();
-				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties"});
+				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties" });
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -162,7 +161,7 @@ public class SetupTestCases {
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSim1Sess.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "1sess", 1, 1, srvCallback);
 	}
-	
+
 	private static void startSessionServer1Connection() throws Exception {
 		scSim1ConSrv = new SCSessionServer();
 		// connect to SC as server
@@ -230,35 +229,47 @@ public class SetupTestCases {
 
 		@Override
 		public SCMessage execute(SCMessage message) {
-			if (message.getData().toString().startsWith("Performance")) {
-				return message;
-			}
-			this.waitABit();
-			if (message.getData().toString().startsWith("large")) {
-				StringBuilder sb = new StringBuilder();
-				int i = 0;
-				sb.append("large:");
-				for (i = 0; i < 100000; i++) {
-					if (sb.length() > Constants.LARGE_MESSAGE_LIMIT + 10000) {
-						break;
+			Object data = message.getData();
+			if (data instanceof String) {
+				String body = (String) data;
+				if (body.startsWith("Performance")) {
+					return message;
+				}
+				this.waitABit();
+				if (body.startsWith("large")) {
+					StringBuilder sb = new StringBuilder();
+					int i = 0;
+					sb.append("large:");
+					for (i = 0; i < 100000; i++) {
+						if (sb.length() > Constants.LARGE_MESSAGE_LIMIT + 10000) {
+							break;
+						}
+						sb.append(i);
 					}
-					sb.append(i);
+					message.setData(sb.toString());
+					return message;
+				} else if (body.startsWith("appError")) {
+					SCMessageFault fault = new SCMessageFault();
+					try {
+						fault.setAppErrorCode(500);
+						fault.setAppErrorText("appErrorText");
+					} catch (SCMPValidatorException e) {
+						e.printStackTrace();
+					}
+					return fault;
+				} else if (body.startsWith("reflect")) {
+					return message;
+				} else if (body.startsWith("excOnServer")) {
+					throw new NullPointerException("test purposes");
+				} else if (body.startsWith("wait")) {
+					String timeValue = body.substring(5);
+					try {
+						int time = Integer.parseInt(timeValue);
+						Thread.sleep(time);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-				message.setData(sb.toString());
-				return message;
-			} else if (message.getData().toString().startsWith("appError")) {
-				SCMessageFault fault = new SCMessageFault();
-				try {
-					fault.setAppErrorCode(500);
-					fault.setAppErrorText("appErrorText");
-				} catch (SCMPValidatorException e) {
-					e.printStackTrace();
-				}
-				return fault;
-			} else if (message.getData().toString().startsWith("reflect")) {
-				return message;
-			} else if (message.getData().toString().startsWith("excOnServer")) {
-				throw new NullPointerException("test purposes");
 			}
 			message.setData("message data test case");
 			return message;
@@ -280,7 +291,7 @@ public class SetupTestCases {
 		publishSrv.setImmediateConnect(true);
 		publishSrv.startListener(TestConstants.HOST, 51000, 0);
 		PublishServerCallback publishCallback = new PublishServerCallback();
-		publishSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, serviceName, 10, 10, publishCallback);
+		publishSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, serviceName, 1, 1, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
 		Thread thread = new Thread(run);
 		thread.start();
@@ -290,6 +301,19 @@ public class SetupTestCases {
 
 		@Override
 		public SCMessage changeSubscription(SCMessage message) {
+			Object obj = message.getData();
+			if (obj != null && obj instanceof String) {
+				String data = (String) obj;
+				if (data.startsWith("wait")) {
+					String timeValue = data.substring(5);
+					try {
+						int time = Integer.parseInt(timeValue);
+						Thread.sleep(time);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
 			return message;
 		}
 
@@ -300,9 +324,16 @@ public class SetupTestCases {
 				String data = (String) obj;
 				if (data.startsWith("large")) {
 					SetupTestCases.large = true;
+				} else if (data.startsWith("wait")) {
+					String timeValue = data.substring(5);
+					try {
+						int time = Integer.parseInt(timeValue);
+						Thread.sleep(time);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
-
 			return message;
 		}
 
@@ -336,9 +367,9 @@ public class SetupTestCases {
 			while (!killPublishServer) {
 				try {
 					if (index % 3 == 0) {
-						Thread.sleep(3500);
+						Thread.sleep(500);
 					} else {
-						Thread.sleep(1000);
+						Thread.sleep(100);
 					}
 					Object data = "publish message nr " + ++index;
 					if (SetupTestCases.large) {

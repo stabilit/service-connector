@@ -19,9 +19,12 @@ package org.serviceconnector.cmd.sc;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.IAsyncCommand;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.SessionRegistry;
@@ -65,21 +68,43 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
-		ClnExecuteCommandCallback callback = new ClnExecuteCommandCallback(request, response, responderCallback,
-				sessionId);
+
 		Session session = this.getSessionById(sessionId);
 		// cancel session timeout
 		this.sessionRegistry.cancelSessionTimeout(session);
-		try {
-			Server server = session.getServer();
-			// try sending to the server
-			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			server.execute(message, callback, oti);
-		} catch (Exception ex) {
-			// schedule session timeout
-			this.sessionRegistry.scheduleSessionTimeout(session);
-		}
-		return;
+
+		Server server = session.getServer();
+		// try sending to the server
+		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
+
+		// Following loop implements the wait mechanism in case of a busy connection pool
+		int i = 0;
+		do {
+			ClnExecuteCommandCallback callback = new ClnExecuteCommandCallback(request, response, responderCallback,
+					sessionId);
+			try {
+				server.execute(message, callback, oti - (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
+				// no exception has been thrown - get out of wait loop
+				break;
+			} catch (ConnectionPoolBusyException ex) {
+				if (i >= (tries - 1)) {
+					// only one loop outstanding - don't continue throw current exception
+					// schedule session timeout
+					this.sessionRegistry.scheduleSessionTimeout(session);
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SC_ERROR,
+							"no free connection on server for service " + message.getServiceName());
+					scmpCommandException.setMessageType(this.getKey());
+					throw scmpCommandException;
+				}
+			} catch (Exception ex) {
+				// schedule session timeout
+				this.sessionRegistry.scheduleSessionTimeout(session);
+				throw ex;
+			}
+			// sleep for a while and then try again
+			Thread.sleep(Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
+		} while (++i < tries);
 	}
 
 	/** {@inheritDoc} */

@@ -153,6 +153,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void setRequestBody(Object obj) {
 		this.requestMessage.setBody(obj);
 	}

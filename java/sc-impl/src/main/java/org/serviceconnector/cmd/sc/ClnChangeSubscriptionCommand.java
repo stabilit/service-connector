@@ -17,13 +17,15 @@
 package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.SubscriptionLogger;
+import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -69,14 +71,40 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 		Subscription subscription = this.getSubscriptionById(subscriptionId);
 		Server server = subscription.getServer();
 
-		ISCMPSynchronousCallback callback = new CommandCallback(true);
+		CommandCallback callback = new CommandCallback(true);
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-		server.changeSubscription(reqMessage, callback, oti);
+
+		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
+		// Following loop implements the wait mechanism in case of a busy connection pool
+		int i = 0;
+		do {
+			callback = new CommandCallback(true);
+			try {
+				server.changeSubscription(reqMessage, callback, oti
+						- (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
+				// no exception has been thrown - get out of wait loop
+				break;
+			} catch (ConnectionPoolBusyException ex) {
+				if (i >= (tries - 1)) {
+					// only one loop outstanding - don't continue throw current exception
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SC_ERROR,
+							"no free connection on server for service " + reqMessage.getServiceName());
+					scmpCommandException.setMessageType(this.getKey());
+					throw scmpCommandException;
+				}
+			} catch (Exception ex) {
+				throw ex;
+			}
+			// sleep for a while and then try again
+			Thread.sleep(Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
+
+		} while (++i < tries);
+
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault() == false) {
-			boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-			if (Boolean.FALSE.equals(rejectSessionFlag)) {
+			boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+			if (Boolean.FALSE.equals(rejectSubscriptionFlag)) {
 				// session has not been rejected
 				String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
 				SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(subscriptionId);
