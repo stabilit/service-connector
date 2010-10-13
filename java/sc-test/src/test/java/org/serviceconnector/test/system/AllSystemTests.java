@@ -2,7 +2,7 @@ package org.serviceconnector.test.system;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.system.perf.PerformanceTests;
+import org.serviceconnector.test.system.perf.AllPerformanceTests;
 import org.serviceconnector.test.system.publish.ChangeSubscriptionClientTest;
 import org.serviceconnector.test.system.publish.PublishClientTest;
 import org.serviceconnector.test.system.publish.SubscribeClientTest;
@@ -32,9 +32,6 @@ import org.serviceconnector.test.system.session.SessionServerTest;
 		SubscriptionServerTest.class,
 
 		// special tests
-		EnableServiceDisableServiceClientToSCTest.class,
-
-		// performance tests
-		PerformanceTests.class })
+		EnableServiceDisableServiceClientToSCTest.class})
 public class AllSystemTests {
 }

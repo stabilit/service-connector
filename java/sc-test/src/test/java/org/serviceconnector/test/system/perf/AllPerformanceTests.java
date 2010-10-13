@@ -16,12 +16,12 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.log.Loggers;
 
-public class PerformanceTests {
+public class AllPerformanceTests {
 
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PerformanceTests.class);
+	protected final static Logger logger = Logger.getLogger(AllPerformanceTests.class);
 
 	private Process scProcess;
 	private Process srvProcess;
