@@ -197,7 +197,7 @@ public abstract class CommandAdapter implements ICommand {
 	/** {@inheritDoc} */
 	@Override
 	public void validate(IRequest request) throws Exception {
-		throw new SCMPValidatorException(SCMPError.HV_ERROR, "no validator implemented");
+		throw new SCMPValidatorException(SCMPError.HV_ERROR, "validator not implemented");
 	}
 
 	/** {@inheritDoc} */

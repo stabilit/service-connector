@@ -356,6 +356,7 @@ public class SCConsoleTest {
 		}
 	}
 	
+	// SC must be running !!
 	@Test
 	public void main_validUndefinedCommandOnNotExistingService_exitCode3State() throws Exception {
 		try {
@@ -365,12 +366,23 @@ public class SCConsoleTest {
 		}
 	}
 	
+	// SC must be running !!
 	@Test
 	public void main_validUndefinedCommandOnServiceSimulation_exitCode3State() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.UNDEFINED.getKey() + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(3, e.status);
+		}
+	}
+	
+	// SC must be running !!
+	@Test
+	public void zz_last_killSC_exitCode0() throws Exception {
+		try {
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.KILL.getKey()});
+		} catch (ExitException e) {
+			assertEquals(0, e.status);
 		}
 	}
 }

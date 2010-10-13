@@ -294,14 +294,13 @@ public class CreateSessionHttpClientTest {
 	@Test
 	public void createSession_10000times_passes() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		for (int i = 0; i < 1000; i++) {
-			testLogger.info("createSession_10000times cycle:\t" + i * 10);
-			for (int j = 0; j < 10; j++) {
-				sessionService.createSession("sessionInfo", 300, 10);
-				assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-				sessionService.deleteSession();
-				assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-			}
+		for (int i = 0; i < 10000; i++) {
+			if ((i % 500) == 0)
+				testLogger.info("createSession_10000times cycle:\t" + i + " ...");
+			sessionService.createSession("sessionInfo", 300, 10);
+			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			sessionService.deleteSession();
+			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
 	}
 
@@ -627,14 +626,13 @@ public class CreateSessionHttpClientTest {
 	@Test
 	public void createSession_1000timesDataNull_passes() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		for (int i = 0; i < 100; i++) {
-			testLogger.info("createSession_1000times cycle:\t" + i * 10);
-			for (int j = 0; j < 10; j++) {
-				sessionService.createSession("sessionInfo", 300, 10, null);
-				assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-				sessionService.deleteSession();
-				assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-			}
+		for (int i = 0; i < 1000; i++) {
+			if ((i % 500) == 0)
+				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
+			sessionService.createSession("sessionInfo", 300, 10, null);
+			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			sessionService.deleteSession();
+			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
 	}
 
@@ -794,14 +792,13 @@ public class CreateSessionHttpClientTest {
 	@Test
 	public void createSession_1000timesDataWhiteSpace_passes() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		for (int i = 0; i < 100; i++) {
-			testLogger.info("createSession_1000times cycle:\t" + i * 10);
-			for (int j = 0; j < 10; j++) {
-				sessionService.createSession("sessionInfo", 300, 10, " ");
-				assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-				sessionService.deleteSession();
-				assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-			}
+		for (int i = 0; i < 1000; i++) {
+			if ((i % 500) == 0)
+				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
+			sessionService.createSession("sessionInfo", 300, 10, " ");
+			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			sessionService.deleteSession();
+			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
 	}
 
@@ -961,14 +958,13 @@ public class CreateSessionHttpClientTest {
 	@Test
 	public void createSession_1000times_passes() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		for (int i = 0; i < 100; i++) {
-			testLogger.info("createSession_1000times cycle:\t" + i * 10);
-			for (int j = 0; j < 10; j++) {
-				sessionService.createSession("sessionInfo", 300, 10, "a");
-				assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-				sessionService.deleteSession();
-				assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-			}
+		for (int i = 0; i < 1000; i++) {
+			if ((i % 500) == 0)
+				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
+			sessionService.createSession("sessionInfo", 300, 10, "a");
+			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			sessionService.deleteSession();
+			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
 	}
 
@@ -1123,14 +1119,13 @@ public class CreateSessionHttpClientTest {
 	@Test
 	public void createSession_1000timesData60kBByteArray_passes() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		for (int i = 0; i < 100; i++) {
-			testLogger.info("createSession_1000times cycle:\t" + i * 10);
-			for (int j = 0; j < 10; j++) {
-				sessionService.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength60kB]);
-				assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-				sessionService.deleteSession();
-				assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-			}
+		for (int i = 0; i < 1000; i++) {
+			if ((i % 100) == 0)
+				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
+			sessionService.createSession("sessionInfo", 300, 10, new byte[TestConstants.dataLength60kB]);
+			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			sessionService.deleteSession();
+			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
 	}
 
@@ -1140,6 +1135,8 @@ public class CreateSessionHttpClientTest {
 		String[] sessions = new String[sessionsCount];
 		SCSessionService[] sessionServices = new SCSessionService[sessionsCount];
 		for (int i = 0; i < sessionsCount; i++) {
+			if ((i % 100) == 0)
+				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
 			sessionServices[i] = client.newSessionService(TestConstants.serviceName);
 			sessionServices[i].createSession("sessionInfo", 300, 10);
 			sessions[i] = sessionServices[i].getSessionId();
@@ -1170,6 +1167,8 @@ public class CreateSessionHttpClientTest {
 		SCSessionService[] sessionServices = new SCSessionService[sessionsCount];
 		try {
 			for (int i = 0; i < sessionsCount; i++) {
+				if ((i % 100) == 0)
+					testLogger.info("createSession_1001times cycle:\t" + i + " ...");
 				sessionServices[i] = client.newSessionService(TestConstants.serviceName);
 				sessionServices[i].createSession("sessionInfo", 300, 10);
 				sessions[i] = sessionServices[i].getSessionId();
@@ -1253,13 +1252,12 @@ public class CreateSessionHttpClientTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		String[] sessions = new String[clientsCount];
 
-		for (int i = 0; i < clientsCount / 10; i++) {
-			testLogger.info("Creating session " + i * 10);
-			for (int j = 0; j < 10; j++) {
-				sessionService.createSession("sessionInfo", 300, 60);
-				sessions[j + (10 * i)] = sessionService.getSessionId();
-				sessionService.deleteSession();
-			}
+		for (int i = 0; i < clientsCount; i++) {
+			if ((i % 500) == 0)
+				testLogger.info("createSession_10000times cycle:\t" + i + " ...");
+			sessionService.createSession("sessionInfo", 300, 60);
+			sessions[i] = sessionService.getSessionId();
+			sessionService.deleteSession();
 		}
 
 		Arrays.sort(sessions);

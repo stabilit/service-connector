@@ -15,10 +15,13 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.log.Loggers;
 
 public class PublishClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PublishClientTest.class);
+	
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	private static Process scProcess;
 	private static Process srvProcess;
@@ -135,6 +138,8 @@ public class PublishClientTest {
 		int counter = 0;
 
 		for (int i = 0; i < 600 && counter < 20; i++) {
+			if ((i % 10) == 0)
+				testLogger.info("wait for message cycle:\t" + i + " ...");
 			if (counter == callback.getMessageCounter()) {
 				Thread.sleep(100);
 			} else if (counter < callback.getMessageCounter()) {

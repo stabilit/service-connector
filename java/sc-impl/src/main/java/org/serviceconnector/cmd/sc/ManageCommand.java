@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
@@ -31,6 +32,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.ServiceState;
+import org.serviceconnector.util.ValidatorUtility;
 
 
 /**
@@ -66,6 +68,7 @@ public class ManageCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
+		String ipAddress = (String) reqMsg.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		
 		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
@@ -74,9 +77,9 @@ public class ManageCommand extends CommandAdapter {
 		InetAddress localHost = InetAddress.getLocalHost();
 		scmpReply.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 
-		if (bodyString.equalsIgnoreCase(Constants.KILL)) {
-			logger.info("SC exiting ...");
-			// kill sc requested
+		if ((ipAddress.equals(localHost.getHostAddress())) && (bodyString.equalsIgnoreCase(Constants.KILL))) {
+			// kill request is allowed from localhost only!
+			logger.warn("Kill request received, SC exiting ...");
 			System.exit(0);
 		}
 
@@ -111,7 +114,21 @@ public class ManageCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void validate(IRequest request) throws SCMPValidatorException {
-		// no validation necessary in case of manage command
+	public void validate(IRequest request) throws Exception {
+		try {
+			SCMPMessage message = request.getMessage();
+			// ipAddressList
+			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
+			ValidatorUtility.validateIpAddressList(ipAddressList);
+		} catch (HasFaultResponseException ex) {
+			// needs to set message type at this point
+			ex.setMessageType(getKey());
+			throw ex;
+		} catch (Throwable ex) {
+			logger.error("validate", ex);
+			SCMPValidatorException validatorException = new SCMPValidatorException();
+			validatorException.setMessageType(getKey());
+			throw validatorException;
+		}
 	}
 }

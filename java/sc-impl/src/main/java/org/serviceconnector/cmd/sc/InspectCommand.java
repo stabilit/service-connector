@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.registry.Registry;
+import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
@@ -31,6 +32,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceState;
+import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used for
@@ -117,8 +119,22 @@ public class InspectCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void validate(IRequest request) throws SCMPValidatorException {
-		// no validation necessary in case of inspect command
+	public void validate(IRequest request) throws Exception {
+		try {
+			SCMPMessage message = request.getMessage();
+			// ipAddressList
+			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
+			ValidatorUtility.validateIpAddressList(ipAddressList);
+		} catch (HasFaultResponseException ex) {
+			// needs to set message type at this point
+			ex.setMessageType(getKey());
+			throw ex;
+		} catch (Throwable ex) {
+			logger.error("validate", ex);
+			SCMPValidatorException validatorException = new SCMPValidatorException();
+			validatorException.setMessageType(getKey());
+			throw validatorException;
+		}
 	}
 
 	/**

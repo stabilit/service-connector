@@ -27,8 +27,10 @@ public enum ConsoleCommand {
 	DISABLE("disable"),
 	/** The SHOW. */
 	STATE("state"),
-	/** The UNDEFINED. */
+	/** The SESSIONS. */
 	SESSIONS("sessions"),
+	/** The KILL. */
+	KILL("kill"),
 	/** The UNDEFINED. */
 	UNDEFINED("undefined");
 
@@ -61,6 +63,9 @@ public enum ConsoleCommand {
 		}
 		if (SESSIONS.key.equals(key)) {
 			return SESSIONS;
+		}
+		if (KILL.key.equals(key)) {
+			return KILL;
 		}
 		return UNDEFINED;
 	}

@@ -16,6 +16,7 @@ import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.log.Loggers;
 import org.serviceconnector.service.SCServiceException;
 
 //TODO FJU missing method to get current subscription to verify correct changes
@@ -24,6 +25,8 @@ public class ChangeSubscriptionClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ChangeSubscriptionClientTest.class);
 
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	
 	private static Process scProcess;
 	private static Process srvProcess;
 
@@ -229,12 +232,13 @@ public class ChangeSubscriptionClientTest {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 		int loop = 10000;
-		for (int i = 0; i < loop / 10; i++) {
-			System.out.println("changeSubscription.loop: " + i * 10);
-			for (int j = 0; j < 10; j++) {
-				service.changeSubscription(TestConstants.mask);
-				Thread.sleep(5); // little sleep, Netty has problems sending very fast will be done next version!
-			}
+		for (int i = 0; i < loop; i++) {
+			if ((i % 500) == 0)
+				testLogger.info("changeSubscription_10000Times cycle:\t" + i + " ...");
+			service.changeSubscription(TestConstants.mask);
+			Thread.sleep(5); // TODO little sleep, Netty has problems sending
+								// very fast will be done next version!
+
 		}
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(true, service.isSubscribed());
@@ -244,17 +248,17 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void subscribeChangeSubscriptionUnsubscribe_10000Times_passes() throws Exception {
 		int loop = 10000;
-		for (int i = 0; i < loop / 10; i++) {
-			System.out.println("subscribeChangeSubscriptionUnsubscribe.loop: " + i * 10);
-			for (int j = 0; j < 10; j++) {
-				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-				service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
-				service.changeSubscription(TestConstants.mask);
-				Thread.sleep(5); // little sleep, Netty has problems sending very fast will be done next version!
-				assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-				assertEquals(true, service.isSubscribed());
-				service.unsubscribe();
-			}
+		for (int i = 0; i < loop; i++) {
+			if ((i % 500) == 0)
+				testLogger.info("ubscribeChangeSubscriptionUnsubscribe_10000Times cycle:\t" + i + " ...");
+			SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			service.changeSubscription(TestConstants.mask);
+			Thread.sleep(5); // TODO little sleep, Netty has problems sending very
+								// fast will be done next version!
+			assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+			assertEquals(true, service.isSubscribed());
+			service.unsubscribe();
 		}
 	}
 

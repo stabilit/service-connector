@@ -16,6 +16,7 @@ import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.log.Loggers;
 import org.serviceconnector.service.SCServiceException;
 
 public class SubscribeUnsubscribeClientTest {
@@ -23,6 +24,8 @@ public class SubscribeUnsubscribeClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SubscribeUnsubscribeClientTest.class);
 
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	
 	private static Process scProcess;
 	private static Process srvProcess;
 
@@ -186,17 +189,17 @@ public class SubscribeUnsubscribeClientTest {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 
 		int loop = 10000;
-		for (int i = 0; i < loop / 10; i++) {
-			System.out.println("subscribeUnsubscribe.loop " + i * 10);
-			for (int j = 0; j < 10; j++) {
-				service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
-				assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-				assertEquals(true, service.isSubscribed());
-				service.unsubscribe();
-				Thread.sleep(5); // little sleep, Netty has problems sending very fast will be done next version!
-				assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-				assertEquals(false, service.isSubscribed());
-			}
+		for (int i = 0; i < loop; i++) {
+			if ((i % 500) == 0)
+				testLogger.info("subscribeUnsubscribe_10000Times cycle:\t" + i + " ...");
+			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+			assertEquals(true, service.isSubscribed());
+			service.unsubscribe();
+			Thread.sleep(5); // TODO little sleep, Netty has problems sending
+								// very fast! must be fixed
+			assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+			assertEquals(false, service.isSubscribed());
 		}
 	}
 
