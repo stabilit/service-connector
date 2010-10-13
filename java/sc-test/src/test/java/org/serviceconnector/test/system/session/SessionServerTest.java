@@ -217,7 +217,6 @@ public class SessionServerTest {
 		StartSessionClient client = new StartSessionClient("echo_waitFor3EchoMessages_5MessagesArrive");
 		client.start();
 		client.join();
-
 		assertEquals(5, srvCallback.messagesExchanged);
 	}
 

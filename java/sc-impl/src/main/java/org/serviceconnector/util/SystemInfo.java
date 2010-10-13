@@ -70,6 +70,7 @@ public class SystemInfo {
 	}
 
 	private static void loadInfos() {
+		
 		Properties sysprops = System.getProperties();
 
 		javaVersion = sysprops.getProperty(JAVA_VERSION);

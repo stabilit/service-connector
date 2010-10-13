@@ -236,8 +236,7 @@ public class ChangeSubscriptionClientTest {
 			if ((i % 500) == 0)
 				testLogger.info("changeSubscription_10000Times cycle:\t" + i + " ...");
 			service.changeSubscription(TestConstants.mask);
-			Thread.sleep(5); // TODO little sleep, Netty has problems sending
-								// very fast will be done next version!
+			Thread.sleep(5); // TODO little sleep required in this Netty version. Known bug, will be fixed soon
 
 		}
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
@@ -254,8 +253,7 @@ public class ChangeSubscriptionClientTest {
 			SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
 			service.changeSubscription(TestConstants.mask);
-			Thread.sleep(5); // TODO little sleep, Netty has problems sending very
-								// fast will be done next version!
+			Thread.sleep(5); // TODO little sleep required in this Netty version. Known bug, will be fixed soon
 			assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 			assertEquals(true, service.isSubscribed());
 			service.unsubscribe();

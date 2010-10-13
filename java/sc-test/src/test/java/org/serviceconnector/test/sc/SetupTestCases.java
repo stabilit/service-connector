@@ -28,7 +28,7 @@ import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.conf.ResponderConfigPool;
+import org.serviceconnector.conf.ResponderConfiguration;
 import org.serviceconnector.ctrl.util.TestConstants;
 
 /**
@@ -51,7 +51,7 @@ public class SetupTestCases {
 	}
 
 	public static void init() throws Exception {
-		ResponderConfigPool config = new ResponderConfigPool();
+		ResponderConfiguration config = new ResponderConfiguration();
 		config.load("sc.properties");
 		deleteLog();
 		scSimEnableSrv = new SCSessionServer();

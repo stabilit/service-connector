@@ -57,8 +57,7 @@ import org.serviceconnector.web.ctx.WebContext;
 public class DefaultWebCommand extends WebCommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(DefaultWebCommand.class);
+	protected final static Logger logger = Logger.getLogger(DefaultWebCommand.class);
 
 	/**
 	 * Instantiates a new default web command.
@@ -74,12 +73,11 @@ public class DefaultWebCommand extends WebCommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IWebRequest request, IWebResponse response)
-			throws Exception {
+	public void run(IWebRequest request, IWebResponse response) throws Exception {
 		// check if session is available
 		String url = request.getURL();
 		if (url != null) {
-		   logger.info(url);
+			logger.info(url);
 		} else {
 			logger.info("url is null");
 		}
@@ -100,9 +98,9 @@ public class DefaultWebCommand extends WebCommandAdapter {
 				jsessionidCookie.setMaxAge(0);
 				response.addCookie(jsessionidCookie);
 			} else {
-			   webSession = request.getSession(true);
-			   response.addCookie("JSESSIONID", webSession.getSessionId());
-			   request.setAttribute("JSESSIONID", webSession.getSessionId());
+				webSession = request.getSession(true);
+				response.addCookie("JSESSIONID", webSession.getSessionId());
+				request.setAttribute("JSESSIONID", webSession.getSessionId());
 			}
 		}
 		// load xml model as stream
@@ -135,8 +133,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		XSLDocument xslDocument = new XSLDocument(request);
 		// check if this web command is accessible
 		if (this.webCommandAccessible.isAccessible(request)) {
-			IWebCommandAccessibleContext accessibleContext = this.webCommandAccessible
-					.getAccessibleContext();
+			IWebCommandAccessibleContext accessibleContext = this.webCommandAccessible.getAccessibleContext();
 			xmlDocument.setAccessibleContext(accessibleContext);
 			xslDocument.setAccessibleContext(accessibleContext);
 		}
@@ -146,21 +143,19 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			xmlDocument.addException(e);
 		}
 		if (xmlDocument.isText()) {
-		    xmlDocument.load(responseOutputStream);
+			xmlDocument.load(responseOutputStream);
 			response.setContentType("text/html");
 			return;
 		}
-	    xmlDocument.load(xmlOS);
+		xmlDocument.load(xmlOS);
 		// check if xmlview is yes or true
 		if (isXMLView(request)) {
-			dumpStream(new ByteArrayInputStream(xmlOS.toByteArray()),
-					responseOutputStream);
+			dumpStream(new ByteArrayInputStream(xmlOS.toByteArray()), responseOutputStream);
 			response.setContentType("text/xml");
 			return;
 		}
 		// transform
-		xslDocument.transform(new ByteArrayInputStream(xmlOS.toByteArray()),
-				responseOutputStream);
+		xslDocument.transform(new ByteArrayInputStream(xmlOS.toByteArray()), responseOutputStream);
 		response.setContentType("text/html");
 	}
 
@@ -337,8 +332,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 * @param accessibleContext
 		 *            the new accessible context
 		 */
-		public void setAccessibleContext(
-				IWebCommandAccessibleContext accessibleContext) {
+		public void setAccessibleContext(IWebCommandAccessibleContext accessibleContext) {
 			this.accessibleContext = accessibleContext;
 		}
 
@@ -460,8 +454,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 * @param accessibleContext
 		 *            the new accessible context
 		 */
-		public void setAccessibleContext(
-				IWebCommandAccessibleContext accessibleContext) {
+		public void setAccessibleContext(IWebCommandAccessibleContext accessibleContext) {
 			this.accessibleContext = accessibleContext;
 		}
 
@@ -474,14 +467,14 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 */
 		private String getXSLPath(String url) {
 			if (url == null) {
-				url = this.request.getURL();				
+				url = this.request.getURL();
 			}
 			String rootPath = "/org/serviceconnector/web/xsl/";
 			String rootAjaxPath = "/org/serviceconnector/web/xsl/ajax/";
 			if (this.isAjax(url)) {
 				String id = request.getParameter("id");
 				if (id != null) {
-					return rootAjaxPath + id+ ".xsl";
+					return rootAjaxPath + id + ".xsl";
 				}
 			}
 			if (this.accessibleContext == null) {
@@ -515,8 +508,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 * @throws Exception
 		 *             the exception
 		 */
-		public void transform(InputStream xmlInputStream,
-				OutputStream resultOutputStream) throws Exception {
+		public void transform(InputStream xmlInputStream, OutputStream resultOutputStream) throws Exception {
 			String xslPath = this.getXSLPath(null);
 			// load xsl input stream for given request
 			xslInputStream = WebUtil.loadResource(xslPath);
@@ -544,8 +536,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			 * @see javax.xml.transform.URIResolver#resolve(java.lang.String,
 			 * java.lang.String)
 			 */
-			public Source resolve(String href, String base)
-					throws TransformerException {
+			public Source resolve(String href, String base) throws TransformerException {
 				InputStream is = WebUtil.loadResource("/org/serviceconnector/web/xsl/" + href);
 				return new StreamSource(is);
 			}

@@ -164,7 +164,7 @@ public class SubscribeUnsubscribeClientTest {
 		assertEquals(false, service.isSubscribed());
 	}
 
-	// TODO FJU after subscrube -> unsubscribe -> subscribe, NullPointer is thrown
+	// TODO FJU after subscribe -> unsubscribe -> subscribe, NullPointer is thrown
 	@Test
 	public void subscribeUnsubscribe_twice_isSubscribedThenNot() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);

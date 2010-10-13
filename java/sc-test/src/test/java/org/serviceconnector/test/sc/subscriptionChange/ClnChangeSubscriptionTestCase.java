@@ -24,7 +24,7 @@ import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
-import org.serviceconnector.conf.RequesterConfigPool;
+import org.serviceconnector.conf.RequesterConfiguration;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -52,7 +52,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 	public void setup() throws Exception {
 		SetupTestCases.setupAll();
 		try {
-			this.config = new RequesterConfigPool();
+			this.config = new RequesterConfiguration();
 			this.config.load(fileName);
 			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
 			req = new SCRequester(this.testContext);

@@ -12,12 +12,15 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.log.Loggers;
 import org.serviceconnector.service.SCServiceException;
 
 public class EnableServiceDisableServiceClientToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(EnableServiceDisableServiceClientToSCTest.class);
 
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	
 	private static Process scProcess;
 	private Process srvProcess;
 
@@ -134,6 +137,8 @@ public class EnableServiceDisableServiceClientToSCTest {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 
 		for (int i = 0; i < 1000; i++) {
+			if ((i % 100) == 0)
+				testLogger.info("EnabledDisableService_1000Times cycle:\t" + i + " ...");
 			client.disableService(TestConstants.serviceName);
 			client.enableService(TestConstants.serviceName);
 		}
@@ -151,6 +156,8 @@ public class EnableServiceDisableServiceClientToSCTest {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 
 		for (int i = 0; i < 1000; i++) {
+			if ((i % 100) == 0)
+				testLogger.info("EnabledDisableService_1000Times cycle:\t" + i + " ...");
 			client.disableService(TestConstants.serviceName);
 			client.enableService(TestConstants.serviceName);
 

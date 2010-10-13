@@ -627,7 +627,7 @@ public class CreateSessionHttpClientTest {
 	public void createSession_1000timesDataNull_passes() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 1000; i++) {
-			if ((i % 500) == 0)
+			if ((i % 100) == 0)
 				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
 			sessionService.createSession("sessionInfo", 300, 10, null);
 			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -793,7 +793,7 @@ public class CreateSessionHttpClientTest {
 	public void createSession_1000timesDataWhiteSpace_passes() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 1000; i++) {
-			if ((i % 500) == 0)
+			if ((i % 100) == 0)
 				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
 			sessionService.createSession("sessionInfo", 300, 10, " ");
 			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -959,7 +959,7 @@ public class CreateSessionHttpClientTest {
 	public void createSession_1000times_passes() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		for (int i = 0; i < 1000; i++) {
-			if ((i % 500) == 0)
+			if ((i % 100) == 0)
 				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
 			sessionService.createSession("sessionInfo", 300, 10, "a");
 			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());

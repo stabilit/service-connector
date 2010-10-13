@@ -28,14 +28,14 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
- * The Class CommunicatorConfigPool. Processes scm property files.
+ * The Class Configuration. Processes sc property file.
  * 
  * @author JTraber
  */
-public abstract class CommunicatorConfigPool {
+public abstract class Configuration {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(CommunicatorConfigPool.class);
+	protected final static Logger logger = Logger.getLogger(Configuration.class);
 
 	/** The properties. */
 	private CompositeConfiguration configurations;
@@ -47,7 +47,7 @@ public abstract class CommunicatorConfigPool {
 	/**
 	 * Instantiates a new communicator configuration pool.
 	 */
-	public CommunicatorConfigPool() {
+	public Configuration() {
 		this.comConfigList = null;
 		this.configurations = null;
 		this.writePIDFlag = false;
@@ -141,6 +141,18 @@ public abstract class CommunicatorConfigPool {
 		if (subscriptionTimeoutString != null) {
 			int subscriptionTimeout = Integer.parseInt(subscriptionTimeoutString);
 			Constants.setSubscriptionTimeout(subscriptionTimeout);
+		}
+
+		String commandValidationString = this.configurations.getString(Constants.ROOT_COMMAND_VALIDATION_ENABLED);
+		if (commandValidationString != null) {
+			boolean commandValidation = Boolean.parseBoolean(commandValidationString);
+			Constants.setCommandValidation(commandValidation);
+		}
+
+		String messageCacheString = this.configurations.getString(Constants.ROOT_MESSAGE_CACHE_ENABLED);
+		if (messageCacheString != null) {
+			boolean messageCache = Boolean.parseBoolean(messageCacheString);
+			Constants.setMessageCache(messageCache);
 		}
 	}
 

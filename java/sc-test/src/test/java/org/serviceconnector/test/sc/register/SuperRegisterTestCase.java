@@ -22,8 +22,8 @@ import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.conf.RequesterConfigPool;
-import org.serviceconnector.conf.ResponderConfigPool;
+import org.serviceconnector.conf.RequesterConfiguration;
+import org.serviceconnector.conf.ResponderConfiguration;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -42,8 +42,8 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	protected IRequester registerRequester;
 	private RequesterContext registerContext;
 	private String registerFileName = "session-server.properties";
-	private RequesterConfigPool registerConfig = null;
-	private ResponderConfigPool responderConfig = null;
+	private RequesterConfiguration registerConfig = null;
+	private ResponderConfiguration responderConfig = null;
 
 	/**
 	 * The Constructor.
@@ -59,8 +59,8 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		this.registerConfig = new RequesterConfigPool();
-		this.responderConfig = new ResponderConfigPool();
+		this.registerConfig = new RequesterConfiguration();
+		this.responderConfig = new ResponderConfiguration();
 		this.registerConfig.load(registerFileName);
 		this.responderConfig.load(registerFileName);
 		this.registerContext = new RegisterServerContext(registerConfig.getRequesterConfig(), this.msgId);

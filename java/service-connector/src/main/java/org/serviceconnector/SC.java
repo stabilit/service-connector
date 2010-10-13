@@ -33,7 +33,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.conf.ResponderConfigPool;
+import org.serviceconnector.conf.ResponderConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ILoggingManagerMXBean;
 import org.serviceconnector.log.JMXLoggingManager;
@@ -95,7 +95,7 @@ public final class SC {
 
 		SystemInfo.setConfigFileName(configFileName);
 
-		ResponderConfigPool config = new ResponderConfigPool();
+		ResponderConfiguration config = new ResponderConfiguration();
 		config.load(configFileName);
 
 		// Initialize service connector command factory

@@ -161,7 +161,6 @@ public class SubscriptionServerTest {
 		StartPublishClient client = new StartPublishClient("subscribeUnsubscribe_twice_isSubscribedThenNot");
 		client.start();
 		client.join();
-
 		assertEquals(4, srvCallback.messagesExchanged);
 	}
 
@@ -170,7 +169,6 @@ public class SubscriptionServerTest {
 		StartPublishClient client = new StartPublishClient("changeSubscription_twice_passes");
 		client.start();
 		client.join();
-
 		assertEquals(4, srvCallback.messagesExchanged);
 	}
 
@@ -179,7 +177,6 @@ public class SubscriptionServerTest {
 		StartPublishClient client = new StartPublishClient("unsubscribe_serviceNameValid_notSubscribedEmptySessionId");
 		client.start();
 		client.join();
-
 		assertEquals(0, srvCallback.messagesExchanged);
 	}
 

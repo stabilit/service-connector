@@ -27,6 +27,7 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.ctx.AppContext;
@@ -158,7 +159,9 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 
 			// validate request and run command
 			try {
-				command.validate(request);
+				if (Constants.COMMAND_VALIDATION_ENABLED) {
+					command.validate(request);
+				}
 				performanceLogger.begin(this.getClass().getSimpleName(), "run");
 				if (command.isAsynchronous()) {
 					if (logger.isDebugEnabled()) {

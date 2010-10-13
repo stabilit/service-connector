@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.serviceconnector.conf.RequesterConfigPool;
+import org.serviceconnector.conf.RequesterConfiguration;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -40,7 +40,7 @@ import org.serviceconnector.test.sc.connectionPool.TestContext;
 public abstract class SuperTestCase {
 
 	protected String fileName;
-	protected RequesterConfigPool config = null;
+	protected RequesterConfiguration config = null;
 	protected IRequester req = null;
 	protected RequesterContext testContext;
 	protected SCMPMessageId msgId;
@@ -64,7 +64,7 @@ public abstract class SuperTestCase {
 	public void setup() throws Exception {
 		SetupTestCases.setupAll();
 		try {
-			this.config = new RequesterConfigPool();
+			this.config = new RequesterConfiguration();
 			this.config.load(fileName);
 			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
 			req = new SCRequester(this.testContext);

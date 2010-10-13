@@ -33,11 +33,15 @@ public final class Constants {
 	}
 
 	/** The Constant LARGE_MESSAGE_LIMIT. */
-	private static final int DEFAULT_LARGE_MESSAGE_LIMIT = 60 << 10; // 64Kb
-	/** The Constant LARGE_MESSAGE_LIMIT. */
+	private static final int DEFAULT_LARGE_MESSAGE_LIMIT = 60 << 10; // 64K
+		/** The Constant LARGE_MESSAGE_LIMIT. */
 	public static int LARGE_MESSAGE_LIMIT = DEFAULT_LARGE_MESSAGE_LIMIT;
 	/** File qualifier for command line argument configuration file. */
 	public static final String CLI_CONFIG_ARG = "-sc.configuration";
+	/** flag to enable / disable validation. */
+	public static boolean COMMAND_VALIDATION_ENABLED = true;
+	/** flag to enable / disable cache. */
+	public static boolean MESSAGE_CACHE_ENABLED = true;
 	/** File qualifier for Http requests. */
 	public static final String HTTP_FILE = "/";
 	/** The DEFAULT_NR_OF_THREADS FOR SERVER. */
@@ -54,10 +58,14 @@ public final class Constants {
 	 */
 	public static double ECHO_INTERVAL_MULTIPLIER = DEFAULT_ECHO_INTERVAL_MULTIPLIER;
 	/**
-	 * OPERATION_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the operation timeout. E.g. SC needs to adapt
-	 * operation timeout from client for operations to server.
+	 * DEFAULT_OPERATION_TIMEOUT_MULTIPLIER: Default value if no OPERATION_TIMEOUT_MULTIPLIER will be set by configuration.
 	 */
-	public static final double OPERATION_TIMEOUT_MULTIPLIER = 0.8;
+	private static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
+	/**
+	 * ECHO_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the echo timeout of a session. E.g. SC needs to
+	 * adapt echo timeout interval from client to get right interval for echo messages.
+	 */
+	public static final double OPERATION_TIMEOUT_MULTIPLIER = DEFAULT_OPERATION_TIMEOUT_MULTIPLIER;
 	/**
 	 * DEFAULT_OPERATION_TIMEOUT: This operation timeout is used when communicating with SC to set timeout on a higher
 	 * level of architecture. Time unit is seconds. Used if no timeout for operation is handed over by the user.
@@ -73,33 +81,37 @@ public final class Constants {
 	 * WRITE/READ/CLOSE/OPEN can have. Should be low/short.
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
-	/** The Constant CONNECT_TIMEOUT_MILLIS_DEFAULT. */
-	private static final int CONNECT_TIMEOUT_MILLIS_DEFAULT = 5000;
+	/** The Constant DEFAULT_CONNECT_TIMEOUT_MILLIS. */
+	private static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 5000;
 	/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
-	public static int CONNECT_TIMEOUT_MILLIS = CONNECT_TIMEOUT_MILLIS_DEFAULT;
-	/** The SUBSCRIPTION_TIMEOUT_MILLIS_DEFAULT, time after a subscription is marked as dead. */
-	private static final int SUBSCRIPTION_TIMEOUT_MILLIS_DEFAULT = 300000;
+	public static int CONNECT_TIMEOUT_MILLIS = DEFAULT_CONNECT_TIMEOUT_MILLIS;
+	/** The DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS, time after a subscription is marked as dead. */
+	private static final int DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS = 300000;
 	/** The SUBSCRIPTION_TIMEOUT_MILLIS, time after a subscription is marked as dead. */
-	public static int SUBSCRIPTION_TIMEOUT_MILLIS = SUBSCRIPTION_TIMEOUT_MILLIS_DEFAULT;
+	public static int SUBSCRIPTION_TIMEOUT_MILLIS = DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS;
 	/** The WAIT_FOR_CONNECTION_INTERVAL_MILLIS. */
 	public static final int WAIT_FOR_CONNECTION_INTERVAL_MILLIS = 200;
 	/** The Constant SEC_TO_MILISEC_FACTOR. */
 	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
 	/** The REGEX. */
 	public static final String COMMA_OR_SEMICOLON = ",|;";
-	/** The Constant ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER. */
-	public static final String ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER = "root.largeMessageLimit";
 	/** The Constant ROOT_TEST_QUALIFIER. */
 	public static final String ROOT_WRITEPID_QUALIFIER = "root.writePID";
 	/** The Constant ROOT_OPERATION_TIMEOUT_QUALIFIER. */
 	public static final String ROOT_OPERATION_TIMEOUT_QUALIFIER = "root.operationTimeoutMultiplier";
 	/** The Constant ROOT_ECHO_TIMEOUT_QUALIFIER. */
 	public static final String ROOT_ECHO_INTERVAL_QUALIFIER = "root.echoIntervalMultiplier";
+	/** The Constant ROOT_COMMAND_VALIDATION_ENABLED. */
+	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
+	/** The Constant ROOT_MESSAGE_CACHE_ENABLED. */
+	public static final String ROOT_MESSAGE_CACHE_ENABLED = "root.messageCacheEnabled";
 	/** The Constant ROOT_CONNECTION_TIMEOUT_QUALIFIER. */
+	public static final String ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER = "root.largeMessageLimit";
+	/** The Constant ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER. */
 	public static final String ROOT_CONNECTION_TIMEOUT_QUALIFIER = "root.connectionTimeout";
 	/** The Constant ROOT_SUBSCRIPTION_TIMEOUT_QUALIFIER. */
 	public static final String ROOT_SUBSCRIPTION_TIMEOUT_QUALIFIER = "root.subscriptionTimeout";
-	/** The CON. */
+	/** The connection type. */
 	public static final String CONNECTION_TYPE_QUALIFIER = ".connectionType";
 	/** The USERID. */
 	public static final String CONNECTION_USERNAME = ".username";
@@ -193,6 +205,21 @@ public final class Constants {
 	/** The Constant EQUAL_SIGN. */
 	public static final String EQUAL_SIGN = "=";
 
+	
+	/**
+	 * @param flag
+	 */
+	public static void setCommandValidation(boolean flag) {
+		Constants.COMMAND_VALIDATION_ENABLED = flag;
+	}
+
+	/**
+	 * @param flag
+	 */
+	public static void setMessageCache(boolean flag) {
+		Constants.MESSAGE_CACHE_ENABLED = flag;
+	}
+
 	/**
 	 * Sets the large message limit.
 	 * 
@@ -224,7 +251,7 @@ public final class Constants {
 	}
 
 	public static void setConnectionTimeout(int connectionTimeout) {
-		if (Constants.CONNECT_TIMEOUT_MILLIS != Constants.CONNECT_TIMEOUT_MILLIS_DEFAULT) {
+		if (Constants.CONNECT_TIMEOUT_MILLIS != Constants.DEFAULT_CONNECT_TIMEOUT_MILLIS) {
 			// setting CONNECT_TIMEOUT_MILLIS only allowed one time
 			logger.error("setConnectionTimeout called two times - not allowed.");
 			return;
@@ -233,7 +260,7 @@ public final class Constants {
 	}
 
 	public static void setSubscriptionTimeout(int subscriptionTimeout) {
-		if (Constants.SUBSCRIPTION_TIMEOUT_MILLIS != Constants.SUBSCRIPTION_TIMEOUT_MILLIS_DEFAULT) {
+		if (Constants.SUBSCRIPTION_TIMEOUT_MILLIS != Constants.DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS) {
 			// setting SUBSCRIPTION_TIMEOUT_MILLIS only allowed one time
 			logger.error("setSubscriptionTimeout called two times - not allowed.");
 			return;

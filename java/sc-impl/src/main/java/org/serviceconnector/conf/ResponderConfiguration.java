@@ -23,18 +23,18 @@ import org.apache.log4j.Logger;
 
 
 /**
- * The Class RequesterConfigPool. RequesterConfigPool may hold more than one configuration for a requester, is
- * represented by <code>RequesterConfig</code>.
+ * The Class ResponderConfigPool. ResponderConfigPool configuration may hold more than one configuration for a
+ * responder, is represented by <code>ResponderConfig</code>.
  * 
  * @author JTraber
  */
-public class RequesterConfigPool extends CommunicatorConfigPool {
+public class ResponderConfiguration extends Configuration {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(RequesterConfigPool.class);
+	protected final static Logger logger = Logger.getLogger(ResponderConfiguration.class);
 	
 	/**
-	 * Loads configuration from a file.
+	 * Load.
 	 * 
 	 * @param fileName
 	 *            the file name
@@ -42,25 +42,15 @@ public class RequesterConfigPool extends CommunicatorConfigPool {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void load(String fileName) throws Exception {
-		this.loadRequesterConfig(fileName);
+		this.loadResponderConfig(fileName);
 	}
 
 	/**
-	 * Gets the requester configuration list.
+	 * Gets the responder configuration list.
 	 * 
-	 * @return the requester configuration list
+	 * @return the responder configuration list
 	 */
-	public List<CommunicatorConfig> getRequesterConfigList() {
+	public List<CommunicatorConfig> getResponderConfigList() {
 		return this.getCommunicatorConfigList();
-	}
-
-	/**
-	 * Gets the requester configuration. Returns the requester configuration of first requester in configuration file.
-	 * Usually only one requester is configured.
-	 * 
-	 * @return the requester configuration
-	 */
-	public CommunicatorConfig getRequesterConfig() {
-		return this.getCommunicatorConfigList().get(0);
 	}
 }
