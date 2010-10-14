@@ -117,6 +117,8 @@ public final class SC {
 		// clean up and initialize cache
 		// Cache cache = Cache.initialize();
 
+		// TODO write system info into log logger.log(priority, message) 
+		
 		List<CommunicatorConfig> respConfigList = config.getResponderConfigList();
 
 		for (CommunicatorConfig respConfig : respConfigList) {
