@@ -23,21 +23,21 @@ import org.apache.log4j.Logger;
 
 public class SessionLogger {
 
-	private static final Logger logger = Logger.getLogger(Loggers.SESSION.getValue());
-	private static final SessionLogger SESSION_LOGGER = new SessionLogger();
+	private static final Logger sessionLogger = Logger.getLogger(Loggers.SESSION.getValue());
+	private static final SessionLogger instance = new SessionLogger();
 
 	private String CREATE_SESSION_STR = "create session:%s";
 	private String DELETE_SESSION_STR = "delete session:%s";
 	private String ABORT_SESSION_STR = "abort session:%s";
 
 	/**
-	 * Instantiates a new connection logger. Private for singelton use.
+	 * Private constructor for singleton use.
 	 */
 	private SessionLogger() {
 	}
 
 	public static SessionLogger getInstance() {
-		return SessionLogger.SESSION_LOGGER;
+		return SessionLogger.instance;
 	}
 
 	/**
@@ -45,10 +45,10 @@ public class SessionLogger {
 	 * @param sessionId
 	 */
 	public synchronized void logCreateSession(String className, String sessionId) {
-		if (logger.isDebugEnabled()) {
+		if (sessionLogger.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(CREATE_SESSION_STR, sessionId);
-			logger.debug(format.toString());
+			sessionLogger.debug(format.toString());
 			format.close();
 		}
 	}
@@ -58,10 +58,10 @@ public class SessionLogger {
 	 * @param sessionId
 	 */
 	public synchronized void logDeleteSession(String className, String sessionId) {
-		if (logger.isDebugEnabled()) {
+		if (sessionLogger.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(DELETE_SESSION_STR, sessionId);
-			logger.debug(format.toString());
+			sessionLogger.debug(format.toString());
 			format.close();
 		}
 	}
@@ -71,10 +71,10 @@ public class SessionLogger {
 	 * @param sessionId
 	 */
 	public synchronized void logAbortSession(String className, String sessionId) {
-		if (logger.isDebugEnabled()) {
+		if (sessionLogger.isDebugEnabled()) {
 			Formatter format = new Formatter();
 			format.format(ABORT_SESSION_STR, sessionId);
-			logger.debug(format.toString());
+			sessionLogger.debug(format.toString());
 			format.close();
 		}
 	}
@@ -83,6 +83,6 @@ public class SessionLogger {
 	 * @return
 	 */
 	public boolean isEnabled() {
-		return logger.isDebugEnabled();
+		return sessionLogger.isDebugEnabled();
 	}
 }

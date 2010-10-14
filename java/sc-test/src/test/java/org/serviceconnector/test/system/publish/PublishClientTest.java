@@ -68,7 +68,7 @@ public class PublishClientTest {
 	public void publish_waitForAMessageToBePublished_incomesAMessage() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, TestConstants.pangram, callback);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, callback);
 		for (int i = 0; i < 30; i++) {
 			if (callback.lastMessage == null) {
 				Thread.sleep(100);
@@ -92,7 +92,7 @@ public class PublishClientTest {
 			throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, TestConstants.pangram, callback);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, callback);
 
 		SCMessage firstMessage = null;
 
@@ -131,7 +131,7 @@ public class PublishClientTest {
 			throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, TestConstants.pangram, callback);
+		service.subscribe(TestConstants.mask, "sessionInfo", 300, callback);
 
 		SCMessage previousMessage = null;
 		SCMessage newMessage = null;

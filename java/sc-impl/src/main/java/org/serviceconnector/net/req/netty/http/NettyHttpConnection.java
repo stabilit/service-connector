@@ -155,7 +155,7 @@ public class NettyHttpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect failed to "
 					+ this.localSocketAddress.toString());
 		}
-		if (connectionLogger.isDebugEnabled()) {
+		if (connectionLogger.isEnabled()) {
 			connectionLogger.logConnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
 					this.localSocketAddress.getPort());
 		}
@@ -174,7 +174,7 @@ public class NettyHttpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
 					+ this.localSocketAddress.toString());
 		}
-		if (connectionLogger.isDebugEnabled()) {
+		if (connectionLogger.isEnabled()) {
 			connectionLogger.logDisconnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
 					this.localSocketAddress.getPort());
 		}
@@ -223,7 +223,7 @@ public class NettyHttpConnection implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on "
 					+ this.localSocketAddress);
 		}
-		if (connectionLogger.isTraceEnabled()) {
+		if (connectionLogger.isEnabledFull()) {
 			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
 					this.localSocketAddress.getPort(), buffer, 0, buffer.length);
 		}

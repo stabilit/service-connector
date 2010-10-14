@@ -2,7 +2,6 @@ package org.serviceconnector.test.system;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.system.perf.AllPerformanceTests;
 import org.serviceconnector.test.system.publish.ChangeSubscriptionClientTest;
 import org.serviceconnector.test.system.publish.PublishClientTest;
 import org.serviceconnector.test.system.publish.SubscribeClientTest;

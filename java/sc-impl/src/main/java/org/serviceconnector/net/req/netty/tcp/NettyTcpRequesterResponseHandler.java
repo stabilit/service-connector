@@ -93,7 +93,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		try {
 			byte[] buffer = new byte[channelBuffer.readableBytes()];
 			channelBuffer.readBytes(buffer);
-			if (connectionLogger.isTraceEnabled()) {
+			if (connectionLogger.isEnabledFull()) {
 				connectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
 			}
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);

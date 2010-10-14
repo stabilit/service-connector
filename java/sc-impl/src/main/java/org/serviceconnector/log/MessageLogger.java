@@ -19,25 +19,26 @@ package org.serviceconnector.log;
 import java.util.Formatter;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 
 
 public class MessageLogger {
 
-	private static final Logger logger = Logger.getLogger(Loggers.MESSAGE.getValue());
-	private static final MessageLogger MESSAGE_LOGGER = new MessageLogger();
+	private static final Logger messageLogger = Logger.getLogger(Loggers.MESSAGE.getValue());
+	private static final MessageLogger instance = new MessageLogger();
 
 	private String MSG_LONG_STR = "msg:%s";
 	private String MSG_SHORT_STR = "msg:%s";
 
 	/**
-	 * Instantiates a new connection logger. Private for singelton use.
+	 * Private constructor for singleton use.
 	 */
 	private MessageLogger() {
 	}
 
 	public static MessageLogger getInstance() {
-		return MessageLogger.MESSAGE_LOGGER;
+		return MessageLogger.instance;
 	}
 
 	/**
@@ -45,25 +46,57 @@ public class MessageLogger {
 	 * @param message
 	 */
 	public synchronized void logMessage(String className, SCMPMessage message) {
-		if (logger.isTraceEnabled()) {
-			// TODO TRN (write out all attributes)
+		if (messageLogger.isTraceEnabled()) {
+			// write out all header attributes
 			Formatter format = new Formatter();
-			format.format(MSG_LONG_STR, message);
-			logger.trace(format.toString());
+			format.format(MSG_LONG_STR, message.getHeader().toString());
+			messageLogger.trace(format.toString());
 			format.close();
-		} else if (logger.isDebugEnabled()) {
-			// TODO TRN (write out important attributes)
+		} else if (messageLogger.isDebugEnabled()) {
+			// write out only important attributes
+			StringBuilder builder = new StringBuilder();
+			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.MSG_TYPE,message));
+			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.SERVICE_NAME,message));
+			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.SESSION_ID,message));
+			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.MASK,message));
+			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.IP_ADDRESS_LIST,message));
+			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.MASK,message));
+			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.MASK,message));
+			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.CASCADED_MASK,message));
+			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT,message));
+			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.CACHE_ID,message));
+			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE,message));
+			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT,message));		
 			Formatter format = new Formatter();
-			format.format(MSG_SHORT_STR, message);
-			logger.debug(format.toString());
+			format.format(MSG_SHORT_STR, builder.toString());
+			messageLogger.debug(format.toString());
 			format.close();
 		}
 	}
 
 	/**
+	 * @param key
+	 * 				e.g. MTY
+	 * @param message
+	 * 				SCMP message
+	 * @return
+	 * 		string like MTY=REG or "" if attribute is missing
+	 */
+	private String formatAttribute(SCMPHeaderAttributeKey key, SCMPMessage message) {
+		String attrValue = message.getHeader(key);
+		if (attrValue == null || attrValue.equals("")) {
+			return "";
+		}
+		else {
+			return " "+key.getValue()+"="+attrValue;
+		}
+	}
+
+	
+	/**
 	 * @return
 	 */
-	public boolean isDebugEnabled() {
-		return logger.isDebugEnabled();
+	public boolean isEnabled() {
+		return messageLogger.isDebugEnabled();
 	}
 }

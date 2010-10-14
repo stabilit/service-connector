@@ -108,7 +108,7 @@ public class NettyHttpResponse extends ResponseAdapter {
 		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
 		// Write the response.
 		event.getChannel().write(httpResponse);
-		if (connectionLogger.isTraceEnabled()) {
+		if (connectionLogger.isEnabledFull()) {
 			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.event
 					.getChannel().getLocalAddress()).getHostName(), ((InetSocketAddress) this.event.getChannel()
 					.getLocalAddress()).getPort(), buffer.toByteBuffer().array(), 0,

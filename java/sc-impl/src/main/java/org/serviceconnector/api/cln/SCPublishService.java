@@ -38,8 +38,8 @@ import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
- * communication functions.
+ * The Class PublishService. PublishService is a remote interface in client API
+ * to a publish service and provides communication functions.
  */
 public class SCPublishService extends SCService {
 
@@ -141,53 +141,8 @@ public class SCPublishService extends SCService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, SCMessageCallback callback,
+	public synchronized void subscribe(String mask, String sessionInfo, int noDataIntervalSeconds, SCMessageCallback scMessageCallback,
 			int timeoutInSeconds) throws Exception {
-		this.subscribe(mask, sessionInfo, noDataInterval, null, callback, timeoutInSeconds);
-	}
-
-	/**
-	 * Subscribe.
-	 * 
-	 * @param mask
-	 *            the mask
-	 * @param sessionInfo
-	 *            the session info
-	 * @param noDataInterval
-	 *            the no data interval
-	 * @param authenticationId
-	 *            the authentication id
-	 * @param callback
-	 *            the callback
-	 * @throws Exception
-	 *             the exception
-	 */
-	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
-			SCMessageCallback callback) throws Exception {
-		this.subscribe(mask, sessionInfo, noDataInterval, authenticationId, callback,
-				Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
-	}
-
-	/**
-	 * Subscribe.
-	 * 
-	 * @param mask
-	 *            the mask
-	 * @param sessionInfo
-	 *            the session info
-	 * @param noDataIntervalSeconds
-	 *            the no data interval
-	 * @param authenticationId
-	 *            the authentication id
-	 * @param callback
-	 *            the callback
-	 * @param timeoutInSeconds
-	 *            the timeout in seconds
-	 * @throws Exception
-	 *             the exception
-	 */
-	public synchronized void subscribe(String mask, String sessionInfo, int noDataIntervalSeconds,
-			String authenticationId, SCMessageCallback scMessageCallback, int timeoutInSeconds) throws Exception {
 		if (this.subscribed) {
 			throw new SCServiceException("already subscribed");
 		}
@@ -205,14 +160,11 @@ public class SCPublishService extends SCService {
 		this.msgId.reset();
 		this.scMessageCallback = scMessageCallback;
 		SCServiceCallback callback = new SCServiceCallback(true);
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
-				this.requester, this.serviceName);
+		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
+				this.serviceName);
 		subscribeCall.setMask(mask);
 		subscribeCall.setSessionInfo(sessionInfo);
 		subscribeCall.setNoDataIntervalSeconds(noDataIntervalSeconds);
-		if (authenticationId != null) {
-			subscribeCall.setAuthenticationId(authenticationId);
-		}
 		try {
 			subscribeCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
@@ -277,14 +229,15 @@ public class SCPublishService extends SCService {
 	 */
 	public synchronized void unsubscribe(int timeoutInSeconds) throws Exception {
 		if (this.subscribed == false) {
-			// unsubscribe not possible - not subscribed on this service just ignore
+			// unsubscribe not possible - not subscribed on this service just
+			// ignore
 			return;
 		}
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		try {
 			this.msgId.incrementMsgSequenceNr();
-			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
-					.newInstance(this.requester, this.serviceName, this.sessionId);
+			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
+					this.requester, this.serviceName, this.sessionId);
 			SCServiceCallback callback = new SCServiceCallback(true);
 			try {
 				unsubscribeCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
@@ -303,8 +256,8 @@ public class SCPublishService extends SCService {
 	}
 
 	/**
-	 * The Class PublishServiceCallback. Responsible for handling the right communication sequence for publish subscribe
-	 * protocol.
+	 * The Class PublishServiceCallback. Responsible for handling the right
+	 * communication sequence for publish subscribe protocol.
 	 */
 	private class PublishServiceCallback extends SCServiceCallback {
 

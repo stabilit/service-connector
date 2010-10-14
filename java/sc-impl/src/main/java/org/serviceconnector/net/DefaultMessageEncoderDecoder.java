@@ -88,7 +88,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					os.write((byte[]) ba);
 					os.flush();
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (messageLogger.isDebugEnabled()) {
+					if (messageLogger.isEnabled()) {
 						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 					}
 					return;
@@ -102,7 +102,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					bw.write(t); // write body
 					bw.flush();
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (messageLogger.isDebugEnabled()) {
+					if (messageLogger.isEnabled()) {
 						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 					}
 					return;
@@ -120,7 +120,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 			throw new EncodingDecodingException("io error when decoding message", ex);
 		}
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-		if (messageLogger.isDebugEnabled()) {
+		if (messageLogger.isEnabled()) {
 			messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 		}
 		return;

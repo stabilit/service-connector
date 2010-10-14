@@ -23,25 +23,25 @@ import org.apache.log4j.Logger;
 
 public class PerformanceLogger {
 
-	private static final Logger logger = Logger.getLogger(Loggers.PERFORMANCE.getValue());
-	private static final PerformanceLogger PERFORMANCE_LOGGER = new PerformanceLogger();
+	private static final Logger performanceLogger = Logger.getLogger(Loggers.PERFORMANCE.getValue());
+	private static final PerformanceLogger instance = new PerformanceLogger();
 
 	/** The thread local is needed to save time in running thread. */
 	private ThreadLocal<PerformanceItem> threadLocal = new ThreadLocal<PerformanceItem>();
 	private static String END_STR = "begin:%s.%s() end:%s.%s() time:%s.%s(ms)";
 
 	/**
-	 * Instantiates a new performance logger. Private for singelton use.
+	 * Private constructor for singleton use. 
 	 */
 	private PerformanceLogger() {
 	}
 
 	public static PerformanceLogger getInstance() {
-		return PerformanceLogger.PERFORMANCE_LOGGER;
+		return PerformanceLogger.instance;
 	}
 
 	public synchronized void begin(String className, String methodName) {
-		if (logger.isTraceEnabled()) {
+		if (performanceLogger.isTraceEnabled()) {
 			this.threadLocal.set(new PerformanceItem(className, methodName, System.nanoTime()));
 		}
 	}
@@ -51,7 +51,7 @@ public class PerformanceLogger {
 	 * @param methodName
 	 */
 	public synchronized void end(String className, String methodName) {
-		if (logger.isTraceEnabled()) {
+		if (performanceLogger.isTraceEnabled()) {
 			PerformanceItem beginItem = this.threadLocal.get();
 			if (beginItem == null) {
 				return;
@@ -64,7 +64,7 @@ public class PerformanceLogger {
 			Formatter format = new Formatter();
 			format.format(END_STR, beginClassName, beginMethodName, className, methodName, String
 					.valueOf((endTime - beginTime) / 1000000), String.valueOf((endTime - beginTime) % 1000000));
-			logger.trace(format.toString());
+			performanceLogger.trace(format.toString());
 			format.close();
 		}
 
@@ -74,7 +74,7 @@ public class PerformanceLogger {
 	 * @return
 	 */
 	public boolean isEnabled() {
-		return logger.isTraceEnabled();
+		return performanceLogger.isTraceEnabled();
 	}
 
 	private class PerformanceItem {

@@ -23,8 +23,8 @@ import org.apache.log4j.Logger;
 
 public class ConnectionLogger {
 
-	private static final Logger logger = Logger.getLogger(Loggers.CONNECTION.getValue());
-	private static final ConnectionLogger CONNECTION_LOGGER = new ConnectionLogger();
+	private static final Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
+	private static final ConnectionLogger instance = new ConnectionLogger();
 
 	private static String CONNECT_STR = "%s connect to:%s/%s";
 	private static String DISCONNECT_STR = "%s disconnect from:%s/%s";
@@ -33,13 +33,13 @@ public class ConnectionLogger {
 	private static String KEEP_ALIVE_STR = "%s send keep alive to:%s/%s - idle count: %s";
 
 	/**
-	 * Instantiates a new connection logger. Private for singelton use.
+	 * Private constructor for singleton use.
 	 */
 	private ConnectionLogger() {
 	}
 
 	public static ConnectionLogger getInstance() {
-		return ConnectionLogger.CONNECTION_LOGGER;
+		return ConnectionLogger.instance;
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class ConnectionLogger {
 	public synchronized void logConnect(String className, String hostName, int port) {
 		Formatter format = new Formatter();
 		format.format(CONNECT_STR, className, hostName, String.valueOf(port));
-		logger.debug(format.toString());
+		connectionLogger.debug(format.toString());
 		format.close();
 	}
 
@@ -64,7 +64,7 @@ public class ConnectionLogger {
 
 		Formatter format = new Formatter();
 		format.format(DISCONNECT_STR, className, hostName, String.valueOf(port));
-		logger.debug(format.toString());
+		connectionLogger.debug(format.toString());
 		format.close();
 	}
 
@@ -84,7 +84,7 @@ public class ConnectionLogger {
 		} else {
 			format.format(READ_STR, className, hostName, String.valueOf(port), new String(data, offset, length));
 		}
-		logger.trace(format.toString());
+		connectionLogger.trace(format.toString());
 		format.close();
 	}
 
@@ -104,7 +104,7 @@ public class ConnectionLogger {
 		} else {
 			format.format(WRITE_STR, className, hostName, String.valueOf(port), new String(data, offset, length));
 		}
-		logger.trace(format.toString());
+		connectionLogger.trace(format.toString());
 		format.close();
 	}
 
@@ -118,7 +118,7 @@ public class ConnectionLogger {
 	public synchronized void logKeepAlive(String className, String hostName, int port, int nrOfIdles) {
 		Formatter format = new Formatter();
 		format.format(KEEP_ALIVE_STR, className, hostName, String.valueOf(port), nrOfIdles);
-		logger.trace(format.toString());
+		connectionLogger.trace(format.toString());
 		format.close();
 	}
 
@@ -126,15 +126,15 @@ public class ConnectionLogger {
 	/**
 	 * @return
 	 */
-	public boolean isTraceEnabled() {
-		return logger.isTraceEnabled();
+	public boolean isEnabledFull() {
+		return connectionLogger.isTraceEnabled();
 	}
 
 
 	/**
 	 * @return
 	 */
-	public boolean isDebugEnabled() {
-		return logger.isDebugEnabled();
+	public boolean isEnabled() {
+		return connectionLogger.isDebugEnabled();
 	}
 }

@@ -29,8 +29,6 @@ public enum SCMPHeaderAttributeKey {
 	APP_ERROR_CODE("aec"),
 	/** The APP_ERROR_TEXT. */
 	APP_ERROR_TEXT("aet"),
-	/** The AUTH_SESSION_ID. */
-	AUTH_SESSION_ID("asi"),
 	/** The BODY_TYPE. */
 	BODY_TYPE("bty"),
 	/** The CACHE_EXPIRATION_DATETIME. */
@@ -69,6 +67,8 @@ public enum SCMPHeaderAttributeKey {
 	MSG_TYPE("mty"),
 	/** The MASK. */
 	MASK("msk"),
+	/** The CASCADED_MASK. */
+	CASCADED_MASK("cam"),
 	/** The MAX_SESSIONS. */
 	MAX_SESSIONS("mxs"),
 	/** The MAX_CONNECTIONS. */
@@ -95,6 +95,8 @@ public enum SCMPHeaderAttributeKey {
 	SERVICE_NAME("nam"),
 	/** The SESSION_ID. */
 	SESSION_ID("sid"),
+	/** The SESSION_ID. */
+	AUTH_SESSION_ID("asi"),
 	/** The SESSION_INFO. */
 	SESSION_INFO("sin");
 
