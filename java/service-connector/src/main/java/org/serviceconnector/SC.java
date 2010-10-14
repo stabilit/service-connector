@@ -30,6 +30,7 @@ import javax.management.ObjectName;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Category;
 import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
@@ -94,6 +95,7 @@ public final class SC {
 		}
 
 		SystemInfo.setConfigFileName(configFileName);
+		SC.writeSystemInfoToLog();
 
 		ResponderConfiguration config = new ResponderConfiguration();
 		config.load(configFileName);
@@ -103,7 +105,7 @@ public final class SC {
 		appContext.initContext(new ServiceConnectorCommandFactory());
 		WebContext webContext = WebContext.getCurrentContext();
 		webContext.initContext(new ServiceConnectorWebCommandFactory());
-		
+
 		// initialize JMX
 		SC.initializeJMX();
 
@@ -117,8 +119,6 @@ public final class SC {
 		// clean up and initialize cache
 		// Cache cache = Cache.initialize();
 
-		// TODO write system info into log logger.log(priority, message) 
-		
 		List<CommunicatorConfig> respConfigList = config.getResponderConfigList();
 
 		for (CommunicatorConfig respConfig : respConfigList) {
@@ -198,5 +198,31 @@ public final class SC {
 				fw.close();
 			}
 		}
+	}
+
+	/**
+	 * Write system info to log.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	private static void writeSystemInfoToLog() throws Exception {
+		logger.log(Level.OFF, "Config file name: " + SystemInfo.getConfigFileName());
+		logger.log(Level.OFF, "Java version: " + SystemInfo.getJavaVersion());
+		logger.log(Level.OFF, "Vm version: " + SystemInfo.getVmVersion());
+		logger.log(Level.OFF, "Local host id:" + SystemInfo.getLocalHostId());
+		logger.log(Level.OFF, "OS: " + SystemInfo.getOs());
+		logger.log(Level.OFF, "Os patch level: " + SystemInfo.getOsPatchLevel());
+		logger.log(Level.OFF, "Cpu type: " + SystemInfo.getCpuType());
+		logger.log(Level.OFF, "User dir: " + SystemInfo.getUserDir());
+		logger.log(Level.OFF, "Country setting: " + SystemInfo.getCountrySetting());
+		logger.log(Level.OFF, "User timezone: " + SystemInfo.getUserTimezone());
+		logger.log(Level.OFF, "Utc Offset: " + SystemInfo.getUtcOffset());
+		logger.log(Level.OFF, "Local date: " + SystemInfo.getLocalDate());
+		logger.log(Level.OFF, "Available processors: " + SystemInfo.getAvailableProcessors());
+		logger.log(Level.OFF, "Max memory: " + SystemInfo.getMaxMemory());
+		logger.log(Level.OFF, "Free memory: " + SystemInfo.getFreeMemory());
+		logger.log(Level.OFF, "Total memory: " + SystemInfo.getTotalMemory());
+		logger.log(Level.OFF, "Available disk memory: " + SystemInfo.getAvailDiskMemory());
 	}
 }
