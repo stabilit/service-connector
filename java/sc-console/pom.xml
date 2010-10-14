@@ -92,7 +92,7 @@
 		<dependency>
 			<groupId>org.serviceconnector</groupId>
 			<artifactId>sc-impl</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
