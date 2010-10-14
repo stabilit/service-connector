@@ -53,21 +53,14 @@
 		<dependency>
 			<groupId>org.serviceconnector</groupId>
 			<artifactId>sc-impl</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.serviceconnector</groupId>
-			<artifactId>sc-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<type>test-jar</type>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.serviceconnector</groupId>
 			<artifactId>sc-impl</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
