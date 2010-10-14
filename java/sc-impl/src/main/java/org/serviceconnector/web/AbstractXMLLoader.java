@@ -51,12 +51,10 @@ import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
 public abstract class AbstractXMLLoader implements IXMLLoader {
 
 	/** The Constant XMLSDF. */
-	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat(
-			"yyyy-MM-dd");
+	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(DefaultXMLLoaderFactory.class);
+	protected final static Logger logger = Logger.getLogger(DefaultXMLLoaderFactory.class);
 
 	/** The meta map. */
 	private Map<String, String> metaMap;
@@ -116,8 +114,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void loadBody(XMLStreamWriter writer, IWebRequest request)
-			throws Exception;
+	public abstract void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception;
 
 	/**
 	 * Load body.
@@ -144,8 +141,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	 *             the exception {@inheritDoc}
 	 */
 	@Override
-	public final void load(IWebRequest request, OutputStream os)
-			throws Exception {
+	public final void load(IWebRequest request, OutputStream os) throws Exception {
 		if (this.isText()) {
 			OutputStreamWriter writer = new OutputStreamWriter(os);
 			this.loadBody(writer, request);
@@ -159,8 +155,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeStartElement("sc-web");
 		writer.writeStartElement("head");
 		writer.writeStartElement("meta");
-		writer.writeAttribute("creation",
-				DateTimeUtility.getCurrentTimeZoneMillis());
+		writer.writeAttribute("creation", DateTimeUtility.getCurrentTimeZoneMillis());
 		// write sc version
 		writer.writeEndElement(); // close meta tag
 		writer.writeStartElement("meta");
@@ -267,8 +262,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	 * @throws XMLStreamException
 	 *             the xML stream exception
 	 */
-	public void writeBean(XMLStreamWriter writer, Object obj)
-			throws XMLStreamException {
+	public void writeBean(XMLStreamWriter writer, Object obj) throws XMLStreamException {
 		if (obj == null) {
 			return;
 		}
@@ -302,15 +296,14 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			if (name.startsWith("get") == false) {
 				continue;
 			}
-			name = String.valueOf(name.charAt(3)).toLowerCase()
-					+ name.substring(4);
+			name = String.valueOf(name.charAt(3)).toLowerCase() + name.substring(4);
 			if ("class".equals(name)) {
 				continue;
 			}
 			if ("context".equals(name)) {
-                if(obj instanceof IConnection) {
-                	continue;
-                }
+				if (obj instanceof IConnection) {
+					continue;
+				}
 			}
 			try {
 				Object value = method.invoke(obj);
@@ -322,8 +315,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						writer.writeStartElement(name);
 						List<?> list = (List<?>) value;
 						for (Object listObj : list) {
-							writer.writeStartElement(listObj.getClass()
-									.getSimpleName().toLowerCase());
+							writer.writeStartElement(listObj.getClass().getSimpleName().toLowerCase());
 							this.writeBean(writer, listObj);
 							writer.writeEndElement();
 						}
@@ -340,8 +332,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						writer.writeCData(String.valueOf(server.getPortNr()));
 						writer.writeEndElement();
 						writer.writeStartElement("socketAddress");
-						writer.writeCData(String.valueOf(server
-								.getSocketAddress()));
+						writer.writeCData(String.valueOf(server.getSocketAddress()));
 						writer.writeEndElement();
 						writer.writeEndElement();
 						continue;
@@ -398,18 +389,17 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	 *             the xML stream exception
 	 */
 	public void writeRuntime(XMLStreamWriter writer) throws XMLStreamException {
-		Runtime runtime = Runtime.getRuntime();
 		writer.writeStartElement("availableProcessors");
-		writer.writeCData(String.valueOf(runtime.availableProcessors()));
+		writer.writeCData(String.valueOf(SystemInfo.getAvailableProcessors()));
 		writer.writeEndElement();
 		writer.writeStartElement("freeMemory");
-		writer.writeCData(String.valueOf(runtime.freeMemory()));
+		writer.writeCData(String.valueOf(SystemInfo.getFreeMemory()));
 		writer.writeEndElement();
 		writer.writeStartElement("maxMemory");
-		writer.writeCData(String.valueOf(runtime.maxMemory()));
+		writer.writeCData(String.valueOf(SystemInfo.getMaxMemory()));
 		writer.writeEndElement();
 		writer.writeStartElement("totalMemory");
-		writer.writeCData(String.valueOf(runtime.totalMemory()));
+		writer.writeCData(String.valueOf(SystemInfo.getTotalMemory()));
 		writer.writeEndElement();
 	}
 

@@ -17,6 +17,9 @@
 
 package org.serviceconnector.util;
 
+import java.io.File;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -46,9 +49,8 @@ public class SystemInfo {
 	private static String configFileName;
 	private static String javaVersion;
 	private static String vmVersion;
-	private static String serverIPAddress;
 	private static String localHostId;
-	private static long totalHeapMemory;
+	private static long maxMemory;
 	private static String os;
 	private static String osPatchLevel;
 	private static String cpuType;
@@ -57,20 +59,18 @@ public class SystemInfo {
 	private static String userTimezone;
 	private static int utcOffset;
 	private static boolean useDST;
-	private static long totalPhysMemory;
-	private static long availPhysMemory;
+	private static long freeMemory;
+	private static long totalMemory;
 	private static long availDiskMemory;
-	private static String processorType;
-	private static int processorSpeed;
 	private static Date localDate;
-	private static int numberOfProcessors;
+	private static int availableProcessors;
 
 	static {
 		loadInfos();
 	}
 
 	private static void loadInfos() {
-		
+
 		Properties sysprops = System.getProperties();
 
 		javaVersion = sysprops.getProperty(JAVA_VERSION);
@@ -80,30 +80,24 @@ public class SystemInfo {
 		cpuType = sysprops.getProperty(OS_ARCH);
 		userDir = sysprops.getProperty(USER_DIR);
 		countrySetting = sysprops.getProperty(USER_COUNTRY);
-		totalHeapMemory = Runtime.getRuntime().maxMemory();
-
+		maxMemory = Runtime.getRuntime().maxMemory();
+		freeMemory = Runtime.getRuntime().freeMemory();
+		totalMemory = Runtime.getRuntime().totalMemory();
+		
 		TimeZone zone = TimeZone.getDefault();
 		userTimezone = sysprops.getProperty(USER_TIMEZONE);
 		utcOffset = zone.getRawOffset();
 		useDST = zone.useDaylightTime();
 		localDate = new Date(System.currentTimeMillis());
+		availableProcessors = Runtime.getRuntime().availableProcessors();
 
-//		Sigar sig = new Sigar();
-//		try {
-//			Mem mem = sig.getMem();
-//			totalPhysMemory = mem.getTotal();
-//			availPhysMemory = mem.getActualFree();
-//
-//			CpuInfo[] cpuInfos = sig.getCpuInfoList();
-//			processorSpeed = cpuInfos[0].getMhz();
-//			processorType = cpuInfos[0].getModel();
-//			numberOfProcessors = cpuInfos[0].getTotalCores();
-//
-//			FileSystemUsage fileSystem = sig.getFileSystemUsage(userDir);
-//			availDiskMemory = fileSystem.getAvail();
-//		} catch (SigarException e) {
-//			log.error("Processor Information could not be detected, SIGAR didn't work properly: " + e.getMessage());
-//		}
+		MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
+		memBean.getHeapMemoryUsage();
+
+		File[] roots = File.listRoots();
+		for (int i = 0; i < roots.length; i++) {
+			availDiskMemory += roots[i].getFreeSpace();
+		}
 
 		try {
 			localHostId = InetAddress.getLocalHost().toString();
@@ -114,22 +108,23 @@ public class SystemInfo {
 
 	/**
 	 * Gets the config file name.
-	 *
+	 * 
 	 * @return the config file name
 	 */
 	public static String getConfigFileName() {
 		return configFileName;
 	}
-	
+
 	/**
 	 * Sets the config file name.
-	 *
-	 * @param configFileName the new config file name
+	 * 
+	 * @param configFileName
+	 *            the new config file name
 	 */
 	public static void setConfigFileName(String configFileName) {
 		SystemInfo.configFileName = configFileName;
 	}
-	
+
 	/**
 	 * Returns current used java version.
 	 * 
@@ -146,15 +141,6 @@ public class SystemInfo {
 	 */
 	public static String getVmVersion() {
 		return vmVersion;
-	}
-
-	/**
-	 * Returns server IP address.
-	 * 
-	 * @return serverIPAddress
-	 */
-	public static String getServerIPAddress() {
-		return serverIPAddress;
 	}
 
 	/**
@@ -252,53 +238,35 @@ public class SystemInfo {
 	 * 
 	 * @return numberOfProcessors
 	 */
-	public static int getNumberOfProcessors() {
-		return numberOfProcessors;
+	public static int getAvailableProcessors() {
+		return availableProcessors;
 	}
 
 	/**
-	 * Returns total heap memory in bytes.
-	 * 
-	 * @return totalHeapMemory
+	 * Gets the max memory.
+	 *
+	 * @return the max memory
 	 */
-	public static long getTotalHeapMemory() {
-		return totalHeapMemory;
+	public static long getMaxMemory() {
+		return maxMemory;
 	}
 
 	/**
-	 * Returns total physical memory in bytes.
-	 * 
-	 * @return totalPhysMemory
+	 * Gets the free memory.
+	 *
+	 * @return the free memory
 	 */
-	public static long getTotalPhysMemory() {
-		return totalPhysMemory;
+	public static long getFreeMemory() {
+		return freeMemory;
 	}
 
 	/**
-	 * Returns current available physical memory in bytes.
-	 * 
-	 * @return availPhysMemory
+	 * Gets the total memory.
+	 *
+	 * @return the total memory
 	 */
-	public static long getAvailPhysMemory() {
-		return availPhysMemory;
-	}
-
-	/**
-	 * Returns processor type.
-	 * 
-	 * @return processorType
-	 */
-	public static String getProcessorType() {
-		return processorType;
-	}
-
-	/**
-	 * Returns processor speed in megahertz.
-	 * 
-	 * @return processorSpeed
-	 */
-	public static int getProcessorSpeed() {
-		return processorSpeed;
+	public static long getTotalMemory() {
+		return totalMemory;
 	}
 
 	/**

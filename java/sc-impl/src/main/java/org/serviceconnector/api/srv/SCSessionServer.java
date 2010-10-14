@@ -144,9 +144,13 @@ public class SCSessionServer {
 		if (scCallback == null) {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "callback must be set");
 		}
+		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		if (srvServiceRegistry.containsKey(serviceName)) {
+			// already registered for this service
+			throw new InvalidActivityException("Server has already been registered for serviceName: " + serviceName);
+		}
 		IRequester requester = this.doRegisterServer(scHost, scPort, serviceName, maxSessions, maxConnections);
 		// creating srvService & adding to registry
-		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
 		SrvService srvService = new SrvSessionService(serviceName, maxSessions, maxConnections, requester, scCallback);
 		srvServiceRegistry.addSrvService(serviceName, srvService);
 	}

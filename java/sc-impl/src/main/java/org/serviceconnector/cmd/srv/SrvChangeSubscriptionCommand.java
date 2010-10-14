@@ -66,6 +66,7 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionId(reqMessage.getSessionId());
 		scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		scMessage.setData(reqMessage.getBody());
 		reqMessage.setServiceName(serviceName);
 
 		// inform callback with scMessages

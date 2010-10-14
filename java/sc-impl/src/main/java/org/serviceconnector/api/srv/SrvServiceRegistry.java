@@ -45,12 +45,12 @@ public class SrvServiceRegistry extends Registry<String, SrvService> {
 	/**
 	 * Gets the server service.
 	 * 
-	 * @param srvServiceName
+	 * @param key
 	 *            the server service name
 	 * @return the server service
 	 */
-	public SrvService getSrvService(String srvServiceName) {
-		return this.get(srvServiceName);
+	public SrvService getSrvService(String key) {
+		return this.get(key);
 	}
 
 	/**
