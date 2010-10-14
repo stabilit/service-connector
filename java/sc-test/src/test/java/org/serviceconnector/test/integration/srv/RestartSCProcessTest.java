@@ -43,6 +43,11 @@ public class RestartSCProcessTest {
 
 	@After
 	public void tearDown() throws Exception {
+		try {
+			server.deregisterServer(TestConstants.serviceName);
+		} catch (Exception e) {
+			// might fail - but doesn't matter
+		}
 		server.destroyServer();
 		server = null;
 		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
@@ -117,6 +122,10 @@ public class RestartSCProcessTest {
 				new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		try {
+			server.deregisterServer(TestConstants.serviceName);
+		} catch (Exception e) { // ignore failing, just registering is important!
+		}
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 10, 10,
 				new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));

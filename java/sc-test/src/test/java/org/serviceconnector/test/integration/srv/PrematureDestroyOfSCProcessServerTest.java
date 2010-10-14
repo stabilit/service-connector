@@ -46,6 +46,12 @@ public class PrematureDestroyOfSCProcessServerTest {
 
 	@After
 	public void tearDown() throws Exception {
+		try {
+			server.deregisterServer(TestConstants.serviceNameAlt);
+			server.deregisterServer(TestConstants.serviceName);
+		} catch (Exception e) {
+			// might happen nothing to do
+		}
 		server.destroyServer();
 		server = null;
 		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);

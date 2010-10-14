@@ -86,7 +86,7 @@ public class ProcessesController {
 	}
 
 	public synchronized boolean existsFile(String fileName) throws Exception {
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 20; i++) {
 			File file = new File(fileName);
 			if (file.exists()) {
 				return true;
