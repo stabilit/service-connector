@@ -141,8 +141,8 @@ public class SCPublishService extends SCService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval,
-			SCMessageCallback callback, int timeoutInSeconds) throws Exception {
+	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, SCMessageCallback callback,
+			int timeoutInSeconds) throws Exception {
 		this.subscribe(mask, sessionInfo, noDataInterval, null, callback, timeoutInSeconds);
 	}
 
@@ -175,7 +175,7 @@ public class SCPublishService extends SCService {
 	 *            the mask
 	 * @param sessionInfo
 	 *            the session info
-	 * @param noDataInterval
+	 * @param noDataIntervalSeconds
 	 *            the no data interval
 	 * @param authenticationId
 	 *            the authentication id
@@ -186,8 +186,8 @@ public class SCPublishService extends SCService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, String authenticationId,
-			SCMessageCallback scMessageCallback, int timeoutInSeconds) throws Exception {
+	public synchronized void subscribe(String mask, String sessionInfo, int noDataIntervalSeconds,
+			String authenticationId, SCMessageCallback scMessageCallback, int timeoutInSeconds) throws Exception {
 		if (this.subscribed) {
 			throw new SCServiceException("already subscribed");
 		}
@@ -196,12 +196,12 @@ public class SCPublishService extends SCService {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "Percent sign not allowed in mask.");
 		}
 		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
-		ValidatorUtility.validateInt(1, noDataInterval, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
+		ValidatorUtility.validateInt(1, noDataIntervalSeconds, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
 		if (scMessageCallback == null) {
 			throw new InvalidParameterException("Callback must be set.");
 		}
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		this.noDataInterval = noDataInterval;
+		this.noDataInterval = noDataIntervalSeconds;
 		this.msgId.reset();
 		this.scMessageCallback = scMessageCallback;
 		SCServiceCallback callback = new SCServiceCallback(true);
@@ -209,7 +209,7 @@ public class SCPublishService extends SCService {
 				this.requester, this.serviceName);
 		subscribeCall.setMask(mask);
 		subscribeCall.setSessionInfo(sessionInfo);
-		subscribeCall.setNoDataIntervalSeconds(noDataInterval);
+		subscribeCall.setNoDataIntervalSeconds(noDataIntervalSeconds);
 		if (authenticationId != null) {
 			subscribeCall.setAuthenticationId(authenticationId);
 		}
@@ -266,7 +266,6 @@ public class SCPublishService extends SCService {
 	public synchronized void unsubscribe() throws Exception {
 		this.unsubscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
-
 
 	/**
 	 * Unsubscribe.

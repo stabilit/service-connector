@@ -117,11 +117,11 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 	/**
 	 * Sets the no data interval seconds.
 	 * 
-	 * @param noDataInterval
+	 * @param noDataIntervalSeconds
 	 *            the new no data interval seconds
 	 */
-	public void setNoDataIntervalSeconds(int noDataInterval) {
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noDataInterval);
+	public void setNoDataIntervalSeconds(int noDataIntervalSeconds) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, noDataIntervalSeconds);
 	}
 
 	/**

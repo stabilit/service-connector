@@ -77,11 +77,4 @@ public abstract class SuperTestCase {
 	public void tearDown() throws Exception {
 		this.testContext.getConnectionPool().destroy();
 	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		this.testContext.getConnectionPool().destroy();
-		SetupTestCases.killPublishServer();
-		req = null;
-	}
 }

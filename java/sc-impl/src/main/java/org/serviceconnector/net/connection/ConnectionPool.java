@@ -144,12 +144,11 @@ public class ConnectionPool {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public IConnection getConnection() throws Exception {
+	public synchronized IConnection getConnection() throws Exception {
 		IConnection connection = null;
-		synchronized (freeConnections) {
-			if (freeConnections.size() > 0) {
-				connection = freeConnections.remove(0);
-			}
+
+		if (freeConnections.size() > 0) {
+			connection = freeConnections.remove(0);
 		}
 		if (connection == null) {
 			// no free connection available - try to create a new one
@@ -166,9 +165,9 @@ public class ConnectionPool {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private IConnection createNewConnection() throws Exception {
+	private synchronized IConnection createNewConnection() throws Exception {
 		IConnection connection = null;
-		if (usedConnections.size() >= maxConnections) {
+		if (usedConnections.size() + freeConnections.size() >= maxConnections) {
 			// we can't create a new one - limit reached
 			throw new ConnectionPoolBusyException("Unable to create new connection - limit of : " + maxConnections
 					+ " reached!");
@@ -198,7 +197,7 @@ public class ConnectionPool {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void freeConnection(IConnection connection) {
+	public synchronized void freeConnection(IConnection connection) {
 		if (this.usedConnections.remove(connection) == false) {
 			logger.warn("connection does not exist in pool - not possible to free");
 			return;
@@ -226,7 +225,7 @@ public class ConnectionPool {
 	/**
 	 * Destroy the pool.
 	 */
-	public void destroy() {
+	public synchronized void destroy() {
 		this.destroyConnections(this.usedConnections);
 		this.destroyConnections(this.freeConnections);
 	}
@@ -285,7 +284,7 @@ public class ConnectionPool {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void forceClosingConnection(IConnection connection) {
+	public synchronized void forceClosingConnection(IConnection connection) {
 		// assure connection is nowhere registered
 		this.usedConnections.remove(connection);
 		this.freeConnections.remove(connection);
@@ -320,7 +319,7 @@ public class ConnectionPool {
 	/**
 	 * Initiates the minimum connections. The minimum of connections gets active immediately.
 	 */
-	public void initMinConnections() {
+	public synchronized void initMinConnections() {
 		IConnection connection = null;
 		int con = usedConnections.size() + freeConnections.size();
 		for (int countCon = con; countCon < this.minConnections; countCon++) {
@@ -361,12 +360,12 @@ public class ConnectionPool {
 	 * 
 	 * @return true, if successful
 	 */
-	public boolean hasFreeConnections() {
-		if (freeConnections.size() > 0) {
+	public synchronized boolean hasFreeConnections() {
+		if (this.freeConnections.size() > 0) {
 			// we have free connections left
 			return true;
 		}
-		if (usedConnections.size() < maxConnections) {
+		if (this.usedConnections.size() < maxConnections) {
 			// we can create new connections if necessary
 			return true;
 		}
@@ -381,7 +380,7 @@ public class ConnectionPool {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void connectionIdle(IConnection connection) {
+	public synchronized void connectionIdle(IConnection connection) {
 		if (this.freeConnections.remove(connection) == false) {
 			// this connection is no more free - no keep alive necessary
 			return;
@@ -436,16 +435,16 @@ public class ConnectionPool {
 
 	/**
 	 * Gets the free connections.
-	 *
+	 * 
 	 * @return the free connections
 	 */
 	public List<IConnection> getFreeConnections() {
 		return Collections.unmodifiableList(freeConnections);
 	}
-	
+
 	/**
 	 * Gets the used connections.
-	 *
+	 * 
 	 * @return the used connections
 	 */
 	public List<IConnection> getUsedConnections() {

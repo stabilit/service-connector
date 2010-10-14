@@ -84,7 +84,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		Subscription subscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList);
 		reqMessage.setSessionId(subscription.getId());
 
-		int noDataInterval = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+		int noDataIntervalSeconds = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 
 		Server server = null;
@@ -134,7 +134,8 @@ public class ClnSubscribeCommand extends CommandAdapter {
 
 					SubscriptionQueue<SCMPMessage> subscriptionQueue = service.getSubscriptionQueue();
 
-					IPublishTimerRun timerRun = new PublishTimerRun(subscriptionQueue, noDataInterval);
+					IPublishTimerRun timerRun = new PublishTimerRun(subscriptionQueue, noDataIntervalSeconds
+							* Constants.SEC_TO_MILLISEC_FACTOR);
 					subscriptionLogger.logSubscribe(serviceName, subscription.getId(), mask);
 					subscriptionQueue.subscribe(subscription.getId(), subscriptionMask, timerRun);
 				} else {

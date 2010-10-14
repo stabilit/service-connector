@@ -279,7 +279,7 @@ public class Server {
 	 */
 	public void serverAbortSession(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) {
 		SCMPSrvAbortSessionCall srvAbortSessionCall = (SCMPSrvAbortSessionCall) SCMPCallFactory.SRV_ABORT_SESSION
-				.newInstance(requester, message);
+				.newInstance(this.requester, message);
 		try {
 			srvAbortSessionCall.invoke(callback, timeoutMillis);
 		} catch (Exception th) {

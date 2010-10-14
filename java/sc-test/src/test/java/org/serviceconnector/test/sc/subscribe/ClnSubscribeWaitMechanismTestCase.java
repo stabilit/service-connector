@@ -44,7 +44,7 @@ public class ClnSubscribeWaitMechanismTestCase extends SuperTestCase {
 				"publish-simulation");
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		subscribeCall.setNoDataIntervalSeconds(20);
+		subscribeCall.setNoDataIntervalSeconds(2);
 		subscribeCall.setMask("000012100012832102FADF-----------X-----------");
 		SubscribeCallback callback = new SubscribeCallback(true);
 		subscribeCall.setRequestBody("wait:2000");
@@ -56,7 +56,7 @@ public class ClnSubscribeWaitMechanismTestCase extends SuperTestCase {
 				.newInstance(req, "publish-simulation");
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		subscribeCall.setNoDataIntervalSeconds(20);
+		subscribeCall.setNoDataIntervalSeconds(2);
 		subscribeCall.setMask("000012100012832102FADF-----------X-----------");
 		SubscribeCallback callback1 = new SubscribeCallback(true);
 		subscribeCall.invoke(callback1, 1000);

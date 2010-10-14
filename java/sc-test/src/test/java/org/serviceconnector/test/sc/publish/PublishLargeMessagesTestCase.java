@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
+import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.conf.RequesterConfiguration;
 import org.serviceconnector.net.req.SCRequester;
@@ -33,11 +34,9 @@ import org.serviceconnector.test.sc.SuperTestCase;
 import org.serviceconnector.test.sc.connectionPool.TestContext;
 import org.serviceconnector.util.SynchronousCallback;
 
-
-
 public class PublishLargeMessagesTestCase extends SuperTestCase {
 
-	private PublishCallback callback = new PublishCallback();;
+	private PublishCallback callback = new PublishCallback();
 
 	/**
 	 * @param fileName
@@ -65,10 +64,10 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 				"publish-simulation");
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
-		subscribeCall.setNoDataIntervalSeconds(2);
+		subscribeCall.setNoDataIntervalSeconds(10);
 		subscribeCall.setMask("000012100012832102FADF-----------X-----------");
 		subscribeCall.setRequestBody("large");
-		subscribeCall.invoke(this.callback, 3000);
+		subscribeCall.invoke(this.callback, 10000);
 		SCMPMessage reply = this.callback.getMessageSync();
 		SCTest.checkReply(reply);
 		String sessionId = reply.getSessionId();
@@ -81,17 +80,22 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 			}
 			sb.append(i);
 		}
-		Thread.sleep(4000);
+
 		for (int i = 1; i < 3; i++) {
 			// receive publication first message
 			SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 					.newInstance(this.req, "publish-simulation", sessionId);
-			receivePublicationCall.invoke(this.callback, 3000);
+			receivePublicationCall.invoke(this.callback, 10000);
 			reply = this.callback.getMessageSync();
 			Assert.assertTrue(reply.isLargeMessage());
 			Assert.assertEquals(sb.toString(), reply.getBody());
 			Thread.sleep(2000);
 		}
+		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
+				.newInstance(req, "publish-simulation", sessionId);
+		unSubscribeCall.invoke(this.callback, 3000);
+		reply = callback.getMessageSync();
+		SCTest.checkReply(reply);
 	}
 
 	private class PublishCallback extends SynchronousCallback {

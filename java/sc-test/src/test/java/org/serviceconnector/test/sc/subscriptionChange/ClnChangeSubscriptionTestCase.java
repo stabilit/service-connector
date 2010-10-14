@@ -18,52 +18,27 @@ package org.serviceconnector.test.sc.subscriptionChange;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
+import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
-import org.serviceconnector.conf.RequesterConfiguration;
-import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.test.sc.SCTest;
-import org.serviceconnector.test.sc.SetupTestCases;
 import org.serviceconnector.test.sc.SuperTestCase;
-import org.serviceconnector.test.sc.connectionPool.TestContext;
 import org.serviceconnector.util.SynchronousCallback;
-
-
 
 public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 
 	private ChangeSubscriptionCallback callback = new ChangeSubscriptionCallback();
-	private static int run = -1;
 
 	/**
 	 * @param fileName
 	 */
 	public ClnChangeSubscriptionTestCase(String fileName) {
 		super(fileName);
-	}
-
-	@Before
-	public void setup() throws Exception {
-		SetupTestCases.setupAll();
-		try {
-			this.config = new RequesterConfiguration();
-			this.config.load(fileName);
-			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
-			req = new SCRequester(this.testContext);
-			if (run != -1) {
-				run = 5;
-			} else {
-				run = 0;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Test
@@ -101,8 +76,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		receivePublicationCall.invoke(this.callback, 3000);
 		reply = this.callback.getMessageSync();
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
-		Assert.assertEquals("publish message nr " + (2 + run), reply.getBody());
-		Thread.sleep(3000);
+
 		for (int i = 1; i < 3; i++) {
 			// receive publication first message
 			receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION.newInstance(
@@ -110,8 +84,12 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 			receivePublicationCall.invoke(this.callback, 3000);
 			reply = this.callback.getMessageSync();
 			Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
-			Assert.assertEquals("publish message nr " + (2 + i + run), reply.getBody());
 		}
+		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
+				.newInstance(req, "publish-simulation", sessionId);
+		unSubscribeCall.invoke(this.callback, 3000);
+		reply = callback.getMessageSync();
+		SCTest.checkReply(reply);
 	}
 
 	private class ChangeSubscriptionCallback extends SynchronousCallback {
