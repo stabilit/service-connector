@@ -29,6 +29,8 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.serviceconnector.Constants;
+import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.conf.SystemConfigurationException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.res.EndpointAdapter;
@@ -42,7 +44,8 @@ import org.serviceconnector.scmp.SCMPError;
 public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyTcpProxyEndpoint.class);
+	protected final static Logger logger = Logger
+			.getLogger(NettyTcpProxyEndpoint.class);
 
 	/** Queue to store the answer. */
 	private ArrayBlockingQueue<Boolean> answer;
@@ -58,12 +61,14 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 	private String clientHost;
 	/** The port. */
 	private int clientPort;
+	/** The max connection pool size. */
+	private int maxConnectionPoolSize;
 	/** The channel factory. */
-	private NioServerSocketChannelFactory serverChannelFactory = new NioServerSocketChannelFactory(Executors
-			.newCachedThreadPool(), Executors.newCachedThreadPool());
+	private NioServerSocketChannelFactory serverChannelFactory = new NioServerSocketChannelFactory(
+			Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
-	private NioClientSocketChannelFactory clientChannelFactory = new NioClientSocketChannelFactory(Executors
-			.newCachedThreadPool(), Executors.newCachedThreadPool());
+	private NioClientSocketChannelFactory clientChannelFactory = new NioClientSocketChannelFactory(
+			Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
 	/**
 	 * Instantiates a new netty web endpoint.
@@ -75,6 +80,8 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 		this.port = 0;
 		this.clientHost = null;
 		this.clientPort = 0;
+		this.maxConnectionPoolSize = Constants.DEFAULT_MAX_CONNECTIONS;
+		;
 		this.answer = new ArrayBlockingQueue<Boolean>(1);
 	}
 
@@ -82,27 +89,44 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void setResponder(IResponder resp) {
 		super.setResponder(resp);
-		URL remoteURL = null;
+		CommunicatorConfig remoteHostConfig = null;
 		try {
-			remoteURL = new URL(resp.getResponderConfig().getRemoteURI());
-			this.clientHost = remoteURL.getHost();
-			this.clientPort = remoteURL.getPort();
-			if (this.clientPort < 0) {
-				if ("http".equals(remoteURL.getProtocol())) {
-					this.clientPort = 80;
-				}
+			CommunicatorConfig communicatorConfig = resp.getResponderConfig();
+			remoteHostConfig = communicatorConfig.getRemoteHostConfig();
+			if (remoteHostConfig == null) {
+				throw new SystemConfigurationException(
+						"no remote host configuration");
 			}
-		} catch (MalformedURLException e) {
-			logger.error("invalid remote url", e);
+			String remoteHost = remoteHostConfig.getHost();
+			int remotePort = remoteHostConfig.getPort();
+			this.clientHost = remoteHost;
+			this.clientPort = remotePort;
+			this.maxConnectionPoolSize = communicatorConfig.getMaxPoolSize();
+			if (this.maxConnectionPoolSize < 1) {
+				this.maxConnectionPoolSize = Constants.DEFAULT_MAX_CONNECTIONS;
+				;
+			}
+			// limit threads
+			serverChannelFactory = new NioServerSocketChannelFactory(
+					Executors.newFixedThreadPool(this.maxConnectionPoolSize),
+					Executors.newFixedThreadPool(this.maxConnectionPoolSize));
+			// no thread limit required
+			this.clientChannelFactory = new NioClientSocketChannelFactory(
+					Executors.newCachedThreadPool(),
+					Executors.newCachedThreadPool());
+
+		} catch (Exception e) {
+			logger.error("setResponder", e);
 		}
-	}	
+	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void create() {
 		this.bootstrap = new ServerBootstrap(serverChannelFactory);
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new NettyTcpProxyResponderPipelineFactory(clientChannelFactory, clientHost, clientPort));
+		bootstrap.setPipelineFactory(new NettyTcpProxyResponderPipelineFactory(
+				clientChannelFactory, clientHost, clientPort));
 	}
 
 	/** {@inheritDoc} */
@@ -112,16 +136,21 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 		serverThread.start();
 		Boolean bool = null;
 		try {
-			bool = this.answer.poll(Constants.CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+			bool = this.answer.poll(Constants.CONNECT_TIMEOUT_MILLIS,
+					TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
+			throw new SCMPCommunicationException(
+					SCMPError.CONNECTION_EXCEPTION,
 					"listener could not start up succesfully");
 		}
 		if (bool == null) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "startup listener timed out");
+			throw new SCMPCommunicationException(
+					SCMPError.CONNECTION_EXCEPTION,
+					"startup listener timed out");
 		}
 		if (bool == false) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
+			throw new SCMPCommunicationException(
+					SCMPError.CONNECTION_EXCEPTION,
 					"listener could not start up succesfully");
 		}
 	}
@@ -130,9 +159,11 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void startListenSync() throws Exception {
 		try {
-			this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
+			this.channel = this.bootstrap.bind(new InetSocketAddress(this.host,
+					this.port));
 			// adds responder to registry
-			ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+			ResponderRegistry responderRegistry = AppContext
+					.getCurrentContext().getResponderRegistry();
 			responderRegistry.addResponder(this.channel.getId(), this.resp);
 		} catch (Exception ex) {
 			this.answer.add(Boolean.FALSE);

@@ -41,7 +41,7 @@ public class EndpointFactory {
 			return new NettyTcpEndpoint();
 		} else if (Constants.NETTY_WEB.equalsIgnoreCase(key)) {
 			return new NettyWebEndpoint();
-		} else if (Constants.NETTY_TCP_PROXY.equalsIgnoreCase(key)) {
+		} else if (Constants.NETTY_PROXY_HTTP.equalsIgnoreCase(key)) {
 			return new NettyTcpProxyEndpoint();
 		} else {
 			logger.fatal("key : " + key + " not found!");

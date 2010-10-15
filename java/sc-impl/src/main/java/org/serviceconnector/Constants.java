@@ -130,8 +130,8 @@ public final class Constants {
 	/** The PASSWORD. */
 	public static final String CONNECTION_PASSWORD = ".password";
 
-	/** The Constant REMOTE_URI. */
-	public static final String REMOTE_URI = ".remoteURI";
+	/** The Constant REMOTE_HOST. */
+	public static final String REMOTE_HOST = ".remoteHost";
 	/** The HOST. */
 	public static final String HOST_QUALIFIER = ".host";
 	/** The PORT. */
@@ -147,9 +147,9 @@ public final class Constants {
 	/** The services Names. */
 	public static final String SERVICE_NAMES = "serviceNames";
 	/** The Constant MAX_CONNECTION_POOL_SIZE. */
-	public static final String MAX_CONNECTION_POOL_SIZE = "maxConnectionPoolSize";
+	public static final String MAX_CONNECTION_POOL_SIZE = ".maxConnectionPoolSize";
 	/** The Constant KEEP_ALIVE_INTERVAL. */
-	public static final String KEEP_ALIVE_INTERVAL = "keepAliveInterval";
+	public static final String KEEP_ALIVE_INTERVAL = ".keepAliveInterval";
 
 	/** The ACCEPT_PARAMS. */
 	public static final String ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
@@ -165,8 +165,8 @@ public final class Constants {
 	public static final String NETTY_HTTP = "netty.http";
 	/** The Constant NETTY_WEB. */
 	public static final String NETTY_WEB = "netty.web";
-	/** The Constant NETTY_TCP_PROXY. */
-	public static final String NETTY_TCP_PROXY = "netty.tcp.proxy";
+	/** The Constant NETTY_PROXY_HTTP. */
+	public static final String NETTY_PROXY_HTTP = "netty-proxy.http";
 	/** The DEFAULT_CLIENT_CON. */
 	public static final String DEFAULT_CLIENT_CON = NETTY_HTTP;
 	/** The DEFAULT_SERVER_CON. */

@@ -53,12 +53,14 @@
 	<xsl:template name="service_row">
 	    <td class="sc_table"><xsl:value-of select="state"/></td>
 	    <td class="sc_table"><xsl:value-of select="type"/></td>
-	    <xsl:if test="countServers &gt; 0">
-	       <td class="sc_table"><a class="sc_table" href="services?service={serviceName}"><xsl:value-of select="serviceName"/></a></td>
-        </xsl:if>	       
-	    <xsl:if test="countServers &lt;= 0">
-	       <td class="sc_table"><xsl:value-of select="serviceName"/></td>
-        </xsl:if>	       
+	    <xsl:choose>
+	      <xsl:when test="countServers &gt; 0">
+	         <td class="sc_table"><a class="sc_table" href="services?service={serviceName}"><xsl:value-of select="serviceName"/></a></td>
+          </xsl:when>
+          <xsl:otherwise>	       
+	         <td class="sc_table"><xsl:value-of select="serviceName"/></td>
+	      </xsl:otherwise>
+        </xsl:choose>       
 	    <td class="sc_table"><xsl:value-of select="countServers"/></td>
 	    <xsl:choose>
 	       <xsl:when test="subscriptionQueueSize &gt; 0">

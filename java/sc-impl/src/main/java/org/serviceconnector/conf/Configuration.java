@@ -84,34 +84,8 @@ public abstract class Configuration {
 		for (String commName : communicators) {
 			commName = commName.trim(); // remove blanks in name
 			CommunicatorConfig commConfig = new CommunicatorConfig(commName);
-
+			commConfig.initialize(this.configurations);
 			comConfigList.add(commConfig);
-
-			int port = Integer.parseInt((String) this.configurations.getString(commName + Constants.PORT_QUALIFIER));
-			String maxPoolSizeValue = (String) this.configurations.getString(commName
-					+ Constants.MAX_CONNECTION_POOL_SIZE);
-
-			if (maxPoolSizeValue != null) {
-				int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
-				commConfig.setMaxPoolSize(maxPoolSize);
-			}
-
-			String keepAliveIntervalValue = (String) this.configurations.getString(commName
-					+ Constants.KEEP_ALIVE_INTERVAL);
-			int keepAliveInterval = 0;
-			if (keepAliveIntervalValue != null) {
-				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
-			}
-			commConfig.setKeepAliveInterval(keepAliveInterval);
-
-			commConfig.setPort(port);
-			commConfig.setHost((String) this.configurations.getString(commName + Constants.HOST_QUALIFIER));
-			commConfig.setConnectionType((String) this.configurations.getString(commName
-					+ Constants.CONNECTION_TYPE_QUALIFIER));
-			commConfig.setUserid((String) this.configurations.getString(commName + Constants.CONNECTION_USERNAME));
-			commConfig.setPassword((String) this.configurations.getString(commName + Constants.CONNECTION_PASSWORD));
-			commConfig.setRemoteURI((String) this.configurations.getString(commName + Constants.REMOTE_URI));
-			commConfig.setOperationTimeoutMultiplier(operationTimeoutMultiplier);
 		}
 
 		String largeMsgLimitValue = this.configurations.getString(Constants.ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER);

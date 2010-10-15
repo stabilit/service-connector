@@ -16,7 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.conf;
 
+import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 
 /**
  * The Class CommunicatorConfig.
@@ -45,8 +47,8 @@ public class CommunicatorConfig {
 	private String userid;
 	/** The password. */
 	private String password;
-	/** The remote uri. */
-	private String remoteURI;
+	/** The remote host. */
+	private CommunicatorConfig remoteHostConfig;
 
 	public CommunicatorConfig(String communicatorName, String host, int port, String connectionType, int maxPoolSize,
 			int keepAliveInterval, int keepAliveTimeout) {
@@ -58,6 +60,7 @@ public class CommunicatorConfig {
 		this.maxPoolSize = maxPoolSize;
 		this.keepAliveInterval = keepAliveInterval;
 		this.operationTimeoutMultiplier = 0;
+		this.remoteHostConfig = null;
 	}
 
 	/**
@@ -70,6 +73,34 @@ public class CommunicatorConfig {
 		this.communicatorName = respName;
 	}
 
+	public void initialize(CompositeConfiguration configurations) {
+		int port = Integer.parseInt((String) configurations.getString(this.communicatorName + Constants.PORT_QUALIFIER));
+		String maxPoolSizeValue = (String) configurations.getString(this.communicatorName	+ Constants.MAX_CONNECTION_POOL_SIZE);
+		if (maxPoolSizeValue != null) {
+			int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
+			this.setMaxPoolSize(maxPoolSize);
+		}
+		String keepAliveIntervalValue = (String) configurations.getString(this.communicatorName + Constants.KEEP_ALIVE_INTERVAL);
+		int keepAliveInterval = 0;
+		if (keepAliveIntervalValue != null) {
+			keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
+		}
+		this.setKeepAliveInterval(keepAliveInterval);
+		this.setPort(port);
+		this.setHost((String) configurations.getString(this.communicatorName  + Constants.HOST_QUALIFIER));
+		this.setConnectionType((String) configurations.getString(this.communicatorName	+ Constants.CONNECTION_TYPE_QUALIFIER));
+		this.setUserid((String) configurations.getString(this.communicatorName  + Constants.CONNECTION_USERNAME));
+		this.setPassword((String) configurations.getString(this.communicatorName + Constants.CONNECTION_PASSWORD));
+		// get remote host
+		String remoteHost = (String) configurations.getString(this.communicatorName + Constants.REMOTE_HOST);
+		if (remoteHost != null) {
+			CommunicatorConfig remoteHostConfig = new CommunicatorConfig(remoteHost);
+			remoteHostConfig.initialize(configurations);
+			this.setRemoteHost(remoteHostConfig);
+		}
+		this.setOperationTimeoutMultiplier(operationTimeoutMultiplier);
+
+	}
 	/**
 	 * Gets the communicator name.
 	 * 
@@ -176,21 +207,21 @@ public class CommunicatorConfig {
 	}
 	
 	/**
-	 * Sets the remote uri.
+	 * Sets the remote host.
 	 *
-	 * @param remoteURI the new remote uri
+	 * @param remoteHostConfig the new remote host
 	 */
-	public void setRemoteURI(String remoteURI) {
-		this.remoteURI = remoteURI;
+	public void setRemoteHost(CommunicatorConfig remoteHostConfig) {
+		this.remoteHostConfig = remoteHostConfig;
 	}
 
 	/**
-	 * Gets the remote uri.
+	 * Gets the remote host config.
 	 *
-	 * @return the remote uri
+	 * @return the remote host config
 	 */
-	public String getRemoteURI() {
-		return remoteURI;
+	public CommunicatorConfig getRemoteHostConfig() {
+		return remoteHostConfig;
 	}
 	/**
 	 * Gets the password.
