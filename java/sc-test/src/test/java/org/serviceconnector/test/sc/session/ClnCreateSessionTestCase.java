@@ -56,7 +56,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	 * @throws Exception
 	 *             the exception
 	 */
-//	@Test
+	@Test
 	public void failClnCreateSessionWrongHeader() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(req, "simulation");
