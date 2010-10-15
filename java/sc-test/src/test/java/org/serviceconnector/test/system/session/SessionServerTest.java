@@ -211,15 +211,6 @@ public class SessionServerTest {
 		assertEquals(6, srvCallback.messagesExchanged);
 	}
 
-	// TODO FJU how can I access echo messages from the API? probably not...
-	@Test
-	public void echo_waitFor3EchoMessages_5MessagesArrive() throws Exception {
-		StartSessionClient client = new StartSessionClient("echo_waitFor3EchoMessages_5MessagesArrive");
-		client.start();
-		client.join();
-		assertEquals(5, srvCallback.messagesExchanged);
-	}
-
 	private class SrvCallback extends SCSessionServerCallback {
 
 		private int messagesExchanged = 0;

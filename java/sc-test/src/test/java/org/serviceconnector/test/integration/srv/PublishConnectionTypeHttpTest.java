@@ -219,14 +219,13 @@ public class PublishConnectionTypeHttpTest {
 		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, sb.toString());
 	}
 
-	// TODO FJU I don't know the intended behavior of this
-	// TODO JOT verify with jan .. object not possible only byte & string
+	// TODO JOT knows about
 	@Test
 	public void publish_dataEmptyObject_passes() throws Exception {
 		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new Object());
 	}
 
-	// TODO JOT verify with jan .. object not possible only byte & string
+	// TODO JOT knows about
 	@Test
 	public void publish_dataSCMessage_passes() throws Exception {
 		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new SCMessage());

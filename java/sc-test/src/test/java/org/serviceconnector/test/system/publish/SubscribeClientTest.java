@@ -646,7 +646,7 @@ public class SubscribeClientTest {
 		service.unsubscribe();
 	}
 
-	// TODO FJU sessionInfo is supposed to be optional ..JOT no - not in case of subscribe - verify with JAN
+	// TODO JOT knows about
 	@Test
 	public void subscribe_sessionInfoNull_isSubscribedSessionIdExists() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
@@ -656,6 +656,7 @@ public class SubscribeClientTest {
 		service.unsubscribe();
 	}
 
+	// TODO JOT knows about
 	@Test
 	public void subscribe_sessionInfoEmpty_isSubscribedSessionIdExists() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);

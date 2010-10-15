@@ -211,12 +211,13 @@ public class PublishConnectionTypeTcpTest {
 		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, sb.toString());
 	}
 
-	// TODO FJU I don't know the intended behavior of this
+	// TODO JOT knows about
 	@Test
 	public void publish_dataEmptyObject_passes() throws Exception {
 		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new Object());
 	}
 
+	// TODO JOT knows about
 	@Test
 	public void publish_dataSCMessage_passes() throws Exception {
 		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new SCMessage());

@@ -190,7 +190,7 @@ public class AttachDetachTest {
 
 	@Test
 	public void attachDetach_cycle500Times_notAttached() throws Exception {
-		for (int i = 0; i < 5000; i++) {
+		for (int i = 0; i < 5000; i++) {	// TODO
 			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 			client.detach();
 		}
@@ -200,13 +200,13 @@ public class AttachDetachTest {
 		assertEquals(false, client.isAttached());
 	}
 
-	//TODO 1000 ist too much.. gets very slow!!
+	//TODO 1000 is too much. Getting very slow exactly after 500. 501,502...
 	@Test
 	public void attach_500ClientsAttachedBeforeDetach_allAttached() throws Exception {
 		int clientsCount = 500;
 		SCClient[] clients = new SCClient[clientsCount];
 		int i = 0;
-		for (; i < clientsCount / 10; i++) {
+		for (; i < clientsCount / 10; i++) {	// TODO TRN
 			testLogger.info("Attaching client " + i*10);
 			for (int j = 0; j < 10; j++) {
 				clients[j + (10 * i)] = new SCClient();

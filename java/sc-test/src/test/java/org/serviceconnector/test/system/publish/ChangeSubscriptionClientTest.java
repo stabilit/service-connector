@@ -179,6 +179,7 @@ public class ChangeSubscriptionClientTest {
 		service.unsubscribe();
 	}
 
+	// TODO JOT knows about
 	@Test
 	public void changeSubscription_toMaskPangram_passes() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
@@ -244,6 +245,7 @@ public class ChangeSubscriptionClientTest {
 		service.unsubscribe();
 	}
 
+	// TODO JOT knows about
 	@Test
 	public void subscribeChangeSubscriptionUnsubscribe_10000Times_passes() throws Exception {
 		int loop = 10000;
