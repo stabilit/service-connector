@@ -10,6 +10,10 @@
 	<name>service-connector</name>
 	<url>http://maven.apache.org</url>
 
+	<reporting>
+		<plugins>
+		</plugins>
+	</reporting>
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
@@ -28,25 +32,12 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<mainClass>org.serviceconnector.SC</mainClass>
-						</manifest>
-					</archive>
-					<classesDirectory>target/classes</classesDirectory>
-					<finalName>sc</finalName>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.7</version>
 				<configuration>
+					<!-- switch on dependency-driven aggregation -->
 					<includeDependencySources>true</includeDependencySources>
+
 					<dependencySourceIncludes>
 						<dependency-source>org.serviceconnector.*</dependency-source>
 					</dependencySourceIncludes>
@@ -95,6 +86,31 @@
 			<artifactId>sc-impl</artifactId>
 			<version>0.0.1</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.15</version>
+			<type>jar</type>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>jmxtools</artifactId>
+					<groupId>com.sun.jdmk</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jms</artifactId>
+					<groupId>javax.jms</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>mail</artifactId>
+					<groupId>javax.mail</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jmxri</artifactId>
+					<groupId>com.sun.jmx</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 </project>
