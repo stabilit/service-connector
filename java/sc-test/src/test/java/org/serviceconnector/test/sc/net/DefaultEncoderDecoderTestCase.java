@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,8 +35,6 @@ import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.sc.SCImplTest;
-
-
 
 /**
  * The Class DefaultEncoderDecoderTest.
@@ -158,8 +157,8 @@ public class DefaultEncoderDecoderTestCase {
 	 */
 	@Test
 	public void decodeUNDEFTest() {
-		String requestString = "garbage /s=69&awd 1.0\n" + "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID
-				+ "\n" + "mty=" + msgType.getValue() + "\n\n" + body + "\n";
+		String requestString = "garbage /s=69&awd 1.0\n" + "bty=" + bodyType.getValue() + "\n" + "mid=" + msgID + "\n"
+				+ "mty=" + msgType.getValue() + "\n\n" + body + "\n";
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -318,6 +317,39 @@ public class DefaultEncoderDecoderTestCase {
 		os = new ByteArrayOutputStream();
 		try {
 			coder.encode(os, encodeScmp);
+		} catch (Exception e) {
+			Assert.fail("Should not throw exception");
+		}
+		Assert.assertEquals(expectedString, os.toString());
+	}
+
+	//TODO JOT
+	public void encodeLargeBody() {
+
+		ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+		for (int i = 0; i < 1024; i++) {
+			byteBuffer.put((byte) i);
+		}
+		byte[] buf = byteBuffer.array();
+		this.bodyLength = new Integer(buf.length).toString();
+		this.body = "hello world!";
+
+		SCMPMessage scmp = new SCMPMessage();
+		scmp.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType.getValue());
+		scmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getValue());
+		scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID);
+		scmp.setBody(body.getBytes());
+
+		IEncoderDecoder coder = coderFactory.createEncoderDecoder(scmp);
+
+		String header = "mid=" + msgID + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
+				+ "\n";
+
+		String expectedString = SCImplTest.getSCMPString(headKey, header, body);
+
+		OutputStream os = new ByteArrayOutputStream();
+		try {
+			coder.encode(os, scmp);
 		} catch (Exception e) {
 			Assert.fail("Should not throw exception");
 		}
