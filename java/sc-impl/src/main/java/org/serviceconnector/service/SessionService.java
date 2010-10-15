@@ -31,7 +31,7 @@ import org.serviceconnector.scmp.SCMPMessage;
  * The Class SessionService. SessionService is a remote interface to a session service and provides communication
  * functions.
  */
-public class SessionService extends Service {
+public class SessionService extends AbstractSessionService {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SessionService.class);
@@ -61,7 +61,7 @@ public class SessionService extends Service {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized Server allocateServerAndCreateSession(SCMPMessage msgToForward, ISCMPCallback callback,
+	public synchronized SessionServer allocateServerAndCreateSession(SCMPMessage msgToForward, ISCMPCallback callback,
 			Session session, int timeoutInMillis) throws Exception {
 
 		if (this.listOfServers.size() == 0) {
@@ -77,7 +77,7 @@ public class SessionService extends Service {
 				// serverIndex reached the end of list no more servers
 				this.serverIndex = 0;
 			}
-			Server server = this.listOfServers.get(serverIndex);
+			SessionServer server = this.listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
 				server.createSession(msgToForward, callback, timeoutInMillis);
 				// store session - successful creation is not done here remove in command if not successful!!

@@ -30,7 +30,7 @@ import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.Service;
+import org.serviceconnector.service.AbstractSessionService;
 import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -108,10 +108,8 @@ public class InspectCommand extends CommandAdapter {
 			// state for service requested
 			String serviceName = bodyString.substring(9);
 			logger.debug("sessions request for service:" + serviceName);
-			if (this.serviceRegistry.containsKey(serviceName)) {
-				Service service = this.serviceRegistry.getService(serviceName);
-				scmpReply.setBody(service.getCountAvailableSessions() + "/" + service.getCountAllocatedSessions());
-			}
+			AbstractSessionService service = this.validateAbstractSessionService(serviceName);
+			scmpReply.setBody(service.getCountAvailableSessions() + "/" + service.getCountAllocatedSessions());
 			response.setSCMP(scmpReply);
 			return;
 		}

@@ -18,7 +18,6 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 
-
 /**
  * The Class SCMPCallFactory. Responsible for instantiating calls.
  * 
@@ -28,7 +27,7 @@ public final class SCMPCallFactory {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPCallFactory.class);
-	
+
 	/**
 	 * Instantiates a new SCMPCallFactory.
 	 */
@@ -66,12 +65,18 @@ public final class SCMPCallFactory {
 	public static final ISCMPCall CLN_UNSUBSCRIBE_CALL = new SCMPClnUnsubscribeCall();
 	/** The RECEIVE_PUBLICATION. */
 	public static final ISCMPCall RECEIVE_PUBLICATION = new SCMPReceivePublicationCall();
+	/** The UPLOAD_CALL. */
+	public static final ISCMPCall FILE_UPLOAD_CALL = new SCMPFileUploadCall();
+	/** The FILE_DOWNLOAD_CALL. */
+	public static final ISCMPCall FILE_DOWNLOAD_CALL = new SCMPFileDownloadCall();
+	/** The FILE_LIST_CALL. */
+	public static final ISCMPCall FILE_LIST_CALL = new SCMPFileListCall();
 
 	/********************** Calls from SC **********************/
 
-	/** The Constant SRV_CREATE_SESSION_CALL. */
+	/** The SRV_CREATE_SESSION_CALL. */
 	public static final ISCMPCall SRV_CREATE_SESSION_CALL = new SCMPSrvCreateSessionCall();
-	/** The Constant SRV_DELETE_SESSION_CALL. */
+	/** The SRV_DELETE_SESSION_CALL. */
 	public static final ISCMPCall SRV_DELETE_SESSION_CALL = new SCMPSrvDeleteSessionCall();
 	/** The SRV_ABORT_SESSION. */
 	public static final ISCMPCall SRV_ABORT_SESSION = new SCMPSrvAbortSessionCall();

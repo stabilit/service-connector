@@ -134,7 +134,7 @@ public abstract class Configuration {
 		String connectionTimeoutString = this.configurations.getString(Constants.ROOT_CONNECTION_TIMEOUT_QUALIFIER);
 		if (connectionTimeoutString != null) {
 			int connectionTimeout = Integer.parseInt(connectionTimeoutString);
-			Constants.setConnectionTimeout(connectionTimeout);
+			Constants.setConnectionTimeoutMillis(connectionTimeout);
 		}
 
 		String subscriptionTimeoutString = this.configurations.getString(Constants.ROOT_SUBSCRIPTION_TIMEOUT_QUALIFIER);
@@ -151,6 +151,12 @@ public abstract class Configuration {
 
 		String messageCacheString = this.configurations.getString(Constants.ROOT_MESSAGE_CACHE_ENABLED);
 		if (messageCacheString != null) {
+			boolean messageCache = Boolean.parseBoolean(messageCacheString);
+			Constants.setMessageCache(messageCache);
+		}
+		
+		String keepAliveString = this.configurations.getString(Constants.ROOT_KEEP_ALIVE_TIMEOUT_QUALIFIER);
+		if (keepAliveString != null) {
 			boolean messageCache = Boolean.parseBoolean(messageCacheString);
 			Constants.setMessageCache(messageCache);
 		}

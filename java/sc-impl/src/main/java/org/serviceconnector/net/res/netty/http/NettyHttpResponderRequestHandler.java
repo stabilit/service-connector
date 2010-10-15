@@ -55,6 +55,7 @@ import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
+import org.serviceconnector.service.SessionServer;
 
 /**
  * The Class NettyHttpResponderRequestHandler. This class is responsible for handling Http requests. Is called from the
@@ -350,17 +351,24 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 	private void cleanUpDeadServer(String host, int port) {
 		String wildKey = "_" + host + "/" + port;
-		// TODO JOT ?? key!
+
 		ServerRegistry serverRegistry = AppContext.getCurrentContext().getServerRegistry();
 		SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
 		Set<String> keySet = serverRegistry.keySet();
 
 		for (String key : keySet) {
 			if (key.endsWith(wildKey)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("clean up server: " + wildKey);
+				}
 				Server server = serverRegistry.getServer(key);
+				if ((server instanceof SessionServer) == false) {
+					continue;
+				}
+				SessionServer sessionServer = (SessionServer) server;
 				// deregister server from service
-				server.getService().removeServer(server);
-				List<AbstractSession> serverSessions = server.getSessions();
+				sessionServer.getService().removeServer(sessionServer);
+				List<AbstractSession> serverSessions = sessionServer.getSessions();
 
 				// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
 				for (AbstractSession session : serverSessions) {

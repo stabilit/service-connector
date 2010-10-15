@@ -28,8 +28,8 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
+import org.serviceconnector.service.SessionServer;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -65,7 +65,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		// delete entry from session registry
 		this.sessionRegistry.removeSession(session);
 
-		Server server = session.getServer();
+		SessionServer server = session.getServer();
 		CommandCallback callback;
 		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
@@ -107,7 +107,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		response.setSCMP(reply);
 	}
 
-	private void cleanUpServer(Server server, SCMPMessage message) {
+	private void cleanUpServer(SessionServer server, SCMPMessage message) {
 		/**
 		 * error in deleting session process<br>
 		 * 1. deregister server from service<br>

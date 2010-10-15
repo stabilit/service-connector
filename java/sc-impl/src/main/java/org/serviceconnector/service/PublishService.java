@@ -27,7 +27,7 @@ import org.serviceconnector.scmp.SCMPMessage;
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
  * communication functions.
  */
-public class PublishService extends Service {
+public class PublishService extends AbstractSessionService {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PublishService.class);
@@ -72,7 +72,7 @@ public class PublishService extends Service {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized Server allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPCallback callback,
+	public synchronized SessionServer allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPCallback callback,
 			Subscription subscription, int timeoutMillis) throws Exception {
 
 		if (this.listOfServers.size() == 0) {
@@ -88,7 +88,7 @@ public class PublishService extends Service {
 				// serverIndex reached the end of list no more servers
 				this.serverIndex = 0;
 			}
-			Server server = this.listOfServers.get(serverIndex);
+			SessionServer server = this.listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
 				server.subscribe(msgToForward, callback, timeoutMillis);
 				server.addSession(subscription);

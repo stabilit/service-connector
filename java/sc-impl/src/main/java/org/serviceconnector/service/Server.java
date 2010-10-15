@@ -18,9 +18,6 @@ package org.serviceconnector.service;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.call.SCMPCallFactory;
@@ -55,23 +52,17 @@ public class Server {
 	protected final static Logger logger = Logger.getLogger(Server.class);
 
 	/** The host. */
-	private String host;
+	protected String host;
 	/** The port number. */
-	private int portNr;
+	protected int portNr;
 	/** The socket address. */
-	private InetSocketAddress socketAddress;
+	protected InetSocketAddress socketAddress;
 	/** The service name. */
-	private String serviceName;
-	/** The service. */
-	private Service service;
-	/** The max sessions. */
-	private int maxSessions;
+	protected String serviceName;
 	/** The max connections. */
 	private int maxConnections;
 	/** The requester. */
 	private IRequester requester;
-	/** The sessions, list of sessions allocated to the server. */
-	private List<AbstractSession> sessions;
 	/** The operation timeout multiplier. */
 	private double operationTimeoutMultiplier;
 
@@ -85,14 +76,11 @@ public class Server {
 	 * @param maxSessions
 	 *            the max sessions
 	 */
-	public Server(InetSocketAddress socketAddress, String serviceName, int portNr, int maxSessions, int maxConnections,
+	public Server(InetSocketAddress socketAddress, String serviceName, int portNr, int maxConnections,
 			int keepAliveInterval) {
-		this.service = null;
-		this.sessions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 		this.serviceName = serviceName;
 		this.socketAddress = socketAddress;
 		this.portNr = portNr;
-		this.maxSessions = maxSessions;
 		this.maxConnections = maxConnections;
 		ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
 		IResponder responder = responderRegistry.getCurrentResponder();
@@ -183,9 +171,10 @@ public class Server {
 	 *            the message to forward
 	 * @param callback
 	 *            the callback
-	 * @throws ConnectionPoolBusyException 
+	 * @throws ConnectionPoolBusyException
 	 */
-	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
+	public void subscribe(SCMPMessage msgToForward, ISCMPCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
 		SCMPSrvSubscribeCall subscribeCall = (SCMPSrvSubscribeCall) SCMPCallFactory.SRV_SUBSCRIBE_CALL.newInstance(
 				requester, msgToForward);
 		try {
@@ -205,9 +194,10 @@ public class Server {
 	 *            the message
 	 * @param callback
 	 *            the callback
-	 * @throws ConnectionPoolBusyException 
+	 * @throws ConnectionPoolBusyException
 	 */
-	public void unsubscribe(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
+	public void unsubscribe(SCMPMessage message, ISCMPCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
 		SCMPSrvUnsubscribeCall unsubscribeCall = (SCMPSrvUnsubscribeCall) SCMPCallFactory.SRV_UNSUBSCRIBE_CALL
 				.newInstance(requester, message);
 
@@ -230,9 +220,10 @@ public class Server {
 	 *            the callback
 	 * @param timeoutMillis
 	 *            the timeout milliseconds
-	 * @throws ConnectionPoolBusyException 
+	 * @throws ConnectionPoolBusyException
 	 */
-	public void changeSubscription(SCMPMessage message, ISCMPCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
+	public void changeSubscription(SCMPMessage message, ISCMPCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
 		SCMPSrvChangeSubscriptionCall changeSubscriptionCall = (SCMPSrvChangeSubscriptionCall) SCMPCallFactory.SRV_CHANGE_SUBSCRIPTION_CALL
 				.newInstance(requester, message);
 
@@ -292,9 +283,7 @@ public class Server {
 	 */
 	public void destroy() {
 		this.requester.getContext().getConnectionPool().destroy();
-		this.sessions = null;
 		this.requester = null;
-		this.service = null;
 	}
 
 	/**
@@ -316,30 +305,12 @@ public class Server {
 	}
 
 	/**
-	 * Gets the max sessions.
-	 * 
-	 * @return the max sessions
-	 */
-	public int getMaxSessions() {
-		return maxSessions;
-	}
-
-	/**
 	 * Gets the max connections.
 	 * 
 	 * @return the max connections
 	 */
 	public int getMaxConnections() {
 		return maxConnections;
-	}
-
-	/**
-	 * Checks for free session.
-	 * 
-	 * @return true, if successful
-	 */
-	public boolean hasFreeSession() {
-		return this.sessions.size() < this.maxSessions;
 	}
 
 	/**
@@ -352,25 +323,6 @@ public class Server {
 	}
 
 	/**
-	 * Sets the service which is served by the server.
-	 * 
-	 * @param service
-	 *            the new service
-	 */
-	public void setService(Service service) {
-		this.service = service;
-	}
-
-	/**
-	 * Gets the service which is served by the server.
-	 * 
-	 * @return the service
-	 */
-	public Service getService() {
-		return service;
-	}
-
-	/**
 	 * Gets the requester.
 	 * 
 	 * @return the requester
@@ -379,38 +331,9 @@ public class Server {
 		return requester;
 	}
 
-	/**
-	 * Adds an allocated session to the server.
-	 * 
-	 * @param session
-	 *            the session
-	 */
-	public void addSession(AbstractSession session) {
-		this.sessions.add(session);
-	}
-
-	/**
-	 * Removes an allocated session from the server.
-	 * 
-	 * @param session
-	 *            the session
-	 */
-	public void removeSession(AbstractSession session) {
-		this.sessions.remove(session);
-	}
-
-	/**
-	 * Gets the sessions.
-	 * 
-	 * @return the sessions
-	 */
-	public List<AbstractSession> getSessions() {
-		return sessions;
-	}
-
+	/** @{inheritDoc */
 	@Override
 	public String toString() {
-		return serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort() + ":" + portNr + " : "
-				+ maxSessions;
+		return serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort() + ":" + portNr;
 	}
 }

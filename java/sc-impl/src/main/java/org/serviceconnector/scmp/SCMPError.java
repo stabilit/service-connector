@@ -77,6 +77,8 @@ public enum SCMPError {
 	HV_WRONG_MESSAGE_INFO("420", "Invalid message info field."),
 	/** The HV_WRONG_MESSAGE_ID. */
 	HV_WRONG_MESSAGE_ID("420", "Invalid message id field."),
+	/** The HV_WRONG_REMOTE_FILE_NAME. */
+	HV_WRONG_REMOTE_FILE_NAME("420", "Invalid remote file name field."),
 	/** The HV_WRONG_MESSAGE_ID. */
 	HV_WRONG_SESSION_ID("420", "Invalid session id field."),
 	/** The HV_WRONG_SC_ERROR_CODE. */

@@ -29,8 +29,9 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.AbstractSessionService;
 import org.serviceconnector.service.Server;
-import org.serviceconnector.service.Service;
+import org.serviceconnector.service.SessionServer;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -65,7 +66,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 		// lookup service and checks properness
-		Service service = this.validateServiceName(serviceName);
+		AbstractSessionService service = this.validateAbstractSessionService(serviceName);
 
 		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		// controls that server not has been registered before for specific service
@@ -77,7 +78,8 @@ public class RegisterServerCommand extends CommandAdapter {
 		boolean immediateConnect = message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		int keepAliveInterval = message.getHeaderInt(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
 		// create new server
-		Server server = new Server(socketAddress, serviceName, portNr, maxSessions, maxConnections, keepAliveInterval);
+		SessionServer server = new SessionServer(socketAddress, serviceName, portNr, maxSessions, maxConnections,
+				keepAliveInterval);
 		try {
 			if (immediateConnect) {
 				// server connections get connected immediately

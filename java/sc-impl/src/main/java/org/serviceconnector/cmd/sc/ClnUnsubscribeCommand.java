@@ -30,7 +30,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.Server;
+import org.serviceconnector.service.SessionServer;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -69,7 +69,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		this.subscriptionRegistry.removeSubscription(subscription);
 
 		// unsubscribe on backend server
-		Server server = subscription.getServer();
+		SessionServer server = subscription.getServer();
 
 		CommandCallback callback;
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);

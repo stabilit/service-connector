@@ -58,8 +58,7 @@ public class SCClient {
 	/** The connection pool. */
 	private ConnectionPool connectionPool;
 	/**
-	 * Identifies low level component to use for communication default for
-	 * clients is {netty.http}.
+	 * Identifies low level component to use for communication default for clients is {netty.http}.
 	 */
 	private String conType;
 	/** The requester. */
@@ -128,7 +127,8 @@ public class SCClient {
 	 */
 	public synchronized void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
 		if (this.attached) {
-			throw new SCServiceException("already attached before - detach first, attaching in sequence is not allowed.");
+			throw new SCServiceException(
+					"already attached before - detach first, attaching in sequence is not allowed.");
 		}
 		if (host == null) {
 			throw new InvalidParameterException("host must be set.");
@@ -186,13 +186,15 @@ public class SCClient {
 		try {
 			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 			try {
-				detachCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+				detachCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+						* Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("detach client failed", e);
 			}
 			SCMPMessage reply = callback.getMessageSync();
 			if (reply.isFault()) {
-				throw new SCServiceException("detach client failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				throw new SCServiceException("detach client failed : "
+						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			}
 		} finally {
 			this.attached = false;
@@ -211,12 +213,10 @@ public class SCClient {
 	}
 
 	/**
-	 * Sets the connection type. Should only be used if you really need to
-	 * change low level technology careful.
+	 * Sets the connection type. Should only be used if you really need to change low level technology careful.
 	 * 
 	 * @param conType
-	 *            the new connection type, identifies low level communication
-	 *            technology
+	 *            the new connection type, identifies low level communication technology
 	 */
 	public void setConnectionType(String conType) {
 		this.conType = conType;
@@ -263,7 +263,7 @@ public class SCClient {
 		if (this.attached == false) {
 			throw new SCServiceException("newFileService not possible - client not attached.");
 		}
-		return null;
+		return new SCFileService(serviceName, this.scContext);
 	}
 
 	/**
@@ -301,9 +301,8 @@ public class SCClient {
 	}
 
 	/**
-	 * Sets the max connections. If client is already connected to the SC and
-	 * max connections is lower than default value or value set earlier
-	 * connection pool is not reducing the connections immediately.
+	 * Sets the max connections. If client is already connected to the SC and max connections is lower than default
+	 * value or value set earlier connection pool is not reducing the connections immediately.
 	 * 
 	 * @param maxConnections
 	 *            the new max connections used by connection pool.
@@ -378,8 +377,7 @@ public class SCClient {
 	}
 
 	/**
-	 * Workload. Returns the number of available and allocated sessions for
-	 * given service name. e.g 4/2.
+	 * Workload. Returns the number of available and allocated sessions for given service name. e.g 4/2.
 	 * 
 	 * @param serviceName
 	 *            the service name
@@ -423,7 +421,8 @@ public class SCClient {
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			inspectCall.setRequestBody(instruction);
-			inspectCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+			inspectCall
+					.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.connectionPool.destroy();
 			throw new SCServiceException("kill SC failed", e);

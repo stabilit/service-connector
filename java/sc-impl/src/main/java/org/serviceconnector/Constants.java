@@ -34,7 +34,7 @@ public final class Constants {
 
 	/** The Constant LARGE_MESSAGE_LIMIT. */
 	private static final int DEFAULT_LARGE_MESSAGE_LIMIT = 60 << 10; // 64K
-		/** The Constant LARGE_MESSAGE_LIMIT. */
+	/** The Constant LARGE_MESSAGE_LIMIT. */
 	public static int LARGE_MESSAGE_LIMIT = DEFAULT_LARGE_MESSAGE_LIMIT;
 	/** File qualifier for command line argument configuration file. */
 	public static final String CLI_CONFIG_ARG = "-sc.configuration";
@@ -58,7 +58,8 @@ public final class Constants {
 	 */
 	public static double ECHO_INTERVAL_MULTIPLIER = DEFAULT_ECHO_INTERVAL_MULTIPLIER;
 	/**
-	 * DEFAULT_OPERATION_TIMEOUT_MULTIPLIER: Default value if no OPERATION_TIMEOUT_MULTIPLIER will be set by configuration.
+	 * DEFAULT_OPERATION_TIMEOUT_MULTIPLIER: Default value if no OPERATION_TIMEOUT_MULTIPLIER will be set by
+	 * configuration.
 	 */
 	private static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
 	/**
@@ -76,6 +77,15 @@ public final class Constants {
 	 * work very fast. Often used in emergency cases and in situation where reply of operation is irrelevant.
 	 */
 	public static final int OPERATION_TIMEOUT_MILLIS_SHORT = 200;
+	/**
+	 * DEFAULT_KEEP_ALIVE_TIMEOUT: Default value if no KEEP_ALIVE_TIMEOUT will be set by configuration.
+	 */
+	private static final int DEFAULT_KEEP_ALIVE_TIMEOUT = 2000;
+	/**
+	 * KEEP_ALIVE_TIMEOUT: This timeout is used to observe the reply of a keep alive message. If reply can not be
+	 * received within this time, connection is will be cleaned up.
+	 */
+	public static int KEEP_ALIVE_TIMEOUT = DEFAULT_KEEP_ALIVE_TIMEOUT;
 	/**
 	 * TECH_LEVEL_OPERATION_TIMEOUT_MILLIS: Is used to detect a technical operation timeout. It is the time a single
 	 * WRITE/READ/CLOSE/OPEN can have. Should be low/short.
@@ -108,16 +118,18 @@ public final class Constants {
 	/** The Constant ROOT_CONNECTION_TIMEOUT_QUALIFIER. */
 	public static final String ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER = "root.largeMessageLimit";
 	/** The Constant ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER. */
-	public static final String ROOT_CONNECTION_TIMEOUT_QUALIFIER = "root.connectionTimeout";
+	public static final String ROOT_CONNECTION_TIMEOUT_QUALIFIER = "root.connectionTimeoutMillis";
 	/** The Constant ROOT_SUBSCRIPTION_TIMEOUT_QUALIFIER. */
 	public static final String ROOT_SUBSCRIPTION_TIMEOUT_QUALIFIER = "root.subscriptionTimeout";
+	/** The Constant ROOT_KEEP_ALIVE_TIMEOUT_QUALIFIER. */
+	public static final String ROOT_KEEP_ALIVE_TIMEOUT_QUALIFIER = "root.keepAliveTimeout";
 	/** The connection type. */
 	public static final String CONNECTION_TYPE_QUALIFIER = ".connectionType";
 	/** The USERID. */
 	public static final String CONNECTION_USERNAME = ".username";
 	/** The PASSWORD. */
 	public static final String CONNECTION_PASSWORD = ".password";
-	
+
 	/** The Constant REMOTE_URI. */
 	public static final String REMOTE_URI = ".remoteURI";
 	/** The HOST. */
@@ -154,7 +166,7 @@ public final class Constants {
 	/** The Constant NETTY_WEB. */
 	public static final String NETTY_WEB = "netty.web";
 	/** The Constant NETTY_TCP_PROXY. */
-	public static final String NETTY_TCP_PROXY = "netty.tcp.proxy";	
+	public static final String NETTY_TCP_PROXY = "netty.tcp.proxy";
 	/** The DEFAULT_CLIENT_CON. */
 	public static final String DEFAULT_CLIENT_CON = NETTY_HTTP;
 	/** The DEFAULT_SERVER_CON. */
@@ -205,7 +217,6 @@ public final class Constants {
 	/** The Constant EQUAL_SIGN. */
 	public static final String EQUAL_SIGN = "=";
 
-	
 	/**
 	 * @param flag
 	 */
@@ -250,15 +261,27 @@ public final class Constants {
 		Constants.ECHO_INTERVAL_MULTIPLIER = echoInteralMultiplier;
 	}
 
-	public static void setConnectionTimeout(int connectionTimeout) {
+	/**
+	 * Sets the connection timeout.
+	 * 
+	 * @param connectionTimeoutMillis
+	 *            the new connection timeout
+	 */
+	public static void setConnectionTimeoutMillis(int connectionTimeoutMillis) {
 		if (Constants.CONNECT_TIMEOUT_MILLIS != Constants.DEFAULT_CONNECT_TIMEOUT_MILLIS) {
 			// setting CONNECT_TIMEOUT_MILLIS only allowed one time
-			logger.error("setConnectionTimeout called two times - not allowed.");
+			logger.error("setConnectionTimeoutMillis called two times - not allowed.");
 			return;
 		}
-		Constants.CONNECT_TIMEOUT_MILLIS = connectionTimeout;
+		Constants.CONNECT_TIMEOUT_MILLIS = connectionTimeoutMillis;
 	}
 
+	/**
+	 * Sets the subscription timeout.
+	 * 
+	 * @param subscriptionTimeout
+	 *            the new subscription timeout
+	 */
 	public static void setSubscriptionTimeout(int subscriptionTimeout) {
 		if (Constants.SUBSCRIPTION_TIMEOUT_MILLIS != Constants.DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS) {
 			// setting SUBSCRIPTION_TIMEOUT_MILLIS only allowed one time
@@ -266,5 +289,20 @@ public final class Constants {
 			return;
 		}
 		Constants.SUBSCRIPTION_TIMEOUT_MILLIS = subscriptionTimeout;
+	}
+
+	/**
+	 * Sets the keep alive timeout.
+	 * 
+	 * @param keepAliveTimeout
+	 *            the new keep alive timeout
+	 */
+	public static void setKeepAliveTimeout(int keepAliveTimeout) {
+		if (Constants.KEEP_ALIVE_TIMEOUT != Constants.DEFAULT_KEEP_ALIVE_TIMEOUT) {
+			// setting KEEP_ALIVE_TIMEOUT only allowed one time
+			logger.error("setKeepAliveTimeout called two times - not allowed.");
+			return;
+		}
+		Constants.KEEP_ALIVE_TIMEOUT = keepAliveTimeout;
 	}
 }

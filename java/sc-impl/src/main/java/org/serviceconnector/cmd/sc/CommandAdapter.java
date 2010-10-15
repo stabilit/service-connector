@@ -31,6 +31,8 @@ import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.AbstractSessionService;
+import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceState;
@@ -186,6 +188,62 @@ public abstract class CommandAdapter implements ICommand {
 			throw scmpCommandException;
 		}
 		return (PublishService) service;
+	}
+
+	/**
+	 * Validate abstract session service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the abstract session service
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
+	protected AbstractSessionService validateAbstractSessionService(String serviceName) throws SCMPCommandException {
+		Service service = this.validateServiceName(serviceName);
+		if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE) {
+			// no service known with incoming serviceName
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service: "
+					+ serviceName + " is not publish service");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		if (service.getState() == ServiceState.DISABLED) {
+			// no session allowed for DISABLED service
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED,
+					"service: " + serviceName + " is disabled");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		return (AbstractSessionService) service;
+	}
+
+	/**
+	 * Validate file service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the publish service
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
+	protected FileService validateFileService(String serviceName) throws SCMPCommandException {
+		Service service = this.validateServiceName(serviceName);
+		if (service.getType() != ServiceType.FILE_SERVICE) {
+			// no service known with incoming serviceName
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service: "
+					+ serviceName + " is not file service");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		if (service.getState() == ServiceState.DISABLED) {
+			// no session allowed for DISABLED service
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED,
+					"service: " + serviceName + " is disabled");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		return (FileService) service;
 	}
 
 	/** {@inheritDoc} */

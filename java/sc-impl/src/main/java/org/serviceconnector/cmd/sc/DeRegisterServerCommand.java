@@ -34,6 +34,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
+import org.serviceconnector.service.SessionServer;
 
 /**
  * The Class DeRegisterServerCommand. Responsible for validation and execution of deregister command. Used to
@@ -70,7 +71,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 
 		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		// looks up server & validate server is registered
-		Server server = this.getServerByName(serverKey);
+		SessionServer server = this.getSessionServerByName(serverKey);
 		// deregister server from service
 		server.getService().removeServer(server);
 
@@ -123,27 +124,26 @@ public class DeRegisterServerCommand extends CommandAdapter {
 	}
 
 	/**
-	 * Validate server. Checks properness of allocated server. If server null no free server available.
+	 * Gets the session server by name. Checks properness of allocated server.
 	 * 
 	 * @param key
 	 *            the key
-	 * @return the server by name
+	 * @return the session server by name
 	 * @throws SCMPCommandException
-	 *             the SCMP command exception
+	 *             the sCMP command exception
 	 */
-	public Server getServerByName(String key) throws SCMPCommandException {
+	public SessionServer getSessionServerByName(String key) throws SCMPCommandException {
 		Server server = this.serverRegistry.getServer(key);
 
-		if (server == null) {
+		if (server == null || (server instanceof SessionServer) == false) {
 			// no available server for this service
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
 					"server not registered, key " + key);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
-		return server;
+		return (SessionServer) server;
 	}
-
 
 	/**
 	 * The Class DeRegisterServerCommmandCallback. It's used as callback for abort sessions. Callback can be ignored.

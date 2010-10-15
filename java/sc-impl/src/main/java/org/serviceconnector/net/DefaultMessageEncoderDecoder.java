@@ -20,6 +20,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.zip.Deflater;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.log.MessageLogger;
@@ -27,10 +28,8 @@ import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPInternalStatus;
 import org.serviceconnector.scmp.SCMPMessage;
 
-
 /**
- * The Class DefaultEncoderDecoder. Defines default SCMP encoding/decoding of
- * object into/from stream.
+ * The Class DefaultEncoderDecoder. Defines default SCMP encoding/decoding of object into/from stream.
  * 
  * @author JTraber
  */
@@ -85,7 +84,11 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					this.writeHeadLine(bw, headerKey, messageLength, headerSize);
 					bw.write(sb.toString());
 					bw.flush();
-					os.write((byte[]) ba);
+					/*
+					 * // compresss body Deflater compresser = new Deflater(); compresser.setInput(ba);
+					 * compresser.finish(); byte[] zipBa = new byte[ba.length]; compresser.deflate(zipBa);
+					 */
+					os.write(ba);
 					os.flush();
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					if (messageLogger.isEnabled()) {

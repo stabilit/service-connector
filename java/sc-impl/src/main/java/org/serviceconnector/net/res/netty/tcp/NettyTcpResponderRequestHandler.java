@@ -54,6 +54,7 @@ import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
+import org.serviceconnector.service.SessionServer;
 
 /**
  * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the
@@ -69,7 +70,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 
 	/** The Constant performanceLogger. */
 	private final static PerformanceLogger performanceLogger = PerformanceLogger.getInstance();
-	
+
 	private static SCMPSessionCompositeRegistry compositeRegistry = AppContext.getCurrentContext()
 			.getSCMPSessionCompositeRegistry();
 
@@ -336,9 +337,13 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 					logger.debug("clean up server: " + wildKey);
 				}
 				Server server = serverRegistry.getServer(key);
+				if ((server instanceof SessionServer) == false) {
+					continue;
+				}
+				SessionServer sessionServer = (SessionServer) server;
 				// deregister server from service
-				server.getService().removeServer(server);
-				List<AbstractSession> serverSessions = server.getSessions();
+				sessionServer.getService().removeServer(sessionServer);
+				List<AbstractSession> serverSessions = sessionServer.getSessions();
 
 				// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
 				for (AbstractSession session : serverSessions) {

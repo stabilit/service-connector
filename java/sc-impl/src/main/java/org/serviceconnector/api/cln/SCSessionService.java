@@ -77,7 +77,7 @@ public class SCSessionService extends SCService {
 		this.scServiceContext = new SCServiceContext(this);
 		this.timerRun = null;
 		this.sessionActive = false;
-		this.scResponseTimeMillis = Constants.OPERATION_TIMEOUT_MILLIS_SHORT;
+		this.scResponseTimeMillis = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
 	}
 
 	/**

@@ -21,10 +21,6 @@
  */
 package org.serviceconnector.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -45,10 +41,6 @@ public abstract class Service {
 	private String name;
 	/** The location. */
 	private String location;
-	/** The server index. */
-	protected int serverIndex;
-	/** The list of servers. */
-	protected List<Server> listOfServers;
 
 	/**
 	 * Instantiates a new service.
@@ -61,10 +53,7 @@ public abstract class Service {
 	public Service(String name, ServiceType type) {
 		this.name = name;
 		this.location = null;
-		this.serverIndex = 0;
 		this.type = type;
-		// synchronize the sever list
-		this.listOfServers = Collections.synchronizedList(new ArrayList<Server>());
 	}
 
 	/**
@@ -76,34 +65,6 @@ public abstract class Service {
 		return name;
 	}
 
-	/**
-	 * Adds the server.
-	 * 
-	 * @param server
-	 *            the server
-	 */
-	public void addServer(Server server) {
-		this.listOfServers.add(server);
-	}
-
-	/**
-	 * Removes the server.
-	 * 
-	 * @param server
-	 *            the server
-	 */
-	public void removeServer(Server server) {
-		this.listOfServers.remove(server);
-	}
-
-	/**
-	 * Gets the server list.
-	 *
-	 * @return the server list
-	 */
-	public List<Server> getServerList() {
-		return Collections.unmodifiableList(this.listOfServers);
-	}
 	/**
 	 * Gets the location.
 	 * 
@@ -147,49 +108,10 @@ public abstract class Service {
 	public void setState(ServiceState state) {
 		this.state = state;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.serverIndex);
-		for (Server server : this.listOfServers) {
-			sb.append(" - ");
-			sb.append(server);
-		}
-		return sb.toString();
+		return this.name + ":" + this.state + ":" + this.type.getValue();
 	}
-
-	public int getCountServers() {
-		return listOfServers.size();
-	}
-	/**
-	 * Gets the count allocated sessions.
-	 * 
-	 * @return the count allocated sessions
-	 */
-	public int getCountAllocatedSessions() {
-		int allocatedSessions = 0;
-
-		for (Server server : listOfServers) {
-			allocatedSessions += server.getSessions().size();
-		}
-		return allocatedSessions;
-	}
-
-	/**
-	 * Gets the count available sessions.
-	 * 
-	 * @return the count available sessions
-	 */
-	public int getCountAvailableSessions() {
-		int availableSessions = 0;
-
-		for (Server server : listOfServers) {
-			availableSessions += server.getMaxSessions();
-		}
-		return availableSessions;
-	}
-	
-
 }

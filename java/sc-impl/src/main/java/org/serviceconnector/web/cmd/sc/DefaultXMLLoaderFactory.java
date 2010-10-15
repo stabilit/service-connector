@@ -44,10 +44,13 @@ import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.AbstractSessionService;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Service;
+import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.Session;
+import org.serviceconnector.service.SessionServer;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
@@ -63,8 +66,7 @@ import org.serviceconnector.web.ctx.WebContext;
 public class DefaultXMLLoaderFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(DefaultXMLLoaderFactory.class);
+	protected final static Logger logger = Logger.getLogger(DefaultXMLLoaderFactory.class);
 
 	/** The loader factory. */
 	protected static DefaultXMLLoaderFactory loaderFactory = new DefaultXMLLoaderFactory();
@@ -101,9 +103,11 @@ public class DefaultXMLLoaderFactory {
 
 	/**
 	 * Adds the xml loader.
-	 *
-	 * @param key the key
-	 * @param loader the loader
+	 * 
+	 * @param key
+	 *            the key
+	 * @param loader
+	 *            the loader
 	 */
 	public void addXMLLoader(String key, IXMLLoader loader) {
 		this.loaderMap.put(key, loader);
@@ -115,7 +119,7 @@ public class DefaultXMLLoaderFactory {
 	 * @param url
 	 *            the url
 	 * @return the xML loader
-	 */ 
+	 */
 	public IXMLLoader getXMLLoader(String url) {
 		if (url == null) {
 			return this.loaderMap.get("default");
@@ -147,8 +151,7 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
-				throws Exception {
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		}
 
 		@Override
@@ -171,10 +174,8 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
-				throws Exception {
-			ServiceRegistry serviceRegistry = AppContext.getCurrentContext()
-					.getServiceRegistry();
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
 			writer.writeStartElement("services");
 			String serviceParameter = request.getParameter("service");
 			Service[] services = serviceRegistry.getServices();
@@ -183,42 +184,41 @@ public class DefaultXMLLoaderFactory {
 				this.writeBean(writer, service);
 				if (service instanceof PublishService) {
 					PublishService publishService = (PublishService) service;
-					SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService
-							.getSubscriptionQueue();
+					SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService.getSubscriptionQueue();
 					writer.writeStartElement("subscriptionQueueSize");
-					writer.writeCData(String.valueOf(subscriptionQueue
-							.getSize()));
+					writer.writeCData(String.valueOf(subscriptionQueue.getSize()));
 					writer.writeEndElement();
 				}
 				if (service.getServiceName().equals(serviceParameter)) {
 					// take a look into
 					writer.writeStartElement("details");
-					List<Server> serverList = service.getServerList();
-					writer.writeStartElement("servers");
-					for (Server server : serverList) {
-						writer.writeStartElement("server");
-						this.writeBean(writer, server);
+					
+					// TODO DANI - JOT: Musste hier einen if einbauen.. bitte anpassen!
+					if (service.getType() == ServiceType.SESSION_SERVICE
+							|| service.getType() == ServiceType.PUBLISH_SERVICE) {
+
+						List<SessionServer> serverList = ((AbstractSessionService) service).getServerList();
+						writer.writeStartElement("servers");
+						for (Server server : serverList) {
+							writer.writeStartElement("server");
+							this.writeBean(writer, server);
+							writer.writeEndElement(); // close servers tag
+						}
 						writer.writeEndElement(); // close servers tag
 					}
-					writer.writeEndElement(); // close servers tag
 					if (service instanceof PublishService) {
 						PublishService publishService = (PublishService) service;
-						SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService
-								.getSubscriptionQueue();
+						SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService.getSubscriptionQueue();
 						writer.writeStartElement("subscriptionQueue");
-						Iterator<SCMPMessage> sqIter = subscriptionQueue
-								.iterator();
+						Iterator<SCMPMessage> sqIter = subscriptionQueue.iterator();
 						while (sqIter.hasNext()) {
 							SCMPMessage scmpMessage = sqIter.next();
 							writer.writeStartElement("scmpMessage");
 							writer.writeStartElement("header");
-							Map<String, String> header = scmpMessage
-									.getHeader();
+							Map<String, String> header = scmpMessage.getHeader();
 							for (Entry headerEntry : header.entrySet()) {
-								writer.writeStartElement((String) headerEntry
-										.getKey());
-								writer.writeCData((String) headerEntry
-										.getValue());
+								writer.writeStartElement((String) headerEntry.getKey());
+								writer.writeCData((String) headerEntry.getValue());
 								writer.writeEndElement();
 							}
 							writer.writeEndElement();
@@ -235,8 +235,7 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(Writer writer, IWebRequest request)
-				throws Exception {
+		public final void loadBody(Writer writer, IWebRequest request) throws Exception {
 			if (writer instanceof XMLStreamWriter) {
 				this.loadBody((XMLStreamWriter) writer, request);
 			}
@@ -262,8 +261,7 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
-				throws Exception {
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
 			writer.writeStartElement("sessions");
 			String serviceParameter = request.getParameter("session");
@@ -278,8 +276,7 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(Writer writer, IWebRequest request)
-				throws Exception {
+		public final void loadBody(Writer writer, IWebRequest request) throws Exception {
 			if (writer instanceof XMLStreamWriter) {
 				this.loadBody((XMLStreamWriter) writer, request);
 			}
@@ -305,8 +302,7 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
-				throws Exception {
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			ServerRegistry serverRegistry = AppContext.getCurrentContext().getServerRegistry();
 			writer.writeStartElement("servers");
 			Server[] servers = serverRegistry.getServers();
@@ -320,8 +316,7 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(Writer writer, IWebRequest request)
-				throws Exception {
+		public final void loadBody(Writer writer, IWebRequest request) throws Exception {
 			if (writer instanceof XMLStreamWriter) {
 				this.loadBody((XMLStreamWriter) writer, request);
 			}
@@ -347,8 +342,7 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
-				throws Exception {
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
 			writer.writeStartElement("responders");
 			IResponder[] responders = responderRegistry.getResponders();
@@ -367,8 +361,7 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(Writer writer, IWebRequest request)
-				throws Exception {
+		public final void loadBody(Writer writer, IWebRequest request) throws Exception {
 			if (writer instanceof XMLStreamWriter) {
 				this.loadBody((XMLStreamWriter) writer, request);
 			}
@@ -394,8 +387,7 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public final void loadBody(XMLStreamWriter writer, IWebRequest request)
-				throws Exception {
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			writer.writeStartElement("logs");
 			String dateParameter = request.getParameter("date");
 			Date today = new Date();
@@ -426,8 +418,8 @@ public class DefaultXMLLoaderFactory {
 			writer.writeEndElement(); // close logs tag
 		}
 
-		private void writeLogger(XMLStreamWriter writer, Logger logger,
-				Date today, Date current) throws XMLStreamException {
+		private void writeLogger(XMLStreamWriter writer, Logger logger, Date today, Date current)
+				throws XMLStreamException {
 			writer.writeStartElement("logger");
 			writer.writeAttribute("name", logger.getName());
 			Enumeration appenders = logger.getAllAppenders();
@@ -481,13 +473,11 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public void loadBody(XMLStreamWriter writer, IWebRequest request)
-				throws Exception {
+		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			String name = request.getParameter("name");
 			InputStream is = WebUtil.loadResource(name);
 			if (is == null) {
-				this.addMeta("exception", "resource for name = " + name
-						+ " not found");
+				this.addMeta("exception", "resource for name = " + name + " not found");
 				return;
 			}
 			try {
@@ -530,20 +520,17 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public void loadBody(XMLStreamWriter writer, IWebRequest request)
-				throws Exception {
+		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			throw new UnsupportedOperationException();
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		public void loadBody(Writer writer, IWebRequest request)
-				throws Exception {
+		public void loadBody(Writer writer, IWebRequest request) throws Exception {
 			String name = request.getParameter("name");
 			InputStream is = WebUtil.loadResource(name);
 			if (is == null) {
-				this.addMeta("exception", "resource for name = " + name
-						+ " not found");
+				this.addMeta("exception", "resource for name = " + name + " not found");
 				return;
 			}
 			try {
@@ -588,8 +575,7 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public void loadBody(XMLStreamWriter writer, IWebRequest request)
-				throws Exception {
+		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		}
 
 	}
@@ -618,15 +604,13 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public void loadBody(XMLStreamWriter writer, IWebRequest request)
-				throws Exception {
+		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			throw new UnsupportedOperationException();
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		public void loadBody(Writer writer, IWebRequest request)
-				throws Exception {
+		public void loadBody(Writer writer, IWebRequest request) throws Exception {
 			String action = request.getParameter("action");
 			if ("gc".equals(action)) {
 				System.gc();
@@ -659,8 +643,7 @@ public class DefaultXMLLoaderFactory {
 
 		/** {@inheritDoc} */
 		@Override
-		public void loadBody(XMLStreamWriter writer, IWebRequest request)
-				throws Exception {
+		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			String id = request.getParameter("id");
 			if (id == null) {
 				throw new InvalidParameterException("id parameter missing");
