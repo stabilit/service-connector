@@ -27,7 +27,7 @@ import org.serviceconnector.scmp.SCMPMessage;
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
  * communication functions.
  */
-public class PublishService extends AbstractSessionService {
+public class PublishService extends StatefulService {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PublishService.class);

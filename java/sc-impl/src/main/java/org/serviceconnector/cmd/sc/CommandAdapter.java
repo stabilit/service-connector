@@ -31,7 +31,7 @@ import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.AbstractSessionService;
+import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Service;
@@ -191,15 +191,15 @@ public abstract class CommandAdapter implements ICommand {
 	}
 
 	/**
-	 * Validate abstract session service.
+	 * Validate stateful service.
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @return the abstract session service
+	 * @return the stateful service
 	 * @throws SCMPCommandException
 	 *             the sCMP command exception
 	 */
-	protected AbstractSessionService validateAbstractSessionService(String serviceName) throws SCMPCommandException {
+	protected StatefulService validateStatefulService(String serviceName) throws SCMPCommandException {
 		Service service = this.validateServiceName(serviceName);
 		if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE) {
 			// no service known with incoming serviceName
@@ -215,7 +215,7 @@ public abstract class CommandAdapter implements ICommand {
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
-		return (AbstractSessionService) service;
+		return (StatefulService) service;
 	}
 
 	/**

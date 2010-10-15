@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractSessionService extends Service {
+public abstract class StatefulService extends Service {
 
 	/** The server index. */
 	protected int serverIndex;
 	/** The list of servers. */
 	protected List<SessionServer> listOfServers;
 
-	public AbstractSessionService(String name, ServiceType type) {
+	public StatefulService(String name, ServiceType type) {
 		super(name, type);
 		this.serverIndex = 0;
 		// synchronize the sever list
@@ -90,5 +90,4 @@ public abstract class AbstractSessionService extends Service {
 		}
 		return availableSessions;
 	}
-
 }

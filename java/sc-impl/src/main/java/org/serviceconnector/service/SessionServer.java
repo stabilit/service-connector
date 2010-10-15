@@ -12,7 +12,7 @@ public class SessionServer extends Server {
 	/** The max sessions. */
 	private int maxSessions;
 	/** The service. */
-	private AbstractSessionService service;
+	private StatefulService service;
 
 	public SessionServer(InetSocketAddress socketAddress, String serviceName, int portNr, int maxSessions,
 			int maxConnections, int keepAliveInterval) {
@@ -74,7 +74,7 @@ public class SessionServer extends Server {
 	 * 
 	 * @return the service
 	 */
-	public AbstractSessionService getService() {
+	public StatefulService getService() {
 		return this.service;
 	}
 
@@ -84,7 +84,7 @@ public class SessionServer extends Server {
 	 * @param service
 	 *            the new service
 	 */
-	public void setService(AbstractSessionService service) {
+	public void setService(StatefulService service) {
 		this.service = service;
 	}
 

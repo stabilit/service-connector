@@ -44,7 +44,7 @@ import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.AbstractSessionService;
+import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Service;
@@ -197,7 +197,7 @@ public class DefaultXMLLoaderFactory {
 					if (service.getType() == ServiceType.SESSION_SERVICE
 							|| service.getType() == ServiceType.PUBLISH_SERVICE) {
 
-						List<SessionServer> serverList = ((AbstractSessionService) service).getServerList();
+						List<SessionServer> serverList = ((StatefulService) service).getServerList();
 						writer.writeStartElement("servers");
 						for (Server server : serverList) {
 							writer.writeStartElement("server");
