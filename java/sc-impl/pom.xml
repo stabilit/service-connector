@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.serviceconnector</groupId>
 	<artifactId>sc-impl</artifactId>
-	<version>0.0-1</version>
+	<version>0.0.1</version>
 	<name>sc-impl</name>
 	<description>sc-impl</description>
 	<url>http://www.stabilit.ch</url>
