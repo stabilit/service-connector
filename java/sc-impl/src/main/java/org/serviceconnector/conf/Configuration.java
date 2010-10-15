@@ -85,6 +85,7 @@ public abstract class Configuration {
 			commName = commName.trim(); // remove blanks in name
 			CommunicatorConfig commConfig = new CommunicatorConfig(commName);
 			commConfig.initialize(this.configurations);
+			commConfig.setOperationTimeoutMultiplier(operationTimeoutMultiplier);
 			comConfigList.add(commConfig);
 		}
 
