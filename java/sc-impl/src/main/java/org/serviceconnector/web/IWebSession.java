@@ -19,12 +19,11 @@ package org.serviceconnector.web;
 public interface IWebSession {
 
 	public abstract String getSessionId();
-	
+
 	public abstract Object getAttribute(String key);
-	
+
 	public abstract void setAttribute(String key, Object value);
-	
+
 	public abstract Object removeAttribute(String key);
 
 }
-

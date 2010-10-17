@@ -22,19 +22,16 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 
-public class NettyTcpProxyResponderPipelineFactory implements
-		ChannelPipelineFactory {
+public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFactory {
 
 	private final ClientSocketChannelFactory cf;
 	private final String remoteHost;
 	private final int remotePort;
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(NettyTcpProxyResponderPipelineFactory.class);
+	protected final static Logger logger = Logger.getLogger(NettyTcpProxyResponderPipelineFactory.class);
 
-	public NettyTcpProxyResponderPipelineFactory(ClientSocketChannelFactory cf,
-			String remoteHost, int remotePort) {
+	public NettyTcpProxyResponderPipelineFactory(ClientSocketChannelFactory cf, String remoteHost, int remotePort) {
 		this.cf = cf;
 		this.remoteHost = remoteHost;
 		this.remotePort = remotePort;
@@ -51,10 +48,8 @@ public class NettyTcpProxyResponderPipelineFactory implements
 		// pipeline.addLast("aggregator", new
 		// HttpChunkAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
 		// responsible for handle requests - Stabilit
-		pipeline.addLast("handler", new NettyTcpProxyResponderRequestHandler(
-				cf, remoteHost, remotePort));
+		pipeline.addLast("handler", new NettyTcpProxyResponderRequestHandler(cf, remoteHost, remotePort));
 		return pipeline;
 	}
-	
-	
+
 }

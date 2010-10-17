@@ -28,30 +28,38 @@ public interface IWebCommandAccessible {
 
 	/**
 	 * Login.
-	 *
-	 * @param request the request
-	 * @throws Exception the exception
+	 * 
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception
 	 */
 	public abstract void login(IWebRequest request) throws Exception;
+
 	/**
 	 * Checks if is accessible.
-	 *
-	 * @param request the request
+	 * 
+	 * @param request
+	 *            the request
 	 * @return true, if is accessible
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	public abstract boolean isAccessible(IWebRequest request) throws Exception;
-	
+
 	/**
 	 * Logout.
-	 *
-	 * @param request the request
-	 * @throws Exception the exception
+	 * 
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception
 	 */
 	public abstract void logout(IWebRequest request) throws Exception;
+
 	/**
 	 * Gets the accessible context.
-	 *
+	 * 
 	 * @return the accessible context
 	 */
 	public abstract IWebCommandAccessibleContext getAccessibleContext();

@@ -25,11 +25,11 @@ import org.serviceconnector.registry.Registry;
 /**
  * The Class WebSessionRegistry.
  */
-public class WebSessionRegistry extends Registry<String, IWebSession>{
-	
+public class WebSessionRegistry extends Registry<String, IWebSession> {
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(WebSessionRegistry.class);
-	
+
 	/** The instance. */
 	private static WebSessionRegistry instance = new WebSessionRegistry();
 
@@ -38,7 +38,7 @@ public class WebSessionRegistry extends Registry<String, IWebSession>{
 	 */
 	private WebSessionRegistry() {
 	}
-	
+
 	/**
 	 * Gets the current instance of web session registry.
 	 * 
@@ -50,7 +50,7 @@ public class WebSessionRegistry extends Registry<String, IWebSession>{
 
 	/**
 	 * New session.
-	 *
+	 * 
 	 * @return the i web session
 	 */
 	public IWebSession newSession() {
@@ -61,29 +61,30 @@ public class WebSessionRegistry extends Registry<String, IWebSession>{
 
 	/**
 	 * Gets the session.
-	 *
-	 * @param sessionId the session id
+	 * 
+	 * @param sessionId
+	 *            the session id
 	 * @return the session
 	 */
 	public IWebSession getSession(String sessionId) {
 		IWebSession webSession = this.get(sessionId);
 		return webSession;
 	}
-	
+
 	/**
 	 * The Class WebSession.
 	 */
 	private class WebSession implements IWebSession {
-		
+
 		/** The attr map. */
 		private Map<String, Object> attrMap;
-		
+
 		/** The creation time. */
 		private long creationTime;
-		
+
 		/** The access time. */
 		private long accessTime;
-		
+
 		/** The session id. */
 		private String sessionId;
 
@@ -98,31 +99,31 @@ public class WebSessionRegistry extends Registry<String, IWebSession>{
 			this.accessTime = this.creationTime;
 			logger.info("New web session created, id = " + this.sessionId);
 		}
-		
+
 		/** {@inheritDoc} */
 		@Override
 		public Object getAttribute(String key) {
 			return this.attrMap.get(key);
 		}
-		
+
 		/** {@inheritDoc} */
 		@Override
 		public void setAttribute(String key, Object value) {
 			this.attrMap.put(key, value);
-			
+
 		}
-		
+
 		/** {@inheritDoc} */
 		@Override
 		public Object removeAttribute(String key) {
 			return this.attrMap.remove(key);
 		}
-		
+
 		/** {@inheritDoc} */
 		@Override
 		public String getSessionId() {
 			return this.sessionId;
 		}
-		
+
 	}
 }

@@ -29,12 +29,12 @@ public class LoginException extends Exception {
 
 	/**
 	 * Instantiates a new login exception.
-	 *
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	public LoginException(String message) {
 		super(message);
 	}
-
 
 }

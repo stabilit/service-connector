@@ -28,8 +28,7 @@ import org.jboss.netty.handler.codec.http.Cookie;
 public abstract class AbstractWebRequest implements IWebRequest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(AbstractWebRequest.class);
+	protected final static Logger logger = Logger.getLogger(AbstractWebRequest.class);
 
 	/** The attr map. */
 	private Map<String, Object> attrMap;
@@ -62,23 +61,23 @@ public abstract class AbstractWebRequest implements IWebRequest {
 		if (jsessionidCookie != null) {
 			String sessionId = jsessionidCookie.getValue();
 			if (sessionId != null) {
-			   IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
-			   if (webSession != null) {
-				   return webSession;
-			   }
+				IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
+				if (webSession != null) {
+					return webSession;
+				}
 			}
 			// session is no more valid
 		}
 		// check for jsessionid in request attribute
 		String sessionId = (String) this.getAttribute("JSESSIONID");
 		if (sessionId != null) {
-			   IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
-			   if (webSession != null) {
-				   return webSession;
-			   }
+			IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
+			if (webSession != null) {
+				return webSession;
 			}
+		}
 		if (create == true) {
-			return WebSessionRegistry.getCurrentInstance().newSession();		
+			return WebSessionRegistry.getCurrentInstance().newSession();
 		}
 		return null;
 	}

@@ -94,7 +94,7 @@ public class SubscriptionQueue<E> {
 			return;
 		}
 		this.dataQueue.insert(message);
-		logger.debug("insert - queue size:" + this.dataQueue.getSize());
+		logger.trace("insert - queue size:" + this.dataQueue.getSize());
 		// inform new message arrived
 		this.fireNewDataArrived();
 		// delete unreferenced nodes in queue
@@ -137,7 +137,7 @@ public class SubscriptionQueue<E> {
 		// dereference node, pointer moves to next node
 		node.dereference();
 		ptr.moveNext();
-		logger.debug("getMessage - queue size:" + this.dataQueue.getSize());
+		logger.trace("getMessage - queue size:" + this.dataQueue.getSize());
 		return message;
 	}
 
@@ -181,7 +181,7 @@ public class SubscriptionQueue<E> {
 			}
 			// remove node
 			this.dataQueue.extract();
-			logger.debug("remove - queue size:" + this.dataQueue.getSize());
+			logger.trace("remove - queue size:" + this.dataQueue.getSize());
 			// reads next node
 			node = this.dataQueue.getFirst();
 		}

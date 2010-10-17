@@ -29,56 +29,61 @@ public interface IWebRequest {
 
 	/**
 	 * Returns the URI (or path) of this request.
-	 *
+	 * 
 	 * @return the uRL
 	 */
 	public abstract String getURL();
 
 	/**
 	 * Gets the cookie.
-	 *
-	 * @param key the key
+	 * 
+	 * @param key
+	 *            the key
 	 * @return the cookie
 	 */
 	public abstract Cookie getCookie(String key);
 
 	/**
 	 * Gets the parameter.
-	 *
-	 * @param string the string
+	 * 
+	 * @param string
+	 *            the string
 	 * @return the parameter
 	 */
 	public abstract String getParameter(String string);
 
 	/**
 	 * Gets the attribute.
-	 *
-	 * @param key the key
+	 * 
+	 * @param key
+	 *            the key
 	 * @return the attribute
 	 */
 	public abstract Object getAttribute(String key);
-	
+
 	/**
 	 * Sets the attribute.
-	 *
-	 * @param key the key
-	 * @param value the value
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
 	 */
 	public abstract void setAttribute(String key, Object value);
-	
+
 	/**
 	 * Gets the session.
-	 *
-	 * @param create the create
+	 * 
+	 * @param create
+	 *            the create
 	 * @return the session
 	 */
 	public abstract IWebSession getSession(boolean create);
 
 	/**
 	 * Gets the parameter map.
-	 *
+	 * 
 	 * @return the parameter map
 	 */
 	public abstract Map<String, List<String>> getParameterMap();
 }
-

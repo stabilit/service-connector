@@ -44,8 +44,7 @@ import org.serviceconnector.scmp.SCMPError;
 public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(NettyTcpProxyEndpoint.class);
+	protected final static Logger logger = Logger.getLogger(NettyTcpProxyEndpoint.class);
 
 	/** Queue to store the answer. */
 	private ArrayBlockingQueue<Boolean> answer;
@@ -58,28 +57,28 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 	/** The port. */
 	private int port;
 	/** The host. */
-	private String clientHost;
+	private String remoteHost;
 	/** The port. */
-	private int clientPort;
+	private int remotePort;
 	/** The max connection pool size. */
 	private int maxConnectionPoolSize;
 	/** The channel factory. */
-	private NioServerSocketChannelFactory serverChannelFactory = new NioServerSocketChannelFactory(
-			Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
+	private NioServerSocketChannelFactory serverChannelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
+			Executors.newCachedThreadPool());
 
-	private NioClientSocketChannelFactory clientChannelFactory = new NioClientSocketChannelFactory(
-			Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
+	private NioClientSocketChannelFactory clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
+			Executors.newCachedThreadPool());
 
 	/**
-	 * Instantiates a new netty web endpoint.
+	 * Instantiates a new NettyTcpProxyEndpoint.
 	 */
 	public NettyTcpProxyEndpoint() {
 		this.bootstrap = null;
 		this.channel = null;
 		this.host = null;
 		this.port = 0;
-		this.clientHost = null;
-		this.clientPort = 0;
+		this.remoteHost = null;
+		this.remotePort = 0;
 		this.maxConnectionPoolSize = Constants.DEFAULT_MAX_CONNECTIONS;
 		;
 		this.answer = new ArrayBlockingQueue<Boolean>(1);
@@ -87,33 +86,30 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setResponder(IResponder resp) {
+	public void setResponder(IResponder resp) {	// TODO TRN why is this necessary here or missing in the other end points?
 		super.setResponder(resp);
 		CommunicatorConfig remoteHostConfig = null;
 		try {
 			CommunicatorConfig communicatorConfig = resp.getResponderConfig();
 			remoteHostConfig = communicatorConfig.getRemoteHostConfig();
 			if (remoteHostConfig == null) {
-				throw new SystemConfigurationException(
-						"no remote host configuration");
+				throw new SystemConfigurationException("no remote host configuration");
 			}
 			String remoteHost = remoteHostConfig.getHost();
 			int remotePort = remoteHostConfig.getPort();
-			this.clientHost = remoteHost;
-			this.clientPort = remotePort;
+			this.remoteHost = remoteHost;
+			this.remotePort = remotePort;
 			this.maxConnectionPoolSize = communicatorConfig.getMaxPoolSize();
 			if (this.maxConnectionPoolSize < 1) {
 				this.maxConnectionPoolSize = Constants.DEFAULT_MAX_CONNECTIONS;
 				;
 			}
 			// limit threads
-			serverChannelFactory = new NioServerSocketChannelFactory(
-					Executors.newFixedThreadPool(this.maxConnectionPoolSize),
+			serverChannelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(this.maxConnectionPoolSize),
 					Executors.newFixedThreadPool(this.maxConnectionPoolSize));
 			// no thread limit required
-			this.clientChannelFactory = new NioClientSocketChannelFactory(
-					Executors.newCachedThreadPool(),
-					Executors.newCachedThreadPool());
+			this.clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors
+					.newCachedThreadPool());
 
 		} catch (Exception e) {
 			logger.error("setResponder", e);
@@ -125,8 +121,7 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 	public void create() {
 		this.bootstrap = new ServerBootstrap(serverChannelFactory);
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new NettyTcpProxyResponderPipelineFactory(
-				clientChannelFactory, clientHost, clientPort));
+		bootstrap.setPipelineFactory(new NettyTcpProxyResponderPipelineFactory(clientChannelFactory, remoteHost, remotePort));
 	}
 
 	/** {@inheritDoc} */
@@ -136,22 +131,15 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 		serverThread.start();
 		Boolean bool = null;
 		try {
-			bool = this.answer.poll(Constants.CONNECT_TIMEOUT_MILLIS,
-					TimeUnit.MILLISECONDS);
+			bool = this.answer.poll(Constants.CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			throw new SCMPCommunicationException(
-					SCMPError.CONNECTION_EXCEPTION,
-					"listener could not start up succesfully");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
 		}
 		if (bool == null) {
-			throw new SCMPCommunicationException(
-					SCMPError.CONNECTION_EXCEPTION,
-					"startup listener timed out");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "startup listener timed out");
 		}
 		if (bool == false) {
-			throw new SCMPCommunicationException(
-					SCMPError.CONNECTION_EXCEPTION,
-					"listener could not start up succesfully");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
 		}
 	}
 
@@ -159,11 +147,9 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void startListenSync() throws Exception {
 		try {
-			this.channel = this.bootstrap.bind(new InetSocketAddress(this.host,
-					this.port));
+			this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 			// adds responder to registry
-			ResponderRegistry responderRegistry = AppContext
-					.getCurrentContext().getResponderRegistry();
+			ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
 			responderRegistry.addResponder(this.channel.getId(), this.resp);
 		} catch (Exception ex) {
 			this.answer.add(Boolean.FALSE);
@@ -181,27 +167,28 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			startListenSync();
 		} catch (Exception ex) {
-			logger.error("run", ex);
-			this.destroy();
+			logger.error("start listening", ex);
+			this.destroy();		// TODO TRN this is not called in NettyTcpEndpoint.run()
 		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
-		this.stopListening();
+		this.stopListening(); 
+		//this.bootstrap.releaseExternalResources(); // TODO TRN should this not be called here ??
 		this.serverChannelFactory.releaseExternalResources();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void stopListening() {
+	public void stopListening() { // TODO TRN slightly different code as NettyTcpEndpoint!!! Why?
 		try {
 			if (this.channel != null) {
-				this.channel.close();
+				this.channel.close(); 
 			}
 		} catch (Exception ex) {
-			logger.error("stoppListening", ex);
+			logger.error("stop listening", ex);
 			return;
 		}
 	}

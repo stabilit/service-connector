@@ -86,9 +86,9 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		NettyHttpResponse response = new NettyHttpResponse(e);
-		logger.error("exceptionCaught", e.getCause());
 		Throwable th = e.getCause();
+		logger.info(th.toString());
+		NettyHttpResponse response = new NettyHttpResponse(e);
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
 			return;

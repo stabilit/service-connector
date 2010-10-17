@@ -68,8 +68,8 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			this.callback((HttpResponse) e.getMessage());
 			return;
 		}
-		// message not expected - race condition
-		logger.error("message received but no reply was outstanding - race condition.");
+		// unsolicited input, message not expected - race condition
+		logger.error("unsolicited input, message not expected, no reply was outstanding!");
 	}
 
 	/** {@inheritDoc} */
@@ -89,7 +89,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 				return;
 			}
 		}
-		logger.info("exceptionCaught " + th.getMessage());
+		logger.info(th.toString());
 	}
 
 	private void callback(HttpResponse httpResponse) throws Exception {
@@ -105,7 +105,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			IEncoderDecoder encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory().createEncoderDecoder(buffer);
 			ret = (SCMPMessage) encoderDecoder.decode(bais);
 		} catch (Exception ex) {
-			logger.info("callback " + ex.getMessage());
+			logger.info("receive"+ex.toString());
 			this.scmpCallback.callback(ex);
 			return;
 		}

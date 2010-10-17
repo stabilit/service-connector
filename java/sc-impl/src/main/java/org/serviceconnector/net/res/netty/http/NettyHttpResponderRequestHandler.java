@@ -167,20 +167,14 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 				}
 				performanceLogger.begin(this.getClass().getSimpleName(), "run");
 				if (command.isAsynchronous()) {
-					if (logger.isDebugEnabled()) {
-						logger.debug("run command async " + command.getKey());
-					}
 					((IAsyncCommand) command).run(request, response, this);
 					return;
-				}
-				if (logger.isDebugEnabled()) {
-					logger.debug("run command sync " + command.getKey());
 				}
 				command.run(request, response);
 				performanceLogger.end(this.getClass().getSimpleName(), "run");
 			} catch (HasFaultResponseException ex) {
 				// exception carries response inside
-				logger.info("messageReceived " + ex.getMessage());
+				logger.info("messageReceived " + ex.toString());
 				ex.setFaultResponse(response);
 			}
 			if (response.isLarge()) {
@@ -210,11 +204,11 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	/** {@inheritDoc} */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+		Throwable th = e.getCause();
+		logger.info(th.toString());
 		NettyHttpResponse response = new NettyHttpResponse(e);
-		logger.error("exceptionCaught", e.getCause());
 		InetSocketAddress socketAddress = (InetSocketAddress) e.getChannel().getRemoteAddress();
 		this.cleanUpDeadServer(socketAddress.getHostName(), socketAddress.getPort());
-		Throwable th = e.getCause();
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
 			return;
@@ -253,7 +247,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			}
 			response.write();
 		} catch (Exception ex) {
-			logger.error("callback", ex);
+			logger.error("send response", ex);
 			this.callback(response, ex);
 		}
 	}
@@ -267,7 +261,6 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	 *            the error
 	 */
 	public void callback(IResponse response, Exception ex) {
-		logger.error("callback", ex);
 		if (ex instanceof HasFaultResponseException) {
 			((HasFaultResponseException) ex).setFaultResponse(response);
 		} else {
@@ -279,7 +272,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		try {
 			response.write();
 		} catch (Throwable th) {
-			logger.error("callback", th);
+			logger.error("send fault", th);
 		}
 	}
 
@@ -358,9 +351,6 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 		for (String key : keySet) {
 			if (key.endsWith(wildKey)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("clean up server: " + wildKey);
-				}
 				Server server = serverRegistry.getServer(key);
 				if ((server instanceof SessionServer) == false) {
 					continue;

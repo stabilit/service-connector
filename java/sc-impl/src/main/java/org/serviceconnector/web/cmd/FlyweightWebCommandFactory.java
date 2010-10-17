@@ -29,8 +29,7 @@ import org.serviceconnector.web.IWebRequest;
 public abstract class FlyweightWebCommandFactory {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger
-			.getLogger(FlyweightWebCommandFactory.class);
+	protected static final Logger logger = Logger.getLogger(FlyweightWebCommandFactory.class);
 
 	/** The command factory. */
 	protected static FlyweightWebCommandFactory webCommandFactory = null;

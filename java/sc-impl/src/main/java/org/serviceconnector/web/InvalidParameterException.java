@@ -20,17 +20,18 @@ package org.serviceconnector.web;
  * The Class InvalidParameterException.
  */
 public class InvalidParameterException extends Exception {
-	
+
 	/**
 	 * Instantiates a new not found exception.
 	 */
 	public InvalidParameterException() {
 	}
-	
+
 	/**
 	 * Instantiates a new not found exception.
-	 *
-	 * @param msg the msg
+	 * 
+	 * @param msg
+	 *            the msg
 	 */
 	public InvalidParameterException(String msg) {
 		super(msg);

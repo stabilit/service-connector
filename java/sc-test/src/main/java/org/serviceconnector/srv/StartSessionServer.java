@@ -128,12 +128,12 @@ public class StartSessionServer {
 
 		@Override
 		public void deleteSession(SCMessage message) {
-			logger.debug("SessionServer.SrvCallback.deleteSession()");
+			logger.trace("SessionServer.SrvCallback.deleteSession()");
 		}
 
 		@Override
 		public void abortSession(SCMessage message) {
-			logger.debug("SessionServer.SrvCallback.abortSession()");
+			logger.trace("SessionServer.SrvCallback.abortSession()");
 		}
 
 		@Override

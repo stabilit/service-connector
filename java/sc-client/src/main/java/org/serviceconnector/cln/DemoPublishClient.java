@@ -39,7 +39,7 @@ public class DemoPublishClient extends Thread {
 				publishService.unsubscribe();
 				sc.detach();
 			} catch (Exception e) {
-				logger.info("run "+e.getMessage());
+				logger.info("cleanup "+e.toString());
 			}
 		}
 	}

@@ -20,7 +20,6 @@ import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
 
-
 /**
  * The Interface ICommand.
  */
@@ -39,27 +38,30 @@ public interface IWebCommand extends IFactoryable {
 	 * @return the command validator
 	 */
 	public IWebCommandValidator getCommandValidator();
-	
+
 	/**
 	 * Sets the command validator.
-	 *
-	 * @param commandValidator the new command validator
+	 * 
+	 * @param commandValidator
+	 *            the new command validator
 	 */
 	public void setCommandValidator(IWebCommandValidator commandValidator);
 
 	/**
 	 * Gets the command accessible.
-	 *
+	 * 
 	 * @return the command accessible
 	 */
 	public IWebCommandAccessible getCommandAccessible();
-	
+
 	/**
 	 * Sets the command accessible.
-	 *
-	 * @param commandAccessible the new command accessible
+	 * 
+	 * @param commandAccessible
+	 *            the new command accessible
 	 */
 	public void setCommandAccessible(IWebCommandAccessible commandAccessible);
+
 	/**
 	 * Run command.
 	 * 

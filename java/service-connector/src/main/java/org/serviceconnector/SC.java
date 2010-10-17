@@ -89,17 +89,18 @@ public final class SC {
 	 *             the exception
 	 */
 	private static void run(String configFileName) throws Exception {
-
 		if (configFileName == null) {
 			throw new SCServiceException("Configuration file is missing");
 		}
 
+		// load the configuration
+		ResponderConfiguration configuration = new ResponderConfiguration();
+		configuration.load(configFileName);
+
+		// write system information to log
 		SystemInfo.setConfigFileName(configFileName);
 		SC.writeSystemInfoToLog();
-
-		ResponderConfiguration config = new ResponderConfiguration();
-		config.load(configFileName);
-
+		
 		// Initialize service connector command factory
 		AppContext appContext = AppContext.getCurrentContext();
 		appContext.initContext(new ServiceConnectorCommandFactory());
@@ -119,22 +120,16 @@ public final class SC {
 		// clean up and initialize cache
 		// Cache cache = Cache.initialize();
 
-		List<CommunicatorConfig> respConfigList = config.getResponderConfigList();
-
-		for (CommunicatorConfig respConfig : respConfigList) {
+		// create configured responders / listeners
+		List<CommunicatorConfig> responderList = configuration.getResponderConfigList();
+		for (CommunicatorConfig respConfig : responderList) {
 			IResponder responder = new Responder(respConfig);
-			try {
-				responder.create();
-				logger.info("Start listener " + respConfig.getCommunicatorName() + " on " + respConfig.getHost() + ":"
-						+ respConfig.getPort());
-				responder.startListenAsync();
-			} catch (Exception ex) {
-				logger.error("run", ex);
-				throw ex;
-			}
+			responder.create();
+			logger.info("Start listener " + respConfig.getCommunicatorName() + " on " + respConfig.getHost() + ":"
+					+ respConfig.getPort());
+			responder.startListenAsync();
 		}
-
-		if (config.writePID()) {
+		if (configuration.writePID()) {
 			SC.writePIDFile();
 		}
 	}
@@ -142,30 +137,26 @@ public final class SC {
 	/**
 	 * Initialize java management interface stuff.
 	 */
-	private static void initializeJMX() {
-		try {
+	private static void initializeJMX() throws Exception {
+		AppContext appContext = AppContext.getCurrentContext();
+		// Necessary to make access for JMX client available
+		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+		ObjectName mxbeanNameSessReg = new ObjectName("org.serviceconnector.registry:type=SessionRegistry");
+		ObjectName mxbeanNameServiceReg = new ObjectName("org.serviceconnector.registry:type=ServiceRegistry");
+		ObjectName mxbeanNameServerReg = new ObjectName("org.serviceconnector.registry:type=ServerRegistry");
+		ObjectName mxbeanNameLoggingManager = new ObjectName("org.serviceconnector.logging:type=LoggingManager");
 
-			AppContext appContext = AppContext.getCurrentContext();
-			// Necessary to make access for JMX client available
-			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-			ObjectName mxbeanNameSessReg = new ObjectName("org.serviceconnector.registry:type=SessionRegistry");
-			ObjectName mxbeanNameServiceReg = new ObjectName("org.serviceconnector.registry:type=ServiceRegistry");
-			ObjectName mxbeanNameServerReg = new ObjectName("org.serviceconnector.registry:type=ServerRegistry");
-			ObjectName mxbeanNameLoggingManager = new ObjectName("org.serviceconnector.logging:type=LoggingManager");
-
-			// Register the Queue Sampler MXBean
-			mbs.registerMBean(appContext.getSessionRegistry(), mxbeanNameSessReg);
-			mbs.registerMBean(appContext.getServiceRegistry(), mxbeanNameServiceReg);
-			mbs.registerMBean(appContext.getServerRegistry(), mxbeanNameServerReg);
-			ILoggingManagerMXBean loggingManager = new JMXLoggingManager();
-			mbs.registerMBean(loggingManager, mxbeanNameLoggingManager);
-		} catch (Throwable th) {
-			logger.error("initializeJMX", th);
-		}
+		// Register the Queue Sampler MXBean
+		mbs.registerMBean(appContext.getSessionRegistry(), mxbeanNameSessReg);
+		mbs.registerMBean(appContext.getServiceRegistry(), mxbeanNameServiceReg);
+		mbs.registerMBean(appContext.getServerRegistry(), mxbeanNameServerReg);
+		ILoggingManagerMXBean loggingManager = new JMXLoggingManager();
+		mbs.registerMBean(loggingManager, mxbeanNameLoggingManager);
 	}
 
 	/**
-	 * Writes a file. PID of SC gets written in. Is used for testing purpose to verify that SC is running properly.
+	 * Writes a file. PID of SC gets written in. Is used for testing purpose to
+	 * verify that SC is running properly.
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -207,17 +198,17 @@ public final class SC {
 	 *             the exception
 	 */
 	private static void writeSystemInfoToLog() throws Exception {
-		logger.log(Level.OFF, "Config file name: " + SystemInfo.getConfigFileName());
+		logger.log(Level.OFF, "SC configuration: " + SystemInfo.getConfigFileName());
 		logger.log(Level.OFF, "Java version: " + SystemInfo.getJavaVersion());
-		logger.log(Level.OFF, "Vm version: " + SystemInfo.getVmVersion());
+		logger.log(Level.OFF, "VM version: " + SystemInfo.getVmVersion());
 		logger.log(Level.OFF, "Local host id:" + SystemInfo.getLocalHostId());
 		logger.log(Level.OFF, "OS: " + SystemInfo.getOs());
-		logger.log(Level.OFF, "Os patch level: " + SystemInfo.getOsPatchLevel());
-		logger.log(Level.OFF, "Cpu type: " + SystemInfo.getCpuType());
+		logger.log(Level.OFF, "OS patch level: " + SystemInfo.getOsPatchLevel());
+		logger.log(Level.OFF, "CPU type: " + SystemInfo.getCpuType());
 		logger.log(Level.OFF, "User dir: " + SystemInfo.getUserDir());
 		logger.log(Level.OFF, "Country setting: " + SystemInfo.getCountrySetting());
 		logger.log(Level.OFF, "User timezone: " + SystemInfo.getUserTimezone());
-		logger.log(Level.OFF, "Utc Offset: " + SystemInfo.getUtcOffset());
+		logger.log(Level.OFF, "UTC Offset: " + SystemInfo.getUtcOffset());
 		logger.log(Level.OFF, "Local date: " + SystemInfo.getLocalDate());
 		logger.log(Level.OFF, "Available processors: " + SystemInfo.getAvailableProcessors());
 		logger.log(Level.OFF, "Max memory: " + SystemInfo.getMaxMemory());

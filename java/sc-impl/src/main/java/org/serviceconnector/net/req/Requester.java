@@ -149,7 +149,7 @@ public class Requester implements IRequester {
 			try {
 				Requester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception ex) {
-				logger.error("disconnectConnection", ex);
+				logger.error("disconnect", ex);
 			}
 		}
 

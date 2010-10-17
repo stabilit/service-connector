@@ -35,8 +35,7 @@ import org.serviceconnector.web.AbstractWebRequest;
 public class NettyWebRequest extends AbstractWebRequest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(NettyWebRequest.class);
+	protected final static Logger logger = Logger.getLogger(NettyWebRequest.class);
 
 	/** The request. */
 	private HttpRequest request;
@@ -62,8 +61,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 			ChannelBuffer content = request.getContent();
 			if (content.readable()) {
 				String param = content.toString("UTF-8");
-				QueryStringDecoder queryStringDecoder = new QueryStringDecoder(
-						"/?" + param);
+				QueryStringDecoder queryStringDecoder = new QueryStringDecoder("/?" + param);
 				Map<String, List<String>> postParams = queryStringDecoder.getParameters();
 				this.parameters.putAll(postParams);
 			}

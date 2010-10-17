@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web.cmd;
 
-
 /**
  * The Interface IWebAccessibleContext.
  */
@@ -24,14 +23,14 @@ public interface IWebCommandAccessibleContext {
 
 	/**
 	 * Gets the userid.
-	 *
+	 * 
 	 * @return the userid
 	 */
 	public abstract String getUserid();
-	
+
 	/**
 	 * Gets the password.
-	 *
+	 * 
 	 * @return the password
 	 */
 	public abstract String getPassword();

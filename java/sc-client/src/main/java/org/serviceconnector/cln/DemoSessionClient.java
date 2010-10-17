@@ -48,7 +48,7 @@ public class DemoSessionClient extends Thread {
 				sessionService.deleteSession();
 				sc.detach();
 			} catch (Exception e) {
-				logger.error("run", e);
+				logger.error("cleanup", e);
 			}
 		}
 	}
@@ -63,7 +63,7 @@ public class DemoSessionClient extends Thread {
 
 		@Override
 		public void callback(SCMessage reply) {
-			System.out.println("Session client received: " + reply.getData());
+			logger.info("Message received: " + reply.getData());
 			DemoSessionClient.pendingRequest = false;
 		}
 

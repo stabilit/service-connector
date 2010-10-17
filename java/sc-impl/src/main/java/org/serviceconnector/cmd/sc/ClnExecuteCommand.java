@@ -141,8 +141,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
 			throw ex;
-		} catch (Throwable ex) {
-			logger.error("validate", ex);
+		} catch (Throwable th) {
+			logger.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

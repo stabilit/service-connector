@@ -31,8 +31,8 @@ import org.serviceconnector.web.cmd.IWebCommandAccessibleContext;
 
 // TODO: Auto-generated Javadoc
 /**
- * A factory for creating ServiceConnectorWebCommand objects. Provides access to concrete instances of Service Connector
- * Web commands.
+ * A factory for creating ServiceConnectorWebCommand objects. Provides access to
+ * concrete instances of Service Connector Web commands.
  * 
  * @author JTraber
  */
@@ -166,8 +166,7 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 			/** {@inheritDoc} */
 			@Override
 			public String getUserid() {
-				IResponder responder = AppContext.getCurrentContext().getResponderRegistry()
-						.getCurrentResponder();
+				IResponder responder = AppContext.getCurrentContext().getResponderRegistry().getCurrentResponder();
 				CommunicatorConfig respConfig = responder.getResponderConfig();
 				return respConfig.getUserid();
 			}
@@ -175,8 +174,7 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 			/** {@inheritDoc} */
 			@Override
 			public String getPassword() {
-				IResponder responder = AppContext.getCurrentContext().getResponderRegistry()
-						.getCurrentResponder();
+				IResponder responder = AppContext.getCurrentContext().getResponderRegistry().getCurrentResponder();
 				CommunicatorConfig respConfig = responder.getResponderConfig();
 				return respConfig.getPassword();
 			}

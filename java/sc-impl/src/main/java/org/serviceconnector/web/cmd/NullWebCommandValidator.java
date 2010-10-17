@@ -19,10 +19,10 @@ package org.serviceconnector.web.cmd;
 import org.apache.log4j.Logger;
 import org.serviceconnector.web.IWebRequest;
 
-
 /**
- * The Class NullCommandValidator. Prevents null pointer exception when command does not implement validation. Throws
- * more specific exception (ValidatorException).
+ * The Class NullCommandValidator. Prevents null pointer exception when command
+ * does not implement validation. Throws more specific exception
+ * (ValidatorException).
  * 
  * @author JTraber
  */
@@ -30,7 +30,7 @@ public final class NullWebCommandValidator implements IWebCommandValidator {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(NullWebCommandValidator.class);
-	
+
 	/** The null command validator. */
 	private static IWebCommandValidator nullCommandValidator = new NullWebCommandValidator();
 

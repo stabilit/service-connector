@@ -18,7 +18,6 @@ package org.serviceconnector.web.cmd;
 
 import org.serviceconnector.web.IWebRequest;
 
-
 /**
  * The Interface ICommandValidator.
  * 

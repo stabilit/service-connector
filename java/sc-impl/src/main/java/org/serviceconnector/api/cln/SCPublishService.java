@@ -289,7 +289,7 @@ public class SCPublishService extends SCService {
 				try {
 					SCPublishService.this.receivePublication();
 				} catch (Exception e) {
-					logger.info("callback " + e.getMessage());
+					logger.info("subscribed "+e.toString());
 					SCMPFault fault = new SCMPFault(e);
 					super.callback(fault);
 					return;

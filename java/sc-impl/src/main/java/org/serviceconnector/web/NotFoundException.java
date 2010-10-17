@@ -20,17 +20,18 @@ package org.serviceconnector.web;
  * The Class NotFoundException.
  */
 public class NotFoundException extends Exception {
-	
+
 	/**
 	 * Instantiates a new not found exception.
 	 */
 	public NotFoundException() {
 	}
-	
+
 	/**
 	 * Instantiates a new not found exception.
-	 *
-	 * @param msg the msg
+	 * 
+	 * @param msg
+	 *            the msg
 	 */
 	public NotFoundException(String msg) {
 		super(msg);

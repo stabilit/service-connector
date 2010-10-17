@@ -32,12 +32,10 @@ import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
 public abstract class WebUtil {
 
 	/** The Constant XMLSDF. */
-	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat(
-			"yyyy-MM-dd");
+	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(DefaultXMLLoaderFactory.class);
+	protected final static Logger logger = Logger.getLogger(DefaultXMLLoaderFactory.class);
 
 	/**
 	 * Load resource.
@@ -59,7 +57,7 @@ public abstract class WebUtil {
 			is = new FileInputStream(name);
 			if (is != null) {
 				return is;
-			}			
+			}
 			if (name.startsWith("/resources")) {
 				return null;
 			}
@@ -111,8 +109,7 @@ public abstract class WebUtil {
 	 */
 	public static String getXMLNextDateAsString(Date date) {
 		Calendar c = Calendar.getInstance();
-		return getXMLDateAsString(new Date(date.getYear(), date.getMonth(),
-				date.getDate() + 1));
+		return getXMLDateAsString(new Date(date.getYear(), date.getMonth(), date.getDate() + 1));
 	}
 
 	/**
@@ -124,7 +121,6 @@ public abstract class WebUtil {
 	 */
 	public static String getXMLPreviousDateAsString(Date date) {
 		Calendar c = Calendar.getInstance();
-		return getXMLDateAsString(new Date(date.getYear(), date.getMonth(),
-				date.getDate() - 1));
+		return getXMLDateAsString(new Date(date.getYear(), date.getMonth(), date.getDate() - 1));
 	}
 }

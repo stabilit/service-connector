@@ -36,8 +36,7 @@ import org.serviceconnector.web.cmd.NullWebCommandValidator;
 public abstract class WebCommandAdapter implements IWebCommand {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(WebCommandAdapter.class);
+	protected final static Logger logger = Logger.getLogger(WebCommandAdapter.class);
 
 	/** The web command accessible. */
 	protected IWebCommandAccessible webCommandAccessible;
@@ -50,30 +49,30 @@ public abstract class WebCommandAdapter implements IWebCommand {
 	public WebCommandAdapter() {
 		this.webCommandAccessible = NullWebCommandAccessible.newInstance(); // www.refactoring.com
 		this.webCommandValidator = NullWebCommandValidator.newInstance(); // www.refactoring.com
-																			// Introduce
-																			// NULL
-																			// Object
+		// Introduce
+		// NULL
+		// Object
 	}
 
 	/**
 	 * Run.
-	 *
-	 * @param request the request
-	 * @param response the response
-	 * @throws Exception the exception
-	 * {@inheritDoc}
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
 	 */
 	@Override
-	public void run(IWebRequest request, IWebResponse response)
-			throws Exception {
+	public void run(IWebRequest request, IWebResponse response) throws Exception {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
 	/**
 	 * Gets the command accessible.
-	 *
-	 * @return the command accessible
-	 * {@inheritDoc}
+	 * 
+	 * @return the command accessible {@inheritDoc}
 	 */
 	@Override
 	public IWebCommandAccessible getCommandAccessible() {
@@ -82,9 +81,9 @@ public abstract class WebCommandAdapter implements IWebCommand {
 
 	/**
 	 * Sets the command accessible.
-	 *
-	 * @param webCommandAccessible the new command accessible
-	 * {@inheritDoc}
+	 * 
+	 * @param webCommandAccessible
+	 *            the new command accessible {@inheritDoc}
 	 */
 	@Override
 	public void setCommandAccessible(IWebCommandAccessible webCommandAccessible) {
@@ -93,9 +92,8 @@ public abstract class WebCommandAdapter implements IWebCommand {
 
 	/**
 	 * Gets the command validator.
-	 *
-	 * @return the command validator
-	 * {@inheritDoc}
+	 * 
+	 * @return the command validator {@inheritDoc}
 	 */
 	@Override
 	public IWebCommandValidator getCommandValidator() {
@@ -104,9 +102,9 @@ public abstract class WebCommandAdapter implements IWebCommand {
 
 	/**
 	 * Sets the command validator.
-	 *
-	 * @param webCommandValidator the new command validator
-	 * {@inheritDoc}
+	 * 
+	 * @param webCommandValidator
+	 *            the new command validator {@inheritDoc}
 	 */
 	@Override
 	public void setCommandValidator(IWebCommandValidator webCommandValidator) {
@@ -115,9 +113,8 @@ public abstract class WebCommandAdapter implements IWebCommand {
 
 	/**
 	 * New instance.
-	 *
-	 * @return the i factoryable
-	 * {@inheritDoc}
+	 * 
+	 * @return the i factoryable {@inheritDoc}
 	 */
 	@Override
 	public IFactoryable newInstance() {
@@ -126,9 +123,8 @@ public abstract class WebCommandAdapter implements IWebCommand {
 
 	/**
 	 * Checks if is asynchronous.
-	 *
-	 * @return true, if is asynchronous
-	 * {@inheritDoc}
+	 * 
+	 * @return true, if is asynchronous {@inheritDoc}
 	 */
 	@Override
 	public boolean isAsynchronous() {
@@ -137,9 +133,8 @@ public abstract class WebCommandAdapter implements IWebCommand {
 
 	/**
 	 * Gets the key.
-	 *
-	 * @return the key
-	 * {@inheritDoc}
+	 * 
+	 * @return the key {@inheritDoc}
 	 */
 	@Override
 	public abstract String getKey();

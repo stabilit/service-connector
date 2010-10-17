@@ -255,8 +255,8 @@ public class ConnectionPool {
 	private void destroyConnection(IConnection connection) {
 		try {
 			connection.disconnect();
-		} catch (Exception e) {
-			logger.error("destroyConnection", e);
+		} catch (Exception ex) {
+			logger.error("destroy disconnect", ex);
 		} finally {
 			connection.destroy();
 		}
@@ -271,8 +271,8 @@ public class ConnectionPool {
 	private void disconnectConnection(IConnection connection) {
 		try {
 			connection.disconnect();
-		} catch (Exception e) {
-			logger.error("disconnectConnection", e);
+		} catch (Exception ex) {
+			logger.error("disconnect", ex);
 		}
 	}
 
@@ -285,14 +285,14 @@ public class ConnectionPool {
 	 *             the exception
 	 */
 	public synchronized void forceClosingConnection(IConnection connection) {
-		// assure connection is nowhere registered
+		// make sure connection is not registered
 		this.usedConnections.remove(connection);
 		this.freeConnections.remove(connection);
 
 		try {
 			connection.disconnect();
-		} catch (Exception e) {
-			logger.error("forceClosingConnection", e);
+		} catch (Exception ex) {
+			logger.error("force disconnect", ex);
 		}
 	}
 
@@ -329,8 +329,8 @@ public class ConnectionPool {
 					// connection null at the time maxConnections is reached - stop creating
 					return;
 				}
-			} catch (Exception e) {
-				logger.error("initMinConnections", e);
+			} catch (Exception ex) {
+				logger.error("create connection", ex);
 				return;
 			}
 			this.freeConnections.add(connection);
@@ -401,8 +401,8 @@ public class ConnectionPool {
 			callback.getMessageSync(Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
-		} catch (Exception e) {
-			logger.error("connectionIdle", e);
+		} catch (Exception ex) {
+			logger.error("send keepalive", ex);
 		}
 	}
 

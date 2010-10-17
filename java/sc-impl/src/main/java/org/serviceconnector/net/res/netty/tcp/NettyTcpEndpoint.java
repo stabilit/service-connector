@@ -36,7 +36,8 @@ import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
- * The Class NettyTcpEndpoint. Concrete responder implementation with JBoss Netty for Tcp.
+ * The Class NettyTcpEndpoint. Concrete responder implementation with JBoss
+ * Netty for Tcp.
  * 
  * @author JTraber
  */
@@ -57,9 +58,8 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 	/** The port. */
 	private int port;
 	/** The channel factory. */
-	private NioServerSocketChannelFactory channelFactory = new NioServerSocketChannelFactory(Executors
-			.newCachedThreadPool(), Executors
-			.newCachedThreadPool());
+	private NioServerSocketChannelFactory channelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
+			Executors.newCachedThreadPool());
 
 	/**
 	 * Instantiates a new NettyTcpEndpoint.
@@ -89,15 +89,13 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			bool = this.answer.poll(Constants.CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
-					"listener could not start up succesfully");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
 		}
 		if (bool == null) {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "startup listener timed out");
 		}
 		if (bool == false) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
-					"listener could not start up succesfully");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
 		}
 	}
 
@@ -125,7 +123,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			startListenSync();
 		} catch (Exception ex) {
-			logger.error("run", ex);
+			logger.error("start listening", ex);
 		}
 	}
 
@@ -150,7 +148,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 				future.addListener(operationListener);
 				try {
 					operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
-				} catch (CommunicationException ex) {
+				} catch (CommunicationException ex) { //TODO TRN should this exception be handled or signaled?
 					logger.error("disconnect", ex);
 				}
 			}
@@ -158,7 +156,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 				this.serverThread.interrupt();
 			}
 		} catch (Exception ex) {
-			logger.error("stopListening", ex);
+			logger.error("stop listening", ex);
 			return;
 		}
 	}

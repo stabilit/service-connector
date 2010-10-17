@@ -32,12 +32,10 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 
-public class NettyTcpProxyResponderRequestHandler extends
-		SimpleChannelUpstreamHandler {
+public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(NettyTcpProxyResponderRequestHandler.class);
+	protected final static Logger logger = Logger.getLogger(NettyTcpProxyResponderRequestHandler.class);
 
 	private int counter = 0;
 
@@ -46,31 +44,26 @@ public class NettyTcpProxyResponderRequestHandler extends
 	private final int remotePort;
 	private volatile Channel outboundChannel;
 
-	public NettyTcpProxyResponderRequestHandler(ClientSocketChannelFactory cf,
-			String remoteHost, int remotePort) {
+	public NettyTcpProxyResponderRequestHandler(ClientSocketChannelFactory cf, String remoteHost, int remotePort) {
 		this.cf = cf;
 		this.remoteHost = remoteHost;
 		this.remotePort = remotePort;
 	}
 
 	@Override
-	public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent e)
-			throws Exception {
+	public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
 		// Suspend incoming traffic until connected to the remote host.
 		final Channel inboundChannel = e.getChannel();
 		inboundChannel.setReadable(false);
 
 		// Start the connection attempt.
 		ClientBootstrap cb = new ClientBootstrap(cf);
-		cb.getPipeline()
-				.addLast("handler", new OutboundHandler(e.getChannel()));
-		ChannelFuture f = cb.connect(new InetSocketAddress(remoteHost,
-				remotePort));
+		cb.getPipeline().addLast("handler", new OutboundHandler(e.getChannel()));
+		ChannelFuture f = cb.connect(new InetSocketAddress(remoteHost, remotePort));
 
 		outboundChannel = f.getChannel();
 		f.addListener(new ChannelFutureListener() {
-			public void operationComplete(ChannelFuture future)
-					throws Exception {
+			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
 					// Connection attempt succeeded:
 					// Begin to accept incoming traffic.
@@ -86,8 +79,7 @@ public class NettyTcpProxyResponderRequestHandler extends
 
 	/** {@inheritDoc} */
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event)
-			throws Exception {
+	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		// needs to set a key in thread local to identify thread later and get
 		// access to the responder
 		ChannelBuffer msg = (ChannelBuffer) event.getMessage();
@@ -96,10 +88,9 @@ public class NettyTcpProxyResponderRequestHandler extends
 
 	/** {@inheritDoc} */
 	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
-			throws Exception {
-		logger.error(e.toString());
-		// e.getChannel().write("Hello Error World!");
+	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+		Throwable th = e.getCause();
+		logger.info(th.toString());
 	}
 
 	private static class OutboundHandler extends SimpleChannelUpstreamHandler {
@@ -111,21 +102,18 @@ public class NettyTcpProxyResponderRequestHandler extends
 		}
 
 		@Override
-		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
-				throws Exception {
+		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 			ChannelBuffer msg = (ChannelBuffer) e.getMessage();
 			inboundChannel.write(msg);
 		}
 
 		@Override
-		public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e)
-				throws Exception {
+		public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
 			closeOnFlush(inboundChannel);
 		}
 
 		@Override
-		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
-				throws Exception {
+		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 			e.getCause().printStackTrace();
 			closeOnFlush(e.getChannel());
 		}
@@ -136,8 +124,7 @@ public class NettyTcpProxyResponderRequestHandler extends
 		 */
 		static void closeOnFlush(Channel ch) {
 			if (ch.isConnected()) {
-				ch.write(ChannelBuffers.EMPTY_BUFFER).addListener(
-						ChannelFutureListener.CLOSE);
+				ch.write(ChannelBuffers.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
 			}
 		}
 	}

@@ -193,8 +193,8 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
 			throw ex;
-		} catch (Throwable ex) {
-			logger.error("validate", ex);
+		} catch (Throwable th) {
+			logger.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;
@@ -262,7 +262,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 					// send message back to client
 					this.response.write();
 				} catch (Exception ex) {
-					logger.error("timeout", ex);
+					logger.warn("timeout expired :"+ex.getMessage());
 				}
 				return;
 			}
@@ -309,7 +309,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				// send message back to client
 				this.response.write();
 			} catch (Exception ex) {
-				logger.error("timeout", ex);
+				logger.warn("timeout expired :"+ex.getMessage());
 			}
 			// set up subscription timeout
 			SubscriptionRegistry subscriptionRegistry = AppContext.getCurrentContext().getSubscriptionRegistry();

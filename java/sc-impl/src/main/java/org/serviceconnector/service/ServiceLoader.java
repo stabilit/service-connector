@@ -86,16 +86,15 @@ public class ServiceLoader {
 						"wrong serviceType, serviceName/serviceType: " + serviceName + "/" + serviceTypeString);
 			}
 
-			// set service state
+			// set service state as defined in configuration. Default is enabled
 			String enable = config.getString(serviceName + Constants.ENABLE_QUALIFIER);
 			if (enable == null || enable.equals("true")) {
 				service.setState(ServiceState.ENABLED); // default is enabled
-				logger.debug("state enable for service: " + serviceName);
+				logger.trace("state enabled for service: " + serviceName);
 
 			} else {
 				service.setState(ServiceState.DISABLED);
-				logger.debug("state disable for service: " + serviceName);
-				// enable is false - so add to disabledServiceRegistry
+				logger.trace("state disabled for service: " + serviceName);
 			}
 			serviceRegistry.addService(service.getServiceName(), service);
 		}

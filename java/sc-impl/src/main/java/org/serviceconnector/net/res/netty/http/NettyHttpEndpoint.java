@@ -123,7 +123,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			startListenSync();
 		} catch (Exception ex) {
-			logger.error("run", ex);
+			logger.error("start listening", ex);
 			this.destroy();
 		}
 	}
@@ -150,15 +150,15 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 				future.addListener(operationListener);
 				try {
 					operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
-				} catch (CommunicationException ex) {
-					logger.error("disconnect", ex);
+				} catch (CommunicationException ex) {	//TODO TRN should this exception be handled or signaled?
+					logger.error("disconnect", ex); 
 				}
 			}
 			if (this.serverThread != null) {
 				this.serverThread.interrupt();
 			}
 		} catch (Exception ex) {
-			logger.error("stopListening", ex);
+			logger.error("stop listening", ex);
 			return;
 		}
 	}

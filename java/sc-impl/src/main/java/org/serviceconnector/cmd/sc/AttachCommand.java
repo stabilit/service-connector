@@ -77,8 +77,8 @@ public class AttachCommand extends CommandAdapter {
 			ex.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 			ex.setMessageType(getKey());
 			throw ex;
-		} catch (Throwable ex) {
-			logger.error("validate", ex);
+		} catch (Throwable th) {
+			logger.error("validation error", th);
 			SCMPValidatorException valExc = new SCMPValidatorException();
 			valExc.setMessageType(getKey());
 			valExc.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());

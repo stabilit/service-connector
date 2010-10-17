@@ -86,7 +86,7 @@ public class RegisterServerCommand extends CommandAdapter {
 				server.immediateConnect();
 			}
 		} catch (Exception ex) {
-			logger.error("run", ex);
+			logger.error("immediate connect", ex);
 			HasFaultResponseException communicationException = new SCMPCommunicationException(
 					SCMPError.CONNECTION_EXCEPTION, "immediate connect failed for server key " + serverKey);
 			communicationException.setMessageType(getKey());
@@ -161,7 +161,7 @@ public class RegisterServerCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validate", th);
+			logger.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

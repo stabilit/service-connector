@@ -20,7 +20,6 @@ import java.io.OutputStream;
 
 import org.jboss.netty.handler.codec.http.Cookie;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * The Interface IWebResponse abstracts a web response.
@@ -29,47 +28,52 @@ public interface IWebResponse {
 
 	/**
 	 * Gets the output stream.
-	 *
+	 * 
 	 * @return the output stream
 	 */
 	public abstract OutputStream getOutputStream();
 
 	/**
 	 * Gets the bytes.
-	 *
+	 * 
 	 * @return the bytes
 	 */
 	public abstract byte[] getBytes();
 
 	/**
 	 * Sets the content type.
-	 *
-	 * @param string the new content type
+	 * 
+	 * @param string
+	 *            the new content type
 	 */
 	public abstract void setContentType(String string);
-	
+
 	/**
 	 * Adds the cookie.
-	 *
-	 * @param key the key
-	 * @param value the value
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
 	 */
 	public abstract void addCookie(String key, String value);
-	
+
 	/**
 	 * Adds the cookie.
-	 *
-	 * @param cookie the cookie
+	 * 
+	 * @param cookie
+	 *            the cookie
 	 */
 	public abstract void addCookie(Cookie cookie);
 
 	/**
 	 * Redirect.
-	 *
-	 * @param string the string
+	 * 
+	 * @param string
+	 *            the string
 	 */
 	public abstract void redirect(String path);
 
 	public abstract boolean isRedirect();
-	
+
 }

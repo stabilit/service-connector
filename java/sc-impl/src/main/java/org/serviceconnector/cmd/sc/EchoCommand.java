@@ -89,12 +89,12 @@ public class EchoCommand extends CommandAdapter {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 			}
 		} catch (HasFaultResponseException ex) {
-			logger.error("validate", ex);
+			logger.warn("validation error", ex);
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
 			throw ex;
-		} catch (Throwable ex) {
-			logger.error("validate", ex);
+		} catch (Throwable th) {
+			logger.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;
