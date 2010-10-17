@@ -132,6 +132,7 @@ public final class SC {
 		if (configuration.writePID()) {
 			SC.writePIDFile();
 		}
+		logger.log(Level.OFF, "Service Connector is running ...");
 	}
 
 	/**
@@ -198,10 +199,12 @@ public final class SC {
 	 *             the exception
 	 */
 	private static void writeSystemInfoToLog() throws Exception {
+		logger.log(Level.OFF, " ");
+		logger.log(Level.OFF, "Service Connector "+SCVersion.CURRENT.toString()+" starting ...");
 		logger.log(Level.OFF, "SC configuration: " + SystemInfo.getConfigFileName());
 		logger.log(Level.OFF, "Java version: " + SystemInfo.getJavaVersion());
 		logger.log(Level.OFF, "VM version: " + SystemInfo.getVmVersion());
-		logger.log(Level.OFF, "Local host id:" + SystemInfo.getLocalHostId());
+		logger.log(Level.OFF, "Local host: " + SystemInfo.getLocalHostId());
 		logger.log(Level.OFF, "OS: " + SystemInfo.getOs());
 		logger.log(Level.OFF, "OS patch level: " + SystemInfo.getOsPatchLevel());
 		logger.log(Level.OFF, "CPU type: " + SystemInfo.getCpuType());
