@@ -27,6 +27,7 @@ import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.RequestAdapter;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.util.Statistics;
 
 
 /**
@@ -63,6 +64,7 @@ public class NettyHttpRequest extends RequestAdapter {
 		ChannelBuffer channelBuffer = request.getContent();
 		byte[] buffer = new byte[channelBuffer.readableBytes()];
 		channelBuffer.readBytes(buffer);
+		Statistics.getInstance().incrementTotalMessages(buffer.length);
 		if (connectionLogger.isEnabledFull()) {
 			connectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getLocalSocketAddress().getHostName(), this.getLocalSocketAddress().getPort(), buffer, 0, buffer.length);
 		}

@@ -14,14 +14,13 @@ import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.service.SCServiceException;
 
-
 public class AttachDetachTest {
 
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachDetachTest.class);
-	
+
 	private int threadCount = 0;
 
 	private SCClient client;
@@ -45,17 +44,17 @@ public class AttachDetachTest {
 		ctrl = null;
 		scProcess = null;
 	}
-	
+
 	@Before
 	public void setUp() {
-//		threadCount = Thread.activeCount();
+		// threadCount = Thread.activeCount();
 		client = new SCClient();
 	}
-	
+
 	@After
 	public void tearDown() {
 		client = null;
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
+		// assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@Test
@@ -148,8 +147,7 @@ public class AttachDetachTest {
 	}
 
 	@Test
-	public void detach_afterDoubleAttemptedAttachDetach_throwsExceptionNotAttached()
-			throws Exception {
+	public void detach_afterDoubleAttemptedAttachDetach_throwsExceptionNotAttached() throws Exception {
 		Exception ex = null;
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals(true, client.isAttached());
@@ -165,7 +163,7 @@ public class AttachDetachTest {
 		assertEquals(false, client.isAttached());
 	}
 
-//	@Test
+	// @Test
 	public void attachDetach_cycle10Times_notAttached() throws Exception {
 		for (int i = 0; i < 10; i++) {
 			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
@@ -190,7 +188,9 @@ public class AttachDetachTest {
 
 	@Test
 	public void attachDetach_cycle500Times_notAttached() throws Exception {
-		for (int i = 0; i < 5000; i++) {	// TODO
+		for (int i = 0; i < 5000; i++) {
+			if ((i % 100) == 0)
+				testLogger.info("Executing cycle nr. " + i + "...");
 			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 			client.detach();
 		}
@@ -200,29 +200,25 @@ public class AttachDetachTest {
 		assertEquals(false, client.isAttached());
 	}
 
-	//TODO 1000 is too much. Getting very slow exactly after 500. 501,502...
+	// TODO 1000 is too much. Getting very slow exactly after 500. 501,502...
 	@Test
 	public void attach_500ClientsAttachedBeforeDetach_allAttached() throws Exception {
 		int clientsCount = 500;
 		SCClient[] clients = new SCClient[clientsCount];
 		int i = 0;
-		for (; i < clientsCount / 10; i++) {	// TODO TRN
-			testLogger.info("Attaching client " + i*10);
-			for (int j = 0; j < 10; j++) {
-				clients[j + (10 * i)] = new SCClient();
-				clients[j + (10 * i)].attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-			}
+		for (; i < clientsCount; i++) {
+			if ((i % 100) == 0) testLogger.info("Attaching client nr. " + i + "...");
+			clients[i] = new SCClient();
+			clients[i].attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		}
 		i = 0;
 		for (; i < clientsCount; i++) {
 			assertEquals(true, clients[i].isAttached());
 		}
 		i = 0;
-		for (; i < clientsCount / 10; i++) {
-			testLogger.info("Detaching client " + i*10);
-			for (int j = 0; j < 10; j++) {
-				clients[j + (10 * i)].detach();
-			}
+		for (; i < clientsCount; i++) {
+			if ((i % 100) == 0) testLogger.info("Detaching client nr. " + i + "...");
+			clients[i].detach();
 		}
 		i = 0;
 		for (; i < clientsCount; i++) {

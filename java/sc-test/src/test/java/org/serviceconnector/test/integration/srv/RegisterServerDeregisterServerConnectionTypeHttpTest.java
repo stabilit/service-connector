@@ -136,46 +136,41 @@ public class RegisterServerDeregisterServerConnectionTypeHttpTest {
 	public void registerServerDeregisterServer_cycle500Times_registeredThenNotRegistered() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 100);
 		int cycles = 500;
-		for (int i = 0; i < cycles / 10; i++) {
-			testLogger.info("RegisterDeregister server iteration:\t" + i * 10);
-			for (int j = 0; j < 10; j++) {
-				server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.serviceName, 1, 1,
-						new CallBack());
-				assertEquals(true, server.isRegistered(TestConstants.serviceName));
-				server.deregisterServer(TestConstants.serviceName);
-				assertEquals(false, server.isRegistered(TestConstants.serviceName));
-			}
+		for (int i = 0; i < cycles; i++) {
+			if ((i % 500) == 0)
+				testLogger.info("Register/Deregister cycle nr. " + i + "...");
+			server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.serviceName, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(TestConstants.serviceName));
+			server.deregisterServer(TestConstants.serviceName);
+			assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		}
 	}
 
-	//TODO out of memory direct buffer problem
-//	@Test
+	// TODO out of memory direct buffer problem
+	// @Test
 	public void registerServer_500CyclesWithChangingConnectionType_registeredThenNotRegistered() throws Exception {
-		int cycles = 250;
-		for (int i = 0; i < cycles / 10; i++) {
-			testLogger.info("RegisterDeregister changing connection type iteration:\t" + i * 10);
-			for (int j = 0; j < 10; j++) {
-				server = new SCSessionServer();
-				((SCSessionServer) server).setConnectionType("netty.http");
-				server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER+j, 0);
-				server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.serviceName, 1, 1,
-						new CallBack());
-				assertEquals(true, server.isRegistered(TestConstants.serviceName));
-				server.deregisterServer(TestConstants.serviceName);
-				assertEquals(false, server.isRegistered(TestConstants.serviceName));
-				server.destroyServer();
-				server = null;
-				server = new SCSessionServer();
-				((SCSessionServer) server).setConnectionType("netty.tcp");
-				server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER+i, 0);
-				server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1,
-						new CallBack());
-				assertEquals(true, server.isRegistered(TestConstants.serviceName));
-				server.deregisterServer(TestConstants.serviceName);
-				assertEquals(false, server.isRegistered(TestConstants.serviceName));
-				server.destroyServer();
-				System.gc();
-			}
+		int cycles = 500;
+		for (int i = 0; i < cycles; i++) {
+			if ((i % 100) == 0)
+				testLogger.info("Register/Deregister cycle nr. " + i + "...");
+			server = new SCSessionServer();
+			((SCSessionServer) server).setConnectionType("netty.http");
+			server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER + i, 0);
+			server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.serviceName, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(TestConstants.serviceName));
+			server.deregisterServer(TestConstants.serviceName);
+			assertEquals(false, server.isRegistered(TestConstants.serviceName));
+			server.destroyServer();
+			server = null;
+			server = new SCSessionServer();
+			((SCSessionServer) server).setConnectionType("netty.tcp");
+			server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER + i, 0);
+			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(TestConstants.serviceName));
+			server.deregisterServer(TestConstants.serviceName);
+			assertEquals(false, server.isRegistered(TestConstants.serviceName));
+			server.destroyServer();
+			System.gc();
 		}
 	}
 

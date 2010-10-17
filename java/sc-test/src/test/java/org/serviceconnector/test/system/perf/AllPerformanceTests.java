@@ -74,11 +74,13 @@ public class AllPerformanceTests {
 
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < 10000; i++) {
+			if ((i % 1000) == 0) testLogger.info("Executing message nr. " + i + "...");
 			sessionService.execute(message);
 		}
 		long stop = System.currentTimeMillis();
 
-		testLogger.info("Time to execute 10000 messages with 128 byte body was:\t" + (stop - start));
+		long diff = (stop - start);
+		testLogger.info("10000 msg à 128 byte in " + diff/1000 + " seconds. => "+10000*1000/diff + " msg/sec.");
 		assertEquals(true, stop - start < 25000);
 	}
 
@@ -92,15 +94,13 @@ public class AllPerformanceTests {
 		sessionService.createSession("sessionInfo", 300, 60);
 
 		long start = System.currentTimeMillis();
-		for (int i = 0; i < 1000; i++) {
-			testLogger.info("Executing message nr. " + (i * 1000));
-			for (int j = 0; j < 1000; j++) {
-				sessionService.execute(message);
-			}
+		for (int i = 0; i < 1000000; i++) {
+			if ((i % 2000) == 0) testLogger.info("Executing message nr. " + i + "...");
+			sessionService.execute(message);
 		}
 		long stop = System.currentTimeMillis();
-
-		testLogger.info("Time to execute 1000000 messages with 128 byte body was:\t" + (stop - start) + "ms.");
+		long diff = (stop - start);
+		testLogger.info("1'000'000 msg à 128 byte in " + diff/1000 + " seconds. => "+1000000*1000/diff + "msg/sec.");
 		assertEquals(true, stop - start < 1500000);
 	}
 

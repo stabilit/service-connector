@@ -56,15 +56,13 @@ public class StartSessionServer {
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 
 			for (int i = 0; i < serviceNames.length; i++) {
-				this.scSrv.registerServer(TestConstants.HOST, port, serviceNames[i], 1000, maxCons,
-						srvCallback);
+				this.scSrv.registerServer(TestConstants.HOST, port, serviceNames[i], 1000, maxCons, srvCallback);
 			}
 
 			// for testing whether the server already started
 			new ProcessesController().createFile(startFile);
 
-			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean()
-					.getName();
+			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
 			long pid = Long.parseLong(processName.split("@")[0]);
 			FileWriter fw = null;
 			try {
@@ -159,8 +157,7 @@ public class StartSessionServer {
 					} else if (dataString.startsWith("timeout")) {
 						int millis = Integer.parseInt(dataString.split(" ")[1]);
 						try {
-							logger.info("Sleeping " + dataString.split(" ")[1]
-									+ "ms in order to timeout.");
+							logger.info("Sleeping " + dataString.split(" ")[1] + "ms in order to timeout.");
 							Thread.sleep(millis);
 						} catch (InterruptedException e) {
 							logger.error("sleep in execute", e);
@@ -177,11 +174,10 @@ public class StartSessionServer {
 						if (!alreadyPresentService) {
 							if (!scSrv.isRegistered(serviceName)) {
 								try {
-									scSrv.registerServer(TestConstants.HOST, port, serviceName, 1000,
-											maxCons, new SrvCallback(new SessionServerContext()));
+									scSrv.registerServer(TestConstants.HOST, port, serviceName, 1000, maxCons, new SrvCallback(
+											new SessionServerContext()));
 									String[] services = new String[serviceNames.length + 1];
-									System.arraycopy(serviceNames, 0, services, 0,
-											serviceNames.length);
+									System.arraycopy(serviceNames, 0, services, 0, serviceNames.length);
 									services[serviceNames.length] = serviceName;
 									serviceNames = services;
 								} catch (Exception e) {

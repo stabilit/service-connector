@@ -45,7 +45,7 @@ public class SessionLogger {
 	 * @param sessionId
 	 */
 	public synchronized void logCreateSession(String className, String sessionId) {
-		if (sessionLogger.isDebugEnabled()) {
+		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(CREATE_SESSION_STR, sessionId);
 			sessionLogger.debug(format.toString());
@@ -58,7 +58,7 @@ public class SessionLogger {
 	 * @param sessionId
 	 */
 	public synchronized void logDeleteSession(String className, String sessionId) {
-		if (sessionLogger.isDebugEnabled()) {
+		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(DELETE_SESSION_STR, sessionId);
 			sessionLogger.debug(format.toString());
@@ -71,7 +71,7 @@ public class SessionLogger {
 	 * @param sessionId
 	 */
 	public synchronized void logAbortSession(String className, String sessionId) {
-		if (sessionLogger.isDebugEnabled()) {
+		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(ABORT_SESSION_STR, sessionId);
 			sessionLogger.debug(format.toString());
@@ -83,6 +83,6 @@ public class SessionLogger {
 	 * @return
 	 */
 	public boolean isEnabled() {
-		return sessionLogger.isDebugEnabled();
+		return sessionLogger.isTraceEnabled();
 	}
 }

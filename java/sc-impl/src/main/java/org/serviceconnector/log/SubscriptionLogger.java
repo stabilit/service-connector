@@ -45,7 +45,7 @@ public class SubscriptionLogger {
 	 * @param mask
 	 */
 	public synchronized void logSubscribe(String serviceName, String sessionId, String mask) {
-		if (subscriptionLogger.isDebugEnabled()) {
+		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(SUBSCRIBE_STR, sessionId, serviceName, mask);
 			subscriptionLogger.debug(format.toString());
@@ -59,7 +59,7 @@ public class SubscriptionLogger {
 	 * @param mask
 	 */
 	public synchronized void logChangeSubscribe(String serviceName, String sessionId, String mask) {
-		if (subscriptionLogger.isDebugEnabled()) {
+		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(CHANGE_SUBSCRIBE_STR, sessionId, serviceName, mask);
 			subscriptionLogger.debug(format.toString());
@@ -72,7 +72,7 @@ public class SubscriptionLogger {
 	 * @param sessionId
 	 */
 	public synchronized void logUnsubscribe(String serviceName, String sessionId) {
-		if (subscriptionLogger.isDebugEnabled()) {
+		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(UNSUBSCRIBE_STR, sessionId, serviceName);
 			subscriptionLogger.debug(format.toString());
@@ -84,6 +84,6 @@ public class SubscriptionLogger {
 	 * @return
 	 */
 	public boolean isEnabled() {
-		return subscriptionLogger.isDebugEnabled();
+		return subscriptionLogger.isTraceEnabled();
 	}
 }

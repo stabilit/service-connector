@@ -155,16 +155,14 @@ public class EnableDisableServiceTest {
 	}
 	
 	@Test
-	public void enableDisableService_1000Times_switchesStates() throws Exception { 
+	public void enableDisableService_1000Times_switchesStates() throws Exception {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
-		for (int i = 0; i < 100; i++) {	// TODO TRN
-			testLogger.info("Enabling/disabling service, iteration:\t" + i*10);
-			for (int j = 0; j < 10; j++) {
-				client.disableService(TestConstants.serviceName);
-				assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
-				client.enableService(TestConstants.serviceName);
-				assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
-			}
+		for (int i = 0; i < 1000; i++) {
+			if ((i % 500) == 0) testLogger.info("Enabling/disabling cycle nr. " + i + "...");
+			client.disableService(TestConstants.serviceName);
+			assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
+			client.enableService(TestConstants.serviceName);
+			assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 		}
 	}
 	

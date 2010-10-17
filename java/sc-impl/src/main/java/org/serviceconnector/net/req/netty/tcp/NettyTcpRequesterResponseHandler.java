@@ -30,6 +30,7 @@ import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.util.Statistics;
 
 /**
  * The Class NettyTcpRequesterResponseHandler.
@@ -93,6 +94,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		try {
 			byte[] buffer = new byte[channelBuffer.readableBytes()];
 			channelBuffer.readBytes(buffer);
+			Statistics.getInstance().incrementTotalMessages(buffer.length);
 			if (connectionLogger.isEnabledFull()) {
 				connectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
 			}

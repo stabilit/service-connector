@@ -69,44 +69,28 @@ public class Statistics {
 	/**
 	 * Increment total messages.
 	 */
-	public synchronized void incrementTotalMessages() {
+	public synchronized void incrementTotalMessages(double msgLength) {
 		totalMessages++;
-	}
-
-	/**
-	 * Increment total bytes.
-	 *
-	 * @param nrBytes the nr bytes
-	 */
-	public synchronized void incrementTotalBytes(double nrBytes) {
-		totalBytes = totalBytes + nrBytes;
+		totalBytes = totalBytes + msgLength;
 	}
 
 	/**
 	 * Increment cached messages.
 	 */
-	public synchronized void incrementCachedMessages() {
+	public synchronized void incrementCachedMessages(double msgLength) {
 		cachedMessages++;
+		cachedBytes = cachedBytes + msgLength;
 	}
 
+	
 	/**
-	 * Increment cached bytes.
-	 *
-	 * @param nrBytes the nr bytes
+	 * Increment cached messages.
 	 */
-	public synchronized void incrementCachedBytes(double nrBytes) {
-		cachedBytes = cachedBytes + nrBytes;
+	public synchronized void decrementCachedMessages(double msgLength) {
+		cachedMessages--;
+		cachedBytes = cachedBytes - msgLength;
 	}
-
-	/**
-	 * Decrement cached bytes.
-	 *
-	 * @param nrBytes the nr bytes
-	 */
-	public synchronized void decrementCachedBytes(double nrBytes) {
-		cachedBytes = cachedBytes - nrBytes;
-	}
-
+	
 	/**
 	 * Increment cached files.
 	 *
@@ -122,7 +106,7 @@ public class Statistics {
 	 * @param nrFiles the nr files
 	 */
 	public synchronized void decrementCachedFiles(int nrFiles) {
-		cachedFiles = cachedFiles + nrFiles;
+		cachedFiles = cachedFiles - nrFiles;
 	}
 
 	/**

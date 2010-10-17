@@ -31,6 +31,7 @@ import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.util.Statistics;
 
 
 /**
@@ -98,9 +99,11 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			ChannelBuffer content = httpResponse.getContent();
 			byte[] buffer = new byte[content.readableBytes()];
 			content.readBytes(buffer);
+			Statistics.getInstance().incrementTotalMessages(buffer.length);
 			if (connectionLogger.isEnabledFull()) {
 				connectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
 			}
+			
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 			IEncoderDecoder encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory().createEncoderDecoder(buffer);
 			ret = (SCMPMessage) encoderDecoder.decode(bais);

@@ -72,15 +72,13 @@ public class StartPublishServer {
 			SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
 
 			for (int i = 0; i < serviceNames.length; i++) {
-				this.publishSrv.registerServer(TestConstants.HOST, port, serviceNames[i], 1000, maxCons,
-						srvCallback);
+				this.publishSrv.registerServer(TestConstants.HOST, port, serviceNames[i], 1000, maxCons, srvCallback);
 			}
 
 			// for testing whether the server already started
 			new ProcessesController().createFile(startFile);
 
-			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean()
-					.getName();
+			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
 			long pid = Long.parseLong(processName.split("@")[0]);
 			FileWriter fw = null;
 			try {
