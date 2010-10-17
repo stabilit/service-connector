@@ -80,6 +80,7 @@ public class DemoPublishServer {
 					Object data = "publish message nr " + ++index;
 					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
 					server.publish(serviceName, mask, data);
+					logger.info("Message published: " + data);
 				} catch (Exception ex) {
 					logger.error("run", ex);
 					return;

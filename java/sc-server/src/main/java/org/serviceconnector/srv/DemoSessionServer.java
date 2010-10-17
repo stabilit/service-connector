@@ -90,6 +90,7 @@ public class DemoSessionServer {
 		@Override
 		public SCMessage execute(SCMessage request) {
 			Object data = request.getData();
+			logger.info("Message received: " + data);
 			int executionTimeout = request.getOperationTimeout();
 			// watch out for kill server message
 			if (data.getClass() == String.class) {

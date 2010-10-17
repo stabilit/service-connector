@@ -34,6 +34,7 @@ public class DemoSessionClient extends Thread {
 			while (true) {
 				SCMessage requestMsg = new SCMessage();
 				requestMsg.setData("body nr : " + index++);
+				logger.info("Message sent: " + requestMsg.getData());
 				SCMessageCallback callback = new DemoSessionClientCallback(sessionService);
 				DemoSessionClient.pendingRequest = true;
 				sessionService.execute(requestMsg, callback);
