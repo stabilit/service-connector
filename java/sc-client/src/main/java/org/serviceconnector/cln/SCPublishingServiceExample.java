@@ -24,9 +24,9 @@ package org.serviceconnector.cln;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
+import org.serviceconnector.api.SCSubscibeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
-
 
 public class SCPublishingServiceExample {
 
@@ -49,7 +49,10 @@ public class SCPublishingServiceExample {
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
-			publishServiceA.subscribe("000012100012832102FADF-----------X-----------", "sessionInfo", 300, callback);
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("000012100012832102FADF-----------X-----------");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			publishServiceA.subscribe(subscibeMessage, callback);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

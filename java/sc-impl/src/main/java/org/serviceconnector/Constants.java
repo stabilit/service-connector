@@ -101,6 +101,8 @@ public final class Constants {
 	public static int SUBSCRIPTION_TIMEOUT_MILLIS = DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS;
 	/** The WAIT_FOR_CONNECTION_INTERVAL_MILLIS. */
 	public static final int WAIT_FOR_CONNECTION_INTERVAL_MILLIS = 200;
+	/** The DEFAULT_NO_DATA_INTERVAL_SECONDS. */
+	public static final int DEFAULT_NO_DATA_INTERVAL_SECONDS = 300;
 	/** The Constant SEC_TO_MILISEC_FACTOR. */
 	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
 	/** The REGEX. */

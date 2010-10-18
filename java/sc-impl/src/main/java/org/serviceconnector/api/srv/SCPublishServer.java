@@ -25,8 +25,10 @@ import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPPublishCall;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
@@ -55,10 +57,12 @@ public class SCPublishServer extends SCSessionServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void publish(String serviceName, String mask, Object data) throws Exception {
+	public void publish(String serviceName, SCPublishMessage publishMessage) throws Exception {
+		if (publishMessage == null) {
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "subscibeMessage can not be null");
+		}
 		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
-		ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
 		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
 		if (srvService == null) {
@@ -66,8 +70,8 @@ public class SCPublishServer extends SCSessionServer {
 		}
 		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(srvService
 				.getRequester(), serviceName);
-		publishCall.setRequestBody(data);
-		publishCall.setMask(mask);
+		publishCall.setRequestBody(publishMessage.getData());
+		publishCall.setMask(publishMessage.getMask());
 		SCServerCallback callback = new SCServerCallback(true);
 		publishCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		SCMPMessage message = callback.getMessageSync();

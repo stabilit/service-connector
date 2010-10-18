@@ -25,7 +25,6 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 
-
 public class SCSyncSessionServiceExample {
 
 	public static void main(String[] args) {
@@ -43,7 +42,9 @@ public class SCSyncSessionServiceExample {
 
 			SCSessionService sessionServiceA = sc.newSessionService("simulation");
 			// creates a session
-			sessionServiceA.createSession("sessionInfo", 300, 60);
+			SCMessage scMessage = new SCMessage();
+			scMessage.setSessionInfo("sessionInfo");
+			sessionServiceA.createSession(300, 60, scMessage);
 
 			SCMessage requestMsg = new SCMessage();
 			requestMsg.setData("Hello World");

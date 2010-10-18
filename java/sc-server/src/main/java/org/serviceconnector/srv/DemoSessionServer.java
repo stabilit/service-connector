@@ -26,11 +26,10 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 
-
 public class DemoSessionServer {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DemoSessionServer.class);
-	
+
 	private SCSessionServer scSrv = null;
 	private String serviceName = "simulation";
 
@@ -91,7 +90,8 @@ public class DemoSessionServer {
 		public SCMessage execute(SCMessage request) {
 			Object data = request.getData();
 			logger.info("Message received: " + data);
-			int executionTimeout = request.getOperationTimeout();
+			// TODO JOT
+			// int executionTimeout = request.getOperationTimeout();
 			// watch out for kill server message
 			if (data.getClass() == String.class) {
 				String dataString = (String) data;

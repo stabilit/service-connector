@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
+import org.serviceconnector.api.SCSubscibeMessage;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
@@ -38,8 +39,8 @@ import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class PublishService. PublishService is a remote interface in client API
- * to a publish service and provides communication functions.
+ * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
+ * communication functions.
  */
 public class SCPublishService extends SCService {
 
@@ -68,39 +69,35 @@ public class SCPublishService extends SCService {
 
 	/**
 	 * Change subscription.
-	 * 
-	 * @param mask
-	 *            the mask
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param scSubscribeMessage the sc subscribe message
+	 * @throws Exception the exception
 	 */
-	public synchronized void changeSubscription(String mask) throws Exception {
-		this.changeSubscription(mask, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	public synchronized void changeSubscription(SCSubscibeMessage scSubscribeMessage) throws Exception {
+		this.changeSubscription(scSubscribeMessage, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
 	/**
 	 * Change subscription.
-	 * 
-	 * @param mask
-	 *            the mask
-	 * @param timeoutInSeconds
-	 *            the timeout in seconds
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param scSubscribeMessage the sc subscribe message
+	 * @param timeoutInSeconds the timeout in seconds
+	 * @throws Exception the exception
 	 */
-	public synchronized void changeSubscription(String mask, int timeoutInSeconds) throws Exception {
+	public synchronized void changeSubscription(SCSubscibeMessage scSubscribeMessage, int timeoutInSeconds)
+			throws Exception {
 		if (this.subscribed == false) {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
 		}
-		ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-		if (mask.indexOf('%') != -1) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "Percent sign not allowed in mask.");
+		if (scSubscribeMessage == null) {
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "scSubscribeMessage can not be null");
 		}
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.msgId.incrementMsgSequenceNr();
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
-		changeSubscriptionCall.setMask(mask);
+		changeSubscriptionCall.setMask(scSubscribeMessage.getMask());
+		changeSubscriptionCall.setCompressed(scSubscribeMessage.isCompressed());
 		SCServiceCallback callback = new SCServiceCallback(true);
 		changeSubscriptionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		callback.getMessageSync();
@@ -108,63 +105,46 @@ public class SCPublishService extends SCService {
 
 	/**
 	 * Subscribe.
-	 * 
-	 * @param mask
-	 *            the mask
-	 * @param sessionInfo
-	 *            the session info
-	 * @param noDataInterval
-	 *            the no data interval
-	 * @param callback
-	 *            the callback
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param scSubscribeMessage the sc subscribe message
+	 * @param callback the callback
+	 * @throws Exception the exception
 	 */
-	public synchronized void subscribe(String mask, String sessionInfo, int noDataInterval, SCMessageCallback callback)
+	public synchronized void subscribe(SCSubscibeMessage scSubscribeMessage, SCMessageCallback callback)
 			throws Exception {
-		this.subscribe(mask, sessionInfo, noDataInterval, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+		this.subscribe(scSubscribeMessage, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
 	/**
 	 * Subscribe.
-	 * 
-	 * @param mask
-	 *            the mask
-	 * @param sessionInfo
-	 *            the session info
-	 * @param noDataInterval
-	 *            the no data interval
-	 * @param callback
-	 *            the callback
-	 * @param timeoutInSeconds
-	 *            the timeout in seconds
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param scSubscribeMessage the sc subscribe message
+	 * @param scMessageCallback the sc message callback
+	 * @param timeoutInSeconds the timeout in seconds
+	 * @throws Exception the exception
 	 */
-	public synchronized void subscribe(String mask, String sessionInfo, int noDataIntervalSeconds, SCMessageCallback scMessageCallback,
+	public synchronized void subscribe(SCSubscibeMessage scSubscribeMessage, SCMessageCallback scMessageCallback,
 			int timeoutInSeconds) throws Exception {
 		if (this.subscribed) {
 			throw new SCServiceException("already subscribed");
 		}
-		ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-		if (mask.indexOf('%') != -1) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "Percent sign not allowed in mask.");
+		if (scSubscribeMessage == null) {
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "scSubscribeMessage can not be null");
 		}
-		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
-		ValidatorUtility.validateInt(1, noDataIntervalSeconds, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
 		if (scMessageCallback == null) {
 			throw new InvalidParameterException("Callback must be set.");
 		}
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		this.noDataInterval = noDataIntervalSeconds;
+		this.noDataInterval = scSubscribeMessage.getNoDataIntervalInSeconds();
 		this.msgId.reset();
 		this.scMessageCallback = scMessageCallback;
 		SCServiceCallback callback = new SCServiceCallback(true);
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
-				this.serviceName);
-		subscribeCall.setMask(mask);
-		subscribeCall.setSessionInfo(sessionInfo);
-		subscribeCall.setNoDataIntervalSeconds(noDataIntervalSeconds);
+		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(
+				this.requester, this.serviceName);
+		subscribeCall.setMask(scSubscribeMessage.getMask());
+		subscribeCall.setSessionInfo(scSubscribeMessage.getSessionInfo());
+		subscribeCall.setNoDataIntervalSeconds(scSubscribeMessage.getNoDataIntervalInSeconds());
+		subscribeCall.setCompressed(scSubscribeMessage.isCompressed());
 		try {
 			subscribeCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
@@ -236,8 +216,8 @@ public class SCPublishService extends SCService {
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		try {
 			this.msgId.incrementMsgSequenceNr();
-			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
-					this.requester, this.serviceName, this.sessionId);
+			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
+					.newInstance(this.requester, this.serviceName, this.sessionId);
 			SCServiceCallback callback = new SCServiceCallback(true);
 			try {
 				unsubscribeCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
@@ -256,8 +236,8 @@ public class SCPublishService extends SCService {
 	}
 
 	/**
-	 * The Class PublishServiceCallback. Responsible for handling the right
-	 * communication sequence for publish subscribe protocol.
+	 * The Class PublishServiceCallback. Responsible for handling the right communication sequence for publish subscribe
+	 * protocol.
 	 */
 	private class PublishServiceCallback extends SCServiceCallback {
 
@@ -289,7 +269,7 @@ public class SCPublishService extends SCService {
 				try {
 					SCPublishService.this.receivePublication();
 				} catch (Exception e) {
-					logger.info("subscribed "+e.toString());
+					logger.info("subscribed " + e.toString());
 					SCMPFault fault = new SCMPFault(e);
 					super.callback(fault);
 					return;

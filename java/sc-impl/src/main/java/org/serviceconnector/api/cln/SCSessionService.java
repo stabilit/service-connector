@@ -60,7 +60,7 @@ public class SCSessionService extends SCService {
 	private TimerTask timerTask;
 	/** The session active, marks state of a session. */
 	private volatile boolean sessionActive;
-	/** The sc response time millis. */
+	/** The sc response time milliseconds. */
 	private int scResponseTimeMillis;
 
 	/**
@@ -83,90 +83,46 @@ public class SCSessionService extends SCService {
 	/**
 	 * Creates the session.
 	 * 
-	 * @param sessionInfo
-	 *            the session info
 	 * @param echoIntervalInSeconds
-	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
-	 *            Very important for SC to detect broken sessions.
+	 *            the echo interval in seconds
+	 * @param scMessage
+	 *            the sc message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds) throws Exception {
-		this.createSession(sessionInfo, echoIntervalInSeconds, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, null);
+	public synchronized void createSession(int echoIntervalInSeconds, SCMessage scMessage) throws Exception {
+		this.createSession(echoIntervalInSeconds, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scMessage);
 	}
 
 	/**
 	 * Creates the session.
 	 * 
-	 * @param sessionInfo
-	 *            the session info
 	 * @param echoIntervalInSeconds
-	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
-	 *            Very important for SC to detect broken sessions.
+	 *            the echo interval in seconds
 	 * @param timeoutInSeconds
-	 *            the echo timeout, time an SC has to observe for receiving echo reply from server.
+	 *            the timeout in seconds
+	 * @param scMessage
+	 *            the sc message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds)
+	public synchronized void createSession(int echoIntervalInSeconds, int timeoutInSeconds, SCMessage scMessage)
 			throws Exception {
-		this.createSession(sessionInfo, echoIntervalInSeconds, timeoutInSeconds, null);
-	}
-
-	/**
-	 * Creates the session.
-	 * 
-	 * @param sessionInfo
-	 *            the session info
-	 * @param echoIntervalInSeconds
-	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
-	 *            Very important for SC to detect broken sessions.
-	 * @param data
-	 *            the data
-	 * @throws Exception
-	 *             the exception
-	 */
-	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, Object data) throws Exception {
-		this.createSession(sessionInfo, echoIntervalInSeconds, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, data);
-	}
-
-	/**
-	 * Creates the session.
-	 * 
-	 * @param sessionInfo
-	 *            the session info
-	 * @param echoIntervalInSeconds
-	 *            the echo interval, time interval a echo will be executed by the client to prevent session timeout.
-	 *            Very important for SC to detect broken sessions.
-	 * @param timeoutInSeconds
-	 *            the echo timeout, time an SC has to observe for receiving echo reply from server.
-	 * @param data
-	 *            the data
-	 * @throws Exception
-	 *             the exception
-	 */
-	public synchronized void createSession(String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds,
-			Object data) throws Exception {
 		if (this.sessionActive) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
-		if (data != null) {
-			// validate body not bigger than 60 Kb
-			int length = (new SCMPMessage(data)).getBodyLength();
-			if (length < 1 || length > 61440) {
-				throw new SCMPValidatorException(SCMPError.HV_ERROR, "data too big - over 60Kb");
-			}
+		if (scMessage == null) {
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "scMessage can not be null");
 		}
-		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		ValidatorUtility.validateInt(1, echoIntervalInSeconds, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
 		this.msgId.reset();
 		SCServiceCallback callback = new SCServiceCallback(true);
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
 				.newInstance(this.requester, this.serviceName);
-		createSessionCall.setSessionInfo(sessionInfo);
+		createSessionCall.setSessionInfo(scMessage.getSessionInfo());
 		createSessionCall.setEchoIntervalSeconds(echoIntervalInSeconds);
-		createSessionCall.setRequestBody(data);
+		createSessionCall.setRequestBody(scMessage.getData());
 		createSessionCall.setCompressed(true);
 		try {
 			createSessionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
@@ -402,7 +358,6 @@ public class SCSessionService extends SCService {
 		this.scResponseTimeMillis = scResponseTimeMillis;
 	}
 
-	
 	public int getSCResponseTimeMillis() {
 		return this.scResponseTimeMillis;
 	}

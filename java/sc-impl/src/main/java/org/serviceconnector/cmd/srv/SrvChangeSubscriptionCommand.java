@@ -30,7 +30,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SrvChangeSubscriptionCommand. Responsible for validation and execution of server change subscription
  * command. Allows changing subscription mask of a subscription.
@@ -41,7 +40,7 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SrvChangeSubscriptionCommand.class);
-	
+
 	/**
 	 * Instantiates a new SrvChangeSubscriptionCommand.
 	 */
@@ -65,14 +64,16 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionId(reqMessage.getSessionId());
-		scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		// TODO JOT
+		// scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		scMessage.setData(reqMessage.getBody());
 		reqMessage.setServiceName(serviceName);
 
 		// inform callback with scMessages
 		SCMessage scReply = srvService.getCallback().changeSubscription(scMessage);
 		// handling messageId
-		SCMPMessageId messageId = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMessageId(reqMessage.getSessionId());
+		SCMPMessageId messageId = SrvCommandAdapter.sessionCompositeRegistry
+				.getSCMPMessageId(reqMessage.getSessionId());
 		messageId.incrementMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();

@@ -49,4 +49,10 @@ public class SCMPFileUploadCall extends SCMPCallAdapter {
 	public void setRemoteFileName(String remoteFileName) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME, remoteFileName);
 	}
+	
+	/** {@inhertiDoc} **/
+	@Override
+	public void setRequestBody(Object obj) {
+		this.requestMessage.setBody(obj);
+	}
 }

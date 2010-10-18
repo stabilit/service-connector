@@ -26,7 +26,6 @@ import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SCMPClnChangeSubscriptionCall. Call changes a subscription for a client.
  * 
@@ -36,7 +35,7 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPClnChangeSubscriptionCall.class);
-	
+
 	/**
 	 * Instantiates a new SCMPClnChangeSubscriptionCall.
 	 */
@@ -86,5 +85,23 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 	 */
 	public void setMask(String mask) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
+	}
+
+	/**
+	 * Sets the compression.
+	 * 
+	 * @param compressed
+	 *            the compression
+	 */
+	public void setCompressed(boolean compressed) {
+		if (compressed) {
+			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+		}
+	}
+
+	/** {@inhertiDoc} **/
+	@Override
+	public void setRequestBody(Object obj) {
+		this.requestMessage.setBody(obj);
 	}
 }

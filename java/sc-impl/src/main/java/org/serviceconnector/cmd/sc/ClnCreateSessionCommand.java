@@ -80,7 +80,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		CommandCallback callback = null;
 		try {
 			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			
+
 			int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 			// Following loop implements the wait mechanism in case of a busy connection pool
 			int i = 0;
@@ -110,7 +110,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 				// sleep for a while and then try again
 				Thread.sleep(Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 			} while (++i < tries);
-			
+
 			SCMPMessage reply = callback.getMessageSync();
 
 			if (reply.isFault() == false) {
@@ -169,7 +169,9 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 			// sessionInfo
 			String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
-			ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+			if (sessionInfo != null) {
+				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+			}
 			// echoInterval
 			String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());
 			ValidatorUtility.validateInt(1, echoIntervalValue, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);

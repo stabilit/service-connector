@@ -133,4 +133,22 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 	public void setAuthenticationId(String authId) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.AUTH_SESSION_ID, authId);
 	}
+
+	/**
+	 * Sets the compression.
+	 * 
+	 * @param compressed
+	 *            the compression
+	 */
+	public void setCompressed(boolean compressed) {
+		if (compressed) {
+			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+		}
+	}
+	
+	/** {@inhertiDoc} **/
+	@Override
+	public void setRequestBody(Object obj) {
+		this.requestMessage.setBody(obj);
+	}
 }

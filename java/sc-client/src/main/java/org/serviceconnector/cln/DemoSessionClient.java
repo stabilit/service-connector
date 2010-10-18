@@ -28,7 +28,9 @@ public class DemoSessionClient extends Thread {
 		try {
 			sc.attach("localhost", 7000);
 			sessionService = sc.newSessionService("simulation");
-			sessionService.createSession("sessionInfo", 300, 60);
+			SCMessage scMessage = new SCMessage();
+			scMessage.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 60, scMessage);
 
 			int index = 0;
 			while (true) {

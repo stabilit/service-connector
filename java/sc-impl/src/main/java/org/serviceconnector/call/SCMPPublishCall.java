@@ -84,4 +84,10 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 	public void setMask(String mask) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
 	}
+	
+	/** {@inhertiDoc} **/
+	@Override
+	public void setRequestBody(Object obj) {
+		this.requestMessage.setBody(obj);
+	}
 }

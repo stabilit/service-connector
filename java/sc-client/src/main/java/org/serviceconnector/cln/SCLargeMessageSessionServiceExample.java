@@ -43,7 +43,9 @@ public class SCLargeMessageSessionServiceExample {
 
 			SCSessionService sessionServiceA = sc.newSessionService("simulation");
 			// creates a session
-			sessionServiceA.createSession("sessionInfo", 300, 60);
+			SCMessage scMessage = new SCMessage();
+			scMessage.setSessionInfo("sessionInfo");
+			sessionServiceA.createSession(300, 60, scMessage);
 
 			SCMessage requestMsg = new SCMessage();
 			// set up large buffer

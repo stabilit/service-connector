@@ -25,7 +25,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
 
-
 /**
  * The Class SCMPCallAdapter. Provides basic functionality for calls.
  * 
@@ -155,7 +154,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	/** {@inheritDoc} */
 	@Override
 	public void setRequestBody(Object obj) {
-		this.requestMessage.setBody(obj);
+		throw new UnsupportedOperationException();
 	}
 
 	/**

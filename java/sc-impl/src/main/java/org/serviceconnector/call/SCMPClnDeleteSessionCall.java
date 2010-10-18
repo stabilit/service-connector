@@ -73,10 +73,4 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 	public void setServiceName(String serviceName) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setRequestBody(Object obj) {
-		throw new UnsupportedOperationException();
-	}
 }

@@ -24,7 +24,6 @@ import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SCMPInspectCall. Call inspects SC. Used for testing to assure operations are done properly.
  * 
@@ -34,7 +33,7 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPInspectCall.class);
-	
+
 	/**
 	 * Instantiates a new SCMPInspectCall.
 	 */
@@ -59,7 +58,7 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke(scmpCallback, timeoutInMillis);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester req) {
@@ -70,5 +69,23 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.INSPECT;
+	}
+
+	/**
+	 * Sets the compression.
+	 * 
+	 * @param compressed
+	 *            the compression
+	 */
+	public void setCompressed(boolean compressed) {
+		if (compressed) {
+			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+		}
+	}
+
+	/** {@inhertiDoc} **/
+	@Override
+	public void setRequestBody(Object obj) {
+		this.requestMessage.setBody(obj);
 	}
 }

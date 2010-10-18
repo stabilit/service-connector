@@ -24,7 +24,6 @@ import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SCMPManageCall. Allows enable/disable of a service on SC.
  */
@@ -32,7 +31,7 @@ public class SCMPManageCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPManageCall.class);
-	
+
 	/**
 	 * Instantiates a new SCMPManageCall.
 	 */
@@ -57,7 +56,7 @@ public class SCMPManageCall extends SCMPCallAdapter {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke(scmpCallback, timeoutInMillis);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester req) {
@@ -68,5 +67,23 @@ public class SCMPManageCall extends SCMPCallAdapter {
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.MANAGE;
+	}
+
+	/**
+	 * Sets the compression.
+	 * 
+	 * @param compressed
+	 *            the compression
+	 */
+	public void setCompressed(boolean compressed) {
+		if (compressed) {
+			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+		}
+	}
+
+	/** {@inhertiDoc} **/
+	@Override
+	public void setRequestBody(Object obj) {
+		this.requestMessage.setBody(obj);
 	}
 }

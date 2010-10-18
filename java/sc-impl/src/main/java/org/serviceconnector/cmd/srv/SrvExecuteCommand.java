@@ -31,7 +31,6 @@ import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.ValidatorUtility;
 
-
 /**
  * The Class SrvExecuteCommand. Responsible for validation and execution of server execute command.
  * 
@@ -67,14 +66,16 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		scMessage.setData(reqMessage.getBody());
 		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		// TODO JOT
+		// scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		scMessage.setSessionId(reqMessage.getSessionId());
 
 		// inform callback with scMessages
 		SCMessage scReply = srvService.getCallback().execute(scMessage);
 
 		// handling messageId
-		SCMPMessageId messageId = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMessageId(reqMessage.getSessionId());
+		SCMPMessageId messageId = SrvCommandAdapter.sessionCompositeRegistry
+				.getSCMPMessageId(reqMessage.getSessionId());
 		messageId.incrementMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();

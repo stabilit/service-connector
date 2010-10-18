@@ -19,8 +19,10 @@ package org.serviceconnector.api;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.util.ValidatorUtility;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SCMessage. A SCMessage is the basic transport unit to communicate with a Service Connector.
  * 
@@ -42,9 +44,6 @@ public class SCMessage {
 	/** The session id - identifies session context of communication. */
 	private String sessionId;
 
-	/** The operation timeout in milliseconds - time to execute. */
-	private int operationTimeout;
-
 	/**
 	 * Instantiates a new SCMessage.
 	 */
@@ -57,13 +56,12 @@ public class SCMessage {
 		this.sessionInfo = null;
 	}
 
-	/**
-	 * Instantiates a new SCMessage.
-	 * 
-	 * @param data
-	 *            the data
-	 */
-	public SCMessage(Object data) {
+	public SCMessage(byte[] data) {
+		this();
+		this.data = data;
+	}
+
+	public SCMessage(String data) {
 		this();
 		this.data = data;
 	}
@@ -100,16 +98,12 @@ public class SCMessage {
 	 * Sets the session info.
 	 * 
 	 * @param sessionInfo
-	 *            Optional information passed together with the message body
-	 *            Any printable character, length > 0 and < 256 Byte<br>
+	 *            Optional information passed together with the message body Any printable character, length > 0 and <
+	 *            256 Byte<br>
+	 * @throws SCMPValidatorException
 	 */
-	public void setSessionInfo(String sessionInfo) {
-		if (sessionInfo != null) {
-			int sessionInfoLength = sessionInfo.getBytes().length;
-			if (sessionInfoLength < 1 || sessionInfoLength > 256) {
-				throw new InvalidParameterException("Session info not within 1 to 256 bytes.");
-			}
-		}
+	public void setSessionInfo(String sessionInfo) throws SCMPValidatorException {
+		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.sessionInfo = sessionInfo;
 	}
 
@@ -141,14 +135,20 @@ public class SCMessage {
 		this.compressed = compressed;
 	}
 
-	/**
-	 * Sets the data.
-	 * 
-	 * @param data
-	 *            the data
-	 */
 	public void setData(Object data) {
-		this.data = data;
+		if (data == null) {
+			this.data = null;
+			return;
+		}
+		if (data instanceof byte[]) {
+			this.data = data;
+			return;
+		}
+		if (data instanceof String) {
+			this.data = data;
+			return;
+		}
+		throw new InvalidParameterException("this type of body is not supported");
 	}
 
 	/**
@@ -186,24 +186,5 @@ public class SCMessage {
 	 */
 	public boolean isFault() {
 		return false;
-	}
-
-	/**
-	 * Gets the operation timeout, equals to the time accepted for request execution.
-	 * 
-	 * @return the operation timeout
-	 */
-	public int getOperationTimeout() {
-		return operationTimeout;
-	}
-
-	/**
-	 * Sets the operation timeout.
-	 * 
-	 * @param operationTimeout
-	 *            the new operation timeout
-	 */
-	public void setOperationTimeout(int operationTimeout) {
-		this.operationTimeout = operationTimeout;
 	}
 }

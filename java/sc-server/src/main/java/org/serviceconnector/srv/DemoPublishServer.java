@@ -23,15 +23,15 @@ package org.serviceconnector.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 
-
 public class DemoPublishServer {
-	
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DemoPublishServer.class);
-	
+
 	private SCPublishServer publishSrv = null;
 	private String serviceName = "publish-simulation";
 	private static boolean killPublishServer = false;
@@ -78,8 +78,10 @@ public class DemoPublishServer {
 						Thread.sleep(5000);
 					}
 					Object data = "publish message nr " + ++index;
-					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
-					server.publish(serviceName, mask, data);
+					SCPublishMessage publishMessage = new SCPublishMessage();
+					publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
+					publishMessage.setData(data);
+					server.publish(serviceName, publishMessage);
 					logger.info("Message published: " + data);
 				} catch (Exception ex) {
 					logger.error("run", ex);

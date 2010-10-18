@@ -77,4 +77,16 @@ public class SCMPSrvCreateSessionCall extends SCMPServerCallAdapter {
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.SRV_CREATE_SESSION;
 	}
+
+	/**
+	 * Sets the compression.
+	 * 
+	 * @param compressed
+	 *            the compression
+	 */
+	public void setCompressed(boolean compressed) {
+		if (compressed) {
+			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+		}
+	}
 }
