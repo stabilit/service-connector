@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
+import org.serviceconnector.api.SCSubscibeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -120,7 +121,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameEmptyMaskNull_throwsValidatorException() throws Exception {
 		SCPublishService service = client.newPublishService("");
 		try {
-			service.subscribe(null, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(null);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -132,7 +136,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameEmptyMaskEmpty_throwsValidatorException() throws Exception {
 		SCPublishService service = client.newPublishService("");
 		try {
-			service.subscribe("", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -144,7 +151,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameEmptyMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService("");
 		try {
-			service.subscribe("a", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("a");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -156,7 +166,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameEmptyMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService("");
 		try {
-			service.subscribe(" ", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(" ");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -168,9 +181,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameEmptyMask256LongString_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService("");
 		try {
-			service
-					.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
-							new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.stringLength256);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -182,9 +196,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameEmptyMask257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService("");
 		try {
-			service
-					.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
-							new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.stringLength257);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -199,8 +214,10 @@ public class SubscribeClientTest {
 			throws Exception {
 		SCPublishService service = client.newPublishService("");
 		try {
-			service.subscribe("0000121ABCDEFGHIJKLMNO%----------X-----------", "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO%----------X-----------");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -212,7 +229,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameEmptyMaskSameAsInServer_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService("");
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -224,7 +244,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameNotExistingServiceMaskNull_throwsValidatorException() throws Exception {
 		SCPublishService service = client.newPublishService("notExistingService");
 		try {
-			service.subscribe(null, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(null);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -237,7 +260,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameNotExistingServiceMaskEmpty_throwsValidatorException() throws Exception {
 		SCPublishService service = client.newPublishService("notExistingService");
 		try {
-			service.subscribe("", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -250,7 +276,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameNotExistingServiceMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService("notExistingService");
 		try {
-			service.subscribe("a", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("a");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -263,7 +292,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameNotExistingServiceMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService("notExistingService");
 		try {
-			service.subscribe(" ", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(" ");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -277,9 +309,10 @@ public class SubscribeClientTest {
 			throws Exception {
 		SCPublishService service = client.newPublishService("notExistingService");
 		try {
-			service
-					.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
-							new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.stringLength256);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -293,9 +326,10 @@ public class SubscribeClientTest {
 			throws Exception {
 		SCPublishService service = client.newPublishService("notExistingService");
 		try {
-			service
-					.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
-							new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.stringLength257);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -309,8 +343,10 @@ public class SubscribeClientTest {
 			throws Exception {
 		SCPublishService service = client.newPublishService("notExistingService");
 		try {
-			service.subscribe("0000121ABCDEFGHIJKLMNO%----------X-----------", "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO%----------X-----------");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -324,7 +360,10 @@ public class SubscribeClientTest {
 			throws Exception {
 		SCPublishService service = client.newPublishService("notExistingService");
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -337,7 +376,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameSessionServiceMaskNull_throwsValidatorException() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
-			service.subscribe(null, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(null);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -350,7 +392,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameSessionServiceMaskEmpty_throwsValidatorException() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
-			service.subscribe("", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -363,7 +408,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameSessionServiceMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
-			service.subscribe("a", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("a");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -376,7 +424,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameSessionServiceMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
-			service.subscribe(" ", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo(" ");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -389,9 +440,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameSessionServiceMask256LongString_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
-			service
-					.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
-							new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.stringLength256);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -405,9 +457,10 @@ public class SubscribeClientTest {
 			throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
-			service
-					.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
-							new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.stringLength257);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -421,8 +474,10 @@ public class SubscribeClientTest {
 			throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
-			service.subscribe("0000121ABCDEFGHIJKLMNO%-----------X-----------", "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO%----------X-----------");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -435,7 +490,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameSessionServiceMaskSameAsInServer_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceName);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo(" ");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -448,7 +506,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameDisabledMaskNull_throwsValidatorException() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
-			service.subscribe(null, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(null);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -461,7 +522,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameDisabledMaskEmpty_throwsValidatorException() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
-			service.subscribe("", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -474,7 +538,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameDisabledMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
-			service.subscribe("a", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("a");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -487,7 +554,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameDisabledMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
-			service.subscribe(" ", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(" ");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -500,9 +570,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameDisabledMask256LongString_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
-			service
-					.subscribe(TestConstants.stringLength256, "sessionInfo", 300,
-							new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.stringLength256);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -515,9 +586,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameDisabledMask257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
-			service
-					.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
-							new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.stringLength257);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -531,8 +603,10 @@ public class SubscribeClientTest {
 			throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
 		try {
-			service.subscribe("0000121ABCDEFGHIJKLMNO%-----------X-----------", "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO%----------X-----------");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -545,7 +619,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameDisabledMaskSameAsInServer_throwsSCExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublishDisabled);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -558,7 +635,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameValidMaskNull_throwsValidatorException() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(null, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(null);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -571,7 +651,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameValidMaskEmpty_throwsValidatorException() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe("", "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -583,7 +666,10 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_serviceNameValidMaskOneChar_isSubscribedSessionIdExists() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe("a", "sessionInfo", 300, new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask("a");
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -592,7 +678,10 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_serviceNameValidMaskWhiteSpace_isSubscribedSessionIdExists() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(" ", "sessionInfo", 300, new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo(" ");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -601,7 +690,10 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_serviceNameValidMask256LongString_isSubscribedSessionIdExists() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.stringLength256, "sessionInfo", 300, new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.stringLength256);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -611,9 +703,10 @@ public class SubscribeClientTest {
 	public void subscribe_serviceNameValidMask257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service
-					.subscribe(TestConstants.stringLength257, "sessionInfo", 300,
-							new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.stringLength257);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -627,8 +720,10 @@ public class SubscribeClientTest {
 			throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe("0000121ABCDEFGHIJKLMNO%-----------X-----------", "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO%----------X-----------");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -640,27 +735,10 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_serviceNameValidMaskSameAsInServer_isSubscribedSessionIdExists() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
-		assertEquals(true, service.isSubscribed());
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		service.unsubscribe();
-	}
-
-	// TODO JOT knows about
-	@Test
-	public void subscribe_sessionInfoNull_isSubscribedSessionIdExists() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, null, 300, new DemoPublishClientCallback(service));
-		assertEquals(true, service.isSubscribed());
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		service.unsubscribe();
-	}
-
-	// TODO JOT knows about
-	@Test
-	public void subscribe_sessionInfoEmpty_isSubscribedSessionIdExists() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "", 300, new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -669,7 +747,10 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_sessionInfoOneChar_isSubscribedSessionIdExists() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "a", 300, new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("a");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -678,7 +759,10 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_sessionInfoPangram_isSubscribedSessionIdExists() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, TestConstants.pangram, 300, new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo(TestConstants.pangram);
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -687,8 +771,10 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_sessionInfo256LongString_isSubscribedSessionIdExists() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, TestConstants.stringLength256, 300,
-				new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.stringLength256);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -698,8 +784,10 @@ public class SubscribeClientTest {
 	public void subscribe_sessionInfo257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, TestConstants.stringLength257, 300, new DemoPublishClientCallback(
-					service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo(TestConstants.stringLength257);
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -712,7 +800,11 @@ public class SubscribeClientTest {
 	public void subscribe_noDataInterval0_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 0, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			subscibeMessage.setNoDataIntervalInSeconds(0);
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -725,7 +817,11 @@ public class SubscribeClientTest {
 	public void subscribe_noDataIntervalMinus1_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", -1, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			subscibeMessage.setNoDataIntervalInSeconds(-1);
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -737,7 +833,11 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_noDataInterval1_isSubscribedSessionIdExists() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 1, new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		subscibeMessage.setNoDataIntervalInSeconds(1);
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -746,7 +846,11 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_noDataIntervalMaxAllowed_isSubscribedSessionIdExists() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 3600, new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		subscibeMessage.setNoDataIntervalInSeconds(3600);
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -756,7 +860,11 @@ public class SubscribeClientTest {
 	public void subscribe_noDataIntervalMaxAllowedPlusOne_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 3601, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			subscibeMessage.setNoDataIntervalInSeconds(3601);
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -769,8 +877,11 @@ public class SubscribeClientTest {
 	public void subscribe_noDataIntervalIntMax_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", Integer.MAX_VALUE, new DemoPublishClientCallback(
-					service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			subscibeMessage.setNoDataIntervalInSeconds(Integer.MAX_VALUE);
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -783,7 +894,10 @@ public class SubscribeClientTest {
 	public void subscribe_callbackNull_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, null);
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, null);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -796,7 +910,10 @@ public class SubscribeClientTest {
 	public void subscribe_timeout0_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service), 0);
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), 0);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -809,7 +926,10 @@ public class SubscribeClientTest {
 	public void subscribe_timeoutMinus1_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service), -1);
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), -1);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -823,7 +943,10 @@ public class SubscribeClientTest {
 	public void subscribe_timeout1_eitherSubscribedOrTimedOut() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service), 1);
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), 1);
 		} catch (Exception e) {
 			assertEquals(true, e.getMessage().toLowerCase().contains("timeout"));
 			assertEquals(false, service.isSubscribed());
@@ -838,7 +961,10 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_timeoutMaxAllowed_isSubscribedSessionIdExists() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service), 3600);
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), 3600);
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -848,7 +974,10 @@ public class SubscribeClientTest {
 	public void subscribe_timeoutMaxAllowedPlusOne_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service), 3601);
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), 3601);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -861,8 +990,10 @@ public class SubscribeClientTest {
 	public void subscribe_timeoutIntMax_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service),
-					Integer.MAX_VALUE);
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -875,8 +1006,10 @@ public class SubscribeClientTest {
 	public void subscribe_timeoutIntMin_throwsValidatorExceptionNotSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service),
-					Integer.MIN_VALUE);
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -888,9 +1021,12 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_twiceInARow_throwsSCExceptionRemainsSubscribed() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}

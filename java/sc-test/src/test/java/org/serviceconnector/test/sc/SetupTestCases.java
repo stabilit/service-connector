@@ -23,6 +23,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.SC;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
+import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
@@ -375,8 +376,10 @@ public class SetupTestCases {
 					if (SetupTestCases.large) {
 						data = sb.toString();
 					}
-					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
-					server.publish(serviceName, mask, data);
+					SCPublishMessage publishMessage = new SCPublishMessage();
+					publishMessage.setData(data);
+					publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
+					server.publish(serviceName, publishMessage);
 				} catch (Exception ex) {
 					logger.error("run", ex);
 				}

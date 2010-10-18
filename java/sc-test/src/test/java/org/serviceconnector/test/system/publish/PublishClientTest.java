@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
+import org.serviceconnector.api.SCSubscibeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -20,7 +21,7 @@ import org.serviceconnector.log.Loggers;
 public class PublishClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PublishClientTest.class);
-	
+
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	private static Process scProcess;
@@ -35,8 +36,8 @@ public class PublishClientTest {
 		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-			srvProcess = ctrl.startServer(TestConstants.publishSrv,
-					TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
+			srvProcess = ctrl.startServer(TestConstants.publishSrv, TestConstants.log4jSrvProperties,
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
 					new String[] { TestConstants.serviceNamePublish });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
@@ -68,7 +69,10 @@ public class PublishClientTest {
 	public void publish_waitForAMessageToBePublished_incomesAMessage() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, callback);
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, callback);
 		for (int i = 0; i < 30; i++) {
 			if (callback.lastMessage == null) {
 				Thread.sleep(100);
@@ -80,19 +84,20 @@ public class PublishClientTest {
 		service.unsubscribe();
 
 		assertEquals(1, callback.getMessageCounter());
-		assertEquals(true, callback.getLastMessage().getData().toString().startsWith(
-				"publish message nr "));
+		assertEquals(true, callback.getLastMessage().getData().toString().startsWith("publish message nr "));
 		assertEquals(null, callback.getLastMessage().getMessageInfo());
 		assertEquals(false, callback.getLastMessage().getSessionId() == null
 				|| callback.getLastMessage().getSessionId().equals(""));
 	}
 
 	@Test
-	public void publish_waitFor2MessagesToBePublished_bodyEndsWithConsequentNumbers()
-			throws Exception {
+	public void publish_waitFor2MessagesToBePublished_bodyEndsWithConsequentNumbers() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, callback);
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, callback);
 
 		SCMessage firstMessage = null;
 
@@ -114,24 +119,23 @@ public class PublishClientTest {
 
 		assertEquals(2, callback.getMessageCounter());
 		assertEquals(true, firstMessage.getData().toString().startsWith("publish message nr "));
-		assertEquals(true, callback.getLastMessage().getData().toString().startsWith(
-				"publish message nr "));
-		assertEquals(Integer.parseInt(firstMessage.getData().toString().split(" ")[3]) + 1, Integer
-				.parseInt(callback.getLastMessage().getData().toString().split(" ")[3]));
+		assertEquals(true, callback.getLastMessage().getData().toString().startsWith("publish message nr "));
+		assertEquals(Integer.parseInt(firstMessage.getData().toString().split(" ")[3]) + 1, Integer.parseInt(callback
+				.getLastMessage().getData().toString().split(" ")[3]));
 		assertEquals(null, firstMessage.getMessageInfo());
 		assertEquals(null, callback.getLastMessage().getMessageInfo());
-		assertEquals(false, firstMessage.getSessionId() == null
-				|| callback.getLastMessage().getSessionId().equals(""));
-		assertEquals(false, firstMessage.getSessionId() == null
-				|| callback.getLastMessage().getSessionId().equals(""));
+		assertEquals(false, firstMessage.getSessionId() == null || callback.getLastMessage().getSessionId().equals(""));
+		assertEquals(false, firstMessage.getSessionId() == null || callback.getLastMessage().getSessionId().equals(""));
 	}
 
 	@Test
-	public void publish_waitFor20MessagesToBePublished_bodysEndWithConsequentNumbers()
-			throws Exception {
+	public void publish_waitFor20MessagesToBePublished_bodysEndWithConsequentNumbers() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, callback);
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, callback);
 
 		SCMessage previousMessage = null;
 		SCMessage newMessage = null;
@@ -147,9 +151,8 @@ public class PublishClientTest {
 				newMessage = callback.getLastMessage();
 				counter++;
 				if (counter > 1) {
-					assertEquals(Integer
-							.parseInt(previousMessage.getData().toString().split(" ")[3]) + 1,
-							Integer.parseInt(newMessage.getData().toString().split(" ")[3]));
+					assertEquals(Integer.parseInt(previousMessage.getData().toString().split(" ")[3]) + 1, Integer
+							.parseInt(newMessage.getData().toString().split(" ")[3]));
 				}
 			}
 		}
@@ -159,6 +162,7 @@ public class PublishClientTest {
 	private class DemoPublishClientCallback extends SCMessageCallback {
 
 		private int messageCounter = 0;
+
 		/**
 		 * @return the messageCounter
 		 */

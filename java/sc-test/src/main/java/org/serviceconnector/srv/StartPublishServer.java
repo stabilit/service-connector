@@ -26,6 +26,7 @@ import java.io.FileWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -125,8 +126,10 @@ public class StartPublishServer {
 						Thread.sleep(2000);
 					}
 					Object data = "publish message nr " + ++index;
-					String mask = "0000121%%%%%%%%%%%%%%%-----------X-----------";
-					server.publish(serviceName, mask, data);
+					SCPublishMessage publishMessage = new SCPublishMessage();
+					publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
+					publishMessage.setData(data);
+					server.publish(serviceName, publishMessage);
 					logger.info("message nr " + index + " sent.");
 				} catch (Exception ex) {
 					logger.error("run", ex);

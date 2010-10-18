@@ -80,16 +80,6 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_SERVICE_NAME, " [serviceName must be set]",
 				SCMPMsgType.CLN_CREATE_SESSION);
-
-		// sessionInfo not set
-		createSessionCall.setSessionInfo(null);
-		createSessionCall.setEchoIntervalSeconds(300);
-		createSessionCall.getRequest().setServiceName("simulation");
-		createSessionCall.invoke(this.attachCallback, 1000);
-		fault = this.attachCallback.getMessageSync();
-		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_SESSION_INFO, " [StringValue must be set]",
-				SCMPMsgType.CLN_CREATE_SESSION);
 	}
 
 	/**

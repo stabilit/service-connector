@@ -63,7 +63,9 @@ public class PerformanceSessionClient implements Runnable {
 
 			for (int i = 0; i < sessionCycles; i++) {
 				SCSessionService service = client.newSessionService(TestConstants.serviceName);
-				service.createSession("sessionInfo", 300);
+				SCMessage scMessage = new SCMessage();
+				scMessage.setSessionInfo("sessionInfo");
+				service.createSession(300, scMessage);
 				for (int j = 0; j < executeCycles; j++) {
 					service.execute(new SCMessage(new byte[messageSize]));
 					counter.increment();

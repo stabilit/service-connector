@@ -36,7 +36,8 @@ public class SCMessageTest {
 
 	@Test
 	public void constructor_setNullDataParam_valuesEmpty() {
-		message = new SCMessage(null);
+		message = new SCMessage();
+		message.setData(null);
 		assertEquals(null, message.getMessageInfo());
 		assertEquals(null, message.getData());
 		assertEquals(null, message.getSessionId());
@@ -44,15 +45,11 @@ public class SCMessageTest {
 		assertEquals(false, message.isFault());
 	}
 
-	@Test
+	@Test(expected = InvalidParameterException.class)
 	public void constructor_setObjectDataParam_dataContainsObject() {
 		Object obj = new Object();
-		message = new SCMessage(obj);
-		assertEquals(null, message.getMessageInfo());
-		assertEquals(obj, message.getData());
-		assertEquals(null, message.getSessionId());
-		assertEquals(true, message.isCompressed());
-		assertEquals(false, message.isFault());
+		message = new SCMessage();
+		message.setData(obj);
 	}
 
 	@Test
@@ -67,17 +64,10 @@ public class SCMessageTest {
 		assertEquals(false, message.isCompressed());
 	}
 
-	@Test
-	public void setData_nullParam_nullData() {
-		message.setData(null);
-		assertEquals(null, message.getData());
-	}
-
-	@Test
+	@Test(expected = InvalidParameterException.class)
 	public void setData_emptyObject_emptyObject() {
 		Object obj = new Object();
 		message.setData(obj);
-		assertEquals(obj, message.getData());
 	}
 
 	@Test

@@ -15,8 +15,6 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
-
-
 public class RejectSessionClientTest {
 
 	/** The Constant logger. */
@@ -35,7 +33,9 @@ public class RejectSessionClientTest {
 		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] {TestConstants.serviceName, TestConstants.serviceNameAlt});
+			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
+							TestConstants.serviceNameAlt });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -65,149 +65,160 @@ public class RejectSessionClientTest {
 		srvProcess = null;
 	}
 
-	
 	@Test
-	public void createSession_rejectTheSession_sessionIdIsNotSetThrowsExceptionWithAppErrorCodeAndText() throws Exception {
+	public void createSession_rejectTheSession_sessionIdIsNotSetThrowsExceptionWithAppErrorCodeAndText()
+			throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		
-		assertEquals(true, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
-		
+
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+
 		try {
 			// message "reject" translates on the server to reject the session
-			sessionService.createSession("sessionInfo", 300, 10, "reject");
+			SCMessage scMessage = new SCMessage("reject");
+			scMessage.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 10, scMessage);
 		} catch (SCServiceException e) {
 			ex = e;
 		}
-		
-		assertEquals(true, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
-		//TODO FJU appErrorCode & appErrorText should be maybe in the exception message rather than attributes of exception
-		assertEquals(0, Integer.parseInt(((SCServiceException)ex).getAppErrorCode()));
-		assertEquals("\"This is the app error text\"", ((SCServiceException)ex).getAppErrorText());
+
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		// TODO FJU appErrorCode & appErrorText should be maybe in the exception message rather than attributes of
+		// exception
+		assertEquals(0, Integer.parseInt(((SCServiceException) ex).getAppErrorCode()));
+		assertEquals("\"This is the app error text\"", ((SCServiceException) ex).getAppErrorText());
 	}
-	
+
 	@Test
 	public void createSession_rejectTheSessionAndTryToDeleteSession_sessionIdIsNotSetPasses() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		
+
 		try {
-			sessionService.createSession("sessionInfo", 300, 10, "reject");
+			SCMessage scMessage = new SCMessage("reject");
+			scMessage.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 10, scMessage);
 		} catch (Exception e) {
 		}
-		assertEquals(true, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
-	
-	//TODO FJU throws NullPointerException
+
+	// TODO FJU throws NullPointerException
 	@Test(expected = SCServiceException.class)
-	public void createSession_rejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetExecuteThrowsException() throws Exception {
+	public void createSession_rejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetExecuteThrowsException()
+			throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		
+
 		try {
-			sessionService.createSession("sessionInfo", 300, 10, "reject");
+			SCMessage scMessage = new SCMessage("reject");
+			scMessage.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 10, scMessage);
 		} catch (Exception e) {
-			assertEquals(true, sessionService.getSessionId() == null
-					|| sessionService.getSessionId().isEmpty());
+			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
 
 		sessionService.execute(new SCMessage());
 	}
-	
+
 	@Test
 	public void createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		
+
 		try {
-			sessionService.createSession("sessionInfo", 300, 10, "reject");
+			SCMessage scMessage = new SCMessage("reject");
+			scMessage.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 10, scMessage);
 		} catch (Exception e) {
-			assertEquals(true, sessionService.getSessionId() == null
-					|| sessionService.getSessionId().isEmpty());
+			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
-		sessionService.createSession("sessionInfo", 300, 10);
-		assertEquals(false, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
+		SCMessage scMessage = new SCMessage();
+		scMessage.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, scMessage);
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		SCMessage response = sessionService.execute(new SCMessage());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
-	
+
 	@Test
-	public void createSession_TcpRejectTheSession_sessionIdIsNotSetThrowsExceptionWithAppErrorCodeAndText() throws Exception {
+	public void createSession_TcpRejectTheSession_sessionIdIsNotSetThrowsExceptionWithAppErrorCodeAndText()
+			throws Exception {
 		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		
+
 		try {
 			// message "reject" translates on the server to reject the session
-			sessionService.createSession("sessionInfo", 300, 10, "reject");
+			SCMessage scMessage = new SCMessage("reject");
+			scMessage.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 10, scMessage);
 		} catch (SCServiceException e) {
 			ex = e;
 		}
-		
-		assertEquals(true, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
-		assertEquals(0, Integer.parseInt(((SCServiceException)ex).getAppErrorCode()));
-		assertEquals("\"This is the app error text\"", ((SCServiceException)ex).getAppErrorText());
+
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		assertEquals(0, Integer.parseInt(((SCServiceException) ex).getAppErrorCode()));
+		assertEquals("\"This is the app error text\"", ((SCServiceException) ex).getAppErrorText());
 	}
-	
+
 	@Test
 	public void createSession_TcpRejectTheSessionAndTryToDeleteSession_sessionIdIsNotSetPasses() throws Exception {
 		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		
+
 		try {
-			sessionService.createSession("sessionInfo", 300, 10, "reject");
+			SCMessage scMessage = new SCMessage("reject");
+			scMessage.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 10, scMessage);
 		} catch (Exception e) {
 		}
-		assertEquals(true, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
-	
+
 	@Test(expected = SCServiceException.class)
-	public void createSession_TcpRejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetThrowsException() throws Exception {
+	public void createSession_TcpRejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetThrowsException()
+			throws Exception {
 		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		
+
 		try {
-			sessionService.createSession("sessionInfo", 300, 10, "reject");
+			SCMessage scMessage = new SCMessage("reject");
+			scMessage.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 10, scMessage);
 		} catch (Exception e) {
-			assertEquals(true, sessionService.getSessionId() == null
-					|| sessionService.getSessionId().isEmpty());
+			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
 
 		sessionService.execute(new SCMessage());
 	}
-	
+
 	@Test
 	public void createSession_TcpRejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes() throws Exception {
 		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		
+
 		try {
-			sessionService.createSession("sessionInfo", 300, 10, "reject");
+			SCMessage scMessage = new SCMessage("reject");
+			scMessage.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 10, scMessage);
 		} catch (Exception e) {
-			assertEquals(true, sessionService.getSessionId() == null
-					|| sessionService.getSessionId().isEmpty());
+			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
-		sessionService.createSession("sessionInfo", 300, 10);
-		assertEquals(false, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
+		SCMessage scMessage = new SCMessage();
+		scMessage.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, scMessage);
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		SCMessage response = sessionService.execute(new SCMessage());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null
-				|| sessionService.getSessionId().isEmpty());
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 }

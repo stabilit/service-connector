@@ -16,8 +16,6 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
-
-
 public class ExecuteClientToSCTest {
 
 	/** The Constant logger. */
@@ -39,7 +37,9 @@ public class ExecuteClientToSCTest {
 		try {
 			sc0Process = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			scCascadedProcess = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scPropertiesCascaded);
-			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] {TestConstants.serviceName, TestConstants.serviceNameAlt});
+			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
+							TestConstants.serviceNameAlt });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -80,33 +80,17 @@ public class ExecuteClientToSCTest {
 	}
 
 	@Test
-	public void execute_messageDataNull_returnsTheSameMessageData() throws Exception {
-
-		SCMessage message = new SCMessage(null);
-
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
-
-		SCMessage response = sessionService.execute(message);
-		sessionService.deleteSession();
-		
-		assertEquals(message.getData(), response.getData());
-		assertEquals(message.getMessageInfo(), response.getMessageInfo());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	@Test
 	public void execute_messageDataEmptyString_returnsTheSameMessageData() throws Exception {
 
 		SCMessage message = new SCMessage("");
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(null, response.getData());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -119,11 +103,12 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("a");
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -136,11 +121,12 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage("The quick brown fox jumps over a lazy dog.");
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData(), response.getData());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -153,12 +139,13 @@ public class ExecuteClientToSCTest {
 		SCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
-		assertEquals(((byte[])message.getData()).length, ((byte[])response.getData()).length);
+
+		assertEquals(((byte[]) message.getData()).length, ((byte[]) response.getData()).length);
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(message.isFault(), response.isFault());
@@ -171,11 +158,12 @@ public class ExecuteClientToSCTest {
 		message.setMessageInfo(" ");
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -189,11 +177,12 @@ public class ExecuteClientToSCTest {
 		message.setMessageInfo("a");
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -207,11 +196,12 @@ public class ExecuteClientToSCTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -226,11 +216,12 @@ public class ExecuteClientToSCTest {
 		message.setCompressed(true);
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -245,11 +236,12 @@ public class ExecuteClientToSCTest {
 		message.setCompressed(false);
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -264,11 +256,12 @@ public class ExecuteClientToSCTest {
 		((SCMessage) message).setSessionId("");
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -284,11 +277,12 @@ public class ExecuteClientToSCTest {
 		((SCMessage) message).setSessionId(" ");
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -304,11 +298,12 @@ public class ExecuteClientToSCTest {
 		((SCMessage) message).setSessionId("a");
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -324,11 +319,12 @@ public class ExecuteClientToSCTest {
 		((SCMessage) message).setSessionId("The quick brown fox jumps over a lazy dog.");
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -337,19 +333,19 @@ public class ExecuteClientToSCTest {
 	}
 
 	@Test
-	public void execute_messageSessionIdLikeSessionIdString_returnsCorrectSessionId()
-			throws Exception {
+	public void execute_messageSessionIdLikeSessionIdString_returnsCorrectSessionId() throws Exception {
 
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 		((SCMessage) message).setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -357,22 +353,22 @@ public class ExecuteClientToSCTest {
 		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
 		assertEquals(message.isFault(), response.isFault());
 	}
-	
+
 	@Test
-	public void execute_messageSessionIdSetManually_returnsTheSameMessage()
-			throws Exception {
+	public void execute_messageSessionIdSetManually_returnsTheSameMessage() throws Exception {
 
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		((SCMessage) message).setSessionId(sessionService.getSessionId());
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -389,17 +385,19 @@ public class ExecuteClientToSCTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
-		sessionService0.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService0.createSession(300, 10, message);
 
 		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceName);
-		sessionService1.createSession("sessionInfo", 300, 60);
-		
+		message.setSessionInfo("sessionInfo");
+		sessionService1.createSession(300, 10, message);
+
 		((SCMessage) message).setSessionId(sessionService1.getSessionId());
 
 		SCMessage response = sessionService0.execute(message);
 		sessionService0.deleteSession();
 		sessionService1.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -407,7 +405,7 @@ public class ExecuteClientToSCTest {
 		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
 		assertEquals(message.isFault(), response.isFault());
 	}
-	
+
 	@Test
 	public void execute_messageSessionIdSetToIdOfDifferentSessionServiceThanExecuting_returnsCorrectSessionId()
 			throws Exception {
@@ -416,17 +414,19 @@ public class ExecuteClientToSCTest {
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
 
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
-		sessionService0.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService0.createSession(300, 10, message);
 
 		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNameAlt);
-		sessionService1.createSession("sessionInfo", 300, 60);
-		
+		message.setSessionInfo("sessionInfo");
+		sessionService1.createSession(300, 10, message);
+
 		((SCMessage) message).setSessionId(sessionService1.getSessionId());
 
 		SCMessage response = sessionService0.execute(message);
 		sessionService0.deleteSession();
 		sessionService1.deleteSession();
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
@@ -434,52 +434,55 @@ public class ExecuteClientToSCTest {
 		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
 		assertEquals(message.isFault(), response.isFault());
 	}
-	
+
 	@Test
 	public void execute_timeout1_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message, 1);
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		assertEquals(message.isFault(), response.isFault());
-		
+
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeout2_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message, 2);
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(sessionService.getSessionId(), response.getSessionId());
 		assertEquals(message.isFault(), response.isFault());
-		
+
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeout0_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = null;
 		try {
@@ -489,17 +492,18 @@ public class ExecuteClientToSCTest {
 		}
 		assertEquals(true, ex instanceof SCMPValidatorException);
 		assertEquals(null, response);
-		
+
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeoutMinus1_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = null;
 		try {
@@ -509,17 +513,18 @@ public class ExecuteClientToSCTest {
 		}
 		assertEquals(true, ex instanceof SCMPValidatorException);
 		assertEquals(null, response);
-		
+
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeoutIntMin_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = null;
 		try {
@@ -529,7 +534,7 @@ public class ExecuteClientToSCTest {
 		}
 		assertEquals(true, ex instanceof SCMPValidatorException);
 		assertEquals(null, response);
-		
+
 		sessionService.deleteSession();
 	}
 
@@ -537,9 +542,10 @@ public class ExecuteClientToSCTest {
 	public void execute_timeoutIntMax_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = null;
 		try {
@@ -549,34 +555,36 @@ public class ExecuteClientToSCTest {
 		}
 		assertEquals(true, ex instanceof SCMPValidatorException);
 		assertEquals(null, response);
-		
+
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeoutAllowedMax_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message, 3600);
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(message.isFault(), response.isFault());
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeoutAllowedMaxPlus1_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = null;
 		try {
@@ -586,68 +594,72 @@ public class ExecuteClientToSCTest {
 		}
 		assertEquals(true, ex instanceof SCMPValidatorException);
 		assertEquals(null, response);
-		
+
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeout1_passes() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message, 1);
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(message.isFault(), response.isFault());
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeout2_passes() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message, 2);
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(message.isFault(), response.isFault());
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeoutMaxAllowed_passes() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message, 3600);
-		
+
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
 		assertEquals(message.isCompressed(), response.isCompressed());
 		assertEquals(message.isFault(), response.isFault());
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeoutMaxAllowedPlus1_throwsSCMPValidatorException() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		try {
 			sessionService.execute(message, 3601);
@@ -658,14 +670,15 @@ public class ExecuteClientToSCTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeoutIntMax_throwsSCMPValidatorException() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		try {
 			sessionService.execute(message, Integer.MAX_VALUE);
@@ -676,14 +689,15 @@ public class ExecuteClientToSCTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeoutIntMin_throwsSCMPValidatorException() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		try {
 			sessionService.execute(message, Integer.MIN_VALUE);
@@ -694,14 +708,15 @@ public class ExecuteClientToSCTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeout0_throwsSCMPValidatorException() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		try {
 			sessionService.execute(message, 0);
@@ -712,14 +727,15 @@ public class ExecuteClientToSCTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeoutMinus1_throwsSCMPValidatorException() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
 		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		try {
 			sessionService.execute(message, -1);
@@ -730,12 +746,13 @@ public class ExecuteClientToSCTest {
 		assertEquals(true, ex instanceof SCMPValidatorException);
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeoutExpiresOnServer_throwsException() throws Exception {
-
+		SCMessage message = new SCMessage();
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		try {
 			sessionService.execute(new SCMessage("timeout 4000"), 2);
@@ -745,12 +762,13 @@ public class ExecuteClientToSCTest {
 		assertEquals(true, ex instanceof SCServiceException);
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeoutCloselyExpires_throwsException() throws Exception {
-
+		SCMessage message = new SCMessage();
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		try {
 			sessionService.execute(new SCMessage("timeout 2000"), 2);
@@ -760,13 +778,14 @@ public class ExecuteClientToSCTest {
 		assertEquals(true, ex instanceof SCServiceException);
 		sessionService.deleteSession();
 	}
-	
+
 	@Test
 	public void execute_timeoutIsEnough_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("timeout 1500");
-		
+
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, message);
 
 		SCMessage response = sessionService.execute(message, 2);
 		assertEquals(message.getData().toString(), response.getData().toString());

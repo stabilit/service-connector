@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
+import org.serviceconnector.api.SCSubscibeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -25,7 +26,7 @@ public class SubscribeUnsubscribeClientTest {
 	protected final static Logger logger = Logger.getLogger(SubscribeUnsubscribeClientTest.class);
 
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	
+
 	private static Process scProcess;
 	private static Process srvProcess;
 
@@ -119,7 +120,10 @@ public class SubscribeUnsubscribeClientTest {
 	public void unsubscribeSubscribe_subscriptionValid_isSubscribedHasSessionId() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.unsubscribe();
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
@@ -128,7 +132,10 @@ public class SubscribeUnsubscribeClientTest {
 	@Test
 	public void subscribeUnsubscribe_subscriptionValid_isSubscribedThenNot() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
@@ -140,7 +147,10 @@ public class SubscribeUnsubscribeClientTest {
 	public void subscribeUnsubscribe_subscriptionThrowsValidatorException_unsubscribePasses() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(null, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(null);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (SCMPValidatorException e) {
 		}
 		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
@@ -154,7 +164,10 @@ public class SubscribeUnsubscribeClientTest {
 	public void subscribeUnsubscribe_subscriptionThrowsSCException_unsubscribePasses() throws Exception {
 		SCPublishService service = client.newPublishService("");
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (SCServiceException e) {
 		}
 		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
@@ -169,14 +182,17 @@ public class SubscribeUnsubscribeClientTest {
 	public void subscribeUnsubscribe_twice_isSubscribedThenNot() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
 		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(false, service.isSubscribed());
 
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
@@ -192,12 +208,14 @@ public class SubscribeUnsubscribeClientTest {
 		for (int i = 0; i < loop; i++) {
 			if ((i % 500) == 0)
 				testLogger.info("subscribeUnsubscribe_10000Times cycle:\t" + i + " ...");
-			service.subscribe(TestConstants.mask, "sessionInfo", 300, new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 			assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 			assertEquals(true, service.isSubscribed());
 			service.unsubscribe();
-			Thread.sleep(5); // TODO little sleep, Netty has problems sending
-								// very fast! must be fixed
+			Thread.sleep(5); // TODO little sleep, Netty has problems sending very fast! must be fixed
 			assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
 			assertEquals(false, service.isSubscribed());
 		}

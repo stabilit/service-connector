@@ -24,8 +24,6 @@ import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.test.sc.SetupTestCases;
 
-
-
 public class PerformanceSessionServiceTestCase {
 
 	/**
@@ -49,7 +47,9 @@ public class PerformanceSessionServiceTestCase {
 			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 			SCSessionService sessionServiceA = sc.newSessionService("simulation");
-			sessionServiceA.createSession("sessionInfo", 10, 60);
+			SCMessage scMessage = new SCMessage();
+			scMessage.setSessionInfo("sessionInfo");
+			sessionServiceA.createSession(10, 10, scMessage);
 
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];

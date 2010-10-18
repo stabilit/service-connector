@@ -23,12 +23,11 @@ import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
+import org.serviceconnector.api.SCSubscibeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.test.sc.SetupTestCases;
-
-
 
 public class ClnAPIPublishTestCase {
 
@@ -52,7 +51,10 @@ public class ClnAPIPublishTestCase {
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
-			publishServiceA.subscribe("000012100012832102FADF-----------X-----------", "sessionInfo", 300, callback);
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			publishServiceA.subscribe(subscibeMessage, callback);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -79,7 +81,10 @@ public class ClnAPIPublishTestCase {
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
-			publishServiceA.subscribe("AEC----", "sessionInfo", 300, callback);
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask("AEC----");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			publishServiceA.subscribe(subscibeMessage, callback);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

@@ -28,8 +28,8 @@ public class ClientThreadController {
 	private int executesPerSessionCount;
 	private int messageSize;
 
-	public ClientThreadController(boolean waitBeforeAttach, boolean waitAfterAttach,
-			int clientsCount, int sessionsCount, int executesPerSessionCount, int messageSize) {
+	public ClientThreadController(boolean waitBeforeAttach, boolean waitAfterAttach, int clientsCount,
+			int sessionsCount, int executesPerSessionCount, int messageSize) {
 		this.waitBeforeAttach = waitBeforeAttach;
 		this.waitAfterAttach = waitAfterAttach;
 		this.clientsCount = clientsCount;
@@ -59,9 +59,8 @@ public class ClientThreadController {
 
 		for (int i = 0; i < clientsCount; i++) {
 			messages[i] = new ThreadSafeCounter();
-			new Thread(new PerformanceSessionClient(beforeAttachSignal, afterAttachSignal,
-					attachedSignal, doneSignal, messages[i], sessionsCount,
-					executesPerSessionCount, messageSize)).start();
+			new Thread(new PerformanceSessionClient(beforeAttachSignal, afterAttachSignal, attachedSignal, doneSignal,
+					messages[i], sessionsCount, executesPerSessionCount, messageSize)).start();
 		}
 
 		start = System.currentTimeMillis();
@@ -73,7 +72,7 @@ public class ClientThreadController {
 		if (waitAfterAttach) {
 			afterAttachSignal.countDown();
 		}
-		
+
 		doneSignal.await();
 
 		stop = System.currentTimeMillis();
@@ -95,16 +94,17 @@ public class ClientThreadController {
 			SCClient client = new SCClient();
 			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 			SCSessionService service = client.newSessionService(TestConstants.serviceName);
-			service.createSession("sessionInfo", 300);
+			SCMessage scMessage = new SCMessage();
+			scMessage.setSessionInfo("sessionInfo");
+			service.createSession(300, scMessage);
 			response = service.execute(new SCMessage("executed"));
 			service.deleteSession();
 			client.detach();
 		} catch (Exception e) {
 		}
-		
+
 		testLogger.info("Messages executed successfuly (clients):\t" + sum);
-		testLogger
-				.info("Messages executed successfuly (server):\t" + response.getData().toString());
+		testLogger.info("Messages executed successfuly (server):\t" + response.getData().toString());
 		testLogger.info("Time to create session execute and delete session:\t" + result + "ms");
 
 	}

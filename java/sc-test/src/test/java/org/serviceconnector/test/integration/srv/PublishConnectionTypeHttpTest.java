@@ -1,5 +1,7 @@
 package org.serviceconnector.test.integration.srv;
 
+import java.security.InvalidParameterException;
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -7,6 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -46,8 +49,8 @@ public class PublishConnectionTypeHttpTest {
 		server = new SCPublishServer();
 		((SCPublishServer) server).setConnectionType("netty.http");
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP,
-				TestConstants.serviceNamePublish, 1, 1, new SCPublishServerCallback());
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.serviceNamePublish, 1, 1,
+				new SCPublishServerCallback());
 	}
 
 	@After
@@ -60,62 +63,93 @@ public class PublishConnectionTypeHttpTest {
 
 	@Test(expected = SCMPValidatorException.class)
 	public void publish_serviceNameNull_throwsValidatorException() throws Exception {
-		server.publish(null, TestConstants.mask, "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("something");
+		server.publish(null, publishMessage);
 	}
 
 	@Test(expected = SCMPValidatorException.class)
 	public void publish_serviceNameEmpty_throwsValidatorException() throws Exception {
-		server.publish("", TestConstants.mask, "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("something");
+		server.publish("", publishMessage);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void publish_serviceNameWhiteSpace_throwsSCException() throws Exception {
-		server.publish(" ", TestConstants.mask, "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("something");
+		server.publish(" ", publishMessage);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void publish_serviceNameOneChar_throwsSCException() throws Exception {
-		server.publish("a", TestConstants.mask, "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("something");
+		server.publish("a", publishMessage);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void publish_serviceNameNotExistingService_throwsSCException() throws Exception {
-		server.publish("notExistingService", TestConstants.mask, "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("something");
+		server.publish("notExistingService", publishMessage);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void publish_serviceName32LongString_throwsSCException() throws Exception {
-		server.publish(TestConstants.stringLength32, TestConstants.mask, "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("something");
+		server.publish(TestConstants.stringLength32, publishMessage);
 	}
 
 	@Test(expected = SCMPValidatorException.class)
 	public void publish_serviceName33LongString_throwsValidatorException() throws Exception {
-		server.publish(TestConstants.stringLength33, TestConstants.mask, "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("something");
+		server.publish(TestConstants.stringLength33, publishMessage);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void publish_serviceNameDisabled_throwsSCException() throws Exception {
-		server.publish(TestConstants.serviceNamePublishDisabled, TestConstants.mask, "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("something");
+		server.publish(TestConstants.serviceNamePublishDisabled, publishMessage);
 	}
 
 	@Test
 	public void publish_serviceNameValid_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("something");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test(expected = SCServiceException.class)
-	public void publish_serviceNameSessionServiceWithoutRegistering_throwsSCException()
-			throws Exception {
-		server.publish(TestConstants.serviceName, TestConstants.mask, "something");
+	public void publish_serviceNameSessionServiceWithoutRegistering_throwsSCException() throws Exception {
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("something");
+		server.publish(TestConstants.serviceName, publishMessage);
 	}
 
 	@Test(expected = SCServiceException.class)
-	public void publish_serviceNameSessionServiceWithRegistering_throwsSCException()
-			throws Exception {
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP,
-				TestConstants.serviceName, 1, 1, new SCPublishServerCallback());
+	public void publish_serviceNameSessionServiceWithRegistering_throwsSCException() throws Exception {
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.serviceName, 1, 1,
+				new SCPublishServerCallback());
 		try {
-			server.publish(TestConstants.serviceName, TestConstants.mask, "something");
+			SCPublishMessage publishMessage = new SCPublishMessage();
+			publishMessage.setMask(TestConstants.mask);
+			publishMessage.setData("something");
+			server.publish(TestConstants.serviceName, publishMessage);
 		} catch (Exception e) {
 			ex = e;
 		} finally {
@@ -128,77 +162,114 @@ public class PublishConnectionTypeHttpTest {
 
 	@Test(expected = SCMPValidatorException.class)
 	public void publish_maskNull_throwsValidatorException() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, null, "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(null);
+		publishMessage.setData("something");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test(expected = SCMPValidatorException.class)
 	public void publish_maskEmpty_throwsValidatorException() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, "", "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask("");
+		publishMessage.setData("something");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_maskWhiteSpace_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, " ", "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(" ");
+		publishMessage.setData("something");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_maskOneChar_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, "a", "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask("a");
+		publishMessage.setData("something");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_maskPangram_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.pangram, "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.pangram);
+		publishMessage.setData("something");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_mask256LongString_passes() throws Exception {
-		server
-				.publish(TestConstants.serviceNamePublish, TestConstants.stringLength256,
-						"something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.stringLength256);
+		publishMessage.setData("something");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test(expected = SCMPValidatorException.class)
 	public void publish_mask257LongString_throwsValidatorException() throws Exception {
-		server
-				.publish(TestConstants.serviceNamePublish, TestConstants.stringLength257,
-						"something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.stringLength257);
+		publishMessage.setData("something");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_maskValidWithoutPercentSign_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("something");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_maskValidWithPercentSign_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish,
-				"0000121%%%%%%%%%%%%%%%-----------X-----------", "something");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
+		publishMessage.setData("something");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_dataNull_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, null);
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData(null);
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_dataEmpty_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, "");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_dataWhiteSpace_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, " ");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData(" ");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_dataOneChar_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, "a");
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData("a");
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_dataPangram_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, TestConstants.pangram);
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData(TestConstants.pangram);
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
@@ -207,7 +278,10 @@ public class PublishConnectionTypeHttpTest {
 		for (int i = 0; i < 1000; i++) {
 			sb.append("a");
 		}
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, sb.toString());
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData(sb.toString());
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
@@ -216,37 +290,51 @@ public class PublishConnectionTypeHttpTest {
 		for (int i = 0; i < 10000; i++) {
 			sb.append("a");
 		}
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, sb.toString());
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData(sb.toString());
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
-	// TODO JOT knows about
-	@Test
+	@Test(expected = InvalidParameterException.class)
 	public void publish_dataEmptyObject_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new Object());
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData(new Object());
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
-	// TODO JOT knows about
-	@Test
+	@Test(expected = InvalidParameterException.class)
 	public void publish_dataSCMessage_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new SCMessage());
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData(new SCMessage());
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_data60kBArray_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask,
-				new byte[TestConstants.dataLength60kB]);
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData(new byte[TestConstants.dataLength60kB]);
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_data1MBArray_passes() throws Exception {
-		server.publish(TestConstants.serviceNamePublish, TestConstants.mask,
-				new byte[TestConstants.dataLength1MB]);
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData(new byte[TestConstants.dataLength1MB]);
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test
 	public void publish_10000Messages_passes() throws Exception {
 		for (int i = 0; i < 10000; i++) {
-			server.publish(TestConstants.serviceNamePublish, TestConstants.mask, new byte[128]);
+			SCPublishMessage publishMessage = new SCPublishMessage();
+			publishMessage.setMask(TestConstants.mask);
+			publishMessage.setData(new byte[128]);
+			server.publish(TestConstants.serviceNamePublish, publishMessage);
 		}
 	}
 }

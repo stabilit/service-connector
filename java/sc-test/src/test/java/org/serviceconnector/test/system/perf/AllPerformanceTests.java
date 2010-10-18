@@ -70,17 +70,19 @@ public class AllPerformanceTests {
 		SCMessage message = new SCMessage(new byte[128]);
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 60, message);
 
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < 10000; i++) {
-			if ((i % 1000) == 0) testLogger.info("Executing message nr. " + i + "...");
+			if ((i % 1000) == 0)
+				testLogger.info("Executing message nr. " + i + "...");
 			sessionService.execute(message);
 		}
 		long stop = System.currentTimeMillis();
 
 		long diff = (stop - start);
-		testLogger.info("10000 msg à 128 byte in " + diff/1000 + " seconds. => "+10000*1000/diff + " msg/sec.");
+		testLogger.info("10000 msg à 128 byte in " + diff / 1000 + " seconds. => " + 10000 * 1000 / diff + " msg/sec.");
 		assertEquals(true, stop - start < 25000);
 	}
 
@@ -91,16 +93,19 @@ public class AllPerformanceTests {
 		SCMessage message = new SCMessage(new byte[128]);
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.createSession("sessionInfo", 300, 60);
+		message.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 60, message);
 
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < 1000000; i++) {
-			if ((i % 2000) == 0) testLogger.info("Executing message nr. " + i + "...");
+			if ((i % 2000) == 0)
+				testLogger.info("Executing message nr. " + i + "...");
 			sessionService.execute(message);
 		}
 		long stop = System.currentTimeMillis();
 		long diff = (stop - start);
-		testLogger.info("1'000'000 msg à 128 byte in " + diff/1000 + " seconds. => "+1000000*1000/diff + "msg/sec.");
+		testLogger.info("1'000'000 msg à 128 byte in " + diff / 1000 + " seconds. => " + 1000000 * 1000 / diff
+				+ "msg/sec.");
 		assertEquals(true, stop - start < 1500000);
 	}
 

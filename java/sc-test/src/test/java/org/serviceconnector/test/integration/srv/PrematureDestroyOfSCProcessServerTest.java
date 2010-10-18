@@ -96,8 +96,6 @@ public class PrematureDestroyOfSCProcessServerTest {
 		server.deregisterServer(TestConstants.serviceName);
 	}
 
-	// TODO FJU I am not sure about intended behavior in this test
-	// TODO JOT verify with try & catch
 	@Test
 	public void deregisterServer_afterRegisterAndSCDestroy_notRegistered() throws Exception {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 10, 10,

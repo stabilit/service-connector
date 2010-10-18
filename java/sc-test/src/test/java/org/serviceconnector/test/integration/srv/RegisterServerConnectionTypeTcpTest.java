@@ -13,8 +13,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
+import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -101,13 +101,11 @@ public class RegisterServerConnectionTypeTcpTest {
 		server.deregisterServer(TestConstants.serviceName);
 	}
 
-	@Test
+	@Test(expected = SCServiceException.class)
 	public void registerServer_withDisabledService_throwsException() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSessionDisabled, 1,
 				1, new CallBack());
-		assertEquals(true, server.isRegistered(TestConstants.serviceNameSessionDisabled));
-		server.deregisterServer(TestConstants.serviceNameSessionDisabled);
 	}
 
 	@Test
@@ -692,25 +690,26 @@ public class RegisterServerConnectionTypeTcpTest {
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
 		assertEquals(true, ex instanceof SCServiceException);
 	}
-	
+
 	@Test
 	public void multipleRegisterServer_differentServiceNames() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1,
 				new CallBack());
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSessionDisabled, 1,
-				1, new CallBack());
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "P01_RTXS_sc1", 1, 1, new CallBack());
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNamePublish, 1, 1,
+				new CallBack());
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameAlt, 1, 1,
+				new CallBack());
 
 		assertEquals(true, server.isRegistered(TestConstants.serviceName));
-		assertEquals(true, server.isRegistered(TestConstants.serviceNameSessionDisabled));
-		assertEquals(true, server.isRegistered("P01_RTXS_sc1"));
+		assertEquals(true, server.isRegistered(TestConstants.serviceNamePublish));
+		assertEquals(true, server.isRegistered(TestConstants.serviceNameAlt));
 		server.deregisterServer(TestConstants.serviceName);
-		server.deregisterServer(TestConstants.serviceNameSessionDisabled);
-		server.deregisterServer("P01_RTXS_sc1");
+		server.deregisterServer(TestConstants.serviceNamePublish);
+		server.deregisterServer(TestConstants.serviceNameAlt);
 		assertEquals(false, server.isRegistered(TestConstants.serviceName));
-		assertEquals(false, server.isRegistered(TestConstants.serviceNameSessionDisabled));
-		assertEquals(false, server.isRegistered("P01_RTXS_sc1"));
+		assertEquals(false, server.isRegistered(TestConstants.serviceNamePublish));
+		assertEquals(false, server.isRegistered(TestConstants.serviceNameAlt));
 	}
 
 	private class CallBack extends SCSessionServerCallback {

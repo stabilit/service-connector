@@ -11,17 +11,16 @@ import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
+import org.serviceconnector.api.SCSubscibeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
 
-
 public class PrematureDestroyOfSCProcessClientTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(PrematureDestroyOfSCProcessClientTest.class);
+	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfSCProcessClientTest.class);
 
 	private Process scProcess;
 	private Process srvProcess;
@@ -43,8 +42,9 @@ public class PrematureDestroyOfSCProcessClientTest {
 		threadCount = Thread.activeCount();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-			srvProcess = ctrl.startServer(TestConstants.publishSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
-					TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNamePublish });
+			srvProcess = ctrl.startServer(TestConstants.publishSrv, TestConstants.log4jSrvProperties,
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
+					new String[] { TestConstants.serviceNamePublish });
 		} catch (Exception e) {
 			logger.error("setUp", e);
 		}
@@ -71,14 +71,16 @@ public class PrematureDestroyOfSCProcessClientTest {
 	public static void oneTimeTearDown() throws Exception {
 		ctrl = null;
 	}
-	
+
 	@Test
 	public void subscribe_withoutSC_throwsException() throws Exception {
 		ctrl.stopProcess(scProcess, TestConstants.log4jSrvProperties);
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			service.subscribe(TestConstants.mask, "sessionInfo", 300,
-					new DemoPublishClientCallback(service));
+			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			subscibeMessage.setMask(TestConstants.mask);
+			subscibeMessage.setSessionInfo("sessionInfo");
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -89,8 +91,10 @@ public class PrematureDestroyOfSCProcessClientTest {
 	@Test
 	public void unsubscribe_withoutSC_throwsException() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		service.subscribe(TestConstants.mask, "sessionInfo", 300,
-				new DemoPublishClientCallback(service));
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 
 		ctrl.stopProcess(scProcess, TestConstants.log4jSrvProperties);
 
@@ -105,8 +109,11 @@ public class PrematureDestroyOfSCProcessClientTest {
 	@Test
 	public void publish_withoutSC_noMessagesReceived() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		DemoPublishClientCallback callback = new DemoPublishClientCallback(service); 
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, callback);
+		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 
 		ctrl.stopProcess(scProcess, TestConstants.log4jSrvProperties);
 
@@ -126,9 +133,11 @@ public class PrematureDestroyOfSCProcessClientTest {
 	@Test
 	public void publish_afterReceivingAMessageWaitFor5Seconds_noOtherMessagesReceived() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		DemoPublishClientCallback callback = new DemoPublishClientCallback(service); 
-		service.subscribe(TestConstants.mask, "sessionInfo", 300, callback);
-
+		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
+		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		subscibeMessage.setMask(TestConstants.mask);
+		subscibeMessage.setSessionInfo("sessionInfo");
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 
 		try {
 			for (int i = 0; i < 30; i++) {
