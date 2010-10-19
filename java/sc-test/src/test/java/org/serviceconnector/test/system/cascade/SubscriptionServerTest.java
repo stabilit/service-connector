@@ -205,21 +205,21 @@ public class SubscriptionServerTest {
 		}
 
 		@Override
-		public SCMessage changeSubscription(SCMessage message) {
+		public SCMessage changeSubscription(SCMessage message, int operationTimeoutInMillis) {
 			messagesExchanged++;
 			changeSubMsg = message;
 			return message;
 		}
 
 		@Override
-		public SCMessage subscribe(SCMessage message) {
+		public SCMessage subscribe(SCMessage message, int operationTimeoutInMillis) {
 			messagesExchanged++;
 			subscribeMsg = message;
 			return message;
 		}
 
 		@Override
-		public void unsubscribe(SCMessage message) {
+		public void unsubscribe(SCMessage message, int operationTimeoutInMillis) {
 			messagesExchanged++;
 			unsubscribeMsg = message;
 		}

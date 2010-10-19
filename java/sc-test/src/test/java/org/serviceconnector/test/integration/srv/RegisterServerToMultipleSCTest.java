@@ -230,7 +230,7 @@ public class RegisterServerToMultipleSCTest {
 	private class CallBack extends SCSessionServerCallback {
 
 		@Override
-		public SCMessage execute(SCMessage message) {
+		public SCMessage execute(SCMessage message, int operationTimeoutInMillis) {
 			return null;
 		}
 	}

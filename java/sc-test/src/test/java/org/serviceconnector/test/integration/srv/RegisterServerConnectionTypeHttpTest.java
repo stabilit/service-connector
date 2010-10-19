@@ -102,12 +102,13 @@ public class RegisterServerConnectionTypeHttpTest {
 		server.deregisterServer(TestConstants.serviceName);
 	}
 
-	// TODO verify with jan
-	@Test(expected=SCServiceException.class)
+	@Test
 	public void registerServer_withDisabledService_isRegistered() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.serviceNameSessionDisabled, 1,
 				1, new CallBack());
+		assertEquals(true, server.isRegistered(TestConstants.serviceNameSessionDisabled));
+		server.deregisterServer(TestConstants.serviceNameSessionDisabled);
 	}
 
 	@Test
@@ -707,7 +708,7 @@ public class RegisterServerConnectionTypeHttpTest {
 	private class CallBack extends SCSessionServerCallback {
 
 		@Override
-		public SCMessage execute(SCMessage message) {
+		public SCMessage execute(SCMessage message, int operationTimeoutInMillis) {
 			return null;
 		}
 	}

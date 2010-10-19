@@ -223,7 +223,7 @@ public class SessionServerTest {
 		}
 
 		@Override
-		public SCMessage createSession(SCMessage message) {
+		public SCMessage createSession(SCMessage message, int operationTimeoutInMillis) {
 			messagesExchanged++;
 			createSessionMsg = message;
 			if (message.getData() != null && message.getData() instanceof String) {
@@ -247,19 +247,19 @@ public class SessionServerTest {
 		}
 
 		@Override
-		public void deleteSession(SCMessage message) {
+		public void deleteSession(SCMessage message, int operationTimeoutInMillis) {
 			messagesExchanged++;
 			deleteSessionMsg = message;
 		}
 
 		@Override
-		public void abortSession(SCMessage message) {
+		public void abortSession(SCMessage message, int operationTimeoutInMillis) {
 			messagesExchanged++;
 			abortSessionMsg = message;
 		}
 
 		@Override
-		public SCMessage execute(SCMessage request) {
+		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
 			messagesExchanged++;
 			Object data = request.getData();
 			// watch out for timeout server message

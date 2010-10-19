@@ -195,12 +195,12 @@ public class SetupTestCases {
 		private static int count = 100;
 
 		@Override
-		public void abortSession(SCMessage message) {
+		public void abortSession(SCMessage message, int operationTimeoutInMillis) {
 			this.waitABit();
 		}
 
 		@Override
-		public SCMessage createSession(SCMessage message) {
+		public SCMessage createSession(SCMessage message, int operationTimeoutInMillis) {
 			this.waitABit();
 			Object data = message.getData();
 			if (data instanceof String) {
@@ -224,12 +224,12 @@ public class SetupTestCases {
 		}
 
 		@Override
-		public void deleteSession(SCMessage message) {
+		public void deleteSession(SCMessage message, int operationTimeoutInMillis) {
 			this.waitABit();
 		}
 
 		@Override
-		public SCMessage execute(SCMessage message) {
+		public SCMessage execute(SCMessage message, int operationTimeoutInMillis) {
 			Object data = message.getData();
 			if (data instanceof String) {
 				String body = (String) data;
@@ -301,7 +301,7 @@ public class SetupTestCases {
 	private static class PublishServerCallback extends SCPublishServerCallback {
 
 		@Override
-		public SCMessage changeSubscription(SCMessage message) {
+		public SCMessage changeSubscription(SCMessage message, int operationTimeoutInMillis) {
 			Object obj = message.getData();
 			if (obj != null && obj instanceof String) {
 				String data = (String) obj;
@@ -319,7 +319,7 @@ public class SetupTestCases {
 		}
 
 		@Override
-		public SCMessage subscribe(SCMessage message) {
+		public SCMessage subscribe(SCMessage message, int operationTimeoutInMillis) {
 			Object obj = message.getData();
 			if (obj != null && obj instanceof String) {
 				String data = (String) obj;
@@ -339,7 +339,7 @@ public class SetupTestCases {
 		}
 
 		@Override
-		public void unsubscribe(SCMessage message) {
+		public void unsubscribe(SCMessage message, int operationTimeoutInMillis) {
 		}
 	}
 

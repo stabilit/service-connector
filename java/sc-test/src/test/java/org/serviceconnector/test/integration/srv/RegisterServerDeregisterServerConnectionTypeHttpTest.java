@@ -178,7 +178,7 @@ public class RegisterServerDeregisterServerConnectionTypeHttpTest {
 	private class CallBack extends SCSessionServerCallback {
 
 		@Override
-		public SCMessage execute(SCMessage message) {
+		public SCMessage execute(SCMessage message, int operationTimeoutInMillis) {
 			return null;
 		}
 	}

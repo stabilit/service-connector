@@ -102,7 +102,7 @@ public class StartSessionServer {
 		}
 
 		@Override
-		public SCMessage createSession(SCMessage message) {
+		public SCMessage createSession(SCMessage message, int operationTimeoutInMillis) {
 			logger.info("SessionServer.SrvCallback.createSession()\n" + message.getData());
 			if (message.getData() != null && message.getData() instanceof String) {
 				String dataString = (String) message.getData();
@@ -125,17 +125,17 @@ public class StartSessionServer {
 		}
 
 		@Override
-		public void deleteSession(SCMessage message) {
+		public void deleteSession(SCMessage message, int operationTimeoutInMillis) {
 			logger.trace("SessionServer.SrvCallback.deleteSession()");
 		}
 
 		@Override
-		public void abortSession(SCMessage message) {
+		public void abortSession(SCMessage message, int operationTimeoutInMillis) {
 			logger.trace("SessionServer.SrvCallback.abortSession()");
 		}
 
 		@Override
-		public SCMessage execute(SCMessage request) {
+		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
 			ctr.increment();
 
 			Object data = request.getData();
@@ -174,8 +174,8 @@ public class StartSessionServer {
 						if (!alreadyPresentService) {
 							if (!scSrv.isRegistered(serviceName)) {
 								try {
-									scSrv.registerServer(TestConstants.HOST, port, serviceName, 1000, maxCons, new SrvCallback(
-											new SessionServerContext()));
+									scSrv.registerServer(TestConstants.HOST, port, serviceName, 1000, maxCons,
+											new SrvCallback(new SessionServerContext()));
 									String[] services = new String[serviceNames.length + 1];
 									System.arraycopy(serviceNames, 0, services, 0, serviceNames.length);
 									services[serviceNames.length] = serviceName;

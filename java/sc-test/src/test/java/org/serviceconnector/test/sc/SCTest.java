@@ -40,6 +40,7 @@ import org.serviceconnector.test.sc.net.DefaultFrameDecoderTestCase;
 import org.serviceconnector.test.sc.net.HttpFrameDecoderTestCase;
 import org.serviceconnector.test.sc.net.KeepAliveMessageEncoderDecoderTestCase;
 import org.serviceconnector.test.sc.net.LargeMessageEncoderDecoderTestCase;
+import org.serviceconnector.test.sc.operationTimeout.SrvExecuteOTITestCase;
 import org.serviceconnector.test.sc.publish.PublishLargeMessagesTestCase;
 import org.serviceconnector.test.sc.register.DeRegisterServerTestCase;
 import org.serviceconnector.test.sc.register.RegisterServerTestCase;
@@ -79,6 +80,7 @@ import org.serviceconnector.test.sc.util.ValidatorUtilityTestCase;
 		SrvExecuteLargeSyncTestCase.class, // 
 		SrvExecuteAsyncTestCase.class,// 
 		SrvExecuteLargeAsyncTestCase.class, //
+		SrvExecuteOTITestCase.class, //
 		ClnSubscribeTestCase.class, //
 		ClnSubscribeWaitMechanismTestCase.class, //
 		ClnChangeSubscriptionTestCase.class, //

@@ -101,11 +101,13 @@ public class RegisterServerConnectionTypeTcpTest {
 		server.deregisterServer(TestConstants.serviceName);
 	}
 
-	@Test(expected = SCServiceException.class)
+	@Test
 	public void registerServer_withDisabledService_throwsException() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSessionDisabled, 1,
 				1, new CallBack());
+		assertEquals(true, server.isRegistered(TestConstants.serviceNameSessionDisabled));
+		server.deregisterServer(TestConstants.serviceNameSessionDisabled);
 	}
 
 	@Test
@@ -715,7 +717,7 @@ public class RegisterServerConnectionTypeTcpTest {
 	private class CallBack extends SCSessionServerCallback {
 
 		@Override
-		public SCMessage execute(SCMessage message) {
+		public SCMessage execute(SCMessage message, int operationTimeoutInMillis) {
 			return null;
 		}
 	}

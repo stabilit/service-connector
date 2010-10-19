@@ -160,19 +160,19 @@ public class StartPublishServer {
 		}
 
 		@Override
-		public SCMessage changeSubscription(SCMessage message) {
+		public SCMessage changeSubscription(SCMessage message, int operationTimeoutInMillis) {
 			logger.trace("PublishServer.SrvCallback.changeSubscription()");
 			return message;
 		}
 
 		@Override
-		public SCMessage subscribe(SCMessage message) {
+		public SCMessage subscribe(SCMessage message, int operationTimeoutInMillis) {
 			logger.trace("PublishServer.SrvCallback.subscribe()");
 			return message;
 		}
 
 		@Override
-		public void unsubscribe(SCMessage message) {
+		public void unsubscribe(SCMessage message, int operationTimeoutInMillis) {
 			logger.trace("PublishServer.SrvCallback.unsubscribe()");
 			Object data = message.getData();
 			// watch out for kill server message
