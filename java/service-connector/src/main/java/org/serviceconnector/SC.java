@@ -114,6 +114,7 @@ public final class SC {
 		Statistics statistics = Statistics.getInstance();
 		statistics.setStartupDateTime(new Timestamp(Calendar.getInstance().getTime().getTime()));
 
+		
 		// load services
 		ServiceLoader.load(configFileName);
 
