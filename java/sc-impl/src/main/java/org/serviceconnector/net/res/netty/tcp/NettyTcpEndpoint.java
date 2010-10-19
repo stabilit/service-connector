@@ -148,15 +148,15 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 				future.addListener(operationListener);
 				try {
 					operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
-				} catch (CommunicationException ex) { //TODO TRN should this exception be handled or signaled?
-					logger.error("disconnect", ex);
+				} catch (CommunicationException ex) {
+					logger.error("disconnect", ex); // stopListening must continue
 				}
 			}
 			if (this.serverThread != null) {
 				this.serverThread.interrupt();
 			}
 		} catch (Exception ex) {
-			logger.error("stop listening", ex);
+			logger.error("stop listening", ex); // stopListening must continue
 			return;
 		}
 	}

@@ -31,6 +31,7 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommand;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.PerformanceLogger;
 import org.serviceconnector.net.res.IResponderCallback;
