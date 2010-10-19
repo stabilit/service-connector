@@ -110,13 +110,13 @@ public class DemoPublishServer {
 		}
 
 		@Override
-		public SCMessage changeSubscription(SCMessage message) {
+		public SCMessage changeSubscription(SCMessage message, int operationTimeoutInMillis) {
 			logger.info("PublishServer.SrvCallback.changeSubscription()");
 			return message;
 		}
 
 		@Override
-		public SCMessage subscribe(SCMessage message) {
+		public SCMessage subscribe(SCMessage message, int operationTimeoutInMillis) {
 			logger.info("PublishServer.SrvCallback.subscribe()");
 			try {
 				Thread.sleep(10000);
@@ -127,7 +127,7 @@ public class DemoPublishServer {
 		}
 
 		@Override
-		public void unsubscribe(SCMessage message) {
+		public void unsubscribe(SCMessage message, int operationTimeoutInMillis) {
 			logger.info("PublishServer.SrvCallback.unsubscribe()");
 			Object data = message.getData();
 			// watch out for kill server message

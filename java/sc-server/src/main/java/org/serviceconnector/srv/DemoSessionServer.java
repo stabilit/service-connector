@@ -71,23 +71,23 @@ public class DemoSessionServer {
 		}
 
 		@Override
-		public SCMessage createSession(SCMessage message) {
+		public SCMessage createSession(SCMessage message, int operationTimeoutInMillis) {
 			logger.info("SessionServer.SrvCallback.createSession()");
 			return message;
 		}
 
 		@Override
-		public void deleteSession(SCMessage message) {
+		public void deleteSession(SCMessage message, int operationTimeoutInMillis) {
 			logger.info("SessionServer.SrvCallback.deleteSession()");
 		}
 
 		@Override
-		public void abortSession(SCMessage message) {
+		public void abortSession(SCMessage message, int operationTimeoutInMillis) {
 			logger.info("SessionServer.SrvCallback.abortSession()");
 		}
 
 		@Override
-		public SCMessage execute(SCMessage request) {
+		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
 			Object data = request.getData();
 			logger.info("Message received: " + data);
 			// TODO JOT
