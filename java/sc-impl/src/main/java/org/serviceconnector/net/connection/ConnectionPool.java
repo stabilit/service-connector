@@ -202,7 +202,7 @@ public class ConnectionPool {
 			logger.warn("connection does not exist in pool - not possible to free");
 			return;
 		}
-		if (closeOnFree && this.freeConnections.size() > 0) {
+		if (closeOnFree && (this.freeConnections.size() + this.usedConnections.size()) > this.minConnections) {
 			// do not add the connection to free pool array - just close it immediately!
 			// at least keep one connection alive
 			this.disconnectConnection(connection);
@@ -387,7 +387,7 @@ public class ConnectionPool {
 		}
 		if (connection.getNrOfIdlesInSequence() > Constants.DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE) {
 			// connection has been idle for the DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE times
-			if (this.freeConnections.size() + this.usedConnections.size() > this.minConnections) {
+			if ((this.freeConnections.size() + this.usedConnections.size()) > this.minConnections) {
 				// there are still enough (totalCons > minConnections) free - disconnect this one
 				this.disconnectConnection(connection);
 				return;
@@ -398,7 +398,7 @@ public class ConnectionPool {
 		try {
 			ConnectionPoolCallback callback = new ConnectionPoolCallback();
 			connection.send(keepAliveMessage, callback);
-			callback.getMessageSync(Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
+			callback.getMessageSync(Constants.KEEP_ALIVE_TIMEOUT);
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception ex) {

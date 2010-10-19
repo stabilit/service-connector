@@ -24,8 +24,6 @@ import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
-import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
@@ -185,9 +183,9 @@ public class Requester implements IRequester {
 		@Override
 		public void timeout() {
 			this.disconnectConnection();
-			SCMPFault fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, "getting message took too long");
 			try {
-				this.scmpCallback.callback(fault);
+				this.scmpCallback
+						.callback(new IdleTimeoutException("idle timeout. operation - could not be completed."));
 			} catch (Exception e) {
 				this.scmpCallback.callback(e);
 			}

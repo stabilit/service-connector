@@ -50,8 +50,6 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyWebResponderRequestHandler.class);
 
-	private int counter = 0;
-
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {

@@ -17,24 +17,19 @@
 package org.serviceconnector.cmd.sc;
 
 import java.net.InetSocketAddress;
-import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.Server;
-import org.serviceconnector.service.Session;
-import org.serviceconnector.service.SessionServer;
+import org.serviceconnector.service.StatefulServer;
 
 /**
  * The Class DeRegisterServerCommand. Responsible for validation and execution of deregister command. Used to
@@ -46,9 +41,6 @@ public class DeRegisterServerCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DeRegisterServerCommand.class);
-
-	private static final String ABORT_SESSION_ERROR_STRING = SCMPError.SESSION_ABORT.getErrorText()
-			+ "[deregister server]";
 
 	/**
 	 * Instantiates a new DeRegisterServerCommand.
@@ -71,26 +63,11 @@ public class DeRegisterServerCommand extends CommandAdapter {
 
 		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		// looks up server & validate server is registered
-		SessionServer server = this.getSessionServerByName(serverKey);
+		StatefulServer server = this.getSessionServerByName(serverKey);
 		// deregister server from service
 		server.getService().removeServer(server);
 
-		List<AbstractSession> serverSessions = server.getSessions();
-		DeRegisterServerCommmandCallback callback = new DeRegisterServerCommmandCallback();
-		// set up abort message
-		SCMPMessage abortMsg = new SCMPMessage();
-		abortMsg.setServiceName(serviceName);
-		abortMsg.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-		abortMsg.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, DeRegisterServerCommand.ABORT_SESSION_ERROR_STRING);
-
-		// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
-		for (AbstractSession session : serverSessions) {
-			this.sessionRegistry.removeSession((Session) session);
-			abortMsg.setSessionId(session.getId());
-			server.serverAbortSession(abortMsg, callback, Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
-		}
-		// release all resources used by server, disconnects requester
-		server.destroy();
+		server.abortSessionsAndDestroy();
 		this.serverRegistry.removeServer(serverKey);
 
 		SCMPMessage scmpReply = new SCMPMessage();
@@ -132,32 +109,16 @@ public class DeRegisterServerCommand extends CommandAdapter {
 	 * @throws SCMPCommandException
 	 *             the sCMP command exception
 	 */
-	public SessionServer getSessionServerByName(String key) throws SCMPCommandException {
+	public StatefulServer getSessionServerByName(String key) throws SCMPCommandException {
 		Server server = this.serverRegistry.getServer(key);
 
-		if (server == null || (server instanceof SessionServer) == false) {
+		if (server == null || (server instanceof StatefulServer) == false) {
 			// no available server for this service
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
 					"server not registered, key " + key);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
-		return (SessionServer) server;
-	}
-
-	/**
-	 * The Class DeRegisterServerCommmandCallback. It's used as callback for abort sessions. Callback can be ignored.
-	 */
-	private class DeRegisterServerCommmandCallback implements ISCMPCallback {
-
-		@Override
-		public void callback(SCMPMessage scmpReply) throws Exception {
-			// nothing to do
-		}
-
-		@Override
-		public void callback(Exception th) {
-			// nothing to do
-		}
+		return (StatefulServer) server;
 	}
 }

@@ -37,8 +37,6 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyTcpProxyResponderRequestHandler.class);
 
-	private int counter = 0;
-
 	private final ClientSocketChannelFactory cf;
 	private final String remoteHost;
 	private final int remotePort;
@@ -119,8 +117,7 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 		}
 
 		/**
-		 * Closes the specified channel after all queued write requests are
-		 * flushed.
+		 * Closes the specified channel after all queued write requests are flushed.
 		 */
 		static void closeOnFlush(Channel ch) {
 			if (ch.isConnected()) {

@@ -46,6 +46,7 @@ public class FileUploadCommand extends CommandAdapter {
 
 		FileService service = this.validateFileService(serviceName);
 		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+
 	}
 
 	/** {@inheritDoc} */

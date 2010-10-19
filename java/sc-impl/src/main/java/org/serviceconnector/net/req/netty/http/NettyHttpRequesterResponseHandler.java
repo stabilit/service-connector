@@ -33,7 +33,6 @@ import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.Statistics;
 
-
 /**
  * The Class NettyHttpROequesterResponseHandler.
  * 
@@ -43,18 +42,27 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpRequesterResponseHandler.class);
-
 	/** The Constant connectionLogger. */
 	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-
+	/** The scmp callback. */
 	private ISCMPCallback scmpCallback;
+	/** The pending request. */
 	private volatile boolean pendingRequest;
 
+	/**
+	 * Instantiates a new netty http requester response handler.
+	 */
 	public NettyHttpRequesterResponseHandler() {
 		this.scmpCallback = null;
 		this.pendingRequest = false;
 	}
 
+	/**
+	 * Sets the callback.
+	 * 
+	 * @param scmpCallback
+	 *            the new callback
+	 */
 	public void setCallback(ISCMPCallback scmpCallback) {
 		this.scmpCallback = scmpCallback;
 		this.pendingRequest = true;
@@ -66,7 +74,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
-			this.callback((HttpResponse) e.getMessage());
+			this.responseReceived((HttpResponse) e.getMessage());
 			return;
 		}
 		// unsolicited input, message not expected - race condition
@@ -93,7 +101,15 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		logger.info(th.toString());
 	}
 
-	private void callback(HttpResponse httpResponse) throws Exception {
+	/**
+	 * Response received.
+	 * 
+	 * @param httpResponse
+	 *            the http response
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void responseReceived(HttpResponse httpResponse) throws Exception {
 		SCMPMessage ret = null;
 		try {
 			ChannelBuffer content = httpResponse.getContent();
@@ -103,12 +119,13 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			if (connectionLogger.isEnabledFull()) {
 				connectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
 			}
-			
+
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			IEncoderDecoder encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory().createEncoderDecoder(buffer);
+			IEncoderDecoder encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory()
+					.createEncoderDecoder(buffer);
 			ret = (SCMPMessage) encoderDecoder.decode(bais);
 		} catch (Exception ex) {
-			logger.info("receive"+ex.toString());
+			logger.info("receive" + ex.toString());
 			this.scmpCallback.callback(ex);
 			return;
 		}

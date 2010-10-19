@@ -129,11 +129,17 @@ public abstract class Configuration {
 			boolean messageCache = Boolean.parseBoolean(messageCacheString);
 			Constants.setMessageCache(messageCache);
 		}
-		
+
 		String keepAliveString = this.configurations.getString(Constants.ROOT_KEEP_ALIVE_TIMEOUT_QUALIFIER);
 		if (keepAliveString != null) {
 			boolean messageCache = Boolean.parseBoolean(messageCacheString);
 			Constants.setMessageCache(messageCache);
+		}
+
+		String srvAbortTimeoutString = this.configurations.getString(Constants.ROOT_SERVER_ABORT_TIMEOUT_QUALIFIER);
+		if (srvAbortTimeoutString != null) {
+			int srvAbortTimeout = Integer.parseInt(srvAbortTimeoutString);
+			Constants.setServerAbortTimeout(srvAbortTimeout);
 		}
 	}
 

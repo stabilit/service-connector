@@ -66,12 +66,11 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		scMessage.setData(reqMessage.getBody());
 		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		// TODO JOT
-		// scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		scMessage.setSessionId(reqMessage.getSessionId());
 
 		// inform callback with scMessages
-		SCMessage scReply = srvService.getCallback().execute(scMessage);
+		SCMessage scReply = srvService.getCallback().execute(scMessage,
+				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 
 		// handling messageId
 		SCMPMessageId messageId = SrvCommandAdapter.sessionCompositeRegistry

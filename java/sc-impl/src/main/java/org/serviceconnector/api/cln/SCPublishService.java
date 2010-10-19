@@ -46,8 +46,6 @@ public class SCPublishService extends SCService {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCPublishService.class);
-
-	private volatile boolean subscribed = false;
 	private int noDataInterval;
 	private SCMessageCallback scMessageCallback;
 
@@ -86,7 +84,7 @@ public class SCPublishService extends SCService {
 	 */
 	public synchronized void changeSubscription(SCSubscibeMessage scSubscribeMessage, int timeoutInSeconds)
 			throws Exception {
-		if (this.subscribed == false) {
+		if (this.sessionActive == false) {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
 		}
 		if (scSubscribeMessage == null) {
@@ -125,7 +123,7 @@ public class SCPublishService extends SCService {
 	 */
 	public synchronized void subscribe(SCSubscibeMessage scSubscribeMessage, SCMessageCallback scMessageCallback,
 			int timeoutInSeconds) throws Exception {
-		if (this.subscribed) {
+		if (this.sessionActive) {
 			throw new SCServiceException("already subscribed");
 		}
 		if (scSubscribeMessage == null) {
@@ -148,17 +146,17 @@ public class SCPublishService extends SCService {
 		try {
 			subscribeCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			this.subscribed = false;
+			this.sessionActive = false;
 			throw new SCServiceException("subscribe failed", e);
 		}
 		SCMPMessage reply = callback.getMessageSync();
 		if (reply.isFault()) {
-			this.subscribed = false;
+			this.sessionActive = false;
 			SCMPFault fault = (SCMPFault) reply;
 			throw new SCServiceException("subscribe failed", fault.getCause());
 		}
 		this.sessionId = reply.getSessionId();
-		this.subscribed = true;
+		this.sessionActive = true;
 		this.receivePublication();
 	}
 
@@ -168,7 +166,7 @@ public class SCPublishService extends SCService {
 	 * @return true, if is subscribed
 	 */
 	public boolean isSubscribed() {
-		return this.subscribed;
+		return this.sessionActive;
 	}
 
 	/**
@@ -178,7 +176,7 @@ public class SCPublishService extends SCService {
 	 *             the exception
 	 */
 	private synchronized void receivePublication() throws Exception {
-		if (this.subscribed == false || this.sessionId == null) {
+		if (this.sessionActive == false || this.sessionId == null) {
 			return;
 		}
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
@@ -208,7 +206,7 @@ public class SCPublishService extends SCService {
 	 *             the exception
 	 */
 	public synchronized void unsubscribe(int timeoutInSeconds) throws Exception {
-		if (this.subscribed == false) {
+		if (this.sessionActive == false) {
 			// unsubscribe not possible - not subscribed on this service just
 			// ignore
 			return;
@@ -230,7 +228,7 @@ public class SCPublishService extends SCService {
 				throw new SCServiceException("unsubscribe failed", fault.getCause());
 			}
 		} finally {
-			this.subscribed = false;
+			this.sessionActive = false;
 			this.sessionId = null;
 		}
 	}
@@ -254,7 +252,7 @@ public class SCPublishService extends SCService {
 		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage reply) {
-			if (SCPublishService.this.subscribed == false) {
+			if (SCPublishService.this.sessionActive == false) {
 				// client is not subscribed anymore - stop continuing
 				return;
 			}
@@ -264,7 +262,7 @@ public class SCPublishService extends SCService {
 				super.callback(fault.getCause());
 				return;
 			}
-			if (SCPublishService.this.subscribed) {
+			if (SCPublishService.this.sessionActive) {
 				// client is still subscribed - CRP again
 				try {
 					SCPublishService.this.receivePublication();

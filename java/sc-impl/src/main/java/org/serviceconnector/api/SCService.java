@@ -44,6 +44,8 @@ public abstract class SCService {
 	private SCContext scContext;
 	/** The sc service context. */
 	protected SCServiceContext scServiceContext;
+	/** The session active, marks state of a session. */
+	protected volatile boolean sessionActive = false;
 
 	/**
 	 * Instantiates a new service.
@@ -55,6 +57,7 @@ public abstract class SCService {
 	 */
 	public SCService(String serviceName, SCContext scContext) {
 		this.serviceName = serviceName;
+		this.sessionActive = false;
 		this.sessionId = null;
 		this.pendingRequest = false;
 		this.msgId = new SCMPMessageId();
@@ -84,6 +87,22 @@ public abstract class SCService {
 	 */
 	public SCContext getSCContext() {
 		return scContext;
+	}
+
+	/**
+	 * Checks if session in service is active.
+	 * 
+	 * @return true, if is active
+	 */
+	public boolean isActive() {
+		return this.isActive();
+	}
+
+	/**
+	 * In activate session.
+	 */
+	public void inActivateSession() {
+		this.sessionActive = false;
 	}
 
 	/**

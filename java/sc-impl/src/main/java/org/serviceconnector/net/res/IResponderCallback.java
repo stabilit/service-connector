@@ -32,5 +32,5 @@ import org.serviceconnector.scmp.IResponse;
  */
 public interface IResponderCallback {
 
-	public abstract void callback(IRequest request, IResponse response);
+	public abstract void responseCallback(IRequest request, IResponse response);
 }

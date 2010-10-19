@@ -48,7 +48,7 @@ import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
-import org.serviceconnector.service.SessionServer;
+import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
@@ -192,9 +192,9 @@ public class DefaultXMLLoaderFactory {
 					// take a look into
 					writer.writeStartElement("details");
 					if (service instanceof StatefulService) {
-						List<SessionServer> serverList = ((StatefulService) service).getServerList();
+						List<StatefulServer> serverList = ((StatefulService) service).getServerList();
 						writer.writeStartElement("servers");
-						for (SessionServer server : serverList) {
+						for (StatefulServer server : serverList) {
 							writer.writeStartElement("server");
 							this.writeBean(writer, server);
 							writer.writeEndElement(); // close servers tag

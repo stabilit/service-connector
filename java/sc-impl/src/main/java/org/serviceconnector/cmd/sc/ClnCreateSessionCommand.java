@@ -30,7 +30,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.NoFreeSessionException;
 import org.serviceconnector.service.Session;
-import org.serviceconnector.service.SessionServer;
+import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.service.SessionService;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -76,7 +76,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 
 		// tries allocating a server for this session
-		SessionServer server = null;
+		StatefulServer server = null;
 		CommandCallback callback = null;
 		try {
 			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);

@@ -30,7 +30,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.Server;
+import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ValidatorUtility;
@@ -69,7 +69,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 		String serviceName = reqMessage.getServiceName();
 
 		Subscription subscription = this.getSubscriptionById(subscriptionId);
-		Server server = subscription.getServer();
+		StatefulServer server = subscription.getServer();
 
 		CommandCallback callback = new CommandCallback(true);
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);

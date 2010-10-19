@@ -124,6 +124,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 			startListenSync();
 		} catch (Exception ex) {
 			logger.error("start listening", ex);
+			this.destroy();
 		}
 	}
 

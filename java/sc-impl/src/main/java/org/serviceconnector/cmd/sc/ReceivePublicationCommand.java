@@ -93,7 +93,7 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 					.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID));
 			response.setSCMP(reply);
 			// message already gotten from queue no asynchronous process necessary call callback right away
-			communicatorCallback.callback(request, response);
+			communicatorCallback.responseCallback(request, response);
 			// set up subscription timeout again
 			this.subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
 			return;

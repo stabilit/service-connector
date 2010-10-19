@@ -29,7 +29,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Session;
-import org.serviceconnector.service.SessionServer;
+import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -65,7 +65,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		// delete entry from session registry
 		this.sessionRegistry.removeSession(session);
 
-		SessionServer server = session.getServer();
+		StatefulServer server = session.getServer();
 		CommandCallback callback;
 		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
@@ -80,14 +80,14 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			} catch (ConnectionPoolBusyException ex) {
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
-					this.cleanUpServer(server, message);
+					server.abortSessionsAndDestroy();
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SC_ERROR,
 							"no free connection on server for service " + message.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
 			} catch (Exception ex) {
-				this.cleanUpServer(server, message);
+				server.abortSessionsAndDestroy();
 				throw ex;
 			}
 			// sleep for a while and then try again
@@ -97,7 +97,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		SCMPMessage reply = callback.getMessageSync();
 
 		if (reply.isFault()) {
-			this.cleanUpServer(server, message);
+			server.abortSessionsAndDestroy();
 		}
 		// free server from session
 		server.removeSession(session);
@@ -105,24 +105,6 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		reply.setIsReply(true);
 		reply.setMessageType(getKey());
 		response.setSCMP(reply);
-	}
-
-	private void cleanUpServer(SessionServer server, SCMPMessage message) {
-		/**
-		 * error in deleting session process<br>
-		 * 1. deregister server from service<br>
-		 * 3. SRV_ABORT_SESSION (SAS) to server<br>
-		 * 4. destroy server<br>
-		 **/
-		server.getService().removeServer(server);
-		// set up server abort session message - don't forward messageId & include error stuff
-		message.removeHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-		message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-		message.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText()
-				+ " [delete session failed]");
-		// no need to get the reply so just put in a random command callback
-		server.serverAbortSession(message, new CommandCallback(false), Constants.OPERATION_TIMEOUT_MILLIS_SHORT);
-		server.destroy();
 	}
 
 	/** {@inheritDoc} */

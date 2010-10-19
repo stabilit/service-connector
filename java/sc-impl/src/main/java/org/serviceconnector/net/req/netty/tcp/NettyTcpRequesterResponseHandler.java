@@ -44,15 +44,25 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 
 	/** The Constant connectionLogger. */
 	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-
+	/** The scmp callback. */
 	private ISCMPCallback scmpCallback;
+	/** The pending request. */
 	private volatile boolean pendingRequest;
 
+	/**
+	 * Instantiates a new netty tcp requester response handler.
+	 */
 	public NettyTcpRequesterResponseHandler() {
 		this.scmpCallback = null;
 		this.pendingRequest = false;
 	}
 
+	/**
+	 * Sets the callback.
+	 * 
+	 * @param callback
+	 *            the new callback
+	 */
 	public void setCallback(ISCMPCallback callback) {
 		this.scmpCallback = callback;
 		this.pendingRequest = true;
@@ -63,7 +73,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
-			this.callback((ChannelBuffer) e.getMessage());
+			this.responseReceived((ChannelBuffer) e.getMessage());
 			return;
 		}
 		// unsolicited input, message not expected - race condition
@@ -89,7 +99,15 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		logger.info(th.toString());
 	}
 
-	private void callback(ChannelBuffer channelBuffer) throws Exception {
+	/**
+	 * Response received.
+	 * 
+	 * @param channelBuffer
+	 *            the channel buffer
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void responseReceived(ChannelBuffer channelBuffer) throws Exception {
 		SCMPMessage ret = null;
 		try {
 			byte[] buffer = new byte[channelBuffer.readableBytes()];
@@ -103,7 +121,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 					.createEncoderDecoder(buffer);
 			ret = (SCMPMessage) encoderDecoder.decode(bais);
 		} catch (Exception ex) {
-			logger.info("receive"+ex.toString());
+			logger.info("receive" + ex.toString());
 			this.scmpCallback.callback(ex);
 			return;
 		}

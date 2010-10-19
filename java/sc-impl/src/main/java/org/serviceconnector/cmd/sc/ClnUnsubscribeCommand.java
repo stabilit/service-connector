@@ -30,7 +30,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.SessionServer;
+import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -69,7 +69,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		this.subscriptionRegistry.removeSubscription(subscription);
 
 		// unsubscribe on backend server
-		SessionServer server = subscription.getServer();
+		StatefulServer server = subscription.getServer();
 
 		CommandCallback callback;
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
@@ -85,14 +85,14 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 			} catch (ConnectionPoolBusyException ex) {
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
-					server.removeSession(subscription);
+					server.abortSession(subscription);
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SC_ERROR,
 							"no free connection on server for service " + reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
 			} catch (Exception ex) {
-				server.removeSession(subscription);
+				server.abortSession(subscription);
 				throw ex;
 			}
 			// sleep for a while and then try again
@@ -100,8 +100,14 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		} while (++i < tries);
 
 		SCMPMessage reply = callback.getMessageSync();
-		// no specific error handling in case of fault - everything is done anyway
+
+		if (reply.isFault()) {
+			server.abortSessionsAndDestroy();
+		}
+
+		// free server from subscription
 		server.removeSession(subscription);
+		// forward server reply to client
 		reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 		reply.setIsReply(true);
 		reply.setMessageType(this.getKey());

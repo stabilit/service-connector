@@ -18,7 +18,6 @@ package org.serviceconnector.net.res.netty.http;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -31,7 +30,6 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommand;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.PerformanceLogger;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -40,7 +38,6 @@ import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
 import org.serviceconnector.net.res.netty.NettyHttpRequest;
 import org.serviceconnector.net.res.netty.NettyHttpResponse;
 import org.serviceconnector.registry.ServerRegistry;
-import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -53,10 +50,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
-import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.Server;
-import org.serviceconnector.service.Session;
-import org.serviceconnector.service.SessionServer;
+import org.serviceconnector.service.StatefulServer;
 
 /**
  * The Class NettyHttpResponderRequestHandler. This class is responsible for handling Http requests. Is called from the
@@ -226,7 +221,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 	/** {@inheritDoc} */
 	@Override
-	public void callback(IRequest request, IResponse response) {
+	public void responseCallback(IRequest request, IResponse response) {
 		try {
 			SCMPMessage scmpRequest = request.getMessage();
 			String sessionId = scmpRequest.getSessionId();
@@ -249,7 +244,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			response.write();
 		} catch (Exception ex) {
 			logger.error("send response", ex);
-			this.callback(response, ex);
+			this.faultResponseCallback(response, ex);
 		}
 	}
 
@@ -261,7 +256,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	 * @param ex
 	 *            the error
 	 */
-	public void callback(IResponse response, Exception ex) {
+	private void faultResponseCallback(IResponse response, Exception ex) {
 		if (ex instanceof HasFaultResponseException) {
 			((HasFaultResponseException) ex).setFaultResponse(response);
 		} else {
@@ -347,28 +342,16 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		String wildKey = "_" + host + "/" + port;
 
 		ServerRegistry serverRegistry = AppContext.getCurrentContext().getServerRegistry();
-		SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
 		Set<String> keySet = serverRegistry.keySet();
 
 		for (String key : keySet) {
 			if (key.endsWith(wildKey)) {
 				Server server = serverRegistry.getServer(key);
-				if ((server instanceof SessionServer) == false) {
+				if ((server instanceof StatefulServer) == false) {
 					continue;
 				}
-				SessionServer sessionServer = (SessionServer) server;
-				// deregister server from service
-				sessionServer.getService().removeServer(sessionServer);
-				List<AbstractSession> serverSessions = sessionServer.getSessions();
-
-				// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
-				for (AbstractSession session : serverSessions) {
-					sessionRegistry.removeSession((Session) session);
-					NettyHttpResponderRequestHandler.compositeRegistry.removeSession(session.getId());
-				}
-				// release all resources used by server, disconnects requester
-				server.destroy();
-				serverRegistry.removeServer(key);
+				StatefulServer statefulServer = (StatefulServer) server;
+				statefulServer.abortSessionsAndDestroy();
 			}
 		}
 	}

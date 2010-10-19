@@ -36,8 +36,8 @@ import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
+import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -73,7 +73,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		// cancel session timeout
 		this.sessionRegistry.cancelSessionTimeout(session);
 
-		Server server = session.getServer();
+		StatefulServer server = session.getServer();
 		// try sending to the server
 		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
@@ -200,7 +200,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		public void callback(SCMPMessage scmpReply) {
 			scmpReply.setMessageType(getKey());
 			this.response.setSCMP(scmpReply);
-			this.callback.callback(request, response);
+			this.callback.responseCallback(request, response);
 			// schedule session timeout
 			Session session = this.sessionRegistry.getSession(this.sessionId);
 			this.sessionRegistry.scheduleSessionTimeout(session);
@@ -209,10 +209,20 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		/** {@inheritDoc} */
 		@Override
 		public void callback(Exception ex) {
+			Session session = this.sessionRegistry.getSession(this.sessionId);
 			SCMPMessage fault = null;
 			if (ex instanceof IdleTimeoutException) {
-				// operation timeout handling
+				/**
+				 * OTI run out in server execute operation<br>
+				 * 1. delete session in registry<br>
+				 * 2. send EXC to client, timeout error<br>
+				 * 3. abort session on backend server<br>
+				 */
+				this.sessionRegistry.removeSession(session.getId());
 				fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, ERROR_STRING_TIMEOUT);
+				this.callback(fault);
+				session.getServer().abortSession(session);
+				return;
 			} else if (ex instanceof IOException) {
 				fault = new SCMPFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
 			} else {
@@ -220,7 +230,6 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			}
 			this.callback(fault);
 			// schedule session timeout
-			Session session = this.sessionRegistry.getSession(this.sessionId);
 			this.sessionRegistry.scheduleSessionTimeout(session);
 		}
 	}

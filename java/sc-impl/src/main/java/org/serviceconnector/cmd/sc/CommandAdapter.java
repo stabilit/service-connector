@@ -31,7 +31,6 @@ import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Service;
@@ -39,6 +38,7 @@ import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.SessionService;
+import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.Subscription;
 
 /**
@@ -212,6 +212,27 @@ public abstract class CommandAdapter implements ICommand {
 			// no session allowed for DISABLED service
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED,
 					"service: " + serviceName + " is disabled");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		return (StatefulService) service;
+	}
+
+	/**
+	 * Gets the stateful service. This method does not control the state of the service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the stateful service
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
+	protected StatefulService getStatefulService(String serviceName) throws SCMPCommandException {
+		Service service = this.validateServiceName(serviceName);
+		if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE) {
+			// no service known with incoming serviceName
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service: "
+					+ serviceName + " is not publish service");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}

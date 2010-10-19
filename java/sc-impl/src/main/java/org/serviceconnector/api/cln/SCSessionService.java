@@ -33,8 +33,9 @@ import org.serviceconnector.call.SCMPEchoCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
@@ -58,8 +59,6 @@ public class SCSessionService extends SCService {
 	private ITimerRun timerRun;
 	/** The timer task. */
 	private TimerTask timerTask;
-	/** The session active, marks state of a session. */
-	private volatile boolean sessionActive;
 	/** The sc response time milliseconds. */
 	private int scResponseTimeMillis;
 
@@ -76,7 +75,6 @@ public class SCSessionService extends SCService {
 		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.scServiceContext = new SCServiceContext(this);
 		this.timerRun = null;
-		this.sessionActive = false;
 		this.scResponseTimeMillis = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
 	}
 
@@ -127,7 +125,7 @@ public class SCSessionService extends SCService {
 		try {
 			createSessionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			throw new SCServiceException("create session failed", e);
+			throw new SCServiceException("create session failed ", e);
 		}
 		SCMPMessage reply = callback.getMessageSync();
 		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
@@ -189,7 +187,7 @@ public class SCSessionService extends SCService {
 					// ignore errors in state of dead session
 					return;
 				}
-				throw new SCServiceException("delete session failed", e);
+				throw new SCServiceException("delete session failed ", e);
 			}
 			SCMPMessage reply = callback.getMessageSync();
 			if (reply.isFault()) {
@@ -197,7 +195,7 @@ public class SCSessionService extends SCService {
 					// ignore errors in state of dead session
 					return;
 				}
-				throw new SCServiceException("delete session failed"
+				throw new SCServiceException("delete session failed "
 						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			}
 		} finally {
@@ -263,13 +261,24 @@ public class SCSessionService extends SCService {
 			clnExecuteCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
-			throw new SCServiceException("execute failed", e);
+			throw new SCServiceException("execute failed ", e);
 		}
 		// wait for message in callback
 		SCMPMessage reply = callback.getMessageSync();
 		this.pendingRequest = false;
 		if (reply.isFault()) {
-			throw new SCServiceException("execute failed" + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			SCMPFault fault = (SCMPFault) reply;
+			String errorCode = fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
+			if (errorCode != null && errorCode.equals(SCMPError.GATEWAY_TIMEOUT.getErrorCode())) {
+				// OTI run out on SC - mark session as dead!
+				this.sessionActive = false;
+			}
+			Exception ex = fault.getCause();
+			if (ex != null && ex instanceof IdleTimeoutException) {
+				// OTI run out on client - mark session as dead!
+				this.sessionActive = false;
+			}
+			throw new SCServiceException("execute failed " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}
 		// trigger session timeout
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
@@ -338,12 +347,12 @@ public class SCSessionService extends SCService {
 		}
 		clnExecuteCall.setCompressed(requestMsg.isCompressed());
 		clnExecuteCall.setRequestBody(requestMsg.getData());
-		ISCMPCallback scmpCallback = new SCServiceCallback(this, callback);
+		SCServiceCallback scmpCallback = new SCServiceCallback(this, callback);
 		try {
 			clnExecuteCall.invoke(scmpCallback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
-			throw new SCServiceException("execute failed", e);
+			throw new SCServiceException("execute failed ", e);
 		}
 	}
 

@@ -383,9 +383,9 @@ public class SCRequester implements IRequester {
 		@Override
 		public void timeout() {
 			this.disconnectConnection();
-			SCMPFault fault = new SCMPFault(SCMPError.REQUEST_TIMEOUT, "getting message took too long");
 			try {
-				this.scmpCallback.callback(fault);
+				this.scmpCallback
+						.callback(new IdleTimeoutException("idle timeout. operation - could not be completed."));
 			} catch (Exception e) {
 				this.scmpCallback.callback(e);
 			}

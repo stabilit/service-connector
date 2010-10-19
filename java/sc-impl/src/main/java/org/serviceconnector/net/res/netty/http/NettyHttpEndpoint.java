@@ -101,7 +101,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 
 	/** {@inheritDoc} */
 	@Override
-	public void startListenSync() throws Exception {
+	public synchronized void startListenSync() throws Exception {
 		try {
 			this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 			// adds responder to registry
@@ -132,7 +132,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void destroy() {
 		this.stopListening();
-		// this.bootstrap.releaseExternalResources();
+		this.bootstrap.releaseExternalResources();
 		this.channelFactory.releaseExternalResources();
 	}
 

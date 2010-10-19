@@ -24,12 +24,8 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.log.SessionLogger;
-import org.serviceconnector.scmp.ISCMPCallback;
-import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.Server;
 import org.serviceconnector.service.Session;
+import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
 
@@ -112,7 +108,7 @@ public class SessionRegistry extends Registry<String, Session> {
 
 	/**
 	 * Gets all sessions.
-	 *
+	 * 
 	 * @return the sessions
 	 */
 	public Session[] getSessions() {
@@ -131,7 +127,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Schedule session timeout.
 	 * 
@@ -180,17 +176,10 @@ public class SessionRegistry extends Registry<String, Session> {
 	 * broken.
 	 */
 	private class SessionTimerRun implements ITimerRun {
-
-		/** Error text in case of a session abortion. */
-		private static final String ABORT_SESSION_ERROR_STRING = "session timed out";
 		/** The session. */
 		private Session session;
 		/** The timeout. */
 		private double timeoutSeconds;
-		/** The callback, callback to send abort session. */
-		private ISCMPCallback callback;
-		/** The abort message, message to send to server in case of a session abortion. */
-		private SCMPMessage abortMessage;
 
 		/**
 		 * Instantiates a new session timer run.
@@ -201,10 +190,6 @@ public class SessionRegistry extends Registry<String, Session> {
 		public SessionTimerRun(Session session) {
 			this.session = session;
 			this.timeoutSeconds = session.getEchoIntervalSeconds();
-			this.callback = new SessionTimerRunCallback();
-			this.abortMessage = new SCMPMessage();
-			this.abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-			this.abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, ABORT_SESSION_ERROR_STRING);
 		}
 
 		/**
@@ -216,42 +201,18 @@ public class SessionRegistry extends Registry<String, Session> {
 			 * broken session procedure<br>
 			 * 1. remove session from session registry<br>
 			 * 2. abort session on backend server<br>
-			 * 3. remove session from server<br>
 			 */
 			SessionRegistry.this.removeSession(session);
-			Server server = session.getServer();
+			StatefulServer server = session.getServer();
 			// aborts session on server
-			abortMessage.setServiceName(server.getServiceName());
-			abortMessage.setSessionId(session.getId());
-			server.serverAbortSession(abortMessage, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-					* Constants.SEC_TO_MILLISEC_FACTOR);
-			// removes session on server
-			session.getServer().removeSession(session);
-			SessionLogger sessionLogger = SessionLogger.getInstance();
-			sessionLogger.logAbortSession(this.getClass().getName(), session.getId());
+			server.abortSession(session);
+			// TODO for jan.. log session timeout
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
 			return (int) (this.timeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		}
-
-		/**
-		 * The Class SessionTimerRunCallback. For abort session callback is irrelevant. Nobody is going to wait/evaluate
-		 * for the response.
-		 */
-		private class SessionTimerRunCallback implements ISCMPCallback {
-
-			@Override
-			public void callback(SCMPMessage scmpReply) throws Exception {
-				// nothing to do in callback
-			}
-
-			@Override
-			public void callback(Exception ex) {
-				// nothing to do in callback
-			}
 		}
 	}
 }

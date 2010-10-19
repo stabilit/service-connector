@@ -78,11 +78,13 @@ public class Responder implements IResponder {
 		this.endpoint.destroy();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public CommunicatorConfig getResponderConfig() {
 		return this.respConfig;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setResponderConfig(CommunicatorConfig respConfig) {
 		this.respConfig = respConfig;

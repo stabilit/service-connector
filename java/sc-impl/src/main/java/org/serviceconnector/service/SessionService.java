@@ -61,7 +61,7 @@ public class SessionService extends StatefulService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized SessionServer allocateServerAndCreateSession(SCMPMessage msgToForward, ISCMPCallback callback,
+	public synchronized StatefulServer allocateServerAndCreateSession(SCMPMessage msgToForward, ISCMPCallback callback,
 			Session session, int timeoutInMillis) throws Exception {
 
 		if (this.listOfServers.size() == 0) {
@@ -77,7 +77,7 @@ public class SessionService extends StatefulService {
 				// serverIndex reached the end of list no more servers
 				this.serverIndex = 0;
 			}
-			SessionServer server = this.listOfServers.get(serverIndex);
+			StatefulServer server = this.listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
 				server.createSession(msgToForward, callback, timeoutInMillis);
 				// store session - successful creation is not done here remove in command if not successful!!

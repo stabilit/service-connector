@@ -9,7 +9,7 @@ public abstract class AbstractSession {
 	/** The id. */
 	private String id;
 	/** The server. */
-	private SessionServer server;
+	private StatefulServer server;
 	/** The ip address list. */
 	private String ipAddressList;
 	/** The session info. */
@@ -45,7 +45,7 @@ public abstract class AbstractSession {
 	 * @param server
 	 *            the new server
 	 */
-	public void setServer(SessionServer server) {
+	public void setServer(StatefulServer server) {
 		this.server = server;
 	}
 
@@ -54,7 +54,7 @@ public abstract class AbstractSession {
 	 * 
 	 * @return the server
 	 */
-	public SessionServer getServer() {
+	public StatefulServer getServer() {
 		return this.server;
 	}
 

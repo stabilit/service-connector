@@ -60,12 +60,11 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setSessionInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
-		// TODO JOT
-		// scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
-		SCMessage scReply = srvService.getCallback().subscribe(scMessage);
+		SCMessage scReply = srvService.getCallback().subscribe(scMessage,
+				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 
 		// create session in SCMPSessionCompositeRegistry
 		SrvCommandAdapter.sessionCompositeRegistry.addSession(sessionId);

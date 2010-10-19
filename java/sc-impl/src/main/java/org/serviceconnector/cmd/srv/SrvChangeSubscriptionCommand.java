@@ -64,13 +64,12 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionId(reqMessage.getSessionId());
-		// TODO JOT
-		// scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		scMessage.setData(reqMessage.getBody());
 		reqMessage.setServiceName(serviceName);
 
 		// inform callback with scMessages
-		SCMessage scReply = srvService.getCallback().changeSubscription(scMessage);
+		SCMessage scReply = srvService.getCallback().changeSubscription(scMessage,
+				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		// handling messageId
 		SCMPMessageId messageId = SrvCommandAdapter.sessionCompositeRegistry
 				.getSCMPMessageId(reqMessage.getSessionId());

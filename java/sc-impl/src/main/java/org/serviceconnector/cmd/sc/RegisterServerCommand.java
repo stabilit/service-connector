@@ -29,9 +29,9 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.Server;
-import org.serviceconnector.service.SessionServer;
+import org.serviceconnector.service.StatefulServer;
+import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -66,7 +66,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 		// lookup service and checks properness
-		StatefulService service = this.validateStatefulService(serviceName);
+		StatefulService service = this.getStatefulService(serviceName);
 
 		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		// controls that server not has been registered before for specific service
@@ -78,7 +78,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		boolean immediateConnect = message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		int keepAliveInterval = message.getHeaderInt(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
 		// create new server
-		SessionServer server = new SessionServer(socketAddress, serviceName, portNr, maxSessions, maxConnections,
+		StatefulServer server = new StatefulServer(socketAddress, serviceName, portNr, maxSessions, maxConnections,
 				keepAliveInterval);
 		try {
 			if (immediateConnect) {

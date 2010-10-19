@@ -37,7 +37,7 @@ import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.IPublishTimerRun;
 import org.serviceconnector.service.NoFreeSessionException;
 import org.serviceconnector.service.PublishService;
-import org.serviceconnector.service.SessionServer;
+import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ValidatorUtility;
@@ -87,7 +87,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		int noDataIntervalSeconds = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 
-		SessionServer server = null;
+		StatefulServer server = null;
 		CommandCallback callback = null;
 		try {
 			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);

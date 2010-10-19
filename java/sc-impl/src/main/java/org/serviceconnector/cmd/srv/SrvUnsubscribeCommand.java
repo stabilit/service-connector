@@ -64,12 +64,11 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
 		scMessage.setData(reqMessage.getBody());
-		// TODO JOT
-		// scMessage.setOperationTimeout(Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		scMessage.setSessionId(sessionId);
 
 		// inform callback with scMessages
-		srvService.getCallback().unsubscribe(scMessage);
+		srvService.getCallback().unsubscribe(scMessage,
+				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 		// handling messageId
 		SCMPMessageId messageId = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMessageId(sessionId);
 		messageId.incrementMsgSequenceNr();

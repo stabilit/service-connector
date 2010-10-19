@@ -22,12 +22,9 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.log.SessionLogger;
-import org.serviceconnector.scmp.ISCMPCallback;
-import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.PublishService;
-import org.serviceconnector.service.Server;
+import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
@@ -155,14 +152,10 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 */
 	private class SubscriptionTimerRun implements ITimerRun {
 
-		/** Error text in case of a session abortion. */
-		private static final String ABORT_SUBSCRIPTION_ERROR_STRING = "subscription timed out";
 		/** The session. */
 		private Subscription subscription;
+
 		/** The callback, callback to send abort subscription. */
-		private ISCMPCallback callback;
-		/** The abort message, message to send to server in case of a subscription abortion. */
-		private SCMPMessage abortMessage;
 
 		/**
 		 * Instantiates a new subscription timer run.
@@ -172,10 +165,6 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		 */
 		public SubscriptionTimerRun(Subscription subscription) {
 			this.subscription = subscription;
-			this.callback = new SubscriptionTimerRunCallback();
-			this.abortMessage = new SCMPMessage();
-			this.abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-			this.abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, ABORT_SUBSCRIPTION_ERROR_STRING);
 		}
 
 		/**
@@ -186,47 +175,21 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			/**
 			 * broken subscription procedure<br>
 			 * 1. unsubscribe (discard messages for client) subscription in queue<br>
-			 * 2. remove subscription from subscription registry<br>
-			 * 3. abort subscription on backend server<br>
-			 * 4. remove subscription from server<br>
+			 * 2. abort subscription on backend server<br>
 			 */
 			SubscriptionQueue<SCMPMessage> subscriptionQueue = ((PublishService) subscription.getServer().getService())
 					.getSubscriptionQueue();
 			subscriptionQueue.unsubscribe(subscription.getId());
-			SubscriptionRegistry.this.removeSubscription(subscription);
-			Server server = subscription.getServer();
-			// aborts session on server
-			abortMessage.setServiceName(server.getServiceName());
-			abortMessage.setSessionId(subscription.getId());
-			server.serverAbortSession(abortMessage, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-					* Constants.SEC_TO_MILLISEC_FACTOR);
-			// removes session on server
-			subscription.getServer().removeSession(subscription);
-			SessionLogger sessionLogger = SessionLogger.getInstance();
-			sessionLogger.logAbortSession(this.getClass().getName(), subscription.getId());
+
+			StatefulServer server = subscription.getServer();
+			server.abortSession(subscription);
+			// TODO for jan.. log session timeout
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
 			return SubscriptionRegistry.this.subscriptionTimeout;
-		}
-
-		/**
-		 * The Class SessionTimerRunCallback. For abort session callback is irrelevant. Nobody is going to wait/evaluate
-		 * for the response.
-		 */
-		private class SubscriptionTimerRunCallback implements ISCMPCallback {
-
-			@Override
-			public void callback(SCMPMessage scmpReply) throws Exception {
-				// nothing to do in callback
-			}
-
-			@Override
-			public void callback(Exception ex) {
-				// nothing to do in callback
-			}
 		}
 	}
 }

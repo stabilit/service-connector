@@ -18,7 +18,6 @@ package org.serviceconnector.net.res.netty.tcp;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -38,7 +37,6 @@ import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
 import org.serviceconnector.net.res.netty.NettyTcpRequest;
 import org.serviceconnector.net.res.netty.NettyTcpResponse;
 import org.serviceconnector.registry.ServerRegistry;
-import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -51,10 +49,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
-import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.Server;
-import org.serviceconnector.service.Session;
-import org.serviceconnector.service.SessionServer;
+import org.serviceconnector.service.StatefulServer;
 
 /**
  * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the
@@ -67,10 +63,9 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(NettyTcpResponderRequestHandler.class);
-
 	/** The Constant performanceLogger. */
 	private final static PerformanceLogger performanceLogger = PerformanceLogger.getInstance();
-
+	/** The composite registry. */
 	private static SCMPSessionCompositeRegistry compositeRegistry = AppContext.getCurrentContext()
 			.getSCMPSessionCompositeRegistry();
 
@@ -223,7 +218,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 
 	/** {@inheritDoc} */
 	@Override
-	public void callback(IRequest request, IResponse response) {
+	public void responseCallback(IRequest request, IResponse response) {
 		try {
 			SCMPMessage scmpRequest = request.getMessage();
 			String sessionId = scmpRequest.getSessionId();
@@ -245,7 +240,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			response.write();
 		} catch (Exception ex) {
 			logger.error("send response", ex);
-			this.callback(response, ex);
+			this.faultResponseCallback(response, ex);
 		}
 	}
 
@@ -257,7 +252,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	 * @param ex
 	 *            the error
 	 */
-	public void callback(IResponse response, Exception ex) {
+	private void faultResponseCallback(IResponse response, Exception ex) {
 		if (ex instanceof HasFaultResponseException) {
 			((HasFaultResponseException) ex).setFaultResponse(response);
 		} else {
@@ -324,28 +319,16 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		String wildKey = "_" + host + "/" + port;
 
 		ServerRegistry serverRegistry = AppContext.getCurrentContext().getServerRegistry();
-		SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
 		Set<String> keySet = serverRegistry.keySet();
 
 		for (String key : keySet) {
 			if (key.endsWith(wildKey)) {
 				Server server = serverRegistry.getServer(key);
-				if ((server instanceof SessionServer) == false) {
+				if ((server instanceof StatefulServer) == false) {
 					continue;
 				}
-				SessionServer sessionServer = (SessionServer) server;
-				// deregister server from service
-				sessionServer.getService().removeServer(sessionServer);
-				List<AbstractSession> serverSessions = sessionServer.getSessions();
-
-				// aborts session on server - carefully don't modify list in loop ConcurrentModificationException
-				for (AbstractSession session : serverSessions) {
-					sessionRegistry.removeSession((Session) session);
-					NettyTcpResponderRequestHandler.compositeRegistry.removeSession(session.getId());
-				}
-				// release all resources used by server, disconnects requester
-				server.destroy();
-				serverRegistry.removeServer(key);
+				StatefulServer statefulServer = (StatefulServer) server;
+				statefulServer.abortSessionsAndDestroy();
 			}
 		}
 	}

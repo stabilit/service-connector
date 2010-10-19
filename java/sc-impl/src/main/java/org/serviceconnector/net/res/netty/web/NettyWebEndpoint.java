@@ -24,10 +24,13 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.CommunicationException;
 import org.serviceconnector.net.SCMPCommunicationException;
+import org.serviceconnector.net.req.netty.NettyOperationListener;
 import org.serviceconnector.net.res.EndpointAdapter;
 import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.scmp.SCMPError;
@@ -46,6 +49,7 @@ public class NettyWebEndpoint extends EndpointAdapter implements Runnable {
 	private ServerBootstrap bootstrap;
 	/** The channel. */
 	private Channel channel;
+	private Thread serverThread;
 	/** The host. */
 	private String host;
 	/** The port. */
@@ -63,6 +67,7 @@ public class NettyWebEndpoint extends EndpointAdapter implements Runnable {
 		this.host = null;
 		this.port = 0;
 		this.answer = new ArrayBlockingQueue<Boolean>(1);
+		this.serverThread = new Thread(this);
 	}
 
 	/** {@inheritDoc} */
@@ -76,8 +81,7 @@ public class NettyWebEndpoint extends EndpointAdapter implements Runnable {
 	/** {@inheritDoc} */
 	@Override
 	public void startsListenAsync() throws Exception {
-		Thread serverThread = new Thread(this);
-		serverThread.start();
+		this.serverThread.start();
 		Boolean bool = null;
 		try {
 			bool = this.answer.poll(Constants.CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
@@ -118,7 +122,7 @@ public class NettyWebEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			startListenSync();
 		} catch (Exception ex) {
-			logger.error("run", ex);
+			logger.error("start listening", ex);
 			this.destroy();
 		}
 	}
@@ -127,6 +131,7 @@ public class NettyWebEndpoint extends EndpointAdapter implements Runnable {
 	@Override
 	public void destroy() {
 		this.stopListening();
+		this.bootstrap.releaseExternalResources();
 		this.channelFactory.releaseExternalResources();
 	}
 
@@ -135,10 +140,23 @@ public class NettyWebEndpoint extends EndpointAdapter implements Runnable {
 	public void stopListening() {
 		try {
 			if (this.channel != null) {
-				this.channel.close();
+				// removes responder to registry
+				ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+				responderRegistry.removeResponder(this.channel.getId());
+				ChannelFuture future = this.channel.close();
+				NettyOperationListener operationListener = new NettyOperationListener();
+				future.addListener(operationListener);
+				try {
+					operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
+				} catch (CommunicationException ex) {
+					logger.error("disconnect", ex); // stopListening must continue
+				}
+			}
+			if (this.serverThread != null) {
+				this.serverThread.interrupt();
 			}
 		} catch (Exception ex) {
-			logger.error("stoppListening", ex);
+			logger.error("stop listening", ex); // stopListening must continue
 			return;
 		}
 	}

@@ -87,6 +87,15 @@ public final class Constants {
 	 */
 	public static int KEEP_ALIVE_TIMEOUT = DEFAULT_KEEP_ALIVE_TIMEOUT;
 	/**
+	 * DEFAULT_ABORT_SERVER_OTI_MILLIS: Default value if no ABORT_SERVER_OTI_MILLIS will be set by configuration.
+	 */
+	public static final int DEFAULT_SERVER_ABORT_OTI_MILLIS = 10000;
+	/**
+	 * ABORT_SERVER_OTI_MILLIS: This timeout is used to observe the reply of a abort session. If reply can not be
+	 * received within this time, server will be cleaned up.
+	 */
+	public static int SERVER_ABORT_OTI_MILLIS = DEFAULT_SERVER_ABORT_OTI_MILLIS;
+	/**
 	 * TECH_LEVEL_OPERATION_TIMEOUT_MILLIS: Is used to detect a technical operation timeout. It is the time a single
 	 * WRITE/READ/CLOSE/OPEN can have. Should be low/short.
 	 */
@@ -125,6 +134,8 @@ public final class Constants {
 	public static final String ROOT_SUBSCRIPTION_TIMEOUT_QUALIFIER = "root.subscriptionTimeout";
 	/** The Constant ROOT_KEEP_ALIVE_TIMEOUT_QUALIFIER. */
 	public static final String ROOT_KEEP_ALIVE_TIMEOUT_QUALIFIER = "root.keepAliveTimeout";
+	/** The Constant ROOT_SERVER_ABORT_TIMEOUT_QUALIFIER. */
+	public static final String ROOT_SERVER_ABORT_TIMEOUT_QUALIFIER = "root.serverAbortTimeout";
 	/** The connection type. */
 	public static final String CONNECTION_TYPE_QUALIFIER = ".connectionType";
 	/** The USERID. */
@@ -306,5 +317,20 @@ public final class Constants {
 			return;
 		}
 		Constants.KEEP_ALIVE_TIMEOUT = keepAliveTimeout;
+	}
+
+	/**
+	 * Sets the server abort timeout.
+	 * 
+	 * @param serverAbortTimeout
+	 *            the new server abort timeout
+	 */
+	public static void setServerAbortTimeout(int serverAbortTimeout) {
+		if (Constants.SERVER_ABORT_OTI_MILLIS != Constants.DEFAULT_SERVER_ABORT_OTI_MILLIS) {
+			// setting SERVER_ABORT_OTI_MILLIS only allowed one time
+			logger.error("setServerAbortTimeout called two times - not allowed.");
+			return;
+		}
+		Constants.SERVER_ABORT_OTI_MILLIS = serverAbortTimeout;
 	}
 }

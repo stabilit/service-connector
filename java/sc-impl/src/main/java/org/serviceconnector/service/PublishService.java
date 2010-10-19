@@ -72,7 +72,7 @@ public class PublishService extends StatefulService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized SessionServer allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPCallback callback,
+	public synchronized StatefulServer allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPCallback callback,
 			Subscription subscription, int timeoutMillis) throws Exception {
 
 		if (this.listOfServers.size() == 0) {
@@ -88,7 +88,7 @@ public class PublishService extends StatefulService {
 				// serverIndex reached the end of list no more servers
 				this.serverIndex = 0;
 			}
-			SessionServer server = this.listOfServers.get(serverIndex);
+			StatefulServer server = this.listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
 				server.subscribe(msgToForward, callback, timeoutMillis);
 				server.addSession(subscription);

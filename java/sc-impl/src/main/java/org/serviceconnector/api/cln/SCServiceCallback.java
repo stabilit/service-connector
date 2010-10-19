@@ -25,6 +25,8 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
+import org.serviceconnector.net.req.netty.IdleTimeoutException;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -79,21 +81,24 @@ public class SCServiceCallback extends SynchronousCallback {
 	@Override
 	public void callback(SCMPMessage scmpReply) {
 		if (this.synchronous) {
-			// interested thread waits for message
-			if (scmpReply.isFault()) {
-				SCMPFault fault = (SCMPFault) scmpReply;
-				SCServiceException ex = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-				super.callback(ex);
-				return;
-			}
 			super.callback(scmpReply);
 			return;
 		}
 		if (scmpReply.isFault()) {
 			SCMPFault fault = (SCMPFault) scmpReply;
-			SCServiceException ex = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			String errorCode = fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
+			if (errorCode != null && errorCode.equals(SCMPError.GATEWAY_TIMEOUT.getErrorCode())) {
+				// OTI run out on SC - mark session as dead!
+				this.service.inActivateSession();
+			}
+			Exception ex = fault.getCause();
+			if (ex != null && ex instanceof IdleTimeoutException) {
+				// OTI run out on client - mark session as dead!
+				this.service.inActivateSession();
+			}
+			SCServiceException e = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			this.service.setRequestComplete();
-			this.messageCallback.callback(ex);
+			this.messageCallback.callback(e);
 			return;
 		}
 		SCMessage messageReply = new SCMessage();

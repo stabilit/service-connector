@@ -9,13 +9,13 @@ public abstract class StatefulService extends Service {
 	/** The server index. */
 	protected int serverIndex;
 	/** The list of servers. */
-	protected List<SessionServer> listOfServers;
+	protected List<StatefulServer> listOfServers;
 
 	public StatefulService(String name, ServiceType type) {
 		super(name, type);
 		this.serverIndex = 0;
 		// synchronize the sever list
-		this.listOfServers = Collections.synchronizedList(new ArrayList<SessionServer>());
+		this.listOfServers = Collections.synchronizedList(new ArrayList<StatefulServer>());
 	}
 
 	/**
@@ -24,7 +24,7 @@ public abstract class StatefulService extends Service {
 	 * @param server
 	 *            the server
 	 */
-	public void addServer(SessionServer server) {
+	public void addServer(StatefulServer server) {
 		this.listOfServers.add(server);
 	}
 
@@ -34,7 +34,7 @@ public abstract class StatefulService extends Service {
 	 * @param server
 	 *            the server
 	 */
-	public void removeServer(SessionServer server) {
+	public void removeServer(StatefulServer server) {
 		this.listOfServers.remove(server);
 	}
 
@@ -43,7 +43,7 @@ public abstract class StatefulService extends Service {
 	 * 
 	 * @return the server list
 	 */
-	public List<SessionServer> getServerList() {
+	public List<StatefulServer> getServerList() {
 		return Collections.unmodifiableList(this.listOfServers);
 	}
 
@@ -71,7 +71,7 @@ public abstract class StatefulService extends Service {
 	public int getCountAllocatedSessions() {
 		int allocatedSessions = 0;
 
-		for (SessionServer server : listOfServers) {
+		for (StatefulServer server : listOfServers) {
 			allocatedSessions += server.getSessions().size();
 		}
 		return allocatedSessions;
@@ -85,7 +85,7 @@ public abstract class StatefulService extends Service {
 	public int getCountAvailableSessions() {
 		int availableSessions = 0;
 
-		for (SessionServer server : listOfServers) {
+		for (StatefulServer server : listOfServers) {
 			availableSessions += server.getMaxSessions();
 		}
 		return availableSessions;
