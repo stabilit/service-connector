@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,16 +30,16 @@ public final class DateTimeUtility {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(DateTimeUtility.class);
-	
+
 	/** The Constant SDF. */
-	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
 	/**
 	 * Instantiates a new date time utility.
 	 */
 	private DateTimeUtility() {
 	}
-	
+
 	/**
 	 * Gets the current time zone millis.
 	 * 
@@ -52,6 +53,19 @@ public final class DateTimeUtility {
 
 		synchronized (SDF) { // SDF is not thread safe
 			return SDF.format(date);
+		}
+	}
+
+	/**
+	 * Parses the date string.
+	 *
+	 * @param dateString the date string
+	 * @return the date
+	 * @throws ParseException the parse exception
+	 */
+	public static Date parseDateString(String dateString) throws ParseException {
+		synchronized (SDF) {
+			return SDF.parse(dateString);
 		}
 	}
 

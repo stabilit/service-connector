@@ -25,17 +25,17 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
-
 /**
- * The Class ValidatorUtility. Provides validation functions for checking header fields of requestFs.
+ * The Class ValidatorUtility. Provides validation functions for checking header
+ * fields of requestFs.
  * 
  * @author JTraber
  */
 public final class ValidatorUtility {
-	
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ValidatorUtility.class);
-	
+
 	/** The Constant IP_LIST_REGEX, regex for ip address list. */
 	private static final String IP_LIST_REGEX = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})(/(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}))*?";
 	/** The Constant PAT_IPLIST, pattern regex for ip address list. */
@@ -63,7 +63,7 @@ public final class ValidatorUtility {
 
 		Date localDateTime = null;
 		try {
-			localDateTime = DateTimeUtility.SDF.parse(localDateTimeString);
+			localDateTime = DateTimeUtility.parseDateString(localDateTimeString);
 		} catch (ParseException ex) {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_LDT, localDateTimeString);
 		}
@@ -98,8 +98,7 @@ public final class ValidatorUtility {
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static int validateInt(int lowerLimitInc, String intStringValue, SCMPError error)
-			throws SCMPValidatorException {
+	public static int validateInt(int lowerLimitInc, String intStringValue, SCMPError error) throws SCMPValidatorException {
 		if (intStringValue == null) {
 			throw new SCMPValidatorException(error, "IntValue must be set");
 		}
@@ -203,8 +202,8 @@ public final class ValidatorUtility {
 		int length = stringValue.getBytes().length;
 
 		if (length < minSizeInc || length > maxSizeInc) {
-			throw new SCMPValidatorException(error, "StringValue length " + length + " is not within limits "
-					+ minSizeInc + " to " + maxSizeInc);
+			throw new SCMPValidatorException(error, "StringValue length " + length + " is not within limits " + minSizeInc + " to "
+					+ maxSizeInc);
 		}
 	}
 
@@ -226,8 +225,7 @@ public final class ValidatorUtility {
 
 		for (int i = 0; i < buffer.length; i++) {
 			if (ValidatorUtility.isCharacterAllowed(buffer[i]) == false) {
-				throw new SCMPValidatorException(error, "String value contains forbidden character "
-						+ new String(buffer));
+				throw new SCMPValidatorException(error, "String value contains forbidden character " + new String(buffer));
 			}
 		}
 	}
