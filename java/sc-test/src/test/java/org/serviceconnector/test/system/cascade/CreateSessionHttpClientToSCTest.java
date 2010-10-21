@@ -78,43 +78,67 @@ public class CreateSessionHttpClientToSCTest {
 		ctrl = null;
 	}
 
+	/**
+	 * Description: Create new session with empty session name and delete the session.<br>
+	 * Expectation:	Session is deleted
+	 */
 	@Test
-	public void deleteSession_sessionServiceNameEmpty_passes() throws Exception {
+	public void deleteSession_1() throws Exception {
 		SCSessionService sessionService = client.newSessionService("");
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
+	/**
+	 * Description: Create new session with blank string as session name and delete the session.<br>
+	 * Expectation:	Session is deleted
+	 */
 	@Test
-	public void deleteSession_sessionServiceNameWhiteSpace_passes() throws Exception {
+	public void deleteSession_2() throws Exception {
 		SCSessionService sessionService = client.newSessionService(" ");
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
+	/**
+	 * Description: Create new session with session name "a" (SingleChar) and delete the session.<br>
+	 * Expectation:	Session is deleted
+	 */
 	@Test
-	public void deleteSession_sessionServiceNameSingleChar_passes() throws Exception {
+	public void deleteSession_3() throws Exception {
 		SCSessionService sessionService = client.newSessionService("a");
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
+	/**
+	 * Description: Create new session with invalid name and delete the session.<br>
+	 * Expectation:	Session is deleted
+	 */
 	@Test
-	public void deleteSession_sessionServiceNamePangram_passes() throws Exception {
+	public void deleteSession_4() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.pangram);
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
+	/**
+	 * Description: Create new session with service name and delete the session.<br>
+	 * Expectation:	Session is deleted
+	 */
 	@Test
-	public void deleteSession_sessionServiceNameDisabled_passes() throws Exception {
+	public void deleteSession_5() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSessionDisabled);
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
+	/**
+	 * Description: Create new session with empty session name.<br>
+	 * Expectation:	throws service exception
+	 */
 	@Test
-	public void createSession_emptySessionServiceName_throwsException() throws Exception {
+	public void createSession_1() throws Exception {
 		SCSessionService sessionService = client.newSessionService("");
 		try {
 			SCMessage scMessage = new SCMessage();
@@ -128,8 +152,12 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Create new session service with blank string (session name) and new session.<br>
+	 * Expectation:	throws service exception
+	 */
 	@Test
-	public void createSession_whiteSpaceSessionServiceName_throwsException() throws Exception {
+	public void createSession_2() throws Exception {
 		SCSessionService sessionService = client.newSessionService(" ");
 		try {
 			SCMessage scMessage = new SCMessage();
@@ -143,9 +171,13 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Create new session service with invalid name and new session.<br>
+	 * Expectation:	throws service exception
+	 */
 	@Test
-	public void createSession_arbitrarySessionServiceNameNotInSCProps_throwsException() throws Exception {
-		SCSessionService sessionService = client.newSessionService("The quick brown fox jumps over a lazy dog.");
+	public void createSession_3() throws Exception {
+		SCSessionService sessionService = client.newSessionService(TestConstants.pangram);
 		try {
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
@@ -158,8 +190,13 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Create new session service with valid name and new session.<br>
+	 * Expectation:	throws service exception
+	 */
+	// TODO: disabledService?
 	@Test
-	public void createSession_disabledService_throwsException() throws Exception {
+	public void createSession_4() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSessionDisabled);
 		try {
 			SCMessage scMessage = new SCMessage();
@@ -173,8 +210,12 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Create new session service with valid name and new session with empty session info.<br>
+	 * Expectation:	throws SCMPValidator exception
+	 */
 	@Test
-	public void createSession_emptySessionInfo_throwsException() throws Exception {
+	public void createSessionInfo_1() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		try {
 			SCMessage scMessage = new SCMessage();

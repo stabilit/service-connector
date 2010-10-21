@@ -3467,8 +3467,7 @@ public class SCServerStartListenerTest {
 	}
 
 	@Test
-	public void startListener_hostArbitraryPortIntMinKeepAliveIntMin_notListeningThrowsException()
-			throws Exception {
+	public void startListener_hostArbitraryPortIntMinKeepAliveIntMin_notListeningThrowsException() {
 		try {
 			server.startListener("The quick brown fox jumps over a lazy dog.", Integer.MIN_VALUE,
 					Integer.MIN_VALUE);

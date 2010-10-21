@@ -69,14 +69,16 @@ public class EnableServiceDisableServiceClientToSCTest {
 	}
 
 	/**
-	 * Description:	Create session on enabled service 
+	 * Description:	Create session on enabled service <br>
 	 * Expectation:	Session is successfully created, returns sessionId
 	 */
 	@Test
-	public void createSession_onEnabledSessionService_sessionIsCreated() throws Exception {
+	public void createSession_1() throws Exception {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 
+		// create session 
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
+
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession(300, 60, scMessage);
@@ -87,11 +89,12 @@ public class EnableServiceDisableServiceClientToSCTest {
 	}
 
 	/**
-	 * Description:	Create session on initially disabled service enabled by the client 
+	 * Description:	Create session on initially disabled service enabled by the client<br> 
 	 * Expectation:	Session is successfully created, returns sessionId
 	 */
+	// TODO doubt this test case is useful ?
 	@Test
-	public void createSession_onInitiallyDisabledServiceThatIsEnabledByClient_sessionIsCreated() throws Exception {
+	public void createSession_2() throws Exception {
 		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
 		client.enableService(TestConstants.serviceNameSessionDisabled);
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
@@ -109,11 +112,11 @@ public class EnableServiceDisableServiceClientToSCTest {
 	}
 
 	/**
-	 * Description:	Create session on initially enabled service disabled by the client 
+	 * Description:	Create session on initially enabled service disabled by the client<br> 
 	 * Expectation:	Throws SCServiceException exception
 	 */
 	@Test
-	public void createSession_onInitiallyEnabledServiceThatIsDisabledByClient_throwsException() throws Exception {
+	public void createSession_3() throws Exception {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 		client.disableService(TestConstants.serviceName);
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
@@ -131,13 +134,23 @@ public class EnableServiceDisableServiceClientToSCTest {
 		client.enableService(TestConstants.serviceName);
 	}
 
+	/**
+	 * Description:<br> 
+	 * 1. Disabled and enabled again the service.<br>
+	 * 2. Create the session on enabled service.<br>
+	 * <br>	
+	 * Expectation:	Session is successfully created, returns sessionId
+	 */
+	// TODO doubt this test case is useful ? disabled & enabled first the service
 	@Test
-	public void createSession_onEnabledServiceThatIsDisabledAndThenEnabledAgain_sessionIsCreated() throws Exception {
+	public void createSession_4() throws Exception {
+		// 1.
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 		client.disableService(TestConstants.serviceName);
 		client.enableService(TestConstants.serviceName);
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 
+		// 2.
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
@@ -146,9 +159,17 @@ public class EnableServiceDisableServiceClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description:<br> 
+	 * 1. Disabled and enabled the service 1000 times.<br>
+	 * 2. Create the session on enabled service.<br>
+	 * <br>	
+	 * Expectation:	Session is successfully created, returns sessionId
+	 */
+	// TODO doubt this test case is useful ? disabled & enabled first the service
 	@Test
-	public void createSession_onEnabledServiceThatIsDisabledAndThenEnabledAgainMultipleTimes_sessionIsCreated()
-			throws Exception {
+	public void createSession_5() throws Exception {
+		// 1.
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 
 		for (int i = 0; i < 1000; i++) {
@@ -158,7 +179,8 @@ public class EnableServiceDisableServiceClientToSCTest {
 			client.enableService(TestConstants.serviceName);
 		}
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
-
+		
+		// 2.
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
@@ -167,17 +189,26 @@ public class EnableServiceDisableServiceClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Do this steps 1000 times.<br>
+	 * 	1. Disabled and enabled the service.<br>
+	 * 	2. Create the session on enabled service.<br>
+	 * <br>
+	 * Expectation:	:	Session is successfully created, returns sessionId
+	 */
+	// TODO doubt this test case is useful ? disabled & enabled first the service
 	@Test
-	public void createSession_multipleTimesOnEnabledServiceThatIsDisabledAndThenEnabledAgainMultipleTimes_sessionIsCreated()
-			throws Exception {
+	public void createSession_6() throws Exception {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
 
 		for (int i = 0; i < 1000; i++) {
 			if ((i % 100) == 0)
 				testLogger.info("EnabledDisableService_1000Times cycle:\t" + i + " ...");
+			// 1.
 			client.disableService(TestConstants.serviceName);
 			client.enableService(TestConstants.serviceName);
-
+			
+			// 2.
 			SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
