@@ -23,7 +23,6 @@ import org.serviceconnector.scmp.SCMPCompositeSender;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPSendPart;
 
-
 /**
  * The Class SCMPLargeResponseTest.
  * 
@@ -40,7 +39,7 @@ public class SCMPLargeResponseTestCase extends SCMPMessage {
 	@Test
 	public final void scmpLargeResponseTest() {
 		StringBuilder sb = new StringBuilder();
-		
+
 		for (int i = 0; i < MAX_ANZ; i++) {
 			sb.append(i);
 		}
@@ -54,7 +53,7 @@ public class SCMPLargeResponseTestCase extends SCMPMessage {
 		int offset = 0;
 		while (largeResponse.hasNext()) {
 
-			SCMPSendPart responsePart = new SCMPSendPart(largeScmp, offset);
+			SCMPSendPart responsePart = new SCMPSendPart(largeScmp, offset, sb.length());
 			offset += responsePart.getBodyLength();
 
 			SCMPMessage message = largeResponse.getNext();
@@ -64,7 +63,7 @@ public class SCMPLargeResponseTestCase extends SCMPMessage {
 			Assert.assertEquals(responsePart.getBodyType(), message.getBodyType());
 		}
 
-		SCMPSendPart firstPart = new SCMPSendPart(largeScmp, 0);
+		SCMPSendPart firstPart = new SCMPSendPart(largeScmp, 0, sb.length());
 		SCMPMessage message = largeResponse.getFirst();
 		Assert.assertEquals(firstPart.getBody().toString(), message.getBody().toString());
 		Assert.assertEquals(firstPart.getBodyLength(), message.getBodyLength());

@@ -56,8 +56,8 @@ public class RegisterServerTestCase extends SuperTestCase {
 
 	@Test
 	public void failRegisterServerForUnknownService() throws Exception {
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL
-				.newInstance(req, "notConfiguredServiceName");
+		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(req,
+				"notConfiguredServiceName");
 
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
@@ -73,8 +73,8 @@ public class RegisterServerTestCase extends SuperTestCase {
 
 	@Test
 	public void failRegisterServerCallWrongHeader() throws Exception {
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL
-				.newInstance(req, "simulation2");
+		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(req,
+				"simulation2");
 
 		// keep alive interval not set
 		registerServerCall.setMaxSessions(10);
@@ -96,8 +96,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.invoke(this.registerCallback, 1000);
 		fault = this.registerCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_MAX_SESSIONS, " [IntValue 0 too low]",
-				SCMPMsgType.REGISTER_SERVER);
+		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_MAX_SESSIONS, " [IntValue 0 too low]", SCMPMsgType.REGISTER_SERVER);
 
 		// maxConnections 0 value
 		registerServerCall.setPortNumber(9100);
@@ -126,13 +125,13 @@ public class RegisterServerTestCase extends SuperTestCase {
 
 	@Test
 	public void registerServerCall() throws Exception {
-		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", TestConstants.HOST,
-				TestConstants.PORT_TCP, "netty.tcp", 1000, 60, 10);
+		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", TestConstants.HOST, TestConstants.PORT_TCP,
+				"netty.tcp", 1000, 60, 10);
 		RequesterContext context = new TestContext(config, this.msgId);
 		IRequester req = new SCRequester(context);
 
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL
-				.newInstance(req, "publish");
+		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(req,
+				"publish");
 
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
@@ -155,7 +154,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		String scEntry = inspectMap.get("serviceRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
-		expectedScEntry = "publish-simulation_localhost/:publish-simulation_localhost/:51000 : 1|1conn_localhost/:1conn_localhost/:41000 : 10|1sess_localhost/:1sess_localhost/:42000 : 1|publish_localhost/:publish_localhost/:51000 : 10|simulation_localhost/:simulation_localhost/:30000 : 10|";
+		expectedScEntry = "publish_localhost/:publish_localhost/:51000 : 10|1conn_localhost/:1conn_localhost/:41000 : 10|fileServer:fileServer:80|simulation_localhost/:simulation_localhost/:30000 : 10|1sess_localhost/:1sess_localhost/:42000 : 1|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 1|";
 		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
@@ -170,7 +169,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		inspect = this.registerCallback.getMessageSync();
 		inspectMsg = (String) inspect.getBody();
 		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		expectedScEntry = "1conn_localhost/:1conn_localhost/:41000 : 10|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 1|1sess_localhost/:1sess_localhost/:42000 : 1|simulation_localhost/:simulation_localhost/:30000 : 10|";
+		expectedScEntry = "simulation_localhost/:simulation_localhost/:30000 : 10|1sess_localhost/:1sess_localhost/:42000 : 1|publish-simulation_localhost/:publish-simulation_localhost/:51000 : 1|fileServer:fileServer:80|1conn_localhost/:1conn_localhost/:41000 : 10|";
 		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 	}
