@@ -68,6 +68,10 @@ public class EnableServiceDisableServiceClientToSCTest {
 		scProcess = null;
 	}
 
+	/**
+	 * Description:	Create session on enabled service 
+	 * Expectation:	Session is successfully created, returns sessionId
+	 */
 	@Test
 	public void createSession_onEnabledSessionService_sessionIsCreated() throws Exception {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
@@ -82,6 +86,10 @@ public class EnableServiceDisableServiceClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description:	Create session on initially disabled service enabled by the client 
+	 * Expectation:	Session is successfully created, returns sessionId
+	 */
 	@Test
 	public void createSession_onInitiallyDisabledServiceThatIsEnabledByClient_sessionIsCreated() throws Exception {
 		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
@@ -100,12 +108,14 @@ public class EnableServiceDisableServiceClientToSCTest {
 		client.disableService(TestConstants.serviceNameSessionDisabled);
 	}
 
+	/**
+	 * Description:	Create session on initially enabled service disabled by the client 
+	 * Expectation:	Throws SCServiceException exception
+	 */
 	@Test
 	public void createSession_onInitiallyEnabledServiceThatIsDisabledByClient_throwsException() throws Exception {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
-
 		client.disableService(TestConstants.serviceName);
-
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 
 		try {
@@ -118,7 +128,6 @@ public class EnableServiceDisableServiceClientToSCTest {
 		assertEquals(true, ex instanceof SCServiceException);
 		assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-
 		client.enableService(TestConstants.serviceName);
 	}
 

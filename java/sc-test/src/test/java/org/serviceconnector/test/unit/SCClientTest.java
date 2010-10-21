@@ -3,7 +3,6 @@
  */
 package org.serviceconnector.test.unit;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -14,10 +13,9 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
 
-
 /**
  * @author FJurnecka
- *
+ * 
  */
 public class SCClientTest {
 
@@ -30,82 +28,115 @@ public class SCClientTest {
 	public void setUp() throws Exception {
 		client = new SCClient();
 	}
-	
+
+	/**
+	 * Description:	Check initial values set by constructor 
+	 * Expectation:	Initial values are properly set 
+	 */
 	@Test
-	public void construtor_setInitialValues_valuesSet()
-	{
+	public void construtor_1() {
 		assertEquals(null, client.getHost());
 		assertEquals(-1, client.getPort());
 		assertEquals(Constants.DEFAULT_CLIENT_CON, client.getConnectionType());
 		assertEquals(Constants.DEFAULT_KEEP_ALIVE_INTERVAL, client.getKeepAliveIntervalInSeconds());
 		assertEquals(Constants.DEFAULT_MAX_CONNECTIONS, client.getMaxConnections());
 		assertEquals(false, client.isAttached());
-		assertNotNull(client.getSCContext());		
+		assertNotNull(client.getSCContext());
 	}
-	
+
+	/**
+	 * Description:	Invoke setConnectionType with null parameter 
+	 * Expectation:	connectionType was set to null
+	 */
 	@Test
-	public void setConnectionType_NullParam_returnNull()
-	{
-		((SCClient)client).setConnectionType(null);
+	public void setConnectionType_1() {
+		client.setConnectionType(null);
 		assertEquals(null, client.getConnectionType());
 	}
 
+	/**
+	 * Description:	Invoke setConnectionType with empty string
+	 * Expectation:	connectionType was set to empty string
+	 */
 	@Test
-	public void setConnectionType_EmptyStringParam_returnEmptyString()
-	{
-		((SCClient)client).setConnectionType(new String());
+	public void setConnectionType_2() {
+		client.setConnectionType(new String());
 		assertEquals("", client.getConnectionType());
 	}
 
+	/**
+	 * Description:	Invoke setConnectionType with blank string
+	 * Expectation:	connectionType was set to blank
+	 */
 	@Test
-	public void setConnectionType_whiteCharParam_returnEmptyString()
-	{
-		((SCClient)client).setConnectionType(" ");
+	public void setConnectionType_3() {
+		client.setConnectionType(" ");
 		assertEquals(" ", client.getConnectionType());
 	}
-	
+
+	/**
+	 * Description:	Invoke setConnectionType with "a" string
+	 * Expectation:	connectionType was set to "a"
+	 */
 	@Test
-	public void setConnectionType_OneCharParam_returnGivenParam()
-	{
-		((SCClient)client).setConnectionType("a");
+	public void setConnectionType_4() {
+		client.setConnectionType("a");
 		assertEquals("a", client.getConnectionType());
 	}
-	
+
+	/**
+	 * Description:	Invoke setConnectionType with some string
+	 * Expectation:	connectionType was set to some value
+	 */
 	@Test
-	public void setConnectionType_ArbitraryStringParam_returnGivenParam()
-	{
-		((SCClient)client).setConnectionType(TestConstants.HOST);
+	public void setConnectionType_5() {
+		client.setConnectionType(TestConstants.HOST);
 		assertEquals(TestConstants.HOST, client.getConnectionType());
 	}
-	
+
+	/**
+	 * Description:	Invoke setMaxConnections with 0 value
+	 * Expectation:	throws validation exception
+	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void setMaxConnections_0Param_throwsSCMPValidatorException() throws SCMPValidatorException
-	{
+	public void setMaxConnections_1() throws SCMPValidatorException {
 		client.setMaxConnections(0);
 	}
-	
+
+	/**
+	 * Description:	Invoke setMaxConnections with value = MIN
+	 * Expectation:	throws validation exception
+	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void setMaxConnections_minParam_throwsInvalidParamException() throws SCMPValidatorException
-	{
+	public void setMaxConnections_2() throws SCMPValidatorException {
 		client.setMaxConnections(Integer.MIN_VALUE);
 	}
-	
+
+	/**
+	 * Description:	Invoke setMaxConnections with value = MAX
+	 * Expectation:	value = MAX was properly set
+	 */
 	@Test
-	public void setMaxConnections_maxParam_returnMax() throws SCMPValidatorException
-	{
+	public void setMaxConnections_3() throws SCMPValidatorException {
 		client.setMaxConnections(Integer.MAX_VALUE);
 		assertEquals(Integer.MAX_VALUE, client.getMaxConnections());
 	}
-	
+
+	/**
+	 * Description:	Invoke setMaxConnections with value = -1
+	 * Expectation:	throws validation exception
+	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void setMaxConnections_minus1Param_throwsInvalidParamException() throws SCMPValidatorException
-	{
+	public void setMaxConnections_4() throws SCMPValidatorException {
 		client.setMaxConnections(-1);
 	}
-	
+
+	/**
+	 * Description:	Invoke setMaxConnections with value = 1
+	 * Expectation:	value = 1 was properly set
+	 */
 	@Test
-	public void setMaxConnections_1Param_return1() throws SCMPValidatorException
-	{
+	public void setMaxConnections_5() throws SCMPValidatorException {
 		client.setMaxConnections(1);
 		assertEquals(1, client.getMaxConnections());
 	}

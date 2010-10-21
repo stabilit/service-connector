@@ -64,8 +64,14 @@ public class AllPerformanceTests {
 		ctrl = null;
 	}
 
+	/**
+	 * Description:	Send 1000 message 128 bytes each to the server.
+	 * 				Receive echoed messages.
+	 * 				Measure performance 
+	 * Expectation:	Performance better than 600 msg/sec. 
+	 */
 	@Test
-	public void execute_10000MessagesWith128BytesLongBody_outputsTime() throws Exception {
+	public void benchmark_1() throws Exception {
 
 		SCMessage message = new SCMessage(new byte[128]);
 
@@ -81,14 +87,14 @@ public class AllPerformanceTests {
 		}
 		long stop = System.currentTimeMillis();
 
-		long diff = (stop - start);
-		testLogger.info("10000 msg à 128 byte in " + diff / 1000 + " seconds. => " + 10000 * 1000 / diff + " msg/sec.");
-		assertEquals(true, stop - start < 25000);
+		long perf = 10000 * 1000 / (stop - start);
+		testLogger.info("10000 msg à 128 byte performance : " + perf + " msg/sec.");
+		assertEquals(true, perf > 600);
 	}
 
 	// TODO FJU after some time has broken session
 	@Test
-	public void execute_1000000MessagesWith128BytesLongBody_outputsTime() throws Exception {
+	public void execute_100000MessagesWith128BytesLongBody_outputsTime() throws Exception {
 
 		SCMessage message = new SCMessage(new byte[128]);
 
@@ -97,7 +103,7 @@ public class AllPerformanceTests {
 		sessionService.createSession(300, 60, message);
 
 		long start = System.currentTimeMillis();
-		for (int i = 0; i < 1000000; i++) {
+		for (int i = 0; i < 100000; i++) {
 			if ((i % 2000) == 0)
 				testLogger.info("Executing message nr. " + i + "...");
 			sessionService.execute(message);
