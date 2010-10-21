@@ -24,14 +24,14 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.log.SessionLogger;
+import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.Session;
-import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
 
 /**
- * The Class SessionRegistry. Registry stores entries for properly created sessions. Registry is also responsible for
- * observing the session timeout and initiating clean up in case of a broken session.
+ * The Class SessionRegistry. Registry stores entries for properly created sessions. Registry is also responsible for observing the
+ * session timeout and initiating clean up in case of a broken session.
  * 
  * @author JTraber
  */
@@ -63,7 +63,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	public void addSession(String key, Session session) {
 		sessionLogger.logCreateSession(this.getClass().getName(), session.getId());
 		this.put(key, session);
-		if (session.getEchoIntervalSeconds() != 0) {
+		if (session.getSessionTimeoutSeconds() != 0) {
 			// TODO TRN handle = session timeout necessary needs to be set up
 			this.scheduleSessionTimeout(session);
 		}
@@ -135,7 +135,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 *            the session
 	 */
 	public void scheduleSessionTimeout(Session session) {
-		if (session == null || session.getEchoIntervalSeconds() == 0) {
+		if (session == null || session.getSessionTimeoutSeconds() == 0) {
 			// no scheduling of session timeout
 			return;
 		}
@@ -147,8 +147,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		sessionTimeouter = new TimerTaskWrapper(new SessionTimerRun(session));
 		session.setSessionTimeouter(sessionTimeouter);
 		// schedule sessionTimeouter in registry timer
-		this.timer
-				.schedule(sessionTimeouter, (int) session.getEchoIntervalSeconds() * Constants.SEC_TO_MILLISEC_FACTOR);
+		this.timer.schedule(sessionTimeouter, (int) session.getSessionTimeoutSeconds() * Constants.SEC_TO_MILLISEC_FACTOR);
 	}
 
 	/**
@@ -172,8 +171,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	}
 
 	/**
-	 * The Class SessionTimerRun. Gets control when a session times out. Responsible for cleaning up when session gets
-	 * broken.
+	 * The Class SessionTimerRun. Gets control when a session times out. Responsible for cleaning up when session gets broken.
 	 */
 	private class SessionTimerRun implements ITimerRun {
 		/** The session. */
@@ -189,7 +187,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		 */
 		public SessionTimerRun(Session session) {
 			this.session = session;
-			this.timeoutSeconds = session.getEchoIntervalSeconds();
+			this.timeoutSeconds = session.getSessionTimeoutSeconds();
 		}
 
 		/**
@@ -203,7 +201,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			 * 2. abort session on backend server<br>
 			 */
 			SessionRegistry.this.removeSession(session);
-			StatefulServer server = session.getServer();
+			StatefulServer server = session.getStatefulServer();
 			// aborts session on server
 			server.abortSession(session);
 			// TODO for jan.. log session timeout

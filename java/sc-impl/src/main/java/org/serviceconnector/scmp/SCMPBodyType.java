@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.util.IReversibleEnum;
 import org.serviceconnector.util.ReverseEnumMap;
 
-
 /**
  * The Enum SCMPBodyType. Defines possible body types in SCMP.
  * 
@@ -32,12 +31,14 @@ public enum SCMPBodyType implements IReversibleEnum<String, SCMPBodyType> {
 	BINARY("bin"),
 	/** text. */
 	TEXT("txt"),
+	/** The INPUT_STREAM. */
+	INPUT_STREAM("inputStream"),
 	/** undefined. */
 	UNDEFINED("undefined");
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPBodyType.class);
-	
+
 	/** The value. */
 	private String value;
 	/** The reverseMap, to get access to the enum constants by string value. */
@@ -78,6 +79,7 @@ public enum SCMPBodyType implements IReversibleEnum<String, SCMPBodyType> {
 	public String getMimeType() {
 		switch (this) {
 		case BINARY:
+		case INPUT_STREAM:
 			return "application/octet-stream";
 		case TEXT:
 			return "text/plain";

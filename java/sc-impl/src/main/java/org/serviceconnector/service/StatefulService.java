@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.serviceconnector.server.Server;
+import org.serviceconnector.server.StatefulServer;
+
 public abstract class StatefulService extends Service {
 
 	/** The server index. */

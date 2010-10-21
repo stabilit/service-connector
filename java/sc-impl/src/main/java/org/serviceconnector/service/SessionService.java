@@ -26,6 +26,7 @@ import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.server.StatefulServer;
 
 /**
  * The Class SessionService. SessionService is a remote interface to a session service and provides communication

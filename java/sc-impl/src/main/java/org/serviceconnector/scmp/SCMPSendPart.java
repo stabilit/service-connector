@@ -16,9 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-
 
 /**
  * The Class SCMPSendPart. Represents an outgoing part SCMP of a large message.
@@ -29,7 +31,7 @@ public class SCMPSendPart extends SCMPPart {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPSendPart.class);
-	
+
 	/** The offset where body starts. */
 	private int offset;
 	/** The size of this specific part SCMP. */
@@ -45,9 +47,9 @@ public class SCMPSendPart extends SCMPPart {
 	 * @param offset
 	 *            the offset
 	 */
-	public SCMPSendPart(SCMPMessage message, int offset) {
+	public SCMPSendPart(SCMPMessage message, int offset, int largeMessageLength) {
 		this.offset = offset;
-		this.callLength = message.getBodyLength();
+		this.callLength = largeMessageLength;
 		// evaluates the size of this part
 		if (this.callLength - this.offset < Constants.LARGE_MESSAGE_LIMIT) {
 			this.size = this.callLength - this.offset;
@@ -65,6 +67,16 @@ public class SCMPSendPart extends SCMPPart {
 	public boolean isPart() {
 		if (this.isGroup()) {
 			return true;
+		}
+		if (this.getBodyType().equals(SCMPBodyType.INPUT_STREAM)) {
+			// needs to be different in case of STREAM - total length is misleading
+			try {
+				if (((InputStream) this.getBody()).available() - this.size <= 0) {
+					return false;
+				}
+			} catch (IOException e) {
+				return false;
+			}
 		}
 		return offset + size < callLength;
 	}

@@ -63,5 +63,8 @@ public class ServiceConnectorCommandFactory extends FlyweightCommandFactory {
 		this.addCommand(receivePublicationCommand.getKey(), receivePublicationCommand);
 		ICommand publishCommand = new PublishCommand();
 		this.addCommand(publishCommand.getKey(), publishCommand);
+		// file commands
+		ICommand fileUploadCommand = new FileUploadCommand();
+		this.addCommand(fileUploadCommand.getKey(), fileUploadCommand);
 	}
 }

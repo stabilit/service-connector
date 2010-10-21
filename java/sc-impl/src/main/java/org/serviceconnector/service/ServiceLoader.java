@@ -33,6 +33,8 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.server.FileServer;
+import org.serviceconnector.server.Server;
 
 /**
  * @author JTraber
@@ -54,7 +56,7 @@ public class ServiceLoader {
 		CompositeConfiguration config = new CompositeConfiguration();
 		try {
 			config.addConfiguration(new PropertiesConfiguration(fileName));
-		} catch(Exception e) {
+		} catch (Exception e) {
 			throw new InvalidParameterException("could not find property file : " + fileName);
 		}
 		@SuppressWarnings("unchecked")
@@ -78,7 +80,12 @@ public class ServiceLoader {
 				service = new PublishService(serviceName);
 				break;
 			case FILE_SERVICE:
-				service = new FileService(serviceName);
+				String path = (String) config.getString(serviceName + Constants.PATH_QUALIFIER);
+				service = new FileService(serviceName, path);
+				String host = (String) config.getString(serviceName + Constants.HOST_QUALIFIER);
+				Server server = AppContext.getCurrentContext().getServerRegistry().getServer(host);
+				((FileService) service).setServer((FileServer) server);
+				// TODO fehlerhandling
 				break;
 			case UNDEFINED:
 			default:

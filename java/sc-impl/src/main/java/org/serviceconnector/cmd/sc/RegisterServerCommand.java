@@ -21,7 +21,11 @@ import java.net.InetSocketAddress;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.SCMPCommunicationException;
+import org.serviceconnector.net.res.IResponder;
+import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -29,8 +33,8 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.Server;
-import org.serviceconnector.service.StatefulServer;
+import org.serviceconnector.server.Server;
+import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ValidatorUtility;
@@ -77,9 +81,20 @@ public class RegisterServerCommand extends CommandAdapter {
 		int portNr = message.getHeaderInt(SCMPHeaderAttributeKey.PORT_NR);
 		boolean immediateConnect = message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		int keepAliveInterval = message.getHeaderInt(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
+
+		ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+		IResponder responder = responderRegistry.getCurrentResponder();
+		CommunicatorConfig respConfig = responder.getResponderConfig();
+		String connectionType = respConfig.getConnectionType();
+		/**
+		 * TODO JOT, verify with JAN do we need operationTimeoutMultiplier in responder config, its enough to take it
+		 * from the Constants??
+		 */
+		double operationTimeoutMultiplier = respConfig.getOperationTimeoutMultiplier();
+
 		// create new server
 		StatefulServer server = new StatefulServer(socketAddress, serviceName, portNr, maxSessions, maxConnections,
-				keepAliveInterval);
+				connectionType, keepAliveInterval, operationTimeoutMultiplier);
 		try {
 			if (immediateConnect) {
 				// server connections get connected immediately

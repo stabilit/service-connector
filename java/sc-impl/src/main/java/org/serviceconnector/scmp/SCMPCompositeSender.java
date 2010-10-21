@@ -16,12 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.log4j.Logger;
 
-
 /**
- * The Class SCMPCompositeSender. Used to handle outgoing large request/response. Works like an iterator and provides
- * functionality of splitting large SCMP into parts.
+ * The Class SCMPCompositeSender. Used to handle outgoing large request/response. Works like an iterator and provides functionality
+ * of splitting large SCMP into parts.
  * 
  * @author JTraber
  */
@@ -29,7 +31,7 @@ public class SCMPCompositeSender extends SCMPMessage {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPCompositeSender.class);
-	
+
 	/** The large scmp message. */
 	private SCMPMessage message;
 	/** The offset. */
@@ -59,7 +61,7 @@ public class SCMPCompositeSender extends SCMPMessage {
 	 */
 	public SCMPMessage getFirst() {
 		this.offset = 0;
-		this.currentPart = new SCMPSendPart(this.message, this.offset);
+		this.currentPart = new SCMPSendPart(this.message, this.offset, this.largeMessageLength);
 		this.offset += currentPart.getBodyLength();
 		return this.currentPart;
 	}
@@ -70,6 +72,16 @@ public class SCMPCompositeSender extends SCMPMessage {
 	 * @return true, if successful
 	 */
 	public boolean hasNext() {
+		if (this.message.getBodyType().equals(SCMPBodyType.INPUT_STREAM)) {
+			// needs to be different in case of STREAM - total length is misleading
+			try {
+				if (((InputStream) this.message.getBody()).available() <= 0) {
+					return false;
+				}
+			} catch (IOException e) {
+				return false;
+			}
+		}
 		return this.offset < this.largeMessageLength;
 	}
 
@@ -80,7 +92,7 @@ public class SCMPCompositeSender extends SCMPMessage {
 	 */
 	public SCMPMessage getNext() {
 		if (this.hasNext()) {
-			this.currentPart = new SCMPSendPart(message, this.offset);
+			this.currentPart = new SCMPSendPart(message, this.offset, this.largeMessageLength);
 			this.offset += currentPart.getBodyLength();
 			return this.currentPart;
 		}

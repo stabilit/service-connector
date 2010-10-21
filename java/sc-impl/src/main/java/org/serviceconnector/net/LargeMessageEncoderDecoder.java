@@ -18,19 +18,19 @@ package org.serviceconnector.net;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.log.MessageLogger;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPInternalStatus;
 import org.serviceconnector.scmp.SCMPMessage;
 
-
 /**
- * The Class LargeMessageEncoderDecoder. Defines large SCMP encoding/decoding of
- * object into/from stream.
+ * The Class LargeMessageEncoderDecoder. Defines large SCMP encoding/decoding of object into/from stream.
  */
 public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
@@ -113,6 +113,30 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					int bodyOffset = scmpMsg.getBodyOffset();
 					bw.write(t, bodyOffset, bodyLength);
 					bw.flush();
+					// set internal status to save communication state
+					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
+					if (messageLogger.isEnabled()) {
+						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+					}
+					return;
+				}
+				if (body instanceof InputStream) {
+					InputStream inStream = (InputStream) body;
+					byte[] buffer = new byte[Constants.LARGE_MESSAGE_LIMIT];
+					int bodySize = 0;
+					if (inStream.available() < Constants.LARGE_MESSAGE_LIMIT) {
+						bodySize = inStream.available();
+						inStream.read(buffer, 0, inStream.available());
+					} else {
+						bodySize = Constants.LARGE_MESSAGE_LIMIT;
+						inStream.read(buffer, 0, Constants.LARGE_MESSAGE_LIMIT);
+					}
+					int messageLength = sb.length() + bodySize;
+					writeHeadLine(bw, headerKey, messageLength, headerSize);
+					bw.write(sb.toString());
+					bw.flush();
+					os.write(buffer);
+					os.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					if (messageLogger.isEnabled()) {

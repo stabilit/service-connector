@@ -18,9 +18,9 @@ package org.serviceconnector.net;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.zip.Deflater;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.log.MessageLogger;
@@ -85,8 +85,8 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					bw.write(sb.toString());
 					bw.flush();
 					/*
-					 * // compresss body Deflater compresser = new Deflater(); compresser.setInput(ba);
-					 * compresser.finish(); byte[] zipBa = new byte[ba.length]; compresser.deflate(zipBa);
+					 * // compresss body Deflater compresser = new Deflater(); compresser.setInput(ba); compresser.finish(); byte[]
+					 * zipBa = new byte[ba.length]; compresser.deflate(zipBa);
 					 */
 					os.write(ba);
 					os.flush();
@@ -104,6 +104,24 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					bw.flush();
 					bw.write(t); // write body
 					bw.flush();
+					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
+					if (messageLogger.isEnabled()) {
+						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+					}
+					return;
+				}
+				if (body instanceof InputStream) {
+					InputStream inStream = (InputStream) body;
+					byte[] buffer = new byte[inStream.available()];
+					int bodySize = inStream.available();
+					inStream.read(buffer, 0, bodySize);
+					int messageLength = sb.length() + bodySize;
+					writeHeadLine(bw, headerKey, messageLength, headerSize);
+					bw.write(sb.toString());
+					bw.flush();
+					os.write(buffer);
+					os.flush();
+					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					if (messageLogger.isEnabled()) {
 						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);

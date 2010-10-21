@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-
 /**
  * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together
  * to complete request/response.
@@ -35,7 +34,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPCompositeReceiver.class);
-	
+
 	/** The list of message parts. */
 	private List<SCMPMessage> scmpList;
 	/** The part request, request to pull. */
@@ -144,7 +143,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 
 	/** {@inheritDoc} */
 	@Override
-	public Object getBody() {		
+	public Object getBody() {
 		if (this.outputStream != null) {
 			return this.outputStream.toByteArray();
 		}
@@ -174,7 +173,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 				}
 				this.outputStream.flush();
 			} catch (Exception ex) {
-				logger.info("getBody "+ ex.toString());
+				logger.info("getBody " + ex.toString());
 				return null;
 			}
 			return this.outputStream.toByteArray();
@@ -191,12 +190,21 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 				}
 				this.writer.flush();
 			} catch (Exception ex) {
-				logger.info("getBody "+ ex.toString());
+				logger.info("getBody " + ex.toString());
 				return null;
 			}
 			return this.writer.toString();
 		}
 		return null;
+	}
+
+	/**
+	 * Gets the body as stream.
+	 * 
+	 * @return the body as stream
+	 */
+	public ByteArrayOutputStream getBodyAsStream() {
+		return this.outputStream;
 	}
 
 	/** {@inheritDoc} */
@@ -227,13 +235,19 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	 * @return the complete
 	 */
 	public boolean isComplete() {
-		return complete;
+		return this.complete;
 	}
 
-	public void uncomplete() {
+	/**
+	 * Incomplete.
+	 */
+	public void incomplete() {
 		this.complete = false;
 	}
 
+	/**
+	 * Complete.
+	 */
 	public void complete() {
 		this.complete = true;
 	}

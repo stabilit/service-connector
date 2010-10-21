@@ -17,39 +17,49 @@
 package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.server.StatefulServer;
 
 /**
- * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation
- * between a client and a server.
+ * The Class Session. Provides unique id and an attribute map to store data. A session represents virtual relation between a client
+ * and a server.
  */
 public class Session extends AbstractSession {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(Session.class);
 
-	private double echoIntervalSeconds;
+	private double sessionTimeoutSeconds;
 
 	public Session(String sessionInfo, String ipAdressList) {
 		super(sessionInfo, ipAdressList);
-		this.echoIntervalSeconds = 0;
+		this.sessionTimeoutSeconds = 0;
 	}
 
 	/**
-	 * Sets the echo interval.
+	 * Sets the session timeout seconds.
 	 * 
-	 * @param echoIntervalSeconds
-	 *            the new echo interval
+	 * @param sessionTimeoutSeconds
+	 *            the new session timeout seconds
 	 */
-	public void setEchoIntervalSeconds(double echoIntervalSeconds) {
-		this.echoIntervalSeconds = echoIntervalSeconds;
+	public void setSessionTimeoutSeconds(double sessionTimeoutSeconds) {
+		this.sessionTimeoutSeconds = sessionTimeoutSeconds;
 	}
 
 	/**
-	 * Gets the echo interval in seconds.
+	 * Gets the session timeout seconds.
 	 * 
-	 * @return the echo interval in seconds
+	 * @return the session timeout seconds
 	 */
-	public double getEchoIntervalSeconds() {
-		return echoIntervalSeconds;
+	public double getSessionTimeoutSeconds() {
+		return sessionTimeoutSeconds;
+	}
+
+	/**
+	 * Gets the stateful server.
+	 * 
+	 * @return the stateful server
+	 */
+	public StatefulServer getStatefulServer() {
+		return (StatefulServer) this.server;
 	}
 }

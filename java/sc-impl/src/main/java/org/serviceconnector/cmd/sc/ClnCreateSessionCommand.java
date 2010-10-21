@@ -28,16 +28,19 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.FileServer;
+import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.service.FileService;
+import org.serviceconnector.service.FileSession;
 import org.serviceconnector.service.NoFreeSessionException;
+import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
-import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.service.SessionService;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ClnCreateSessionCommand. Responsible for validation and execution of creates session command. Command runs
- * successfully if backend server accepts clients request and allows creating a session. Session is saved in a session
- * registry of SC.
+ * The Class ClnCreateSessionCommand. Responsible for validation and execution of creates session command. Command runs successfully
+ * if backend server accepts clients request and allows creating a session. Session is saved in a session registry of SC.
  * 
  * @author JTraber
  */
@@ -64,15 +67,40 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// check service is present
-		SessionService service = this.validateSessionService(serviceName);
+		Service abstractService = this.validateService(serviceName);
 
 		String ipAddressList = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		String sessionInfo = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
+		int eci = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL);
+
+		switch (abstractService.getType()) {
+		case SESSION_SERVICE:
+			// code for type session service is below
+			break;
+		case FILE_SERVICE:
+			// create file session
+			FileSession fileSession = new FileSession(sessionInfo, ipAddressList);
+			FileServer fileServer = ((FileService) abstractService).getServer();
+			// add server to session
+			fileSession.setServer(fileServer);
+			fileSession.setSessionTimeoutSeconds(eci * Constants.ECHO_INTERVAL_MULTIPLIER);
+			// finally add file session to the registry
+			this.sessionRegistry.addSession(fileSession.getId(), fileSession);
+			// reply to client
+			SCMPMessage reply = new SCMPMessage();
+			reply.setIsReply(true);
+			reply.setMessageType(getKey());
+			reply.setSessionId(fileSession.getId());
+			response.setSCMP(reply);
+			return;
+		case CASCADED_SERVICE:
+			// TODO JOT cascaded service
+		}
+
 		// create session
 		Session session = new Session(sessionInfo, ipAddressList);
 		reqMessage.setSessionId(session.getId());
 		// no need to forward echo attributes
-		int eci = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 
 		// tries allocating a server for this session
@@ -87,7 +115,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			do {
 				callback = new CommandCallback(true);
 				try {
-					server = service.allocateServerAndCreateSession(reqMessage, callback, session, oti
+					server = ((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session, oti
 							- (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
 					// no exception has been thrown - get out of wait loop
 					break;
@@ -118,7 +146,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 				if (Boolean.FALSE.equals(rejectSessionFlag)) {
 					// session has not been rejected, add server to session
 					session.setServer(server);
-					session.setEchoIntervalSeconds(eci * Constants.ECHO_INTERVAL_MULTIPLIER);
+					session.setSessionTimeoutSeconds(eci * Constants.ECHO_INTERVAL_MULTIPLIER);
 					// finally add session to the registry
 					this.sessionRegistry.addSession(session.getId(), session);
 				} else {

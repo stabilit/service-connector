@@ -28,8 +28,8 @@ import org.serviceconnector.net.req.netty.http.NettyHttpConnection;
 import org.serviceconnector.net.req.netty.tcp.NettyTcpConnection;
 
 /**
- * A factory for creating connection objects. Provides access to concrete client instances. Possible connection types
- * are shown as constants below.
+ * A factory for creating connection objects. Provides access to concrete client instances. Possible connection types are shown as
+ * constants below.
  */
 public class ConnectionFactory {
 
@@ -38,8 +38,8 @@ public class ConnectionFactory {
 
 	/**
 	 * NETTY stuff<br>
-	 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming connections
-	 * on a socket. A worker thread performs non-blocking read and write on a channel.
+	 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming connections on a socket. A
+	 * worker thread performs non-blocking read and write on a channel.
 	 */
 	private static NioClientSocketChannelFactory channelFactory;
 	/** The Constant timer, responsible component to observe timeouts in a connection. */
@@ -51,6 +51,13 @@ public class ConnectionFactory {
 		ConnectionFactory.timer = new HashedWheelTimer();
 	}
 
+	/**
+	 * Creates a new Connection object.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the i connection
+	 */
 	public IConnection createConnection(String key) {
 		if (Constants.NETTY_HTTP.equalsIgnoreCase(key)) {
 			return new NettyHttpConnection(ConnectionFactory.channelFactory, ConnectionFactory.timer);
@@ -63,14 +70,12 @@ public class ConnectionFactory {
 	}
 
 	// TODO FJU this shutdown is never called
-	// TODO FJU
 	// http://docs.jboss.org/netty/3.2/api/org/jboss/netty/channel/socket/nio/NioClientSocketChannelFactory.html
 	/**
 	 * Shutdown connection factory.<br>
-	 * This method shuts down every resource needed by connections. Should only be used if whole application shuts down.
-	 * Be very careful if you use this method - every connection in relation to this channelFactory must be closed
-	 * otherwise you end up in indefinitely loop. In most cases closing the connections is good enough NETTY will
-	 * release other resources.
+	 * This method shuts down every resource needed by connections. Should only be used if whole application shuts down. Be very
+	 * careful if you use this method - every connection in relation to this channelFactory must be closed otherwise you end up in
+	 * indefinitely loop. In most cases closing the connections is good enough NETTY will release other resources.
 	 */
 	public static void shutdownConnectionFactory() {
 		ConnectionFactory.timer.stop();

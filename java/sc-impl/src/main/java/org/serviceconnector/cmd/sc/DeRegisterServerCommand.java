@@ -28,8 +28,9 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.Server;
-import org.serviceconnector.service.StatefulServer;
+import org.serviceconnector.server.Server;
+import org.serviceconnector.server.ServerType;
+import org.serviceconnector.server.StatefulServer;
 
 /**
  * The Class DeRegisterServerCommand. Responsible for validation and execution of deregister command. Used to
@@ -63,7 +64,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 
 		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		// looks up server & validate server is registered
-		StatefulServer server = this.getSessionServerByName(serverKey);
+		StatefulServer server = this.getStatefulServerByName(serverKey);
 		// deregister server from service
 		server.getService().removeServer(server);
 
@@ -101,18 +102,18 @@ public class DeRegisterServerCommand extends CommandAdapter {
 	}
 
 	/**
-	 * Gets the session server by name. Checks properness of allocated server.
+	 * Gets the stateful server by name.
 	 * 
 	 * @param key
 	 *            the key
-	 * @return the session server by name
+	 * @return the stateful server by name
 	 * @throws SCMPCommandException
 	 *             the sCMP command exception
 	 */
-	public StatefulServer getSessionServerByName(String key) throws SCMPCommandException {
+	public StatefulServer getStatefulServerByName(String key) throws SCMPCommandException {
 		Server server = this.serverRegistry.getServer(key);
 
-		if (server == null || (server instanceof StatefulServer) == false) {
+		if (server == null || (server.getType().equals(ServerType.STATEFUL_SERVER) == false)) {
 			// no available server for this service
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
 					"server not registered, key " + key);

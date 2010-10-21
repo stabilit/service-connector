@@ -1,5 +1,6 @@
 package org.serviceconnector.service;
 
+import org.serviceconnector.server.StatefulServer;
 
 public class Subscription extends AbstractSession {
 
@@ -17,11 +18,28 @@ public class Subscription extends AbstractSession {
 		this.mask = mask;
 	}
 
+	/**
+	 * Gets the mask.
+	 * 
+	 * @return the mask
+	 */
 	public SubscriptionMask getMask() {
 		return mask;
 	}
 
+	/**
+	 * Sets the mask.
+	 * 
+	 * @param mask
+	 *            the new mask
+	 */
 	public void setMask(SubscriptionMask mask) {
 		this.mask = mask;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public StatefulServer getServer() {
+		return (StatefulServer) this.server;
 	}
 }

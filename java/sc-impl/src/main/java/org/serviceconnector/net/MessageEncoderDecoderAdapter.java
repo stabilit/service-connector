@@ -55,8 +55,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.FORMAT_OF_MSG_SIZE);
 	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.FORMAT_OF_HEADER_SIZE);
-	protected IFrameDecoder defaultFrameDecoder = AppContext.getCurrentContext().getFrameDecoderFactory()
-			.getFrameDecoder(Constants.TCP);
+	protected IFrameDecoder defaultFrameDecoder = AppContext.getCurrentContext().getFrameDecoderFactory().getFrameDecoder(
+			Constants.TCP);
 
 	/** {@inheritDoc} */
 	@Override
@@ -109,8 +109,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 					// looping until <LF> got found
 					if (buffer[inLoopIndex] == 0x0A) {
 						// <LF> found
-						metaMap.put(new String(buffer, keyOff, (index - keyOff), CHARSET), new String(buffer,
-								index + 1, (inLoopIndex - 1) - index, CHARSET));
+						metaMap.put(new String(buffer, keyOff, (index - keyOff), CHARSET), new String(buffer, index + 1,
+								(inLoopIndex - 1) - index, CHARSET));
 						// updating outer loop index
 						index = inLoopIndex;
 						// updating offset for next key, +1 for <LF>
@@ -148,6 +148,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 			switch (scmpBodyType) {
 			case BINARY:
+			case INPUT_STREAM:
 			case UNDEFINED:
 				scmpMsg.setBody(body);
 				return scmpMsg;
@@ -164,8 +165,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		return scmpMsg;
 	}
 
-	protected void writeHeadLine(BufferedWriter bw, SCMPHeadlineKey headerKey, int messageSize, int headerSize)
-			throws IOException {
+	protected void writeHeadLine(BufferedWriter bw, SCMPHeadlineKey headerKey, int messageSize, int headerSize) throws IOException {
 		bw.write(headerKey.toString());
 		bw.write(dfMsgSize.format(messageSize));
 		bw.write(dfHeaderSize.format(headerSize));

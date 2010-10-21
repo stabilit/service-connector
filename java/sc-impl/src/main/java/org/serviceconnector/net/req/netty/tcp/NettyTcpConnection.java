@@ -41,7 +41,6 @@ import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 
-
 /**
  * The Class NettyTcpConnection. Concrete connection implementation with JBoss Netty for Tcp.
  */
@@ -52,7 +51,7 @@ public class NettyTcpConnection implements IConnection {
 
 	/** The Constant connectionLogger. */
 	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-	
+
 	/** The bootstrap. */
 	private ClientBootstrap bootstrap;
 	/** The channel. */
@@ -135,8 +134,7 @@ public class NettyTcpConnection implements IConnection {
 		operationListener = new NettyOperationListener();
 		future.addListener(operationListener);
 		try {
-			this.channel = operationListener.awaitUninterruptibly(Constants.CONNECT_TIMEOUT_MILLIS)
-					.getChannel();
+			this.channel = operationListener.awaitUninterruptibly(Constants.CONNECT_TIMEOUT_MILLIS).getChannel();
 			// complete localSocketAdress
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
@@ -145,7 +143,8 @@ public class NettyTcpConnection implements IConnection {
 					+ this.localSocketAddress.toString());
 		}
 		if (connectionLogger.isEnabled()) {
-			connectionLogger.logConnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(), this.localSocketAddress.getPort());
+			connectionLogger.logConnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
+					this.localSocketAddress.getPort());
 		}
 		this.isConnected = true;
 	}
@@ -163,7 +162,8 @@ public class NettyTcpConnection implements IConnection {
 					+ this.localSocketAddress.toString());
 		}
 		if (connectionLogger.isEnabled()) {
-			connectionLogger.logDisconnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(), this.localSocketAddress.getPort());
+			connectionLogger.logDisconnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
+					this.localSocketAddress.getPort());
 		}
 	}
 
@@ -202,9 +202,9 @@ public class NettyTcpConnection implements IConnection {
 		}
 		if (connectionLogger.isEnabledFull()) {
 			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
-					this.localSocketAddress.getPort(), chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);
+					this.localSocketAddress.getPort(), chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer()
+							.array().length);
 		}
-		return;
 	}
 
 	/** {@inheritDoc} */

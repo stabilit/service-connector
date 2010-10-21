@@ -2,6 +2,7 @@ package org.serviceconnector.service;
 
 import java.util.UUID;
 
+import org.serviceconnector.server.Server;
 import org.serviceconnector.util.TimerTaskWrapper;
 
 public abstract class AbstractSession {
@@ -9,7 +10,7 @@ public abstract class AbstractSession {
 	/** The id. */
 	private String id;
 	/** The server. */
-	private StatefulServer server;
+	protected Server server;
 	/** The ip address list. */
 	private String ipAddressList;
 	/** The session info. */
@@ -45,7 +46,7 @@ public abstract class AbstractSession {
 	 * @param server
 	 *            the new server
 	 */
-	public void setServer(StatefulServer server) {
+	public void setServer(Server server) {
 		this.server = server;
 	}
 
@@ -54,7 +55,7 @@ public abstract class AbstractSession {
 	 * 
 	 * @return the server
 	 */
-	public StatefulServer getServer() {
+	public Server getServer() {
 		return this.server;
 	}
 
@@ -77,10 +78,20 @@ public abstract class AbstractSession {
 		this.sessionTimeouter = sessionTimeouter;
 	}
 
+	/**
+	 * Gets the ip address list.
+	 *
+	 * @return the ip address list
+	 */
 	public String getIpAddressList() {
 		return ipAddressList;
 	}
 
+	/**
+	 * Gets the session info.
+	 *
+	 * @return the session info
+	 */
 	public String getSessionInfo() {
 		return sessionInfo;
 	}

@@ -16,15 +16,20 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
+import java.io.ByteArrayOutputStream;
+
 import org.apache.log4j.Logger;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.FileServer;
 import org.serviceconnector.service.FileService;
 
 public class FileUploadCommand extends CommandAdapter {
@@ -44,9 +49,33 @@ public class FileUploadCommand extends CommandAdapter {
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 
-		FileService service = this.validateFileService(serviceName);
-		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		ByteArrayOutputStream outputStream = null;
+		if (message.isComposite()) {
+			SCMPCompositeReceiver composie = (SCMPCompositeReceiver) message;
+			outputStream = composie.getBodyAsStream();
+		} else if (message.isByteArray()) {
+			outputStream = new ByteArrayOutputStream(message.getBodyLength());
+			outputStream.write((byte[]) message.getBody());
+		} else {
+			throw new SCMPCommandException(SCMPError.BAD_REQUEST, "wrong body for upload file.");
+		}
 
+		FileService service = this.validateFileService(serviceName);
+
+		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		String remoteFileName = (String) message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
+
+		CommandCallback callback = new CommandCallback(true);
+		FileServer fileServer = service.getServer();
+		String pathOnHost = service.getPath() + "?name=" + remoteFileName;
+		fileServer.serverUploadFile(message, pathOnHost, (byte[]) message.getBody(), callback, oti);
+
+		SCMPMessage reply = callback.getMessageSync();
+
+		// forward server reply to client
+		reply.setIsReply(true);
+		reply.setMessageType(getKey());
+		response.setSCMP(reply);
 	}
 
 	/** {@inheritDoc} */

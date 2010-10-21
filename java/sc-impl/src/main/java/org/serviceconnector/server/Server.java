@@ -14,28 +14,25 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.service;
+package org.serviceconnector.server;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
-import org.serviceconnector.net.res.IResponder;
-import org.serviceconnector.net.res.ResponderRegistry;
 
 /**
- * The Class Server. Represents a server instance on a backend Server. Serves a service. Has control over the max of
- * sessions and holds a connection pool to communicate to backend server.
+ * The Class Server. Represents a server instance on a backend Server. Serves a service. Has control over the max of sessions and
+ * holds a connection pool to communicate to backend server.
  * 
  * @author JTraber
  */
-public class Server {
+public abstract class Server {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(Server.class);
@@ -54,32 +51,44 @@ public class Server {
 	protected IRequester requester;
 	/** The operation timeout multiplier. */
 	protected double operationTimeoutMultiplier;
+	/** The type. */
+	private ServerType type;
+	/** The server key. */
+	protected String serverKey;
 
 	/**
 	 * Instantiates a new server.
 	 * 
+	 * @param type
+	 *            the type
 	 * @param socketAddress
 	 *            the socket address
+	 * @param serviceName
+	 *            the service name
 	 * @param portNr
 	 *            the port number
-	 * @param maxSessions
-	 *            the max sessions
+	 * @param maxConnections
+	 *            the max connections
+	 * @param connectionType
+	 *            the connection type
+	 * @param keepAliveInterval
+	 *            the keep alive interval
+	 * @param operationTimeoutMultiplier
+	 *            the operation timeout multiplier
 	 */
-	public Server(InetSocketAddress socketAddress, String serviceName, int portNr, int maxConnections,
-			int keepAliveInterval) {
+	public Server(ServerType type, InetSocketAddress socketAddress, String serviceName, int portNr, int maxConnections,
+			String connectionType, int keepAliveInterval, double operationTimeoutMultiplier) {
 		this.serviceName = serviceName;
 		this.socketAddress = socketAddress;
+		this.type = type;
 		this.portNr = portNr;
 		this.maxConnections = maxConnections;
-		ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
-		IResponder responder = responderRegistry.getCurrentResponder();
-		CommunicatorConfig respConfig = responder.getResponderConfig();
-		String connectionType = respConfig.getConnectionType();
-		this.operationTimeoutMultiplier = respConfig.getOperationTimeoutMultiplier();
+		this.operationTimeoutMultiplier = operationTimeoutMultiplier;
 		this.host = socketAddress.getHostName();
 		ConnectionPool connectionPool = new ConnectionPool(host, portNr, connectionType, keepAliveInterval);
 		connectionPool.setMaxConnections(maxConnections);
 		this.requester = new Requester(new RequesterContext(connectionPool, null));
+		this.serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 	}
 
 	/**
@@ -111,8 +120,7 @@ public class Server {
 	 */
 	public void destroy() {
 		this.requester.getContext().getConnectionPool().destroy();
-		AppContext.getCurrentContext().getServerRegistry().removeServer(
-				serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort());
+		AppContext.getCurrentContext().getServerRegistry().removeServer(this.getServerKey());
 		this.requester = null;
 	}
 
@@ -153,6 +161,19 @@ public class Server {
 	}
 
 	/**
+	 * Gets the type.
+	 * 
+	 * @return the type
+	 */
+	public ServerType getType() {
+		return this.type;
+	}
+
+	public String getServerKey() {
+		return serverKey;
+	}
+
+	/**
 	 * Gets the requester.
 	 * 
 	 * @return the requester
@@ -164,6 +185,6 @@ public class Server {
 	/** @{inheritDoc */
 	@Override
 	public String toString() {
-		return serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort() + ":" + portNr;
+		return this.getServerKey() + ":" + portNr;
 	}
 }

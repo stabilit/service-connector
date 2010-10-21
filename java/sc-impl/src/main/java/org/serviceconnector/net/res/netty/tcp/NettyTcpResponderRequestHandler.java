@@ -49,8 +49,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
-import org.serviceconnector.service.Server;
-import org.serviceconnector.service.StatefulServer;
+import org.serviceconnector.server.Server;
+import org.serviceconnector.server.StatefulServer;
 
 /**
  * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the
@@ -301,7 +301,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 
 		if (scmpReq.isPart()) {
 			// received message part - request not complete yet
-			compositeReceiver.uncomplete();
+			compositeReceiver.incomplete();
 			// set up pull request
 			SCMPMessage scmpReply = new SCMPPart();
 			scmpReply.setIsReply(true);

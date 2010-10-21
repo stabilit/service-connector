@@ -28,13 +28,13 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.Session;
-import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ClnDeleteSessionCommand. Responsible for validation and execution of delete session command. Deleting a
- * session means: Free up backend server from session and delete session entry in SC session registry.
+ * The Class ClnDeleteSessionCommand. Responsible for validation and execution of delete session command. Deleting a session means:
+ * Free up backend server from session and delete session entry in SC session registry.
  * 
  * @author JTraber
  */
@@ -65,7 +65,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		// delete entry from session registry
 		this.sessionRegistry.removeSession(session);
 
-		StatefulServer server = session.getServer();
+		StatefulServer server = session.getStatefulServer();
 		CommandCallback callback;
 		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);

@@ -1,4 +1,4 @@
-package org.serviceconnector.service;
+package org.serviceconnector.server;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -24,6 +24,9 @@ import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.AbstractSession;
+import org.serviceconnector.service.Session;
+import org.serviceconnector.service.StatefulService;
 
 public class StatefulServer extends Server {
 
@@ -34,12 +37,12 @@ public class StatefulServer extends Server {
 	private List<AbstractSession> sessions;
 	/** The max sessions. */
 	private int maxSessions;
-	/** The service. */
 	private StatefulService service;
 
 	public StatefulServer(InetSocketAddress socketAddress, String serviceName, int portNr, int maxSessions,
-			int maxConnections, int keepAliveInterval) {
-		super(socketAddress, serviceName, portNr, maxConnections, keepAliveInterval);
+			int maxConnections, String connectionType, int keepAliveInterval, double operationTimeoutMultiplier) {
+		super(ServerType.STATEFUL_SERVER, socketAddress, serviceName, portNr, maxConnections, connectionType,
+				keepAliveInterval, operationTimeoutMultiplier);
 		this.sessions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 		this.maxSessions = maxSessions;
 		this.service = null;
@@ -90,25 +93,6 @@ public class StatefulServer extends Server {
 	 */
 	public int getMaxSessions() {
 		return this.maxSessions;
-	}
-
-	/**
-	 * Gets the service.
-	 * 
-	 * @return the service
-	 */
-	public StatefulService getService() {
-		return this.service;
-	}
-
-	/**
-	 * Sets the service.
-	 * 
-	 * @param service
-	 *            the new service
-	 */
-	public void setService(StatefulService service) {
-		this.service = service;
 	}
 
 	/**
@@ -329,7 +313,25 @@ public class StatefulServer extends Server {
 		}
 		super.destroy();
 		this.sessions = null;
-		this.service = null;
+	}
+
+	/**
+	 * Gets the service.
+	 * 
+	 * @return the service
+	 */
+	public StatefulService getService() {
+		return this.service;
+	}
+
+	/**
+	 * Sets the service.
+	 * 
+	 * @param service
+	 *            the new service
+	 */
+	public void setService(StatefulService service) {
+		this.service = service;
 	}
 
 	/** @{inheritDoc */
@@ -343,7 +345,6 @@ public class StatefulServer extends Server {
 	/** @{inheritDoc */
 	@Override
 	public String toString() {
-		return serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort() + ":" + portNr + " : "
-				+ maxSessions;
+		return super.getServerKey() + ":" + portNr + " : " + maxSessions;
 	}
 }

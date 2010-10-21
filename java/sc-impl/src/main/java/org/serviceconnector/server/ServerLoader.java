@@ -19,9 +19,10 @@
 /**
  * 
  */
-package org.serviceconnector.service;
+package org.serviceconnector.server;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 import java.util.List;
 
@@ -29,6 +30,9 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.scmp.SCMPError;
 
 /**
  * @author JTraber
@@ -54,53 +58,53 @@ public class ServerLoader {
 			throw new InvalidParameterException("could not find property file : " + fileName);
 		}
 		@SuppressWarnings("unchecked")
-		List<String> remoteHostNames = config.getList(Constants.REMOTE_HOST);
+		List<String> serverNames = config.getList(Constants.SERVERS);
 
-		for (String remoteHostName : remoteHostNames) {
-			// remove blanks in remoteHostName
-			remoteHostName = remoteHostName.trim();
+		for (String serverName : serverNames) {
+			// remove blanks in serverName
+			serverName = serverName.trim();
 
-			int portNr = Integer.parseInt((String) config.getString(remoteHostName + Constants.PORT_QUALIFIER));
-			String host = (String) config.getString(remoteHostName + Constants.HOST_QUALIFIER);
-			String connectionType = (String) config.getString(remoteHostName + Constants.CONNECTION_TYPE_QUALIFIER);
+			int portNr = Integer.parseInt((String) config.getString(serverName + Constants.PORT_QUALIFIER));
+			String host = (String) config.getString(serverName + Constants.HOST_QUALIFIER);
+			String connectionType = (String) config.getString(serverName + Constants.CONNECTION_TYPE_QUALIFIER);
 
 			if (connectionType == null) {
 				connectionType = Constants.DEFAULT_SERVER_CON;
 			}
-			String maxConnectionsValue = (String) config.getString(remoteHostName + Constants.MAX_CONNECTION_POOL_SIZE);
+			String maxConnectionsValue = (String) config.getString(serverName + Constants.MAX_CONNECTION_POOL_SIZE);
 			int maxConnections = Constants.DEFAULT_MAX_CONNECTIONS;
 			if (maxConnectionsValue != null) {
 				maxConnections = Integer.parseInt(maxConnectionsValue);
 			}
 
-			String keepAliveIntervalValue = (String) config.getString(remoteHostName + Constants.KEEP_ALIVE_INTERVAL);
+			String keepAliveIntervalValue = (String) config.getString(serverName + Constants.KEEP_ALIVE_INTERVAL);
 			int keepAliveInterval = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 			if (keepAliveIntervalValue != null) {
 				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
 			}
-			
-//			ServiceType serviceType = ServiceType.getServiceType(serviceTypeString);
-//			
-//			InetSocketAddress socketAddress = new InetSocketAddress(host, portNr);			
-//			Server server = new Server(socketAddress, null, portNr, maxConnections, keepAliveInterval);
-//			// instantiate right type of server
-//			
-//			Service service = null;
-//			switch (serviceType) {
-//			case SESSION_SERVICE:
-//				service = new SessionService(serviceName);
-//				break;
-//			case PUBLISH_SERVICE:
-//				service = new PublishService(serviceName);
-//				break;
-//			case FILE_SERVICE:
-//				service = new FileService(serviceName);
-//				break;
-//			case UNDEFINED:
-//			default:
-//				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
-//						"wrong serviceType, serviceName/serviceType: " + serviceName + "/" + serviceTypeString);
-//			}
+			String serverTypeString = (String) config.getString(serverName + Constants.TYPE_QUALIFIER);
+			ServerType serverType = ServerType.getServiceType(serverTypeString);
+
+			InetSocketAddress socketAddress = new InetSocketAddress(host, portNr);
+			// instantiate right type of server
+
+			Server server = null;
+			switch (serverType) {
+			case FILE_SERVER:
+				server = new FileServer(serverName, socketAddress, null, portNr, maxConnections, connectionType, keepAliveInterval);
+				break;
+			case CASCADED_SC:
+				// TODO JOT .. cascaded handling
+				// server = new FileService(serviceName);
+				continue;
+			case WEB_SERVER:
+				// TODO JOT .. WEB_SERVER handling
+				continue;
+			default:
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong serverType, serverName/serverType: "
+						+ serverName + "/" + serverTypeString);
+			}
+			AppContext.getCurrentContext().getServerRegistry().addServer(server.getServerKey(), server);
 		}
 	}
 }

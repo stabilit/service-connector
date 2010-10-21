@@ -17,6 +17,7 @@
 package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.server.FileServer;
 
 /**
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
@@ -26,7 +27,8 @@ public class FileService extends Service {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(FileService.class);
-	private Server server;
+	private FileServer server;
+	private String path;
 
 	/**
 	 * Instantiates a new publish service.
@@ -36,15 +38,20 @@ public class FileService extends Service {
 	 * @param type
 	 *            the type
 	 */
-	public FileService(String name) {
+	public FileService(String name, String path) {
 		super(name, ServiceType.FILE_SERVICE);
+		this.path = path;
 	}
 
-	public Server getServer() {
+	public FileServer getServer() {
 		return server;
 	}
 
-	public void setServer(Server server) {
+	public void setServer(FileServer server) {
 		this.server = server;
+	}
+	
+	public String getPath() {
+		return path;
 	}
 }

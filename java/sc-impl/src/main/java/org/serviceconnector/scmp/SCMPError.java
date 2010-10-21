@@ -101,7 +101,8 @@ public enum SCMPError {
 	GATEWAY_TIMEOUT(
 			"504",
 			"Gateway Timeout. The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server specified by the URI."),
-
+	/** The UPLOAD_FILE_FAILED. */
+	UPLOAD_FILE_FAILED("505", "Uploading file failed."),
 	/** 6xx errors caused by service connector */
 	SC_ERROR("600", "Service connector error."),
 	/** The NO_FREE_SERVER. */

@@ -36,13 +36,13 @@ import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.Session;
-import org.serviceconnector.service.StatefulServer;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ClnExecuteCommand. Responsible for validation and execution of execute command. Execute command sends any
- * data to the server. Execute command runs asynchronously and passes through any parts messages.
+ * The Class ClnExecuteCommand. Responsible for validation and execution of execute command. Execute command sends any data to the
+ * server. Execute command runs asynchronously and passes through any parts messages.
  * 
  * @author JTraber
  */
@@ -73,7 +73,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		// cancel session timeout
 		this.sessionRegistry.cancelSessionTimeout(session);
 
-		StatefulServer server = session.getServer();
+		StatefulServer server = session.getStatefulServer();
 		// try sending to the server
 		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
@@ -81,8 +81,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 		do {
-			ClnExecuteCommandCallback callback = new ClnExecuteCommandCallback(request, response, responderCallback,
-					sessionId);
+			ClnExecuteCommandCallback callback = new ClnExecuteCommandCallback(request, response, responderCallback, sessionId);
 			try {
 				server.execute(message, callback, oti - (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
@@ -187,8 +186,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		 * @param callback
 		 *            the callback
 		 */
-		public ClnExecuteCommandCallback(IRequest request, IResponse response, IResponderCallback callback,
-				String sessionId) {
+		public ClnExecuteCommandCallback(IRequest request, IResponse response, IResponderCallback callback, String sessionId) {
 			this.callback = callback;
 			this.request = request;
 			this.response = response;
@@ -221,7 +219,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				this.sessionRegistry.removeSession(session.getId());
 				fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, ERROR_STRING_TIMEOUT);
 				this.callback(fault);
-				session.getServer().abortSession(session);
+				session.getStatefulServer().abortSession(session);
 				return;
 			} else if (ex instanceof IOException) {
 				fault = new SCMPFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);

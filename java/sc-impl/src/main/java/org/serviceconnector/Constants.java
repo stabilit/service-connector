@@ -159,11 +159,14 @@ public final class Constants {
 	public static final String SERVER_LISTENER = "serverListener";
 	/** The services Names. */
 	public static final String SERVICE_NAMES = "serviceNames";
+	/** The Constant SERVERS. */
+	public static final String SERVERS = "servers";
 	/** The Constant MAX_CONNECTION_POOL_SIZE. */
 	public static final String MAX_CONNECTION_POOL_SIZE = ".maxConnectionPoolSize";
 	/** The Constant KEEP_ALIVE_INTERVAL. */
 	public static final String KEEP_ALIVE_INTERVAL = ".keepAliveInterval";
-
+	/** The Constant PATH_QUALIFIER. */
+	public static final String PATH_QUALIFIER = ".path";
 	/** The ACCEPT_PARAMS. */
 	public static final String ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
 

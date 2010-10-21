@@ -22,6 +22,7 @@ import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.server.StatefulServer;
 
 /**
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides

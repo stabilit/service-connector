@@ -16,13 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
-
 
 /**
  * Service Connector Message Protocol. Data container for one message.
@@ -318,8 +318,8 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * Returns the boolean value of the header attribute. Be careful if header field is not set - null is returned and
-	 * if you unbox return value automatically into boolean than a NullPointerException will be thrown.
+	 * Returns the boolean value of the header attribute. Be careful if header field is not set - null is returned and if you unbox
+	 * return value automatically into boolean than a NullPointerException will be thrown.
 	 * 
 	 * @param headerType
 	 *            the header attribute
@@ -367,7 +367,7 @@ public class SCMPMessage {
 		try {
 			intValue = Integer.parseInt(value);
 		} catch (Exception ex) {
-			logger.info("getHeaderInt "+ ex.toString());
+			logger.info("getHeaderInt " + ex.toString());
 			return null;
 		}
 		return intValue;
@@ -455,6 +455,7 @@ public class SCMPMessage {
 		SCMPBodyType bodyType = this.getBodyType();
 		switch (bodyType) {
 		case BINARY:
+		case INPUT_STREAM:
 		case UNDEFINED:
 			return;
 		case TEXT:
@@ -478,6 +479,9 @@ public class SCMPMessage {
 		}
 		if (String.class == body.getClass()) {
 			return SCMPBodyType.TEXT;
+		}
+		if (body instanceof InputStream) {
+			return SCMPBodyType.INPUT_STREAM;
 		}
 		return SCMPBodyType.UNDEFINED;
 	}
@@ -507,6 +511,13 @@ public class SCMPMessage {
 		}
 		if (String.class == body.getClass()) {
 			return ((String) body).length();
+		}
+		if (body instanceof InputStream) {
+			/*
+			 * needs to be different in case of INPUT_STREAM body length is always unknown for streams. Set it on Integer.MAX_VALUE
+			 * 2^31-1 (2048 MB). Never rely on bodyLength for body type INPUT_STREAM.
+			 */
+			return Integer.MAX_VALUE;
 		}
 		return 0;
 	}
@@ -541,8 +552,8 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * Checks if is request. Marks if this SCMP is a complete or completing part of a request. Last part SCMP of a
-	 * request returns true.
+	 * Checks if is request. Marks if this SCMP is a complete or completing part of a request. Last part SCMP of a request returns
+	 * true.
 	 * 
 	 * @return true, if is request
 	 */

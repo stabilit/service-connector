@@ -19,7 +19,7 @@
 /**
  * 
  */
-package org.serviceconnector.service;
+package org.serviceconnector.server;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.util.IReversibleEnum;
@@ -28,31 +28,31 @@ import org.serviceconnector.util.ReverseEnumMap;
 /**
  * @author JTraber
  */
-public enum ServiceType implements IReversibleEnum<String, ServiceType> {
+public enum ServerType implements IReversibleEnum<String, ServerType> {
 
-	SESSION_SERVICE("session"), //
-	PUBLISH_SERVICE("publish"), //
-	CASCADED_SERVICE("cascaded"), //
-	FILE_SERVICE("file"), //
+	STATEFUL_SERVER("statefulServer"), //
+	FILE_SERVER("fileServer"), //
+	WEB_SERVER("webServer"), //
+	CASCADED_SC("cascadedSC"), //
 	UNDEFINED("undefined");
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ServiceType.class);
+	protected final static Logger logger = Logger.getLogger(ServerType.class);
 
 	/** The value. */
 	private String value;
 	/** The reverseMap, to get access to the enum constants by string value. */
-	private static final ReverseEnumMap<String, ServiceType> reverseMap = new ReverseEnumMap<String, ServiceType>(ServiceType.class);
+	private static final ReverseEnumMap<String, ServerType> reverseMap = new ReverseEnumMap<String, ServerType>(ServerType.class);
 
-	private ServiceType(String value) {
+	private ServerType(String value) {
 		this.value = value;
 	}
 
-	public static ServiceType getServiceType(String typeString) {
-		ServiceType type = reverseMap.get(typeString);
+	public static ServerType getServiceType(String typeString) {
+		ServerType type = reverseMap.get(typeString);
 		if (type == null) {
 			// typeString doesn't match to a valid serviceType
-			return ServiceType.UNDEFINED;
+			return ServerType.UNDEFINED;
 		}
 		return type;
 	}
@@ -63,7 +63,7 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 	}
 
 	@Override
-	public ServiceType reverse(String typeString) {
-		return ServiceType.getServiceType(typeString);
+	public ServerType reverse(String typeString) {
+		return ServerType.getServiceType(typeString);
 	}
 }
