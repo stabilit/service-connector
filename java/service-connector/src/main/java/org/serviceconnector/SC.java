@@ -40,6 +40,7 @@ import org.serviceconnector.log.ILoggingManagerMXBean;
 import org.serviceconnector.log.JMXLoggingManager;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
+import org.serviceconnector.server.ServerLoader;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
@@ -114,7 +115,8 @@ public final class SC {
 		Statistics statistics = Statistics.getInstance();
 		statistics.setStartupDateTime(new Timestamp(Calendar.getInstance().getTime().getTime()));
 
-		
+		// load servers
+		ServerLoader.load(configFileName);
 		// load services
 		ServiceLoader.load(configFileName);
 
@@ -157,8 +159,7 @@ public final class SC {
 	}
 
 	/**
-	 * Writes a file. PID of SC gets written in. Is used for testing purpose to
-	 * verify that SC is running properly.
+	 * Writes a file. PID of SC gets written in. Is used for testing purpose to verify that SC is running properly.
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -201,7 +202,7 @@ public final class SC {
 	 */
 	private static void writeSystemInfoToLog() throws Exception {
 		logger.log(Level.OFF, " ");
-		logger.log(Level.OFF, "Service Connector "+SCVersion.CURRENT.toString()+" starting ...");
+		logger.log(Level.OFF, "Service Connector " + SCVersion.CURRENT.toString() + " starting ...");
 		logger.log(Level.OFF, "SC configuration: " + SystemInfo.getConfigFileName());
 		logger.log(Level.OFF, "Java version: " + SystemInfo.getJavaVersion());
 		logger.log(Level.OFF, "VM version: " + SystemInfo.getVmVersion());
