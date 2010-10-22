@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.log.SessionLogger;
-import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.server.Server;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
@@ -201,7 +201,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			 * 2. abort session on backend server<br>
 			 */
 			SessionRegistry.this.removeSession(session);
-			StatefulServer server = session.getStatefulServer();
+			Server server = session.getServer();
 			// aborts session on server
 			server.abortSession(session);
 			// TODO for jan.. log session timeout

@@ -28,6 +28,8 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.FileServer;
+import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
@@ -65,42 +67,63 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		// delete entry from session registry
 		this.sessionRegistry.removeSession(session);
 
-		StatefulServer server = session.getStatefulServer();
+		Server abstractServer = session.getServer();
+
+		switch (abstractServer.getType()) {
+		case STATEFUL_SERVER:
+			// code for type session service is below
+			break;
+		case FILE_SERVER:
+			this.sessionRegistry.removeSession(session);
+			((FileServer) abstractServer).abortSession(session);
+			// reply to client
+			SCMPMessage reply = new SCMPMessage();
+			reply.setIsReply(true);
+			reply.setMessageType(getKey());
+			response.setSCMP(reply);
+			return;
+		case CASCADED_SC:
+			// TODO JOT cascaded service
+		}
+
+		StatefulServer statefulServer = (StatefulServer) abstractServer;
 		CommandCallback callback;
 		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
+		int otiOnServerMillis = 0;
 		do {
 			callback = new CommandCallback(true);
 			try {
-				server.deleteSession(message, callback, oti - (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
+				otiOnServerMillis = oti - (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
+				statefulServer.deleteSession(message, callback, otiOnServerMillis);
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
-					server.abortSessionsAndDestroy();
+					statefulServer.abortSessionsAndDestroy();
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SC_ERROR,
 							"no free connection on server for service " + message.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
 			} catch (Exception ex) {
-				server.abortSessionsAndDestroy();
+				statefulServer.abortSessionsAndDestroy();
 				throw ex;
 			}
 			// sleep for a while and then try again
 			Thread.sleep(Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 		} while (++i < tries);
 
-		SCMPMessage reply = callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync(otiOnServerMillis);
 
 		if (reply.isFault()) {
-			server.abortSessionsAndDestroy();
+			statefulServer.abortSessionsAndDestroy();
 		}
 		// free server from session
-		server.removeSession(session);
+		statefulServer.removeSession(session);
 		// forward server reply to client
 		reply.setIsReply(true);
 		reply.setMessageType(getKey());

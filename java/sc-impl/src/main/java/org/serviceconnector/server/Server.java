@@ -20,11 +20,17 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.sc.CommandCallback;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.AbstractSession;
 
 /**
  * The Class Server. Represents a server instance on a backend Server. Serves a service. Has control over the max of sessions and
@@ -115,6 +121,14 @@ public abstract class Server {
 		connectionPool.setMinConnections(1);
 	}
 
+	/**
+	 * Abort session on server.
+	 * 
+	 * @param abortMessage
+	 *            the abort message
+	 */
+	public abstract void abortSession(AbstractSession session);
+	
 	/**
 	 * Destroy server.
 	 */

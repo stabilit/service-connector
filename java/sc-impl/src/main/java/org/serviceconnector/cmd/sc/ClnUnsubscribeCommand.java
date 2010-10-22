@@ -35,8 +35,8 @@ import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ClnUnsubscribeCommand. Responsible for validation and execution of unsubscribe command. Allows
- * unsubscribing from a publish service.
+ * The Class ClnUnsubscribeCommand. Responsible for validation and execution of unsubscribe command. Allows unsubscribing from a
+ * publish service.
  */
 public class ClnUnsubscribeCommand extends CommandAdapter {
 
@@ -76,10 +76,12 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
+		int otiOnServerMillis = 0;
 		do {
 			callback = new CommandCallback(true);
 			try {
-				server.unsubscribe(reqMessage, callback, oti - (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
+				otiOnServerMillis = oti - (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
+				server.unsubscribe(reqMessage, callback, otiOnServerMillis);
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
@@ -99,7 +101,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 			Thread.sleep(Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 		} while (++i < tries);
 
-		SCMPMessage reply = callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync(otiOnServerMillis);
 
 		if (reply.isFault()) {
 			server.abortSessionsAndDestroy();

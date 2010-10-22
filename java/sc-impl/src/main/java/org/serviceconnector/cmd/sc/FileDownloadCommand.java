@@ -29,15 +29,15 @@ import org.serviceconnector.server.FileServer;
 import org.serviceconnector.service.FileSession;
 import org.serviceconnector.util.ValidatorUtility;
 
-public class FileUploadCommand extends CommandAdapter {
+public class FileDownloadCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(FileUploadCommand.class);
+	protected final static Logger logger = Logger.getLogger(FileDownloadCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.FILE_UPLOAD;
+		return SCMPMsgType.FILE_DOWNLOAD;
 	}
 
 	/** {@inheritDoc} */
@@ -52,8 +52,7 @@ public class FileUploadCommand extends CommandAdapter {
 			String remoteFileName = (String) message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
 
 			FileServer fileServer = session.getFileServer();
-
-			SCMPMessage reply = fileServer.serverUploadFile(session, message, remoteFileName, oti);
+			SCMPMessage reply = fileServer.serverDownloadFile(session, message, remoteFileName, oti);
 
 			// forward server reply to client
 			reply.setIsReply(true);

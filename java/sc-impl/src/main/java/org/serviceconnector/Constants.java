@@ -53,28 +53,27 @@ public final class Constants {
 	 */
 	private static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
 	/**
-	 * ECHO_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the echo timeout of a session. E.g. SC needs to
-	 * adapt echo timeout interval from client to get right interval for echo messages.
+	 * ECHO_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the echo timeout of a session. E.g. SC needs to adapt echo
+	 * timeout interval from client to get right interval for echo messages.
 	 */
 	public static double ECHO_INTERVAL_MULTIPLIER = DEFAULT_ECHO_INTERVAL_MULTIPLIER;
 	/**
-	 * DEFAULT_OPERATION_TIMEOUT_MULTIPLIER: Default value if no OPERATION_TIMEOUT_MULTIPLIER will be set by
-	 * configuration.
+	 * DEFAULT_OPERATION_TIMEOUT_MULTIPLIER: Default value if no OPERATION_TIMEOUT_MULTIPLIER will be set by configuration.
 	 */
 	private static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
 	/**
-	 * ECHO_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the echo timeout of a session. E.g. SC needs to
-	 * adapt echo timeout interval from client to get right interval for echo messages.
+	 * ECHO_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the echo timeout of a session. E.g. SC needs to adapt echo
+	 * timeout interval from client to get right interval for echo messages.
 	 */
 	public static final double OPERATION_TIMEOUT_MULTIPLIER = DEFAULT_OPERATION_TIMEOUT_MULTIPLIER;
 	/**
-	 * DEFAULT_OPERATION_TIMEOUT: This operation timeout is used when communicating with SC to set timeout on a higher
-	 * level of architecture. Time unit is seconds. Used if no timeout for operation is handed over by the user.
+	 * DEFAULT_OPERATION_TIMEOUT: This operation timeout is used when communicating with SC to set timeout on a higher level of
+	 * architecture. Time unit is seconds. Used if no timeout for operation is handed over by the user.
 	 */
 	public static final int DEFAULT_OPERATION_TIMEOUT_SECONDS = 60;
 	/**
-	 * OPERATION_TIMEOUT_MILLIS_SHORT: This operation timeout is used in urgent situations when communication should
-	 * work very fast. Often used in emergency cases and in situation where reply of operation is irrelevant.
+	 * OPERATION_TIMEOUT_MILLIS_SHORT: This operation timeout is used in urgent situations when communication should work very fast.
+	 * Often used in emergency cases and in situation where reply of operation is irrelevant.
 	 */
 	public static final int OPERATION_TIMEOUT_MILLIS_SHORT = 200;
 	/**
@@ -82,8 +81,8 @@ public final class Constants {
 	 */
 	private static final int DEFAULT_KEEP_ALIVE_TIMEOUT = 2000;
 	/**
-	 * KEEP_ALIVE_TIMEOUT: This timeout is used to observe the reply of a keep alive message. If reply can not be
-	 * received within this time, connection is will be cleaned up.
+	 * KEEP_ALIVE_TIMEOUT: This timeout is used to observe the reply of a keep alive message. If reply can not be received within
+	 * this time, connection is will be cleaned up.
 	 */
 	public static int KEEP_ALIVE_TIMEOUT = DEFAULT_KEEP_ALIVE_TIMEOUT;
 	/**
@@ -91,8 +90,8 @@ public final class Constants {
 	 */
 	public static final int DEFAULT_SERVER_ABORT_OTI_MILLIS = 10000;
 	/**
-	 * ABORT_SERVER_OTI_MILLIS: This timeout is used to observe the reply of a abort session. If reply can not be
-	 * received within this time, server will be cleaned up.
+	 * ABORT_SERVER_OTI_MILLIS: This timeout is used to observe the reply of a abort session. If reply can not be received within
+	 * this time, server will be cleaned up.
 	 */
 	public static int SERVER_ABORT_OTI_MILLIS = DEFAULT_SERVER_ABORT_OTI_MILLIS;
 	/**
@@ -100,6 +99,8 @@ public final class Constants {
 	 * WRITE/READ/CLOSE/OPEN can have. Should be low/short.
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
+	/** The Constant DEFAULT_FILE_SESSION_TIMEOUT_SECONDS: Is used to timeout a file session on SC when streaming of files has began. */
+	public static final int DEFAULT_FILE_SESSION_TIMEOUT_SECONDS = 15;
 	/** The Constant DEFAULT_CONNECT_TIMEOUT_MILLIS. */
 	private static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 5000;
 	/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
@@ -143,6 +144,8 @@ public final class Constants {
 	/** The PASSWORD. */
 	public static final String CONNECTION_PASSWORD = ".password";
 
+	/** The Constant FILE_NAME_UPLOAD_SCRIPT: The name of the upload script which is used on the file server. */
+	public static final String FILE_NAME_UPLOAD_SCRIPT = "scupload.php";
 	/** The Constant REMOTE_HOST. */
 	public static final String REMOTE_HOST = ".remoteHost";
 	/** The HOST. */

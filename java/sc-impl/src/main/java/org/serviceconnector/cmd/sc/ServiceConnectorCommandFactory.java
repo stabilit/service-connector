@@ -21,8 +21,7 @@ import org.serviceconnector.cmd.FlyweightCommandFactory;
 import org.serviceconnector.cmd.ICommand;
 
 /**
- * A factory for creating ServiceConnectorCommand objects. Provides access to concrete instances of Service Connector
- * commands.
+ * A factory for creating ServiceConnectorCommand objects. Provides access to concrete instances of Service Connector commands.
  * 
  * @author JTraber
  */
@@ -66,5 +65,7 @@ public class ServiceConnectorCommandFactory extends FlyweightCommandFactory {
 		// file commands
 		ICommand fileUploadCommand = new FileUploadCommand();
 		this.addCommand(fileUploadCommand.getKey(), fileUploadCommand);
+		ICommand fileDownloadCommand = new FileDownloadCommand();
+		this.addCommand(fileDownloadCommand.getKey(), fileDownloadCommand);
 	}
 }

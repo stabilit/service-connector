@@ -43,8 +43,8 @@ import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ClnSubscribeCommand. Responsible for validation and execution of subscribe command. Allows subscribing to a
- * publish service.
+ * The Class ClnSubscribeCommand. Responsible for validation and execution of subscribe command. Allows subscribing to a publish
+ * service.
  * 
  * @author JTraber
  */
@@ -95,11 +95,12 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 			// Following loop implements the wait mechanism in case of a busy connection pool
 			int i = 0;
+			int otiOnServerMillis = 0;
 			do {
 				callback = new CommandCallback(true);
 				try {
-					server = service.allocateServerAndSubscribe(reqMessage, callback, subscription, oti
-							- (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
+					otiOnServerMillis = oti - (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
+					server = service.allocateServerAndSubscribe(reqMessage, callback, subscription, otiOnServerMillis);
 					// no exception has been thrown - get out of wait loop
 					break;
 				} catch (NoFreeSessionException ex) {
@@ -122,7 +123,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				Thread.sleep(Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 			} while (++i < tries);
 
-			SCMPMessage reply = callback.getMessageSync();
+			SCMPMessage reply = callback.getMessageSync(otiOnServerMillis);
 
 			if (reply.isFault() == false) {
 				boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
@@ -262,7 +263,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 					// send message back to client
 					this.response.write();
 				} catch (Exception ex) {
-					logger.warn("timeout expired :"+ex.getMessage());
+					logger.warn("timeout expired :" + ex.getMessage());
 				}
 				return;
 			}
@@ -291,16 +292,13 @@ public class ClnSubscribeCommand extends CommandAdapter {
 
 				// message polling successful
 				reply.setBody(message.getBody());
-				reply
-						.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message
-								.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+				reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
 				String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 				if (messageInfo != null) {
 					reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 				}
 				reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
-				reply.setHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID, message
-						.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID));
+				reply.setHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID, message.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID));
 				reply.setBody(message.getBody());
 				this.response.setSCMP(reply);
 			}
@@ -309,7 +307,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				// send message back to client
 				this.response.write();
 			} catch (Exception ex) {
-				logger.warn("timeout expired :"+ex.getMessage());
+				logger.warn("timeout expired :" + ex.getMessage());
 			}
 			// set up subscription timeout
 			SubscriptionRegistry subscriptionRegistry = AppContext.getCurrentContext().getSubscriptionRegistry();

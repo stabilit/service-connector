@@ -79,7 +79,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			break;
 		case FILE_SERVICE:
 			// create file session
-			FileSession fileSession = new FileSession(sessionInfo, ipAddressList);
+			FileSession fileSession = new FileSession(sessionInfo, ipAddressList, ((FileService) abstractService).getPath());
 			FileServer fileServer = ((FileService) abstractService).getServer();
 			// add server to session
 			fileSession.setServer(fileServer);
@@ -112,11 +112,13 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 			// Following loop implements the wait mechanism in case of a busy connection pool
 			int i = 0;
+			int otiOnServerMillis = 0;
 			do {
 				callback = new CommandCallback(true);
 				try {
-					server = ((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session, oti
-							- (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
+					otiOnServerMillis = oti - (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
+					server = ((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session,
+							otiOnServerMillis);
 					// no exception has been thrown - get out of wait loop
 					break;
 				} catch (NoFreeSessionException ex) {
@@ -139,7 +141,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 				Thread.sleep(Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 			} while (++i < tries);
 
-			SCMPMessage reply = callback.getMessageSync();
+			SCMPMessage reply = callback.getMessageSync(otiOnServerMillis);
 
 			if (reply.isFault() == false) {
 				boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);

@@ -98,7 +98,7 @@ public class SCPublishService extends SCService {
 		changeSubscriptionCall.setCompressed(scSubscribeMessage.isCompressed());
 		SCServiceCallback callback = new SCServiceCallback(true);
 		changeSubscriptionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		callback.getMessageSync();
+		callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class SCPublishService extends SCService {
 			this.sessionActive = false;
 			throw new SCServiceException("subscribe failed", e);
 		}
-		SCMPMessage reply = callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
 			this.sessionActive = false;
 			SCMPFault fault = (SCMPFault) reply;
@@ -222,7 +222,7 @@ public class SCPublishService extends SCService {
 			} catch (Exception e) {
 				throw new SCServiceException("unsubscribe failed", e);
 			}
-			SCMPMessage reply = callback.getMessageSync();
+			SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCMPFault fault = (SCMPFault) reply;
 				throw new SCServiceException("unsubscribe failed", fault.getCause());

@@ -27,17 +27,17 @@ public class SCMPFileUploadCall extends SCMPCallAdapter {
 	private final static Logger logger = Logger.getLogger(SCMPFileUploadCall.class);
 
 	public SCMPFileUploadCall() {
-		this(null, null);
+		this(null, null, null);
 	}
 
-	public SCMPFileUploadCall(IRequester requester, String serviceName) {
-		super(requester, serviceName);
+	public SCMPFileUploadCall(IRequester requester, String serviceName, String sessionId) {
+		super(requester, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester requester, String serviceName) {
-		return new SCMPFileUploadCall(requester, serviceName);
+	public ISCMPCall newInstance(IRequester requester, String serviceName, String sessionId) {
+		return new SCMPFileUploadCall(requester, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */
@@ -49,7 +49,7 @@ public class SCMPFileUploadCall extends SCMPCallAdapter {
 	public void setRemoteFileName(String remoteFileName) {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME, remoteFileName);
 	}
-	
+
 	/** {@inhertiDoc} **/
 	@Override
 	public void setRequestBody(Object obj) {

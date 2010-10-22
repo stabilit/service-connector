@@ -27,17 +27,17 @@ public class SCMPFileDownloadCall extends SCMPCallAdapter {
 	private final static Logger logger = Logger.getLogger(SCMPFileDownloadCall.class);
 
 	public SCMPFileDownloadCall() {
-		this(null, null);
+		this(null, null, null);
 	}
 
-	public SCMPFileDownloadCall(IRequester requester, String serviceName) {
-		super(requester, serviceName);
+	public SCMPFileDownloadCall(IRequester requester, String serviceName, String sessionId) {
+		super(requester, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester requester, String serviceName) {
-		return new SCMPFileDownloadCall(requester, serviceName);
+	public ISCMPCall newInstance(IRequester requester, String serviceName, String sessionId) {
+		return new SCMPFileDownloadCall(requester, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */

@@ -122,15 +122,13 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				}
 				if (body instanceof InputStream) {
 					InputStream inStream = (InputStream) body;
-					byte[] buffer = new byte[Constants.LARGE_MESSAGE_LIMIT];
-					int bodySize = 0;
-					if (inStream.available() < Constants.LARGE_MESSAGE_LIMIT) {
-						bodySize = inStream.available();
-						inStream.read(buffer, 0, inStream.available());
-					} else {
+					int bodySize = inStream.available();
+					if (bodySize > Constants.LARGE_MESSAGE_LIMIT) {
+						// there are more bytes available then LARGE_MESSAGE_LIMIT allows
 						bodySize = Constants.LARGE_MESSAGE_LIMIT;
-						inStream.read(buffer, 0, Constants.LARGE_MESSAGE_LIMIT);
 					}
+					byte[] buffer = new byte[bodySize];
+					inStream.read(buffer, 0, bodySize);
 					int messageLength = sb.length() + bodySize;
 					writeHeadLine(bw, headerKey, messageLength, headerSize);
 					bw.write(sb.toString());

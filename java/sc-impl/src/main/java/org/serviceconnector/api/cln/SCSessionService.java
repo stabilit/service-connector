@@ -44,8 +44,8 @@ import org.serviceconnector.util.TimerTaskWrapper;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class SessionService. SessionService is a remote interface in client API to a session service and provides
- * communication functions.
+ * The Class SessionService. SessionService is a remote interface in client API to a session service and provides communication
+ * functions.
  * 
  * @author JTraber
  */
@@ -104,8 +104,7 @@ public class SCSessionService extends SCService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void createSession(int echoIntervalInSeconds, int timeoutInSeconds, SCMessage scMessage)
-			throws Exception {
+	public synchronized void createSession(int echoIntervalInSeconds, int timeoutInSeconds, SCMessage scMessage) throws Exception {
 		if (this.sessionActive) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
@@ -116,18 +115,18 @@ public class SCSessionService extends SCService {
 		ValidatorUtility.validateInt(1, echoIntervalInSeconds, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
 		this.msgId.reset();
 		SCServiceCallback callback = new SCServiceCallback(true);
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(this.requester, this.serviceName);
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
+				this.requester, this.serviceName);
 		createSessionCall.setSessionInfo(scMessage.getSessionInfo());
 		createSessionCall.setEchoIntervalSeconds(echoIntervalInSeconds);
 		createSessionCall.setRequestBody(scMessage.getData());
-		createSessionCall.setCompressed(true);
+		createSessionCall.setCompressed(scMessage.isCompressed());
 		try {
 			createSessionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			throw new SCServiceException("create session failed ", e);
 		}
-		SCMPMessage reply = callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
 			SCServiceException ex = new SCServiceException("create session failed"
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
@@ -168,8 +167,7 @@ public class SCSessionService extends SCService {
 		}
 		if (this.pendingRequest) {
 			// pending request - reply still outstanding
-			throw new SCServiceException(
-					"execute not possible, there is a pending request - two pending request are not allowed.");
+			throw new SCServiceException("execute not possible, there is a pending request - two pending request are not allowed.");
 		}
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
@@ -189,14 +187,13 @@ public class SCSessionService extends SCService {
 				}
 				throw new SCServiceException("delete session failed ", e);
 			}
-			SCMPMessage reply = callback.getMessageSync();
+			SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				if (this.sessionActive == false) {
 					// ignore errors in state of dead session
 					return;
 				}
-				throw new SCServiceException("delete session failed "
-						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				throw new SCServiceException("delete session failed " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			}
 		} finally {
 			this.pendingRequest = false;
@@ -238,16 +235,15 @@ public class SCSessionService extends SCService {
 		}
 		if (this.pendingRequest) {
 			// pending Request - reply still outstanding
-			throw new SCServiceException(
-					"execute not possible, there is a pending request - two pending request are not allowed.");
+			throw new SCServiceException("execute not possible, there is a pending request - two pending request are not allowed.");
 		}
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
 		// cancel session timeout
 		this.timerTask.cancel();
 		this.msgId.incrementMsgSequenceNr();
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(
-				this.requester, this.serviceName, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+				this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
 		if (msgInfo != null) {
 			// message info optional
@@ -264,7 +260,7 @@ public class SCSessionService extends SCService {
 			throw new SCServiceException("execute failed ", e);
 		}
 		// wait for message in callback
-		SCMPMessage reply = callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		this.pendingRequest = false;
 		if (reply.isFault()) {
 			SCMPFault fault = (SCMPFault) reply;
@@ -317,8 +313,7 @@ public class SCSessionService extends SCService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void execute(SCMessage requestMsg, SCMessageCallback callback, int timeoutInSeconds)
-			throws Exception {
+	public synchronized void execute(SCMessage requestMsg, SCMessageCallback callback, int timeoutInSeconds) throws Exception {
 		if (this.sessionActive == false) {
 			throw new SCServiceException("execute not possible, no active session.");
 		}
@@ -330,16 +325,15 @@ public class SCSessionService extends SCService {
 		}
 		if (this.pendingRequest) {
 			// already executed before - reply still outstanding
-			throw new SCServiceException(
-					"execute not possible, there is a pending request - two pending request are not allowed.");
+			throw new SCServiceException("execute not possible, there is a pending request - two pending request are not allowed.");
 		}
 		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
 		// cancel session timeout
 		this.timerTask.cancel();
 		this.msgId.incrementMsgSequenceNr();
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(
-				this.requester, this.serviceName, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+				this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
 		if (msgInfo != null) {
 			// message info optional
@@ -384,8 +378,8 @@ public class SCSessionService extends SCService {
 		}
 		this.pendingRequest = true;
 		this.msgId.incrementMsgSequenceNr();
-		SCMPEchoCall clnEchoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(this.requester,
-				this.serviceName, this.sessionId);
+		SCMPEchoCall clnEchoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(this.requester, this.serviceName,
+				this.sessionId);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			clnEchoCall.invoke(callback, this.scResponseTimeMillis);
@@ -402,8 +396,8 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * The Class SessionTimeouter. Get control at the time a session refresh is needed. Takes care of sending an echo to
-	 * SC which gets the session refreshed.
+	 * The Class SessionTimeouter. Get control at the time a session refresh is needed. Takes care of sending an echo to SC which
+	 * gets the session refreshed.
 	 */
 	private class SessionTimeouter implements ITimerRun {
 

@@ -17,6 +17,7 @@
 package org.serviceconnector.scmp;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 /**
- * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together
- * to complete request/response.
+ * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together to complete
+ * request/response.
  * 
  * @author JTraber
  */
@@ -73,6 +74,8 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.OPERATION_TIMEOUT); // tries to set operation timeout
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
 		currentPart.setHeader(messagePart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
+		// necessary for downloading file
+		currentPart.setHeader(request, SCMPHeaderAttributeKey.REMOTE_FILE_NAME); // tries to set remote file name
 		this.add(messagePart);
 	}
 
@@ -156,6 +159,15 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		if (this.scmpList == null || this.scmpList.size() <= 0) {
 			return 0;
 		}
+		return this.mergePartBodies();
+	}
+
+	/**
+	 * Merge part bodies.
+	 * 
+	 * @return the object
+	 */
+	private Object mergePartBodies() {
 		// put all parts together to get complete body
 		SCMPMessage firstScmp = scmpList.get(0);
 		if (firstScmp.isByteArray()) {
@@ -169,9 +181,9 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 							logger.warn("bodyLength > 0 but body == null");
 						}
 						this.outputStream.write((byte[]) body);
+						this.outputStream.flush();
 					}
 				}
-				this.outputStream.flush();
 			} catch (Exception ex) {
 				logger.info("getBody " + ex.toString());
 				return null;
@@ -203,8 +215,26 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	 * 
 	 * @return the body as stream
 	 */
-	public ByteArrayOutputStream getBodyAsStream() {
-		return this.outputStream;
+	public void getBodyAsStream(OutputStream outStream) {
+		// put all parts together to get complete body
+		SCMPMessage firstScmp = scmpList.get(0);
+		if (firstScmp.isByteArray()) {
+			try {
+				for (SCMPMessage message : this.scmpList) {
+					int bodyLength = message.getBodyLength();
+					if (bodyLength > 0) {
+						Object body = message.getBody();
+						if (body == null) {
+							logger.warn("bodyLength > 0 but body == null");
+						}
+						outStream.write((byte[]) body);
+						outStream.flush();
+					}
+				}
+			} catch (Exception ex) {
+				logger.info("getBodyAsStream " + ex.toString());
+			}
+		}
 	}
 
 	/** {@inheritDoc} */
