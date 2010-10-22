@@ -18,6 +18,7 @@ package org.serviceconnector.test.sc.cln.api;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,24 +46,25 @@ public class ClnAPIFileTestCase {
 
 			String targetFileName = "uploadFile.txt";
 
-			File uploadFile = new File("target/classes/uploadFile.txt");
-			FileInputStream fileStream = new FileInputStream(uploadFile);
-			fileServiceA.uploadFile(targetFileName, fileStream, 600);
-
-			targetFileName = "uploadFileLarge.zip";
-
-			uploadFile = new File("target/classes/uploadFileLarge.zip");
-			fileStream = new FileInputStream(uploadFile);
+//			File uploadFile = new File("target/classes/uploadFile.txt");
+//			FileInputStream fileStream = new FileInputStream(uploadFile);
 //			fileServiceA.uploadFile(targetFileName, fileStream, 600);
 
-			// String sourceFileName = "";
-			// OutputStream outStream = null;
-			// fileServiceA.downloadFile(sourceFileName, outStream);
-			//			
-			// targetFileName = "";
-			// inStream = null;
-			// sc.uploadFile("serviceName", targetFileName, inStream);
+//			targetFileName = "uploadFileLarge.zip";
+//
+//			uploadFile = new File("target/classes/uploadFileLarge.zip");
+//			fileStream = new FileInputStream(uploadFile);
+//			fileServiceA.uploadFile(targetFileName, fileStream, 600);
 
+			targetFileName = "uploadFile.txt";
+			FileOutputStream outStream = new FileOutputStream(new File("src/main/resources/downloaded_uploadFile.txt"));
+			fileServiceA.downloadFile(targetFileName, outStream, 600);
+			outStream.close();
+
+//			targetFileName = "uploadFileLarge.zip";
+//			outStream = new FileOutputStream(new File("src/main/resources/downloaded_uploadFileLarge.zip"));
+//			fileServiceA.downloadFile(targetFileName, outStream, 600);
+//			outStream.close();
 			// String sourceFileName = "";
 			// OutputStream outStream = null;
 			// sc.downloadFile("serviceName", sourceFileName, outStream);
