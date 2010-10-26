@@ -134,7 +134,7 @@ public class CreateSessionHttpClientToSCTest {
 	}
 
 	/**
-	 * Description: Create new session with empty session name.<br>
+	 * Description: Create new session with empty session service name.<br>
 	 * Expectation:	throws service exception
 	 */
 	@Test
@@ -152,6 +152,65 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	
+	/**
+	 * Description: Create new session with empty session service name and message (SCMessage) with white space.<br>
+	 * Expectation:	throws service exception
+	 */
+	@Test
+	public void createSession_1_1() throws Exception {
+		SCSessionService sessionService = client.newSessionService("");
+		try {
+			SCMessage scMessage = new SCMessage(" ");
+			scMessage.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 10, scMessage);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+	
+	/**
+	 * Description: Create new session with white space session service name and message (SCMessage) with white space.<br>
+	 * Expectation:	throws service exception
+	 */
+	@Test
+	public void createSession_1_2() throws Exception {
+		SCSessionService sessionService = client.newSessionService(" ");
+		try {
+			SCMessage scMessage = new SCMessage(" ");
+			scMessage.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 10, scMessage);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+	
+	/**
+	 * Description: Create new session with arbitrary session service name and message (SCMessage) with white space.<br>
+	 * Expectation:	throws service exception
+	 */
+	@Test
+	public void createSession_1_3() throws Exception {
+		SCSessionService sessionService = client.newSessionService(TestConstants.pangram);
+		try {
+			SCMessage scMessage = new SCMessage(" ");
+			scMessage.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 10, scMessage);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+	
+	
 	/**
 	 * Description: Create new session service with blank string (session name) and new session.<br>
 	 * Expectation:	throws service exception
@@ -194,7 +253,6 @@ public class CreateSessionHttpClientToSCTest {
 	 * Description: Create new session service with valid name and new session.<br>
 	 * Expectation:	throws service exception
 	 */
-	// TODO: disabledService?
 	@Test
 	public void createSession_4() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSessionDisabled);
@@ -234,7 +292,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session service isn't created.
 	 */
 	@Test
-	public void createSessionInfo_2() throws Exception {
+	public void createSessionInfo_1_1() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo(" ");
@@ -248,10 +306,10 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session service isn't created.
 	 */
 	@Test
-	public void createSessionInfo_3() throws Exception {
+	public void createSessionInfo_1_3() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
+		scMessage.setSessionInfo(TestConstants.pangram);
 		sessionService.createSession(300, 10, scMessage);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -262,7 +320,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session service isn't created.
 	 */
 	@Test
-	public void createSessionInfo_4() throws Exception {
+	public void createSessionInfo_1_4() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 256; i++) {
 			sb.append('a');
@@ -280,7 +338,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMPValidator exception
 	 */
 	@Test
-	public void createSessionInfo_5() throws Exception {
+	public void createSessionInfo_1_5() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 257; i++) {
 			sb.append('a');
@@ -297,14 +355,70 @@ public class CreateSessionHttpClientToSCTest {
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
-	// TODO delete this test, same test already exist!  deleteSession_beforeCreateSession_noSessionId()
+	/**
+	 * Description: Create new session service with white space name and new session with empty session info.<br>
+	 * Expectation:	throws SCMPValidator exception
+	 */
 	@Test
-	public void deleteSession_beforeCreateSession_noSessionId() throws Exception {
+	public void createSessionInfo_2() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		sessionService.deleteSession();
+		try {
+			SCMessage scMessage = new SCMessage(" ");
+			scMessage.setSessionInfo("");
+			sessionService.createSession(300, 10, scMessage);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCMPValidatorException);
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Create new session service with white space name and new session with white space session info.<br>
+	 * Expectation:	throws SCMPValidator exception
+	 */
+	@Test
+	public void createSessionInfo_2_1() throws Exception {
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCMessage scMessage = new SCMessage(" ");
+		scMessage.setSessionInfo(" ");
+		sessionService.createSession(300, 10, scMessage);
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+
+	/**
+	 * Description: Create new session service with white spaces name and new session with arbitrary string as session info.<br>
+	 * Expectation:	Session service isn't created.
+	 */
+	@Test
+	public void createSessionInfo_2_2() throws Exception {
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCMessage scMessage = new SCMessage(" ");
+		scMessage.setSessionInfo(TestConstants.pangram);
+		sessionService.createSession(300, 10, scMessage);
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+
+	/**
+	 * Description: Create new session service with white spaces name and new session with long (256 Bytes) session info.<br>
+	 * Expectation:	Session service isn't created.
+	 */
+	@Test
+	public void createSessionInfo_2_3() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 256; i++) {
+			sb.append('a');
+		}
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCMessage scMessage = new SCMessage(" ");
+		scMessage.setSessionInfo(sb.toString());
+		sessionService.createSession(300, 10, scMessage);
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
 	
 	/**
 	 * Description: Create new session service with SC-message and delete the session.<br>
@@ -325,9 +439,37 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session is deleted
 	 */
 	@Test
-	public void deleteSessionService_2() throws Exception {
+	public void deleteSessionService_1_1() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		SCMessage scMessage = new SCMessage();
+		scMessage.setSessionInfo(" ");
+		sessionService.createSession(300, 10, scMessage);
+		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+	}
+
+	/**
+	 * Description: Create new session service with SC-message (white space as message name) and delete the session.<br>
+	 * Expectation:	Session is deleted
+	 */
+@Test
+	public void deleteSessionService_2() throws Exception {
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCMessage scMessage = new SCMessage(" ");
+		scMessage.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, scMessage);
+		sessionService.deleteSession();
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+	}
+
+	/**
+	 * Description: Create new session service with SC-message (white space as message name and as Info-Data) and delete the session.<br>
+	 * Expectation:	Session is deleted
+	 */
+	@Test
+	public void deleteSessionService_2_1() throws Exception {
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCMessage scMessage = new SCMessage(" ");
 		scMessage.setSessionInfo(" ");
 		sessionService.createSession(300, 10, scMessage);
 		sessionService.deleteSession();
@@ -354,6 +496,29 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Create new session service with valid name and two sessions with the same SessionInfo.<br>
+	 * Expectation:	throws SC-Service exception
+	 */
+	@Test
+	public void createSession_10_1() throws Exception {
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCMessage scMessage0 = new SCMessage();
+		scMessage0.setSessionInfo("sessionInfo");
+		sessionService.createSession(300, 10, scMessage0);
+		try {
+			SCMessage scMessage1 = new SCMessage();
+			scMessage1.setSessionInfo("sessionInfo");
+			sessionService.createSession(300, 10, scMessage1);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.deleteSession();
+	}
+
+	
 	/**
 	 * Description: Create two new session service with any one session (different session id's).<br>
 	 * Expectation:	two sessions are created
@@ -386,6 +551,38 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService1.deleteSession();
 	}
 
+	/**
+	 * Description: Create two new session service with any one session (different session id's). The name of the messages are  message are white space. <br>
+	 * Expectation:	two sessions are created
+	 */
+	@Test
+	public void createSession_11_1() throws Exception {
+		SCSessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNameAlt);
+
+		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+
+		SCMessage scMessage0 = new SCMessage(" ");
+		scMessage0.setSessionInfo("sessionInfo");
+		sessionService0.createSession(300, 10, scMessage0);
+
+		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+
+		SCMessage scMessage1 = new SCMessage(" ");
+		scMessage1.setSessionInfo("sessionInfo");
+		sessionService1.createSession(300, 10, scMessage1);
+
+		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		assertEquals(false, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+
+		assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
+
+		sessionService0.deleteSession();
+		sessionService1.deleteSession();
+	}
+
 
 	/**
 	 * Description: Create and delete 10'000 times one session service with one session.<br>
@@ -394,9 +591,9 @@ public class CreateSessionHttpClientToSCTest {
 	@Test
 	public void createSession_12() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		for (int i = 0; i < 10000; i++) {
-			if ((i % 500) == 0)
-				testLogger.info("createSession_10000times cycle:\t" + i + " ...");
+		for (int i = 0; i < 1000; i++) {
+			if ((i % 100) == 0)
+				testLogger.info("createSession_12 cycle:\t" + i + " ...");
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
 			sessionService.createSession(300, 10, scMessage);
@@ -660,320 +857,16 @@ public class CreateSessionHttpClientToSCTest {
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
-	/**
-	 * Description: Create one session service with empty service name.<br>
-	 * Expectation:	throws SC-Service exception on create session
-	 */	
-	@Test
-	public void createSession_14() throws Exception {
-		SCSessionService sessionService = client.newSessionService("");
-		try {
-			SCMessage scMessage = new SCMessage();
-			scMessage.setSessionInfo("sessionInfo");
-			sessionService.createSession(300, 10, scMessage);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
 
-	/**
-	 * Description: Create one session service with white space as service name.<br>
-	 * Expectation:	throws SC-Service exception on create session
-	 */	
-	@Test
-	public void createSession_15() throws Exception {
-		SCSessionService sessionService = client.newSessionService(" ");
-		try {
-			SCMessage scMessage = new SCMessage();
-			scMessage.setSessionInfo("sessionInfo");
-			sessionService.createSession(300, 10, scMessage);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
 
-	/**
-	 * Description: Create new session service with arbitrary service name.<br>
-	 * Expectation:	throws SC-Service exception on create session
-	 */
-	@Test
-	public void createSession_16() throws Exception {
-		SCSessionService sessionService = client.newSessionService("The quick brown fox jumps over a lazy dog.");
-		try {
-			SCMessage scMessage = new SCMessage();
-			scMessage.setSessionInfo("sessionInfo");
-			sessionService.createSession(300, 10, scMessage);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
 
-	/**
-	 * Description: Create one session service and one session with blank session info.<br>
-	 * Expectation:	Session service was created and delete.
-	 */	
-	@Test
-	public void createSessionInfo_6() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo(" ");
-		sessionService.createSession(300, 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
 
-	/**
-	 * Description: Create one session service and one session with arbitrary session info.<br>
-	 * Expectation:	Session service was created and delete.
-	 */	
-	@Test
-	public void createSessionInfo_7() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
-		sessionService.createSession(300, 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
 
-	/**
-	 * Description: Create one session service and one session with long (256 Bytes) session info.<br>
-	 * Expectation:	Session service was created and delete.
-	 */	
-	@Test
-	public void createSessionInfo_8() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 256; i++) {
-			sb.append('a');
-		}
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo(sb.toString());
-		sessionService.createSession(300, 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
+	
 
-	/**
-	 * Description: Create one session service and one session with too long (257 Bytes) session info.<br>
-	 * Expectation:	throws SCMP-Validator exception
-	 */	
-	@Test
-	public void createSessionInfo_9() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 257; i++) {
-			sb.append('a');
-		}
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		try {
-			SCMessage scMessage = new SCMessage();
-			scMessage.setSessionInfo(sb.toString());
-			sessionService.createSession(300, 10, scMessage);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCMPValidatorException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-	}
 
-	@Test
-	public void deleteSession_afterValidCreateSessionDataNull_noSessionId() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 10, scMessage);
-		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-	}
 
-	@Test
-	public void deleteSession_whiteSpaceSessionInfoDataNull_noSessionId() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo(" ");
-		sessionService.createSession(300, 10, scMessage);
-		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-	}
 
-	@Test
-	public void createSession_twiceDataNull_throwsException() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage0 = new SCMessage();
-		scMessage0.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 10, scMessage0);
-		try {
-			SCMessage scMessage1 = new SCMessage();
-			scMessage1.setSessionInfo("sessionInfo");
-			sessionService.createSession(300, 10, scMessage1);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
-
-	@Test
-	public void createSession_twiceWithDifferentSessionServicesDataNull_differentSessionIds() throws Exception {
-		SCSessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
-		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNameAlt);
-
-		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
-
-		SCMessage scMessage0 = new SCMessage();
-		scMessage0.setSessionInfo("sessionInfo");
-		sessionService0.createSession(300, 10, scMessage0);
-
-		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
-
-		SCMessage scMessage1 = new SCMessage();
-		scMessage1.setSessionInfo("sessionInfo");
-		sessionService1.createSession(300, 10, scMessage1);
-
-		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(false, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
-
-		assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
-
-		sessionService0.deleteSession();
-		sessionService1.deleteSession();
-	}
-
-	@Test
-	public void createSession_1000timesDataNull_passes() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		for (int i = 0; i < 1000; i++) {
-			if ((i % 100) == 0)
-				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
-			SCMessage scMessage = new SCMessage();
-			scMessage.setSessionInfo("sessionInfo");
-			sessionService.createSession(300, 10, scMessage);
-			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-			sessionService.deleteSession();
-			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		}
-	}
-
-	@Test
-	public void createSession_emptySessionServiceNameDataWhiteSpace_throwsException() throws Exception {
-		SCSessionService sessionService = client.newSessionService("");
-		try {
-			SCMessage scMessage = new SCMessage(" ");
-			scMessage.setSessionInfo("sessionInfo");
-			sessionService.createSession(300, 10, scMessage);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
-
-	@Test
-	public void createSession_whiteSpaceSessionServiceNameDataWhiteSpace_throwsException() throws Exception {
-		SCSessionService sessionService = client.newSessionService(" ");
-		try {
-			SCMessage scMessage = new SCMessage(" ");
-			scMessage.setSessionInfo("sessionInfo");
-			sessionService.createSession(300, 10, scMessage);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
-
-	@Test
-	public void createSession_arbitrarySessionServiceNameNotInSCPropsDataWhiteSpace_throwsException() throws Exception {
-		SCSessionService sessionService = client.newSessionService("The quick brown fox jumps over a lazy dog.");
-		try {
-			SCMessage scMessage = new SCMessage(" ");
-			scMessage.setSessionInfo("sessionInfo");
-			sessionService.createSession(300, 10, scMessage);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
-
-	@Test(expected = SCMPValidatorException.class)
-	public void createSession_emptySessionInfoDataWhiteSpace_throwsException() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage(" ");
-		scMessage.setSessionInfo("");
-		sessionService.createSession(300, 10, scMessage);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
-
-	@Test
-	public void createSession_whiteSpaceSessionInfoDataWhiteSpace_sessionIdIsNotEmpty() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage(" ");
-		scMessage.setSessionInfo(" ");
-		sessionService.createSession(300, 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
-
-	@Test
-	public void createSession_arbitrarySpaceSessionInfoDataWhiteSpace_sessionIdIsNotEmpty() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage(" ");
-		scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
-		sessionService.createSession(300, 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
-
-	@Test
-	public void createSession_256LongSessionInfoDataWhiteSpace_sessionIdIsNotEmpty() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 256; i++) {
-			sb.append('a');
-		}
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage(" ");
-		scMessage.setSessionInfo(sb.toString());
-		sessionService.createSession(300, 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
-
-	@Test
-	public void deleteSession_afterValidCreateSessionDataWhiteSpace_noSessionId() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage(" ");
-		scMessage.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 10, scMessage);
-		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-	}
-
-	@Test
-	public void deleteSession_whiteSpaceSessionInfoDataWhiteSpace_noSessionId() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage(" ");
-		scMessage.setSessionInfo(" ");
-		sessionService.createSession(300, 10, scMessage);
-		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-	}
 
 	@Test
 	public void createSession_twiceDataWhiteSpace_throwsException() throws Exception {
@@ -993,33 +886,6 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
-	@Test
-	public void createSession_twiceWithDifferentSessionServicesDataWhiteSpace_differentSessionIds() throws Exception {
-		SCSessionService sessionService0 = client.newSessionService(TestConstants.serviceName);
-		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNameAlt);
-
-		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
-
-		SCMessage scMessage0 = new SCMessage(" ");
-		scMessage0.setSessionInfo("sessionInfo");
-		sessionService0.createSession(300, 10, scMessage0);
-
-		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
-
-		SCMessage scMessage1 = new SCMessage(" ");
-		scMessage1.setSessionInfo("sessionInfo");
-		sessionService1.createSession(300, 10, scMessage1);
-
-		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(false, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
-
-		assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
-
-		sessionService0.deleteSession();
-		sessionService1.deleteSession();
-	}
 
 	@Test
 	public void createSession_1000timesDataWhiteSpace_passes() throws Exception {
@@ -1068,7 +934,7 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void createSession_arbitrarySessionServiceNameNotInSCPropsDataOneChar_throwsException() throws Exception {
-		SCSessionService sessionService = client.newSessionService("The quick brown fox jumps over a lazy dog.");
+		SCSessionService sessionService = client.newSessionService(TestConstants.pangram);
 		try {
 			SCMessage scMessage = new SCMessage("a");
 			scMessage.setSessionInfo("sessionInfo");
@@ -1105,7 +971,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void createSession_arbitrarySpaceSessionInfoDataOneChar_sessionIdIsNotEmpty() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		SCMessage scMessage = new SCMessage("a");
-		scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
+		scMessage.setSessionInfo(TestConstants.pangram);
 		sessionService.createSession(300, 10, scMessage);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1257,7 +1123,7 @@ public class CreateSessionHttpClientToSCTest {
 	@Test
 	public void createSession_arbitrarySessionServiceNameNotInSCPropsData60kBByteArray_throwsException()
 			throws Exception {
-		SCSessionService sessionService = client.newSessionService("The quick brown fox jumps over a lazy dog.");
+		SCSessionService sessionService = client.newSessionService(TestConstants.pangram);
 		try {
 			SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 			scMessage.setSessionInfo("sessionInfo");
@@ -1294,7 +1160,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void createSession_arbitrarySpaceSessionInfoData60kBByteArray_sessionIdIsNotEmpty() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
-		scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
+		scMessage.setSessionInfo(TestConstants.pangram);
 		sessionService.createSession(300, 10, scMessage);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
