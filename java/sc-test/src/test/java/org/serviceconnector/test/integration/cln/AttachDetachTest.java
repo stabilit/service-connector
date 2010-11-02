@@ -176,7 +176,7 @@ public class AttachDetachTest {
 
 	@Test
 	public void attachDetach_cycle100Times_notAttached() throws Exception {
-		for (int i = 0; i < 99; i++) {
+		for (int i = 0; i < 100; i++) {
 			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 			client.detach();
 		}

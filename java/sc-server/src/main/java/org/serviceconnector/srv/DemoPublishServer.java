@@ -26,6 +26,7 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
+import org.serviceconnector.ctrl.util.TestConstants;
 
 public class DemoPublishServer {
 
@@ -44,39 +45,45 @@ public class DemoPublishServer {
 	/*
 	public void runPublishServer() {
 	
-		SCPublishServer sc = new SCPublishServer("localhost", 9000, 9001);	// regular, defaults must be documented in javadoc
-		SCPublishServer sc = new SCPublishServer("localhost", 9000, 9001, ConnectionType.NETTY-HTTP);	// alternative with connection type
-	
+		SCServer sc = new SCServer("localhost", 9000, 9001);		// regular, defaults documented in javadoc
+		SCServer sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY-HTTP);	// alternative with connection type
+			
 		try {
 			sc.setConnectionType(ConnectionType.NETTY-HTTP);		// can be set before start listener
 			sc.setHost("localhost");								// can be set before start listener
 			sc.setPort(9000);										// can be set before start listener
 			sc.setListenerPort(9001);								// can be set before start listener
-			sc.setKeepaliveIntervalInSeconds(10);					// can be set before start listener
-			sc.setImmediateConnect(true);							// can be set before start listener
+			sc.setKeepaliveIntervalInSeconds(10);					// can be set before register
+			sc.setImmediateConnect(true);							// can be set before register
 			
-			sc.startListener()										// regular
+			sc.startListener();										// regular
 			sc.startListener(10);									// alternative with operation timeout
+
+			String serviceName = "simulation";
+			SCPublishServer server = sc.newPublishServer(serviceName);	// no other params possible
 			
 			int maxSessions = 10;
 			int maxConnections = 5;
-			String serviceName = "publish-simulation";
-			SCPublishServerCallback cbk = new SrvCallback();	
-			sc.registerServer(serviceName, maxSessions, maxConnections, cbk);		// regular
-			sc.registerServer(serviceName, maxSessions, maxConnections, cbk, 10);	// alternative with operation timeout
-			
-			int index = 0;
-			SCMessage pubMessage = new SCMessage();
-			while (true) {
-				pubMessage.setData("publish message nr : " + index++);
-				pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-				sc.publish(serviceName, pubMessage);				// regular
-				sc.publish(serviceName, pubMessage, 10);			// alternative with operation timeout
-				Thread.sleep(1000);
-			}			
+			SCPublishServerCallback cbk = new SrvCallback(server);
+			try {
+				server.register(maxSessions, maxConnections, cbk);	//	regular
+				server.register(maxSessions, maxConnections, cbk, 10);	// alternative with operation timeout		
+							
+				SCMessage pubMessage = new SCMessage();
+				for (int i = 0; i < 1000; i++) {
+					pubMessage.setData("publish message nr : " + i++);
+					pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
+					server.publish(pubMessage);							// regular
+					server.publish(pubMessage, 10);						// alternative with operation timeout
+					Thread.sleep(1000);
+				}
+			} catch	(Exception e) {
+				logger.error("runPublishServer", e);
+				server.deregister();
 		} catch (Exception e) {
 			logger.error("runPublishServer", e);
-			sc.deregisterServer("publish-simulation");
+		} finally {
+			sc.stopListener();
 		}
 	}
 	 */

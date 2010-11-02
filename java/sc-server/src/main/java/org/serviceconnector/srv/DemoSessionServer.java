@@ -41,36 +41,37 @@ public class DemoSessionServer {
 	/*
 	public void runSessionServer() {
 	
-		SCSessionServer sc = new SCSessionServer("localhost", 9000, 9001);	// regular, defaults must be documented in javadoc
-		SCSessionServer sc = new SCSessionServer("localhost", 9000, 9001, ConnectionType.NETTY-HTTP);	// alternative with connection type
+		SCServer sc = new SCServer("localhost", 9000, 9001);		// regular, defaults documented in javadoc
+		SCServer sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY-HTTP);	// alternative with connection type
 	
 		try {
 			sc.setConnectionType(ConnectionType.NETTY-HTTP);		// can be set before start listener
 			sc.setHost("localhost");								// can be set before start listener
 			sc.setPort(9000);										// can be set before start listener
 			sc.setListenerPort(9001);								// can be set before start listener
-			sc.setKeepaliveIntervalInSeconds(10);					// can be set before start listener
-			sc.setImmediateConnect(true);							// can be set before start listener
+			sc.setKeepaliveIntervalInSeconds(10);					// can be set before register
+			sc.setImmediateConnect(true);							// can be set before register
 			
 			sc.startListener()										// regular
 			sc.startListener(10);									// alternative with operation timeout
 			
+			String serviceName = "simulation";
+			SCSessionServer server = sc.newSessionServer(serviceName);	// no other params possible
+			
 			int maxSessions = 10;
 			int maxConnections = 5;
-			String serviceName = "simulation";
-			SCSessionServerCallback cbk = new SrvCallback();	
-			sc.registerServer(serviceName, maxSessions, maxConnections, cbk);		// regular
-			sc.registerServer(serviceName, maxSessions, maxConnections, cbk, 10);	// alternative with operation timeout
-			
-			String serviceName = "other";
-			SCSessionServerCallback cbk2 = new SrvCallback();
-			sc.registerServer(serviceName, 1000, 5, cbk2);				// regular
-			sc.registerServer(serviceName, 1000, 5, cbk2, 10);			// alternative with operation timeout
-			
+			SCSessionServerCallback cbk = new SrvCallback(server);
+			try {
+				server.register(maxSessions, maxConnections, cbk);	//	regular
+				server.register(maxSessions, maxConnections, cbk, 10);	// alternative with operation timeout
+			} catch	(Exception e) {
+				logger.error("runSessionServer", e);
+				server.deregister();
+			}
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
-			sc.deregisterServer("simulation");
-			sc.deregisterServer("other");
+		} finally {
+			sc.stopListener();
 		}
 	}
 	 */

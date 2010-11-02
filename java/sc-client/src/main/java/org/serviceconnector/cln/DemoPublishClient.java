@@ -22,7 +22,7 @@ public class DemoPublishClient extends Thread {
 	@Override
 	public void run() {
 	
-		SCClient sc = new SCClient("localhost", 7000);				// regular defaults must be documented in javadoc
+		SCClient sc = new SCClient("localhost", 7000);				// regular, defaults documented in javadoc
 		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY-HTTP);	// alternative with connection type
 		
 		try {
@@ -34,21 +34,20 @@ public class DemoPublishClient extends Thread {
 			sc.attach();											// regular
 			sc.attach(10);											// alternative with operation timeout
 		
-			SCPublishService service = sc.newPublishService("publish-simulation");		// no other params possible
+			String serviceName = "publish-simulation";
+			SCPublishService service = sc.newPublishService(serviceName);	// no other params possible
 			service.setNoDataIntervalInSeconds(100);				// can be set before subscribe
 			
 			SCMessageCallback cbk = new DemoSessionClientCallback(service);	// callback on service!!
-			
 			String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
-			SCSubscription subscr = service.subscribe(mask,cbk);	//regular
-			SCSubscription subscr = service.subscribe(mask,cbk,10);	//alternative with operation timeout 
-
+			service.subscribe(cbk, mask);							//regular
+			service.subscribe(cbk, mask, 10);						//alternative with operation timeout 
 			SCMessage msg = new SCMessage();
-			msg.setSessionInfo("sessionInfo");						// optional
+			msg.setSessionInfo("subsriptionInfo");					// optional
 			msg.setData("certificate or what so ever");				// optional
-			SCSubscription subscr = service.subscribe(mask,cbk,10,msg);	//alternative with operation timeout and message 
+			service.subscribe(cbk, mask, 10, msg);					//alternative with operation timeout and message 
 
-			String sid = subscr.getSessionID();
+			String sid = service.getSessionID();
 		
 			while (true) {
 				Thread.sleep(10000);
