@@ -1,14 +1,16 @@
 package org.serviceconnector.cln;
 
 
-public class DemoSessionAndPublishClient {
+public class DemoClient {
 
 	public static void main(String[] args) throws Exception {
 
 		DemoSessionClient demoSessionClient = new DemoSessionClient();
-		demoSessionClient.start();
-
 		DemoPublishClient demoPublishClient = new DemoPublishClient();
+		DemoFileClient demoFileClient = new DemoFileClient();
+		
+		demoSessionClient.start();	
 		demoPublishClient.start();
+		//demoFileClient.start();
 	}
 }

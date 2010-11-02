@@ -38,6 +38,44 @@ public class DemoSessionServer {
 		sessionServer.runSessionServer();
 	}
 
+	/*
+	public void runSessionServer() {
+	
+		SCSessionServer sc = new SCSessionServer("localhost", 9000, 9001);	// regular, defaults must be documented in javadoc
+		SCSessionServer sc = new SCSessionServer("localhost", 9000, 9001, ConnectionType.NETTY-HTTP);	// alternative with connection type
+	
+		try {
+			sc.setConnectionType(ConnectionType.NETTY-HTTP);		// can be set before start listener
+			sc.setHost("localhost");								// can be set before start listener
+			sc.setPort(9000);										// can be set before start listener
+			sc.setListenerPort(9001);								// can be set before start listener
+			sc.setKeepaliveIntervalInSeconds(10);					// can be set before start listener
+			sc.setImmediateConnect(true);							// can be set before start listener
+			
+			sc.startListener()										// regular
+			sc.startListener(10);									// alternative with operation timeout
+			
+			int maxSessions = 10;
+			int maxConnections = 5;
+			String serviceName = "simulation";
+			SCSessionServerCallback cbk = new SrvCallback();	
+			sc.registerServer(serviceName, maxSessions, maxConnections, cbk);		// regular
+			sc.registerServer(serviceName, maxSessions, maxConnections, cbk, 10);	// alternative with operation timeout
+			
+			String serviceName = "other";
+			SCSessionServerCallback cbk2 = new SrvCallback();
+			sc.registerServer(serviceName, 1000, 5, cbk2);				// regular
+			sc.registerServer(serviceName, 1000, 5, cbk2, 10);			// alternative with operation timeout
+			
+		} catch (Exception e) {
+			logger.error("runSessionServer", e);
+			sc.deregisterServer("simulation");
+			sc.deregisterServer("other");
+		}
+	}
+	 */
+	
+	
 	public void runSessionServer() {
 		try {
 			this.scSrv = new SCSessionServer();
@@ -45,7 +83,7 @@ public class DemoSessionServer {
 			// connect to SC as server
 			this.scSrv.setImmediateConnect(true);
 			this.scSrv.startListener("localhost", 9001, 0);
-			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
+			SrvCallback srvCallback = new SrvCallback(new SrvContext());
 			this.scSrv.registerServer("localhost", 9000, serviceName, 10, 10, srvCallback);
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
@@ -64,9 +102,9 @@ public class DemoSessionServer {
 
 	class SrvCallback extends SCSessionServerCallback {
 
-		private SessionServerContext outerContext;
+		private SrvContext outerContext;
 
-		public SrvCallback(SessionServerContext context) {
+		public SrvCallback(SrvContext context) {
 			this.outerContext = context;
 		}
 
@@ -114,7 +152,7 @@ public class DemoSessionServer {
 		}
 	}
 
-	private class SessionServerContext {
+	private class SrvContext {
 		public SCSessionServer getServer() {
 			return scSrv;
 		}

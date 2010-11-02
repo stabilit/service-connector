@@ -18,6 +18,55 @@ public class DemoPublishClient extends Thread {
 		demoPublishClient.start();
 	}
 
+	/*
+	@Override
+	public void run() {
+	
+		SCClient sc = new SCClient("localhost", 7000);				// regular defaults must be documented in javadoc
+		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY-HTTP);	// alternative with connection type
+		
+		try {
+			sc.setConnectionType(ConnectionType.NETTY-HTTP);		// can be set before attach
+			sc.setHost("localhost");								// can be set before attach
+			sc.setPort(7000);										// can be set before attach
+			sc.setMaxConnections(20);								// can be set before attach
+			sc.setKeepaliveIntervalInSeconds(10);					// can be set before attach
+			sc.attach();											// regular
+			sc.attach(10);											// alternative with operation timeout
+		
+			SCPublishService service = sc.newPublishService("publish-simulation");		// no other params possible
+			service.setNoDataIntervalInSeconds(100);				// can be set before subscribe
+			
+			SCMessageCallback cbk = new DemoSessionClientCallback(service);	// callback on service!!
+			
+			String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
+			SCSubscription subscr = service.subscribe(mask,cbk);	//regular
+			SCSubscription subscr = service.subscribe(mask,cbk,10);	//alternative with operation timeout 
+
+			SCMessage msg = new SCMessage();
+			msg.setSessionInfo("sessionInfo");						// optional
+			msg.setData("certificate or what so ever");				// optional
+			SCSubscription subscr = service.subscribe(mask,cbk,10,msg);	//alternative with operation timeout and message 
+
+			String sid = subscr.getSessionID();
+		
+			while (true) {
+				Thread.sleep(10000);
+			}
+		} catch (Exception e) {
+			logger.error("run", e);
+		} finally {
+			try {
+				service.unsubscribe();					// regular
+				service.unsubscribe(10);				// alternative with operation timeout
+				sc.detach();
+			} catch (Exception e) {
+				logger.info("cleanup " + e.toString());
+			}
+		}	
+	}
+	*/
+	
 	@Override
 	public void run() {
 		SCClient sc = new SCClient();

@@ -21,27 +21,49 @@ public class DemoSessionClient extends Thread {
 	}
 
 	/*
-	public void runOther() {
-		try {
-			SCClient sc = new SCClient();						// defaults must be documented in javadoc
-			sc.setConnectionType(ConnectionType.NETTY-HTTP);	// must be set
-			sc.setHost("localhost");							// must be set
-			sc.setPort(7000);									// must be set
-			sc.setMaxConnections(20);							// optional
-			sc.setKeepaliveIntervalInSeconds(10);				// optional
-			sc.attach();
+	@Override
+	public void run() {
+	
+		SCClient sc = new SCClient("localhost", 7000);				// regular defaults must be documented in javadoc
+		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY-HTTP);	// alternative with connection type
 		
-			SCSessionService sessionService = sc.newSessionService("simulation");		
-			SCSession session = sessionService.createSession();
-
+		try {
+			sc.setConnectionType(ConnectionType.NETTY-HTTP);		// can be set before attach
+			sc.setHost("localhost");								// can be set before attach
+			sc.setPort(7000);										// can be set before attach
+			sc.setMaxConnections(20);								// can be set before attach
+			sc.setKeepaliveIntervalInSeconds(10);					// can be set before attach
+			sc.attach();											// regular
+			sc.attach(10);											// alternative with operation timeout
+		
+			SCSessionService service = sc.newSessionService("simulation");		// no other params possible
+			service.setEchoIntervalInSeconds(10);					// can be set before create session
+			service.setEchoTimeoutInSeconds(2);						// can be set before create session
+			
+			SCSession session = service.createSession();			//regular
+			SCSession session = service.createSession(10);			//alternative with operation timeout 
+			SCMessage msg = new SCMessage();
+			msg.setSessionInfo("sessionInfo");						// optional
+			msg.setData("certificate or what so ever");				// optional
+			SCSession session = service.createSession(10, msg);		//alternative with operation timeout and message 
+			
+			String sid = session.getSessionID();
+			
+			SCMessage requestMsg = new SCMessage();
+			SCMessage responseMsg = new SCMessage();
+			SCMessageCallback cbk = new DemoSessionClientCallback(service);	// callback on service!!
+			
 			int index = 0;
 			while (true) {
-				SCMessage requestMsg = new SCMessage();
 				requestMsg.setData("body nr : " + index++);
 				logger.info("Message sent: " + requestMsg.getData());
-				SCMessageCallback callback = new DemoSessionClientCallback(sessionService);
-				DemoSessionClient.pendingRequest = true;
-				session.execute(requestMsg, callback);
+
+				responseMsg = session.execute(requestMsg);			// regular synchronous
+				responseMsg = session.execute(requestMsg, 10);		// alternative synchronous with operation timeout
+
+				DemoSessionClient.pendingRequest = true;	
+				session.execute(requestMsg, cbk);					// regular asynchronous
+				session.execute(requestMsg, cbk, 10);				// alternative asynchronous with operation timeout
 				while (DemoSessionClient.pendingRequest) {
 					Thread.sleep(500);
 				}
@@ -50,7 +72,8 @@ public class DemoSessionClient extends Thread {
 			logger.error("run", e);
 		} finally {
 			try {
-				session.deleteSession();
+				session.deleteSession();							// regular
+				session.deleteSession(10);							// alternative with operation timeout
 				sc.detach();
 			} catch (Exception e) {
 				logger.error("cleanup", e);

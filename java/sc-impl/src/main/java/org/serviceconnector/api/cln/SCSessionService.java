@@ -59,8 +59,8 @@ public class SCSessionService extends SCService {
 	private ITimerRun timerRun;
 	/** The timer task. */
 	private TimerTask timerTask;
-	/** The sc response time milliseconds. */
-	private int scResponseTimeMillis;
+	/** The echo timeout in seconds. */
+	private int echoTimeoutInSeconds;
 
 	/**
 	 * Instantiates a new session service.
@@ -75,7 +75,7 @@ public class SCSessionService extends SCService {
 		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
 		this.scServiceContext = new SCServiceContext(this);
 		this.timerRun = null;
-		this.scResponseTimeMillis = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
+		this.echoTimeoutInSeconds = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
 	}
 
 	/**
@@ -257,7 +257,7 @@ public class SCSessionService extends SCService {
 			clnExecuteCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
-			throw new SCServiceException("execute failed ", e);
+			throw new SCServiceException("execute reuest failed ", e);
 		}
 		// wait for message in callback
 		SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
@@ -346,7 +346,7 @@ public class SCSessionService extends SCService {
 			clnExecuteCall.invoke(scmpCallback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
-			throw new SCServiceException("execute failed ", e);
+			throw new SCServiceException("execute request failed ", e);
 		}
 	}
 
@@ -357,12 +357,12 @@ public class SCSessionService extends SCService {
 		SCSessionService.timer.schedule(this.timerTask, (long) this.timerRun.getTimeoutMillis());
 	}
 
-	public void setSCResponseTimeMillis(int scResponseTimeMillis) {
-		this.scResponseTimeMillis = scResponseTimeMillis;
+	public void setEchoTimeoutInSeconds(int echoTimeoutInSeconds) {
+		this.echoTimeoutInSeconds = echoTimeoutInSeconds;
 	}
 
-	public int getSCResponseTimeMillis() {
-		return this.scResponseTimeMillis;
+	public int getEchoTimeoutInSeconds() {
+		return this.echoTimeoutInSeconds;
 	}
 
 	/**
@@ -382,10 +382,10 @@ public class SCSessionService extends SCService {
 				this.sessionId);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
-			clnEchoCall.invoke(callback, this.scResponseTimeMillis);
+			clnEchoCall.invoke(callback, this.echoTimeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
-			throw new SCServiceException("execute failed", e);
+			throw new SCServiceException("echo request failed", e);
 		}
 		// wait for message in callback
 		SCMPMessage reply = callback.getMessageSync();

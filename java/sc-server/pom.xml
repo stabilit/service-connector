@@ -68,7 +68,7 @@
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
-							<mainClass>org.serviceconnector.srv.DemoSessionAndPublishServer</mainClass>
+							<mainClass>org.serviceconnector.srv.DemoServer</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

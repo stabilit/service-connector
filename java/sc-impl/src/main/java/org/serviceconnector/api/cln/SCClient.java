@@ -124,7 +124,7 @@ public class SCClient {
 	 */
 	public synchronized void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
 		if (this.attached) {
-			throw new SCServiceException("already attached before - detach first, attaching in sequence is not allowed.");
+			throw new SCServiceException("already attached");
 		}
 		if (host == null) {
 			throw new InvalidParameterException("host must be set.");
@@ -175,7 +175,7 @@ public class SCClient {
 	 */
 	public synchronized void detach() throws Exception {
 		if (this.attached == false) {
-			// detach not possible - client not attached just ignore
+			// client is not attached just ignore
 			return;
 		}
 		SCServiceCallback callback = new SCServiceCallback(true);
