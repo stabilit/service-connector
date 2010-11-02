@@ -85,7 +85,7 @@ public class RestartOfSCProcessClientTest {
 	public void workload_afterSCRestart_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-		client.workload(TestConstants.serviceName);
+		client.getWorkload(TestConstants.serviceName);
 	}
 
 	@Test

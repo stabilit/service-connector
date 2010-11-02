@@ -98,7 +98,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
 		scProcess.waitFor();
-		client.workload(TestConstants.serviceName);
+		client.getWorkload(TestConstants.serviceName);
 	}
 
 	@Test

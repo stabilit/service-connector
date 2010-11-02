@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
-import org.serviceconnector.api.SCSubscibeMessage;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
@@ -71,7 +71,7 @@ public class SCPublishService extends SCService {
 	 * @param scSubscribeMessage the sc subscribe message
 	 * @throws Exception the exception
 	 */
-	public synchronized void changeSubscription(SCSubscibeMessage scSubscribeMessage) throws Exception {
+	public synchronized void changeSubscription(SCSubscribeMessage scSubscribeMessage) throws Exception {
 		this.changeSubscription(scSubscribeMessage, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
@@ -82,7 +82,7 @@ public class SCPublishService extends SCService {
 	 * @param timeoutInSeconds the timeout in seconds
 	 * @throws Exception the exception
 	 */
-	public synchronized void changeSubscription(SCSubscibeMessage scSubscribeMessage, int timeoutInSeconds)
+	public synchronized void changeSubscription(SCSubscribeMessage scSubscribeMessage, int timeoutInSeconds)
 			throws Exception {
 		if (this.sessionActive == false) {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
@@ -108,7 +108,7 @@ public class SCPublishService extends SCService {
 	 * @param callback the callback
 	 * @throws Exception the exception
 	 */
-	public synchronized void subscribe(SCSubscibeMessage scSubscribeMessage, SCMessageCallback callback)
+	public synchronized void subscribe(SCSubscribeMessage scSubscribeMessage, SCMessageCallback callback)
 			throws Exception {
 		this.subscribe(scSubscribeMessage, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
@@ -121,7 +121,7 @@ public class SCPublishService extends SCService {
 	 * @param timeoutInSeconds the timeout in seconds
 	 * @throws Exception the exception
 	 */
-	public synchronized void subscribe(SCSubscibeMessage scSubscribeMessage, SCMessageCallback scMessageCallback,
+	public synchronized void subscribe(SCSubscribeMessage scSubscribeMessage, SCMessageCallback scMessageCallback,
 			int timeoutInSeconds) throws Exception {
 		if (this.sessionActive) {
 			throw new SCServiceException("already subscribed");

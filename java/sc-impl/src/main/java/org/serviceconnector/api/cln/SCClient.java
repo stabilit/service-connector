@@ -60,7 +60,7 @@ public class SCClient {
 	/**
 	 * Identifies low level component to use for communication default for clients is {netty.http}.
 	 */
-	private String conType;
+	private String connectionType;
 	/** The requester. */
 	private IRequester requester;
 	/** The context. */
@@ -70,14 +70,11 @@ public class SCClient {
 
 	/**
 	 * Instantiates a new SC client.
-	 * 
-	 * @param connectionType
-	 *            the connection type
 	 */
 	public SCClient() {
 		this.host = null;
 		this.port = -1;
-		this.conType = Constants.DEFAULT_CLIENT_CON;
+		this.connectionType = Constants.DEFAULT_CLIENT_CON;
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 		this.scContext = new SCContext(this);
 		this.attached = false;
@@ -127,8 +124,7 @@ public class SCClient {
 	 */
 	public synchronized void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
 		if (this.attached) {
-			throw new SCServiceException(
-					"already attached before - detach first, attaching in sequence is not allowed.");
+			throw new SCServiceException("already attached before - detach first, attaching in sequence is not allowed.");
 		}
 		if (host == null) {
 			throw new InvalidParameterException("host must be set.");
@@ -138,7 +134,7 @@ public class SCClient {
 		this.port = port;
 		this.host = host;
 		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
-		this.connectionPool = new ConnectionPool(host, port, this.conType, keepAliveIntervalInSeconds);
+		this.connectionPool = new ConnectionPool(host, port, this.connectionType, keepAliveIntervalInSeconds);
 		this.connectionPool.setMaxConnections(this.maxConnections);
 		// keep always one connection active from client to SC
 		this.connectionPool.setMinConnections(1);
@@ -186,15 +182,13 @@ public class SCClient {
 		try {
 			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 			try {
-				detachCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
-						* Constants.SEC_TO_MILLISEC_FACTOR);
+				detachCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("detach client failed", e);
 			}
 			SCMPMessage reply = callback.getMessageSync();
 			if (reply.isFault()) {
-				throw new SCServiceException("detach client failed : "
-						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				throw new SCServiceException("detach client failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			}
 		} finally {
 			this.attached = false;
@@ -209,17 +203,17 @@ public class SCClient {
 	 * @return the connection type in use
 	 */
 	public String getConnectionType() {
-		return conType;
+		return connectionType;
 	}
 
 	/**
-	 * Sets the connection type. Should only be used if you really need to change low level technology careful.
+	 * Sets the connection type.
 	 * 
-	 * @param conType
+	 * @param connectionType
 	 *            the new connection type, identifies low level communication technology
 	 */
-	public void setConnectionType(String conType) {
-		this.conType = conType;
+	public void setConnectionType(String connectionType) {
+		this.connectionType = connectionType;
 	}
 
 	/**
@@ -301,8 +295,8 @@ public class SCClient {
 	}
 
 	/**
-	 * Sets the max connections. If client is already connected to the SC and max connections is lower than default
-	 * value or value set earlier connection pool is not reducing the connections immediately.
+	 * Sets the max connections. If client is already connected to the SC and max connections is lower than default value or value
+	 * set earlier connection pool is not reducing the connections immediately.
 	 * 
 	 * @param maxConnections
 	 *            the new max connections used by connection pool.
@@ -377,15 +371,15 @@ public class SCClient {
 	}
 
 	/**
-	 * Workload. Returns the number of available and allocated sessions for given service name. e.g 4/2.
+	 * Returns the number of available and allocated sessions for given service name.
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @return the string
+	 * @return string containing the available and allocated sessions, e.g. "4/2".
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
-	public String workload(String serviceName) throws SCServiceException {
+	public String getWorkload(String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			// isServiceEnabled not possible - client not attached
 			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
@@ -421,14 +415,13 @@ public class SCClient {
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			inspectCall.setRequestBody(instruction);
-			inspectCall
-					.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+			inspectCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.connectionPool.destroy();
-			throw new SCServiceException("kill SC failed", e);
+			throw new SCServiceException("inspect request failed", e);
 		}
 		if (instruction.equalsIgnoreCase(Constants.KILL)) {
-			// kill sc doesn't reply a message
+			// on KILL SC cannot reply a message
 			return null;
 		}
 		SCMPMessage reply = callback.getMessageSync();

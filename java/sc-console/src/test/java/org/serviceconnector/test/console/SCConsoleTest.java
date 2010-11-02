@@ -298,7 +298,7 @@ public class SCConsoleTest {
 			assertEquals(0, e.status);
 		}
 		SCClient client = new SCClient();
-		client.setConnectionType("netty.tcp");
+		client.setConnectionType(org.serviceconnector.Constants.NETTY_TCP);
 		client.attach(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP));
 		assertEquals(true, client.isServiceEnabled("simulation"));
 		client.detach();
@@ -313,7 +313,7 @@ public class SCConsoleTest {
 			assertEquals(0, e.status);
 		}
 		SCClient client = new SCClient();
-		client.setConnectionType("netty.tcp");
+		client.setConnectionType(org.serviceconnector.Constants.NETTY_TCP);
 		client.attach(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP));
 		assertEquals(false, client.isServiceEnabled("simulation"));
 		

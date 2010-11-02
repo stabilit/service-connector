@@ -5,20 +5,20 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.ValidatorUtility;
 
-public class SCSubscibeMessage extends SCMessage {
+public class SCSubscribeMessage extends SCMessage {
 
 	private String mask;
 	private int noDataIntervalInSeconds;
 
-	public SCSubscibeMessage() {
+	public SCSubscribeMessage() {
 		this.noDataIntervalInSeconds = Constants.DEFAULT_NO_DATA_INTERVAL_SECONDS;
 	}
 
-	public SCSubscibeMessage(byte[] data) {
+	public SCSubscribeMessage(byte[] data) {
 		super(data);
 	}
 
-	public SCSubscibeMessage(String data) {
+	public SCSubscribeMessage(String data) {
 		super(data);
 	}
 

@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
-import org.serviceconnector.api.SCSubscibeMessage;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -69,7 +69,7 @@ public class PublishClientTest {
 	public void publish_waitForAMessageToBePublished_incomesAMessage() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
-		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
 		service.subscribe(subscibeMessage, callback);
@@ -94,7 +94,7 @@ public class PublishClientTest {
 	public void publish_waitFor2MessagesToBePublished_bodyEndsWithConsequentNumbers() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
-		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
 		service.subscribe(subscibeMessage, callback);
@@ -132,7 +132,7 @@ public class PublishClientTest {
 	public void publish_waitFor20MessagesToBePublished_bodysEndWithConsequentNumbers() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
-		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
 		service.subscribe(subscibeMessage, callback);

@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
-import org.serviceconnector.api.SCSubscibeMessage;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -120,7 +120,7 @@ public class SubscribeUnsubscribeClientTest {
 	public void unsubscribeSubscribe_subscriptionValid_isSubscribedHasSessionId() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.unsubscribe();
-		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
@@ -132,7 +132,7 @@ public class SubscribeUnsubscribeClientTest {
 	@Test
 	public void subscribeUnsubscribe_subscriptionValid_isSubscribedThenNot() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
@@ -147,7 +147,7 @@ public class SubscribeUnsubscribeClientTest {
 	public void subscribeUnsubscribe_subscriptionThrowsValidatorException_unsubscribePasses() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
-			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(null);
 			subscibeMessage.setSessionInfo("sessionInfo");
 			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
@@ -164,7 +164,7 @@ public class SubscribeUnsubscribeClientTest {
 	public void subscribeUnsubscribe_subscriptionThrowsSCException_unsubscribePasses() throws Exception {
 		SCPublishService service = client.newPublishService("");
 		try {
-			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
 			subscibeMessage.setSessionInfo("sessionInfo");
 			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
@@ -182,7 +182,7 @@ public class SubscribeUnsubscribeClientTest {
 	public void subscribeUnsubscribe_twice_isSubscribedThenNot() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 
-		SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
@@ -208,7 +208,7 @@ public class SubscribeUnsubscribeClientTest {
 		for (int i = 0; i < loop; i++) {
 			if ((i % 500) == 0)
 				testLogger.info("subscribeUnsubscribe_10000Times cycle:\t" + i + " ...");
-			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
 			subscibeMessage.setSessionInfo("sessionInfo");
 			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));

@@ -54,12 +54,12 @@ public class CreateSessionHttpClientTest {
 	public void setUp() throws Exception {
 		client = new SCClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
+		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.serviceName));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
+		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.serviceName));
 		client.detach();
 		client = null;
 		ex = null;

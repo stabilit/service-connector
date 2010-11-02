@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
-import org.serviceconnector.api.SCSubscibeMessage;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -51,7 +51,7 @@ public class ClnAPIPublishTestCase {
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
-			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
 			subscibeMessage.setSessionInfo("sessionInfo");
 			publishServiceA.subscribe(subscibeMessage, callback);
@@ -81,7 +81,7 @@ public class ClnAPIPublishTestCase {
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
-			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("AEC----");
 			subscibeMessage.setSessionInfo("sessionInfo");
 			publishServiceA.subscribe(subscibeMessage, callback);

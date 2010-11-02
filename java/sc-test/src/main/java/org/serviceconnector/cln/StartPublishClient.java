@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
-import org.serviceconnector.api.SCSubscibeMessage;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
@@ -37,7 +37,7 @@ public class StartPublishClient extends Thread {
 		try {
 			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
-			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
 			subscibeMessage.setSessionInfo("sessionInfo");
 

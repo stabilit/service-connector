@@ -51,12 +51,12 @@ public class CreateSessionTcpClientTest {
 		client = new SCClient();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
+		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.serviceName));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		assertEquals("available/allocated sessions", "1000/0", client.workload(TestConstants.serviceName));
+		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.serviceName));
 		client.detach();
 		client = null;
 		ex = null;

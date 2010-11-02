@@ -84,7 +84,7 @@ public class SCConsole {
 		int status = 0;
 		try {
 			SCClient client = new SCClient();
-			client.setConnectionType("netty.tcp");
+			client.setConnectionType(org.serviceconnector.Constants.NETTY_TCP);
 			client.attach(host, Integer.parseInt(port));
 			switch (cmd) {
 			case DISABLE:
@@ -113,7 +113,7 @@ public class SCConsole {
 				break;
 			case SESSIONS:
 				try {
-					String sessions = client.workload(serviceName);
+					String sessions = client.getWorkload(serviceName);
 					System.out.println("Service [" + serviceName + "] has " + sessions + " sessions");
 				} catch (Exception e) {
 					System.out.println("Serivce [" + serviceName + "] does not exist!");

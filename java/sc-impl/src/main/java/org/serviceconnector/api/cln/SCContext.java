@@ -35,8 +35,9 @@ public class SCContext {
 
 	/**
 	 * Sets the connection pool.
-	 *
-	 * @param connectionPool the new connection pool
+	 * 
+	 * @param connectionPool
+	 *            the new connection pool
 	 */
 	public void setConnectionPool(ConnectionPool connectionPool) {
 		this.connectionPool = connectionPool;

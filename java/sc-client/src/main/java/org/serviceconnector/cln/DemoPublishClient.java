@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
-import org.serviceconnector.api.SCSubscibeMessage;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 
@@ -26,7 +26,7 @@ public class DemoPublishClient extends Thread {
 			((SCClient) sc).setConnectionType("netty.http");
 			sc.attach("localhost", 7000);
 			publishService = sc.newPublishService("publish-simulation");
-			SCSubscibeMessage subscibeMessage = new SCSubscibeMessage();
+			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
 			subscibeMessage.setSessionInfo("sessionInfo");
 			publishService.subscribe(subscibeMessage, new DemoSessionClientCallback(publishService));

@@ -20,6 +20,45 @@ public class DemoSessionClient extends Thread {
 		demoSessionClient.start();
 	}
 
+	/*
+	public void runOther() {
+		try {
+			SCClient sc = new SCClient();						// defaults must be documented in javadoc
+			sc.setConnectionType(ConnectionType.NETTY-HTTP);	// must be set
+			sc.setHost("localhost");							// must be set
+			sc.setPort(7000);									// must be set
+			sc.setMaxConnections(20);							// optional
+			sc.setKeepaliveIntervalInSeconds(10);				// optional
+			sc.attach();
+		
+			SCSessionService sessionService = sc.newSessionService("simulation");		
+			SCSession session = sessionService.createSession();
+
+			int index = 0;
+			while (true) {
+				SCMessage requestMsg = new SCMessage();
+				requestMsg.setData("body nr : " + index++);
+				logger.info("Message sent: " + requestMsg.getData());
+				SCMessageCallback callback = new DemoSessionClientCallback(sessionService);
+				DemoSessionClient.pendingRequest = true;
+				session.execute(requestMsg, callback);
+				while (DemoSessionClient.pendingRequest) {
+					Thread.sleep(500);
+				}
+			}
+		} catch (Exception e) {
+			logger.error("run", e);
+		} finally {
+			try {
+				session.deleteSession();
+				sc.detach();
+			} catch (Exception e) {
+				logger.error("cleanup", e);
+			}
+		}
+	}
+	*/
+	
 	@Override
 	public void run() {
 		SCClient sc = new SCClient();
