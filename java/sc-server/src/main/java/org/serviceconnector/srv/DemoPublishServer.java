@@ -24,9 +24,8 @@ package org.serviceconnector.srv;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
-import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
-import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.api.srv.SCPublishServerCallback;
 
 public class DemoPublishServer {
 
