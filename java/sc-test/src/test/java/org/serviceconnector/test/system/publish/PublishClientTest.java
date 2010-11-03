@@ -196,13 +196,13 @@ public class PublishClientTest {
 		}
 
 		@Override
-		public void callback(SCMessage message) {
+		public void receive(SCMessage message) {
 			increment();
 			setLastMessage(message);
 		}
 
 		@Override
-		public void callback(Exception e) {
+		public void receive(Exception e) {
 		}
 	}
 }

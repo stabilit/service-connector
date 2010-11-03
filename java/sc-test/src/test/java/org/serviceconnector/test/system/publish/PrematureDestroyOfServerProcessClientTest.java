@@ -179,12 +179,12 @@ public class PrematureDestroyOfServerProcessClientTest {
 		}
 
 		@Override
-		public void callback(SCMessage message) {
+		public void receive(SCMessage message) {
 			setLastMessage(message);
 		}
 
 		@Override
-		public void callback(Exception e) {
+		public void receive(Exception e) {
 		}
 	}
 }

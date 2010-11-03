@@ -98,7 +98,7 @@ public class SCServiceCallback extends SynchronousCallback {
 			}
 			SCServiceException e = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			this.service.setRequestComplete();
-			this.messageCallback.callback(e);
+			this.messageCallback.receive(e);
 			return;
 		}
 		SCMessage messageReply = new SCMessage();
@@ -108,7 +108,7 @@ public class SCServiceCallback extends SynchronousCallback {
 		messageReply.setMessageInfo(scmpReply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		// inform service request is completed
 		this.service.setRequestComplete();
-		this.messageCallback.callback(messageReply);
+		this.messageCallback.receive(messageReply);
 	}
 
 	/** {@inheritDoc} */
@@ -121,6 +121,6 @@ public class SCServiceCallback extends SynchronousCallback {
 		}
 		// inform service request is completed
 		this.service.setRequestComplete();
-		this.messageCallback.callback(ex);
+		this.messageCallback.receive(ex);
 	}
 }

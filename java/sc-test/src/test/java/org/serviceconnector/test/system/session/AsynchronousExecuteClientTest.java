@@ -73,7 +73,7 @@ public class AsynchronousExecuteClientTest {
 	@Test(expected = SCServiceException.class)
 	public void execute_beforeCreateSession_throwsException() throws Exception {
 		SCSessionService service = client.newSessionService(TestConstants.serviceName);
-		service.execute(new SCMessage(), new CallBack(service));
+		service.execute(new SCMessage(), new MsgCallback(service));
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -103,7 +103,7 @@ public class AsynchronousExecuteClientTest {
 		SCMessage message = new SCMessage("a");
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -124,7 +124,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -147,7 +147,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -171,7 +171,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -195,7 +195,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -219,7 +219,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -243,7 +243,7 @@ public class AsynchronousExecuteClientTest {
 		SCSessionService service = client.newSessionService(TestConstants.serviceName);
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -268,7 +268,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -294,7 +294,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -321,7 +321,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -348,7 +348,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -375,7 +375,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -402,7 +402,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -431,7 +431,7 @@ public class AsynchronousExecuteClientTest {
 
 		((SCMessage) message).setSessionId(service.getSessionId());
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -463,7 +463,7 @@ public class AsynchronousExecuteClientTest {
 
 		((SCMessage) message).setSessionId(service1.getSessionId());
 
-		CallBack callback = new CallBack(service0);
+		MsgCallback callback = new MsgCallback(service0);
 		service0.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -496,7 +496,7 @@ public class AsynchronousExecuteClientTest {
 
 		((SCMessage) message).setSessionId(service1.getSessionId());
 
-		CallBack callback = new CallBack(service0);
+		MsgCallback callback = new MsgCallback(service0);
 		service0.execute(message, callback);
 		// wait until message received
 		while (messageReceived == false)
@@ -523,7 +523,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback, 1);
 		// wait until message received
 		while (messageReceived == false)
@@ -548,7 +548,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback, 2);
 		// wait until message received
 		while (messageReceived == false)
@@ -575,7 +575,7 @@ public class AsynchronousExecuteClientTest {
 
 		SCMessage response = null;
 		try {
-			CallBack callback = new CallBack(service);
+			MsgCallback callback = new MsgCallback(service);
 			service.execute(message, callback, 0);
 			// wait until message received
 		} catch (Exception e) {
@@ -598,7 +598,7 @@ public class AsynchronousExecuteClientTest {
 
 		SCMessage response = null;
 		try {
-			CallBack callback = new CallBack(service);
+			MsgCallback callback = new MsgCallback(service);
 			service.execute(message, callback, -1);
 		} catch (Exception e) {
 			ex = e;
@@ -620,7 +620,7 @@ public class AsynchronousExecuteClientTest {
 
 		SCMessage response = null;
 		try {
-			CallBack callback = new CallBack(service);
+			MsgCallback callback = new MsgCallback(service);
 			service.execute(message, callback, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
@@ -642,7 +642,7 @@ public class AsynchronousExecuteClientTest {
 
 		SCMessage response = null;
 		try {
-			CallBack callback = new CallBack(service);
+			MsgCallback callback = new MsgCallback(service);
 			service.execute(message, callback, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
@@ -662,7 +662,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback, 3600);
 		// wait until message received
 		while (messageReceived == false)
@@ -687,7 +687,7 @@ public class AsynchronousExecuteClientTest {
 
 		SCMessage response = null;
 		try {
-			CallBack callback = new CallBack(service);
+			MsgCallback callback = new MsgCallback(service);
 			service.execute(message, callback, 3601);
 		} catch (Exception e) {
 			ex = e;
@@ -707,7 +707,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback, 1);
 		// wait until message received
 		while (messageReceived == false)
@@ -730,7 +730,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback, 2);
 		// wait until message received
 		while (messageReceived == false)
@@ -753,7 +753,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback, 3600);
 		// wait until message received
 		while (messageReceived == false)
@@ -777,7 +777,7 @@ public class AsynchronousExecuteClientTest {
 		service.createSession(300, 10, message);
 
 		try {
-			CallBack callback = new CallBack(service);
+			MsgCallback callback = new MsgCallback(service);
 			service.execute(message, callback, 3601);
 		} catch (Exception e) {
 			ex = e;
@@ -797,7 +797,7 @@ public class AsynchronousExecuteClientTest {
 		service.createSession(300, 10, message);
 
 		try {
-			CallBack callback = new CallBack(service);
+			MsgCallback callback = new MsgCallback(service);
 			service.execute(message, callback, Integer.MAX_VALUE);
 		} catch (Exception e) {
 			ex = e;
@@ -817,7 +817,7 @@ public class AsynchronousExecuteClientTest {
 		service.createSession(300, 10, message);
 
 		try {
-			CallBack callback = new CallBack(service);
+			MsgCallback callback = new MsgCallback(service);
 			service.execute(message, callback, Integer.MIN_VALUE);
 		} catch (Exception e) {
 			ex = e;
@@ -837,7 +837,7 @@ public class AsynchronousExecuteClientTest {
 		service.createSession(300, 10, message);
 
 		try {
-			CallBack callback = new CallBack(service);
+			MsgCallback callback = new MsgCallback(service);
 			service.execute(message, callback, 0);
 		} catch (Exception e) {
 			ex = e;
@@ -857,7 +857,7 @@ public class AsynchronousExecuteClientTest {
 		service.createSession(300, 10, message);
 
 		try {
-			CallBack callback = new CallBack(service);
+			MsgCallback callback = new MsgCallback(service);
 			service.execute(message, callback, -1);
 		} catch (Exception e) {
 			ex = e;
@@ -874,7 +874,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(new SCMessage("timeout 4000"), callback, 2);
 		// wait until message received
 		while (messageReceived == false)
@@ -892,7 +892,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(new SCMessage("timeout 2000"), callback, 2);
 		// wait until message received
 		while (messageReceived == false)
@@ -910,7 +910,7 @@ public class AsynchronousExecuteClientTest {
 		message.setSessionInfo("sessionInfo");
 		service.createSession(300, 10, message);
 
-		CallBack callback = new CallBack(service);
+		MsgCallback callback = new MsgCallback(service);
 		service.execute(message, callback, 2);
 		// wait until message received
 		while (messageReceived == false)
@@ -924,22 +924,22 @@ public class AsynchronousExecuteClientTest {
 		service.deleteSession();
 	}
 
-	private class CallBack extends SCMessageCallback {
+	private class MsgCallback extends SCMessageCallback {
 		private SCMessage response = null;
 		private volatile Exception exc = null;
 
-		public CallBack(SCService service) {
+		public MsgCallback(SCService service) {
 			super(service);
 		}
 
 		@Override
-		public void callback(SCMessage msg) {
+		public void receive(SCMessage msg) {
 			response = msg;
 			AsynchronousExecuteClientTest.messageReceived = true;
 		}
 
 		@Override
-		public void callback(Exception e) {
+		public void receive(Exception e) {
 			logger.error("callback", e);
 			exc = e;
 			AsynchronousExecuteClientTest.messageReceived = true;

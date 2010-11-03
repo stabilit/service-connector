@@ -101,7 +101,7 @@ public class DemoPublishClient extends Thread {
 		}
 
 		@Override
-		public void callback(SCMessage reply) {
+		public void receive(SCMessage reply) {
 			System.out.println("Publish client received: " + reply.getData());
 			try {
 				Thread.sleep(1000);
@@ -111,7 +111,7 @@ public class DemoPublishClient extends Thread {
 		}
 
 		@Override
-		public void callback(Exception e) {
+		public void receive(Exception e) {
 		}
 	}
 }

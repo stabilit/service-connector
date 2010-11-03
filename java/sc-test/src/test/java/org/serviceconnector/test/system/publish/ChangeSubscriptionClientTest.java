@@ -316,12 +316,12 @@ public class ChangeSubscriptionClientTest {
 		}
 
 		@Override
-		public void callback(SCMessage reply) {
+		public void receive(SCMessage reply) {
 			logger.info("Publish client received: " + reply.getData());
 		}
 
 		@Override
-		public void callback(Exception e) {
+		public void receive(Exception e) {
 			System.err.println(e);
 		}
 	}

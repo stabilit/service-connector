@@ -80,12 +80,12 @@ public class ClnAPIAsyncSessionTestCase {
 		}
 
 		@Override
-		public void callback(SCMessage msg) {
+		public void receive(SCMessage msg) {
 			System.out.println(msg);
 		}
 
 		@Override
-		public void callback(Exception ex) {
+		public void receive(Exception ex) {
 			logger.error("callback", ex);
 		}
 	}

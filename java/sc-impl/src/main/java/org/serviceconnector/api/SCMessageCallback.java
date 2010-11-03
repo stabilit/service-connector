@@ -48,7 +48,7 @@ public abstract class SCMessageCallback {
 	 * @param reply
 	 *            the reply
 	 */
-	public abstract void callback(SCMessage reply);
+	public abstract void receive(SCMessage reply);
 
 	/**
 	 * Callback. Method gets called when an error shows up in communication process.
@@ -56,7 +56,7 @@ public abstract class SCMessageCallback {
 	 * @param ex
 	 *            the exception
 	 */
-	public abstract void callback(Exception ex);
+	public abstract void receive(Exception ex);
 
 	/**
 	 * Gets the service which is using the message callback.

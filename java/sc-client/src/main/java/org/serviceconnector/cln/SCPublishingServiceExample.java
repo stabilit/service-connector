@@ -73,14 +73,14 @@ public class SCPublishingServiceExample {
 		}
 
 		@Override
-		public void callback(SCMessage reply) {
+		public void receive(SCMessage reply) {
 			publishedMessageCounter++;
 			System.out.println("ClnAPIPublishSubscribeTestCase.TestPublishCallback.callback() counter = "
 					+ publishedMessageCounter);
 		}
 
 		@Override
-		public void callback(Exception ex) {
+		public void receive(Exception ex) {
 			ex.printStackTrace();
 		}
 	}

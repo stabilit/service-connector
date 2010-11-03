@@ -93,14 +93,14 @@ public class SCAsyncSessionServiceExample {
 		}
 
 		@Override
-		public void callback(SCMessage msg) {
+		public void receive(SCMessage msg) {
 			SCServiceContext serviceContext = this.getService().getSCServiceContext();
 			System.out.println(msg);
 			SCAsyncSessionServiceExample.messageReceived = true;
 		}
 
 		@Override
-		public void callback(Exception ex) {
+		public void receive(Exception ex) {
 			logger.error("callback", ex);
 		}
 	}

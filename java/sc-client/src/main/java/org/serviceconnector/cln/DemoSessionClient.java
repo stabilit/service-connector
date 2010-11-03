@@ -124,7 +124,7 @@ public class DemoSessionClient extends Thread {
 		}
 
 		@Override
-		public void callback(SCMessage reply) {
+		public void receive(SCMessage reply) {
 			logger.info("Message received: " + reply.getData());
 			DemoSessionClient.pendingRequest = false;
 		}
@@ -135,7 +135,7 @@ public class DemoSessionClient extends Thread {
 		}
 
 		@Override
-		public void callback(Exception e) {
+		public void receive(Exception e) {
 		}
 	}
 }
