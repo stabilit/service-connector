@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
-import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -27,7 +27,7 @@ public class AsynchronousExecuteClientTest {
 	private static Process srvProcess;
 	private static boolean messageReceived;
 
-	private SCClient client;
+	private SCMgmtClient client;
 	private Exception ex;
 
 	private static ProcessesController ctrl;
@@ -47,7 +47,7 @@ public class AsynchronousExecuteClientTest {
 
 	@Before
 	public void setUp() throws Exception {
-		client = new SCClient();
+		client = new SCMgmtClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.serviceName));
 	}

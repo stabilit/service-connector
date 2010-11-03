@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -26,7 +26,7 @@ public class ExecuteClientToSCTest {
 	private static Process srvProcess;
 
 	private int threadCount = 0;
-	private SCClient client;
+	private SCMgmtClient client;
 	private Exception ex;
 
 	private static ProcessesController ctrl;
@@ -48,7 +48,7 @@ public class ExecuteClientToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		threadCount = Thread.activeCount();
-		client = new SCClient();
+		client = new SCMgmtClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.serviceName));
 	}

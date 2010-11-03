@@ -23,8 +23,6 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
-import org.serviceconnector.call.SCMPInspectCall;
-import org.serviceconnector.call.SCMPManageCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
@@ -34,11 +32,10 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class SCClient. Client to an SC.
+ * Client to an SC.
  * 
  * @author JTraber
  */
@@ -56,17 +53,15 @@ public class SCClient {
 	/** The keep alive interval. */
 	private int keepAliveIntervalInSeconds;
 	/** The connection pool. */
-	private ConnectionPool connectionPool;
-	/**
-	 * Identifies low level component to use for communication default for clients is {netty.http}.
-	 */
+	protected ConnectionPool connectionPool;
+	/** The connection type. {netty.http}*/
 	private String connectionType;
 	/** The requester. */
-	private IRequester requester;
+	protected IRequester requester;
 	/** The context. */
-	private SCContext scContext;
+	protected SCContext scContext;
 
-	private boolean attached;
+	protected boolean attached;
 
 	/**
 	 * Instantiates a new SC client.
@@ -317,146 +312,4 @@ public class SCClient {
 		return this.maxConnections;
 	}
 
-	/**
-	 * Disable service on SC.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 */
-	public void disableService(String serviceName) throws SCServiceException {
-		if (this.attached == false) {
-			// disableService not possible - client not attached
-			throw new SCServiceException("client not attached - disableService not possible.");
-		}
-		String body = this.manageCall(Constants.DISABLE + Constants.EQUAL_SIGN + serviceName);
-		if (body != null) {
-			throw new SCServiceException(body.toString());
-		}
-	}
-
-	/**
-	 * Enable service on SC.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 */
-	public void enableService(String serviceName) throws SCServiceException {
-		if (this.attached == false) {
-			// enableService not possible - client not attached
-			throw new SCServiceException("client not attached - enableService not possible.");
-		}
-		String body = this.manageCall(Constants.ENABLE + Constants.EQUAL_SIGN + serviceName);
-		if (body != null) {
-			throw new SCServiceException(body.toString());
-		}
-	}
-
-	/**
-	 * Checks if service is enabled on SC.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @return true, if is service enabled
-	 */
-	public boolean isServiceEnabled(String serviceName) throws SCServiceException {
-		if (this.attached == false) {
-			// isServiceEnabled not possible - client not attached
-			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
-		}
-		String body = this.inspectCall(Constants.STATE + Constants.EQUAL_SIGN + serviceName);
-		if (ServiceState.ENABLED.toString().equalsIgnoreCase(body)) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Returns the number of available and allocated sessions for given service name.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @return string containing the available and allocated sessions, e.g. "4/2".
-	 * @throws SCServiceException
-	 *             the SC service exception
-	 */
-	public String getWorkload(String serviceName) throws SCServiceException {
-		if (this.attached == false) {
-			// isServiceEnabled not possible - client not attached
-			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
-		}
-		return this.inspectCall(Constants.SESSIONS + Constants.EQUAL_SIGN + serviceName);
-	}
-
-	/**
-	 * Kill SC.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void killSC() throws SCServiceException {
-		if (this.attached == false) {
-			// killSC not possible - client not attached
-			throw new SCServiceException("client not attached - killSC not possible.");
-		}
-		this.manageCall(Constants.KILL);
-	}
-
-	/**
-	 * Inspect call.
-	 * 
-	 * @param instruction
-	 *            the instruction
-	 * @return the string
-	 * @throws SCServiceException
-	 *             the sC service exception
-	 */
-	private String inspectCall(String instruction) throws SCServiceException {
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(this.requester);
-		SCServiceCallback callback = new SCServiceCallback(true);
-		try {
-			inspectCall.setRequestBody(instruction);
-			inspectCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
-		} catch (Exception e) {
-			this.connectionPool.destroy();
-			throw new SCServiceException("inspect request failed", e);
-		}
-		if (instruction.equalsIgnoreCase(Constants.KILL)) {
-			// on KILL SC cannot reply a message
-			return null;
-		}
-		SCMPMessage reply = callback.getMessageSync();
-		if (reply.isFault()) {
-			throw new SCServiceException("inspect failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-		}
-		return (String) reply.getBody();
-	}
-
-	/**
-	 * Process a manage call.
-	 * 
-	 * @param instruction
-	 *            the instruction
-	 * @throws SCServiceException
-	 *             the SC service exception
-	 */
-	private String manageCall(String instruction) throws SCServiceException {
-		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(this.requester);
-		SCServiceCallback callback = new SCServiceCallback(true);
-		try {
-			manageCall.setRequestBody(instruction);
-			manageCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
-		} catch (Exception e) {
-			this.connectionPool.destroy();
-			throw new SCServiceException("kill SC failed", e);
-		}
-		if (instruction.equalsIgnoreCase(Constants.KILL)) {
-			// kill sc doesn't reply a message
-			return null;
-		}
-		SCMPMessage reply = callback.getMessageSync();
-		if (reply.isFault()) {
-			throw new SCServiceException("manage failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-		}
-		return (String) reply.getBody();
-	}
 }

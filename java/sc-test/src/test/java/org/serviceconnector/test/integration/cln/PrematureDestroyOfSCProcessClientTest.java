@@ -8,7 +8,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
@@ -18,7 +18,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfSCProcessClientTest.class);
 
-	private SCClient client;
+	private SCMgmtClient client;
 	private Process scProcess;
 
 	private static ProcessesController ctrl;
@@ -35,7 +35,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
-		client = new SCClient();
+		client = new SCMgmtClient();
 	}
 
 	@After

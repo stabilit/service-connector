@@ -17,7 +17,6 @@
 package org.serviceconnector.test.sc.cln.api;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import org.junit.Before;

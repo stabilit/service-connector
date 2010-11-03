@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
@@ -25,7 +25,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 	private static Process scProcess;
 	private Process srvProcess;
 
-	private SCClient client;
+	private SCMgmtClient client;
 	private Exception ex;
 
 	private static ProcessesController ctrl;
@@ -42,7 +42,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 
 	@Before
 	public void setUp() throws Exception {
-		client = new SCClient();
+		client = new SCMgmtClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,

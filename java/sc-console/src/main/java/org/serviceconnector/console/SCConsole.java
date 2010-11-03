@@ -15,13 +15,25 @@
  */
 package org.serviceconnector.console;
 
-import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.CommandLineUtil;
 import org.serviceconnector.util.ValidatorUtility;
 
 public class SCConsole {
 
+	/**
+	 * @param args
+	 * usage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>|kill><br>
+	 * 
+	 * samples: java -jar scconsole.jar -h localhost -p 7000 enable=abc<br>
+	 *          java -jar scconsole.jar -h localhost -p 7000 disable=abc<br>
+	 *          java -jar scconsole.jar -h localhost -p 7000 state=abc<br>
+	 *          java -jar scconsole.jar -h localhost -p 7000 sessions=abc<br>
+	 *          java -jar scconsole.jar -h localhost -p 7000 kill<br>
+	 *          
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception {
 		// check arguments
 		if (args == null || args.length <= 0) {
@@ -83,7 +95,7 @@ public class SCConsole {
 	private static int run(String host, String port, ConsoleCommand cmd, String serviceName) throws Exception {
 		int status = 0;
 		try {
-			SCClient client = new SCClient();
+			SCMgmtClient client = new SCMgmtClient();
 			client.setConnectionType(org.serviceconnector.Constants.NETTY_TCP);
 			client.attach(host, Integer.parseInt(port));
 			switch (cmd) {
@@ -106,7 +118,7 @@ public class SCConsole {
 						System.out.println("Service [" + serviceName + "] is disabled");
 					}
 				} catch (Exception e) {
-					System.out.println("Serivce [" + serviceName + "] does not exist!");
+					System.out.println("Service [" + serviceName + "] does not exist!");
 					status = 4;
 				}
 				client.detach();
@@ -116,7 +128,7 @@ public class SCConsole {
 					String sessions = client.getWorkload(serviceName);
 					System.out.println("Service [" + serviceName + "] has " + sessions + " sessions");
 				} catch (Exception e) {
-					System.out.println("Serivce [" + serviceName + "] does not exist!");
+					System.out.println("Service [" + serviceName + "] does not exist!");
 					status = 4;
 				}
 				client.detach();

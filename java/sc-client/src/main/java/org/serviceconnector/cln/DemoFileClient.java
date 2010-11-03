@@ -1,8 +1,5 @@
 package org.serviceconnector.cln;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 import org.apache.log4j.Logger;
 
 public class DemoFileClient extends Thread {
