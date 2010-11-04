@@ -116,7 +116,11 @@ public enum SCMPError {
 	/** The SESSION_ABORT. */
 	SESSION_ABORT("607", "Session aborted."),
 	/** The CONNECTION_EXCEPTION. */
-	CONNECTION_EXCEPTION("610", "Connection error.");
+	CONNECTION_EXCEPTION("610", "Connection error."),	
+	/** The CACHE_ERROR. */
+	CACHE_ERROR("620", "Cache Error."),
+	/** The CACHE_LOADING. */
+	CACHE_LOADING("621", "Cache Loading.");
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPError.class);

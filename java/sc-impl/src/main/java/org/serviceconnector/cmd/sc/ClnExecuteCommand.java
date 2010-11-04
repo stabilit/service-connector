@@ -36,20 +36,26 @@ import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.cache.SCMPCache;
+import org.serviceconnector.scmp.cache.SCMPCacheException;
+import org.serviceconnector.scmp.cache.SCMPCacheManager;
+import org.serviceconnector.scmp.cache.SCMPCacheMessage;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class ClnExecuteCommand. Responsible for validation and execution of execute command. Execute command sends any data to the
- * server. Execute command runs asynchronously and passes through any parts messages.
+ * The Class ClnExecuteCommand. Responsible for validation and execution of
+ * execute command. Execute command sends any data to the server. Execute
+ * command runs asynchronously and passes through any parts messages.
  * 
  * @author JTraber
  */
 public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ClnExecuteCommand.class);
+	protected final static Logger logger = Logger
+			.getLogger(ClnExecuteCommand.class);
 
 	/**
 	 * Instantiates a new ClnExecuteCommand.
@@ -65,9 +71,47 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
+	public void run(IRequest request, IResponse response,
+			IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();
+		String sessionId = message.getSessionId();	
+		// check for cache id
+		if (message.getCacheId() != null) {
+			// try to load response from cache
+			try {
+				SCMPCacheManager scmpCacheManager = AppContext.getCurrentContext().getCacheManager();
+				String serviceName = message.getServiceName();
+				SCMPCache scmpCache = scmpCacheManager.getCache(serviceName);
+				if (scmpCache == null) {
+					// schedule session timeout
+					SCMPCommandException scmpCommandException = new SCMPCommandException(
+							SCMPError.CACHE_ERROR,
+							"no cache instance, service name = " + message.getServiceName());
+					scmpCommandException.setMessageType(this.getKey());
+					throw scmpCommandException;
+				}
+				SCMPCacheMessage scmpCacheMessage = scmpCache.getSCMP(message);
+				if (scmpCacheMessage == null) {
+					SCMPCommandException scmpCommandException = new SCMPCommandException(
+							SCMPError.CACHE_LOADING,
+							"cache is loading, retry it later, service name = " + message.getServiceName());
+					scmpCommandException.setMessageType(this.getKey());
+					throw scmpCommandException;
+				}
+				SCMPMessage scmpReply = new SCMPMessage();
+				scmpReply.setMessageType(getKey());
+				scmpReply.setBody(scmpCacheMessage.getBody());
+				response.setSCMP(scmpReply);
+				responderCallback.responseCallback(request, response);
+				// schedule session timeout
+				Session session = this.sessionRegistry.getSession(sessionId);
+				this.sessionRegistry.scheduleSessionTimeout(session);
+			} catch (Exception e) {
+				Session session = this.sessionRegistry.getSession(sessionId);
+				this.sessionRegistry.scheduleSessionTimeout(session);
+                throw e;				
+			}
+		}
 
 		Session session = this.getSessionById(sessionId);
 		// cancel session timeout
@@ -75,24 +119,31 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 
 		StatefulServer server = session.getStatefulServer();
 		// try sending to the server
-		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		int oti = message
+				.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS);
 
-		// Following loop implements the wait mechanism in case of a busy connection pool
+		// Following loop implements the wait mechanism in case of a busy
+		// connection pool
 		int i = 0;
 		do {
-			ClnExecuteCommandCallback callback = new ClnExecuteCommandCallback(request, response, responderCallback, sessionId);
+			ClnExecuteCommandCallback callback = new ClnExecuteCommandCallback(
+					request, response, responderCallback, sessionId);
 			try {
-				server.execute(message, callback, oti - (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
+				server.execute(message, callback, oti
+						- (i * Constants.WAIT_FOR_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
 				if (i >= (tries - 1)) {
-					// only one loop outstanding - don't continue throw current exception
+					// only one loop outstanding - don't continue throw current
+					// exception
 					// schedule session timeout
 					this.sessionRegistry.scheduleSessionTimeout(session);
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SC_ERROR,
-							"no free connection on server for service " + message.getServiceName());
+					SCMPCommandException scmpCommandException = new SCMPCommandException(
+							SCMPError.SC_ERROR,
+							"no free connection on server for service "
+									+ message.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
@@ -112,27 +163,37 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		try {
 			SCMPMessage message = request.getMessage();
 			// messageId
-			String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+			String messageId = (String) message
+					.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 			if (messageId == null || messageId.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID,
+						"messageId must be set");
 			}
 			// serviceName
 			String serviceName = message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
+				throw new SCMPValidatorException(
+						SCMPError.HV_WRONG_SERVICE_NAME,
+						"serviceName must be set");
 			}
 			// operation timeout
-			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			String otiValue = message
+					.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT
+							.getValue());
+			ValidatorUtility.validateInt(10, otiValue, 3600000,
+					SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sessionId
 			String sessionId = message.getSessionId();
 			if (sessionId == null || sessionId.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID,
+						"sessionId must be set");
 			}
 			// message info
-			String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+			String messageInfo = (String) message
+					.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 			if (messageInfo != null) {
-				ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
+				ValidatorUtility.validateStringLength(1, messageInfo, 256,
+						SCMPError.HV_WRONG_MESSAGE_INFO);
 			}
 			// compression
 			message.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
@@ -174,7 +235,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		/** The Constant ERROR_STRING_FAIL. */
 		private static final String ERROR_STRING_FAIL = "executing command failed";
 
-		private SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
+		private SessionRegistry sessionRegistry = AppContext
+				.getCurrentContext().getSessionRegistry();
 
 		/**
 		 * Instantiates a new ClnExecuteCommandCallback.
@@ -186,7 +248,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		 * @param callback
 		 *            the callback
 		 */
-		public ClnExecuteCommandCallback(IRequest request, IResponse response, IResponderCallback callback, String sessionId) {
+		public ClnExecuteCommandCallback(IRequest request, IResponse response,
+				IResponderCallback callback, String sessionId) {
 			this.callback = callback;
 			this.request = request;
 			this.response = response;
@@ -196,6 +259,22 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage scmpReply) {
+			// check for cache id
+			if (scmpReply.getCacheId() != null) {
+				// try save reply in cache
+				try {
+					SCMPCacheManager scmpCacheManager = AppContext.getCurrentContext().getCacheManager();
+					String serviceName = scmpReply.getServiceName();
+					SCMPCache scmpCache = scmpCacheManager.getCache(serviceName);
+					if (scmpCache == null) {
+						this.logger.error("cache write failed, no cache, service name = " + serviceName);
+					} else {
+						scmpCache.putSCMP(scmpReply);
+					}
+				} catch(Exception e) {
+					this.logger.error(e.toString());
+				}
+			}
 			scmpReply.setMessageType(getKey());
 			this.response.setSCMP(scmpReply);
 			this.callback.responseCallback(request, response);
@@ -217,12 +296,14 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				 * 3. abort session on backend server<br>
 				 */
 				this.sessionRegistry.removeSession(session.getId());
-				fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, ERROR_STRING_TIMEOUT);
+				fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT,
+						ERROR_STRING_TIMEOUT);
 				this.callback(fault);
 				session.getStatefulServer().abortSession(session);
 				return;
 			} else if (ex instanceof IOException) {
-				fault = new SCMPFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
+				fault = new SCMPFault(SCMPError.CONNECTION_EXCEPTION,
+						ERROR_STRING_CONNECTION);
 			} else {
 				fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
 			}

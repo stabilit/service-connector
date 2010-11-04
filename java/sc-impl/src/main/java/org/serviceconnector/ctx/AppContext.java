@@ -12,6 +12,7 @@ import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionRegistry;
+import org.serviceconnector.scmp.cache.SCMPCacheManager;
 
 /**
  * The Class AppContext. The AppContext is singelton and holds all factories and registries. Its the top context in a
@@ -37,6 +38,8 @@ public class AppContext {
 	private static final SubscriptionRegistry subscriptionRegistry = new SubscriptionRegistry();
 	private static final SCMPSessionCompositeRegistry scmpSessionCompositeRegistry = new SCMPSessionCompositeRegistry();
 
+	// scmp cache
+	private static final SCMPCacheManager scmpCacheManager = new SCMPCacheManager();
 	/**
 	 * Instantiates a new AppContext. Singelton.
 	 */
@@ -102,4 +105,9 @@ public class AppContext {
 	public SCMPSessionCompositeRegistry getSCMPSessionCompositeRegistry() {
 		return AppContext.scmpSessionCompositeRegistry;
 	}
+	
+	public SCMPCacheManager getCacheManager() {
+		return AppContext.scmpCacheManager;
+	}
+	
 }

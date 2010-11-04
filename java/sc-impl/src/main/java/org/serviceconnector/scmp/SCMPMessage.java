@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
 
+// TODO: Auto-generated Javadoc
 /**
  * Service Connector Message Protocol. Data container for one message.
  * 
@@ -68,6 +69,28 @@ public class SCMPMessage {
 	}
 
 	/**
+	 * Parses the message id.
+	 *
+	 * @param messageId the message id
+	 * @return the sCMP message id
+	 */
+	public static SCMPMessageId parseMessageId(String messageId) {
+	   if (messageId == null) {
+		   return null;
+	   }
+	   String [] splitted = messageId.split("/");
+	   if (splitted.length <= 0 || splitted.length > 2) {
+		   return null;
+	   }
+	   int sequenceNr = Integer.parseInt(splitted[0]);
+	   if (splitted.length == 1) {
+	       return new SCMPMessageId(sequenceNr, 0);
+	   }
+	   int partSequenceNr = Integer.parseInt(splitted[1]);
+       return new SCMPMessageId(sequenceNr, partSequenceNr);
+	}
+	
+	/**
 	 * Sets the message type.
 	 * 
 	 * @param messageType
@@ -97,6 +120,24 @@ public class SCMPMessage {
 	}
 
 	/**
+	 * Gets the message id.
+	 *
+	 * @return the message id
+	 */
+	public String getMessageId() {
+		return this.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);		
+	}
+	
+	/**
+	 * Gets the cache id.
+	 *
+	 * @return the cache id
+	 */
+	public String getCacheId() {
+		return this.getHeader(SCMPHeaderAttributeKey.CACHE_ID);
+	}
+	
+	/**
 	 * Checks if the message is a fault.
 	 * 
 	 * @return true, if is fault
@@ -116,6 +157,11 @@ public class SCMPMessage {
 		return false;
 	}
 
+	/**
+	 * Checks if is keep alive.
+	 *
+	 * @return true, if is keep alive
+	 */
 	public boolean isKeepAlive() {
 		return false;
 	}
@@ -522,7 +568,12 @@ public class SCMPMessage {
 		return 0;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

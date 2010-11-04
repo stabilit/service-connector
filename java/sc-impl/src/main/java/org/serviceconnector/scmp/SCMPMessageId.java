@@ -40,8 +40,26 @@ public class SCMPMessageId {
 	 * Instantiates a new scmp message id.
 	 */
 	public SCMPMessageId() {
-		this.msgSequenceNr = 1;
-		this.partSequenceNr = 0;
+		this(1,0);
+	}
+
+	/**
+	 * Instantiates a new sCMP message id.
+	 *
+	 * @param msgSequenceNr the msg sequence nr
+	 */
+	public SCMPMessageId(int msgSequenceNr) {
+		this(msgSequenceNr, 0);
+	}
+	/**
+	 * Instantiates a new sCMP message id.
+	 *
+	 * @param msgSequenceNr the msg sequence nr
+	 * @param partSequenceNr the part sequence nr
+	 */
+	public SCMPMessageId(int msgSequenceNr, int partSequenceNr) {
+		this.msgSequenceNr = msgSequenceNr;
+		this.partSequenceNr = partSequenceNr;
 		this.sb = null;
 	}
 

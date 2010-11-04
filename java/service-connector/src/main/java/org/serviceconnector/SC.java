@@ -119,6 +119,8 @@ public final class SC {
 		ServerLoader.load(configFileName);
 		// load services
 		ServiceLoader.load(configFileName);
+		// load cache manager
+		appContext.getCacheManager().initialize();
 
 		// clean up and initialize cache
 		// Cache cache = Cache.initialize();
