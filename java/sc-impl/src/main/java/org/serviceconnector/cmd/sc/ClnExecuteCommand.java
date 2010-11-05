@@ -37,7 +37,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.cache.SCMPCache;
-import org.serviceconnector.scmp.cache.SCMPCacheException;
 import org.serviceconnector.scmp.cache.SCMPCacheManager;
 import org.serviceconnector.scmp.cache.SCMPCacheMessage;
 import org.serviceconnector.server.StatefulServer;
