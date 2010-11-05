@@ -28,25 +28,20 @@ public class DemoFileClient extends Thread {
 			sc.attach();											// regular
 			sc.attach(10);											// alternative with operation timeout
 		
-			SCFileService service = sc.newFileService("P01_logging");		// no other params possible
+			SCFileService service = sc.newFileService("P01_logging");	// no other params possible
 
 			uploadFile = new File("target/classes/uploadFileLarge.zip");
 			fileStream = new FileInputStream(uploadFile);
-			service.uploadFile(targetFileName, fileStream, 600);
+			
+			service.uploadFile(targetFileName, fileStream);			// regular
+			service.uploadFile(targetFileName, fileStream, 600);	// alternative with operation timeout
 
 			targetFileName = "uploadFile.txt";
 			FileOutputStream outStream = new FileOutputStream(new File("src/main/resources/downloaded_uploadFile.txt"));
 			service.downloadFile(targetFileName, outStream);		// regular
 			service.downloadFile(targetFileName, outStream, 600);	// alternative with operation timeout
 			outStream.close();
-			
-			SCSession session = service.createSession();			//regular
-			SCSession session = service.createSession(10);			//alternative with operation timeout 
-			SCMessage msg = new SCMessage();
-			msg.setSessionInfo("sessionInfo");						// optional
-			msg.setData("certificate or what so ever");				// optional
-			SCSession session = service.createSession(10, msg);		//alternative with operation timeout and message 
-			
+						
 		} catch (Exception e) {
 			logger.error("run", e);
 		} finally {

@@ -38,7 +38,7 @@ public class DemoPublishClient extends Thread {
 			SCPublishService service = sc.newPublishService(serviceName);	// no other params possible
 			service.setNoDataIntervalInSeconds(100);				// can be set before subscribe
 			
-			SCMessageCallback cbk = new DemoSessionClientCallback(service);	// callback on service!!
+			SCMessageCallback cbk = new DemoPublishClientCallback(service);	// callback on service!!
 			String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
 			service.subscribe(cbk, mask);							//regular
 			service.subscribe(cbk, mask, 10);						//alternative with operation timeout 
@@ -64,6 +64,26 @@ public class DemoPublishClient extends Thread {
 			}
 		}	
 	}
+
+	private class DemoPublishClientCallback extends SCMessageCallback {
+		public DemoPublishClientCallback(SCPublishService service) {
+			super(service);
+		}
+
+		@Override
+		public void receive(SCMessage reply) {
+			System.out.println("Publish client received: " + reply.getData());
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public void receive(Exception e) {
+		}
+	}
 	*/
 	
 	@Override
@@ -77,7 +97,7 @@ public class DemoPublishClient extends Thread {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
 			subscibeMessage.setSessionInfo("sessionInfo");
-			publishService.subscribe(subscibeMessage, new DemoSessionClientCallback(publishService));
+			publishService.subscribe(subscibeMessage, new DemoPublishClientCallback(publishService));
 
 			while (true) {
 				Thread.sleep(10000);
@@ -94,9 +114,8 @@ public class DemoPublishClient extends Thread {
 		}
 	}
 
-	private class DemoSessionClientCallback extends SCMessageCallback {
-
-		public DemoSessionClientCallback(SCService service) {
+	private class DemoPublishClientCallback extends SCMessageCallback {
+		public DemoPublishClientCallback(SCPublishService service) {
 			super(service);
 		}
 

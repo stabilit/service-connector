@@ -69,11 +69,12 @@ public class DemoPublishServer {
 				server.register(maxSessions, maxConnections, cbk, 10);	// alternative with operation timeout		
 							
 				SCMessage pubMessage = new SCMessage();
-				for (int i = 0; i < 1000; i++) {
-					pubMessage.setData("publish message nr : " + i++);
+				for (int i = 0; i < 100; i++) {
+					pubMessage.setData("publish message nr : " + i);
 					pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
 					server.publish(pubMessage);							// regular
 					server.publish(pubMessage, 10);						// alternative with operation timeout
+					
 					Thread.sleep(1000);
 				}
 			} catch	(Exception e) {

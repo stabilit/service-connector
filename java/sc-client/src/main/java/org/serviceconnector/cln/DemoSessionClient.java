@@ -37,32 +37,34 @@ public class DemoSessionClient extends Thread {
 			sc.attach(10);											// alternative with operation timeout
 		
 			String serviceName = "simulation";
-			SCSessionService service = sc.newSessionService(serviceName);	// no other params possible
+			SCSessionService service = sc.newSessionService(serviceName);	// regular, no other params possible
 			service.setEchoIntervalInSeconds(10);					// can be set before create session
 			service.setEchoTimeoutInSeconds(2);						// can be set before create session
 			
-			SCMessageCallback cbk = new DemoSessionClientCallback(service);	// callback on service!!
-			service.createSession(cbk);								// regular
-			service.createSession(cbk, 10);							// alternative with operation timeout 
+			service.createSession();								// regular
+			service.createSession(10);								// alternative with operation timeout 
 			SCMessage msg = new SCMessage();
 			msg.setSessionInfo("sessionInfo");						// optional
 			msg.setData("certificate or what so ever");				// optional
-			service.createSession(cbk, 10, msg);					// alternative with operation timeout and message 
+			service.createSession(10, msg);							// alternative with operation timeout and message 
 
 			String sid = service.getSessionID();
 			
 			SCMessage requestMsg = new SCMessage();
 			SCMessage responseMsg = new SCMessage();		
-			int index = 0;
-			while (true) {
-				requestMsg.setData("body nr : " + index++);
+			SCMessageCallback cbk = new DemoSessionClientCallback(service);	// callback on service!!
+			for (int i = 0; i < 100; i++) {
+				requestMsg.setData("body nr : " + i);
 				logger.info("Message sent: " + requestMsg.getData());
 
-				service.execute(requestMsg);						// regular asynchronous call
-				service.execute(requestMsg, 10);					// alternative with operation timeout
-	
-				service.waitForResponse();							// optionally wait for response (synchronous)
-				responseMsg = cbk.getResponse()						// get response message
+				service.send(cbk, requestMsg);						// regular asynchronous call
+				service.send(cbk, requestMsg, 10);					// alternative with operation timeout
+				service.receive();									// wait for response message synchronous
+				responseMsg = cbk.getMessage();						// response message
+				
+				responseMsg = service.execute(requestMsg);			// regular synchronous call
+				responseMsg = service.execute(requestMsg, 10);		// alternative with operation timeout
+				
 				Thread.sleep(1000);
 			}
 		} catch (Exception e) {
@@ -75,6 +77,22 @@ public class DemoSessionClient extends Thread {
 			} catch (Exception e) {
 				logger.error("cleanup", e);
 			}
+		}
+	}
+
+	private class DemoSessionClientCallback extends SCMessageCallback {
+		public DemoSessionClientCallback(SCSessionService service) {
+			super(service);
+		}
+
+		@Override
+		public void receive(SCMessage reply) {
+			logger.info("Message received: " + reply.getData());
+			DemoSessionClient.pendingRequest = false;
+		}
+
+		@Override
+		public void receive(Exception e) {
 		}
 	}
 	*/
@@ -116,10 +134,7 @@ public class DemoSessionClient extends Thread {
 	}
 
 	private class DemoSessionClientCallback extends SCMessageCallback {
-
-		private SCService service;
-
-		public DemoSessionClientCallback(SCService service) {
+		public DemoSessionClientCallback(SCSessionService service) {
 			super(service);
 		}
 
@@ -127,11 +142,6 @@ public class DemoSessionClient extends Thread {
 		public void receive(SCMessage reply) {
 			logger.info("Message received: " + reply.getData());
 			DemoSessionClient.pendingRequest = false;
-		}
-
-		@Override
-		public SCService getService() {
-			return this.service;
 		}
 
 		@Override
