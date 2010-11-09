@@ -12,6 +12,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.net.ConnectionType;
 
 /**
  * @author FJurnecka
@@ -37,7 +38,7 @@ public class SCClientTest {
 	public void construtor_1() {
 		assertEquals(null, client.getHost());
 		assertEquals(-1, client.getPort());
-		assertEquals(Constants.DEFAULT_CLIENT_CON, client.getConnectionType());
+		assertEquals(ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE, client.getConnectionType());
 		assertEquals(Constants.DEFAULT_KEEP_ALIVE_INTERVAL, client.getKeepAliveIntervalInSeconds());
 		assertEquals(Constants.DEFAULT_MAX_CONNECTIONS, client.getMaxConnections());
 		assertEquals(false, client.isAttached());

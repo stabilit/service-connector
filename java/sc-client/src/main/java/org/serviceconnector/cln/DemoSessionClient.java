@@ -70,6 +70,9 @@ public class DemoSessionClient extends Thread {
 				logger.info("Message received: " + responseMsg.getData());
 				Thread.sleep(1000);
 			}
+			requestMsg.setData("kill server");
+			service.send(cbk, requestMsg);
+			
 		} catch (Exception e) {
 			logger.error("run", e);
 		} finally {

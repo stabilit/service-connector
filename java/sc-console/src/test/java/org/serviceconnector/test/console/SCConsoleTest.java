@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.console.ConsoleCommand;
 import org.serviceconnector.console.SCConsole;
+import org.serviceconnector.net.ConnectionType;
 
 
 public class SCConsoleTest {
@@ -409,7 +410,7 @@ public class SCConsoleTest {
 			assertEquals(0, e.status);
 		}
 		SCMgmtClient client = new SCMgmtClient();
-		client.setConnectionType(org.serviceconnector.Constants.NETTY_TCP);
+		client.setConnectionType(ConnectionType.NETTY_TCP);
 		client.attach(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP));
 		assertEquals(true, client.isServiceEnabled("simulation"));
 		client.detach();
@@ -428,7 +429,7 @@ public class SCConsoleTest {
 			assertEquals(0, e.status);
 		}
 		SCMgmtClient client = new SCMgmtClient();
-		client.setConnectionType(org.serviceconnector.Constants.NETTY_TCP);
+		client.setConnectionType(ConnectionType.NETTY_TCP);
 		client.attach(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP));
 		assertEquals(false, client.isServiceEnabled("simulation"));
 		

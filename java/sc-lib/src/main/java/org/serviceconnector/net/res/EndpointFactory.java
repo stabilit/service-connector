@@ -19,7 +19,7 @@ package org.serviceconnector.net.res;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.res.netty.http.NettyHttpEndpoint;
 import org.serviceconnector.net.res.netty.tcp.NettyTcpEndpoint;
 import org.serviceconnector.net.res.netty.tcp.proxy.NettyTcpProxyEndpoint;
@@ -35,13 +35,13 @@ public class EndpointFactory {
 	protected final static Logger logger = Logger.getLogger(EndpointFactory.class);
 
 	public IEndpoint createEndpoint(String key) {
-		if (Constants.NETTY_HTTP.equalsIgnoreCase(key)) {
+		if (ConnectionType.NETTY_HTTP.equalsIgnoreCase(key)) {
 			return new NettyHttpEndpoint();
-		} else if (Constants.NETTY_TCP.equalsIgnoreCase(key)) {
+		} else if (ConnectionType.NETTY_TCP.equalsIgnoreCase(key)) {
 			return new NettyTcpEndpoint();
-		} else if (Constants.NETTY_WEB.equalsIgnoreCase(key)) {
+		} else if (ConnectionType.NETTY_WEB.equalsIgnoreCase(key)) {
 			return new NettyWebEndpoint();
-		} else if (Constants.NETTY_PROXY_HTTP.equalsIgnoreCase(key)) {
+		} else if (ConnectionType.NETTY_PROXY_HTTP.equalsIgnoreCase(key)) {
 			return new NettyTcpProxyEndpoint();
 		} else {
 			logger.fatal("key : " + key + " not found!");

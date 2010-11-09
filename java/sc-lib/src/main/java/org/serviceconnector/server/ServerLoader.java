@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
@@ -69,7 +70,7 @@ public class ServerLoader {
 			String connectionType = (String) config.getString(serverName + Constants.CONNECTION_TYPE_QUALIFIER);
 
 			if (connectionType == null) {
-				connectionType = Constants.DEFAULT_SERVER_CON;
+				connectionType = ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE;
 			}
 			String maxConnectionsValue = (String) config.getString(serverName + Constants.MAX_CONNECTION_POOL_SIZE);
 			int maxConnections = Constants.DEFAULT_MAX_CONNECTIONS;

@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.srv.SCSessionServer;
+import org.serviceconnector.net.ConnectionType;
 
 
 public class SCServerTest {
@@ -27,7 +28,7 @@ public class SCServerTest {
 	@Test
 	public void constructor_1(){
 		assertEquals(false, server.isListening());
-		assertEquals(Constants.DEFAULT_SERVER_CON, server.getConnectionType());
+		assertEquals(ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
 		assertEquals(true, server.isImmediateConnect());
 		assertEquals(null, server.getHost());
 		assertEquals(Constants.DEFAULT_KEEP_ALIVE_INTERVAL, server.getKeepAliveIntervalInSeconds());

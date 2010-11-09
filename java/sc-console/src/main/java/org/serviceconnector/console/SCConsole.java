@@ -16,6 +16,7 @@
 package org.serviceconnector.console;
 
 import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.CommandLineUtil;
 import org.serviceconnector.util.ValidatorUtility;
@@ -96,7 +97,7 @@ public class SCConsole {
 		int status = 0;
 		try {
 			SCMgmtClient client = new SCMgmtClient();
-			client.setConnectionType(org.serviceconnector.Constants.NETTY_TCP);
+			client.setConnectionType(ConnectionType.NETTY_TCP);
 			client.attach(host, Integer.parseInt(port));
 			switch (cmd) {
 			case DISABLE:

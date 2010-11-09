@@ -29,6 +29,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.srv.ServerCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
@@ -76,7 +77,7 @@ public class SCSessionServer {
 	 */
 	public SCSessionServer() {
 		this.listening = false;
-		this.conType = Constants.DEFAULT_SERVER_CON;
+		this.conType = ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE;
 		// attributes for registerServer
 		this.immediateConnect = true;
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;

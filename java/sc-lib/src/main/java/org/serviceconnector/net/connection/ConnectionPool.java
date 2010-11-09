@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.util.SynchronousCallback;
 
@@ -122,7 +123,7 @@ public class ConnectionPool {
 	 *            the keep alive interval
 	 */
 	public ConnectionPool(String host, int port, int keepAliveInterval) {
-		this(host, port, Constants.DEFAULT_CLIENT_CON, keepAliveInterval);
+		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE, keepAliveInterval);
 	}
 
 	/**
@@ -134,7 +135,7 @@ public class ConnectionPool {
 	 *            the port
 	 */
 	public ConnectionPool(String host, int port) {
-		this(host, port, Constants.DEFAULT_CLIENT_CON, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
+		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
 	/**

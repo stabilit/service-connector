@@ -24,6 +24,7 @@ import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
@@ -69,7 +70,7 @@ public class SCClient {
 	public SCClient() {
 		this.host = null;
 		this.port = -1;
-		this.connectionType = Constants.DEFAULT_CLIENT_CON;
+		this.connectionType = ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE;
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 		this.scContext = new SCContext(this);
 		this.attached = false;

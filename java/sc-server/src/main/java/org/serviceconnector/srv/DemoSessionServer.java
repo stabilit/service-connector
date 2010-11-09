@@ -85,47 +85,36 @@ public class DemoSessionServer {
 
 		@Override
 		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
-			logger.info("SessionServer.SrvCallback.createSession()");
+			logger.info("Session created");
 			return request;
 		}
 
 		@Override
 		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
-			logger.info("SessionServer.SrvCallback.deleteSession()");
+			logger.info("Session deleted");
 		}
 
 		@Override
 		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
-			logger.info("SessionServer.SrvCallback.abortSession()");
+			logger.info("Session aborted");
 		}
 
 		@Override
 		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
 			Object data = request.getData();
-			logger.info("Message received: " + data);
-
+			
 			// watch out for kill server message
 			if (data.getClass() == String.class) {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
-					try {
-						KillThread kill = new KillThread(this.outerContext.getServer());
-						kill.start();
-					} catch (Exception e) {
-						logger.error("execute", e);
-					}
+					System.exit(1);
 				} else {
-					try {
-						Thread.sleep(3000);
-					} catch (InterruptedException e) {
-						logger.error("execute", e);
-					}
+					logger.info("Message received: " + data);
 				}
 			}
 			return request;
 		}
 	}
-
 	 */
 	
 	
