@@ -24,7 +24,6 @@ public class AttachConnectionTypeHttpTest {
 
 	private int threadCount = 0;
 	private SCClient client;
-	private Exception ex;
 
 	private static Process scProcess;
 	private static ProcessesController ctrl;

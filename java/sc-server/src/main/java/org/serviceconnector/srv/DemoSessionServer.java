@@ -47,7 +47,7 @@ public class DemoSessionServer {
 		try {
 			sc.setConnectionType(ConnectionType.NETTY-HTTP);		// can be set before start listener
 			sc.setHost("localhost");								// can be set before start listener
-			sc.setPort(9000);										// can be set before start listener
+			sc.setPort(9000);										// can be set before register
 			sc.setListenerPort(9001);								// can be set before start listener
 			sc.setKeepaliveIntervalInSeconds(10);					// can be set before register
 			sc.setImmediateConnect(true);							// can be set before register
