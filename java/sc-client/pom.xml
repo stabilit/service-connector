@@ -52,17 +52,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.serviceconnector</groupId>
-			<artifactId>sc-impl</artifactId>
+			<artifactId>sc-lib</artifactId>
 			<version>0.0.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.serviceconnector</groupId>
-			<artifactId>sc-impl</artifactId>
-			<version>0.0.1</version>
-			<type>test-jar</type>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>

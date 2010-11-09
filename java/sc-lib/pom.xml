@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.serviceconnector</groupId>
-	<artifactId>sc-impl</artifactId>
+	<artifactId>sc-lib</artifactId>
 	<version>0.0.1</version>
-	<name>sc-impl</name>
-	<description>sc-impl</description>
+	<name>sc-lib</name>
+	<description>sc-lib</description>
 	<url>http://www.stabilit.ch</url>
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
@@ -28,7 +28,7 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.3.1</version>
 				<configuration>
-					<finalName>sc-impl-${project.version}</finalName>
+					<finalName>sc-lib-${project.version}</finalName>
 				</configuration>
 			</plugin>
 			<plugin>

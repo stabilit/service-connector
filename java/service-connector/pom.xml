@@ -83,7 +83,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.serviceconnector</groupId>
-			<artifactId>sc-impl</artifactId>
+			<artifactId>sc-lib</artifactId>
 			<version>0.0.1</version>
 			<scope>compile</scope>
 		</dependency>
