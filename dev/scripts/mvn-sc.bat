@@ -1,6 +1,6 @@
 @echo off
 
-call mvn-source-test-install-cmd.bat ..\..\java\sc-impl
+call mvn-source-test-install-cmd.bat ..\..\java\sc-lib
 call mvn-source-test-install-cmd.bat ..\..\java\service-connector
 
 rem create service-connector sc.jar and copy to bin dir
