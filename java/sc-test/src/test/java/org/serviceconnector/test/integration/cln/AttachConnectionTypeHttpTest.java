@@ -261,172 +261,310 @@ public class AttachConnectionTypeHttpTest {
 		this.testAttach("",  TestConstants.PORT_HTTP, null, true, null);
 	}
 
+	/**
+	 * Description: Attach client with empty host name and TCP-port.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostEmptyPortTcp_notAttachedThrowsException() throws Exception {
+	public void attach_21() throws Exception {
 		this.testAttach("", TestConstants.PORT_TCP, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with empty host name and port zero.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostEmptyPort0_notAttachedThrowsException() throws Exception {
+	public void attach_22() throws Exception {
 		this.testAttach("", 0, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with empty host name and port -1.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostEmptyPortMinus1_notAttachedThrowsException() throws Exception {
+	public void attach_23() throws Exception {
 		this.testAttach("", -1, null, false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with empty host name and minimum port number.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostEmptyPortMin_notAttachedThrowsException() throws Exception {
+	public void attach_24() throws Exception {
 		this.testAttach("", TestConstants.PORT_MIN, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with empty host name and maximum allowed port number.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostEmptyPortMaxAllowed_notAttachedThrowsException() throws Exception {
+	public void attach_25() throws Exception {
 		this.testAttach("", 0xFFFF, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with empty host name and maximum allowed port number +1.<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostEmptyPortMaxAllowedPlus1_notAttachedThrowsException() throws Exception {
+	public void attach_26() throws Exception {
 		this.testAttach("", 0xFFFF + 1, null, false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with empty host name and use port number "Integer.MIN_VALUE".<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostEmptyPortIntMin_notAttachedThrowsException() throws Exception {
+	public void attach_27() throws Exception {
 		this.testAttach("", Integer.MIN_VALUE, null, false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with empty host name and use port number "Integer.MAX_VALUE".<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostEmptyPortIntMax_notAttachedThrowsException() throws Exception {
+	public void attach_28() throws Exception {
 		this.testAttach("", Integer.MAX_VALUE, null, false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with host name "a" and use default http-port.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostAPortHttp_notAttachedThrowsException() throws Exception {
+	public void attach_29() throws Exception {
 		this.testAttach("a", TestConstants.PORT_HTTP, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with host name "a" and use default TCP-port.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostAPortTcp_notAttachedThrowsException() throws Exception {
+	public void attach_30() throws Exception {
 		this.testAttach("a", TestConstants.PORT_TCP, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with host name "a" and port zero.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostAPort0_notAttachedThrowsException() throws Exception {
+	public void attach_31() throws Exception {
 		this.testAttach("a", 0, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with host name "a" and port -1.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostAPortMinus1_notAttachedThrowsException() throws Exception {
+	public void attach_32() throws Exception {
 		this.testAttach("a", -1, null, false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with host name "a" and minimum port number.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostAPortMin_notAttachedThrowsException() throws Exception {
+	public void attach_33() throws Exception {
 		this.testAttach("a", TestConstants.PORT_MIN, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with host name "a" and maximum allowed port number.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostAPortMaxAllowed_notAttachedThrowsException() throws Exception {
+	public void attach_34() throws Exception {
 		this.testAttach("a", 0xFFFF, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with host name "a" and maximum allowed port number +1.<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostAPortMaxAllowedPlus1_notAttachedThrowsException() throws Exception {
+	public void attach_35() throws Exception {
 		this.testAttach("a", 0xFFFF + 1, null, false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with host name "a" and use port number "Integer.MIN_VALUE".<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostAPortIntMin_notAttachedThrowsException() throws Exception {
+	public void attach_36() throws Exception {
 		this.testAttach("a", Integer.MIN_VALUE, null, false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with host name "a" and use port number "Integer.MAX_VALUE".<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostAPortIntMax_notAttachedThrowsException() throws Exception {
+	public void attach_37() throws Exception {
 		this.testAttach("a", Integer.MAX_VALUE, null, false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with arbitrary host name and use default http-port.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostArbitraryPortHttp_notAttachedThrowsException() throws Exception {
+	public void attach_38() throws Exception {
 		this.testAttach(TestConstants.pangram, TestConstants.PORT_HTTP, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with arbitrary host name and use default tcp-port.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostArbitraryPortTcp_notAttachedThrowsException() throws Exception {
+	public void attach_39() throws Exception {
 		this.testAttach(TestConstants.pangram, TestConstants.PORT_TCP, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with arbitrary host name and port zero.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostArbitraryPort0_notAttachedThrowsException() throws Exception {
+	public void attach_40() throws Exception {
 		this.testAttach(TestConstants.pangram, 0, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with arbitrary host name and port -1.<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostArbitraryPortMinus1_notAttachedThrowsException() throws Exception {
+	public void attach_41() throws Exception {
 		this.testAttach(TestConstants.pangram, -1, null, false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with arbitrary host name and minimum port number.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostArbitraryPortMin_notAttachedThrowsException() throws Exception {
+	public void attach_42() throws Exception {
 		this.testAttach(TestConstants.pangram, TestConstants.PORT_MIN, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with arbitrary host name and maximum allowed port number.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
 	@Test
-	public void attach_hostArbitraryPortMaxAllowed_notAttachedThrowsException() throws Exception {
+	public void attach_43() throws Exception {
 		this.testAttach(TestConstants.pangram, 0xFFFF, null, false, "SCServiceException");
 	}
 
+	/**
+	 * Description: Attach client with arbitrary host name and maximum allowed port number + 1.<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostArbitraryPortMaxAllowedPlus1_notAttachedThrowsException()
+	public void attach_44()
 			throws Exception {
 		this.testAttach(TestConstants.pangram, 0xFFFF + 1, null, false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with arbitrary host name and use port number "Integer.MIN_VALUE".<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostArbitraryPortMinValue_notAttachedThrowsException() throws Exception {
+	public void attach_45() throws Exception {
 		this.testAttach(TestConstants.pangram, Integer.MIN_VALUE, null, false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with arbitrary host name and use port number "Integer.MAX_VALUE".<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostArbitraryPortIntMax_notAttachedThrowsException() throws Exception {
+	public void attach_46() throws Exception {
 		this.testAttach(TestConstants.pangram, Integer.MAX_VALUE, null, false, "SCMPValidatorException");
 	}
 
-	public void attach_hostDefaultPortHttpKeepAlive1_attached() throws Exception {
+	/**
+	 * Description: Attach client with default host name, default http-port and set keepAlive to 1 .<br>
+	 * Expectation:	Client is attached.
+	 */
+	@Test
+	public void attach_47() throws Exception {
 		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, new Integer(1), true, "");
 	}
 
-	public void attach_hostDefaultPortHttpKeepAlive3600_attached() throws Exception {
+	/**
+	 * Description: Attach client with default host name, default http-port and set keepAlive to 3600 .<br>
+	 * Expectation:	Client is attached.
+	 */
+	@Test
+	public void attach_48() throws Exception {
 		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, new Integer(3600), true, "");
 	}
 
+	/**
+	 * Description: Attach client with default host name, default http-port and set keepAlive to 0 .<br>
+	 * Expectation:	Client is attached.
+	 */
 	@Test
 	public void attach_KeepAlive0_notAttached() throws Exception {
 		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, new Integer(0), true, "");
 	}
 
+	/**
+	 * Description: Attach client with default host name, default http-port and set keepAlive to -1 .<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostDefaultPortHttpKeepAliveMinus1_notAttached() throws Exception {
+	public void attach_50() throws Exception {
 		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, new Integer(-1), false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with default host name, default http-port and set keepAlive to 1 .<br>
+	 * Expectation:	Client is attached.
+	 */
 	@Test
-	public void attach_hostDefaultPortHttpKeepAlive1_isAttached() throws Exception {
+	public void attach_51() throws Exception {
 		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, new Integer(1), true, "");
 	}
 
+	/**
+	 * Description: Attach client with default host name, default http-port and set keepAlive to 3601 .<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostDefaultPortHttpKeepAlive3601_notAttached() throws Exception {
+	public void attach_52() throws Exception {
 		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, new Integer(3601), false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with default host name, default http-port and set keepAlive to "Integer.MIN_VALUE" .<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostDefaultPortHttpKeepAliveIntMin_notAttached() throws Exception {
+	public void attach_53() throws Exception {
 		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, Integer.MIN_VALUE, false, "SCMPValidatorException");
 	}
 
+	/**
+	 * Description: Attach client with default host name, default http-port and set keepAlive to "Integer.MAX_VALUE" .<br>
+	 * Expectation:	Client is not attached and throws SCMPValidatorException.
+	 */
 	@Test
-	public void attach_hostDefaultPortHttpKeepAliveIntMax_notAttached() throws Exception {
-		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_HTTP, false, "SCMPValidatorException");
+	public void attach_54() throws Exception {
+		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, Integer.MAX_VALUE, false, "SCMPValidatorException");
 	}
 }
