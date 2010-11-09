@@ -61,7 +61,7 @@ public class SystemInfo {
 	private static boolean useDST;
 	private static long freeMemory;
 	private static long totalMemory;
-	private static long availDiskMemory;
+	private static long availableDiskSpace;
 	private static Date localDate;
 	private static int availableProcessors;
 
@@ -96,7 +96,7 @@ public class SystemInfo {
 
 		File[] roots = File.listRoots();
 		for (int i = 0; i < roots.length; i++) {
-			availDiskMemory += roots[i].getFreeSpace();
+			availableDiskSpace += roots[i].getFreeSpace();
 		}
 
 		try {
@@ -274,7 +274,7 @@ public class SystemInfo {
 	 * 
 	 * @return availDiskMemory
 	 */
-	public static long getAvailDiskMemory() {
-		return availDiskMemory;
+	public static long getAvailableDiskSpace() {
+		return availableDiskSpace;
 	}
 }

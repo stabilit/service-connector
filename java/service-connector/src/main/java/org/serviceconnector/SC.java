@@ -221,6 +221,6 @@ public final class SC {
 		logger.log(Level.OFF, "Max memory: " + SystemInfo.getMaxMemory());
 		logger.log(Level.OFF, "Free memory: " + SystemInfo.getFreeMemory());
 		logger.log(Level.OFF, "Total memory: " + SystemInfo.getTotalMemory());
-		logger.log(Level.OFF, "Available disk memory: " + SystemInfo.getAvailDiskMemory());
+		logger.log(Level.OFF, "Available disk memory: " + SystemInfo.getAvailableDiskSpace());
 	}
 }

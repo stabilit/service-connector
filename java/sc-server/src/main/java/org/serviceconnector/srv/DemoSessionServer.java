@@ -75,7 +75,57 @@ public class DemoSessionServer {
 		}
 	}
 	
-	
+		class SrvCallback extends SCSessionServerCallback {
+
+		private SrvContext outerContext;
+
+		public SrvCallback(SrvContext context) {
+			this.outerContext = context;
+		}
+
+		@Override
+		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
+			logger.info("SessionServer.SrvCallback.createSession()");
+			return request;
+		}
+
+		@Override
+		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
+			logger.info("SessionServer.SrvCallback.deleteSession()");
+		}
+
+		@Override
+		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
+			logger.info("SessionServer.SrvCallback.abortSession()");
+		}
+
+		@Override
+		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
+			Object data = request.getData();
+			logger.info("Message received: " + data);
+
+			// watch out for kill server message
+			if (data.getClass() == String.class) {
+				String dataString = (String) data;
+				if (dataString.equals("kill server")) {
+					try {
+						KillThread kill = new KillThread(this.outerContext.getServer());
+						kill.start();
+					} catch (Exception e) {
+						logger.error("execute", e);
+					}
+				} else {
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						logger.error("execute", e);
+					}
+				}
+			}
+			return request;
+		}
+	}
+
 	 */
 	
 	
