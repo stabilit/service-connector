@@ -30,14 +30,16 @@ public class DemoFileClient extends Thread {
 		
 			SCFileService service = sc.newFileService("P01_logging");	// no other params possible
 
-			uploadFile = new File("target/classes/uploadFileLarge.zip");
-			fileStream = new FileInputStream(uploadFile);
-			
-			service.uploadFile(targetFileName, fileStream);			// regular
-			service.uploadFile(targetFileName, fileStream, 600);	// alternative with operation timeout
+			localFile = new File("src/main/resources/ClientContent.zip");
+			inpStream = new FileInputStream(localFile);
+			targetFileName = "uploadedContent.txt";
+						
+			service.uploadFile(targetFileName, inpStream);			// regular
+			service.uploadFile(targetFileName, inpStream, 600);		// alternative with operation timeout
 
-			targetFileName = "uploadFile.txt";
-			FileOutputStream outStream = new FileOutputStream(new File("src/main/resources/downloaded_uploadFile.txt"));
+			localFile = new File("src/main/resources/ServerContent.zip");
+			FileOutputStream outStream = new FileOutputStream(new File("localFile"));
+			
 			service.downloadFile(targetFileName, outStream);		// regular
 			service.downloadFile(targetFileName, outStream, 600);	// alternative with operation timeout
 			outStream.close();

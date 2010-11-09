@@ -42,8 +42,9 @@ public class DemoSessionClient extends Thread {
 			
 			service.createSession();								// regular
 			service.createSession(10);								// alternative with operation timeout 
+			service.createSession(10, "session-info");				// alternative with operation timeout and session info
 			SCMessage msg = new SCMessage();
-			msg.setSessionInfo("sessionInfo");						// optional
+			msg.setSessionInfo("session-info");						// optional
 			msg.setData("certificate or what so ever");				// optional
 			service.createSession(10, msg);							// alternative with operation timeout and message 
 
@@ -58,12 +59,15 @@ public class DemoSessionClient extends Thread {
 
 				service.send(cbk, requestMsg);						// regular asynchronous call
 				service.send(cbk, requestMsg, 10);					// alternative with operation timeout
-				service.receive();									// wait for response message synchronous
+				service.receive();									// wait for response
+				cbk.receive();										// wait for response ?
 				responseMsg = cbk.getMessage();						// response message
 				
+						// synchronous call encapsulates asynchronous call!
 				responseMsg = service.execute(requestMsg);			// regular synchronous call
 				responseMsg = service.execute(requestMsg, 10);		// alternative with operation timeout
 				
+				logger.info("Message received: " + responseMsg.getData());
 				Thread.sleep(1000);
 			}
 		} catch (Exception e) {
@@ -72,6 +76,7 @@ public class DemoSessionClient extends Thread {
 			try {
 				service.deleteSession();							// regular
 				service.deleteSession(10);							// alternative with operation timeout
+				service.deleteSession(10, "session-info");			// alternative with operation timeout and session info
 				sc.detach();
 			} catch (Exception e) {
 				logger.error("cleanup", e);
@@ -80,16 +85,22 @@ public class DemoSessionClient extends Thread {
 	}
 
 	private class DemoSessionClientCallback extends SCMessageCallback {
+		private SCMessage replyMessage;
+		
 		public DemoSessionClientCallback(SCSessionService service) {
 			super(service);
 		}
 
 		@Override
 		public void receive(SCMessage reply) {
-			logger.info("Message received: " + reply.getData());
-			DemoSessionClient.pendingRequest = false;
+			this.replyMessage = reply;
 		}
 
+		@Override
+		public SCMessage getMessage() {
+			return this.replyMessage;
+		}
+		
 		@Override
 		public void receive(Exception e) {
 		}

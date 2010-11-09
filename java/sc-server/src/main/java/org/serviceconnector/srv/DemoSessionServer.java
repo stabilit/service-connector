@@ -58,12 +58,12 @@ public class DemoSessionServer {
 			String serviceName = "simulation";
 			SCSessionServer server = sc.newSessionServer(serviceName);	// no other params possible
 			
-			int maxSessions = 10;
-			int maxConnections = 5;
+			int maxSess = 10;
+			int maxConn = 5;
 			SCSessionServerCallback cbk = new SrvCallback(server);
 			try {
-				server.register(maxSessions, maxConnections, cbk);	//	regular
-				server.register(maxSessions, maxConnections, cbk, 10);	// alternative with operation timeout
+				server.register(maxSess, maxConn, cbk);				//	regular
+				server.register(maxSess, maxConn, cbk, 10);			// alternative with operation timeout
 			} catch	(Exception e) {
 				logger.error("runSessionServer", e);
 				server.deregister();
@@ -74,6 +74,8 @@ public class DemoSessionServer {
 			sc.stopListener();
 		}
 	}
+	
+	
 	 */
 	
 	
