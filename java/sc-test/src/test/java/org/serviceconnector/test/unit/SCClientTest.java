@@ -108,9 +108,27 @@ public class SCClientTest {
 	 * Description:	Invoke setMaxConnections with value = MIN<br>
 	 * Expectation:	throws validation exception
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test
 	public void setMaxConnections_2() throws SCMPValidatorException {
-		client.setMaxConnections(Integer.MIN_VALUE);
+		Throwable e = null;
+
+		/*
+		 * Description:	Invoke setMaxConnections with value = MIN<br>
+		 * Expectation:	throws validation exception
+		 */
+		e = null;
+		try {
+			client.setMaxConnections(Integer.MIN_VALUE);
+		} catch (Throwable ex) {
+			e = ex;
+		}
+		assertEquals("MIN_VALUE", true, e instanceof SCMPValidatorException);
+
+		/*
+		 * Description:	Invoke setMaxConnections with value = MAX<br>
+		 * Expectation:	value = MAX was properly set
+		 */
+		assertEquals(Integer.MAX_VALUE, client.getMaxConnections());
 	}
 
 	/**
