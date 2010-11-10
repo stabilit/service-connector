@@ -7,7 +7,7 @@
     }
     </xsl:template>
     <xsl:template name="sc_content">
-      <div class="sc_table" style="width:800px;">
+      <div class="sc_table max_width">
         <div class="sc_table_title">
            Resource <xsl:value-of select="$head/query/param/@name"/>
         </div>             
@@ -17,7 +17,7 @@
       </div>
     </xsl:template>
     <xsl:template match="resource">
-      <div id="sc_resource" style="width:800px; height:500px;">
+      <div id="sc_resource">
         ... loading <xsl:value-of select="$head/query/param/@name"/> ...
       </div>
       <script type="text/javascript">loadResource();</script>

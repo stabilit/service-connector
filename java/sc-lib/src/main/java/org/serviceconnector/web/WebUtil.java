@@ -45,6 +45,9 @@ public abstract class WebUtil {
 	 * @return the input stream
 	 */
 	public static InputStream loadResource(String name) {
+		if (name == null) {
+			return null;
+		}
 		try {
 			InputStream is = ClassLoader.getSystemResourceAsStream(name);
 			if (is != null) {

@@ -1,8 +1,10 @@
+
 * {
 	background-color: transparent;
 	font-family: arial;
 	margin: 0;
 	padding: 0;
+	font-size: 12px;
 }
 
 a {
@@ -16,6 +18,10 @@ a.sc_reload {
 
 a.sc_reload:hover {
 	color: #FFFF00;
+}
+
+.max_width {
+	width:99%;
 }
 
 .sc_header {
@@ -42,7 +48,7 @@ div#sc_logo {
 	color: white;
 	padding: 18px;
 	float: left;
-	font-size: 20px;
+	font-size: 14px;
 }
 
 div#sc_logo_img {
@@ -50,7 +56,7 @@ div#sc_logo_img {
 	color: white;
 	padding: 5px;
 	float: left;
-	font-size: 20px;
+	font-size: 14px;
 }
 
 div#sc_meta {
@@ -59,7 +65,6 @@ div#sc_meta {
 	padding-right:10px;
 	color: white;
 	float: right;
-	font-size: 12px;
 	text-align: right;
 }
 
@@ -67,7 +72,7 @@ div#sc_menu {
 	background-color: #EEEEEE;
 	border-bottom: solid 4px #B61F34;
 	padding: 0px;
-	height: 28px;
+	height: 24px;
 }
 
 div#sc_menu_left {
@@ -78,7 +83,7 @@ div#sc_menu_left {
 div.sc_menu_item {
 	padding:4px;
 	float:left;
-	height:20px;
+	height:16px;
 }
 
 div.sc_menu_item_over {
@@ -86,12 +91,17 @@ div.sc_menu_item_over {
 	color:#FFFFFF;
 	padding:4px;
 	float:left;
-	height:20px;
+	height:16px;
 }
 
 a.sc_menu_item {
 	text-decoration: none;
-	color:inherit;
+	color:#000000;
+}
+
+a.sc_menu_item_over {
+	text-decoration: none;
+	color:#FFFFFF;
 }
 
 div#sc_menu_right {
@@ -109,47 +119,49 @@ div.sc_navigation_item {
 	border-bottom: 1px solid #666666;
 	border-right: 1px solid #666666;
 	text-align: center;
-	padding: 2px;
+	padding: 1px;
 }
 
 a.sc_navigation_item {
 	text-decoration: none;
-	color:inherit;
+	color:#000000;
 }
 
 .sc_navigation_item_over {
 	background-color: #B61F34;
 	color:#FFFFFF;
 	border-bottom: 1px solid #666666;
-	border-right: 1px solid #666666;
+	border-right: 0px solid #666666;
 	text-align: center;
-	padding: 2px;
+	padding: 1px;
 }
 
 div#sc_content {
+	background:white;
 	position: absolute;
 	float: left;
-	background-color: white;
-	top: 100px;
-	right: 240px;
+	top: 94px;
+	right: 0px;
 	bottom: 0px;
 	left: 160px;
-	padding: 4px;
+	padding-left: 4px;
+	padding-right: 4px;
+	text-align:center;
 	overflow:auto;
 }
 
 div#sc_info {
 	background-color: #EEEEEE;
-	float: right;
-	width: 240px;
-	padding-top:6px;
+	float: left;
+	width: 160px;
+	padding-top:0px;
 }
 
 div#sc_login {
 	background: #EEEEEE;
 	border: 1px solid #666666;
-	width: 400px;
-	height: 300px;
+	width: 260px;
+	height: 200px;
 	margin-top: 40px;
 	margin-left: auto;
 	margin-right: auto;
@@ -159,22 +171,28 @@ div#sc_login_title {
 	background: #B61F34;
 	color: white;
 	padding-top: 4px;
-	font-size: 18px;
+	font-size: 14px;
 	font-weight: bold;
-	height: 28px;
-	width: 400px;
+	height: 18px;
+	width: 260px;
 	text-align: center;
 }
 
 div#sc_login_form {
 	background: #EEEEEE;
 	color: black;
-	font-size: 14px;
-	width: 400px;
+	font-size: 12px;
+	width: 250px;
 }
 
 div#sc_resource {
-	background:#FFFFFF;
+	position:absolute;
+	background:#eeeeee;
+	border:1px solid #888888;
+	top:29px;
+	left:8px;
+	right:8px;
+	bottom:5px;
 	color:black;
 	overflow:auto;
 	text-align:left;
@@ -183,34 +201,29 @@ div#sc_resource {
 .sc_form {
 	background: transparent;
 	color: black;
-	font-size: 16px;
 }
 
 .sc_form_text {
 	background: transparent;
 	color: black;
-	font-size: 18px;
 }
 
 .sc_form_field {
 	background: #DDDDDD;
-	padding: 2px;
-	height: 28px;
+	padding: 1px;
+	height: 14px;
 	color: black;
-	font-size: 16px;
 }
 
 .sc_form_button {
 	color: black;
 	padding: 4px;
-	font-size: 16px;
 }
 
 .sc_error {
 	background: #FFDDDD;
 	border-bottom: 1px solid #B61F34;
 	text-align: center;
-	font-size: 16px;
 	color: #B61F34;
 }
 
@@ -254,7 +267,19 @@ tr.sc_sub_table_even {
 	padding: 0px;
 }
 
+td.sc_sub_table_even {
+	background: #FFAAAA;
+	color:#000000;
+	padding: 0px;
+}
+
 tr.sc_sub_table_odd {
+	background: #FFEEEE;
+	color:#000000;
+	padding: 0px;
+}
+
+td.sc_sub_table_odd {
 	background: #FFEEEE;
 	color:#000000;
 	padding: 0px;
@@ -265,7 +290,17 @@ tr.sc_sub_table_odd_over {
 	color:#FFFFFF;
 }
 
+td.sc_sub_table_odd_over {
+	background-color: #1FB634;
+	color:#FFFFFF;
+}
+
 tr.sc_sub_table_even_over {
+	background-color: #1FB634;
+	color:#FFFFFF;
+}
+
+td.sc_sub_table_even_over {
 	background-color: #1FB634;
 	color:#FFFFFF;
 }
@@ -277,14 +312,49 @@ th.sc_table {
 }
 
 td.sc_table {
+	vertical-align: top;
+}
+
+td.sc_table_even {
+	background: #EEEEEE;
 	border-bottom: 1px solid #666666;
 	border-right: 1px solid #666666;
-	padding: 2px;
+	padding: 1px;
+	vertical-align: top;
+	font-size:12px;
+}
+
+td.sc_table_odd {
+	background: #CCCCCC;
+	border-bottom: 1px solid #666666;
+	border-right: 1px solid #666666;
+	padding: 1px;
+	vertical-align: top;
+}
+
+td.sc_table_even_over {
+	background-color: #B61F34;
+	border-bottom: 1px solid #666666;
+	border-right: 1px solid #666666;
+	padding: 1px;
+	vertical-align: top;
+}
+
+td.sc_table_odd_over {
+	background-color: #B61F34;
+	border-bottom: 1px solid #666666;
+	border-right: 1px solid #666666;
+	padding: 1px;
 	vertical-align: top;
 }
 
 a.sc_table {
-	color: inherit;
+	color: #000000;
+	text-decoration: underline;
+}
+
+a.sc_table_over {
+	color: #FFFFFF;
 	text-decoration: underline;
 }
 
@@ -294,7 +364,7 @@ a.sc_table:hover {
 }
 
 a.sc_table_title {
-	color: inherit;
+	color: #FFFFFF;
 	text-decoration: underline;
 }
 
@@ -307,9 +377,9 @@ div.sc_table_title {
 	background: #B61F34;
 	color: white;
 	padding-top: 4px;
-	font-size: 18px;
+	font-size: 12px;
 	font-weight: bold;
-	height: 28px;
+	height: 18px;
 	text-align: center;
 }
 
@@ -319,6 +389,6 @@ div.sc_table_title {
 }
 
 .sc_table_details {
-	padding:2px;
+	padding:1px;
 	border:2px solid #B61F34;
 }

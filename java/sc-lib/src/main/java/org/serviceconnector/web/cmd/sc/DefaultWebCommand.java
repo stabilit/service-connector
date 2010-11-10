@@ -129,6 +129,10 @@ public class DefaultWebCommand extends WebCommandAdapter {
 				xmlDocument.addErrorMessage("not authorized");
 			}
 		}
+		response.addHeader("Pragma", "no-cache");
+		response.addHeader("Expires", "-1");
+	    response.addHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+
 		// load stylesheet as stream
 		XSLDocument xslDocument = new XSLDocument(request);
 		// check if this web command is accessible

@@ -6,7 +6,7 @@
       setInterval("contentCall('logs', 'date=<xsl:value-of select="$head/query/param/@date"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
-      <div class="sc_table" style="width:800px;">
+      <div class="sc_table max_width">
         <div class="sc_table_title">
            Log files 
            <xsl:if test="$body/logs/@previous">
@@ -31,19 +31,24 @@
 	<xsl:template match="appender">
 	  <xsl:if test="position() mod 2 = 0">
 	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
-	        <xsl:call-template name="appender_row"/>
+	        <xsl:call-template name="appender_row">
+	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
 	  <xsl:if test="position() mod 2 != 0">
 	     <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
-	        <xsl:call-template name="appender_row"/>
+	        <xsl:call-template name="appender_row">
+	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
 	</xsl:template>
 	<xsl:template name="appender_row">
-	    <td class="sc_table"><xsl:value-of select="../@name"/></td>
-	    <td class="sc_table"><xsl:value-of select="@name"/></td>
-	    <td class="sc_table">
+	    <xsl:param name="class"/>
+	    <td class="{$class}"><xsl:value-of select="../@name"/></td>
+	    <td class="{$class}"><xsl:value-of select="@name"/></td>
+	    <td class="{$class}">
 	      <xsl:choose>
 	        <xsl:when test="file/@size">
   	          <a class="sc_table" href="./resource?id=logs&amp;name={file}"><xsl:value-of select="file"/></a>

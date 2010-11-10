@@ -42,13 +42,14 @@ public class SCMPCacheTestCase {
 	private SCMPCacheManager scmpCacheManager;
 	/**
 	 * Scmp cache write test.
+	 * @throws Exception 
 	 * 
 	 * @throws SCMPCacheException
 	 *             the sCMP cache exception
 	 */
 
 	@Before
-	public void beforeTest() {		
+	public void beforeTest() throws Exception {		
        ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
 	   Service service = new SessionService("dummy");
        serviceRegistry.addService("dummy", service);
@@ -57,7 +58,7 @@ public class SCMPCacheTestCase {
 	   service = new SessionService("dummy2");
        serviceRegistry.addService("dummy2", service);
 	   scmpCacheManager = new SCMPCacheManager();
-	   scmpCacheManager.initialize();
+	   scmpCacheManager.initialize(null);
 	}
 
 	@After

@@ -28,6 +28,21 @@ function setStyleOver(obj) {
 	if (obj.className != null) {
 		obj.className = obj.className + "_over";
 	}
+	// check for any child elements
+	var anchors = obj.getElementsByTagName("a");
+	if (anchors != null) {
+		for (var i = 0; i < anchors.length; i++) {
+			var anchor = anchors[i];
+			anchor.className = anchor.className + "_over";
+		}
+	}
+	var tds = obj.getElementsByTagName("td");
+	if (tds != null) {
+		for (var i = 0; i < tds.length; i++) {
+			var td = tds[i];
+			td.className = td.className + "_over";
+		}
+	}
 }
 
 function setStyleOut(obj) {
@@ -36,6 +51,21 @@ function setStyleOut(obj) {
 	}	
 	if (obj.className != null) {
 		obj.className = obj.className.replace("_over","");
+	}
+	// check for any child elements
+	var anchors = obj.getElementsByTagName("a");
+	if (anchors != null) {
+		for (var i = 0; i < anchors.length; i++) {
+			var anchor = anchors[i];
+			anchor.className = anchor.className.replace("_over","");			
+		}
+	}
+	var tds = obj.getElementsByTagName("td");
+	if (tds != null) {
+		for (var i = 0; i < tds.length; i++) {
+			var td = tds[i];
+			td.className = td.className.replace("_over","");
+		}
 	}
 }
 

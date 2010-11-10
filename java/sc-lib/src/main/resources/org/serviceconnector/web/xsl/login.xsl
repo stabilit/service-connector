@@ -13,26 +13,26 @@
         <xsl:for-each select="$error">
           <div class="sc_error"><xsl:value-of select="@message"/></div>
         </xsl:for-each>
-        <div id="sc_login_form" style="margin-top:20px;margin-left:30px;">
+        <div id="sc_login_form" style="margin-top:10px;margin-left:5px;">
           <form name="loginForm" method="post" action="?action=login">
             <div style="float:left; padding:10px;">
-	            <div class="sc_form" style="float:left; width:100px; text-align:right;">
-	              <span class="sc_form_text">Userid :</span>
+	            <div class="sc_form" style="float:left; width:60px; text-align:right;">
+	              <span class="sc_form_text">Userid</span>
 	            </div>
 	            <div class="sc_form" style="float:left; margin-left:20px; text-align:left;">
 	              <input class="sc_form_field" name="userid" type="text" value="{$query/param/@userid}" size="20"></input>
 	            </div>
             </div>
-            <div style="float:left; padding:10px;">
-	            <div class="sc_form" style="float:left; width:100px; text-align:right;">
-	              <span class="sc_form_text">Password :</span>
+            <div style="float:left; padding:10px; text-align:center;">
+	            <div class="sc_form" style="float:left; width:60px; text-align:right;">
+	              <span class="sc_form_text">Password</span>
 	            </div>
 	            <div class="sc_form" style="float:left; margin-left:20px; text-align:left;">
 	              <input class="sc_form_field" name="password" type="password" value="" size="20"></input>
 	            </div>
             </div>
-            <div style="float:left; padding:10px;">
-	            <div class="sc_form" style="float:left; width:160px; text-align:right;">
+            <div style="float:left; padding:10px; margin-left:20px; text-align:center;">
+	            <div class="sc_form" style="float:left; width:80px; text-align:right;">
 	              <input class="sc_form_button" name="submit" type="submit" value="Login"></input>
 	            </div>
 	            <div class="sc_form" style="float:left; margin-left:20px; text-align:left;">

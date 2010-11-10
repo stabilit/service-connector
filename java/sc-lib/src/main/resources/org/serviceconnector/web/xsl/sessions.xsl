@@ -8,7 +8,7 @@
       setInterval("contentCall('sessions', '')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
-      <div class="sc_table" style="width:800px;">
+      <div class="sc_table max_width">
         <div class="sc_table_title">
            List of sessions
         </div>             
@@ -32,7 +32,9 @@
 	        <xsl:if test="details">
 	          <xsl:attribute name="style">height:40px;</xsl:attribute>
 	        </xsl:if>
-	        <xsl:call-template name="session_row"/>
+	        <xsl:call-template name="session_row">
+	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
 	  <xsl:if test="position() mod 2 != 0">
@@ -40,7 +42,9 @@
 	        <xsl:if test="details">
 	          <xsl:attribute name="style">height:40px;</xsl:attribute>
 	        </xsl:if>
-	        <xsl:call-template name="session_row"/>
+	        <xsl:call-template name="session_row">
+	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
       <xsl:if test="details">
@@ -50,9 +54,10 @@
       </xsl:if>
 	</xsl:template>
 	<xsl:template name="session_row">
-	    <td class="sc_table"><xsl:value-of select="id"/></td>
-	    <td class="sc_table"><xsl:value-of select="echoIntervalSeconds"/></td>
-        <td class="sc_table"><a class="sc_table" href="sessions?server={server}"><xsl:value-of select="server/host"/>:<xsl:value-of select="server/port"/></a></td>
+	    <xsl:param name="class"/>
+	    <td class="{$class}"><xsl:value-of select="id"/></td>
+	    <td class="{$class}"><xsl:value-of select="echoIntervalSeconds"/></td>
+        <td class="{$class}"><a class="sc_table" href="sessions?server={server}"><xsl:value-of select="server/host"/>:<xsl:value-of select="server/port"/></a></td>
 	</xsl:template>
 	<xsl:template name="session_details">
 	  <td colspan="7">

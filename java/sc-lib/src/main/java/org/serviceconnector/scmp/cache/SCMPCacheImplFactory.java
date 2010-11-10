@@ -4,8 +4,8 @@ import org.serviceconnector.scmp.cache.impl.EHCacheSCMPCacheImpl;
 
 public class SCMPCacheImplFactory {
 
-	public static ISCMPCacheImpl getDefaultCacheImpl(String serviceName) {
-		return new EHCacheSCMPCacheImpl(serviceName);
+	public static ISCMPCacheImpl getDefaultCacheImpl(SCMPCacheConfiguration scmpCacheConfiguration, String serviceName) {
+		return new EHCacheSCMPCacheImpl(scmpCacheConfiguration, serviceName);
 	}
 	
 	public static void destroy() {

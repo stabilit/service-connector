@@ -65,6 +65,9 @@ function AjaxCall(path) {
   if( this.req ) {
      var _this = this;
      this.req.open( "GET", this.path, true );
+     this.req.setRequestHeader("Pragma", "no-cache");
+     this.req.setRequestHeader("Cache-Control", "must-revalidate");
+     this.req.setRequestHeader("If-Modified-Since", document.lastModified);
      this.req.onreadystatechange = function()
      {
         _this.ajaxCallback();

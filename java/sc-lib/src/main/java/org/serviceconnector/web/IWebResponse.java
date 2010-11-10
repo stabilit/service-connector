@@ -27,6 +27,14 @@ import org.jboss.netty.handler.codec.http.Cookie;
 public interface IWebResponse {
 
 	/**
+	 * Adds the header.
+	 *
+	 * @param name the name
+	 * @param value the value
+	 */
+	void addHeader(String name, String value);
+
+	/**
 	 * Gets the output stream.
 	 * 
 	 * @return the output stream
@@ -75,5 +83,6 @@ public interface IWebResponse {
 	public abstract void redirect(String path);
 
 	public abstract boolean isRedirect();
+
 
 }

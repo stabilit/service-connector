@@ -8,7 +8,7 @@
       setInterval("contentCall('services', 'service=<xsl:value-of select="$head/query/param/@service"/>&amp;subscription=<xsl:value-of select="$head/query/param/@subscription"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
-      <div class="sc_table" style="width:800px;">
+      <div class="sc_table max_width">
         <div class="sc_table_title">
            List of services
         </div>             
@@ -33,7 +33,9 @@
 	        <xsl:if test="details">
 	          <xsl:attribute name="style">height:40px;</xsl:attribute>
 	        </xsl:if>
-	        <xsl:call-template name="service_row"/>
+	        <xsl:call-template name="service_row">
+	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
 	  <xsl:if test="position() mod 2 != 0">
@@ -41,7 +43,9 @@
 	        <xsl:if test="details">
 	          <xsl:attribute name="style">height:40px;</xsl:attribute>
 	        </xsl:if>
-	        <xsl:call-template name="service_row"/>
+	        <xsl:call-template name="service_row">
+	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
       <xsl:if test="details">
@@ -51,27 +55,28 @@
       </xsl:if>
 	</xsl:template>
 	<xsl:template name="service_row">
-	    <td class="sc_table"><xsl:value-of select="state"/></td>
-	    <td class="sc_table"><xsl:value-of select="type"/></td>
+	    <xsl:param name="class"/>
+	    <td class="{$class}"><xsl:value-of select="state"/></td>
+	    <td class="{$class}"><xsl:value-of select="type"/></td>
 	    <xsl:choose>
 	      <xsl:when test="countServers &gt; 0">
-	         <td class="sc_table"><a class="sc_table" href="services?service={serviceName}"><xsl:value-of select="serviceName"/></a></td>
+	         <td class="{$class}"><a class="sc_table" href="services?service={serviceName}"><xsl:value-of select="serviceName"/></a>&#160;</td>
           </xsl:when>
           <xsl:otherwise>	       
-	         <td class="sc_table"><xsl:value-of select="serviceName"/></td>
+	         <td class="{$class}"><xsl:value-of select="serviceName"/>&#160;</td>
 	      </xsl:otherwise>
         </xsl:choose>       
-	    <td class="sc_table"><xsl:value-of select="countServers"/></td>
+	    <td class="{$class}"><xsl:value-of select="countServers"/>&#160;</td>
 	    <xsl:choose>
 	       <xsl:when test="subscriptionQueueSize &gt; 0">
-	         <td class="sc_table"><a class="sc_table" href="services?service={serviceName}&amp;subscription=yes"><xsl:value-of select="subscriptionQueueSize"/></a></td>
+	         <td class="{$class}"><a class="sc_table" href="services?service={serviceName}&amp;subscription=yes"><xsl:value-of select="subscriptionQueueSize"/></a>&#160;</td>
 	      </xsl:when>
 	      <xsl:otherwise>
-	         <td class="sc_table"><xsl:value-of select="subscriptionQueueSize"/></td>
+	         <td class="{$class}"><xsl:value-of select="subscriptionQueueSize"/>&#160;</td>
 	      </xsl:otherwise>
 	    </xsl:choose>
-	    <td class="sc_table"><xsl:value-of select="countAllocatedSessions"/></td>
-	    <td class="sc_table"><xsl:value-of select="countAvailableSessions"/></td>	
+	    <td class="{$class}"><xsl:value-of select="countAllocatedSessions"/>&#160;</td>
+	    <td class="{$class}"><xsl:value-of select="countAvailableSessions"/>&#160;</td>	
 	</xsl:template>
 	<xsl:template name="service_details">
 	  <td colspan="7">
@@ -104,29 +109,34 @@
 	<xsl:template match="server">
 	  <xsl:if test="position() mod 2 = 0">
 	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
-	        <xsl:call-template name="server_row"/>
+	        <xsl:call-template name="server_row">
+	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
 	  <xsl:if test="position() mod 2 != 0">
 	     <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
-	        <xsl:call-template name="server_row"/>
+	        <xsl:call-template name="server_row">
+	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
 	</xsl:template>
 	<xsl:template name="server_row">
-	    <td class="sc_table"><xsl:value-of select="host"/></td>
-	    <td class="sc_table"><xsl:value-of select="portNr"/></td>
-	    <td class="sc_table"><xsl:value-of select="maxConnections"/></td>
+	    <xsl:param name="class"/>
+	    <td class="{$class}"><xsl:value-of select="host"/>&#160;</td>
+	    <td class="{$class}"><xsl:value-of select="portNr"/>&#160;</td>
+	    <td class="{$class}"><xsl:value-of select="maxConnections"/>&#160;</td>
 	    <xsl:choose>
 	       <xsl:when test="sessions/session">
-	          <td class="sc_table">
+	          <td class="{$class}">
 	            <table class="sc_table">
 	              <xsl:apply-templates select="sessions/session"/>
 	            </table>
 	          </td>	         
 	       </xsl:when>
 	       <xsl:otherwise>
-	          <td class="sc_table">-</td>	         
+	          <td class="{$class}">-</td>	         
 	       </xsl:otherwise>
 	    </xsl:choose>
 	</xsl:template>

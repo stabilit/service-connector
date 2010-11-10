@@ -1,3 +1,18 @@
+/*
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ */
 package org.serviceconnector.scmp.cache;
 
 import java.io.Serializable;
@@ -8,14 +23,36 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.util.DateTimeUtility;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SCMPCache.
+ */
 public class SCMPCache {
 
+	/** The manager. */
+	private SCMPCacheManager manager;
+	
+	/** The cache impl. */
 	private ISCMPCacheImpl cacheImpl;
 
-	public SCMPCache(String serviceName) {
-		this.cacheImpl = SCMPCacheImplFactory.getDefaultCacheImpl(serviceName);
+	/**
+	 * Instantiates a new sCMP cache.
+	 *
+	 * @param manager the manager
+	 * @param serviceName the service name
+	 */
+	public SCMPCache(SCMPCacheManager manager, String serviceName) {
+		this.manager = manager;
+		this.cacheImpl = SCMPCacheImplFactory.getDefaultCacheImpl(manager.getScmpCacheConfiguration(), serviceName);
 	}
-	
+		
+	/**
+	 * Gets the sCMP.
+	 *
+	 * @param msg the msg
+	 * @return the sCMP
+	 * @throws SCMPCacheException the sCMP cache exception
+	 */
 	public synchronized SCMPCacheMessage getSCMP(SCMPMessage msg) throws SCMPCacheException {
 		String cacheId = msg.getCacheId();
 		if (cacheId == null) {
@@ -43,6 +80,12 @@ public class SCMPCache {
 		return scmpCacheMessage;
 	}
 
+	/**
+	 * Put scmp.
+	 *
+	 * @param scmpReply the scmp reply
+	 * @throws SCMPCacheException the sCMP cache exception
+	 */
 	public synchronized void putSCMP(SCMPMessage scmpReply) throws SCMPCacheException {
 		try {
 			String cacheId = scmpReply.getCacheId();
@@ -110,6 +153,11 @@ public class SCMPCache {
 		}
 	}
 	
+	/**
+	 * Removes the root.
+	 *
+	 * @param cacheKey the cache key
+	 */
 	public synchronized void removeRoot(SCMPCacheKey cacheKey) {
 		// remove all parts
 		SCMPCacheRoot cacheRoot = null;
@@ -136,16 +184,38 @@ public class SCMPCache {
 		}
 		return;
 	}
+	
+	/**
+	 * Gets the manager.
+	 *
+	 * @return the manager
+	 */
+	public SCMPCacheManager getManager() {
+		return manager;
+	}
 
 	// member class SCMPCacheKey
+	/**
+	 * The Class SCMPCacheKey.
+	 */
 	static class SCMPCacheKey implements Serializable {	
+		
+		/** The cache id. */
 		private String cacheId;
 		
+		/**
+		 * Instantiates a new sCMP cache key.
+		 *
+		 * @param cacheId the cache id
+		 */
 		public SCMPCacheKey(String cacheId) {
 			this.cacheId = cacheId;
 		}
 		
 		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
 		@Override
 		public int hashCode() {
 			final int prime = 31;
@@ -156,6 +226,9 @@ public class SCMPCache {
 		}
 
 
+		/* (non-Javadoc)
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
@@ -173,52 +246,106 @@ public class SCMPCache {
 			return true;
 		}
 		
+		/**
+		 * Gets the cache id.
+		 *
+		 * @return the cache id
+		 */
 		public String getCacheId() {
 			return cacheId;
 		}
 	}
 	
 	// member class SCMPCacheHeader
+	/**
+	 * The Class SCMPCacheRoot.
+	 */
 	static class SCMPCacheRoot implements Serializable {
+		
+		/** The size. */
 		private int size;
+		
+		/** The expiration. */
 		private Date expiration;
 		
+		/**
+		 * Instantiates a new sCMP cache root.
+		 */
 		public SCMPCacheRoot() {
 			this(null);
 		}
 		
+		/**
+		 * Instantiates a new sCMP cache root.
+		 *
+		 * @param expiration the expiration
+		 */
 		public SCMPCacheRoot(Date expiration) {
 			this.expiration = expiration;
 			this.size = 0;
 		}
 		
+		/**
+		 * Gets the size.
+		 *
+		 * @return the size
+		 */
 		public int getSize() {
 			return size;
 		}
 		
+		/**
+		 * Sets the size.
+		 *
+		 * @param size the new size
+		 */
 		public void setSize(int size) {
 			this.size = size;
 		}
 		
+		/**
+		 * Gets the expiration.
+		 *
+		 * @return the expiration
+		 */
 		public Date getExpiration() {
 			return expiration;
 		}
 		
+		/**
+		 * Sets the expiration.
+		 *
+		 * @param expiration the new expiration
+		 */
 		public void setExpiration(Date expiration) {
 			this.expiration = expiration;
 		}
 	}
 	
 	// member class SCMPPartCacheKey
+	/**
+	 * The Class SCMPPartCacheKey.
+	 */
 	static class SCMPPartCacheKey extends SCMPCacheKey {
+		
+		/** The nr. */
 		private int nr;
 		
+		/**
+		 * Instantiates a new sCMP part cache key.
+		 *
+		 * @param cacheId the cache id
+		 * @param nr the nr
+		 */
 		public SCMPPartCacheKey(String cacheId, int nr) {
 			super(cacheId);
 			this.nr = nr;
 		}
 		
 		
+		/* (non-Javadoc)
+		 * @see org.serviceconnector.scmp.cache.SCMPCache.SCMPCacheKey#hashCode()
+		 */
 		@Override
 		public int hashCode() {
 			final int prime = 31;
@@ -228,6 +355,9 @@ public class SCMPCache {
 		}
 
 
+		/* (non-Javadoc)
+		 * @see org.serviceconnector.scmp.cache.SCMPCache.SCMPCacheKey#equals(java.lang.Object)
+		 */
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
@@ -243,10 +373,20 @@ public class SCMPCache {
 		}
 
 
+		/**
+		 * Gets the nr.
+		 *
+		 * @return the nr
+		 */
 		public int getNr() {
 			return nr;
 		}
 		
+		/**
+		 * Sets the nr.
+		 *
+		 * @param nr the new nr
+		 */
 		public void setNr(int nr) {
 			this.nr = nr;
 		}

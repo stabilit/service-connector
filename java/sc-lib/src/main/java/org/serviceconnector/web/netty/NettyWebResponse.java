@@ -55,7 +55,13 @@ public class NettyWebResponse implements IWebResponse {
 		this.os = null;
 		this.ce = null; // server side encoding
 	}
-
+	
+	/** {@inheritDoc} */
+	@Override
+	public void addHeader(String name, String value) {
+	   this.response.addHeader(name, value);
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public OutputStream getOutputStream() {

@@ -8,7 +8,7 @@
       setInterval("contentCall('responders', '')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
-      <div class="sc_table" style="width:800px;">
+      <div class="sc_table max_width">
         <div class="sc_table_title">
            List of responders
         </div>             
@@ -36,7 +36,9 @@
 	        <xsl:if test="details">
 	          <xsl:attribute name="style">height:40px;</xsl:attribute>
 	        </xsl:if>
-	        <xsl:call-template name="responder_row"/>
+	        <xsl:call-template name="responder_row">
+	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
 	  <xsl:if test="position() mod 2 != 0">
@@ -44,7 +46,9 @@
 	        <xsl:if test="details">
 	          <xsl:attribute name="style">height:40px;</xsl:attribute>
 	        </xsl:if>
-	        <xsl:call-template name="responder_row"/>
+	        <xsl:call-template name="responder_row">
+	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
       <xsl:if test="false">
@@ -54,13 +58,14 @@
       </xsl:if>
 	</xsl:template>
 	<xsl:template name="responder_row">
-	    <td class="sc_table"><xsl:value-of select="responderConfig/host"/></td>
-	    <td class="sc_table"><xsl:value-of select="responderConfig/port"/></td>
-	    <td class="sc_table"><xsl:value-of select="responderConfig/communicatorName"/></td>
-	    <td class="sc_table"><xsl:value-of select="responderConfig/connectionType"/></td>
-	    <td class="sc_table"><xsl:value-of select="responderConfig/maxPoolSize"/></td>
-	    <td class="sc_table"><xsl:value-of select="responderConfig/keepAliveInterval"/></td>
-	    <td class="sc_table"><xsl:value-of select="responderConfig/operationTimeoutMultiplier"/></td>
+	    <xsl:param name="class"/>
+	    <td class="{$class}"><xsl:value-of select="responderConfig/host"/></td>
+	    <td class="{$class}"><xsl:value-of select="responderConfig/port"/></td>
+	    <td class="{$class}"><xsl:value-of select="responderConfig/communicatorName"/></td>
+	    <td class="{$class}"><xsl:value-of select="responderConfig/connectionType"/></td>
+	    <td class="{$class}"><xsl:value-of select="responderConfig/maxPoolSize"/></td>
+	    <td class="{$class}"><xsl:value-of select="responderConfig/keepAliveInterval"/></td>
+	    <td class="{$class}"><xsl:value-of select="responderConfig/operationTimeoutMultiplier"/></td>
 	</xsl:template>
 	<xsl:template name="responder_details">
 	  <td colspan="7">

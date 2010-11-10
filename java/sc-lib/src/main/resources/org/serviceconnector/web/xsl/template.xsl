@@ -12,6 +12,10 @@
 		<html>
 			<head>
 				<title><xsl:call-template name="sc_title"/></title>
+				<META HTTP-EQUIV="Pragma" CONTENT="no-cache"></META>
+                <META HTTP-EQUIV="Cache-Control" CONTENT="no-store, no-cache, must-revalidate"></META>
+                <META HTTP-EQUIV="Cache-Control" CONTENT="post-check=1, pre-check=2"></META>
+                <META HTTP-EQUIV="Expires" CONTENT="-1"></META>				
 				<link rel="stylesheet" href="sc-web.css"></link>
 				<script type="text/javascript" src="ajax.js"></script>
 				<script type="text/javascript" src="sc_ajax.js"></script>
@@ -32,11 +36,11 @@
 					   </div>
 					</xsl:if>
 					<div id="sc_content">
+					   <xsl:if test="string-length($userid) &lt;= 0">
+					     <xsl:attribute name="style">left:0px;</xsl:attribute>
+					   </xsl:if>					
 					   <xsl:call-template name="sc_content"/> 
 					</div>
-				    <div id="sc_info">
-			          <xsl:call-template name="sc_info"/> 
-				    </div>
 				</div>
 			</body>
 		</html>
@@ -81,7 +85,10 @@
 	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="cache">Cache</a></div>
 	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="maintenance">Maintenance</a></div>
 	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="logs">Logs</a></div>
-	  <div class="sc_navigation_item" style="height:400px;"></div>
+	  <div class="sc_navigation_item" style="height:20px;"></div>
+	  <div id="sc_info">
+		  <xsl:call-template name="sc_info"/> 
+	  </div>	 
 	</xsl:template>
 	<xsl:template name="sc_content">Service Connector</xsl:template>
 	<xsl:template name="sc_menu_left"></xsl:template>
@@ -99,27 +106,27 @@
 	   setInterval('infoCall()', 5000);	
 	</xsl:template>
 	<xsl:template name="sc_status">
-      <div class="sc_table" style="width:230px;">
+      <div class="sc_table" style="width:160px;">
         <div class="sc_table_title">
-           Status
+           <div style="float:left;width:130px;">Status</div>
            <xsl:choose>
              <xsl:when test="$head/meta/@scstatus = 'success'">
-               <div id="sc_status_area" style="padding:2px; float:right">
+               <div id="sc_status_area" style="padding-left:2px; float:right">
                  <div id="sc_status_area_success" style="visibility:visible; float:right">
-                   <img border="0" width="20" height="20" src="green.png"/>
+                   <img border="0" width="14" height="14" src="green.png"></img>
                  </div>             
                  <div id="sc_status_area_error" style="visibility:hidden; float:right">
-                    <img border="0" width="20" height="20" src="red.png"/>             
+                    <img border="0" width="14" height="14" src="red.png"></img>             
                  </div>
                </div>
              </xsl:when>
              <xsl:otherwise>
-               <div id="sc_status_area" style="padding:2px; float:right">
+               <div id="sc_status_area" style="padding-left:2px; float:right">
                  <div id="sc_status_area_success" style="visibility:hidden; float:right">
-                   <img border="0" width="20" height="20" src="green.png"/>
+                   <img border="0" width="14" height="14" src="green.png"></img>
                  </div>             
                  <div id="sc_status_area_error" style="visibility:visible; float:right">
-                    <img border="0" width="20" height="20" src="red.png"/>             
+                    <img border="0" width="14" height="14" src="red.png"></img>       
                  </div>
                </div>
              </xsl:otherwise>
@@ -128,7 +135,7 @@
       </div>
 	</xsl:template>
 	<xsl:template name="sc_runtime">
-      <div class="sc_table" style="width:230px;">
+      <div class="sc_table" style="width:160px;">
         <div class="sc_table_title">
            Runtime
         </div>             
@@ -139,27 +146,27 @@
 	</xsl:template>
 	<xsl:template match="runtime">
 	  <tr class="sc_table_even">
-	    <td class="sc_table">Processors</td>	  
-	    <td class="sc_table"><xsl:value-of select="availableProcessors"/></td>	  
+	    <td class="sc_table_even">Processors</td>	  
+	    <td class="sc_table_even"><xsl:value-of select="availableProcessors"/></td>	  
 	  </tr>
 	  <tr class="sc_table_odd">
-	    <td class="sc_table">Free Memory</td>	  
-	    <td class="sc_table"><xsl:value-of select="freeMemory"/></td>	  
+	    <td class="sc_table_odd">Free Memory</td>	  
+	    <td class="sc_table_odd"><xsl:value-of select="freeMemory"/></td>	  
 	  </tr>
 	  <tr class="sc_table_even">
-	    <td class="sc_table">Total Memory</td>	  
-	    <td class="sc_table"><xsl:value-of select="totalMemory"/></td>	  
+	    <td class="sc_table_even">Total Memory</td>	  
+	    <td class="sc_table_even"><xsl:value-of select="totalMemory"/></td>	  
 	  </tr>
-	  <tr class="sc_table_even">
-	    <td class="sc_table">Max Memory</td>	  
-	    <td class="sc_table"><xsl:value-of select="maxMemory"/></td>	  
+	  <tr class="sc_table_odd">
+	    <td class="sc_table_odd">Max Memory</td>	  
+	    <td class="sc_table_odd"><xsl:value-of select="maxMemory"/></td>	  
 	  </tr>
 	  <tr>
 	    <td colspan="2" class="sc_table"><a class="sc_table" href="javascript:runGC()">Run GC</a></td>
 	  </tr>
 	</xsl:template> 
 	<xsl:template name="sc_statistics">
-      <div class="sc_table" style="width:230px;">
+      <div class="sc_table" style="width:160px;">
         <div class="sc_table_title">
            Statistics
         </div>             
@@ -170,35 +177,35 @@
 	</xsl:template>
 	<xsl:template match="statistics">
 	  <tr class="sc_table_even">
-	    <td class="sc_table">Startup Time</td>	  
-	    <td class="sc_table">
+	    <td class="sc_table_even">Startup Time</td>	  
+	    <td class="sc_table_even">
 	      <xsl:value-of select="substring(startupDateTime,0,11)"/><br/>
 	      <xsl:value-of select="substring(startupDateTime,12,8)"/>
 	    </td>
 	  </tr>
 	  <tr class="sc_table_odd">
-	    <td class="sc_table">Runtime (s)</td>	  
-	    <td class="sc_table"><xsl:value-of select="runtimeSinceStartupSeconds"/></td>	  
+	    <td class="sc_table_odd">Runtime (s)</td>	  
+	    <td class="sc_table_odd"><xsl:value-of select="runtimeSinceStartupSeconds"/></td>	  
 	  </tr>
 	  <tr class="sc_table_even">
-	    <td class="sc_table">Total Messages</td>	  
-	    <td class="sc_table"><xsl:value-of select="totalMessages"/></td>	  
+	    <td class="sc_table_even">Total Messages</td>	  
+	    <td class="sc_table_even"><xsl:value-of select="totalMessages"/></td>	  
 	  </tr>
 	  <tr class="sc_table_odd">
-	    <td class="sc_table">Total Bytes</td>	  
-	    <td class="sc_table"><xsl:value-of select="totalBytes"/></td>	  
+	    <td class="sc_table_odd">Total Bytes</td>	  
+	    <td class="sc_table_odd"><xsl:value-of select="totalBytes"/></td>	  
 	  </tr>
 	  <tr class="sc_table_even">
-	    <td class="sc_table">Cached Messages</td>	  
-	    <td class="sc_table"><xsl:value-of select="cachedMessages"/></td>	  
+	    <td class="sc_table_even">Cached Messages</td>	  
+	    <td class="sc_table_even"><xsl:value-of select="cachedMessages"/></td>	  
 	  </tr>
 	  <tr class="sc_table_odd">
-	    <td class="sc_table">Cached Bytes</td>	  
-	    <td class="sc_table"><xsl:value-of select="cachedBytes"/></td>	  
+	    <td class="sc_table_odd">Cached Bytes</td>	  
+	    <td class="sc_table_odd"><xsl:value-of select="cachedBytes"/></td>	  
 	  </tr>
 	  <tr class="sc_table_even">
-	    <td class="sc_table">Cached Files</td>	  
-	    <td class="sc_table"><xsl:value-of select="cachedFiles"/></td>	  
+	    <td class="sc_table_even">Cached Files</td>	  
+	    <td class="sc_table_even"><xsl:value-of select="cachedFiles"/></td>	  
 	  </tr>
 	</xsl:template> 
 </xsl:stylesheet>

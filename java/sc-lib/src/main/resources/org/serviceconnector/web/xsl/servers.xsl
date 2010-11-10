@@ -10,7 +10,7 @@
       setInterval("contentCall('servers', 'host=<xsl:value-of select="$paramHost"/>&amp;port=<xsl:value-of select="$paramPort"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
-      <div class="sc_table" style="width:800px;">
+      <div class="sc_table max_width">
         <div class="sc_table_title">
            List of servers
         </div>             
@@ -37,7 +37,9 @@
 	        <xsl:if test="details">
 	          <xsl:attribute name="style">height:40px;</xsl:attribute>
 	        </xsl:if>
-	        <xsl:call-template name="server_row"/>
+	        <xsl:call-template name="server_row">
+	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
 	  <xsl:if test="position() mod 2 != 0">
@@ -45,7 +47,9 @@
 	        <xsl:if test="details">
 	          <xsl:attribute name="style">height:40px;</xsl:attribute>
 	        </xsl:if>
-	        <xsl:call-template name="server_row"/>
+	        <xsl:call-template name="server_row">
+	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
       <xsl:if test="$paramHost and $paramPort">
@@ -55,12 +59,13 @@
       </xsl:if>
 	</xsl:template>
 	<xsl:template name="server_row">
-	    <td class="sc_table"><xsl:value-of select="host"/></td>
-	    <td class="sc_table"><xsl:value-of select="portNr"/></td>
-	    <td class="sc_table"><xsl:value-of select="serviceName"/></td>
-	    <td class="sc_table"><xsl:value-of select="maxSessions"/></td>
-	    <td class="sc_table"><xsl:value-of select="maxConnections"/></td>
-	    <td class="sc_table"><a class="sc_table" href="servers?host={host}&amp;port={portNr}"><xsl:value-of select="requester/context/connectionPool/busyConnections"/></a></td>	    
+	    <xsl:param name="class"/>
+	    <td class="{$class}"><xsl:value-of select="host"/></td>
+	    <td class="{$class}"><xsl:value-of select="portNr"/></td>
+	    <td class="{$class}"><xsl:value-of select="serviceName"/></td>
+	    <td class="{$class}"><xsl:value-of select="maxSessions"/></td>
+	    <td class="{$class}"><xsl:value-of select="maxConnections"/></td>
+	    <td class="{$class}"><a class="sc_table" href="servers?host={host}&amp;port={portNr}"><xsl:value-of select="requester/context/connectionPool/busyConnections"/></a></td>	    
 	</xsl:template>
 	<xsl:template name="server_details">
 	  <td colspan="7">
@@ -98,14 +103,14 @@
 	  <xsl:for-each select="usedConnections/*">
 	    <xsl:if test="position() mod 2 = 0">
 	      <tr class="sc_sub_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
-	        <td class="sc_table"><img width="20" height="20" src="rightarrow.png"/></td>
-	        <td class="sc_table"><xsl:value-of select="local-name()"/></td>
+	        <td class="sc_sub_table_even"><img width="20" height="20" src="rightarrow.png"/></td>
+	        <td class="sc_sub_table_even"><xsl:value-of select="local-name()"/></td>
 	      </tr>	    
 	    </xsl:if>
 	    <xsl:if test="position() mod 2 != 0">
 	       <tr class="sc_sub_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
-	        <td class="sc_table"><img width="20" height="20" src="rightarrow.png"/></td>
-	        <td class="sc_table"><xsl:value-of select="local-name()"/></td>
+	        <td class="sc_sub_table_odd"><img width="20" height="20" src="rightarrow.png"/></td>
+	        <td class="sc_sub_table_odd"><xsl:value-of select="local-name()"/></td>
 	       </tr>	    
 	    </xsl:if>
 	  </xsl:for-each>
@@ -116,14 +121,14 @@
 	  <xsl:for-each select="freeConnections/*">
 	    <xsl:if test="position() mod 2 = 0">
 	      <tr class="sc_sub_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
-	        <td class="sc_table"><img width="20" height="20" src="rightarrow.png"/></td>
-	        <td class="sc_table"><xsl:value-of select="local-name()"/></td>
+	        <td class="sc_sub_table_even"><img width="20" height="20" src="rightarrow.png"/></td>
+	        <td class="sc_sub_table_even"><xsl:value-of select="local-name()"/></td>
 	      </tr>	    
 	    </xsl:if>
 	    <xsl:if test="position() mod 2 != 0">
 	       <tr class="sc_sub_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
-	        <td class="sc_table"><img width="20" height="20" src="rightarrow.png"/></td>
-	        <td class="sc_table"><xsl:value-of select="local-name()"/></td>
+	        <td class="sc_sub_table_odd"><img width="20" height="20" src="rightarrow.png"/></td>
+	        <td class="sc_sub_table_odd"><xsl:value-of select="local-name()"/></td>
 	       </tr>	    
 	    </xsl:if>
 	  </xsl:for-each>

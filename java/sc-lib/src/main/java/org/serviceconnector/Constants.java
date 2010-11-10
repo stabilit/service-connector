@@ -223,6 +223,18 @@ public final class Constants {
 	public static final String KILL = "kill";
 	/** The Constant EQUAL_SIGN. */
 	public static final String EQUAL_SIGN = "=";
+	/** The Constant CACHE_ENABLED. */
+	public static final String CACHE_ENABLED = "cache.enabled";
+	/** The Constant CACHE_NAME. */
+	public static final String CACHE_NAME = "cache.name";	
+	/** The Constant CACHE_DISK_PERSISTENT. */
+	public static final String CACHE_DISK_PERSISTENT = "cache.diskPersistent";
+	/** The Constant CACHE_DISK_PATH. */
+	public static final String CACHE_DISK_PATH = "cache.diskPath";	
+	/** The Constant CACHE_MAX_ELEMENTS_IN_MEMORY. */
+	public static final String CACHE_MAX_ELEMENTS_IN_MEMORY = "cache.maxElementsInMemory";	
+	/** The Constant CACHE_MAX_ELEMENTS_ON_DISK. */
+	public static final String CACHE_MAX_ELEMENTS_ON_DISK = "cache.maxElementsOnDisk";
 
 	/**
 	 * @param flag

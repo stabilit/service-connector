@@ -28,6 +28,7 @@ public class SCMPCacheManager {
 
 	/** The scmp cache map. */
 	private Map<String, SCMPCache> scmpCacheMap;
+	private SCMPCacheConfiguration scmpCacheConfiguration;
 
 	
 	/**
@@ -35,13 +36,17 @@ public class SCMPCacheManager {
 	 */
 	public SCMPCacheManager() {
 		// load scmp caches from configuration
-		this.scmpCacheMap = new ConcurrentHashMap();
+		this.scmpCacheMap = new ConcurrentHashMap<String, SCMPCache>();
+		this.scmpCacheConfiguration = null;
 	}
 
 	/**
 	 * Inits the scmp cache map according the service registry.
 	 */
-	public void initialize() {
+	public void initialize(String configFile) throws Exception {
+		this.scmpCacheConfiguration = SCMPCacheConfiguration.getInstance();
+		this.scmpCacheConfiguration.load(configFile);
+		
 		ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
 		Service services[] = serviceRegistry.getServices();
 		for (int i = 0; i < services.length; i++) {
@@ -49,7 +54,7 @@ public class SCMPCacheManager {
 			String serviceName = service.getServiceName();
 			ServiceType serviceType = service.getType();
 			if (serviceType == ServiceType.SESSION_SERVICE) {
-				this.scmpCacheMap.put(serviceName, new SCMPCache(serviceName));
+				this.scmpCacheMap.put(serviceName, new SCMPCache(this, serviceName));
 			}
 		}
 	}
@@ -68,4 +73,7 @@ public class SCMPCacheManager {
 		return this.scmpCacheMap.get(serviceName);
 	}
 	
+	public SCMPCacheConfiguration getScmpCacheConfiguration() {
+		return scmpCacheConfiguration;
+	}
 }
