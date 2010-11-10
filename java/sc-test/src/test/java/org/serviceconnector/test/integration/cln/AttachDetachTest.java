@@ -119,6 +119,7 @@ public class AttachDetachTest {
 		assertEquals(false, client.isAttached());
 	}
 
+	
 	/**
 	 * Description: Attach two time the same client and detach one time with default host and http-port.<br>
 	 * Expectation:	Throws exception on the second attach and detached.
