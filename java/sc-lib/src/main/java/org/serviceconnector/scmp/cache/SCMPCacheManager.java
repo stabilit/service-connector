@@ -16,6 +16,7 @@
 package org.serviceconnector.scmp.cache;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.serviceconnector.ctx.AppContext;
@@ -53,6 +54,10 @@ public class SCMPCacheManager {
 		}
 	}
 
+	public void destroy() {
+		SCMPCacheImplFactory.destroy();
+	}
+	
 	/**
 	 * Gets the cache.
 	 *

@@ -52,13 +52,17 @@ public class SCMPCacheTestCase {
        ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
 	   Service service = new SessionService("dummy");
        serviceRegistry.addService("dummy", service);
+	   service = new SessionService("dummy1");
+       serviceRegistry.addService("dummy1", service);
+	   service = new SessionService("dummy2");
+       serviceRegistry.addService("dummy2", service);
 	   scmpCacheManager = new SCMPCacheManager();
 	   scmpCacheManager.initialize();
 	}
 
 	@After
 	public void afterTest() {
-
+		scmpCacheManager.destroy();
 	}
 
 	@Test
@@ -78,6 +82,31 @@ public class SCMPCacheTestCase {
 		byte[] bufferRead = (byte[]) cacheMessage.getBody();
 		String stringRead = new String(bufferRead);
 		Assert.assertEquals(stringWrite, stringRead);
+	}
+
+	@Test
+	public void duplicateSCMPCacheWriteTest() throws SCMPCacheException {
+		SCMPCache scmpCache1 = this.scmpCacheManager.getCache("dummy1");
+		SCMPCache scmpCache2 = this.scmpCacheManager.getCache("dummy2");
+		String stringWrite = "this is the buffer";
+		byte[] buffer = stringWrite.getBytes();
+		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
+		
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, 1233);
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+		scmpCache1.putSCMP(scmpMessageWrite);
+		scmpCache2.putSCMP(scmpMessageWrite);
+		SCMPMessage scmpMessageRead = new SCMPMessage();
+		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, 1233);
+		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+		SCMPCacheMessage cacheMessage1 = scmpCache1.getSCMP(scmpMessageRead);
+		byte[] bufferRead1 = (byte[]) cacheMessage1.getBody();
+		String stringRead1 = new String(bufferRead1);
+		Assert.assertEquals(stringWrite, stringRead1);
+		SCMPCacheMessage cacheMessage2 = scmpCache2.getSCMP(scmpMessageRead);
+		byte[] bufferRead2 = (byte[]) cacheMessage2.getBody();
+		String stringRead2 = new String(bufferRead2);
+		Assert.assertEquals(stringWrite, stringRead2);
 	}
 
 }

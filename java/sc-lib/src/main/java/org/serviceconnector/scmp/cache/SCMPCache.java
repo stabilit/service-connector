@@ -15,7 +15,7 @@ public class SCMPCache {
 	public SCMPCache(String serviceName) {
 		this.cacheImpl = SCMPCacheImplFactory.getDefaultCacheImpl(serviceName);
 	}
-
+	
 	public synchronized SCMPCacheMessage getSCMP(SCMPMessage msg) throws SCMPCacheException {
 		String cacheId = msg.getCacheId();
 		if (cacheId == null) {

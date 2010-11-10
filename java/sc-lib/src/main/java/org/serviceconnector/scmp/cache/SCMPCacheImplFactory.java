@@ -7,5 +7,9 @@ public class SCMPCacheImplFactory {
 	public static ISCMPCacheImpl getDefaultCacheImpl(String serviceName) {
 		return new EHCacheSCMPCacheImpl(serviceName);
 	}
+	
+	public static void destroy() {
+		EHCacheSCMPCacheImpl.destroy();
+	}
 
 }
