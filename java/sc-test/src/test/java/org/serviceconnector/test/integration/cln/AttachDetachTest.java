@@ -1,6 +1,8 @@
 package org.serviceconnector.test.integration.cln;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+
+import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -49,6 +51,7 @@ public class AttachDetachTest {
 	public void setUp() {
 		// threadCount = Thread.activeCount();
 		client = new SCClient();
+		((SCClient) client).setConnectionType("netty.http");
 	}
 
 	@After
@@ -57,12 +60,33 @@ public class AttachDetachTest {
 		// assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
+
+	private void testAttachDetach(String host, int port, int cicle, int sleep) throws Exception  {
+		int i = 0;
+		try {
+			for (i = 0; i < cicle; i++) {
+				if ((i % 100) == 0)
+					testLogger.info("Executing cycle nr. " + i + "...");
+				client.attach(host, port);
+				assertEquals(true, client.isAttached());
+				if (sleep > 0) 
+					Thread.sleep(sleep);
+				client.detach();
+				assertEquals(false, client.isAttached());
+			}
+		} catch (Exception ex){
+			assertFalse("Clients Count:"+i+"  Exception, error msg:"+ex.getMessage(), true);
+		}
+	}
+
+
 	@Test
 	public void attach_changesState_initiallyNotAttachedThenAttached() throws Exception {
 		assertEquals(false, client.isAttached());
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals(true, client.isAttached());
 		client.detach();
+		assertEquals(false, client.isAttached());
 	}
 
 	@Test
@@ -165,39 +189,18 @@ public class AttachDetachTest {
 
 	// @Test
 	public void attachDetach_cycle10Times_notAttached() throws Exception {
-		for (int i = 0; i < 10; i++) {
-			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-			Thread.sleep(1000);
-			client.detach();
-			Thread.sleep(1000);
-		}
-		assertEquals(false, client.isAttached());
+		this.testAttachDetach(TestConstants.HOST, TestConstants.PORT_HTTP, 10, 1000);
 	}
 
 	@Test
 	public void attachDetach_cycle100Times_notAttached() throws Exception {
-		for (int i = 0; i < 100; i++) {
-			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-			client.detach();
-		}
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		assertEquals(true, client.isAttached());
-		client.detach();
-		assertEquals(false, client.isAttached());
+		this.testAttachDetach(TestConstants.HOST, TestConstants.PORT_HTTP, 100, 0);
 	}
 
+	
 	@Test
-	public void attachDetach_cycle500Times_notAttached() throws Exception {
-		for (int i = 0; i < 5000; i++) {
-			if ((i % 100) == 0)
-				testLogger.info("Executing cycle nr. " + i + "...");
-			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-			client.detach();
-		}
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		assertEquals(true, client.isAttached());
-		client.detach();
-		assertEquals(false, client.isAttached());
+	public void attachDetach_cycle5000Times_notAttached() throws Exception  {
+		this.testAttachDetach(TestConstants.HOST, TestConstants.PORT_HTTP, 5000, 0);
 	}
 
 	// TODO 1000 is too much. Getting very slow exactly after 500. 501,502...
@@ -206,23 +209,35 @@ public class AttachDetachTest {
 		int clientsCount = 500;
 		SCClient[] clients = new SCClient[clientsCount];
 		int i = 0;
-		for (; i < clientsCount; i++) {
-			if ((i % 100) == 0) testLogger.info("Attaching client nr. " + i + "...");
-			clients[i] = new SCClient();
-			clients[i].attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		try {
+			for (; i < clientsCount; i++) {
+				if ((i % 100) == 0) testLogger.info("Attaching client nr. " + i + "...");
+				clients[i] = new SCClient();
+				((SCClient) clients[i]).setConnectionType("netty.http");
+				clients[i].attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+			}
+		} catch (InvalidParameterException ex) {
+			assertFalse("Attach, clientsCount:"+i+"  InvalidParameterException, error msg:"+ex.getMessage(), true);
+		} catch (Exception ex){
+			assertFalse("Attach, clientsCount:"+i+"  Exception, error msg:"+ex.getMessage(), true);
 		}
-		i = 0;
-		for (; i < clientsCount; i++) {
-			assertEquals(true, clients[i].isAttached());
+		try {
+			i = 0;
+			for (; i < clientsCount; i++) {
+				assertEquals(true, clients[i].isAttached());
+			}
+			i = 0;
+			for (; i < clientsCount; i++) {
+				if ((i % 100) == 0) testLogger.info("Detaching client nr. " + i + "...");
+				clients[i].detach();
+			}
+			i = 0;
+			for (; i < clientsCount; i++) {
+				assertEquals(false, clients[i].isAttached());
+			}
+		} catch (Exception ex){
+			assertFalse("Detach, clientsCount:"+i+"  Exception, error msg:"+ex.getMessage(), true);
 		}
-		i = 0;
-		for (; i < clientsCount; i++) {
-			if ((i % 100) == 0) testLogger.info("Detaching client nr. " + i + "...");
-			clients[i].detach();
-		}
-		i = 0;
-		for (; i < clientsCount; i++) {
-			assertEquals(false, clients[i].isAttached());
-		}
+			
 	}
 }
