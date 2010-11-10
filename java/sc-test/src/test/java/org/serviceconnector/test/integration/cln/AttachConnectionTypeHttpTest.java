@@ -60,7 +60,14 @@ public class AttachConnectionTypeHttpTest {
 //		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
-	private void testAttach(String host, int port, Integer keepAlive, boolean isClientAttached, String expectedException) {
+	/**
+	 * Run the method "client.atach" and check the exeptions.
+	 * @param host
+	 * @param port
+	 * @param keepAlive = integer value or can be null
+	 * @param isClientAttached = true or false
+	 * @param expectedException = need the expected exception as string.
+	 */private void testAttach(String host, int port, Integer keepAlive, boolean isClientAttached, String expectedException) {
 		try {
 			if (keepAlive == null) {
 				client.attach(host, port);
@@ -77,7 +84,7 @@ public class AttachConnectionTypeHttpTest {
 		} catch (Exception ex){
 			assertEquals("Host:"+host+"  port:"+port+"  Exception:"+ex.getMessage(), expectedException, "Exception");
 		}
-		assertEquals(isClientAttached, client.isAttached());
+		assertEquals("Is client attached:", isClientAttached, client.isAttached());
 	}
 
 	/**
@@ -516,11 +523,11 @@ public class AttachConnectionTypeHttpTest {
 
 	/**
 	 * Description: Attach client with default host name, default http-port and set keepAlive to 0 .<br>
-	 * Expectation:	Client is attached.
+	 * Expectation:	Client is not attached and throws SCServiceException.
 	 */
 	@Test
-	public void attach_KeepAlive0_notAttached() throws Exception {
-		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, new Integer(0), true, "");
+	public void attach_49() throws Exception {
+		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, new Integer(0), false, "SCServiceException");
 	}
 
 	/**
