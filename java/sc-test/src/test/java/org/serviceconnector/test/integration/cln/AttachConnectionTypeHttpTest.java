@@ -49,6 +49,7 @@ public class AttachConnectionTypeHttpTest {
 	public void setUp() throws Exception {
 //		threadCount = Thread.activeCount();
 		client = new SCClient();
+		((SCClient) client).setConnectionType("netty.http");
 	}
 	
 	@After
@@ -523,11 +524,11 @@ public class AttachConnectionTypeHttpTest {
 
 	/**
 	 * Description: Attach client with default host name, default http-port and set keepAlive to 0 .<br>
-	 * Expectation:	Client is not attached and throws SCServiceException.
+	 * Expectation:	Client is attached.
 	 */
 	@Test
 	public void attach_49() throws Exception {
-		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, new Integer(0), false, "SCServiceException");
+		this.testAttach(TestConstants.HOST, TestConstants.PORT_HTTP, new Integer(0), true, "");
 	}
 
 	/**
