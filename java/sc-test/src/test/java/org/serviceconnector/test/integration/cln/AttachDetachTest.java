@@ -61,27 +61,57 @@ public class AttachDetachTest {
 	}
 
 
-	private void testAttachDetach(String host, int port, int cicle, int sleep) throws Exception  {
+	private void testAttachDetachCycle(String host, int port, int cicle, int sleep) throws Exception  {
 		int i = 0;
 		try {
 			for (i = 0; i < cicle; i++) {
-				if ((i % 100) == 0)
-					testLogger.info("Executing cycle nr. " + i + "...");
 				client.attach(host, port);
 				assertEquals(true, client.isAttached());
 				if (sleep > 0) 
 					Thread.sleep(sleep);
 				client.detach();
 				assertEquals(false, client.isAttached());
+				if (((i+1) % 100) == 0)
+					testLogger.info("Executing cycle nr. " + (i+1) + "...");
 			}
 		} catch (Exception ex){
 			assertFalse("Clients Count:"+i+"  Exception, error msg:"+ex.getMessage(), true);
 		}
 	}
 
+	private void testAttachAllDetachALL(String host, int port, int clientsCount) throws Exception {
+		SCClient[] clients = new SCClient[clientsCount];
+		int i = 0;
+		try {
+			for (; i < clientsCount; i++) {
+				if (((i+1) % 100) == 0) testLogger.info("Attaching client nr. " + (i+1) + "...");
+				clients[i] = new SCClient();
+				((SCClient) clients[i]).setConnectionType("netty.http");
+				clients[i].attach(host, port);
+			}
+		} catch (InvalidParameterException ex) {
+			assertFalse("Attach, clientsCount:"+i+"  InvalidParameterException, error msg:"+ex.getMessage(), true);
+		} catch (Exception ex){
+			assertFalse("Attach, clientsCount:"+i+"  Exception, error msg:"+ex.getMessage(), true);
+		}
+		try {
+			for (i = 0; i < clientsCount; i++) {
+				if (((i+1) % 100) == 0) testLogger.info("Detaching client nr. " + (i+1) + "...");
+				assertEquals(true, clients[i].isAttached());
+				clients[i].detach();
+				assertEquals(false, clients[i].isAttached());
+			}
+		} catch (Exception ex){
+			assertFalse("Detach, clientsCount:"+i+"  Exception, error msg:"+ex.getMessage(), true);
+		}
+	}
 
+	/**
+	 * Description: Attach and detach one time with default host and http-port.<br>
+	 * Expectation:	Client is detached.
+	 */
 	@Test
-	public void attach_changesState_initiallyNotAttachedThenAttached() throws Exception {
+	public void attachDetach_1() throws Exception {
 		assertEquals(false, client.isAttached());
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals(true, client.isAttached());
@@ -89,17 +119,12 @@ public class AttachDetachTest {
 		assertEquals(false, client.isAttached());
 	}
 
+	/**
+	 * Description: Attach two time the same client and detach one time with default host and http-port.<br>
+	 * Expectation:	Throws exception on the second attach and detached.
+	 */
 	@Test
-	public void detach_changesState_fromAttachedToNotAttached() throws Exception {
-		assertEquals(false, client.isAttached());
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		assertEquals(true, client.isAttached());
-		client.detach();
-		assertEquals(false, client.isAttached());
-	}
-
-	@Test
-	public void attach_twiceSameParams_throwsExceptionAttached() throws Exception {
+	public void attachDetach_2() throws Exception {
 		Exception ex = null;
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		try {
@@ -110,71 +135,17 @@ public class AttachDetachTest {
 		assertEquals(true, ex instanceof SCServiceException);
 		assertEquals(true, client.isAttached());
 		client.detach();
-	}
-
-	@Test
-	public void attach_twiceDifferentParamsHttpFirst_throwsExceptionAttached() throws Exception {
-		Exception ex = null;
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		((SCClient) client).setConnectionType("netty.tcp");
-		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, client.isAttached());
-		client.detach();
-	}
-
-	@Test
-	public void attach_twiceDifferentParamsTcpFirst_throwsExceptionAttached() throws Exception {
-		Exception ex = null;
-		((SCClient) client).setConnectionType("netty.tcp");
-		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		((SCClient) client).setConnectionType("netty.http");
-		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, client.isAttached());
-		client.detach();
-	}
-
-	@Test
-	public void detach_withoutAttach_notAttached() throws Exception {
-		client.detach();
 		assertEquals(false, client.isAttached());
 	}
 
+	/**
+	 * Description: Attach two time the same client and detach one time with twice different parameters.<br>
+	 * Expectation:	Throws exception on the second attach and detached.
+	 */
 	@Test
-	public void detach_validAttachPortHttp_notAttached() throws Exception {
-		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		} finally {
-			client.detach();
-			assertEquals(false, client.isAttached());
-		}
-	}
-
-	@Test
-	public void detach_validAttachPortTcp_notAttached() throws Exception {
-		((SCClient) client).setConnectionType("netty.tcp");
-		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		} finally {
-			client.detach();
-			assertEquals(false, client.isAttached());
-		}
-	}
-
-	@Test
-	public void detach_afterDoubleAttemptedAttachDetach_throwsExceptionNotAttached() throws Exception {
+	public void attachDetach_3() throws Exception {
 		Exception ex = null;
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		assertEquals(true, client.isAttached());
 		try {
 			((SCClient) client).setConnectionType("netty.tcp");
 			client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
@@ -187,57 +158,93 @@ public class AttachDetachTest {
 		assertEquals(false, client.isAttached());
 	}
 
-	// @Test
-	public void attachDetach_cycle10Times_notAttached() throws Exception {
-		this.testAttachDetach(TestConstants.HOST, TestConstants.PORT_HTTP, 10, 1000);
+	/**
+	 * Description: Attach two time the same client and detach one time with twice different parameters.<br>
+	 * Expectation:	Throws exception on the second attach and detached.
+	 */
+	@Test
+	public void attachDetach_4() throws Exception {
+		Exception ex = null;
+		assertEquals(false, client.isAttached());
+
+		((SCClient) client).setConnectionType("netty.tcp");
+		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
+		try {
+			((SCClient) client).setConnectionType("netty.http");
+			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		} catch (Exception e) {
+			ex = e;
+		}
+		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals(true, client.isAttached());
+		client.detach();
+		assertEquals(false, client.isAttached());
 	}
 
+	/**
+	 * Description: Detach the client without to attach.<br>
+	 * Expectation:	Client is detached.
+	 */
 	@Test
-	public void attachDetach_cycle100Times_notAttached() throws Exception {
-		this.testAttachDetach(TestConstants.HOST, TestConstants.PORT_HTTP, 100, 0);
+	public void detach_1() throws Exception {
+		assertEquals(false, client.isAttached());
+		client.detach();
+		assertEquals(false, client.isAttached());
+	}
+
+	/**
+	 * Description: Attach and detach 10 times with sleep time 1sec between attach and detach.<br>
+	 * Expectation:	Client is detached.
+	 */
+	@Test
+	public void attachDetach_5() throws Exception {
+		this.testAttachDetachCycle(TestConstants.HOST, TestConstants.PORT_HTTP, 10, 1000);
+	}
+
+	/**
+	 * Description: Attach first and then detach 100 times.<br>
+	 * Expectation:	Client is detached.
+	 */
+	@Test
+	public void attachDetach_6() throws Exception {
+		this.testAttachDetachCycle(TestConstants.HOST, TestConstants.PORT_HTTP, 100, 0);
+	}
+
+	/**
+	 * Description: Attach and detach 5000 times.<br>
+	 * Expectation:	Client is detached.
+	 */
+	@Test
+	public void attachDetach_7() throws Exception  {
+		this.testAttachDetachCycle(TestConstants.HOST, TestConstants.PORT_HTTP, 5000, 0);
+	}
+
+	/**
+	 * Description: Attach first and then detach all 100 times.<br>
+	 * Expectation:	Client is detached.
+	 */
+	@Test
+	public void attachDetach_8() throws Exception {
+		this.testAttachAllDetachALL(TestConstants.HOST, TestConstants.PORT_HTTP, 10);
+	}
+	
+	/**
+	 * Description: Attach first and then detach all 500 times.<br>
+	 * Expectation:	Client is detached.
+	 */
+	@Test
+	public void attachDetach_9() throws Exception {
+		this.testAttachAllDetachALL(TestConstants.HOST, TestConstants.PORT_HTTP, 500);
+	}
+
+	/**
+	 * Description: Attach first and then detach all 1000 times.<br>
+	 * Expectation:	Client is detached.
+	 */
+	@Test
+	public void attachDetach_10() throws Exception {
+		this.testAttachAllDetachALL(TestConstants.HOST, TestConstants.PORT_HTTP, 1000);
 	}
 
 	
-	@Test
-	public void attachDetach_cycle5000Times_notAttached() throws Exception  {
-		this.testAttachDetach(TestConstants.HOST, TestConstants.PORT_HTTP, 5000, 0);
-	}
-
-	// TODO 1000 is too much. Getting very slow exactly after 500. 501,502...
-	@Test
-	public void attach_500ClientsAttachedBeforeDetach_allAttached() throws Exception {
-		int clientsCount = 500;
-		SCClient[] clients = new SCClient[clientsCount];
-		int i = 0;
-		try {
-			for (; i < clientsCount; i++) {
-				if ((i % 100) == 0) testLogger.info("Attaching client nr. " + i + "...");
-				clients[i] = new SCClient();
-				((SCClient) clients[i]).setConnectionType("netty.http");
-				clients[i].attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-			}
-		} catch (InvalidParameterException ex) {
-			assertFalse("Attach, clientsCount:"+i+"  InvalidParameterException, error msg:"+ex.getMessage(), true);
-		} catch (Exception ex){
-			assertFalse("Attach, clientsCount:"+i+"  Exception, error msg:"+ex.getMessage(), true);
-		}
-		try {
-			i = 0;
-			for (; i < clientsCount; i++) {
-				assertEquals(true, clients[i].isAttached());
-			}
-			i = 0;
-			for (; i < clientsCount; i++) {
-				if ((i % 100) == 0) testLogger.info("Detaching client nr. " + i + "...");
-				clients[i].detach();
-			}
-			i = 0;
-			for (; i < clientsCount; i++) {
-				assertEquals(false, clients[i].isAttached());
-			}
-		} catch (Exception ex){
-			assertFalse("Detach, clientsCount:"+i+"  Exception, error msg:"+ex.getMessage(), true);
-		}
-			
-	}
 }

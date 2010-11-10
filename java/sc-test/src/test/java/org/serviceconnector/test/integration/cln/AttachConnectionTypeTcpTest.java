@@ -64,7 +64,7 @@ public class AttachConnectionTypeTcpTest {
 	 * Run the method "client.atach" and check the exeptions.
 	 * @param host
 	 * @param port
-	 * @param keepAlive = integer value or can be null
+	 * @param keepAlive = the keep alive interval in seconds, integer value or can be null
 	 * @param isClientAttached = true or false
 	 * @param expectedException = need the expected exception as string.
 	 */
