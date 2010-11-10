@@ -98,7 +98,7 @@ public class AttachToMultipleSCTest {
 				client1.attach(host1, port1);
 			}
 			catch (Exception  ex) {
-				assertFalse("Cicle:"+count+" attach client 1 on host="+host1+"  port="+port1+", msg="+ex.getMessage(), true);
+				assertFalse("Cicle:"+count+" attach client 1 on host="+host1+"  port="+port1+"  con.type="+connectionType1+", msg="+ex.getMessage(), true);
 				i = cicle;  // to end the loop
 			}
 			assertEquals(true, client1.isAttached());
@@ -107,7 +107,7 @@ public class AttachToMultipleSCTest {
 				client2.attach(host2, port2);
 			}
 			catch (Exception  ex) {
-				assertFalse("Cicle:"+count+" attach client 2 on host="+host2+"  port="+port2+", msg="+ex.getMessage(), true);
+				assertFalse("Cicle:"+count+" attach client 2 on host="+host2+"  port="+port2+"  con.type="+connectionType2+", msg="+ex.getMessage(), true);
 				i = cicle;  // to end the loop
 			}
 			assertEquals(true, client1.isAttached());
@@ -135,6 +135,7 @@ public class AttachToMultipleSCTest {
 	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_HTTP</td><td>TestConstants.PORT_MIN</td></tr>
 	 * </table>
+	 * </br>
 	 * Expectation:	Both clients are detached.
 	 */
 	@Test
@@ -150,6 +151,7 @@ public class AttachToMultipleSCTest {
 	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_HTTP</td><td>TestConstants.PORT_MAX</td></tr>
 	 * </table>
+	 * </br>
 	 * Expectation:	Both clients are detached.
 	 */
 	@Test
@@ -165,6 +167,7 @@ public class AttachToMultipleSCTest {
 	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_TCP</td><td>TestConstants.PORT_MAX</td></tr>
 	 * </table>
+	 * </br>
 	 * Expectation:	Both clients are detached.
 	 */
 	@Test
@@ -180,6 +183,7 @@ public class AttachToMultipleSCTest {
 	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_TCP</td><td>TestConstants.PORT_MIN</td></tr>
 	 * </table>
+	 * </br>
 	 * Expectation:	Both clients are detached.
 	 */
 	@Test
@@ -195,8 +199,10 @@ public class AttachToMultipleSCTest {
 	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_HTTP</td><td>TestConstants.PORT_MIN</td></tr>
 	 * </table>
+	 * </br>
 	 * Expectation:	Both clients are detached.
-	 */	@Test
+	 */	
+	@Test
 	public void attachDetach_5() throws Exception {
 		this.testAttachDetach(100, "netty.http", TestConstants.LOCALHOST, TestConstants.PORT_HTTP, "netty.http", TestConstants.HOST, TestConstants.PORT_MIN);
 	}
@@ -209,8 +215,10 @@ public class AttachToMultipleSCTest {
 	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_TCP</td><td>TestConstants.PORT_MAX</td></tr>
 	 * </table>
+	 * </br>
 	 * Expectation:	Both clients are detached.
-	 */	@Test
+	 */	
+	@Test
 	public void attachDetach_6() throws Exception {
 		this.testAttachDetach(100, "netty.tcp", TestConstants.LOCALHOST, TestConstants.PORT_TCP, "netty.tcp", TestConstants.HOST, TestConstants.PORT_MAX);
 	}
@@ -223,16 +231,23 @@ public class AttachToMultipleSCTest {
 	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_TCP</td><td>TestConstants.PORT_MIN</td></tr>
 	 * </table>
+	 * </br>
 	 * Expectation:	Both clients are detached.
-	 */	@Test
+	 */	
+	@Test
 	public void attachDetach_7() throws Exception {
 		this.testAttachDetach(100, "netty.tcp", TestConstants.LOCALHOST, TestConstants.PORT_TCP, "netty.http", TestConstants.HOST, TestConstants.PORT_MIN);
 	}
 
+	/**
+	 * Description: Attach and detach two clients 50 times and change the connection type periodically.<br>
+	 * Expectation:	Both clients are detached.
+	 */	
 	@Test
-	public void attachDetach_onTwoSCsChangingTypes_periodicallyAttached() throws Exception {
-		((SCClient) client1).setConnectionType("netty.tcp");
+	public void attachDetach_8() throws Exception {
 		for (int i = 0; i < 50; i++) {
+			((SCClient) client1).setConnectionType("netty.tcp");
+			((SCClient) client2).setConnectionType("netty.http");
 			client1.attach(TestConstants.LOCALHOST, TestConstants.PORT_TCP);
 			client2.attach(TestConstants.HOST, TestConstants.PORT_MIN);
 			assertEquals(true, client1.isAttached());
@@ -241,6 +256,7 @@ public class AttachToMultipleSCTest {
 			client2.detach();
 			assertEquals(false, client1.isAttached());
 			assertEquals(false, client2.isAttached());
+			
 			((SCClient) client1).setConnectionType("netty.http");
 			((SCClient) client2).setConnectionType("netty.tcp");
 			client1.attach(TestConstants.LOCALHOST, TestConstants.PORT_HTTP);
@@ -251,13 +267,17 @@ public class AttachToMultipleSCTest {
 			client2.detach();
 			assertEquals(false, client1.isAttached());
 			assertEquals(false, client2.isAttached());
-			((SCClient) client1).setConnectionType("netty.tcp");
-			((SCClient) client2).setConnectionType("netty.http");
 		}
 	}
 
+	/**
+	 * Description: Attach and detach two clients 50 times and change the port periodically.<br>
+	 * Expectation:	Both clients are detached.
+	 */	
 	@Test
-	public void attachDetach_onTwoSCsChangingSCs_periodicallyAttached() throws Exception {
+	public void attachDetach_9() throws Exception {
+		((SCClient) client1).setConnectionType("netty.http");
+		((SCClient) client2).setConnectionType("netty.http");
 		for (int i = 0; i < 50; i++) {
 			client1.attach(TestConstants.LOCALHOST, TestConstants.PORT_HTTP);
 			client2.attach(TestConstants.HOST, TestConstants.PORT_MIN);
