@@ -194,4 +194,25 @@ public class EHCacheSCMPCacheImpl implements ISCMPCacheImpl {
 			}
 		}
 	}
+
+	@Override
+	public int getElementSize() {
+		return this.cache.getSize();
+	}
+	
+	@Override
+	public String getCacheName() {
+		return this.cache.getName();
+	}
+	
+	@Override
+	public long getMemoryStoreSize() {
+		return this.cache.getMemoryStoreSize();
+	}
+	
+	@Override
+	public int getDiskStoreSize() {
+		return this.cache.getDiskStoreSize();
+	}
+	
 }

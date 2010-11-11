@@ -110,4 +110,35 @@ public class SCMPCacheTestCase {
 		Assert.assertEquals(stringWrite, stringRead2);
 	}
 
+	@Test
+	public void partSCMPCacheWriteTest() throws SCMPCacheException {
+		SCMPCache scmpCache = this.scmpCacheManager.getCache("dummy");
+		String stringWrite = "this is the part buffer nr = ";
+		for (int i = 1; i <= 10; i++) {
+			String partWrite = stringWrite + i;		    
+		    byte[] buffer = partWrite.getBytes();
+		    SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);		
+		    scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, "1233/"+i);
+		    scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+		    scmpCache.putSCMP(scmpMessageWrite);
+		}
+		for (int i = 1; i <= 11; i++) {
+			String partWrite = stringWrite + i;		    
+		    SCMPMessage scmpMessageRead = new SCMPMessage();
+		    scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, "1233/"+i);
+		    scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+		    SCMPCacheMessage cacheMessage = scmpCache.getSCMP(scmpMessageRead);
+		    if (cacheMessage == null) {
+		    	if (i < 11) {
+		    	   Assert.fail("cacheMessage is null but should not");
+		    	   continue;
+		    	}
+		    	break;
+		    }
+		    byte[] bufferRead = (byte[]) cacheMessage.getBody();
+		    String stringRead = new String(bufferRead);
+		    Assert.assertEquals(partWrite, stringRead);
+		}
+	}
+
 }

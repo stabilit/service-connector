@@ -248,6 +248,7 @@ public class SystemInfo {
 	 * @return the max memory
 	 */
 	public static long getMaxMemory() {
+		maxMemory = Runtime.getRuntime().maxMemory();
 		return maxMemory;
 	}
 
@@ -257,6 +258,7 @@ public class SystemInfo {
 	 * @return the free memory
 	 */
 	public static long getFreeMemory() {
+		freeMemory = Runtime.getRuntime().freeMemory();
 		return freeMemory;
 	}
 
@@ -266,6 +268,7 @@ public class SystemInfo {
 	 * @return the total memory
 	 */
 	public static long getTotalMemory() {
+		totalMemory = Runtime.getRuntime().totalMemory();
 		return totalMemory;
 	}
 

@@ -14,18 +14,23 @@
     <xsl:template match="system/info/*">
       <xsl:if test="position() mod 2 = 0">
 	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
-	        <xsl:call-template name="service_row"/>
+	        <xsl:call-template name="service_row">
+	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
 	  <xsl:if test="position() mod 2 != 0">
 	     <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
-	        <xsl:call-template name="service_row"/>
+	        <xsl:call-template name="service_row">
+	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
+	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
 	</xsl:template>
 	<xsl:template name="service_row">
-	    <td class="sc_table"><xsl:value-of select="local-name()"/></td>
-	    <td class="sc_table">
+	    <xsl:param name="class"/>
+	    <td class="{$class}"><xsl:value-of select="local-name()"/></td>
+	    <td class="{$class}">
 	      <xsl:if test="local-name() = 'configFileName'">
 	         <a class="sc_table" href="./resource?name={.}"><xsl:value-of select="."/></a>
 	      </xsl:if>

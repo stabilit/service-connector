@@ -24,6 +24,10 @@ a.sc_reload:hover {
 	width:99%;
 }
 
+.border_right {
+	border-right: 1px solid black;
+}
+	
 .sc_header {
 	color: #FFFFFF;
 }

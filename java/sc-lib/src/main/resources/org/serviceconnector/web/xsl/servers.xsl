@@ -59,7 +59,7 @@
       </xsl:if>
 	</xsl:template>
 	<xsl:template name="server_row">
-	    <xsl:param name="class"/>
+	    <xsl:param name="class"/> 
 	    <td class="{$class}"><xsl:value-of select="host"/></td>
 	    <td class="{$class}"><xsl:value-of select="portNr"/></td>
 	    <td class="{$class}"><xsl:value-of select="serviceName"/></td>

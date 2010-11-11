@@ -15,8 +15,8 @@
  */
 package org.serviceconnector.scmp.cache;
 
+import java.util.Collection;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.serviceconnector.ctx.AppContext;
@@ -72,7 +72,16 @@ public class SCMPCacheManager {
 	public SCMPCache getCache(String serviceName) {
 		return this.scmpCacheMap.get(serviceName);
 	}
-	
+
+	/**
+	 * Gets the all caches.
+	 *
+	 * @return the all caches
+	 */
+	public Object[] getAllCaches() {
+		return (Object[]) this.scmpCacheMap.values().toArray();
+	}
+
 	public SCMPCacheConfiguration getScmpCacheConfiguration() {
 		return scmpCacheConfiguration;
 	}

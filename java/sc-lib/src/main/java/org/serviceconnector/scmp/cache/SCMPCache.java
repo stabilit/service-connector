@@ -31,29 +31,38 @@ public class SCMPCache {
 
 	/** The manager. */
 	private SCMPCacheManager manager;
-	
+
+	private String serviceName;
+
 	/** The cache impl. */
 	private ISCMPCacheImpl cacheImpl;
 
 	/**
 	 * Instantiates a new sCMP cache.
-	 *
-	 * @param manager the manager
-	 * @param serviceName the service name
+	 * 
+	 * @param manager
+	 *            the manager
+	 * @param serviceName
+	 *            the service name
 	 */
 	public SCMPCache(SCMPCacheManager manager, String serviceName) {
 		this.manager = manager;
-		this.cacheImpl = SCMPCacheImplFactory.getDefaultCacheImpl(manager.getScmpCacheConfiguration(), serviceName);
+		this.serviceName = serviceName;
+		this.cacheImpl = SCMPCacheImplFactory.getDefaultCacheImpl(
+				manager.getScmpCacheConfiguration(), serviceName);
 	}
-		
+
 	/**
 	 * Gets the sCMP.
-	 *
-	 * @param msg the msg
+	 * 
+	 * @param msg
+	 *            the msg
 	 * @return the sCMP
-	 * @throws SCMPCacheException the sCMP cache exception
+	 * @throws SCMPCacheException
+	 *             the sCMP cache exception
 	 */
-	public synchronized SCMPCacheMessage getSCMP(SCMPMessage msg) throws SCMPCacheException {
+	public synchronized SCMPCacheMessage getSCMP(SCMPMessage msg)
+			throws SCMPCacheException {
 		String cacheId = msg.getCacheId();
 		if (cacheId == null) {
 			throw new SCMPCacheException("no cache id");
@@ -66,27 +75,32 @@ public class SCMPCache {
 		SCMPCacheKey cacheKey = null;
 		SCMPCacheRoot cacheRoot = null;
 		// check if this message is part of cache
-		cacheKey = new SCMPCacheKey(cacheId);		
+		cacheKey = new SCMPCacheKey(cacheId);
 		Object value = this.cacheImpl.get(cacheKey);
 		if (value == null) {
 			return null;
 		}
 		if (value != null && value instanceof SCMPCacheRoot) {
 			cacheRoot = (SCMPCacheRoot) value;
-		}				
+		}
 		int partSequenceNr = msgId.getPartSequenceNr();
-		SCMPPartCacheKey cachePartKey = new SCMPPartCacheKey(cacheId, partSequenceNr);
-		SCMPCacheMessage scmpCacheMessage = (SCMPCacheMessage) this.cacheImpl.get(cachePartKey);
+		SCMPPartCacheKey cachePartKey = new SCMPPartCacheKey(cacheId,
+				partSequenceNr);
+		SCMPCacheMessage scmpCacheMessage = (SCMPCacheMessage) this.cacheImpl
+				.get(cachePartKey);
 		return scmpCacheMessage;
 	}
 
 	/**
 	 * Put scmp.
-	 *
-	 * @param scmpReply the scmp reply
-	 * @throws SCMPCacheException the sCMP cache exception
+	 * 
+	 * @param scmpReply
+	 *            the scmp reply
+	 * @throws SCMPCacheException
+	 *             the sCMP cache exception
 	 */
-	public synchronized void putSCMP(SCMPMessage scmpReply) throws SCMPCacheException {
+	public synchronized void putSCMP(SCMPMessage scmpReply)
+			throws SCMPCacheException {
 		try {
 			String cacheId = scmpReply.getCacheId();
 			if (cacheId == null) {
@@ -104,24 +118,27 @@ public class SCMPCache {
 			Object value = this.cacheImpl.get(cacheKey);
 			if (value != null && value instanceof SCMPCacheRoot) {
 				cacheRoot = (SCMPCacheRoot) value;
-			}				
-			String cacheExpirationDateTime = scmpReply.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
+			}
+			String cacheExpirationDateTime = scmpReply
+					.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
 			Date expirationDateTime = null;
 			if (cacheExpirationDateTime != null) {
-               expirationDateTime = DateTimeUtility.parseDateString(cacheExpirationDateTime);				
+				expirationDateTime = DateTimeUtility
+						.parseDateString(cacheExpirationDateTime);
 			}
 			int partSequenceNr = msgId.getPartSequenceNr();
 			if (partSequenceNr > 0) {
 				// this is a multi part message (large message)
 				// cache root must exist
-				if (cacheRoot == null) {
+				if (cacheRoot == null && partSequenceNr > 1) {
 					throw new SCMPCacheException("no cache root");
 				}
 			}
 			if (partSequenceNr == 0) {
 				// this is a simple scmp message (not large)
 				if ((cacheRoot != null)) {
-					// cache root exists, remove it, included all associated scmp parts 
+					// cache root exists, remove it, included all associated
+					// scmp parts
 					this.removeRoot(cacheKey);
 				} else {
 					cacheRoot = new SCMPCacheRoot();
@@ -132,19 +149,29 @@ public class SCMPCache {
 				this.cacheImpl.put(cacheKey, cacheRoot);
 				// insert cache part
 				SCMPPartCacheKey cachePartKey = new SCMPPartCacheKey(cacheId, 0);
-				SCMPCacheMessage scmpCacheMessage = new SCMPCacheMessage(scmpReply.getBody());
+				SCMPCacheMessage scmpCacheMessage = new SCMPCacheMessage(
+						scmpReply.getBody());
 				this.cacheImpl.put(cachePartKey, scmpCacheMessage);
 				return;
+			}
+			if (cacheRoot == null) {
+				cacheRoot = new SCMPCacheRoot();
+			    cacheRoot.setExpiration(expirationDateTime);
+			    this.cacheImpl.put(cacheKey, cacheRoot);
 			}
 			// multi part message
 			// check if part sequence nr is valid
 			int size = cacheRoot.getSize();
-			if (partSequenceNr != size) {
-				throw new SCMPCacheException("invalid part sequence nr = " + partSequenceNr + ", cache root size = " + size);
+ 			if (partSequenceNr != size+1) {
+				throw new SCMPCacheException("invalid part sequence nr = "
+						+ partSequenceNr + ", cache root size = " + size);
 			}
 			cacheRoot.setSize(partSequenceNr);
-			SCMPPartCacheKey cachePartKey = new SCMPPartCacheKey(cacheId, partSequenceNr);
-			SCMPCacheMessage scmpCacheMessage = new SCMPCacheMessage(scmpReply.getBody());
+		    this.cacheImpl.put(cacheKey, cacheRoot);
+			SCMPPartCacheKey cachePartKey = new SCMPPartCacheKey(cacheId,
+					partSequenceNr);
+			SCMPCacheMessage scmpCacheMessage = new SCMPCacheMessage(
+					scmpReply.getBody());
 			this.cacheImpl.put(cachePartKey, scmpCacheMessage);
 		} catch (SCMPCacheException e) {
 			throw e;
@@ -152,11 +179,12 @@ public class SCMPCache {
 			throw new SCMPCacheException(e.toString());
 		}
 	}
-	
+
 	/**
 	 * Removes the root.
-	 *
-	 * @param cacheKey the cache key
+	 * 
+	 * @param cacheKey
+	 *            the cache key
 	 */
 	public synchronized void removeRoot(SCMPCacheKey cacheKey) {
 		// remove all parts
@@ -176,44 +204,71 @@ public class SCMPCache {
 			return;
 		}
 		for (int i = 1; i < size; i++) {
-           partCacheKey.setNr(i);
-   		   ret = this.cacheImpl.remove(partCacheKey);
-		   if (ret == false) {
-			  return;
-		   }           
+			partCacheKey.setNr(i);
+			ret = this.cacheImpl.remove(partCacheKey);
+			if (ret == false) {
+				return;
+			}
 		}
 		return;
 	}
-	
+
 	/**
 	 * Gets the manager.
-	 *
+	 * 
 	 * @return the manager
 	 */
 	public SCMPCacheManager getManager() {
 		return manager;
 	}
 
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the service name
+	 */
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	public String getCacheName() {
+		return this.cacheImpl.getCacheName();
+	}
+
+	public int getElementSize() {
+		return this.cacheImpl.getElementSize();
+	}
+
+	public long getMemoryStoreSize() {
+		return this.cacheImpl.getMemoryStoreSize();
+	}
+
+	public int getDiskStoreSize() {
+		return this.cacheImpl.getDiskStoreSize();
+	}
+
 	// member class SCMPCacheKey
 	/**
 	 * The Class SCMPCacheKey.
 	 */
-	static class SCMPCacheKey implements Serializable {	
-		
+	static class SCMPCacheKey implements Serializable {
+
 		/** The cache id. */
 		private String cacheId;
-		
+
 		/**
 		 * Instantiates a new sCMP cache key.
-		 *
-		 * @param cacheId the cache id
+		 * 
+		 * @param cacheId
+		 *            the cache id
 		 */
 		public SCMPCacheKey(String cacheId) {
 			this.cacheId = cacheId;
 		}
-		
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Object#hashCode()
 		 */
 		@Override
@@ -225,8 +280,9 @@ public class SCMPCache {
 			return result;
 		}
 
-
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
 		@Override
@@ -245,106 +301,138 @@ public class SCMPCache {
 				return false;
 			return true;
 		}
-		
+
 		/**
 		 * Gets the cache id.
-		 *
+		 * 
 		 * @return the cache id
 		 */
 		public String getCacheId() {
 			return cacheId;
 		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("SCMPCacheKey [cacheId=");
+			builder.append(cacheId);
+			builder.append("]");
+			return builder.toString();
+		}
+
 	}
-	
+
 	// member class SCMPCacheHeader
 	/**
 	 * The Class SCMPCacheRoot.
 	 */
 	static class SCMPCacheRoot implements Serializable {
-		
+
 		/** The size. */
 		private int size;
-		
+
 		/** The expiration. */
 		private Date expiration;
-		
+
 		/**
 		 * Instantiates a new sCMP cache root.
 		 */
 		public SCMPCacheRoot() {
 			this(null);
 		}
-		
+
 		/**
 		 * Instantiates a new sCMP cache root.
-		 *
-		 * @param expiration the expiration
+		 * 
+		 * @param expiration
+		 *            the expiration
 		 */
 		public SCMPCacheRoot(Date expiration) {
 			this.expiration = expiration;
 			this.size = 0;
 		}
-		
+
 		/**
 		 * Gets the size.
-		 *
+		 * 
 		 * @return the size
 		 */
 		public int getSize() {
 			return size;
 		}
-		
+
 		/**
 		 * Sets the size.
-		 *
-		 * @param size the new size
+		 * 
+		 * @param size
+		 *            the new size
 		 */
 		public void setSize(int size) {
 			this.size = size;
 		}
-		
+
 		/**
 		 * Gets the expiration.
-		 *
+		 * 
 		 * @return the expiration
 		 */
 		public Date getExpiration() {
 			return expiration;
 		}
-		
+
 		/**
 		 * Sets the expiration.
-		 *
-		 * @param expiration the new expiration
+		 * 
+		 * @param expiration
+		 *            the new expiration
 		 */
 		public void setExpiration(Date expiration) {
 			this.expiration = expiration;
 		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("SCMPCacheRoot [size=");
+			builder.append(size);
+			builder.append(", expiration=");
+			builder.append(expiration);
+			builder.append("]");
+			return builder.toString();
+		}
+		
 	}
-	
+
 	// member class SCMPPartCacheKey
 	/**
 	 * The Class SCMPPartCacheKey.
 	 */
 	static class SCMPPartCacheKey extends SCMPCacheKey {
-		
+
 		/** The nr. */
 		private int nr;
-		
+
 		/**
 		 * Instantiates a new sCMP part cache key.
-		 *
-		 * @param cacheId the cache id
-		 * @param nr the nr
+		 * 
+		 * @param cacheId
+		 *            the cache id
+		 * @param nr
+		 *            the nr
 		 */
 		public SCMPPartCacheKey(String cacheId, int nr) {
 			super(cacheId);
 			this.nr = nr;
 		}
-		
-		
-		/* (non-Javadoc)
-		 * @see org.serviceconnector.scmp.cache.SCMPCache.SCMPCacheKey#hashCode()
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.serviceconnector.scmp.cache.SCMPCache.SCMPCacheKey#hashCode()
 		 */
 		@Override
 		public int hashCode() {
@@ -354,9 +442,12 @@ public class SCMPCache {
 			return result;
 		}
 
-
-		/* (non-Javadoc)
-		 * @see org.serviceconnector.scmp.cache.SCMPCache.SCMPCacheKey#equals(java.lang.Object)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.serviceconnector.scmp.cache.SCMPCache.SCMPCacheKey#equals(java
+		 * .lang.Object)
 		 */
 		@Override
 		public boolean equals(Object obj) {
@@ -372,23 +463,37 @@ public class SCMPCache {
 			return true;
 		}
 
-
 		/**
 		 * Gets the nr.
-		 *
+		 * 
 		 * @return the nr
 		 */
 		public int getNr() {
 			return nr;
 		}
-		
+
 		/**
 		 * Sets the nr.
-		 *
-		 * @param nr the new nr
+		 * 
+		 * @param nr
+		 *            the new nr
 		 */
 		public void setNr(int nr) {
 			this.nr = nr;
 		}
+
+		/* (non-Javadoc)
+		 * @see org.serviceconnector.scmp.cache.SCMPCache.SCMPCacheKey#toString()
+		 */
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("SCMPPartCacheKey [nr=");
+			builder.append(nr);
+			builder.append("]");
+			return builder.toString();
+		}
+		
 	}
+
 }
