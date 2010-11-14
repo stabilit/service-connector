@@ -38,9 +38,8 @@ public class AllPerformanceTests {
 	@Before
 	public void setUp() throws Exception {
 		scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
-						TestConstants.serviceNameAlt });
+		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
+				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName });
 		client = new SCClient();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
@@ -65,10 +64,8 @@ public class AllPerformanceTests {
 	}
 
 	/**
-	 * Description:	Send 1000 message 128 bytes each to the server.
-	 * 				Receive echoed messages.
-	 * 				Measure performance 
-	 * Expectation:	Performance better than 600 msg/sec. 
+	 * Description: Send 1000 message 128 bytes each to the server. Receive echoed messages. Measure performance Expectation:
+	 * Performance better than 600 msg/sec.
 	 */
 	@Test
 	public void benchmark_1() throws Exception {
@@ -110,8 +107,7 @@ public class AllPerformanceTests {
 		}
 		long stop = System.currentTimeMillis();
 		long diff = (stop - start);
-		testLogger.info("1'000'000 msg à 128 byte in " + diff / 1000 + " seconds. => " + 1000000 * 1000 / diff
-				+ "msg/sec.");
+		testLogger.info("1'000'000 msg à 128 byte in " + diff / 1000 + " seconds. => " + 1000000 * 1000 / diff + "msg/sec.");
 		assertEquals(true, stop - start < 1500000);
 	}
 
@@ -126,8 +122,7 @@ public class AllPerformanceTests {
 			previousResult = result;
 			messages++;
 
-			ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength
-					/ messages);
+			ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength / messages);
 
 			result = clientCtrl.perform();
 
@@ -143,8 +138,7 @@ public class AllPerformanceTests {
 	}
 
 	@Test
-	public void execute_10MBDataUsingDifferentBodyLengthStartingFrom100000Messages_outputsBestTimeAndBodyLength()
-			throws Exception {
+	public void execute_10MBDataUsingDifferentBodyLengthStartingFrom100000Messages_outputsBestTimeAndBodyLength() throws Exception {
 		long previousResult = Long.MAX_VALUE;
 		long result = Long.MAX_VALUE - 1;
 		int dataLength = 10 * TestConstants.dataLength1MB;
@@ -154,8 +148,7 @@ public class AllPerformanceTests {
 			previousResult = result;
 			messages--;
 
-			ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength
-					/ messages);
+			ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength / messages);
 
 			result = clientCtrl.perform();
 
@@ -179,8 +172,7 @@ public class AllPerformanceTests {
 	}
 
 	@Test
-	public void createSessionExecuteDeleteSession_10000ExecuteMessagesDividedInto10ParallelClients_outputsTime()
-			throws Exception {
+	public void createSessionExecuteDeleteSession_10000ExecuteMessagesDividedInto10ParallelClients_outputsTime() throws Exception {
 		int threadCount = Thread.activeCount();
 
 		ClientThreadController clientCtrl = new ClientThreadController(false, true, 10, 10, 100, 128);
@@ -225,8 +217,8 @@ public class AllPerformanceTests {
 							TestConstants.serviceNameAlt });
 		}
 
-		testLogger.info("Best performance to execute roughly 100000 messages was " + previousResult + "ms using "
-				+ --clientsCount + " parallel clients");
+		testLogger.info("Best performance to execute roughly 100000 messages was " + previousResult + "ms using " + --clientsCount
+				+ " parallel clients");
 		assertEquals(true, previousResult < 25000);
 	}
 }

@@ -17,9 +17,9 @@
 
 package org.serviceconnector.console;
 
-public final class Constants {
+public final class ConsoleConstants {
 	
-	private Constants() {
+	private ConsoleConstants() {
 		// instantiating not allowed
 	}
 	

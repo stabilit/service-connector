@@ -143,7 +143,7 @@ public final class SC {
 		for (CommunicatorConfig respConfig : responderList) {
 			IResponder responder = new Responder(respConfig);
 			responder.create();
-			logger.info("Start listener " + respConfig.getCommunicatorName()
+			logger.info("Start listener " + respConfig.getName()
 					+ " on " + respConfig.getHost() + ":"
 					+ respConfig.getPort());
 			responder.startListenAsync();

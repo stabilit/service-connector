@@ -123,9 +123,9 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				if (body instanceof InputStream) {
 					InputStream inStream = (InputStream) body;
 					int bodySize = inStream.available();
-					if (bodySize > Constants.LARGE_MESSAGE_LIMIT) {
+					if (bodySize > Constants.MAX_MESSAGE_SIZE) {
 						// there are more bytes available then LARGE_MESSAGE_LIMIT allows
-						bodySize = Constants.LARGE_MESSAGE_LIMIT;
+						bodySize = Constants.MAX_MESSAGE_SIZE;
 					}
 					byte[] buffer = new byte[bodySize];
 					inStream.read(buffer, 0, bodySize);

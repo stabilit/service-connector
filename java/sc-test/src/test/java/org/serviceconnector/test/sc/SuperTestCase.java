@@ -66,7 +66,7 @@ public abstract class SuperTestCase {
 		try {
 			this.config = new RequesterConfiguration();
 			this.config.load(fileName);
-			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
+			this.testContext = new TestContext(this.config.getFirstRequesterConfig(), this.msgId);
 			req = new SCRequester(this.testContext);
 		} catch (Throwable e) {
 			e.printStackTrace();

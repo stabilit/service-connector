@@ -31,83 +31,78 @@ public class CommunicatorConfig {
 	protected final static Logger logger = Logger.getLogger(CommunicatorConfig.class);
 
 	/** The communicator name. */
-	private String communicatorName;
+	private String name;
 	/** The port. */
 	private int port;
 	/** The host. */
 	private String host;
-	/** The connectionKey. */
+	/** The connectionType. */
 	private String connectionType;	
 	/** The max pool size. */
 	private int maxPoolSize;
 	/** The keep alive interval. */
 	private int keepAliveInterval;
-	private double operationTimeoutMultiplier;
-	/** The userid. */
-	private String userid;
+	/** The username. */
+	private String username;
 	/** The password. */
 	private String password;
-	/** The remote host. */
-	private CommunicatorConfig remoteHostConfig;
+	/** The remote host configuration. */
+	private CommunicatorConfig remoteHostConfiguration;
 
-	public CommunicatorConfig(String communicatorName, String host, int port, String connectionType, int maxPoolSize,
+	public CommunicatorConfig(String name, String host, int port, String connectionType, int maxPoolSize,
 			int keepAliveInterval, int keepAliveTimeout) {
-		super();
-		this.communicatorName = communicatorName;
+		this.name = name;
 		this.port = port;
 		this.host = host;
 		this.connectionType = connectionType;
 		this.maxPoolSize = maxPoolSize;
 		this.keepAliveInterval = keepAliveInterval;
-		this.operationTimeoutMultiplier = 0;
-		this.remoteHostConfig = null;
+		this.remoteHostConfiguration = null;
 	}
 
 	/**
 	 * The Constructor.
 	 * 
-	 * @param respName
-	 *            the responder name
+	 * @param name
+	 *            the communicator name
 	 */
-	public CommunicatorConfig(String respName) {
-		this.communicatorName = respName;
+	public CommunicatorConfig(String name) {
+		this.name = name;
 	}
 
 	public void initialize(CompositeConfiguration configurations) {
-		int port = Integer.parseInt((String) configurations.getString(this.communicatorName + Constants.PORT_QUALIFIER));
-		String maxPoolSizeValue = (String) configurations.getString(this.communicatorName	+ Constants.MAX_CONNECTION_POOL_SIZE);
+		int port = Integer.parseInt((String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_PORT));
+		String maxPoolSizeValue = (String) configurations.getString(this.name	+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE);
 		if (maxPoolSizeValue != null) {
 			int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
 			this.setMaxPoolSize(maxPoolSize);
-		}
-		String keepAliveIntervalValue = (String) configurations.getString(this.communicatorName + Constants.KEEP_ALIVE_INTERVAL);
+		} // TODO TRN where is the else setting the default?
+		String keepAliveIntervalValue = (String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL);
 		int keepAliveInterval = 0;
 		if (keepAliveIntervalValue != null) {
 			keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
-		}
+		} // TODO TRN where is the else setting the default?
 		this.setKeepAliveInterval(keepAliveInterval);
 		this.setPort(port);
-		this.setHost((String) configurations.getString(this.communicatorName  + Constants.HOST_QUALIFIER));
-		this.setConnectionType((String) configurations.getString(this.communicatorName	+ Constants.CONNECTION_TYPE_QUALIFIER));
-		this.setUserid((String) configurations.getString(this.communicatorName  + Constants.CONNECTION_USERNAME));
-		this.setPassword((String) configurations.getString(this.communicatorName + Constants.CONNECTION_PASSWORD));
+		this.setHost((String) configurations.getString(this.name  + Constants.PROPERTY_QUALIFIER_HOST));
+		this.setConnectionType((String) configurations.getString(this.name	+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
+		this.setUsername((String) configurations.getString(this.name  + Constants.PROPERTY_QUALIFIER_USERNAME));
+		this.setPassword((String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_PASSWORD));
 		// get remote host
-		String remoteHost = (String) configurations.getString(this.communicatorName + Constants.REMOTE_HOST);
+		String remoteHost = (String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
 		if (remoteHost != null) {
 			CommunicatorConfig remoteHostConfig = new CommunicatorConfig(remoteHost);
 			remoteHostConfig.initialize(configurations);
-			this.setRemoteHost(remoteHostConfig);
+			this.setRemoteHostConfiguration(remoteHostConfig);
 		}
-		this.setOperationTimeoutMultiplier(operationTimeoutMultiplier);
-
 	}
 	/**
 	 * Gets the communicator name.
 	 * 
 	 * @return the communicator name
 	 */
-	public String getCommunicatorName() {
-		return communicatorName;
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -116,8 +111,8 @@ public class CommunicatorConfig {
 	 * @param respName
 	 *            the new communicator name
 	 */
-	public void setCommunicatorName(String respName) {
-		this.communicatorName = respName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -178,22 +173,22 @@ public class CommunicatorConfig {
 	}
 
 	/**
-	 * Sets the userid.
+	 * Sets the username.
 	 * 
-	 * @param userid
-	 *            the new userid
+	 * @param username
+	 *            the new username
 	 */
-	public void setUserid(String userid) {
-		this.userid = userid;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	/**
-	 * Gets the userid.
+	 * Gets the username.
 	 * 
-	 * @return the userid
+	 * @return the username
 	 */
-	public String getUserid() {
-		return userid;
+	public String getUsername() {
+		return username;
 	}
 
 	/**
@@ -211,8 +206,8 @@ public class CommunicatorConfig {
 	 *
 	 * @param remoteHostConfig the new remote host
 	 */
-	public void setRemoteHost(CommunicatorConfig remoteHostConfig) {
-		this.remoteHostConfig = remoteHostConfig;
+	public void setRemoteHostConfiguration(CommunicatorConfig remoteHostConfig) {
+		this.remoteHostConfiguration = remoteHostConfig;
 	}
 
 	/**
@@ -220,8 +215,8 @@ public class CommunicatorConfig {
 	 *
 	 * @return the remote host config
 	 */
-	public CommunicatorConfig getRemoteHostConfig() {
-		return remoteHostConfig;
+	public CommunicatorConfig getRemoteHostConfiguration() {
+		return remoteHostConfiguration;
 	}
 	/**
 	 * Gets the password.
@@ -269,24 +264,4 @@ public class CommunicatorConfig {
 	public void setKeepAliveInterval(int keepAliveInterval) {
 		this.keepAliveInterval = keepAliveInterval;
 	}
-
-	/**
-	 * Sets the operation timeout multiplier.
-	 * 
-	 * @param operationTimeoutMultiplier
-	 *            the new operation timeout multiplier
-	 */
-	public void setOperationTimeoutMultiplier(double operationTimeoutMultiplier) {
-		this.operationTimeoutMultiplier = operationTimeoutMultiplier;
-	}
-
-	/**
-	 * Gets the operation timeout multiplier.
-	 * 
-	 * @return the operation timeout multiplier
-	 */
-	public double getOperationTimeoutMultiplier() {
-		return operationTimeoutMultiplier;
-	}
-
 }

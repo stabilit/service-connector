@@ -76,7 +76,7 @@ public class MessageIdTestCase extends SuperSessionTestCase {
 		reqData = new StringBuilder();
 		reqData.append("large:");
 		for (int i = 0; i < 100000; i++) {
-			if (reqData.length() > Constants.LARGE_MESSAGE_LIMIT + 10000) {
+			if (reqData.length() > Constants.MAX_MESSAGE_SIZE + 10000) {
 				break;
 			}
 			reqData.append(i);

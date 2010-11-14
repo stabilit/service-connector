@@ -240,7 +240,7 @@ public class SCMPMessage {
 			return false;
 		}
 		int bodyLength = this.getBodyLength();
-		return bodyLength > Constants.LARGE_MESSAGE_LIMIT;
+		return bodyLength > Constants.MAX_MESSAGE_SIZE;
 	}
 
 	/**

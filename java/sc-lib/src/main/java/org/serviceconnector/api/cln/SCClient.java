@@ -74,7 +74,7 @@ public class SCClient {
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 		this.scContext = new SCContext(this);
 		this.attached = false;
-		this.maxConnections = Constants.DEFAULT_MAX_CONNECTIONS;
+		this.maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 		this.connectionPool = null;
 	}
 

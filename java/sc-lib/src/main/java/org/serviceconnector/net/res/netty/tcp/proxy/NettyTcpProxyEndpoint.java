@@ -65,11 +65,11 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 	private int maxConnectionPoolSize;
 	private Thread serverThread;
 	/** The channel factory. */
-	private NioServerSocketChannelFactory serverChannelFactory = new NioServerSocketChannelFactory(Executors
-			.newCachedThreadPool(), Executors.newCachedThreadPool());
+	private NioServerSocketChannelFactory serverChannelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
+			Executors.newCachedThreadPool());
 
-	private NioClientSocketChannelFactory clientChannelFactory = new NioClientSocketChannelFactory(Executors
-			.newCachedThreadPool(), Executors.newCachedThreadPool());
+	private NioClientSocketChannelFactory clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
+			Executors.newCachedThreadPool());
 
 	/**
 	 * Instantiates a new NettyTcpProxyEndpoint.
@@ -81,20 +81,20 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 		this.port = 0;
 		this.remoteHost = null;
 		this.remotePort = 0;
-		this.maxConnectionPoolSize = Constants.DEFAULT_MAX_CONNECTIONS;
+		this.maxConnectionPoolSize = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 		this.answer = new ArrayBlockingQueue<Boolean>(1);
 		this.serverThread = new Thread(this);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setResponder(IResponder resp) { // TODO TRN why is this necessary here or missing in the other end
-		// points?
+	// TODO TRN why is this necessary here or missing in the other end points?
+	public void setResponder(IResponder resp) {
 		super.setResponder(resp);
 		CommunicatorConfig remoteHostConfig = null;
 		try {
 			CommunicatorConfig communicatorConfig = resp.getResponderConfig();
-			remoteHostConfig = communicatorConfig.getRemoteHostConfig();
+			remoteHostConfig = communicatorConfig.getRemoteHostConfiguration();
 			if (remoteHostConfig == null) {
 				throw new SystemConfigurationException("no remote host configuration");
 			}
@@ -104,13 +104,12 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 			this.remotePort = remotePort;
 			this.maxConnectionPoolSize = communicatorConfig.getMaxPoolSize();
 			if (this.maxConnectionPoolSize < 1) {
-				this.maxConnectionPoolSize = Constants.DEFAULT_MAX_CONNECTIONS;
+				this.maxConnectionPoolSize = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 				;
 			}
 			// limit threads
-			serverChannelFactory = new NioServerSocketChannelFactory(Executors
-					.newFixedThreadPool(this.maxConnectionPoolSize), Executors
-					.newFixedThreadPool(this.maxConnectionPoolSize));
+			serverChannelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(this.maxConnectionPoolSize),
+					Executors.newFixedThreadPool(this.maxConnectionPoolSize));
 			// no thread limit required
 			this.clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors
 					.newCachedThreadPool());
@@ -125,8 +124,7 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 	public void create() {
 		this.bootstrap = new ServerBootstrap(serverChannelFactory);
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new NettyTcpProxyResponderPipelineFactory(clientChannelFactory, remoteHost,
-				remotePort));
+		bootstrap.setPipelineFactory(new NettyTcpProxyResponderPipelineFactory(clientChannelFactory, remoteHost, remotePort));
 	}
 
 	/** {@inheritDoc} */
@@ -137,15 +135,13 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			bool = this.answer.poll(Constants.CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
-					"listener could not start up succesfully");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
 		}
 		if (bool == null) {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "startup listener timed out");
 		}
 		if (bool == false) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
-					"listener could not start up succesfully");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
 		}
 	}
 

@@ -127,13 +127,12 @@ public class ProcessesController {
 	/**
 	 * Creates a new JVM and starts a SCServer process in that JVM
 	 * 
-	 * @param serverType
-	 *            "session" or "publish"
-	 * @param log4jSrvProperties
+	 * @param serverType ("session" or "publish")
+	 * @param log4jSrvProperties (file name)
 	 * @param listenerPort
 	 * @param port
 	 * @param maxConnections
-	 * @param serviceNames
+	 * @param serviceNames (list of strings)
 	 * @return Process with JVM in which the server is started
 	 * @throws Exception
 	 */
@@ -143,7 +142,7 @@ public class ProcessesController {
 		String fileName = getPidLogPath(log4jSrvProperties);
 		deleteFile(fileName);
 		String services = "";
-		for (String service : serviceNames) {
+ 		for (String service : serviceNames) {
 			services += " " + service;
 		}
 

@@ -332,7 +332,7 @@ public class SCSessionServer {
 			this.localServerHost = null;
 			this.localServerPort = 0;
 			this.listening = false;
-			logger.error("unable to start listener :"+respConfig.getCommunicatorName(), ex);
+			logger.error("unable to start listener :"+respConfig.getName(), ex);
 			throw ex;
 		}
 		this.listening = true;

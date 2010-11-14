@@ -38,18 +38,18 @@ public abstract class Configuration {
 	protected final static Logger logger = Logger.getLogger(Configuration.class);
 
 	/** The properties. */
-	private CompositeConfiguration configurations;
-	/** The requester configuration list. */
-	private List<CommunicatorConfig> comConfigList;
+	private CompositeConfiguration apacheCompositeConfig;
+	/** The responder (listeners) or requester (remoteHosts) configuration list. */
+	private List<CommunicatorConfig> communicatorConfigList;
 	/** The writePID flag. */
 	private boolean writePIDFlag;
 
 	/**
-	 * Instantiates a new communicator configuration pool.
+	 * Instantiates a new configuration.
 	 */
 	public Configuration() {
-		this.comConfigList = null;
-		this.configurations = null;
+		this.communicatorConfigList = null;
+		this.apacheCompositeConfig = null;
 		this.writePIDFlag = false;
 	}
 
@@ -61,82 +61,77 @@ public abstract class Configuration {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	private void load(String fileName, String topLevelPropsKey) throws Exception {
-		this.configurations = new CompositeConfiguration();
+	private void load(String fileName, String propertyName) throws Exception {
+		this.apacheCompositeConfig = new CompositeConfiguration();
 		try {
-			this.configurations.addConfiguration(new PropertiesConfiguration(fileName));
+			this.apacheCompositeConfig.addConfiguration(new PropertiesConfiguration(fileName));
 		} catch (Exception e) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.toString());
 		}
 		@SuppressWarnings("unchecked")
-		List<String> communicators = this.configurations.getList(topLevelPropsKey);
-		if (communicators == null) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "top level key not found: "
-					+ topLevelPropsKey);
+		List<String> communicatorsList = this.apacheCompositeConfig.getList(propertyName);
+		if (communicatorsList == null) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property:"+propertyName+" not found");
 		}
-		comConfigList = new ArrayList<CommunicatorConfig>();
-		String operationTimeoutString = this.configurations.getString(Constants.ROOT_OPERATION_TIMEOUT_QUALIFIER);
+		
+		// load all communicators in the list into the array
+		communicatorConfigList = new ArrayList<CommunicatorConfig>();
+		for (String communicatorName : communicatorsList) {
+			communicatorName = communicatorName.trim(); // remove blanks in name
+			CommunicatorConfig commConfig = new CommunicatorConfig(communicatorName);
+			commConfig.initialize(this.apacheCompositeConfig);
+			communicatorConfigList.add(commConfig);
+		}
+
+		String operationTimeoutString = this.apacheCompositeConfig.getString(Constants.ROOT_OPERATION_TIMEOUT_MULTIPLIER);
 		double operationTimeoutMultiplier = Constants.OPERATION_TIMEOUT_MULTIPLIER;
 		if (operationTimeoutString != null) {
 			operationTimeoutMultiplier = Double.parseDouble(operationTimeoutString);
+			Constants.setOperationTimeoutMultiplier(operationTimeoutMultiplier);
 		}
-
-		for (String commName : communicators) {
-			commName = commName.trim(); // remove blanks in name
-			CommunicatorConfig commConfig = new CommunicatorConfig(commName);
-			commConfig.initialize(this.configurations);
-			commConfig.setOperationTimeoutMultiplier(operationTimeoutMultiplier);
-			comConfigList.add(commConfig);
-		}
-
-		String largeMsgLimitValue = this.configurations.getString(Constants.ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER);
-		if (largeMsgLimitValue != null) {
-			int largeMsgLimit = Integer.parseInt(largeMsgLimitValue);
-			Constants.setLargeMessageLimit(largeMsgLimit);
-		}
-
-		String writePIDFlag = this.configurations.getString(Constants.ROOT_WRITEPID_QUALIFIER);
+		
+		String writePIDFlag = this.apacheCompositeConfig.getString(Constants.ROOT_WRITEPID);
 		if (writePIDFlag != null) {
 			this.writePIDFlag = true;
 		}
 
-		String echoIntervalString = this.configurations.getString(Constants.ROOT_ECHO_INTERVAL_QUALIFIER);
+		String echoIntervalString = this.apacheCompositeConfig.getString(Constants.ROOT_ECHO_INTERVAL_MULTIPLIER);
 		if (operationTimeoutString != null) {
 			double echoIntervalMultiplier = Double.parseDouble(echoIntervalString);
 			Constants.setEchoIntervalMultiplier(echoIntervalMultiplier);
 		}
 
-		String connectionTimeoutString = this.configurations.getString(Constants.ROOT_CONNECTION_TIMEOUT_QUALIFIER);
+		String connectionTimeoutString = this.apacheCompositeConfig.getString(Constants.ROOT_CONNECTION_TIMEOUT);
 		if (connectionTimeoutString != null) {
 			int connectionTimeout = Integer.parseInt(connectionTimeoutString);
 			Constants.setConnectionTimeoutMillis(connectionTimeout);
 		}
 
-		String subscriptionTimeoutString = this.configurations.getString(Constants.ROOT_SUBSCRIPTION_TIMEOUT_QUALIFIER);
+		String subscriptionTimeoutString = this.apacheCompositeConfig.getString(Constants.ROOT_SUBSCRIPTION_TIMEOUT);
 		if (subscriptionTimeoutString != null) {
 			int subscriptionTimeout = Integer.parseInt(subscriptionTimeoutString);
 			Constants.setSubscriptionTimeout(subscriptionTimeout);
 		}
 
-		String commandValidationString = this.configurations.getString(Constants.ROOT_COMMAND_VALIDATION_ENABLED);
+		String commandValidationString = this.apacheCompositeConfig.getString(Constants.ROOT_COMMAND_VALIDATION_ENABLED);
 		if (commandValidationString != null) {
 			boolean commandValidation = Boolean.parseBoolean(commandValidationString);
 			Constants.setCommandValidation(commandValidation);
 		}
 
-		String messageCacheString = this.configurations.getString(Constants.ROOT_MESSAGE_CACHE_ENABLED);
+		String messageCacheString = this.apacheCompositeConfig.getString(Constants.ROOT_MESSAGE_CACHE_ENABLED);
 		if (messageCacheString != null) {
 			boolean messageCache = Boolean.parseBoolean(messageCacheString);
 			Constants.setMessageCache(messageCache);
 		}
 
-		String keepAliveString = this.configurations.getString(Constants.ROOT_KEEP_ALIVE_TIMEOUT_QUALIFIER);
-		if (keepAliveString != null) {
-			boolean messageCache = Boolean.parseBoolean(messageCacheString);
-			Constants.setMessageCache(messageCache);
+		String keepAliveTimeoutString = this.apacheCompositeConfig.getString(Constants.ROOT_KEEP_ALIVE_TIMEOUT);
+		if (keepAliveTimeoutString != null) {
+			int keepAliveTimeout = Integer.parseInt(keepAliveTimeoutString);
+			Constants.setKeepAliveTimeout(keepAliveTimeout);
 		}
-
-		String srvAbortTimeoutString = this.configurations.getString(Constants.ROOT_SERVER_ABORT_TIMEOUT_QUALIFIER);
+	
+		String srvAbortTimeoutString = this.apacheCompositeConfig.getString(Constants.ROOT_SERVER_ABORT_TIMEOUT);
 		if (srvAbortTimeoutString != null) {
 			int srvAbortTimeout = Integer.parseInt(srvAbortTimeoutString);
 			Constants.setServerAbortTimeout(srvAbortTimeout);
@@ -144,34 +139,34 @@ public abstract class Configuration {
 	}
 
 	/**
-	 * Load responder configuration.
+	 * Load responder (listeners) configuration.
 	 * 
 	 * @param fileName
 	 *            the file name
 	 * @throws IOException
 	 */
 	public void loadResponderConfig(String fileName) throws Exception {
-		this.load(fileName, Constants.SERVER_LISTENER);
+		this.load(fileName, Constants.PROPERTY_LISTENERS);
 	}
 
 	/**
-	 * Load requester configuration.
+	 * Load requester (remote hosts) configuration.
 	 * 
 	 * @param fileName
 	 *            the file name
 	 * @throws IOException
 	 */
 	public void loadRequesterConfig(String fileName) throws Exception {
-		this.load(fileName, Constants.CONNECTIONS);
+		this.load(fileName, Constants.PROPERTY_REMOTE_HOSTS);
 	}
 
 	/**
-	 * Gets the requester configuration list.
+	 * Gets the communicators configuration list.
 	 * 
-	 * @return the requester configuration list
+	 * @return the communicators configuration list
 	 */
 	public List<CommunicatorConfig> getCommunicatorConfigList() {
-		return comConfigList;
+		return communicatorConfigList;
 	}
 
 	/**

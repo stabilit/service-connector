@@ -21,10 +21,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-
 /**
- * The Class ResponderConfigPool. ResponderConfigPool configuration may hold more than one configuration for a
- * responder, is represented by <code>ResponderConfig</code>.
+ * The Class ResponderConfiguration. It may hold more than one configuration for a responder, is represented by
+ * <code>ResponderConfig</code>.
  * 
  * @author JTraber
  */
@@ -32,7 +31,7 @@ public class ResponderConfiguration extends Configuration {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ResponderConfiguration.class);
-	
+
 	/**
 	 * Load.
 	 * 

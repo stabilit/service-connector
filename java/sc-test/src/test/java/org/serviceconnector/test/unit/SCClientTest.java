@@ -40,7 +40,7 @@ public class SCClientTest {
 		assertEquals(-1, client.getPort());
 		assertEquals(ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE, client.getConnectionType());
 		assertEquals(Constants.DEFAULT_KEEP_ALIVE_INTERVAL, client.getKeepAliveIntervalInSeconds());
-		assertEquals(Constants.DEFAULT_MAX_CONNECTIONS, client.getMaxConnections());
+		assertEquals(Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE, client.getMaxConnections());
 		assertEquals(false, client.isAttached());
 		assertNotNull(client.getSCContext());
 	}

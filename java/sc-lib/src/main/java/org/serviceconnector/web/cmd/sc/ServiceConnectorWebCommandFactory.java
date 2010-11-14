@@ -168,7 +168,7 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 			public String getUserid() {
 				IResponder responder = AppContext.getCurrentContext().getResponderRegistry().getCurrentResponder();
 				CommunicatorConfig respConfig = responder.getResponderConfig();
-				return respConfig.getUserid();
+				return respConfig.getUsername();
 			}
 
 			/** {@inheritDoc} */

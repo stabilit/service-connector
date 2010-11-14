@@ -59,21 +59,20 @@ public class ServerLoader {
 			throw new InvalidParameterException("could not find property file : " + fileName);
 		}
 		@SuppressWarnings("unchecked")
-		List<String> serverNames = config.getList(Constants.SERVERS);
+		List<String> serverNames = config.getList(Constants.PROPERTY_REMOTE_HOSTS);
 
 		for (String serverName : serverNames) {
-			// remove blanks in serverName
-			serverName = serverName.trim();
+			serverName = serverName.trim();		// remove blanks in serverName
 
-			int portNr = Integer.parseInt((String) config.getString(serverName + Constants.PORT_QUALIFIER));
-			String host = (String) config.getString(serverName + Constants.HOST_QUALIFIER);
-			String connectionType = (String) config.getString(serverName + Constants.CONNECTION_TYPE_QUALIFIER);
+			int portNr = Integer.parseInt((String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_PORT));
+			String host = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_HOST);
+			String connectionType = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
 
 			if (connectionType == null) {
 				connectionType = ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE;
 			}
-			String maxConnectionsValue = (String) config.getString(serverName + Constants.MAX_CONNECTION_POOL_SIZE);
-			int maxConnections = Constants.DEFAULT_MAX_CONNECTIONS;
+			String maxConnectionsValue = (String) config.getString(serverName + Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE);
+			int maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 			if (maxConnectionsValue != null) {
 				maxConnections = Integer.parseInt(maxConnectionsValue);
 			}
@@ -83,7 +82,7 @@ public class ServerLoader {
 			if (keepAliveIntervalValue != null) {
 				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
 			}
-			String serverTypeString = (String) config.getString(serverName + Constants.TYPE_QUALIFIER);
+			String serverTypeString = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_TYPE);
 			ServerType serverType = ServerType.getServiceType(serverTypeString);
 
 			InetSocketAddress socketAddress = new InetSocketAddress(host, portNr);

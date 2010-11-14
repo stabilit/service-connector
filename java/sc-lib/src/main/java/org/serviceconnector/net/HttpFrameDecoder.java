@@ -52,9 +52,9 @@ public class HttpFrameDecoder extends DefaultFrameDecoder {
 		// watch out for Content-Length attribute in http header to evaluate frame size
 		// (bytesRead - 3) avoids IndexOutOfBoundException because inner while looks ahead
 		label: for (int i = 0; i < (bytesRead - 3); i++) {
-			if (buffer[i] == Constants.CR && buffer[i + 1] == Constants.LF) {
+			if (buffer[i] == Constants.SCMP_CR && buffer[i + 1] == Constants.SCMP_LF) {
 				i += 2;
-				if (buffer[i] == Constants.CR && buffer[i + 1] == Constants.LF) {
+				if (buffer[i] == Constants.SCMP_CR && buffer[i + 1] == Constants.SCMP_LF) {
 					headerEnd = i + 2;
 					break label;
 				}
@@ -62,7 +62,7 @@ public class HttpFrameDecoder extends DefaultFrameDecoder {
 					sizeStart = i + 16;
 					sizeEnd = sizeStart + 1;
 					while (sizeEnd < bytesRead) {
-						if (buffer[sizeEnd + 1] == Constants.CR && buffer[sizeEnd + 2] == Constants.LF) {
+						if (buffer[sizeEnd + 1] == Constants.SCMP_CR && buffer[sizeEnd + 2] == Constants.SCMP_LF) {
 							break;
 						}
 						sizeEnd++;

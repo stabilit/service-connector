@@ -15,6 +15,7 @@
  */
 package org.serviceconnector.console;
 
+import org.serviceconnector.Constants;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
@@ -49,14 +50,14 @@ public class SCConsole {
 		}
 
 		// check host
-		String host = CommandLineUtil.getArg(args, Constants.CLI_HOST_ARG);
+		String host = CommandLineUtil.getArg(args, ConsoleConstants.CLI_HOST_ARG);
 		if (host == null) {
 			showError("Host argument is missing");
 			System.exit(1);
 		}
 
 		// check port
-		String port = CommandLineUtil.getArg(args, Constants.CLI_PORT_ARG);
+		String port = CommandLineUtil.getArg(args, ConsoleConstants.CLI_PORT_ARG);
 		if (port == null) {
 			showError("Port argument is missing");
 			System.exit(1);
@@ -68,7 +69,7 @@ public class SCConsole {
 		String commandKey = "";
 		String serviceName = "";
 		for (int i = 0; i < args.length; i++) {
-			String[] splitted = args[i].split("=");
+			String[] splitted = args[i].split(Constants.EQUAL_SIGN);
 			commandKey = splitted[0];
 			if (splitted.length >= 2) {
 				serviceName = splitted[1];

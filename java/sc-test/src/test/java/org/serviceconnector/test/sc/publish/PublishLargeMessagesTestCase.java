@@ -51,7 +51,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 		try {
 			this.config = new RequesterConfiguration();
 			this.config.load(fileName);
-			this.testContext = new TestContext(this.config.getRequesterConfig(), this.msgId);
+			this.testContext = new TestContext(this.config.getFirstRequesterConfig(), this.msgId);
 			req = new SCRequester(this.testContext);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,7 +75,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 		StringBuilder sb = new StringBuilder();
 		sb.append("large:");
 		for (int i = 0; i < 100000; i++) {
-			if (sb.length() > Constants.LARGE_MESSAGE_LIMIT + 10000) {
+			if (sb.length() > Constants.MAX_MESSAGE_SIZE + 10000) {
 				break;
 			}
 			sb.append(i);

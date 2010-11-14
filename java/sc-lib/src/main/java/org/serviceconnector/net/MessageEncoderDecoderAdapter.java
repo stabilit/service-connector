@@ -53,8 +53,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	/** The Constant messageLogger. */
 	private final static MessageLogger messageLogger = MessageLogger.getInstance();
 
-	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.FORMAT_OF_MSG_SIZE);
-	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.FORMAT_OF_HEADER_SIZE);
+	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
+	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.SCMP_FORMAT_OF_HEADER_SIZE);
 	protected IFrameDecoder defaultFrameDecoder = AppContext.getCurrentContext().getFrameDecoderFactory().getFrameDecoder(
 			Constants.TCP);
 
@@ -62,10 +62,10 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	@Override
 	public Object decode(InputStream is) throws Exception {
 		// read headline
-		byte[] headline = new byte[Constants.FIX_HEADLINE_SIZE_WITHOUT_VERSION];
+		byte[] headline = new byte[Constants.SCMP_HEADLINE_SIZE_WITHOUT_VERSION];
 		is.read(headline);
 
-		byte[] version = new byte[Constants.FIX_VERSION_LENGTH_IN_HEADLINE];
+		byte[] version = new byte[Constants.SCMP_VERSION_LENGTH_IN_HEADLINE];
 		is.read(version);
 		SCMPMessage.SCMP_VERSION.isSupported(version);
 		is.skip(1); // read LF

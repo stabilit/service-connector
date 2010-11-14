@@ -41,7 +41,7 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 	@Override
 	public int parseFrameSize(byte[] buffer) throws FrameDecoderException {
 
-		if (buffer == null || buffer.length < Constants.FIX_HEADLINE_SIZE) {
+		if (buffer == null || buffer.length < Constants.SCMP_HEADLINE_SIZE) {
 			return 0; // don't throw exception it is the case if client disconnects
 		}
 		// check headerKey
@@ -51,17 +51,17 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 		}
 		// parse frame size
 		int scmpLength = this.parseMessageSize(buffer);
-		return Constants.FIX_HEADLINE_SIZE + scmpLength;
+		return Constants.SCMP_HEADLINE_SIZE + scmpLength;
 	}
 	
 	@Override
 	public int parseMessageSize(byte[] buffer) throws FrameDecoderException {
-		return this.readInt(buffer, Constants.FIX_MSG_SIZE_START, Constants.FIX_MSG_SIZE_END);
+		return this.readInt(buffer, Constants.SCMP_MSG_SIZE_START, Constants.SCMP_MSG_SIZE_END);
 	}
 	
 	@Override
 	public int parseHeaderSize(byte[] buffer) throws Exception {
-		return this.readInt(buffer, Constants.FIX_HEADER_SIZE_START, Constants.FIX_HEADER_SIZE_END);
+		return this.readInt(buffer, Constants.SCMP_HEADER_SIZE_START, Constants.SCMP_HEADER_SIZE_END);
 	}
 
 	/**

@@ -63,7 +63,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		this.responderConfig = new ResponderConfiguration();
 		this.registerConfig.load(registerFileName);
 		this.responderConfig.load(registerFileName);
-		this.registerContext = new RegisterServerContext(registerConfig.getRequesterConfig(), this.msgId);
+		this.registerContext = new RegisterServerContext(registerConfig.getFirstRequesterConfig(), this.msgId);
 		this.registerRequester = new SCRequester(registerContext);
 		registerServerBefore();
 	}

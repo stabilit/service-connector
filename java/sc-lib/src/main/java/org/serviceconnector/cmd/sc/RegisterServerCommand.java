@@ -19,6 +19,7 @@ package org.serviceconnector.cmd.sc;
 import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.CommunicatorConfig;
@@ -86,15 +87,10 @@ public class RegisterServerCommand extends CommandAdapter {
 		IResponder responder = responderRegistry.getCurrentResponder();
 		CommunicatorConfig respConfig = responder.getResponderConfig();
 		String connectionType = respConfig.getConnectionType();
-		/**
-		 * TODO JOT, verify with JAN do we need operationTimeoutMultiplier in responder config, its enough to take it
-		 * from the Constants??
-		 */
-		double operationTimeoutMultiplier = respConfig.getOperationTimeoutMultiplier();
 
 		// create new server
 		StatefulServer server = new StatefulServer(socketAddress, serviceName, portNr, maxSessions, maxConnections,
-				connectionType, keepAliveInterval, operationTimeoutMultiplier);
+				connectionType, keepAliveInterval, Constants.OPERATION_TIMEOUT_MULTIPLIER);
 		try {
 			if (immediateConnect) {
 				// server connections get connected immediately

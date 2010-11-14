@@ -37,7 +37,7 @@ public class FileServer extends Server {
 		} else {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
-			URL url = new URL("http://" + this.host + ":" + this.portNr + path + Constants.FILE_NAME_UPLOAD_SCRIPT + "?name="
+			URL url = new URL("http://" + this.host + ":" + this.portNr + path + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT_NAME + "?name="
 					+ remoteFileName);
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("PUT");
@@ -114,13 +114,13 @@ public class FileServer extends Server {
 			SCMPMessage reply = null;
 			byte[] fullBuffer = null;
 
-			if (outstandingDownloadLength <= Constants.LARGE_MESSAGE_LIMIT) {
+			if (outstandingDownloadLength <= Constants.MAX_MESSAGE_SIZE) {
 				// last package should be done now
 				fullBuffer = new byte[outstandingDownloadLength];
 				reply = new SCMPMessage();
 			} else {
 				// continue polling still packages available
-				fullBuffer = new byte[Constants.LARGE_MESSAGE_LIMIT];
+				fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
 				reply = new SCMPPart();
 			}
 			int readBytes = in.read(fullBuffer);

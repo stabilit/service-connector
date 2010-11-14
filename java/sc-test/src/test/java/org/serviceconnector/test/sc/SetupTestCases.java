@@ -242,7 +242,7 @@ public class SetupTestCases {
 					int i = 0;
 					sb.append("large:");
 					for (i = 0; i < 100000; i++) {
-						if (sb.length() > Constants.LARGE_MESSAGE_LIMIT + 10000) {
+						if (sb.length() > Constants.MAX_MESSAGE_SIZE + 10000) {
 							break;
 						}
 						sb.append(i);
@@ -359,7 +359,7 @@ public class SetupTestCases {
 			StringBuilder sb = new StringBuilder();
 			sb.append("large:");
 			for (int i = 0; i < 100000; i++) {
-				if (sb.length() > Constants.LARGE_MESSAGE_LIMIT + 10000) {
+				if (sb.length() > Constants.MAX_MESSAGE_SIZE + 10000) {
 					break;
 				}
 				sb.append(i);

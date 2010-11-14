@@ -57,8 +57,8 @@ import org.serviceconnector.test.sc.util.ValidatorUtilityTestCase;
 				 ValidatorUtilityTestCase.class })
 public final class SCImplTest {
 
-	private static DecimalFormat dfMsg = new DecimalFormat(Constants.FORMAT_OF_MSG_SIZE);
-	private static DecimalFormat dfHeader = new DecimalFormat(Constants.FORMAT_OF_HEADER_SIZE);
+	private static DecimalFormat dfMsg = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
+	private static DecimalFormat dfHeader = new DecimalFormat(Constants.SCMP_FORMAT_OF_HEADER_SIZE);
 
 	/**
 	 * Instantiates a new sC impl test.

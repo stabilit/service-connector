@@ -21,10 +21,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-
 /**
- * The Class RequesterConfigPool. RequesterConfigPool may hold more than one configuration for a requester, is
- * represented by <code>RequesterConfig</code>.
+ * The Class RequesterConfiguration. It may hold more than one configuration for a requester, is represented by
+ * <code>RequesterConfig</code>.
  * 
  * @author JTraber
  */
@@ -32,7 +31,7 @@ public class RequesterConfiguration extends Configuration {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RequesterConfiguration.class);
-	
+
 	/**
 	 * Loads configuration from a file.
 	 * 
@@ -55,12 +54,12 @@ public class RequesterConfiguration extends Configuration {
 	}
 
 	/**
-	 * Gets the requester configuration. Returns the requester configuration of first requester in configuration file.
+	 * Gets the first requester configuration in the configuration file.<br> 
 	 * Usually only one requester is configured.
 	 * 
-	 * @return the requester configuration
+	 * @return the first requester configuration  
 	 */
-	public CommunicatorConfig getRequesterConfig() {
-		return this.getCommunicatorConfigList().get(0);
+	public CommunicatorConfig getFirstRequesterConfig() {	
+		return this.getCommunicatorConfigList().get(0); // TODO TRN are you sure? What are the other requesters in list? Is this a helper?
 	}
 }

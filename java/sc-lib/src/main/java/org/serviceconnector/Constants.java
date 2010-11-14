@@ -17,7 +17,7 @@
 package org.serviceconnector;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.net.ConnectionType;
+import org.jboss.netty.handler.codec.http.HttpHeaders;
 
 /**
  * The Interface IConstants. SCM constants.
@@ -33,184 +33,135 @@ public final class Constants {
 		// instantiating not allowed
 	}
 
-	/** The Constant LARGE_MESSAGE_LIMIT. */
-	private static final int DEFAULT_LARGE_MESSAGE_LIMIT = 60 << 10; // 64K
-	/** The Constant LARGE_MESSAGE_LIMIT. */
-	public static int LARGE_MESSAGE_LIMIT = DEFAULT_LARGE_MESSAGE_LIMIT;
-	/** File qualifier for command line argument configuration file. */
-	public static final String CLI_CONFIG_ARG = "-sc.configuration";
-	/** flag to enable / disable validation. */
-	public static boolean COMMAND_VALIDATION_ENABLED = true;
-	/** flag to enable / disable cache. */
-	public static boolean MESSAGE_CACHE_ENABLED = true;
-	/** File qualifier for Http requests. */
-	public static final String HTTP_FILE = "/";
-	/** The DEFAULT_NR_OF_THREADS FOR SERVER. */
-	public static final int DEFAULT_NR_OF_THREADS_SERVER = 10000;
-	/** The DEFAULT_NR_OF_THREADS FOR CLIENT. */
-	public static final int DEFAULT_NR_OF_THREADS_CLIENT = 5000;
-	/**
-	 * DEFAULT_ECHO_TIMEOUT_MULTIPLIER: Default value if no ECHO_TIMEOUT_MULTIPLIER will be set by configuration.
+	/*
+	 * Defaults
+	 * ********
 	 */
+	/** Default value used if no ECHO_TIMEOUT_MULTIPLIER is configured */
 	private static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
+	
+	/** Default value if no OPERATION_TIMEOUT_MULTIPLIER is configured. */
+	private static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
+	
+	/** Default value used if no timeout for operation is passed in the API.  */
+	public static final int DEFAULT_OPERATION_TIMEOUT_SECONDS = 60;
+	
+	/** Default value used if no ABORT_SERVER_OTI_MILLIS is configured.  */
+	public static final int DEFAULT_SERVER_ABORT_OTI_MILLIS = 10000;
+	
+	/** Default timeout for file session creation. */
+	public static final int DEFAULT_FILE_SESSION_TIMEOUT_SECONDS = 15;
+	
+	/** Default timeout for creation of an connection to peer. */
+	private static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 5000;
+
+	/** Default timeout after a subscription is marked as dead. */
+	private static final int DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS = 300000;
+	
+	/** Default interval used for publishing services if the NO_DATA_INTERVAL was not set by API. */
+	public static final int DEFAULT_NO_DATA_INTERVAL_SECONDS = 300;
+	
+	/** Default value used if no KEEP_ALIVE_TIMEOUT is configured. */
+	private static final int DEFAULT_KEEP_ALIVE_TIMEOUT = 2000;
+	
+	/** The default keep alive interval, 0 = not active. */
+	public static final int DEFAULT_KEEP_ALIVE_INTERVAL = 0;
+
+	/** The default number of subsequent keep alive before the connection is closed. */
+	public static final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
+	
+	/** The default maximal connection pool size */
+	public static final int DEFAULT_MAX_CONNECTION_POOL_SIZE = 100;	
+	
+	/** Default number of threads for the server. */
+	public static final int DEFAULT_NR_OF_THREADS_SERVER = 10000;		// TODO not used
+	
+	/** Default number of threads for the client. */
+	public static final int DEFAULT_NR_OF_THREADS_CLIENT = 5000;		// TODO not used
+	
+	/*
+	 * Constants 
+	 * *********
+	 */
 	/**
-	 * ECHO_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the echo timeout of a session. E.g. SC needs to adapt echo
-	 * timeout interval from client to get right interval for echo messages.
+	 * Multiplier to calculate the echo timeout of a session. <br>
+	 * SC must adapt (extend) echo interval passed from client to get the right interval for echo messages.
 	 */
 	public static double ECHO_INTERVAL_MULTIPLIER = DEFAULT_ECHO_INTERVAL_MULTIPLIER;
+
 	/**
-	 * DEFAULT_OPERATION_TIMEOUT_MULTIPLIER: Default value if no OPERATION_TIMEOUT_MULTIPLIER will be set by configuration.
+	 * Multiplier to calculate the operation timeout.<br> 
+	 * SC must adapt (shorten) the timeout passed from client to get the right timeout.
 	 */
-	private static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
+	public static double OPERATION_TIMEOUT_MULTIPLIER = DEFAULT_OPERATION_TIMEOUT_MULTIPLIER;
+
 	/**
-	 * ECHO_TIMEOUT_MULTIPLIER: The multiplier is needed to calculate the echo timeout of a session. E.g. SC needs to adapt echo
-	 * timeout interval from client to get right interval for echo messages.
-	 */
-	public static final double OPERATION_TIMEOUT_MULTIPLIER = DEFAULT_OPERATION_TIMEOUT_MULTIPLIER;
-	/**
-	 * DEFAULT_OPERATION_TIMEOUT: This operation timeout is used when communicating with SC to set timeout on a higher level of
-	 * architecture. Time unit is seconds. Used if no timeout for operation is handed over by the user.
-	 */
-	public static final int DEFAULT_OPERATION_TIMEOUT_SECONDS = 60;
-	/**
-	 * OPERATION_TIMEOUT_MILLIS_SHORT: This operation timeout is used in urgent situations when communication should work very fast.
-	 * Often used in emergency cases and in situation where reply of operation is irrelevant.
-	 */
-	public static final int OPERATION_TIMEOUT_MILLIS_SHORT = 200;
-	/**
-	 * DEFAULT_KEEP_ALIVE_TIMEOUT: Default value if no KEEP_ALIVE_TIMEOUT will be set by configuration.
-	 */
-	private static final int DEFAULT_KEEP_ALIVE_TIMEOUT = 2000;
-	/**
-	 * KEEP_ALIVE_TIMEOUT: This timeout is used to observe the reply of a keep alive message. If reply can not be received within
-	 * this time, connection is will be cleaned up.
+	 * Used to observe the reply of a keep alive message. <br>
+	 * If the peer does not reply within this time, connection will be cleaned up.
 	 */
 	public static int KEEP_ALIVE_TIMEOUT = DEFAULT_KEEP_ALIVE_TIMEOUT;
+
 	/**
-	 * DEFAULT_ABORT_SERVER_OTI_MILLIS: Default value if no ABORT_SERVER_OTI_MILLIS will be set by configuration.
+	 * Used to send keep alive message to the peer. <br>
 	 */
-	public static final int DEFAULT_SERVER_ABORT_OTI_MILLIS = 10000;
+	public static int KEEP_ALIVE_INTERVAL = DEFAULT_KEEP_ALIVE_INTERVAL;
+	
 	/**
-	 * ABORT_SERVER_OTI_MILLIS: This timeout is used to observe the reply of a abort session. If reply can not be received within
-	 * this time, server will be cleaned up.
+	 * Used to observe the reply of a abort session. <br> 
+	 * If server does not reply within this time, the server will be cleaned up.
 	 */
 	public static int SERVER_ABORT_OTI_MILLIS = DEFAULT_SERVER_ABORT_OTI_MILLIS;
+		
 	/**
-	 * TECH_LEVEL_OPERATION_TIMEOUT_MILLIS: Is used to detect a technical operation timeout. It is the time a single
-	 * WRITE/READ/CLOSE/OPEN can have. Should be low/short.
+	 * Technical operation timeout. <br> 
+	 * It is the time a single WRITE/READ/CLOSE/OPEN can take. Must be reasonably sort.
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
-	/** The Constant DEFAULT_FILE_SESSION_TIMEOUT_SECONDS: Is used to timeout a file session on SC when streaming of files has began. */
-	public static final int DEFAULT_FILE_SESSION_TIMEOUT_SECONDS = 15;
-	/** The Constant DEFAULT_CONNECT_TIMEOUT_MILLIS. */
-	private static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 5000;
-	/** ONNECT_TIMEOUT_MILLIS: Timeout prevents stocking in technical connect process. */
-	public static int CONNECT_TIMEOUT_MILLIS = DEFAULT_CONNECT_TIMEOUT_MILLIS;
-	/** The DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS, time after a subscription is marked as dead. */
-	private static final int DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS = 300000;
-	/** The SUBSCRIPTION_TIMEOUT_MILLIS, time after a subscription is marked as dead. */
-	public static int SUBSCRIPTION_TIMEOUT_MILLIS = DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS;
-	/** The WAIT_FOR_CONNECTION_INTERVAL_MILLIS. */
-	public static final int WAIT_FOR_CONNECTION_INTERVAL_MILLIS = 200;
-	/** The DEFAULT_NO_DATA_INTERVAL_SECONDS. */
-	public static final int DEFAULT_NO_DATA_INTERVAL_SECONDS = 300;
-	/** The Constant SEC_TO_MILISEC_FACTOR. */
-	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
-	/** The REGEX. */
-	public static final String COMMA_OR_SEMICOLON = ",|;";
-	/** The Constant ROOT_TEST_QUALIFIER. */
-	public static final String ROOT_WRITEPID_QUALIFIER = "root.writePID";
-	/** The Constant ROOT_OPERATION_TIMEOUT_QUALIFIER. */
-	public static final String ROOT_OPERATION_TIMEOUT_QUALIFIER = "root.operationTimeoutMultiplier";
-	/** The Constant ROOT_ECHO_TIMEOUT_QUALIFIER. */
-	public static final String ROOT_ECHO_INTERVAL_QUALIFIER = "root.echoIntervalMultiplier";
-	/** The Constant ROOT_COMMAND_VALIDATION_ENABLED. */
-	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
-	/** The Constant ROOT_MESSAGE_CACHE_ENABLED. */
-	public static final String ROOT_MESSAGE_CACHE_ENABLED = "root.messageCacheEnabled";
-	/** The Constant ROOT_CONNECTION_TIMEOUT_QUALIFIER. */
-	public static final String ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER = "root.largeMessageLimit";
-	/** The Constant ROOT_LARGE_MESSAGE_LIMIT_QUALIFIER. */
-	public static final String ROOT_CONNECTION_TIMEOUT_QUALIFIER = "root.connectionTimeoutMillis";
-	/** The Constant ROOT_SUBSCRIPTION_TIMEOUT_QUALIFIER. */
-	public static final String ROOT_SUBSCRIPTION_TIMEOUT_QUALIFIER = "root.subscriptionTimeout";
-	/** The Constant ROOT_KEEP_ALIVE_TIMEOUT_QUALIFIER. */
-	public static final String ROOT_KEEP_ALIVE_TIMEOUT_QUALIFIER = "root.keepAliveTimeout";
-	/** The Constant ROOT_SERVER_ABORT_TIMEOUT_QUALIFIER. */
-	public static final String ROOT_SERVER_ABORT_TIMEOUT_QUALIFIER = "root.serverAbortTimeout";
-	/** The connection type. */
-	public static final String CONNECTION_TYPE_QUALIFIER = ".connectionType";
-	/** The USERID. */
-	public static final String CONNECTION_USERNAME = ".username";
-	/** The PASSWORD. */
-	public static final String CONNECTION_PASSWORD = ".password";
 
-	/** The Constant FILE_NAME_UPLOAD_SCRIPT: The name of the upload script which is used on the file server. */
-	public static final String FILE_NAME_UPLOAD_SCRIPT = "scupload.php";
-	/** The Constant REMOTE_HOST. */
-	public static final String REMOTE_HOST = ".remoteHost";
-	/** The HOST. */
-	public static final String HOST_QUALIFIER = ".host";
-	/** The PORT. */
-	public static final String PORT_QUALIFIER = ".port";
-	/** The connection names. */
-	public static final String TYPE_QUALIFIER = ".type";
-	/** The Constant ENABLE_QUALIFIER. */
-	public static final String ENABLE_QUALIFIER = ".enabled";
-	/** The Constant CONNECTIONS. */
-	public static final String CONNECTIONS = "connections";
-	/** The server names. */
-	public static final String SERVER_LISTENER = "serverListener";
-	/** The services Names. */
-	public static final String SERVICE_NAMES = "serviceNames";
-	/** The Constant SERVERS. */
-	public static final String SERVERS = "servers";
-	/** The Constant MAX_CONNECTION_POOL_SIZE. */
-	public static final String MAX_CONNECTION_POOL_SIZE = ".maxConnectionPoolSize";
-	/** The Constant KEEP_ALIVE_INTERVAL. */
-	public static final String KEEP_ALIVE_INTERVAL = ".keepAliveInterval";
-	/** The Constant PATH_QUALIFIER. */
-	public static final String PATH_QUALIFIER = ".path";
-	/** The ACCEPT_PARAMS. */
-	public static final String ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
+	/** Timeout to prevent stocking in technical connect process. */
+	public static int CONNECT_TIMEOUT_MILLIS = DEFAULT_CONNECT_TIMEOUT_MILLIS;
+
+	/** The wait time in a loop waiting for a busy connection. */
+	public static final int WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS = 200;
+
+	/** The time after a subscription is marked as dead. */
+	public static int SUBSCRIPTION_TIMEOUT_MILLIS = DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS;
+	
+	/** Maximum size of a message. Larger data is treated as large message */
+	public static final int MAX_MESSAGE_SIZE = 60 << 10; // 64K
+	
+	/** flag to enable / disable command validation. */
+	public static boolean COMMAND_VALIDATION_ENABLED = true;
+	
+	/** flag to enable / disable message caching. */
+	public static boolean MESSAGE_CACHE_ENABLED = true;
+	
+	/** File qualifier for Http requests. */
+	public static final String HTTP_FILE = "/";
+	
+	/** Seconds to milliseconds calculation factor */
+	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
+	
+	/** HttpHeaders.Names.ACCEPT parameter used when http data is sent */
+	public static final String HTTP_ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
 
 	/** Protocol literal. */
 	public static final String HTTP = "http";
+	
 	/** Protocol literal. */
 	public static final String TCP = "tcp";
+	
 
-	/** The DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE, after keep alive occurs 10 times connection gets disconnected. */
-	public static final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
-	/** The DEFAULT_MAX_CONNECTIONS, 100 connections in the pool. */
-	public static final int DEFAULT_MAX_CONNECTIONS = 100;
-	/** The DEFAULT_KEEP_ALIVE_INTERVAL, 0 = not active. */
-	public static final int DEFAULT_KEEP_ALIVE_INTERVAL = 0;
+	/** File qualifier for command line argument configuration file. */
+	public static final String CLI_CONFIG_ARG = "-sc.configuration";
+	
+	/** Comma or semicolon REGEX. */
+	public static final String COMMA_OR_SEMICOLON = ",|;";		// TODO not used
 
-	/** Carriage return character. */
-	public static final byte CR = 0x0D;
-	/** Line feed character. */
-	public static final byte LF = 0x0A;
-	/** The Constant FIX_HEADLINE_SIZE. */
-	public static final int FIX_HEADLINE_SIZE = 22;
-	/** The Constant FIX_HEADLINE_SIZE. */
-	public static final int FIX_HEADLINE_SIZE_WITHOUT_VERSION = 18;
-	/** The Constant FORMAT_OF_MSG_SIZE. */
-	public static final String FORMAT_OF_MSG_SIZE = " 0000000";
-	/** The Constant FORMAT_OF_HEADER_SIZE. */
-	public static final String FORMAT_OF_HEADER_SIZE = " 00000";
-	/** The Constant FIX_MSG_SIZE_START. */
-	public static final int FIX_MSG_SIZE_START = 4;
-	/** The Constant FIX_MSG_SIZE_END. */
-	public static final int FIX_MSG_SIZE_END = 10;
-	/** The Constant FIX_HEADER_SIZE_START. */
-	public static final int FIX_HEADER_SIZE_START = 12;
-	/** The Constant FIX_HEADER_SIZE_END. */
-	public static final int FIX_HEADER_SIZE_END = 16;
-	/** The Constant MAX_HTTP_CONTENT_LENGTH. */
-	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
-	/** The Constant FIX_VERSION_LENGTH_IN_HEADLINE. */
-	public static final int FIX_VERSION_LENGTH_IN_HEADLINE = 3;
-
+	/*
+	 * console command constants
+	 * *************************
+	 */
 	/** The Constant DISABLE. */
 	public static final String DISABLE = "disable";
 	/** The Constant ENABLE. */
@@ -223,6 +174,58 @@ public final class Constants {
 	public static final String KILL = "kill";
 	/** The Constant EQUAL_SIGN. */
 	public static final String EQUAL_SIGN = "=";
+	
+	/*
+	 * Constants for syntax in sc.properies
+	 * ************************************
+	 */
+	public static final String ROOT_WRITEPID = "root.writePID";
+	public static final String ROOT_OPERATION_TIMEOUT_MULTIPLIER = "root.operationTimeoutMultiplier";
+	public static final String ROOT_ECHO_INTERVAL_MULTIPLIER = "root.echoIntervalMultiplier";
+	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
+	public static final String ROOT_MESSAGE_CACHE_ENABLED = "root.messageCacheEnabled";
+	public static final String ROOT_CONNECTION_TIMEOUT = "root.connectionTimeoutMillis";
+	public static final String ROOT_SUBSCRIPTION_TIMEOUT = "root.subscriptionTimeout";
+	public static final String ROOT_KEEP_ALIVE_TIMEOUT = "root.keepAliveTimeout";
+	public static final String ROOT_SERVER_ABORT_TIMEOUT = "root.serverAbortTimeout";
+
+	public static final String PROPERTY_LISTENERS = "listeners";
+	public static final String PROPERTY_SERVICE_NAMES = "serviceNames";
+	public static final String PROPERTY_REMOTE_HOSTS = "remoteHosts";
+	
+	public static final String PROPERTY_QUALIFIER_CONNECTION_TYPE = ".connectionType";
+	public static final String PROPERTY_QUALIFIER_USERNAME = ".username";
+	public static final String PROPERTY_QUALIFIER_PASSWORD = ".password";
+	public static final String PROPERTY_QUALIFIER_UPLOAD_SCRIPT_NAME = "scupload.php";
+	public static final String PROPERTY_QUALIFIER_REMOTE_HOST = ".remoteHost";
+	public static final String PROPERTY_QUALIFIER_HOST = ".host";
+	public static final String PROPERTY_QUALIFIER_PORT = ".port";
+	public static final String PROPERTY_QUALIFIER_TYPE = ".type";
+	public static final String PROPERTY_QUALIFIER_ENABLED = ".enabled";
+	public static final String PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE = ".maxConnectionPoolSize";
+	public static final String PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL = ".keepAliveInterval";
+	public static final String PROPERTY_QUALIFIER_PATH = ".path";
+
+
+	/*
+	 * SCMP protocol constants
+	 * ***********************
+	 */
+	/** Carriage return character. */
+	public static final byte SCMP_CR = 0x0D;
+	/** Line feed character. */
+	public static final byte SCMP_LF = 0x0A;
+	public static final int SCMP_HEADLINE_SIZE = 22;
+	public static final int SCMP_HEADLINE_SIZE_WITHOUT_VERSION = 18;
+	public static final int SCMP_MSG_SIZE_START = 4;
+	public static final int SCMP_MSG_SIZE_END = 10;
+	public static final int SCMP_HEADER_SIZE_START = 12;
+	public static final int SCMP_HEADER_SIZE_END = 16;
+	public static final int SCMP_VERSION_LENGTH_IN_HEADLINE = 3;
+	public static final String SCMP_FORMAT_OF_MSG_SIZE = " 0000000";
+	public static final String SCMP_FORMAT_OF_HEADER_SIZE = " 00000";
+	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
+	
 	/** The Constant CACHE_ENABLED. */
 	public static final String CACHE_ENABLED = "cache.enabled";
 	/** The Constant CACHE_NAME. */
@@ -251,18 +254,18 @@ public final class Constants {
 	}
 
 	/**
-	 * Sets the large message limit.
+	 * Sets the echo timeout multiplier.
 	 * 
-	 * @param largeMessageLimit
-	 *            the new large message limit
+	 * @param echoTimeoutMultiplier
+	 *            the new echo timeout multiplier
 	 */
-	public static void setLargeMessageLimit(int largeMessageLimit) {
-		if (Constants.LARGE_MESSAGE_LIMIT != Constants.DEFAULT_LARGE_MESSAGE_LIMIT) {
-			// setting LARGE_MESSAGE_LIMIT only allowed one time
-			logger.error("setLargeMessageLimit called two times - not allowed.");
+	public static void setEchoIntervalMultiplier(double echoInteralMultiplier) {
+		if (Constants.ECHO_INTERVAL_MULTIPLIER != Constants.DEFAULT_ECHO_INTERVAL_MULTIPLIER) {
+			// setting ECHO_INTERVAL_MULTIPLIER only allowed once
+			logger.error("setEchoIntervalMultiplier called two times - not allowed.");
 			return;
 		}
-		Constants.LARGE_MESSAGE_LIMIT = largeMessageLimit;
+		Constants.ECHO_INTERVAL_MULTIPLIER = echoInteralMultiplier;
 	}
 
 	/**
@@ -271,15 +274,15 @@ public final class Constants {
 	 * @param echoTimeoutMultiplier
 	 *            the new echo timeout multiplier
 	 */
-	public static void setEchoIntervalMultiplier(double echoInteralMultiplier) {
-		if (Constants.ECHO_INTERVAL_MULTIPLIER != Constants.DEFAULT_ECHO_INTERVAL_MULTIPLIER) {
-			// setting ECHO_INTERVAL_MULTIPLIER only allowed one time
+	public static void setOperationTimeoutMultiplier(double operationTimeoutMultiplier) {
+		if (Constants.OPERATION_TIMEOUT_MULTIPLIER != Constants.DEFAULT_OPERATION_TIMEOUT_MULTIPLIER) {
+			// setting OPERATION_TIMEOUT_MULTIPLIER only allowed once
 			logger.error("setEchoIntervalMultiplier called two times - not allowed.");
 			return;
 		}
-		Constants.ECHO_INTERVAL_MULTIPLIER = echoInteralMultiplier;
+		Constants.OPERATION_TIMEOUT_MULTIPLIER = operationTimeoutMultiplier;
 	}
-
+	
 	/**
 	 * Sets the connection timeout.
 	 * 
@@ -288,7 +291,7 @@ public final class Constants {
 	 */
 	public static void setConnectionTimeoutMillis(int connectionTimeoutMillis) {
 		if (Constants.CONNECT_TIMEOUT_MILLIS != Constants.DEFAULT_CONNECT_TIMEOUT_MILLIS) {
-			// setting CONNECT_TIMEOUT_MILLIS only allowed one time
+			// setting CONNECT_TIMEOUT_MILLIS only allowed once
 			logger.error("setConnectionTimeoutMillis called two times - not allowed.");
 			return;
 		}
@@ -303,13 +306,29 @@ public final class Constants {
 	 */
 	public static void setSubscriptionTimeout(int subscriptionTimeout) {
 		if (Constants.SUBSCRIPTION_TIMEOUT_MILLIS != Constants.DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS) {
-			// setting SUBSCRIPTION_TIMEOUT_MILLIS only allowed one time
+			// setting SUBSCRIPTION_TIMEOUT_MILLIS only allowed once
 			logger.error("setSubscriptionTimeout called two times - not allowed.");
 			return;
 		}
 		Constants.SUBSCRIPTION_TIMEOUT_MILLIS = subscriptionTimeout;
 	}
 
+	
+	/**
+	 * Sets the keep alive interval.
+	 * 
+	 * @param keepAliveTimeout
+	 *            the new keep alive timeout
+	 */
+	public static void setKeepAliveInterval(int keepAliveInterval) {
+		if (Constants.KEEP_ALIVE_INTERVAL != Constants.DEFAULT_KEEP_ALIVE_INTERVAL) {
+			// setting KEEP_ALIVE_INTERVAL only allowed once
+			logger.error("setKeepAliveInterval called two times - not allowed.");
+			return;
+		}
+		Constants.KEEP_ALIVE_INTERVAL = keepAliveInterval;
+	}
+	
 	/**
 	 * Sets the keep alive timeout.
 	 * 
@@ -318,7 +337,7 @@ public final class Constants {
 	 */
 	public static void setKeepAliveTimeout(int keepAliveTimeout) {
 		if (Constants.KEEP_ALIVE_TIMEOUT != Constants.DEFAULT_KEEP_ALIVE_TIMEOUT) {
-			// setting KEEP_ALIVE_TIMEOUT only allowed one time
+			// setting KEEP_ALIVE_TIMEOUT only allowed once
 			logger.error("setKeepAliveTimeout called two times - not allowed.");
 			return;
 		}
@@ -333,7 +352,7 @@ public final class Constants {
 	 */
 	public static void setServerAbortTimeout(int serverAbortTimeout) {
 		if (Constants.SERVER_ABORT_OTI_MILLIS != Constants.DEFAULT_SERVER_ABORT_OTI_MILLIS) {
-			// setting SERVER_ABORT_OTI_MILLIS only allowed one time
+			// setting SERVER_ABORT_OTI_MILLIS only allowed once
 			logger.error("setServerAbortTimeout called two times - not allowed.");
 			return;
 		}

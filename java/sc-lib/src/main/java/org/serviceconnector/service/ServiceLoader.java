@@ -60,14 +60,14 @@ public class ServiceLoader {
 			throw new InvalidParameterException("could not find property file : " + fileName);
 		}
 		@SuppressWarnings("unchecked")
-		List<String> serviceNames = config.getList(Constants.SERVICE_NAMES);
+		List<String> serviceNames = config.getList(Constants.PROPERTY_SERVICE_NAMES);
 
 		ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
 
 		for (String serviceName : serviceNames) {
 			// remove blanks in serviceName
 			serviceName = serviceName.trim();
-			String serviceTypeString = (String) config.getString(serviceName + Constants.TYPE_QUALIFIER);
+			String serviceTypeString = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_TYPE);
 			ServiceType serviceType = ServiceType.getServiceType(serviceTypeString);
 
 			// instantiate right type of service
@@ -80,10 +80,10 @@ public class ServiceLoader {
 				service = new PublishService(serviceName);
 				break;
 			case FILE_SERVICE:
-				String path = (String) config.getString(serviceName + Constants.PATH_QUALIFIER);
+				String path = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_PATH);
 				service = new FileService(serviceName, path);
-				String host = (String) config.getString(serviceName + Constants.HOST_QUALIFIER);
-				Server server = AppContext.getCurrentContext().getServerRegistry().getServer(host);
+				String remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
+				Server server = AppContext.getCurrentContext().getServerRegistry().getServer(remoteHost);
 				((FileService) service).setServer((FileServer) server);
 				// TODO fehlerhandling
 				break;
@@ -94,7 +94,7 @@ public class ServiceLoader {
 			}
 
 			// set service state as defined in configuration. Default is enabled
-			String enable = config.getString(serviceName + Constants.ENABLE_QUALIFIER);
+			String enable = config.getString(serviceName + Constants.PROPERTY_QUALIFIER_ENABLED);
 			if (enable == null || enable.equals("true")) {
 				service.setState(ServiceState.ENABLED); // default is enabled
 				logger.trace("state enabled for service: " + serviceName);
