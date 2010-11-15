@@ -219,16 +219,16 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		/**
 		 * Instantiates a new publish timer run.
 		 * 
-		 * @param subscriptionPlace
+		 * @param subscriptionQueue
 		 *            the subscription place
 		 * @param timeoutMillis
 		 *            the timeout
 		 */
-		public PublishTimerRun(SubscriptionQueue<SCMPMessage> subscriptionPlace, int timeoutMillis) {
+		public PublishTimerRun(SubscriptionQueue<SCMPMessage> subscriptionQueue, int timeoutMillis) {
 			this.request = null;
 			this.response = null;
 			this.timeoutMillis = timeoutMillis;
-			this.subscriptionQueue = subscriptionPlace;
+			this.subscriptionQueue = subscriptionQueue;
 		}
 
 		/** {@inheritDoc} */
@@ -267,7 +267,23 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				}
 				return;
 			}
+			// set up subscription timeout
+			SubscriptionRegistry subscriptionRegistry = AppContext.getCurrentContext().getSubscriptionRegistry();
 			String subscriptionId = reqMsg.getSessionId();
+
+			Subscription subscription = subscriptionRegistry.getSubscription(subscriptionId);
+			if (subscription == null) {
+				// subscription has already been deleted
+				SCMPFault fault = new SCMPFault(SCMPError.NOT_FOUND, "subscription not found");
+				response.setSCMP(fault);
+				try {
+					// send message back to client
+					this.response.write();
+				} catch (Exception ex) {
+					logger.warn("timeout expired :" + ex.getMessage());
+				}
+				return;
+			}
 
 			// tries polling from queue
 			SCMPMessage message = this.subscriptionQueue.getMessage(subscriptionId);
@@ -309,8 +325,6 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			} catch (Exception ex) {
 				logger.warn("timeout expired :" + ex.getMessage());
 			}
-			// set up subscription timeout
-			SubscriptionRegistry subscriptionRegistry = AppContext.getCurrentContext().getSubscriptionRegistry();
 			subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
 		}
 	}

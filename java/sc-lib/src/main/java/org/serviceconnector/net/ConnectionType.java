@@ -16,23 +16,30 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net;
 
-public final class ConnectionType {
+public enum ConnectionType {
 
-	private ConnectionType() {
-		// instantiating not allowed
+	/** The NETTY_TCP. */
+	NETTY_TCP("netty.tcp"),
+	/** The NETTY_HTTP. */
+	NETTY_HTTP("netty.http"),
+	/** The NETTY_WEB. */
+	NETTY_WEB("netty.web"),
+	/** The NETTY_PROXY_HTTP. */
+	NETTY_PROXY_HTTP("netty-proxy.http"),
+	/** The DEFAULT_CLIENT_CONNECTION_TYPE. */
+	DEFAULT_CLIENT_CONNECTION_TYPE(ConnectionType.NETTY_TCP.getValue()),
+	/** The DEFAULT_SERVER_CONNECTION_TYPE. */
+	DEFAULT_SERVER_CONNECTION_TYPE(ConnectionType.NETTY_TCP.getValue());
+
+	/** The value. */
+	private String value;
+
+	/** The Connection type. */
+	private ConnectionType(String value) {
+		this.value = value;
 	}
 
-	/** The Constant NETTY_TCP. */
-	public static final String NETTY_TCP = "netty.tcp";
-	/** The Constant NETTY_HTTP. */
-	public static final String NETTY_HTTP = "netty.http";
-	/** The Constant NETTY_WEB. */
-	public static final String NETTY_WEB = "netty.web";
-	/** The Constant NETTY_PROXY_HTTP. */
-	public static final String NETTY_PROXY_HTTP = "netty-proxy.http";
-	
-	/** The DEFAULT_CLIENT_CONNECTION_TYPE. */
-	public static final String DEFAULT_CLIENT_CONNECTION_TYPE = NETTY_TCP;
-	/** The DEFAULT_SERVER_CONNECTION_TYPE. */
-	public static final String DEFAULT_SERVER_CONNECTION_TYPE = NETTY_TCP;
+	public String getValue() {
+		return this.value;
+	}
 }

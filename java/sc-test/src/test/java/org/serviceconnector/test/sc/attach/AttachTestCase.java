@@ -48,7 +48,7 @@ public class AttachTestCase extends SuperTestCase {
 	public void attach() throws Exception {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 
-		AttachTestCallback callback = new AttachTestCallback();
+		TestAttachCallback callback = new TestAttachCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 		SCTest.checkReply(result);
@@ -63,7 +63,7 @@ public class AttachTestCase extends SuperTestCase {
 		SCTest.checkReply(callback.getMessageSync());
 	}
 
-	private class AttachTestCallback extends SynchronousCallback {
+	private class TestAttachCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}
 }

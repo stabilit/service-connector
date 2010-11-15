@@ -49,7 +49,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(100);
 		createSessionCall.setRequestBody("wait:2000");
-		WaitMechanismCallback callback = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback = new TestWaitMechanismCallback(true);
 		createSessionCall.invoke(callback, 10000);
 		
 		// to assure second create is not faster
@@ -59,7 +59,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 				.newInstance(req, "1conn");
 		createSessionCall1.setSessionInfo("sessionInfo");
 		createSessionCall1.setEchoIntervalSeconds(100);
-		WaitMechanismCallback callback1 = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		createSessionCall1.invoke(callback1, 1000);
 
 		SCMPMessage responseMessage = callback.getMessageSync();
@@ -85,7 +85,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(100);
 		createSessionCall.setRequestBody("wait:1000");
-		WaitMechanismCallback callback = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback = new TestWaitMechanismCallback(true);
 		createSessionCall.invoke(callback, 10000);
 
 		// to assure second create is not faster
@@ -95,7 +95,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 				.newInstance(req, "1conn");
 		createSessionCall1.setSessionInfo("sessionInfo");
 		createSessionCall1.setEchoIntervalSeconds(100);
-		WaitMechanismCallback callback1 = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		createSessionCall1.invoke(callback1, 10000);
 
 		SCMPMessage responseMessage = callback.getMessageSync();
@@ -122,7 +122,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(100);
 		createSessionCall.setRequestBody("wait:2000");
-		WaitMechanismCallback callback = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback = new TestWaitMechanismCallback(true);
 		createSessionCall.invoke(callback, 10000);
 		
 		// to assure second create is not faster
@@ -132,7 +132,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 				.newInstance(req, "1sess");
 		createSessionCall1.setSessionInfo("sessionInfo");
 		createSessionCall1.setEchoIntervalSeconds(100);
-		WaitMechanismCallback callback1 = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		createSessionCall1.invoke(callback1, 1000);
 
 		SCMPMessage responseMessage = callback.getMessageSync();
@@ -158,7 +158,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(100);
 		createSessionCall.setRequestBody("wait:1000");
-		WaitMechanismCallback callback = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback = new TestWaitMechanismCallback(true);
 		createSessionCall.invoke(callback, 10000);
 
 		// to assure second create is not faster
@@ -168,7 +168,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 				.newInstance(req, "1sess");
 		createSessionCall1.setSessionInfo("sessionInfo");
 		createSessionCall1.setEchoIntervalSeconds(100);
-		WaitMechanismCallback callback1 = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		createSessionCall1.invoke(callback1, 10000);
 
 		SCMPMessage responseMessage = callback.getMessageSync();
@@ -188,9 +188,9 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		this.attachCallback.getMessageSync();
 	}
 
-	protected class WaitMechanismCallback extends SynchronousCallback {
+	protected class TestWaitMechanismCallback extends SynchronousCallback {
 
-		public WaitMechanismCallback(boolean synchronous) {
+		public TestWaitMechanismCallback(boolean synchronous) {
 			this.synchronous = synchronous;
 		}
 	}

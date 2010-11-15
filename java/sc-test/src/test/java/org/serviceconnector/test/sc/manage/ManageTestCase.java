@@ -55,7 +55,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 
 		// enable enableService by manage call
 		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
-		ManageTestCallback callback = new ManageTestCallback();
+		TestManageCallback callback = new TestManageCallback();
 		manageCall.setRequestBody("enable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
@@ -72,7 +72,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 
 		// disable enableService by manage call
 		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
-		callback = new ManageTestCallback();
+		callback = new TestManageCallback();
 		manageCall.setRequestBody("disable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
 		result = callback.getMessageSync();
@@ -108,14 +108,14 @@ public class ManageTestCase extends SuperAttachTestCase {
 	public void manageCommandState() throws Exception {
 		// enable enableService by manage call
 		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
-		ManageTestCallback callback = new ManageTestCallback();
+		TestManageCallback callback = new TestManageCallback();
 		manageCall.setRequestBody("enable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 
 		// state of enableService
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		callback = new ManageTestCallback();
+		callback = new TestManageCallback();
 		inspectCall.setRequestBody(Constants.STATE + "=" + this.serviceName);
 		inspectCall.invoke(callback, 1000);
 		result = callback.getMessageSync();
@@ -123,7 +123,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 
 		// disable enableService by manage call
 		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
-		callback = new ManageTestCallback();
+		callback = new TestManageCallback();
 		manageCall.setRequestBody("disable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
 		result = callback.getMessageSync();
@@ -133,7 +133,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 	public void manageCommandSessions() throws Exception {
 		// enable enableService by manage call
 		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
-		ManageTestCallback callback = new ManageTestCallback();
+		TestManageCallback callback = new TestManageCallback();
 		manageCall.setRequestBody("enable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
@@ -147,7 +147,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 
 		// sessions of enableService
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
-		callback = new ManageTestCallback();
+		callback = new TestManageCallback();
 		inspectCall.setRequestBody(Constants.SESSIONS + "=" + this.serviceName);
 		inspectCall.invoke(callback, 1000);
 		result = callback.getMessageSync();
@@ -164,7 +164,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 
 		// disable enableService by manage call
 		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
-		callback = new ManageTestCallback();
+		callback = new TestManageCallback();
 		manageCall.setRequestBody("disable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
 		result = callback.getMessageSync();
@@ -189,7 +189,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		return this.attachCallback.getMessageSync();
 	}
 
-	private class ManageTestCallback extends SynchronousCallback {
+	private class TestManageCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}
 }

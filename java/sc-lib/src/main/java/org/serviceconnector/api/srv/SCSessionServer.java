@@ -77,7 +77,7 @@ public class SCSessionServer {
 	 */
 	public SCSessionServer() {
 		this.listening = false;
-		this.conType = ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE;
+		this.conType = ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE.getValue();
 		// attributes for registerServer
 		this.immediateConnect = true;
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;

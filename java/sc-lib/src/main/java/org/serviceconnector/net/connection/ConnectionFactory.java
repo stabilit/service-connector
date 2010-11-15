@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jboss.netty.util.Timer;
-import org.serviceconnector.Constants;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.netty.http.NettyHttpConnection;
 import org.serviceconnector.net.req.netty.tcp.NettyTcpConnection;
@@ -60,9 +59,9 @@ public class ConnectionFactory {
 	 * @return the i connection
 	 */
 	public IConnection createConnection(String key) {
-		if (ConnectionType.NETTY_HTTP.equalsIgnoreCase(key)) {
+		if (ConnectionType.NETTY_HTTP.getValue().equalsIgnoreCase(key)) {
 			return new NettyHttpConnection(ConnectionFactory.channelFactory, ConnectionFactory.timer);
-		} else if (ConnectionType.NETTY_TCP.equalsIgnoreCase(key)) {
+		} else if (ConnectionType.NETTY_TCP.getValue().equalsIgnoreCase(key)) {
 			return new NettyTcpConnection(ConnectionFactory.channelFactory, ConnectionFactory.timer);
 		} else {
 			logger.fatal("key : " + key + " not found!");

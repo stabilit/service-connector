@@ -62,6 +62,16 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_DELETE_SESSION;
+	}	
+
+	/**
+	 * Sets the session info.
+	 * 
+	 * @param sessionInfo
+	 *            the new session info
+	 */
+	public void setSessionInfo(String sessionInfo) {
+		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 
 	/**

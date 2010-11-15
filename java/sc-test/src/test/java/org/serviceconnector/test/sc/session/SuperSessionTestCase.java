@@ -33,7 +33,7 @@ import org.serviceconnector.util.SynchronousCallback;
 public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 
 	protected String sessionId = null;
-	protected SuperSessionCallback sessionCallback;
+	protected TestSuperSessionCallback sessionCallback;
 
 	/**
 	 * The Constructor.
@@ -43,7 +43,7 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 	 */
 	public SuperSessionTestCase(String fileName) {
 		super(fileName);
-		this.sessionCallback = new SuperSessionCallback();
+		this.sessionCallback = new TestSuperSessionCallback();
 	}
 
 	@Before
@@ -77,6 +77,6 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 		this.sessionCallback.getMessageSync();
 	}
 
-	protected class SuperSessionCallback extends SynchronousCallback {
+	protected class TestSuperSessionCallback extends SynchronousCallback {
 	}
 }

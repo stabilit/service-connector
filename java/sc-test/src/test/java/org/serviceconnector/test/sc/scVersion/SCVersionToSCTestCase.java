@@ -56,7 +56,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 			}
 		};
 
-		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
+		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_VERSION_FORMAT, " []", SCMPMsgType.ATTACH);
@@ -78,7 +78,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 			}
 		};
 
-		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
+		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_RELEASE_NR, " [2.0-000]", SCMPMsgType.ATTACH);
@@ -100,7 +100,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 			}
 		};
 
-		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
+		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_VERSION_FORMAT, " [1.1-000]", SCMPMsgType.ATTACH);
@@ -122,7 +122,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 			}
 		};
 
-		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
+		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_RELEASE_NR, " [0.9-000]", SCMPMsgType.ATTACH);
@@ -144,7 +144,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 			}
 		};
 
-		SCMPVersionTestCallback callback = new SCMPVersionTestCallback();
+		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
 		Assert.assertFalse(result.isFault());
@@ -155,7 +155,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 		Assert.assertFalse(result.isFault());
 	}
 
-	private class SCMPVersionTestCallback extends SynchronousCallback {
+	private class TestSCMPVersionCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}
 }

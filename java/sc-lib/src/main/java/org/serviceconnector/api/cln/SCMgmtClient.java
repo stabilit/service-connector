@@ -21,6 +21,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPManageCall;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
@@ -30,13 +31,20 @@ import org.serviceconnector.service.ServiceState;
  * Management client to an SC.
  * 
  * @author JTrnka
- *
  */
 public class SCMgmtClient extends SCClient {
 
+	public SCMgmtClient(String host, int port) {
+		super(host, port);
+	}
+
+	public SCMgmtClient(String host, int port, ConnectionType connectionType) {
+		super(host, port, connectionType);
+	}
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMgmtClient.class);
-	
+
 	/**
 	 * Disable service on SC.
 	 * 

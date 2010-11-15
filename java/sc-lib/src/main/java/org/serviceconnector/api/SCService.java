@@ -113,4 +113,13 @@ public abstract class SCService {
 	public String getSessionId() {
 		return this.sessionId;
 	}
+
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the service name
+	 */
+	public String getServiceName() {
+		return serviceName;
+	}
 }

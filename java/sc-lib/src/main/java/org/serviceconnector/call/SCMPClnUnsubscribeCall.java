@@ -18,6 +18,7 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 
@@ -62,5 +63,15 @@ public class SCMPClnUnsubscribeCall extends SCMPSessionCallAdapter {
 	@Override
 	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
 		return new SCMPClnUnsubscribeCall(req, serviceName, sessionId);
+	}
+	
+	/**
+	 * Sets the session info.
+	 * 
+	 * @param sessionInfo
+	 *            the new session info
+	 */
+	public void setSessionInfo(String sessionInfo) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 }

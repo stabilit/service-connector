@@ -58,7 +58,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody(sb.toString());
-		SynchronousCallback callback = new SrvExecuteTestCaseCallback();
+		SynchronousCallback callback = new TestSrvExecuteCaseCallback();
 		clnExecuteCall.invoke(callback, 1000);
 		SCMPMessage scmpReply = callback.getMessageSync();
 
@@ -81,7 +81,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(sessionId, scmpReply.getSessionId());
 	}
 
-	private class SrvExecuteTestCaseCallback extends SynchronousCallback {
+	private class TestSrvExecuteCaseCallback extends SynchronousCallback {
 		// necessary because SynchronousCallback is abstract
 	}
 
@@ -96,7 +96,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 		}
 		String expectedBody = "message data test case";
 		clnExecuteCall.setRequestBody(sb.toString());
-		SrvExecuteTestCaseCallback callback = new SrvExecuteTestCaseCallback();
+		TestSrvExecuteCaseCallback callback = new TestSrvExecuteCaseCallback();
 		clnExecuteCall.invoke(callback, 1000);
 		SCMPMessage scmpReply = callback.getMessageSync();
 
@@ -121,7 +121,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 			sb.append(i);
 		}
 		clnExecuteCall.setRequestBody(sb.toString());
-		SrvExecuteTestCaseCallback callback = new SrvExecuteTestCaseCallback();
+		TestSrvExecuteCaseCallback callback = new TestSrvExecuteCaseCallback();
 		clnExecuteCall.invoke(callback, 1000);
 		SCMPMessage scmpReply = callback.getMessageSync();
 		

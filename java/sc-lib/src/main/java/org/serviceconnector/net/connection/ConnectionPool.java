@@ -123,7 +123,7 @@ public class ConnectionPool {
 	 *            the keep alive interval
 	 */
 	public ConnectionPool(String host, int port, int keepAliveInterval) {
-		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE, keepAliveInterval);
+		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE.getValue(), keepAliveInterval);
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class ConnectionPool {
 	 *            the port
 	 */
 	public ConnectionPool(String host, int port) {
-		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
+		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE.getValue(), Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
 	/**
@@ -170,8 +170,7 @@ public class ConnectionPool {
 		IConnection connection = null;
 		if (usedConnections.size() + freeConnections.size() >= maxConnections) {
 			// we can't create a new one - limit reached
-			throw new ConnectionPoolBusyException("Unable to create new connection - limit of : " + maxConnections
-					+ " reached!");
+			throw new ConnectionPoolBusyException("Unable to create new connection - limit of : " + maxConnections + " reached!");
 		}
 		// we create a new one
 		connection = connectionFactory.createConnection(this.connectionType);
@@ -247,8 +246,8 @@ public class ConnectionPool {
 	}
 
 	/**
-	 * Destroy connection. Careful in use - to be called only if pool gets destroyed. Destroying a single connection may
-	 * affect others because of shared stuff (timer) etc.
+	 * Destroy connection. Careful in use - to be called only if pool gets destroyed. Destroying a single connection may affect
+	 * others because of shared stuff (timer) etc.
 	 * 
 	 * @param connection
 	 *            the connection

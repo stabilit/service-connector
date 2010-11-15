@@ -33,7 +33,7 @@ import org.serviceconnector.util.SynchronousCallback;
 public abstract class SuperAttachTestCase extends SuperTestCase {
 
 	protected String localDateTimeOfConnect;
-	protected SuperAttachCallback attachCallback;
+	protected TestSuperAttachCallback attachCallback;
 
 	/**
 	 * The Constructor.
@@ -43,7 +43,7 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 	 */
 	public SuperAttachTestCase(String fileName) {
 		super(fileName);
-		this.attachCallback = new SuperAttachCallback();
+		this.attachCallback = new TestSuperAttachCallback();
 	}
 
 	@Before
@@ -71,6 +71,6 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 		this.attachCallback.getMessageSync();
 	}
 
-	protected class SuperAttachCallback extends SynchronousCallback {
+	protected class TestSuperAttachCallback extends SynchronousCallback {
 	}
 }

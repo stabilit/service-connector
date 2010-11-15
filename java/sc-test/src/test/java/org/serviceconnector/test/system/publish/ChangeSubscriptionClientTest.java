@@ -52,8 +52,8 @@ public class ChangeSubscriptionClientTest {
 
 	@Before
 	public void setUp() throws Exception {
-		client = new SCClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client.attach();
 	}
 
 	@After

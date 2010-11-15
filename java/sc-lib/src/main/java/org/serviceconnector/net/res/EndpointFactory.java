@@ -26,8 +26,8 @@ import org.serviceconnector.net.res.netty.tcp.proxy.NettyTcpProxyEndpoint;
 import org.serviceconnector.net.res.netty.web.NettyWebEndpoint;
 
 /**
- * A factory for creating Endpoint objects. Provides access to concrete endpoint instances. Possible endpoints are shown
- * in key string constants below.
+ * A factory for creating Endpoint objects. Provides access to concrete endpoint instances. Possible endpoints are shown in key
+ * string constants below.
  */
 public class EndpointFactory {
 
@@ -35,13 +35,13 @@ public class EndpointFactory {
 	protected final static Logger logger = Logger.getLogger(EndpointFactory.class);
 
 	public IEndpoint createEndpoint(String key) {
-		if (ConnectionType.NETTY_HTTP.equalsIgnoreCase(key)) {
+		if (ConnectionType.NETTY_HTTP.getValue().equalsIgnoreCase(key)) {
 			return new NettyHttpEndpoint();
-		} else if (ConnectionType.NETTY_TCP.equalsIgnoreCase(key)) {
+		} else if (ConnectionType.NETTY_TCP.getValue().equalsIgnoreCase(key)) {
 			return new NettyTcpEndpoint();
-		} else if (ConnectionType.NETTY_WEB.equalsIgnoreCase(key)) {
+		} else if (ConnectionType.NETTY_WEB.getValue().equalsIgnoreCase(key)) {
 			return new NettyWebEndpoint();
-		} else if (ConnectionType.NETTY_PROXY_HTTP.equalsIgnoreCase(key)) {
+		} else if (ConnectionType.NETTY_PROXY_HTTP.getValue().equalsIgnoreCase(key)) {
 			return new NettyTcpProxyEndpoint();
 		} else {
 			logger.fatal("key : " + key + " not found!");

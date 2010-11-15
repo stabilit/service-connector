@@ -77,7 +77,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 				"1conn", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("wait:2000");
-		WaitMechanismCallback callback = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback = new TestWaitMechanismCallback(true);
 
 		clnExecuteCall.invoke(callback, 10000);
 
@@ -86,7 +86,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL
 				.newInstance(req, "1conn", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
-		WaitMechanismCallback callback1 = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		clnExecuteCall.invoke(callback1, 1000);
 
 		SCMPMessage responseMessage = callback.getMessageSync();
@@ -107,7 +107,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 				"1conn", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("wait:2000");
-		WaitMechanismCallback callback = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback = new TestWaitMechanismCallback(true);
 
 		clnExecuteCall.invoke(callback, 10000);
 
@@ -116,7 +116,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL
 				.newInstance(req, "1conn", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
-		WaitMechanismCallback callback1 = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		clnExecuteCall.invoke(callback1, 10000);
 
 		SCMPMessage responseMessage = callback.getMessageSync();
@@ -161,9 +161,9 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 		this.sessionCallback.getMessageSync();
 	}
 
-	protected class WaitMechanismCallback extends SynchronousCallback {
+	protected class TestWaitMechanismCallback extends SynchronousCallback {
 
-		public WaitMechanismCallback(boolean synchronous) {
+		public TestWaitMechanismCallback(boolean synchronous) {
 			this.synchronous = synchronous;
 		}
 	}

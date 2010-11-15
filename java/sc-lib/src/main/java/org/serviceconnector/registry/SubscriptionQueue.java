@@ -34,10 +34,9 @@ import org.serviceconnector.util.LinkedQueue;
 import org.serviceconnector.util.TimerTaskWrapper;
 
 /**
- * The Class SubscriptionQueue. The SubscriptionQueue is responsible for queuing incoming data from server, to inform
- * subscriptions about new arrived messages, to observe there timeouts and to know there current position in queue
- * (TimeAwareDataPointer). The queue needs also to handle the deleting of consumed messages and to assure queue does not
- * overflow.
+ * The Class SubscriptionQueue. The SubscriptionQueue is responsible for queuing incoming data from server, to inform subscriptions
+ * about new arrived messages, to observe there timeouts and to know there current position in queue (TimeAwareDataPointer). The
+ * queue needs also to handle the deleting of consumed messages and to assure queue does not overflow.
  * 
  * @param <E>
  *            the element type to handle in the queue
@@ -142,8 +141,8 @@ public class SubscriptionQueue<E> {
 	}
 
 	/**
-	 * Fire new data arrived. Indicates that a new message has been added. Sets data pointer pointing on null elements
-	 * to new element if necessary (mask matches & listening mode).
+	 * Fire new data arrived. Indicates that a new message has been added. Sets data pointer pointing on null elements to new element
+	 * if necessary (mask matches & listening mode).
 	 */
 	private void fireNewDataArrived() {
 		Object[] nodeArray = null;
@@ -169,8 +168,8 @@ public class SubscriptionQueue<E> {
 	}
 
 	/**
-	 * Removes the non referenced nodes. Starts removing nodes in first position of queue - stops at the position a node
-	 * is referenced.
+	 * Removes the non referenced nodes. Starts removing nodes in first position of queue - stops at the position a node is
+	 * referenced.
 	 */
 	private void removeNonreferencedNodes() {
 		LinkedNode<E> node = this.dataQueue.getFirst();
@@ -246,13 +245,18 @@ public class SubscriptionQueue<E> {
 	 */
 	public void unsubscribe(String sessionId) {
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
+		if (dataPointer.listening) {
+			// unsubscribe & pointer is in listen mode - run a timeout
+			dataPointer.cancel();
+			dataPointer.timerRun.timeout();
+		}
 		this.pointerMap.remove(sessionId);
 		dataPointer.destroy();
 	}
 
 	/**
-	 * The Class TimeAwareDataPointer. Points to a queue node. Knows mask for matching messages and state if
-	 * subscription is listening or not. Each subscription has his data pointer - its created when client subscribes.
+	 * The Class TimeAwareDataPointer. Points to a queue node. Knows mask for matching messages and state if subscription is
+	 * listening or not. Each subscription has his data pointer - its created when client subscribes.
 	 */
 	private class TimeAwareDataPointer {
 		/** The current node in queue. */
@@ -436,9 +440,8 @@ public class SubscriptionQueue<E> {
 	}
 
 	/**
-	 * The Class SubscriptionTaskWrapper. SubscriptionTaskWrapper times out and calls the target ITimerRun which happens
-	 * in super class TimerTaskWrapper. Important to store subscription state in data pointer when time runs out
-	 * listening becomes false.
+	 * The Class SubscriptionTaskWrapper. SubscriptionTaskWrapper times out and calls the target ITimerRun which happens in super
+	 * class TimerTaskWrapper. Important to store subscription state in data pointer when time runs out listening becomes false.
 	 */
 	private class SubscriptionTaskWrapper extends TimerTaskWrapper {
 

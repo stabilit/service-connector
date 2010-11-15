@@ -61,6 +61,8 @@ public class SCSessionService extends SCService {
 	private TimerTask timerTask;
 	/** The echo timeout in seconds. */
 	private int echoTimeoutInSeconds;
+	/** The echo interval in seconds. */
+	private int echoIntervalInSeconds;
 
 	/**
 	 * Instantiates a new session service.
@@ -81,52 +83,61 @@ public class SCSessionService extends SCService {
 	/**
 	 * Creates the session.
 	 * 
-	 * @param echoIntervalInSeconds
-	 *            the echo interval in seconds
-	 * @param scMessage
-	 *            the sc message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void createSession(int echoIntervalInSeconds, SCMessage scMessage) throws Exception {
-		this.createSession(echoIntervalInSeconds, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scMessage);
+	public synchronized void createSession() throws Exception {
+		this.createSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, null);
 	}
 
 	/**
 	 * Creates the session.
 	 * 
-	 * @param echoIntervalInSeconds
-	 *            the echo interval in seconds
-	 * @param timeoutInSeconds
-	 *            the timeout in seconds
+	 * @param operationTimeoutSeconds
+	 *            the operation timeout seconds
+	 * @throws Exception
+	 *             the exception
+	 */
+	public synchronized void createSession(int operationTimeoutSeconds) throws Exception {
+		this.createSession(operationTimeoutSeconds, null);
+	}
+
+	public synchronized void createSession(SCMessage scMessage) throws Exception {
+		this.createSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scMessage);
+	}
+
+	/**
+	 * Creates the session.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            the operation timeout seconds
 	 * @param scMessage
 	 *            the sc message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void createSession(int echoIntervalInSeconds, int timeoutInSeconds, SCMessage scMessage) throws Exception {
+	public synchronized void createSession(int operationTimeoutSeconds, SCMessage scMessage) throws Exception {
 		if (this.sessionActive) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
-		if (scMessage == null) {
-			throw new SCMPValidatorException(SCMPError.HV_ERROR, "scMessage can not be null");
-		}
-		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		ValidatorUtility.validateInt(1, echoIntervalInSeconds, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
+		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+
 		this.msgId.reset();
 		SCServiceCallback callback = new SCServiceCallback(true);
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, this.serviceName);
-		createSessionCall.setSessionInfo(scMessage.getSessionInfo());
-		createSessionCall.setEchoIntervalSeconds(echoIntervalInSeconds);
-		createSessionCall.setRequestBody(scMessage.getData());
-		createSessionCall.setCompressed(scMessage.isCompressed());
+		if (scMessage != null) {
+			createSessionCall.setRequestBody(scMessage.getData());
+			createSessionCall.setCompressed(scMessage.isCompressed());
+			createSessionCall.setSessionInfo(scMessage.getSessionInfo());
+		}
+		createSessionCall.setEchoIntervalSeconds(this.echoIntervalInSeconds);
 		try {
-			createSessionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			createSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			throw new SCServiceException("create session failed ", e);
 		}
-		SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
 			SCServiceException ex = new SCServiceException("create session failed"
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
@@ -149,18 +160,42 @@ public class SCSessionService extends SCService {
 	 *             the exception
 	 */
 	public synchronized void deleteSession() throws Exception {
-		this.deleteSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+		this.deleteSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, null);
 	}
 
 	/**
 	 * Delete session.
 	 * 
-	 * @param timeoutInSeconds
+	 * @param operationTimeoutSeconds
+	 *            the operation timeout seconds
+	 * @throws Exception
+	 *             the exception
+	 */
+	public synchronized void deleteSession(int operationTimeoutSeconds) throws Exception {
+		this.deleteSession(operationTimeoutSeconds, null);
+	}
+
+	/**
+	 * Delete session.
+	 * 
+	 * @param scMessage
+	 *            the sc message
+	 * @throws Exception
+	 *             the exception
+	 */
+	public synchronized void deleteSession(SCMessage scMessage) throws Exception {
+		this.deleteSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scMessage);
+	}
+
+	/**
+	 * Delete session.
+	 * 
+	 * @param operationTimeoutSeconds
 	 *            the timeout in seconds
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void deleteSession(int timeoutInSeconds) throws Exception {
+	public synchronized void deleteSession(int operationTimeoutSeconds, SCMessage scMessage) throws Exception {
 		if (this.sessionActive == false) {
 			// delete session not possible - no session on this service just ignore
 			return;
@@ -169,7 +204,7 @@ public class SCSessionService extends SCService {
 			// pending request - reply still outstanding
 			throw new SCServiceException("execute not possible, there is a pending request - two pending request are not allowed.");
 		}
-		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
 		// cancel session timeout
 		this.timerTask.cancel();
@@ -178,8 +213,11 @@ public class SCSessionService extends SCService {
 			this.msgId.incrementMsgSequenceNr();
 			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
+			if (scMessage != null) {
+				deleteSessionCall.setSessionInfo(scMessage.getSessionInfo());
+			}
 			try {
-				deleteSessionCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+				deleteSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				if (this.sessionActive == false) {
 					// ignore errors in state of dead session
@@ -187,7 +225,7 @@ public class SCSessionService extends SCService {
 				}
 				throw new SCServiceException("delete session failed ", e);
 			}
-			SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				if (this.sessionActive == false) {
 					// ignore errors in state of dead session
@@ -265,7 +303,7 @@ public class SCSessionService extends SCService {
 		if (reply.isFault()) {
 			SCMPFault fault = (SCMPFault) reply;
 			String errorCode = fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
-			if (errorCode != null && errorCode.equals(SCMPError.GATEWAY_TIMEOUT.getErrorCode())) {
+			if (errorCode != null && errorCode.equals(SCMPError.PROXY_TIMEOUT.getErrorCode())) {
 				// OTI run out on SC - mark session as dead!
 				this.sessionActive = false;
 			}
@@ -441,5 +479,18 @@ public class SCSessionService extends SCService {
 		public int getTimeoutMillis() {
 			return this.timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR;
 		}
+	}
+
+	/**
+	 * Sets the echo interval in seconds.
+	 * 
+	 * @param echoIntervalInSeconds
+	 *            the new echo interval in seconds
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
+	public void setEchoIntervalInSeconds(int echoIntervalInSeconds) throws SCMPValidatorException {
+		ValidatorUtility.validateInt(1, echoIntervalInSeconds, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
+		this.echoIntervalInSeconds = echoIntervalInSeconds;
 	}
 }

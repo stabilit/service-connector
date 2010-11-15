@@ -26,14 +26,12 @@ public class SCConsole {
 
 	/**
 	 * @param args
-	 * usage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>|kill><br>
-	 * 
-	 * samples: java -jar scconsole.jar -h localhost -p 7000 enable=abc<br>
-	 *          java -jar scconsole.jar -h localhost -p 7000 disable=abc<br>
-	 *          java -jar scconsole.jar -h localhost -p 7000 state=abc<br>
-	 *          java -jar scconsole.jar -h localhost -p 7000 sessions=abc<br>
-	 *          java -jar scconsole.jar -h localhost -p 7000 kill<br>
-	 *          
+	 *            usage : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>|kill><br>
+	 *            samples: java -jar scconsole.jar -h localhost -p 7000 enable=abc<br>
+	 *            java -jar scconsole.jar -h localhost -p 7000 disable=abc<br>
+	 *            java -jar scconsole.jar -h localhost -p 7000 state=abc<br>
+	 *            java -jar scconsole.jar -h localhost -p 7000 sessions=abc<br>
+	 *            java -jar scconsole.jar -h localhost -p 7000 kill<br>
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
@@ -97,9 +95,8 @@ public class SCConsole {
 	private static int run(String host, String port, ConsoleCommand cmd, String serviceName) throws Exception {
 		int status = 0;
 		try {
-			SCMgmtClient client = new SCMgmtClient();
-			client.setConnectionType(ConnectionType.NETTY_TCP);
-			client.attach(host, Integer.parseInt(port));
+			SCMgmtClient client = new SCMgmtClient(host, Integer.parseInt(port), ConnectionType.NETTY_TCP);
+			client.attach();
 			switch (cmd) {
 			case DISABLE:
 				client.disableService(serviceName);

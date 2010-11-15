@@ -46,7 +46,7 @@ public class ClnSubscribeWaitMechanismTestCase extends SuperTestCase {
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(2);
 		subscribeCall.setMask("000012100012832102FADF-----------X-----------");
-		SubscribeCallback callback = new SubscribeCallback(true);
+		TestSubscribeCallback callback = new TestSubscribeCallback(true);
 		subscribeCall.setRequestBody("wait:2000");
 		subscribeCall.invoke(callback, 10000);
 
@@ -58,7 +58,7 @@ public class ClnSubscribeWaitMechanismTestCase extends SuperTestCase {
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(2);
 		subscribeCall.setMask("000012100012832102FADF-----------X-----------");
-		SubscribeCallback callback1 = new SubscribeCallback(true);
+		TestSubscribeCallback callback1 = new TestSubscribeCallback(true);
 		subscribeCall.invoke(callback1, 1000);
 
 		SCMPMessage reply = callback.getMessageSync();
@@ -77,9 +77,9 @@ public class ClnSubscribeWaitMechanismTestCase extends SuperTestCase {
 		SCTest.checkReply(reply);
 	}
 
-	private class SubscribeCallback extends SynchronousCallback {
+	private class TestSubscribeCallback extends SynchronousCallback {
 
-		public SubscribeCallback(boolean synchronous) {
+		public TestSubscribeCallback(boolean synchronous) {
 			this.synchronous = synchronous;
 		}
 	}

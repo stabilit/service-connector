@@ -40,53 +40,50 @@ public class DemoPublishServer {
 		DemoPublishServer publishServer = new DemoPublishServer();
 		publishServer.runPublishServer();
 	}
-
-	/*
-	public void runPublishServer() {
-	
-		SCServer sc = new SCServer("localhost", 9000, 9001);		// regular, defaults documented in javadoc
-		SCServer sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY-HTTP);	// alternative with connection type
-			
-		try {
-			sc.setConnectionType(ConnectionType.NETTY-HTTP);		// can be set before start listener
-			sc.setHost("localhost");								// can be set before start listener
-			sc.setPort(9000);										// can be set before start listener
-			sc.setListenerPort(9001);								// can be set before start listener
-			sc.setKeepaliveIntervalInSeconds(10);					// can be set before register
-			sc.setImmediateConnect(true);							// can be set before register
-			
-			sc.startListener();										// regular
-			sc.startListener(10);									// alternative with operation timeout
-
-			String serviceName = "simulation";
-			SCPublishServer server = sc.newPublishServer(serviceName);	// no other params possible
-			
-			int maxSessions = 10;
-			int maxConnections = 5;
-			SCPublishServerCallback cbk = new SrvCallback(server);
-			try {
-				server.register(maxSessions, maxConnections, cbk);	//	regular
-				server.register(maxSessions, maxConnections, cbk, 10);	// alternative with operation timeout		
-							
-				SCMessage pubMessage = new SCMessage();
-				for (int i = 0; i < 100; i++) {
-					pubMessage.setData("publish message nr : " + i);
-					pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-					server.publish(pubMessage);							// regular
-					server.publish(pubMessage, 10);						// alternative with operation timeout
-					
-					Thread.sleep(1000);
-				}
-			} catch	(Exception e) {
-				logger.error("runPublishServer", e);
-				server.deregister();
-		} catch (Exception e) {
-			logger.error("runPublishServer", e);
-		} finally {
-			sc.stopListener();
-		}
-	}
-	 */
+//
+//	public void runPublishServer() {
+//	
+//		SCServer sc = new SCServer("localhost", 9000, "localhost", 9001);		// regular, defaults documented in javadoc
+//		sc = new SCServer("localhost", 9000, "localhost", 9001, ConnectionType.NETTY_HTTP);	// alternative with connection type
+//			
+//		try {
+//			sc.setKeepaliveIntervalInSeconds(10);					// can be set before register
+//			sc.setImmediateConnect(true);							// can be set before register
+//			
+//			sc.startListener();										// regular
+//
+//			String serviceName = "simulation";
+//			publishSrv = sc.newPublishServer(serviceName);	// no other params possible
+//			
+//			
+//			PublishServerContext context = new PublishServerContext();
+//			int maxSessions = 10;
+//			int maxConnections = 5;
+//			SCPublishServerCallback cbk = new SrvCallback(context);
+//			try {
+//				server.register(maxSessions, maxConnections, cbk);	//	regular
+//				server.register(10,maxSessions, maxConnections, cbk);	// alternative with operation timeout		
+//							
+//				SCPublishMessage pubMessage = new SCPublishMessage();
+//				for (int i = 0; i < 100; i++) {
+//					pubMessage.setData("publish message nr : " + i);
+//					pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
+//					server.publish(serviceName,pubMessage);							// regular
+//					server.publish(10, serviceName, pubMessage);						// alternative with operation timeout
+//					
+//					Thread.sleep(1000);
+//				}
+//			} catch	(Exception e) {
+//				logger.error("runPublishServer", e);
+//				server.deregister();
+//				server.deregister(10);
+//		} catch (Exception e) {
+//			logger.error("runPublishServer", e);
+//		} finally {
+//			sc.stopListener();
+//		}
+//	}
+//		}
 
 	
 	public void runPublishServer() {

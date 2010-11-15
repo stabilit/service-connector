@@ -15,6 +15,7 @@ import org.serviceconnector.ctrl.util.ClientThreadController;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.log.Loggers;
+import org.serviceconnector.net.ConnectionType;
 
 public class AllPerformanceTests {
 
@@ -40,9 +41,8 @@ public class AllPerformanceTests {
 		scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
 				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName });
-		client = new SCClient();
-		((SCClient) client).setConnectionType("netty.tcp");
-		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
 	}
 
 	@After
@@ -132,8 +132,8 @@ public class AllPerformanceTests {
 							TestConstants.serviceNameAlt });
 		}
 
-		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
-				+ --messages + " messages of " + dataLength / messages + "B data each.");
+		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using " + --messages
+				+ " messages of " + dataLength / messages + "B data each.");
 		assertEquals(true, previousResult < 25000);
 	}
 
@@ -158,8 +158,8 @@ public class AllPerformanceTests {
 							TestConstants.serviceNameAlt });
 		}
 
-		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
-				+ ++messages + " messages of " + dataLength / messages + "B data each.");
+		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using " + ++messages
+				+ " messages of " + dataLength / messages + "B data each.");
 		assertEquals(true, previousResult < 25000);
 	}
 

@@ -57,7 +57,7 @@ public class NettyConnectTestCase {
 			message.setMessageType(SCMPMsgType.ATTACH);
 			message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
 			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
-			ConnectCallback callback = new ConnectCallback();
+			TestConnectCallback callback = new TestConnectCallback();
 			connection.send(message, callback);
 			callback.getMessageSync();
 			connection.disconnect();
@@ -87,7 +87,7 @@ public class NettyConnectTestCase {
 			message.setMessageType(SCMPMsgType.ATTACH);
 			message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
 			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
-			ConnectCallback callback = new ConnectCallback();
+			TestConnectCallback callback = new TestConnectCallback();
 			connection.send(message, callback);
 			callback.getMessageSync();
 			if (i % 100 == 0) {
@@ -99,7 +99,7 @@ public class NettyConnectTestCase {
 		}
 	}
 
-	private class ConnectCallback extends SynchronousCallback {
+	private class TestConnectCallback extends SynchronousCallback {
 		// nothing to implement in this case - everything is done by super-class
 	}
 

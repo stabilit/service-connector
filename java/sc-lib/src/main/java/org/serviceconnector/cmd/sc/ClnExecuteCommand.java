@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.IAsyncCommand;
@@ -25,14 +23,12 @@ import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
-import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -205,12 +201,6 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		private IResponse response;
 		/** The session id. */
 		private String sessionId;
-		/** The Constant ERROR_STRING. */
-		private static final String ERROR_STRING_TIMEOUT = "executing command timed out";
-		/** The Constant ERROR_STRING_CONNECTION. */
-		private static final String ERROR_STRING_CONNECTION = "broken connection";
-		/** The Constant ERROR_STRING_FAIL. */
-		private static final String ERROR_STRING_FAIL = "executing command failed";
 
 		private SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
 
@@ -242,12 +232,12 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					String serviceName = scmpReply.getServiceName();
 					SCMPCache scmpCache = scmpCacheManager.getCache(serviceName);
 					if (scmpCache == null) {
-						this.logger.error("cache write failed, no cache, service name = " + serviceName);
+						CommandCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
 					} else {
 						scmpCache.putSCMP(scmpReply);
 					}
 				} catch (Exception e) {
-					this.logger.error(e.toString());
+					CommandCallback.logger.error(e.toString());
 				}
 			}
 			scmpReply.setMessageType(getKey());
@@ -261,27 +251,9 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		/** {@inheritDoc} */
 		@Override
 		public void callback(Exception ex) {
-			Session session = this.sessionRegistry.getSession(this.sessionId);
-			SCMPMessage fault = null;
-			if (ex instanceof IdleTimeoutException) {
-				/**
-				 * OTI run out in server execute operation<br>
-				 * 1. delete session in registry<br>
-				 * 2. send EXC to client, timeout error<br>
-				 * 3. abort session on backend server<br>
-				 */
-				this.sessionRegistry.removeSession(session.getId());
-				fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, ERROR_STRING_TIMEOUT);
-				this.callback(fault);
-				session.getStatefulServer().abortSession(session);
-				return;
-			} else if (ex instanceof IOException) {
-				fault = new SCMPFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
-			} else {
-				fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
-			}
-			this.callback(fault);
+			super.callback(ex);
 			// schedule session timeout
+			Session session = this.sessionRegistry.getSession(this.sessionId);
 			this.sessionRegistry.scheduleSessionTimeout(session);
 		}
 	}

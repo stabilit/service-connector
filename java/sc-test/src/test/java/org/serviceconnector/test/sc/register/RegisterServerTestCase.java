@@ -41,7 +41,7 @@ import org.serviceconnector.util.SynchronousCallback;
 
 public class RegisterServerTestCase extends SuperTestCase {
 
-	protected RegisterServerCallback registerCallback;
+	protected TestRegisterServerCallback registerCallback;
 
 	/**
 	 * The Constructor.
@@ -51,7 +51,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 	 */
 	public RegisterServerTestCase(String fileName) {
 		super(fileName);
-		this.registerCallback = new RegisterServerCallback();
+		this.registerCallback = new TestRegisterServerCallback();
 	}
 
 	@Test
@@ -150,7 +150,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
-		String expectedScEntry = "P01_logging:P01_logging:ENABLED:file|publish-simulation:0 - publish-simulation_localhost/:51000 : 1|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|P01_RTXS_sc1:0|publish:0 - publish_localhost/:51000 : 10|simulation:0 - simulation_localhost/:30000 : 10|1sess:0 - 1sess_localhost/:42000 : 1|P01_BCST_CH_sc1:0|";
+		String expectedScEntry = "P01_logging:P01_logging:ENABLED:file|publish-simulation:0 - publish-simulation_localhost/:51000 : 1|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|publish:0 - publish_localhost/:51000 : 10|simulation:0 - simulation_localhost/:30000 : 10|1sess:0 - 1sess_localhost/:42000 : 1|";
 		String scEntry = inspectMap.get("serviceRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
@@ -174,6 +174,6 @@ public class RegisterServerTestCase extends SuperTestCase {
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 	}
 
-	protected class RegisterServerCallback extends SynchronousCallback {
+	protected class TestRegisterServerCallback extends SynchronousCallback {
 	}
 }

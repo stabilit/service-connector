@@ -41,25 +41,25 @@ public class SrvExecuteOTITestCase extends SuperSessionTestCase {
 				"simulation", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("wait:2000");
-		WaitMechanismCallback callback = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback = new TestWaitMechanismCallback(true);
 
 		clnExecuteCall.invoke(callback, 1000);
 		SCMPMessage responseMessage = callback.getMessageSync();
-		SCTest.verifyError(responseMessage, SCMPError.GATEWAY_TIMEOUT, "executing command timed out",
+		SCTest.verifyError(responseMessage, SCMPError.PROXY_TIMEOUT, "executing command timed out",
 				SCMPMsgType.CLN_EXECUTE);
 
 		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
-		WaitMechanismCallback callback1 = new WaitMechanismCallback(true);
+		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		clnExecuteCall.invoke(callback1, 1000);
 		SCMPMessage responseMessage1 = callback1.getMessageSync();
 		SCTest.verifyError(responseMessage1, SCMPError.NOT_FOUND, "", SCMPMsgType.CLN_EXECUTE);
 	}
 
-	protected class WaitMechanismCallback extends SynchronousCallback {
+	protected class TestWaitMechanismCallback extends SynchronousCallback {
 
-		public WaitMechanismCallback(boolean synchronous) {
+		public TestWaitMechanismCallback(boolean synchronous) {
 			this.synchronous = synchronous;
 		}
 	}

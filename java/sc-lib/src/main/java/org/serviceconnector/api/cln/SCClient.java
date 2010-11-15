@@ -55,7 +55,7 @@ public class SCClient {
 	private int keepAliveIntervalInSeconds;
 	/** The connection pool. */
 	protected ConnectionPool connectionPool;
-	/** The connection type. {netty.http}*/
+	/** The connection type. {netty.http} */
 	private String connectionType;
 	/** The requester. */
 	protected IRequester requester;
@@ -67,10 +67,17 @@ public class SCClient {
 	/**
 	 * Instantiates a new SC client.
 	 */
-	public SCClient() {
-		this.host = null;
-		this.port = -1;
-		this.connectionType = ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE;
+	public SCClient(String host, int port) {
+		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE);
+	}
+
+	/**
+	 * Instantiates a new SC client.
+	 */
+	public SCClient(String host, int port, ConnectionType connectionType) {
+		this.host = host;
+		this.port = port;
+		this.connectionType = connectionType.toString();
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 		this.scContext = new SCContext(this);
 		this.attached = false;
@@ -90,47 +97,33 @@ public class SCClient {
 	/**
 	 * Attach client to SC.
 	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
 	 * @throws Exception
 	 *             the exception
 	 * @throws InvalidParameterException
-	 *             scPort is not within limits 0 to 0xFFFF, scHost unset
+	 *             port is not within limits 0 to 0xFFFF, host unset
 	 */
-	public synchronized void attach(String host, int port) throws Exception {
-		this.attach(host, port, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
+	public synchronized void attach() throws Exception {
+		this.attach(Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
 	}
 
 	/**
 	 * Attach client to SC.
 	 * 
-	 * @param host
-	 *            the host
-	 * @param port
-	 *            the port
-	 * @param keepAliveIntervalInSeconds
-	 *            the keep alive interval in seconds
-	 * @throws Exception
-	 *             the exception
+	 * @param operationTimeout
+	 *            the operation timeout
 	 * @throws InvalidParameterException
 	 *             port is not within limits 0 to 0xFFFF, host unset<br>
-	 *             keepAliveIntervalInSeconds not within limits 0 to 3600
 	 */
-	public synchronized void attach(String host, int port, int keepAliveIntervalInSeconds) throws Exception {
+	public synchronized void attach(int operationTimeout) throws Exception {
 		if (this.attached) {
 			throw new SCServiceException("already attached");
 		}
 		if (host == null) {
 			throw new InvalidParameterException("host must be set.");
 		}
-		ValidatorUtility.validateInt(0, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
-		ValidatorUtility.validateInt(0, keepAliveIntervalInSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
-		this.port = port;
-		this.host = host;
-		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
-		this.connectionPool = new ConnectionPool(host, port, this.connectionType, keepAliveIntervalInSeconds);
+		ValidatorUtility.validateInt(0, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(0, this.keepAliveIntervalInSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
+		this.connectionPool = new ConnectionPool(this.host, this.port, this.connectionType, keepAliveIntervalInSeconds);
 		this.connectionPool.setMaxConnections(this.maxConnections);
 		// keep always one connection active from client to SC
 		this.connectionPool.setMinConnections(1);
@@ -203,16 +196,6 @@ public class SCClient {
 	}
 
 	/**
-	 * Sets the connection type.
-	 * 
-	 * @param connectionType
-	 *            the new connection type, identifies low level communication technology
-	 */
-	public void setConnectionType(String connectionType) {
-		this.connectionType = connectionType;
-	}
-
-	/**
 	 * Gets the host.
 	 * 
 	 * @return the host
@@ -237,6 +220,18 @@ public class SCClient {
 	 */
 	public int getKeepAliveIntervalInSeconds() {
 		return this.keepAliveIntervalInSeconds;
+	}
+
+	/**
+	 * Sets the keep alive interval in seconds.
+	 * 
+	 * @param keepAliveIntervalInSeconds
+	 *            the new keep alive interval in seconds
+	 * @throws InvalidParameterException
+	 *             keepAliveIntervalInSeconds not within limits 0 to 3600
+	 */
+	public void setKeepAliveIntervalInSeconds(int keepAliveIntervalInSeconds) {
+		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
 	}
 
 	/**

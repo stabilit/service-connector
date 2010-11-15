@@ -97,10 +97,10 @@ public enum SCMPError {
 	SERVER_ERROR("500", "Server error occured."),
 	/** The service is DISABLED. */
 	SERVICE_DISABLED("501", "Service is disabled."),
-	/** The GATEWAY_TIMEOUT. */
-	GATEWAY_TIMEOUT(
+	/** The PROXY_TIMEOUT. */
+	PROXY_TIMEOUT(
 			"504",
-			"Gateway Timeout. The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server specified by the URI."),
+			"Proxy Timeout. The server, while acting as a proxy, did not receive a timely response from the upstream server specified by the URI."),
 	/** The UPLOAD_FILE_FAILED. */
 	UPLOAD_FILE_FAILED("505", "Uploading file failed."),
 	/** 6xx errors caused by service connector */
@@ -116,7 +116,7 @@ public enum SCMPError {
 	/** The SESSION_ABORT. */
 	SESSION_ABORT("607", "Session aborted."),
 	/** The CONNECTION_EXCEPTION. */
-	CONNECTION_EXCEPTION("610", "Connection error."),	
+	CONNECTION_EXCEPTION("610", "Connection error."),
 	/** The CACHE_ERROR. */
 	CACHE_ERROR("620", "Cache Error."),
 	/** The CACHE_LOADING. */

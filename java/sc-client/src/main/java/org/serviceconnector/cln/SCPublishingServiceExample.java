@@ -41,11 +41,11 @@ public class SCPublishingServiceExample {
 		SCClient sc = null;
 		SCPublishService publishServiceA = null;
 		try {
-			sc = new SCClient();
+			sc = new SCClient("localhost", 7000);
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
-			sc.attach("localhost", 7000);
+			sc.attach();
 
 			publishServiceA = sc.newPublishService("publish-simulation");
 			SCMessageCallback callback = new TestPublishCallback(publishServiceA);

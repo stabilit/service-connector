@@ -62,16 +62,17 @@ public class ServerLoader {
 		List<String> serverNames = config.getList(Constants.PROPERTY_REMOTE_HOSTS);
 
 		for (String serverName : serverNames) {
-			serverName = serverName.trim();		// remove blanks in serverName
+			serverName = serverName.trim(); // remove blanks in serverName
 
 			int portNr = Integer.parseInt((String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_PORT));
 			String host = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_HOST);
 			String connectionType = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
 
 			if (connectionType == null) {
-				connectionType = ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE;
+				connectionType = ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE.getValue();
 			}
-			String maxConnectionsValue = (String) config.getString(serverName + Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE);
+			String maxConnectionsValue = (String) config
+					.getString(serverName + Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE);
 			int maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 			if (maxConnectionsValue != null) {
 				maxConnections = Integer.parseInt(maxConnectionsValue);

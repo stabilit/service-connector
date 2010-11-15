@@ -36,7 +36,7 @@ import org.serviceconnector.util.SynchronousCallback;
 
 public class PublishLargeMessagesTestCase extends SuperTestCase {
 
-	private PublishCallback callback = new PublishCallback();
+	private TestPublishCallback callback = new TestPublishCallback();
 
 	/**
 	 * @param fileName
@@ -98,6 +98,6 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 		SCTest.checkReply(reply);
 	}
 
-	private class PublishCallback extends SynchronousCallback {
+	private class TestPublishCallback extends SynchronousCallback {
 	}
 }

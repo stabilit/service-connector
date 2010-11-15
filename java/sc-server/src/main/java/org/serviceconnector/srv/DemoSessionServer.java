@@ -45,15 +45,10 @@ public class DemoSessionServer {
 		SCServer sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY-HTTP);	// alternative with connection type
 	
 		try {
-			sc.setConnectionType(ConnectionType.NETTY-HTTP);		// can be set before start listener
-			sc.setHost("localhost");								// can be set before start listener
-			sc.setPort(9000);										// can be set before register
-			sc.setListenerPort(9001);								// can be set before start listener
 			sc.setKeepaliveIntervalInSeconds(10);					// can be set before register
 			sc.setImmediateConnect(true);							// can be set before register
 			
 			sc.startListener()										// regular
-			sc.startListener(10);									// alternative with operation timeout
 			
 			String serviceName = "simulation";
 			SCSessionServer server = sc.newSessionServer(serviceName);	// no other params possible
@@ -67,6 +62,7 @@ public class DemoSessionServer {
 			} catch	(Exception e) {
 				logger.error("runSessionServer", e);
 				server.deregister();
+				server.deregister(10);
 			}
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);

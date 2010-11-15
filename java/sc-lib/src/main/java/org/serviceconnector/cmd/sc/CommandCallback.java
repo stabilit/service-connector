@@ -40,7 +40,7 @@ public class CommandCallback extends SynchronousCallback {
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPFault(SCMPError.GATEWAY_TIMEOUT, ERROR_STRING_TIMEOUT);
+			fault = new SCMPFault(SCMPError.PROXY_TIMEOUT, ERROR_STRING_TIMEOUT);
 		} else if (ex instanceof IOException) {
 			fault = new SCMPFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
 		} else if (ex instanceof ConnectionPoolBusyException) {

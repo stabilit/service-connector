@@ -34,17 +34,18 @@ public class SCSyncSessionServiceExample {
 	public static void runExample() {
 		SCClient sc = null;
 		try {
-			sc = new SCClient();
+			sc = new SCClient("localhost", 7000);
 			sc.setMaxConnections(100);
 
 			// connects to SC, checks connection to SC
-			sc.attach("localhost", 7000);
+			sc.attach();
 
 			SCSessionService sessionServiceA = sc.newSessionService("simulation");
 			// creates a session
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
-			sessionServiceA.createSession(300, 60, scMessage);
+			sessionServiceA.setEchoTimeoutInSeconds(300);
+			sessionServiceA.createSession(60, scMessage);
 
 			SCMessage requestMsg = new SCMessage();
 			requestMsg.setData("Hello World");
