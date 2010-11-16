@@ -53,6 +53,8 @@ public class DemoPublishServer {
 		try {
 			sc.startListener(); // regular
 
+			// TODO TRN better solution next line
+			// publishSrv = sc.newPublishServer(serviceName); // no other params possible
 			publishSrv = sc.newPublishServer(); // no other params possible
 
 			int maxSessions = 10;

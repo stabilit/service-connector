@@ -51,6 +51,8 @@ public class DemoSessionServer {
 
 			sc.startListener(); // regular
 
+			// TODO TRN better solution next line
+			//SCSessionServer server = sc.newSessionServer(serviceName); // no other params possible
 			SCSessionServer server = sc.newSessionServer(); // no other params possible
 
 			int maxSess = 10;

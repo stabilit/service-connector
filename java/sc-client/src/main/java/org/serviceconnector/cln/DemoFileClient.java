@@ -20,9 +20,6 @@ public class DemoFileClient extends Thread {
 		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY-HTTP);	// alternative with connection type
 		
 		try {
-			sc.setConnectionType(ConnectionType.NETTY-HTTP);		// can be set before attach
-			sc.setHost("localhost");								// can be set before attach
-			sc.setPort(7000);										// can be set before attach
 			sc.setMaxConnections(20);								// can be set before attach
 			sc.setKeepaliveIntervalInSeconds(10);					// can be set before attach
 			sc.attach();											// regular
