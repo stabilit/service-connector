@@ -45,13 +45,12 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 	@Test
 	public void deRegisterServerCall() throws Exception {
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
-				.newInstance(this.registerRequester, "publish-simulation");
+				.newInstance(this.registerRequester, "local-publish-service");
 
 		deRegisterServerCall.invoke(this.attachCallback, 1000);
 		SCTest.checkReply(this.attachCallback.getMessageSync());
 		/*************** scmp inspect ********/
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL
-				.newInstance(req);
+		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		inspectCall.invoke(this.attachCallback, 1000);
 		SCMPMessage inspect = this.attachCallback.getMessageSync();
 
@@ -59,8 +58,8 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
-		String scEntry = (String) inspectMap.get("serviceRegistry");
-		String expectedEntry = "P01_logging:P01_logging:ENABLED:file|publish-simulation:0 - publish-simulation_localhost/:51000 : 1|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|publish:0|simulation:0 - simulation_localhost/:30000 : 10|1sess:0 - 1sess_localhost/:42000 : 1|";
+		String scEntry = (String) inspectMap.get("serviceRegistry"); // TODO TRN this will not work if config is changed!
+		String expectedEntry = "P01_logging:P01_logging:ENABLED:file|local-publish-service:0 - local-publish-service_localhost/:51000 : 1|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|publish:0|local-session-service:0 - local-session-service_localhost/:30000 : 10|1sess:0 - 1sess_localhost/:42000 : 1|";
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedEntry, scEntry);
 		super.registerServerBefore();
 	}
@@ -69,15 +68,13 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 	public void secondDeRegisterServerCall() throws Exception {
 		super.deRegisterServerAfter();
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
-				.newInstance(this.registerRequester, "publish-simulation");
+				.newInstance(this.registerRequester, "local-publish-service");
 
 		deRegisterServerCall.invoke(this.attachCallback, 1000);
 		SCMPMessage fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
-		Assert.assertEquals(SCMPMsgType.DEREGISTER_SERVER.getValue(), fault
-				.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
-		Assert.assertEquals(SCMPError.NOT_FOUND.getErrorCode(), fault
-				.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+		Assert.assertEquals(SCMPMsgType.DEREGISTER_SERVER.getValue(), fault.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
+		Assert.assertEquals(SCMPError.NOT_FOUND.getErrorCode(), fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 		super.registerServerBefore();
 	}
 }

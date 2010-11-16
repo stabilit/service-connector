@@ -59,12 +59,12 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	@Test
 	public void failClnCreateSessionWrongHeader() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "simulation");
+				.newInstance(req, "local-session-service");
 
 		// echoInterval not valid
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		createSessionCall.setEchoIntervalSeconds(0);
-		createSessionCall.getRequest().setServiceName("simulation");
+		createSessionCall.getRequest().setServiceName("local-session-service");
 		createSessionCall.invoke(this.attachCallback, 1000);
 		SCMPMessage fault = this.attachCallback.getMessageSync();
 		Assert.assertTrue(fault.isFault());
@@ -92,7 +92,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	public void clnCreateSession() throws Exception {
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "simulation");
+				.newInstance(req, "local-session-service");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(3000);
 		createSessionCall.invoke(this.attachCallback, 30000);
@@ -108,7 +108,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		/*********************************** Verify registry entries in SC ********************************/
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		String expectedScEntry = sessId + ":" + sessId + ":simulation_localhost/:" + TestConstants.PORT_LISTENER + " : 10|";
+		String expectedScEntry = sessId + ":" + sessId + ":local-session-service_localhost/:" + TestConstants.PORT_LISTENER + " : 10|";
 		String scEntry = inspectMap.get("sessionRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
@@ -131,7 +131,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	public void rejectedSession() throws Exception {
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "simulation");
+				.newInstance(req, "local-session-service");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(300);
 		createSessionCall.setRequestBody("reject");

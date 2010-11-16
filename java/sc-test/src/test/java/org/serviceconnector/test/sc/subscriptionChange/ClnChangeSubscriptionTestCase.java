@@ -44,7 +44,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 
 	public void changeSubscription() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(req,
-				"publish-simulation");
+				"local-publish-service");
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(2);
@@ -59,7 +59,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 
 			// receive publication - no data
 			SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
-					.newInstance(this.req, "publish-simulation", sessionId);
+					.newInstance(this.req, "local-publish-service", sessionId);
 			callback = new TestChangeSubscriptionCallback(true);
 			receivePublicationCall.invoke(callback, 3000);
 			reply = callback.getMessageSync();
@@ -67,7 +67,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		}
 
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
-				.newInstance(this.req, "publish-simulation", sessionId);
+				.newInstance(this.req, "local-publish-service", sessionId);
 		changeSubscriptionCall.setMask("000012100012832102FADF-----------X-----------");
 		callback = new TestChangeSubscriptionCallback(true);
 		changeSubscriptionCall.invoke(callback, 3000);
@@ -75,7 +75,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 
 		// receive publication first message
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
-				.newInstance(this.req, "publish-simulation", sessionId);
+				.newInstance(this.req, "local-publish-service", sessionId);
 		callback = new TestChangeSubscriptionCallback(true);
 		receivePublicationCall.invoke(callback, 3000);
 		reply = callback.getMessageSync();
@@ -84,14 +84,14 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		for (int i = 1; i < 3; i++) {
 			// receive publication first message
 			receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION.newInstance(
-					this.req, "publish-simulation", sessionId);
+					this.req, "local-publish-service", sessionId);
 			callback = new TestChangeSubscriptionCallback(true);
 			receivePublicationCall.invoke(callback, 3000);
 			reply = callback.getMessageSync();
 			Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 		}
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
-				.newInstance(req, "publish-simulation", sessionId);
+				.newInstance(req, "local-publish-service", sessionId);
 		callback = new TestChangeSubscriptionCallback(true);
 		unSubscribeCall.invoke(callback, 3000);
 		reply = callback.getMessageSync();
@@ -101,7 +101,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 	@Test
 	public void changeSubscriptionWaitForConnection() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(req,
-				"publish-simulation");
+				"local-publish-service");
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(2);
@@ -113,14 +113,14 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		String sessionId = reply.getSessionId();
 
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
-				.newInstance(this.req, "publish-simulation", sessionId);
+				.newInstance(this.req, "local-publish-service", sessionId);
 		changeSubscriptionCall.setMask("000012100012832102FADF-----------X-----------");
 		changeSubscriptionCall.setRequestBody("wait:2000");
 		callback = new TestChangeSubscriptionCallback(true);
 		changeSubscriptionCall.invoke(callback, 3000);
 
 		changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION.newInstance(
-				this.req, "publish-simulation", sessionId);
+				this.req, "local-publish-service", sessionId);
 		changeSubscriptionCall.setMask("000012100012832102FADF-----------X-----------");
 		TestChangeSubscriptionCallback callback1 = new TestChangeSubscriptionCallback(true);
 		changeSubscriptionCall.invoke(callback1, 1000);
@@ -130,11 +130,11 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		SCTest.checkReply(reply);
 		Assert.assertFalse(reply.isFault());
 		Assert.assertTrue(reply1.isFault());
-		SCTest.verifyError(reply1, SCMPError.SC_ERROR, "[no free connection on server for service publish-simulation]",
+		SCTest.verifyError(reply1, SCMPError.SC_ERROR, "[no free connection on server for service local-publish-service]",
 				SCMPMsgType.CLN_CHANGE_SUBSCRIPTION);
 
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
-				.newInstance(req, "publish-simulation", sessionId);
+				.newInstance(req, "local-publish-service", sessionId);
 		callback = new TestChangeSubscriptionCallback(true);
 		unSubscribeCall.invoke(callback, 3000);
 		reply = callback.getMessageSync();

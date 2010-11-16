@@ -47,7 +47,7 @@ public class SCPublishingServiceExample {
 			// connects to SC, checks connection to SC
 			sc.attach();
 
-			publishServiceA = sc.newPublishService("publish-simulation");
+			publishServiceA = sc.newPublishService("local-publish-service");
 			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("000012100012832102FADF-----------X-----------");

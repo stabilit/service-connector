@@ -31,7 +31,7 @@ public class DemoSessionClient extends Thread {
 			sc.attach(); // regular
 //			sc.attach(10); // alternative with operation timeout
 
-			String serviceName = "simulation";
+			String serviceName = "local-session-service";
 			service = sc.newSessionService(serviceName); // regular, no other params possible
 			service.setEchoIntervalInSeconds(10); // can be set before create session
 			service.setEchoTimeoutInSeconds(2); // can be set before create session
@@ -114,7 +114,7 @@ public class DemoSessionClient extends Thread {
 	//
 	// try {
 	// sc.attach();
-	// sessionService = sc.newSessionService("simulation");
+	// sessionService = sc.newSessionService("local-session-service");
 	// SCMessage scMessage = new SCMessage();
 	// scMessage.setSessionInfo("sessionInfo");
 	// sessionService.createSession(300, 60, scMessage);

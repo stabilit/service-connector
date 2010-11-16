@@ -17,10 +17,10 @@ public class TestConstants {
 	public static final String scProperties1 = "scIntegrationChanged.properties";
 	public static final String scPropertiesCascaded = "scCascaded.properties";
 	
-	public static final String serviceName = "simulation";
-	public static final String serviceNameAlt = "P01_RTXS_sc1";
+	public static final String serviceNameSession = "local-session-service";
+	public static final String serviceNameAlt = "sc1-session-service";
 	public static final String serviceNameSessionDisabled = "disabledService";
-	public static final String serviceNamePublish = "publish-simulation";
+	public static final String serviceNamePublish = "local-publish-service";
 	public static final String serviceNamePublishDisabled = "disabledPublish";
 	
 	public static final String pangram = "The quick brown fox jumps over a lazy dog.";

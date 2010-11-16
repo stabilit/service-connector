@@ -44,7 +44,7 @@ public class MessageIdTestCase extends SuperSessionTestCase {
 		int index = 0;
 		for (index = 0; index < 20; index++) {
 			this.msgId.incrementMsgSequenceNr();
-			clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
+			clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "local-session-service",
 					this.sessionId);
 
 			clnExecuteCall.setMessagInfo("message info");
@@ -63,7 +63,7 @@ public class MessageIdTestCase extends SuperSessionTestCase {
 			reqData.append(i);
 		}
 		this.msgId.incrementMsgSequenceNr();
-		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
+		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "local-session-service",
 				this.sessionId);
 		clnExecuteCall.getRequest().setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, this.msgId.getCurrentMessageID());
 		clnExecuteCall.setMessagInfo("message info");
@@ -82,7 +82,7 @@ public class MessageIdTestCase extends SuperSessionTestCase {
 			reqData.append(i);
 		}
 		this.msgId.incrementMsgSequenceNr();
-		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
+		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "local-session-service",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody(reqData.toString());

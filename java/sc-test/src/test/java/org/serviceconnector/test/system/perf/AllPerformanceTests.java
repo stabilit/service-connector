@@ -40,7 +40,7 @@ public class AllPerformanceTests {
 	public void setUp() throws Exception {
 		scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
-				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName });
+				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession });
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
@@ -72,7 +72,7 @@ public class AllPerformanceTests {
 
 		SCMessage message = new SCMessage(new byte[128]);
 
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
 		message.setSessionInfo("sessionInfo");
 		sessionService.createSession(300, 60, message);
 
@@ -95,7 +95,7 @@ public class AllPerformanceTests {
 
 		SCMessage message = new SCMessage(new byte[128]);
 
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
 		message.setSessionInfo("sessionInfo");
 		sessionService.createSession(300, 60, message);
 
@@ -128,7 +128,7 @@ public class AllPerformanceTests {
 
 			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
 							TestConstants.serviceNameAlt });
 		}
 
@@ -154,7 +154,7 @@ public class AllPerformanceTests {
 
 			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
 							TestConstants.serviceNameAlt });
 		}
 
@@ -213,7 +213,7 @@ public class AllPerformanceTests {
 
 			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceName,
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
 							TestConstants.serviceNameAlt });
 		}
 

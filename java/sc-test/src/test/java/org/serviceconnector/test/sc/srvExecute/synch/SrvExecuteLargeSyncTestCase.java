@@ -47,7 +47,7 @@ public class SrvExecuteLargeSyncTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void srvExecuteApplicationError() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "local-session-service",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("appError");
@@ -65,7 +65,7 @@ public class SrvExecuteLargeSyncTestCase extends SuperSessionTestCase {
 			sb.append(i);
 		}
 
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "local-session-service",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody(sb.toString());
@@ -95,7 +95,7 @@ public class SrvExecuteLargeSyncTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void srvExecuteLargeRequestSmallResponseTest() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "local-session-service",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		StringBuilder sb = new StringBuilder();
@@ -109,13 +109,13 @@ public class SrvExecuteLargeSyncTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(scmpReply.getSessionId());
 		Assert.assertEquals(expectedBody.length(), scmpReply.getBodyLength());
-		Assert.assertEquals("simulation", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+		Assert.assertEquals("local-session-service", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		Assert.assertEquals(expectedBody, scmpReply.getBody());
 	}
 
 	@Test
 	public void srvExecuteLargeRequestLargeResponseTest() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "local-session-service",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		StringBuilder sb = new StringBuilder();
@@ -132,7 +132,7 @@ public class SrvExecuteLargeSyncTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(scmpReply.getSessionId());
 		Assert.assertEquals(sb.length() + "", scmpReply.getBodyLength() + "");
-		Assert.assertEquals("simulation", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+		Assert.assertEquals("local-session-service", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		Assert.assertEquals(sb.toString(), scmpReply.getBody());
 	}
 }

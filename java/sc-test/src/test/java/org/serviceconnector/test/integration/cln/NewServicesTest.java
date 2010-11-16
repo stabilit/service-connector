@@ -83,7 +83,7 @@ public class NewServicesTest {
 
 	@Test
 	public void newSessionService_validServiceName_returnsSCSessionService() throws Exception {
-		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof SCSessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceNameSession) instanceof SCSessionService);
 	}
 
 	@Test
@@ -94,20 +94,20 @@ public class NewServicesTest {
 
 	@Test
 	public void newSessionService_twice_returnsSCSessionService() throws Exception {
-		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof SCSessionService);
-		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof SCSessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceNameSession) instanceof SCSessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceNameSession) instanceof SCSessionService);
 	}
 
 	@Test
 	public void newSessionService_twiceDifferentServiceName_returnsSCSessionService() throws Exception {
-		assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof SCSessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceNameSession) instanceof SCSessionService);
 		assertEquals(true, client.newSessionService(TestConstants.serviceNameAlt) instanceof SCSessionService);
 	}
 
 	@Test
 	public void newSessionService_1000TimesDifferentServiceName_returnsSCSessionService() throws Exception {
 		for (int i = 0; i < 500; i++) {
-			assertEquals(true, client.newSessionService(TestConstants.serviceName) instanceof SCSessionService);
+			assertEquals(true, client.newSessionService(TestConstants.serviceNameSession) instanceof SCSessionService);
 			assertEquals(true, client.newSessionService(TestConstants.serviceNameAlt) instanceof SCSessionService);
 		}
 	}
@@ -135,12 +135,12 @@ public class NewServicesTest {
 
 	@Test
 	public void newPublishService_serviceNameInSCPropertiesNotPublish_returnsSCPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof SCPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceNameSession) instanceof SCPublishService);
 	}
 
 	@Test
 	public void newPublishService_serviceNameInSCPropertiesPublish_returnsSCPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof SCPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceNameSession) instanceof SCPublishService);
 	}
 
 	@Test
@@ -151,20 +151,20 @@ public class NewServicesTest {
 
 	@Test
 	public void newPublishService_twice_returnsSCPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof SCPublishService);
-		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof SCPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceNameSession) instanceof SCPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceNameSession) instanceof SCPublishService);
 	}
 
 	@Test
 	public void newPublishService_twiceDifferentServiceName_returnsSCPublishService() throws Exception {
-		assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof SCPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceNameSession) instanceof SCPublishService);
 		assertEquals(true, client.newPublishService(TestConstants.serviceNameAlt) instanceof SCPublishService);
 	}
 
 	@Test
 	public void newPublishService_1000TimesDifferentServiceName_returnsSCPublishService() throws Exception {
 		for (int i = 0; i < 500; i++) {
-			assertEquals(true, client.newPublishService(TestConstants.serviceName) instanceof SCPublishService);
+			assertEquals(true, client.newPublishService(TestConstants.serviceNameSession) instanceof SCPublishService);
 			assertEquals(true, client.newPublishService(TestConstants.serviceNameAlt) instanceof SCPublishService);
 		}
 	}
@@ -191,7 +191,7 @@ public class NewServicesTest {
 
 	@Test
 	public void newFileService_validServiceName_returnsSCFileService() throws Exception {
-		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof SCFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceNameSession) instanceof SCFileService);
 	}
 
 	@Test
@@ -201,20 +201,20 @@ public class NewServicesTest {
 
 	@Test
 	public void newFileService_twice_returnsSCFileService() throws Exception {
-		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof SCFileService);
-		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof SCFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceNameSession) instanceof SCFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceNameSession) instanceof SCFileService);
 	}
 
 	@Test
 	public void newFileService_twiceDifferentServiceName_returnsSCFileService() throws Exception {
-		assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof SCFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceNameSession) instanceof SCFileService);
 		assertEquals(true, client.newFileService(TestConstants.serviceNameAlt) instanceof SCFileService);
 	}
 
 	@Test
 	public void newFileService_1000TimesDifferentServiceName_returnsSCFileService() throws Exception {
 		for (int i = 0; i < 500; i++) {
-			assertEquals(true, client.newFileService(TestConstants.serviceName) instanceof SCFileService);
+			assertEquals(true, client.newFileService(TestConstants.serviceNameSession) instanceof SCFileService);
 			assertEquals(true, client.newFileService(TestConstants.serviceNameAlt) instanceof SCFileService);
 		}
 	}

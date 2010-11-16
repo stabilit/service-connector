@@ -28,7 +28,7 @@ public class DemoFileClient extends Thread {
 			sc.attach();											// regular
 			sc.attach(10);											// alternative with operation timeout
 		
-			SCFileService service = sc.newFileService("P01_logging");	// no other params possible
+			SCFileService service = sc.newFileService("file-service");	// no other params possible
 
 			localFile = new File("src/main/resources/ClientContent.zip");
 			inpStream = new FileInputStream(localFile);

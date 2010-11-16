@@ -53,7 +53,7 @@ public class SCAsyncSessionServiceExample {
 			// connects to SC, checks connection to SC
 			sc.attach();
 
-			SCSessionService sessionServiceA = sc.newSessionService("simulation");
+			SCSessionService sessionServiceA = sc.newSessionService("local-session-service");
 			// creates a session
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");

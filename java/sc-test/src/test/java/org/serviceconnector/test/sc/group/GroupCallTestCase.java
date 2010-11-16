@@ -45,7 +45,7 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 	@Test
 	public void groupCallTest() throws Exception {
 		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
-				"simulation", this.sessionId);
+				"local-session-service", this.sessionId);
 		ISCMPCall groupCall = executeCall.openGroup();
 		StringBuilder sb = new StringBuilder();
 
@@ -72,7 +72,7 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 	@Test
 	public void groupCallLargePartsTest() throws Exception {
 		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
-				"simulation", this.sessionId);
+				"local-session-service", this.sessionId);
 
 		ISCMPCall groupCall = executeCall.openGroup();
 		StringBuilder sb = new StringBuilder();

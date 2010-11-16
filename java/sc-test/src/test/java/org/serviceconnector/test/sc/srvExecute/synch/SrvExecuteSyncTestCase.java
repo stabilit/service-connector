@@ -52,7 +52,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 
 		for (int i = 0; i < 100; i++) {
 			SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
-					"simulation", this.sessionId);
+					"local-session-service", this.sessionId);
 			clnExecuteCall.setMessagInfo("message info");
 			clnExecuteCall.setRequestBody("get Data (query)");
 			clnExecuteCall.invoke(this.sessionCallback, 1000);
@@ -130,7 +130,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 	@Test
 	public void ExcOnServerExecuteTest() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
-				"simulation", this.sessionId);
+				"local-session-service", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("excOnServer");
 		clnExecuteCall.invoke(this.sessionCallback, 1000);

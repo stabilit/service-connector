@@ -62,7 +62,7 @@ public class EnableDisableServiceTest {
 	
 	@Test
 	public void isEnabled_enabledService_isEnabled() throws SCServiceException {
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class EnableDisableServiceTest {
 	public void enableService_withoutAttach_throwsException() throws Exception {
 		client.detach();
 		try {
-			client.enableService(TestConstants.serviceName);
+			client.enableService(TestConstants.serviceNameSession);
 		} catch (SCServiceException e) {
 			ex = e;
 		}
@@ -90,7 +90,7 @@ public class EnableDisableServiceTest {
 	public void disableService_withoutAttach_throwsException() throws Exception {
 		client.detach();
 		try {
-			client.disableService(TestConstants.serviceName);
+			client.disableService(TestConstants.serviceNameSession);
 		} catch (SCServiceException e) {
 			ex = e;
 		}
@@ -98,11 +98,11 @@ public class EnableDisableServiceTest {
 	}
 
 	@Test
-	public void enableService_simulationAlreadyEnabled_staysEnabled()
+	public void enableService_AlreadyEnabled_staysEnabled()
 			throws Exception {
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
-		client.enableService(TestConstants.serviceName);
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
+		client.enableService(TestConstants.serviceNameSession);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
 	}
 	
 	@Test
@@ -123,11 +123,11 @@ public class EnableDisableServiceTest {
 	}
 	
 	@Test
-	public void disableService_simulationAlreadyEnabled_disabled() throws Exception {
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
-		client.disableService(TestConstants.serviceName);
-		assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
-		client.enableService(TestConstants.serviceName);
+	public void disableService_AlreadyEnabled_disabled() throws Exception {
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
+		client.disableService(TestConstants.serviceNameSession);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSession));
+		client.enableService(TestConstants.serviceNameSession);
 	}
 	
 	@Test(expected = SCServiceException.class)
@@ -156,13 +156,13 @@ public class EnableDisableServiceTest {
 	
 	@Test
 	public void enableDisableService_1000Times_switchesStates() throws Exception {
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
 		for (int i = 0; i < 1000; i++) {
 			if ((i % 500) == 0) testLogger.info("Enabling/disabling cycle nr. " + i + "...");
-			client.disableService(TestConstants.serviceName);
-			assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
-			client.enableService(TestConstants.serviceName);
-			assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+			client.disableService(TestConstants.serviceNameSession);
+			assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSession));
+			client.enableService(TestConstants.serviceNameSession);
+			assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
 		}
 	}
 	
@@ -170,14 +170,14 @@ public class EnableDisableServiceTest {
 	public void enableDisableService_twoClients_seeChangesOfTheOther() throws Exception {
 		SCMgmtClient client2 = new SCMgmtClient();
 		client2.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
-		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceName));
-		client.disableService(TestConstants.serviceName);
-		assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
-		assertEquals(false, client2.isServiceEnabled(TestConstants.serviceName));
-		client2.enableService(TestConstants.serviceName);
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
-		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
+		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceNameSession));
+		client.disableService(TestConstants.serviceNameSession);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSession));
+		assertEquals(false, client2.isServiceEnabled(TestConstants.serviceNameSession));
+		client2.enableService(TestConstants.serviceNameSession);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
+		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceNameSession));
 		client2.detach();
 	}
 	
@@ -186,14 +186,14 @@ public class EnableDisableServiceTest {
 		SCMgmtClient client2 = new SCMgmtClient();
 		((SCMgmtClient) client2).setConnectionType("netty.tcp");
 		client2.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
-		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceName));
-		client.disableService(TestConstants.serviceName);
-		assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
-		assertEquals(false, client2.isServiceEnabled(TestConstants.serviceName));
-		client2.enableService(TestConstants.serviceName);
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
-		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
+		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceNameSession));
+		client.disableService(TestConstants.serviceNameSession);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSession));
+		assertEquals(false, client2.isServiceEnabled(TestConstants.serviceNameSession));
+		client2.enableService(TestConstants.serviceNameSession);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
+		assertEquals(true, client2.isServiceEnabled(TestConstants.serviceNameSession));
 		client2.detach();
 	}
 }

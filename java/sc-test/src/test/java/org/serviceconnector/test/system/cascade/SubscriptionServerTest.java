@@ -62,7 +62,7 @@ public class SubscriptionServerTest {
 
 	@After
 	public void tearDown() throws Exception {
-		server.deregisterServer(TestConstants.serviceName);
+		server.deregisterServer(TestConstants.serviceNameSession);
 		server.destroy();
 		server = null;
 		srvCallback = null;

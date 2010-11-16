@@ -38,7 +38,7 @@ public class SrvExecuteOTITestCase extends SuperSessionTestCase {
 	@Test
 	public void executeOTIRunsOutSessionCleanedUp() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
-				"simulation", this.sessionId);
+				"local-session-service", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("wait:3000");
 		TestWaitMechanismCallback callback = new TestWaitMechanismCallback(true);
@@ -48,7 +48,7 @@ public class SrvExecuteOTITestCase extends SuperSessionTestCase {
 		SCTest.verifyError(responseMessage, SCMPError.PROXY_TIMEOUT, "executing command timed out",
 				SCMPMsgType.CLN_EXECUTE);
 
-		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "simulation",
+		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "local-session-service",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);

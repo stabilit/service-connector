@@ -47,7 +47,7 @@ public class ClnAPIAsyncSessionTestCase {
 			// set environment, e.g. keepAliveInterval
 			// connects to SC, checks connection to SC
 			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-			SCSessionService sessionServiceA = sc.newSessionService("simulation");
+			SCSessionService sessionServiceA = sc.newSessionService("local-session-service");
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
 			sessionServiceA.createSession(60, 360, scMessage);

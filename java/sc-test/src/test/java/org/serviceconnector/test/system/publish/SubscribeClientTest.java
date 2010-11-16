@@ -101,7 +101,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void isSubscribed_serviceNameSessionService_false() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceName);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		assertEquals(false, service.isSubscribed());
 	}
 
@@ -374,7 +374,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameSessionServiceMaskNull_throwsValidatorException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceName);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(null);
@@ -390,7 +390,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameSessionServiceMaskEmpty_throwsValidatorException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceName);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("");
@@ -406,7 +406,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameSessionServiceMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceName);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("a");
@@ -422,7 +422,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameSessionServiceMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceName);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
@@ -438,7 +438,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameSessionServiceMask256LongString_throwsSCExceptionNotSubscribed() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceName);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.stringLength256);
@@ -455,7 +455,7 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_serviceNameSessionServiceMask257LongString_throwsValidatorExceptionNotSubscribed()
 			throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceName);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.stringLength257);
@@ -472,7 +472,7 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_serviceNameSessionServiceMaskContainingPercentSign_throwsValidatorExceptionNotSubscribed()
 			throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceName);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO%----------X-----------");
@@ -488,7 +488,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameSessionServiceMaskSameAsInServer_throwsSCExceptionNotSubscribed() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceName);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);

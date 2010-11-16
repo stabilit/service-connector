@@ -52,7 +52,7 @@ public class SrvExecuteAsyncTestCase extends SuperSessionTestCase {
 
 		for (int i = 0; i < 100; i++) {
 			SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
-					"simulation", this.sessionId);
+					"local-session-service", this.sessionId);
 			clnExecuteCall.setMessagInfo("message info");
 			clnExecuteCall.setRequestBody("get Data (query)");
 			SrvExecuteTestCaseCallback callback = new SrvExecuteTestCaseCallback(clnExecuteCall);

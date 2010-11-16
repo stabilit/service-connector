@@ -137,22 +137,22 @@ public class PublishConnectionTypeTcpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData("something");
-		server.publish(TestConstants.serviceName, publishMessage);
+		server.publish(TestConstants.serviceNameSession, publishMessage);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void publish_serviceNameSessionServiceWithRegistering_throwsSCException() throws Exception {
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceName, 1, 1,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 1, 1,
 				new SCPublishServerCallback());
 		try {
 			SCPublishMessage publishMessage = new SCPublishMessage();
 			publishMessage.setMask(TestConstants.mask);
 			publishMessage.setData("something");
-			server.publish(TestConstants.serviceName, publishMessage);
+			server.publish(TestConstants.serviceNameSession, publishMessage);
 		} catch (Exception e) {
 			ex = e;
 		} finally {
-			server.deregisterServer(TestConstants.serviceName);
+			server.deregisterServer(TestConstants.serviceNameSession);
 		}
 		if (ex != null) {
 			throw ex;

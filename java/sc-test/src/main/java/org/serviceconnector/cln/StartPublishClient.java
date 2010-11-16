@@ -79,7 +79,7 @@ public class StartPublishClient extends Thread {
 				service.unsubscribe();
 
 			} else if (getMethodName() == "createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
 
 				try {
 					SCMessage scMessage = new SCMessage("reject");
@@ -95,7 +95,7 @@ public class StartPublishClient extends Thread {
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "execute_messageData1MBArray_returnsTheSameMessageData") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
 				sessionService.createSession(300, 10, scMessage);

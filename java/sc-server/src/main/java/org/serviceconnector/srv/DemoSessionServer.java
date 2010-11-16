@@ -33,7 +33,7 @@ public class DemoSessionServer {
 	protected final static Logger logger = Logger.getLogger(DemoSessionServer.class);
 
 	private SCSessionServer scSrv = null;
-	private String serviceName = "simulation";
+	private static String serviceName = "local-session-service";
 
 	public static void main(String[] args) throws Exception {
 		DemoSessionServer sessionServer = new DemoSessionServer();
@@ -51,7 +51,6 @@ public class DemoSessionServer {
 
 			sc.startListener(); // regular
 
-			String serviceName = "simulation";
 			SCSessionServer server = sc.newSessionServer(); // no other params possible
 
 			int maxSess = 10;

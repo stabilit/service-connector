@@ -190,7 +190,7 @@ public class SetupTestCases {
 		scSim10ConSrv.startListener();
 		scSessionSim10ConSrv = scSim10ConSrv.newSessionServer();
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSessionSim10ConSrv.registerServer("simulation", 10, 10, srvCallback);
+		scSessionSim10ConSrv.registerServer("local-session-service", 10, 10, srvCallback);
 	}
 
 	public static void registerSessionServiceEnable() throws Exception {
@@ -299,7 +299,7 @@ public class SetupTestCases {
 	}
 
 	public static void startPublishServer() throws Exception {
-		String serviceName = "publish-simulation";
+		String serviceName = "local-publish-service";
 		SCServer scPubServer = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, 51000);
 		SCPublishServer publishSrv = scPubServer.newPublishServer();
 		// connect to SC as server

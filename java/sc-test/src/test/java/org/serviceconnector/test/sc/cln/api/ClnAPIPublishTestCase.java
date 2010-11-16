@@ -49,7 +49,7 @@ public class ClnAPIPublishTestCase {
 			// connects to SC, checks connection to SC
 			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
-			publishServiceA = sc.newPublishService("publish-simulation");
+			publishServiceA = sc.newPublishService("local-publish-service");
 			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
@@ -79,7 +79,7 @@ public class ClnAPIPublishTestCase {
 			// connects to SC, checks connection to SC
 			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
-			publishServiceA = sc.newPublishService("publish-simulation");
+			publishServiceA = sc.newPublishService("local-publish-service");
 			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("AEC----");

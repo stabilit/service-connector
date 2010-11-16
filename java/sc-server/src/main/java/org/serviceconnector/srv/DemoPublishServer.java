@@ -35,7 +35,7 @@ public class DemoPublishServer {
 	protected final static Logger logger = Logger.getLogger(DemoPublishServer.class);
 
 	private SCPublishServer publishSrv = null;
-	private String serviceName = "publish-simulation";
+	private static String serviceName = "local-publish-service";
 	private static boolean killPublishServer = false;
 
 	public static void main(String[] args) throws Exception {
@@ -53,7 +53,6 @@ public class DemoPublishServer {
 		try {
 			sc.startListener(); // regular
 
-			String serviceName = "publish-simulation";
 			publishSrv = sc.newPublishServer(); // no other params possible
 
 			int maxSessions = 10;
@@ -181,7 +180,7 @@ public class DemoPublishServer {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {
-						this.publishSrv.deregisterServer("simulation");
+						this.publishSrv.deregisterServer("local-publish-service");
 					} catch (Exception ex) {
 						logger.error("unsubscribe", ex);
 					}

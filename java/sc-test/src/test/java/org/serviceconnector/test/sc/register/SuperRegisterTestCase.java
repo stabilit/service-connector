@@ -32,8 +32,6 @@ import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 import org.serviceconnector.test.sc.connectionPool.TestContext;
 
-
-
 /**
  * @author JTraber
  */
@@ -75,8 +73,8 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	}
 
 	public void registerServerBefore() throws Exception {
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL
-				.newInstance(registerRequester, "publish-simulation");
+		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
+				registerRequester, "local-publish-service");
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
 		registerServerCall.setPortNumber(this.responderConfig.getResponderConfigList().get(0).getPort());
@@ -87,7 +85,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	}
 
 	public void deRegisterServerAfter() throws Exception {
-		this.deRegisterServerAfter("publish-simulation");
+		this.deRegisterServerAfter("local-publish-service");
 	}
 
 	public void deRegisterServerAfter(String serviceName) throws Exception {

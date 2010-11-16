@@ -82,7 +82,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
 		scProcess.waitFor();
-		client.enableService(TestConstants.serviceName);
+		client.enableService(TestConstants.serviceNameSession);
 	}
 
 	@Test(expected = SCServiceException.class)
@@ -90,7 +90,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
 		scProcess.waitFor();
-		client.enableService(TestConstants.serviceName);
+		client.enableService(TestConstants.serviceNameSession);
 	}
 
 	@Test(expected = SCServiceException.class)
@@ -98,7 +98,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
 		scProcess.waitFor();
-		client.getWorkload(TestConstants.serviceName);
+		client.getWorkload(TestConstants.serviceNameSession);
 	}
 
 	@Test

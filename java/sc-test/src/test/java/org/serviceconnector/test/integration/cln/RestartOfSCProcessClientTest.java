@@ -71,21 +71,21 @@ public class RestartOfSCProcessClientTest {
 	public void enableService_afterSCRestart_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-		client.enableService(TestConstants.serviceName);
+		client.enableService(TestConstants.serviceNameSession);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void disableService_afterSCRestart_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-		client.enableService(TestConstants.serviceName);
+		client.enableService(TestConstants.serviceNameSession);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void workload_afterSCRestart_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
-		client.getWorkload(TestConstants.serviceName);
+		client.getWorkload(TestConstants.serviceNameSession);
 	}
 
 	@Test
@@ -121,15 +121,15 @@ public class RestartOfSCProcessClientTest {
 	@Test
 	public void isServiceDisabled_afterDisablingItBeforeSCRestart_enabled() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
-		client.disableService(TestConstants.serviceName);
-		assertEquals(false, client.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
+		client.disableService(TestConstants.serviceNameSession);
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSession));
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
 		try {
 			client.detach();
 		} catch (SCServiceException e) {
 		}
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceName));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
 	}
 }
