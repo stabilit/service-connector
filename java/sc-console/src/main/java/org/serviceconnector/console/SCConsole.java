@@ -15,6 +15,9 @@
  */
 package org.serviceconnector.console;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.net.ConnectionType;
@@ -26,15 +29,18 @@ public class SCConsole {
 
 	/**
 	 * @param args
-	 *            usage : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>|kill><br>
-	 *            samples: java -jar scconsole.jar -h localhost -p 7000 enable=abc<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 disable=abc<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 state=abc<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 sessions=abc<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 kill<br>
+	 * usage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>|kill><br>
+	 * 
+	 * samples: java -jar scconsole.jar -h localhost -p 7000 enable=abc<br>
+	 *          java -jar scconsole.jar -h localhost -p 7000 disable=abc<br>
+	 *          java -jar scconsole.jar -h localhost -p 7000 state=abc<br>
+	 *          java -jar scconsole.jar -h localhost -p 7000 sessions=abc<br>
+	 *          java -jar scconsole.jar -h localhost -p 7000 kill<br>
+	 *          
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
+
 		// check arguments
 		if (args == null || args.length <= 0) {
 			showError("no argumments");
@@ -63,26 +69,13 @@ public class SCConsole {
 			ValidatorUtility.validateInt(0, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		}
 
-		ConsoleCommand consoleCommand = ConsoleCommand.UNDEFINED;
-		String commandKey = "";
-		String serviceName = "";
-		for (int i = 0; i < args.length; i++) {
-			String[] splitted = args[i].split(Constants.EQUAL_SIGN);
-			commandKey = splitted[0];
-			if (splitted.length >= 2) {
-				serviceName = splitted[1];
-			}
-			consoleCommand = ConsoleCommand.getCommand(commandKey);
-			if (consoleCommand != ConsoleCommand.UNDEFINED) {
-				break;
-			}
+		// get command from args[4]
+		String bodyString = args[4];
+		if (bodyString == null) {
+			showError("Command is missing");
+			System.exit(1);
 		}
-		if (consoleCommand == ConsoleCommand.UNDEFINED) {
-			showError("invalid or no command (enable|disable|state|sessions|kill)");
-			System.exit(3);
-		}
-		// fileName extracted from vm arguments
-		int status = SCConsole.run(host, port, consoleCommand, serviceName);
+		int status = SCConsole.run(host, port, bodyString);
 		System.exit(status);
 	}
 
@@ -92,23 +85,45 @@ public class SCConsole {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private static int run(String host, String port, ConsoleCommand cmd, String serviceName) throws Exception {
+	private static int run(String host, String port, String bodyString) throws Exception {
+
+		/** The Constant COMMAND_REGEX_STRING. */
+		String regex = "(" + Constants.KILL + "|(" + 
+							Constants.ENABLE + "|" + 
+							Constants.DISABLE + "|" + 
+							Constants.STATE + "|" + 
+							Constants.SESSIONS + ")" + Constants.EQUAL_SIGN + "(.*))";
 		int status = 0;
+
+		Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+		Matcher m = pattern.matcher(bodyString);
+		if (!m.matches()) {
+			showError("invalid or no command (enable|disable|state|sessions|kill)");
+			return 3;
+		}
+		String kill = m.group(1);
+		String command = m.group(2);
+		String serviceName = m.group(3);
+
 		try {
 			SCMgmtClient client = new SCMgmtClient(host, Integer.parseInt(port), ConnectionType.NETTY_TCP);
 			client.attach();
-			switch (cmd) {
-			case DISABLE:
-				client.disableService(serviceName);
-				System.out.println("Service [" + serviceName + "] has been disabled");
-				client.detach();
-				break;
-			case ENABLE:
+			
+			if (kill.equalsIgnoreCase(Constants.KILL)) {
+				client.killSC();
+				System.out.println("SC exit requested");
+			}
+			else if (command.equalsIgnoreCase(Constants.ENABLE)) {
 				client.enableService(serviceName);
 				System.out.println("Service [" + serviceName + "] has been enabled");
 				client.detach();
-				break;
-			case STATE:
+			}
+			else if (command.equalsIgnoreCase(Constants.DISABLE)) {
+				client.disableService(serviceName);
+				System.out.println("Service [" + serviceName + "] has been disabled");
+				client.detach();
+			}
+			else if (command.equalsIgnoreCase(Constants.STATE)) {
 				try {
 					boolean enabled = client.isServiceEnabled(serviceName);
 					if (enabled) {
@@ -121,8 +136,8 @@ public class SCConsole {
 					status = 4;
 				}
 				client.detach();
-				break;
-			case SESSIONS:
+			}
+			else if (command.equalsIgnoreCase(Constants.SESSIONS)) {
 				try {
 					String sessions = client.getWorkload(serviceName);
 					System.out.println("Service [" + serviceName + "] has " + sessions + " sessions");
@@ -131,14 +146,7 @@ public class SCConsole {
 					status = 4;
 				}
 				client.detach();
-				break;
-			case KILL:
-				client.killSC();
-				System.out.println("SC exit requested");
-				break;
 			}
-			client.detach();
-			return status;
 		} catch (Exception e) {
 			e.printStackTrace();
 			status = 5;

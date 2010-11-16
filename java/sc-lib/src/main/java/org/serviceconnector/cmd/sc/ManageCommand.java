@@ -34,10 +34,9 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.util.ValidatorUtility;
 
-
 /**
- * The Class ManageCommand. Responsible for validation and execution of manage command. Manage command is used to
- * enable/disable services.
+ * The Class ManageCommand. Responsible for validation and execution of manage command. Manage command is used to enable/disable
+ * services.
  * 
  * @author JTraber
  */
@@ -47,8 +46,9 @@ public class ManageCommand extends CommandAdapter {
 	protected final static Logger logger = Logger.getLogger(ManageCommand.class);
 
 	/** The Constant MANAGE_REGEX_STRING. */
-	private static final String MANAGE_REGEX_STRING = "(" + Constants.ENABLE + "|" + Constants.DISABLE + ")=(.*)";
-	/** The Constant MANAGE_PATTER. */
+	private static final String MANAGE_REGEX_STRING = "(" + Constants.ENABLE + "|" + Constants.DISABLE + ")" + 
+			Constants.EQUAL_SIGN + "(.*)";
+	/** The Constant MANAGE_PATTERN. */
 	private static final Pattern MANAGE_PATTERN = Pattern.compile(MANAGE_REGEX_STRING, Pattern.CASE_INSENSITIVE);
 
 	/**
@@ -69,7 +69,7 @@ public class ManageCommand extends CommandAdapter {
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
 		String ipAddress = (String) reqMsg.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-		
+
 		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -85,18 +85,18 @@ public class ManageCommand extends CommandAdapter {
 
 		Matcher m = MANAGE_PATTERN.matcher(bodyString);
 		if (!m.matches()) {
-			logger.error("wrong body syntax:" + bodyString); 		// body has bad syntax
+			logger.error("wrong body syntax:" + bodyString); // body has bad syntax
 			scmpReply = new SCMPFault(SCMPError.NOT_FOUND, "wrong body syntax");
 			response.setSCMP(scmpReply);
 			return;
 		}
 
-		String stateString = m.group(1);
+		String command = m.group(1);
 		String serviceName = m.group(2);
 
 		if (this.serviceRegistry.containsKey(serviceName)) {
 			// service exists
-			if (stateString.equalsIgnoreCase(Constants.ENABLE)) {
+			if (command.equalsIgnoreCase(Constants.ENABLE)) {
 				// enable service
 				logger.info("enable service:" + serviceName);
 				this.serviceRegistry.getService(serviceName).setState(ServiceState.ENABLED);

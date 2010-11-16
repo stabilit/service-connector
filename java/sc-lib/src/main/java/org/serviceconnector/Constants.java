@@ -162,17 +162,11 @@ public final class Constants {
 	 * console command constants
 	 * *************************
 	 */
-	/** The Constant DISABLE. */
 	public static final String DISABLE = "disable";
-	/** The Constant ENABLE. */
 	public static final String ENABLE = "enable";
-	/** The Constant STATE. */
 	public static final String STATE = "state";
-	/** The Constant SESSIONS. */
 	public static final String SESSIONS = "sessions";
-	/** The Constant SHUTDOWN. */
 	public static final String KILL = "kill";
-	/** The Constant EQUAL_SIGN. */
 	public static final String EQUAL_SIGN = "=";
 	
 	/*
@@ -183,7 +177,6 @@ public final class Constants {
 	public static final String ROOT_OPERATION_TIMEOUT_MULTIPLIER = "root.operationTimeoutMultiplier";
 	public static final String ROOT_ECHO_INTERVAL_MULTIPLIER = "root.echoIntervalMultiplier";
 	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
-	public static final String ROOT_MESSAGE_CACHE_ENABLED = "root.messageCacheEnabled";
 	public static final String ROOT_CONNECTION_TIMEOUT = "root.connectionTimeoutMillis";
 	public static final String ROOT_SUBSCRIPTION_TIMEOUT = "root.subscriptionTimeout";
 	public static final String ROOT_KEEP_ALIVE_TIMEOUT = "root.keepAliveTimeout";
@@ -206,6 +199,12 @@ public final class Constants {
 	public static final String PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL = ".keepAliveInterval";
 	public static final String PROPERTY_QUALIFIER_PATH = ".path";
 
+	public static final String CACHE_ENABLED = "cache.enabled";
+	public static final String CACHE_NAME = "cache.name";	
+	public static final String CACHE_DISK_PERSISTENT = "cache.diskPersistent";
+	public static final String CACHE_DISK_PATH = "cache.diskPath";	
+	public static final String CACHE_MAX_ELEMENTS_IN_MEMORY = "cache.maxElementsInMemory";	
+	public static final String CACHE_MAX_ELEMENTS_ON_DISK = "cache.maxElementsOnDisk";
 
 	/*
 	 * SCMP protocol constants
@@ -226,19 +225,6 @@ public final class Constants {
 	public static final String SCMP_FORMAT_OF_HEADER_SIZE = " 00000";
 	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
 	
-	/** The Constant CACHE_ENABLED. */
-	public static final String CACHE_ENABLED = "cache.enabled";
-	/** The Constant CACHE_NAME. */
-	public static final String CACHE_NAME = "cache.name";	
-	/** The Constant CACHE_DISK_PERSISTENT. */
-	public static final String CACHE_DISK_PERSISTENT = "cache.diskPersistent";
-	/** The Constant CACHE_DISK_PATH. */
-	public static final String CACHE_DISK_PATH = "cache.diskPath";	
-	/** The Constant CACHE_MAX_ELEMENTS_IN_MEMORY. */
-	public static final String CACHE_MAX_ELEMENTS_IN_MEMORY = "cache.maxElementsInMemory";	
-	/** The Constant CACHE_MAX_ELEMENTS_ON_DISK. */
-	public static final String CACHE_MAX_ELEMENTS_ON_DISK = "cache.maxElementsOnDisk";
-
 	/**
 	 * @param flag
 	 */

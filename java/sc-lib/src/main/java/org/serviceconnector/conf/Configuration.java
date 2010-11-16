@@ -119,12 +119,6 @@ public abstract class Configuration {
 			Constants.setCommandValidation(commandValidation);
 		}
 
-		String messageCacheString = this.apacheCompositeConfig.getString(Constants.ROOT_MESSAGE_CACHE_ENABLED);
-		if (messageCacheString != null) {
-			boolean messageCache = Boolean.parseBoolean(messageCacheString);
-			Constants.setMessageCache(messageCache);
-		}
-
 		String keepAliveTimeoutString = this.apacheCompositeConfig.getString(Constants.ROOT_KEEP_ALIVE_TIMEOUT);
 		if (keepAliveTimeoutString != null) {
 			int keepAliveTimeout = Integer.parseInt(keepAliveTimeoutString);
