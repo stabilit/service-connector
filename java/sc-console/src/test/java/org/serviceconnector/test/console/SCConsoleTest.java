@@ -48,7 +48,7 @@ public class SCConsoleTest {
 
 	@After
 	public void tearDown() throws Exception {
-		System.setSecurityManager(null); // or save and restore original
+		System.setSecurityManager(null);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_01() throws Exception {
+	public void t01_start() throws Exception {
 		try {
 			SCConsole.main(null);
 		} catch (ExitException e) {
@@ -69,7 +69,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_02() throws Exception {
+	public void t02_start() throws Exception {
 		try {
 			SCConsole.main(new String[] {});
 		} catch (ExitException e) {
@@ -82,7 +82,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_03() throws Exception {
+	public void t03_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "" });
 		} catch (ExitException e) {
@@ -95,7 +95,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_04() throws Exception {
+	public void t04_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "", "", "", "", "" });
 		} catch (ExitException e) {
@@ -108,7 +108,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_05() throws Exception {
+	public void t05_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { " " });
 		} catch (ExitException e) {
@@ -121,7 +121,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_06() throws Exception {
+	public void t06_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { " ", " ", " ", " ", " " });
 		} catch (ExitException e) {
@@ -134,7 +134,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_07() throws Exception {
+	public void t07_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "h" });
 		} catch (ExitException e) {
@@ -147,7 +147,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_08() throws Exception {
+	public void t08_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h" });
 		} catch (ExitException e) {
@@ -160,7 +160,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_09() throws Exception {
+	public void t09_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "" });
 		} catch (ExitException e) {
@@ -173,7 +173,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_10() throws Exception {
+	public void t10_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", " " });
 		} catch (ExitException e) {
@@ -186,7 +186,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_11() throws Exception {
+	public void t11_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "h" });
 		} catch (ExitException e) {
@@ -199,7 +199,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_12() throws Exception {
+	public void t12_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "-p" });
 		} catch (ExitException e) {
@@ -212,7 +212,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_13() throws Exception {
+	public void t13_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "-p", "" });
 		} catch (ExitException e) {
@@ -225,7 +225,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_14() throws Exception {
+	public void t14_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "-p", " " });
 		} catch (ExitException e) {
@@ -238,7 +238,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_15() throws Exception {
+	public void t15_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "-p", "h" });
 		} catch (ExitException e) {
@@ -251,7 +251,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_16() throws Exception {
+	public void t16_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-p", "-h", "h" });
 		} catch (ExitException e) {
@@ -264,7 +264,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_17() throws Exception {
+	public void t17_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "h", "-p", "something" });
 		} catch (ExitException e) {
@@ -277,7 +277,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_18() throws Exception {
+	public void t18_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "-p", "h", "something" });
 		} catch (ExitException e) {
@@ -290,7 +290,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_19() throws Exception {
+	public void t19_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "-p", "h", "key=something" });
 		} catch (ExitException e) {
@@ -303,7 +303,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_20() throws Exception {
+	public void t20_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "h", "-p", "key=something" });
 		} catch (ExitException e) {
@@ -316,7 +316,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_21() throws Exception {
+	public void t21_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "-h", "h", "-p", "p", "key=something" });
 		} catch (ExitException e) {
@@ -329,7 +329,7 @@ public class SCConsoleTest {
 	 * multiple commands Expectation: throws exception with exitCode = 1
 	 */
 	@Test
-	public void main_22() throws Exception {
+	public void t22_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_HTTP,
 					Constants.STATE + "=something", Constants.STATE + "=something" });
@@ -343,7 +343,7 @@ public class SCConsoleTest {
 	 * HTTP port Expectation: throws exception with exitCode = 5 "Communication error" Pre-condition: SC must be running!
 	 */
 	@Test
-	public void main_23() throws Exception {
+	public void t23_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_HTTP,
 					Constants.STATE + "=something" });
@@ -357,7 +357,7 @@ public class SCConsoleTest {
 	 * Management port Expectation: throws exception with exitCode = 5 "Communication error" Pre-condition: SC must be running!
 	 */
 	@Test
-	public void main_24() throws Exception {
+	public void t24_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_MGMT,
 					Constants.STATE + "=something" });
@@ -371,7 +371,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 4 "Unknown service" Pre-condition: SC must be running!
 	 */
 	@Test
-	public void main_25() throws Exception {
+	public void t25_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.STATE + "=something" });
@@ -385,7 +385,7 @@ public class SCConsoleTest {
 	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running!
 	 */
 	@Test
-	public void main_26() throws Exception {
+	public void t26_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", TestConstants.PORT_SC_TCP,
 					Constants.STATE + "=simulation" });
@@ -399,7 +399,7 @@ public class SCConsoleTest {
 	 * Expectation: passes though with exitCode = 0 "Success", service is enabled Pre-condition: SC must be running!
 	 */
 	@Test
-	public void main_27_enable() throws Exception {
+	public void t27_enable_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.ENABLE + "=simulation" });
@@ -418,7 +418,7 @@ public class SCConsoleTest {
 	 * Expectation: passes though with exitCode = 0 "Success", service is disabled Pre-condition: SC must be running!
 	 */
 	@Test
-	public void main_28_disable() throws Exception {
+	public void t28_disable_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.DISABLE + "=simulation" });
@@ -445,7 +445,7 @@ public class SCConsoleTest {
 	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running!
 	 */
 	@Test
-	public void main_29_sessions() throws Exception {
+	public void t29_sessions_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.SESSIONS + "=simulation" });
@@ -459,7 +459,7 @@ public class SCConsoleTest {
 	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running!
 	 */
 	@Test
-	public void main_30_sessions() throws Exception {
+	public void t30_sessions_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.SESSIONS + "=publish-simulation" });
@@ -473,7 +473,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 4 "Unknown service" Pre-condition: SC must be running!
 	 */
 	@Test
-	public void main_31_sessions() throws Exception {
+	public void t31_sessions_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.SESSIONS + "=notExistingService" });
@@ -487,7 +487,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 3 "invalid command" Pre-condition: SC must be running!
 	 */
 	@Test
-	public void main_32_undefined() throws Exception {
+	public void t32_undefined_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					"gaga=notExistingService" });
@@ -501,7 +501,7 @@ public class SCConsoleTest {
 	 * Expectation: throws exception with exitCode = 3 "invalid command" Pre-condition: SC must be running!
 	 */
 	@Test
-	public void main_33_undefined() throws Exception {
+	public void t33_undefined_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					"gaga=simulation" });
@@ -515,7 +515,7 @@ public class SCConsoleTest {
 	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running! Post-condition: SC will be killed!
 	 */
 	@Test
-	public void main_99_kill() throws Exception {
+	public void t99_kill_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, Constants.KILL });
 		} catch (ExitException e) {
