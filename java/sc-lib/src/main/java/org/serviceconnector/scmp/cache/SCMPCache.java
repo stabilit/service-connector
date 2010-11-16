@@ -38,7 +38,7 @@ public class SCMPCache {
 	private ISCMPCacheImpl cacheImpl;
 
 	/**
-	 * Instantiates a new sCMP cache.
+	 * Instantiates a new SCMP cache.
 	 * 
 	 * @param manager
 	 *            the manager
