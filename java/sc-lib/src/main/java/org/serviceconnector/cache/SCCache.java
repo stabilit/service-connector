@@ -13,11 +13,12 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.scmp.cache;
+package org.serviceconnector.cache;
 
 import java.io.Serializable;
 import java.util.Date;
 
+import org.serviceconnector.cache.impl.ICacheImpl;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
@@ -27,15 +28,15 @@ import org.serviceconnector.util.DateTimeUtility;
 /**
  * The Class SCMPCache.
  */
-public class SCMPCache {
+public class SCCache {
 
 	/** The manager. */
-	private SCMPCacheManager manager;
+	private SCCacheManager manager;
 
 	private String serviceName;
 
 	/** The cache impl. */
-	private ISCMPCacheImpl cacheImpl;
+	private ICacheImpl cacheImpl;
 
 	/**
 	 * Instantiates a new SCMP cache.
@@ -45,10 +46,10 @@ public class SCMPCache {
 	 * @param serviceName
 	 *            the service name
 	 */
-	public SCMPCache(SCMPCacheManager manager, String serviceName) {
+	public SCCache(SCCacheManager manager, String serviceName) {
 		this.manager = manager;
 		this.serviceName = serviceName;
-		this.cacheImpl = SCMPCacheImplFactory.getDefaultCacheImpl(
+		this.cacheImpl = SCCacheImplFactory.getDefaultCacheImpl(
 				manager.getScmpCacheConfiguration(), serviceName);
 	}
 
@@ -58,18 +59,18 @@ public class SCMPCache {
 	 * @param msg
 	 *            the msg
 	 * @return the sCMP
-	 * @throws SCMPCacheException
+	 * @throws SCCacheException
 	 *             the sCMP cache exception
 	 */
-	public synchronized SCMPCacheMessage getSCMP(SCMPMessage msg)
-			throws SCMPCacheException {
+	public synchronized SCCacheMessage getSCMP(SCMPMessage msg)
+			throws SCCacheException {
 		String cacheId = msg.getCacheId();
 		if (cacheId == null) {
-			throw new SCMPCacheException("no cache id");
+			throw new SCCacheException("no cache id");
 		}
 		String messageId = msg.getMessageId();
 		if (messageId == null) {
-			throw new SCMPCacheException("no message id");
+			throw new SCCacheException("no message id");
 		}
 		SCMPMessageId msgId = SCMPMessage.parseMessageId(messageId);
 		SCMPCacheKey cacheKey = null;
@@ -86,7 +87,7 @@ public class SCMPCache {
 		int partSequenceNr = msgId.getPartSequenceNr();
 		SCMPPartCacheKey cachePartKey = new SCMPPartCacheKey(cacheId,
 				partSequenceNr);
-		SCMPCacheMessage scmpCacheMessage = (SCMPCacheMessage) this.cacheImpl
+		SCCacheMessage scmpCacheMessage = (SCCacheMessage) this.cacheImpl
 				.get(cachePartKey);
 		return scmpCacheMessage;
 	}
@@ -96,19 +97,19 @@ public class SCMPCache {
 	 * 
 	 * @param scmpReply
 	 *            the scmp reply
-	 * @throws SCMPCacheException
+	 * @throws SCCacheException
 	 *             the sCMP cache exception
 	 */
 	public synchronized void putSCMP(SCMPMessage scmpReply)
-			throws SCMPCacheException {
+			throws SCCacheException {
 		try {
 			String cacheId = scmpReply.getCacheId();
 			if (cacheId == null) {
-				throw new SCMPCacheException("no cache id");
+				throw new SCCacheException("no cache id");
 			}
 			String messageId = scmpReply.getMessageId();
 			if (messageId == null) {
-				throw new SCMPCacheException("no message id");
+				throw new SCCacheException("no message id");
 			}
 			SCMPMessageId msgId = SCMPMessage.parseMessageId(messageId);
 			SCMPCacheKey cacheKey = null;
@@ -131,7 +132,7 @@ public class SCMPCache {
 				// this is a multi part message (large message)
 				// cache root must exist
 				if (cacheRoot == null && partSequenceNr > 1) {
-					throw new SCMPCacheException("no cache root");
+					throw new SCCacheException("no cache root");
 				}
 			}
 			if (partSequenceNr == 0) {
@@ -149,7 +150,7 @@ public class SCMPCache {
 				this.cacheImpl.put(cacheKey, cacheRoot);
 				// insert cache part
 				SCMPPartCacheKey cachePartKey = new SCMPPartCacheKey(cacheId, 0);
-				SCMPCacheMessage scmpCacheMessage = new SCMPCacheMessage(
+				SCCacheMessage scmpCacheMessage = new SCCacheMessage(
 						scmpReply.getBody());
 				this.cacheImpl.put(cachePartKey, scmpCacheMessage);
 				return;
@@ -163,20 +164,20 @@ public class SCMPCache {
 			// check if part sequence nr is valid
 			int size = cacheRoot.getSize();
  			if (partSequenceNr != size+1) {
-				throw new SCMPCacheException("invalid part sequence nr = "
+				throw new SCCacheException("invalid part sequence nr = "
 						+ partSequenceNr + ", cache root size = " + size);
 			}
 			cacheRoot.setSize(partSequenceNr);
 		    this.cacheImpl.put(cacheKey, cacheRoot);
 			SCMPPartCacheKey cachePartKey = new SCMPPartCacheKey(cacheId,
 					partSequenceNr);
-			SCMPCacheMessage scmpCacheMessage = new SCMPCacheMessage(
+			SCCacheMessage scmpCacheMessage = new SCCacheMessage(
 					scmpReply.getBody());
 			this.cacheImpl.put(cachePartKey, scmpCacheMessage);
-		} catch (SCMPCacheException e) {
+		} catch (SCCacheException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new SCMPCacheException(e.toString());
+			throw new SCCacheException(e.toString());
 		}
 	}
 
@@ -218,7 +219,7 @@ public class SCMPCache {
 	 * 
 	 * @return the manager
 	 */
-	public SCMPCacheManager getManager() {
+	public SCCacheManager getManager() {
 		return manager;
 	}
 

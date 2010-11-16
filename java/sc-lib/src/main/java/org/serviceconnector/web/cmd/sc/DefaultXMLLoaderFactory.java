@@ -35,6 +35,9 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.serviceconnector.cache.SCCache;
+import org.serviceconnector.cache.SCCacheConfiguration;
+import org.serviceconnector.cache.SCCacheManager;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.res.IResponder;
@@ -44,9 +47,6 @@ import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.cache.SCMPCache;
-import org.serviceconnector.scmp.cache.SCMPCacheConfiguration;
-import org.serviceconnector.scmp.cache.SCMPCacheManager;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.PublishService;
@@ -495,8 +495,8 @@ public class DefaultXMLLoaderFactory {
 				throws Exception {
 			writer.writeStartElement("cache");
 			AppContext appContext = AppContext.getCurrentContext();
-			SCMPCacheManager cacheManager = appContext.getCacheManager();
-			SCMPCacheConfiguration cacheConfiguration = cacheManager.getScmpCacheConfiguration();
+			SCCacheManager cacheManager = appContext.getCacheManager();
+			SCCacheConfiguration cacheConfiguration = cacheManager.getScmpCacheConfiguration();
 			this.writeCacheConfiguration(writer, cacheConfiguration);
 			writer.writeEndElement(); // close cache tag
 			writer.writeStartElement("caches");
@@ -506,7 +506,7 @@ public class DefaultXMLLoaderFactory {
 		}
 
 		private void writeCacheConfiguration(XMLStreamWriter writer,
-				SCMPCacheConfiguration cacheConfiguration) throws XMLStreamException {
+				SCCacheConfiguration cacheConfiguration) throws XMLStreamException {
 			writer.writeStartElement("config");
 			writer.writeStartElement("name");
 			writer.writeCharacters(cacheConfiguration.getCacheName());
@@ -532,10 +532,10 @@ public class DefaultXMLLoaderFactory {
 		private void writeCaches(XMLStreamWriter writer,
 				Object[] caches) throws XMLStreamException {
 			for (Object obj : caches) {
-				if (obj instanceof SCMPCache == false) {
+				if (obj instanceof SCCache == false) {
 					continue;
 				}
-				SCMPCache cache = (SCMPCache) obj;
+				SCCache cache = (SCCache) obj;
 				writer.writeStartElement("cache");
 				writer.writeStartElement("serviceName");
 				writer.writeCharacters(cache.getServiceName());

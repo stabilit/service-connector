@@ -7,8 +7,8 @@ import java.security.Permission;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.Constants;
 import org.serviceconnector.api.cln.SCMgmtClient;
-import org.serviceconnector.console.ConsoleCommand;
 import org.serviceconnector.console.SCConsole;
 import org.serviceconnector.net.ConnectionType;
 
@@ -325,84 +325,84 @@ public class SCConsoleTest {
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 7000 SHOW=something SHOW=something" parameters<br>
+	 * Description: start console with "-h localhost -p 7000 state=something SHOW=something" parameters<br>
 	 * multiple commands Expectation: throws exception with exitCode = 1
 	 */
 	@Test
 	public void main_22() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_HTTP,
-					ConsoleCommand.STATE.getKey() + "=something", ConsoleCommand.STATE.getKey() + "=something" });
+					Constants.STATE + "=something", Constants.STATE + "=something" });
 		} catch (ExitException e) {
 			assertEquals(1, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 7000 SHOW=something" parameters<br>
+	 * Description: start console with "-h localhost -p 7000 state=something" parameters<br>
 	 * HTTP port Expectation: throws exception with exitCode = 5 "Communication error" Pre-condition: SC must be running!
 	 */
 	@Test
 	public void main_23() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_HTTP,
-					ConsoleCommand.STATE.getKey() + "=something" });
+					Constants.STATE + "=something" });
 		} catch (ExitException e) {
 			assertEquals(5, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 81 SHOW=something" parameters<br>
+	 * Description: start console with "-h localhost -p 81 state=something" parameters<br>
 	 * Management port Expectation: throws exception with exitCode = 5 "Communication error" Pre-condition: SC must be running!
 	 */
 	@Test
 	public void main_24() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_MGMT,
-					ConsoleCommand.STATE.getKey() + "=something" });
+					Constants.STATE + "=something" });
 		} catch (ExitException e) {
 			assertEquals(5, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 SHOW=something" parameters<br>
+	 * Description: start console with "-h localhost -p 9000 state=something" parameters<br>
 	 * Expectation: throws exception with exitCode = 4 "Unknown service" Pre-condition: SC must be running!
 	 */
 	@Test
 	public void main_25() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					ConsoleCommand.STATE.getKey() + "=something" });
+					Constants.STATE + "=something" });
 		} catch (ExitException e) {
 			assertEquals(4, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h 127.0.0.1 -p 9000 SHOW=simulation" parameters<br>
+	 * Description: start console with "-h 127.0.0.1 -p 9000 state=simulation" parameters<br>
 	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running!
 	 */
 	@Test
 	public void main_26() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", TestConstants.PORT_SC_TCP,
-					ConsoleCommand.STATE.getKey() + "=simulation" });
+					Constants.STATE + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 ENABLE=simulation" parameters<br>
+	 * Description: start console with "-h localhost -p 9000 enable=simulation" parameters<br>
 	 * Expectation: passes though with exitCode = 0 "Success", service is enabled Pre-condition: SC must be running!
 	 */
 	@Test
 	public void main_27_enable() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					ConsoleCommand.ENABLE.getKey() + "=simulation" });
+					Constants.ENABLE + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
@@ -414,14 +414,14 @@ public class SCConsoleTest {
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 DISABLE=simulation" parameters<br>
+	 * Description: start console with "-h localhost -p 9000 disable=simulation" parameters<br>
 	 * Expectation: passes though with exitCode = 0 "Success", service is disabled Pre-condition: SC must be running!
 	 */
 	@Test
 	public void main_28_disable() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					ConsoleCommand.DISABLE.getKey() + "=simulation" });
+					Constants.DISABLE + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
@@ -432,7 +432,7 @@ public class SCConsoleTest {
 
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					ConsoleCommand.ENABLE.getKey() + "=simulation" });
+					Constants.ENABLE + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
@@ -441,83 +441,83 @@ public class SCConsoleTest {
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 SESSIONS=simulation" parameters<br>
+	 * Description: start console with "-h localhost -p 9000 sessions=simulation" parameters<br>
 	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running!
 	 */
 	@Test
 	public void main_29_sessions() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					ConsoleCommand.SESSIONS.getKey() + "=simulation" });
+					Constants.SESSIONS + "=simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 SESSIONS=publish-simulation<br>
+	 * Description: start console with "-h localhost -p 9000 sessions=publish-simulation<br>
 	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running!
 	 */
 	@Test
 	public void main_30_sessions() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					ConsoleCommand.SESSIONS.getKey() + "=publish-simulation" });
+					Constants.SESSIONS + "=publish-simulation" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 SESSIONS=notExistingService<br>
+	 * Description: start console with "-h localhost -p 9000 sessions=notExistingService<br>
 	 * Expectation: throws exception with exitCode = 4 "Unknown service" Pre-condition: SC must be running!
 	 */
 	@Test
 	public void main_31_sessions() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					ConsoleCommand.SESSIONS.getKey() + "=notExistingService" });
+					Constants.SESSIONS + "=notExistingService" });
 		} catch (ExitException e) {
 			assertEquals(4, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 UNDEFINED=notExistingService<br>
+	 * Description: start console with "-h localhost -p 9000 gaga=notExistingService<br>
 	 * Expectation: throws exception with exitCode = 3 "invalid command" Pre-condition: SC must be running!
 	 */
 	@Test
 	public void main_32_undefined() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					ConsoleCommand.UNDEFINED.getKey() + "=notExistingService" });
+					"gaga=notExistingService" });
 		} catch (ExitException e) {
 			assertEquals(3, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 UNDEFINED=simulation<br>
+	 * Description: start console with "-h localhost -p 9000 gaga=simulation<br>
 	 * Expectation: throws exception with exitCode = 3 "invalid command" Pre-condition: SC must be running!
 	 */
 	@Test
 	public void main_33_undefined() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					ConsoleCommand.UNDEFINED.getKey() + "=simulation" });
+					"gaga=simulation" });
 		} catch (ExitException e) {
 			assertEquals(3, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 KILL<br>
+	 * Description: start console with "-h localhost -p 9000 kill<br>
 	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running! Post-condition: SC will be killed!
 	 */
 	@Test
 	public void main_99_kill() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, ConsoleCommand.KILL.getKey() });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, Constants.KILL });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}

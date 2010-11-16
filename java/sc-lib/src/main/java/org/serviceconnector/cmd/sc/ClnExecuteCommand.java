@@ -18,6 +18,9 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cache.SCCache;
+import org.serviceconnector.cache.SCCacheManager;
+import org.serviceconnector.cache.SCCacheMessage;
 import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -32,9 +35,6 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.scmp.cache.SCMPCache;
-import org.serviceconnector.scmp.cache.SCMPCacheManager;
-import org.serviceconnector.scmp.cache.SCMPCacheMessage;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
@@ -71,9 +71,9 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		if (message.getCacheId() != null) {
 			// try to load response from cache
 			try {
-				SCMPCacheManager scmpCacheManager = AppContext.getCurrentContext().getCacheManager();
+				SCCacheManager scmpCacheManager = AppContext.getCurrentContext().getCacheManager();
 				String serviceName = message.getServiceName();
-				SCMPCache scmpCache = scmpCacheManager.getCache(serviceName);
+				SCCache scmpCache = scmpCacheManager.getCache(serviceName);
 				if (scmpCache == null) {
 					// schedule session timeout
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
@@ -81,7 +81,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
-				SCMPCacheMessage scmpCacheMessage = scmpCache.getSCMP(message);
+				SCCacheMessage scmpCacheMessage = scmpCache.getSCMP(message);
 				if (scmpCacheMessage == null) {
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
 							"cache is loading, retry it later, service name = " + message.getServiceName());
@@ -228,9 +228,9 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			if (scmpReply.getCacheId() != null) {
 				// try save reply in cache
 				try {
-					SCMPCacheManager scmpCacheManager = AppContext.getCurrentContext().getCacheManager();
+					SCCacheManager scmpCacheManager = AppContext.getCurrentContext().getCacheManager();
 					String serviceName = scmpReply.getServiceName();
-					SCMPCache scmpCache = scmpCacheManager.getCache(serviceName);
+					SCCache scmpCache = scmpCacheManager.getCache(serviceName);
 					if (scmpCache == null) {
 						CommandCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
 					} else {

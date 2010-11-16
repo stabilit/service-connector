@@ -21,14 +21,14 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.cache.SCCache;
+import org.serviceconnector.cache.SCCacheException;
+import org.serviceconnector.cache.SCCacheManager;
+import org.serviceconnector.cache.SCCacheMessage;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.cache.SCMPCache;
-import org.serviceconnector.scmp.cache.SCMPCacheException;
-import org.serviceconnector.scmp.cache.SCMPCacheManager;
-import org.serviceconnector.scmp.cache.SCMPCacheMessage;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SessionService;
 
@@ -39,12 +39,12 @@ import org.serviceconnector.service.SessionService;
  */
 public class SCMPCacheTestCase {
 
-	private SCMPCacheManager scmpCacheManager;
+	private SCCacheManager scmpCacheManager;
 	/**
 	 * Scmp cache write test.
 	 * @throws Exception 
 	 * 
-	 * @throws SCMPCacheException
+	 * @throws SCCacheException
 	 *             the sCMP cache exception
 	 */
 
@@ -57,7 +57,7 @@ public class SCMPCacheTestCase {
        serviceRegistry.addService("dummy1", service);
 	   service = new SessionService("dummy2");
        serviceRegistry.addService("dummy2", service);
-	   scmpCacheManager = new SCMPCacheManager();
+	   scmpCacheManager = new SCCacheManager();
 	   scmpCacheManager.initialize(null);
 	}
 
@@ -67,8 +67,8 @@ public class SCMPCacheTestCase {
 	}
 
 	@Test
-	public void simpleSCMPCacheWriteTest() throws SCMPCacheException {
-		SCMPCache scmpCache = this.scmpCacheManager.getCache("dummy");
+	public void simpleSCMPCacheWriteTest() throws SCCacheException {
+		SCCache scmpCache = this.scmpCacheManager.getCache("dummy");
 		String stringWrite = "this is the buffer";
 		byte[] buffer = stringWrite.getBytes();
 		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
@@ -79,16 +79,16 @@ public class SCMPCacheTestCase {
 		SCMPMessage scmpMessageRead = new SCMPMessage();
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, 1233);
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
-		SCMPCacheMessage cacheMessage = scmpCache.getSCMP(scmpMessageRead);
+		SCCacheMessage cacheMessage = scmpCache.getSCMP(scmpMessageRead);
 		byte[] bufferRead = (byte[]) cacheMessage.getBody();
 		String stringRead = new String(bufferRead);
 		Assert.assertEquals(stringWrite, stringRead);
 	}
 
 	@Test
-	public void duplicateSCMPCacheWriteTest() throws SCMPCacheException {
-		SCMPCache scmpCache1 = this.scmpCacheManager.getCache("dummy1");
-		SCMPCache scmpCache2 = this.scmpCacheManager.getCache("dummy2");
+	public void duplicateSCMPCacheWriteTest() throws SCCacheException {
+		SCCache scmpCache1 = this.scmpCacheManager.getCache("dummy1");
+		SCCache scmpCache2 = this.scmpCacheManager.getCache("dummy2");
 		String stringWrite = "this is the buffer";
 		byte[] buffer = stringWrite.getBytes();
 		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
@@ -100,19 +100,19 @@ public class SCMPCacheTestCase {
 		SCMPMessage scmpMessageRead = new SCMPMessage();
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, 1233);
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
-		SCMPCacheMessage cacheMessage1 = scmpCache1.getSCMP(scmpMessageRead);
+		SCCacheMessage cacheMessage1 = scmpCache1.getSCMP(scmpMessageRead);
 		byte[] bufferRead1 = (byte[]) cacheMessage1.getBody();
 		String stringRead1 = new String(bufferRead1);
 		Assert.assertEquals(stringWrite, stringRead1);
-		SCMPCacheMessage cacheMessage2 = scmpCache2.getSCMP(scmpMessageRead);
+		SCCacheMessage cacheMessage2 = scmpCache2.getSCMP(scmpMessageRead);
 		byte[] bufferRead2 = (byte[]) cacheMessage2.getBody();
 		String stringRead2 = new String(bufferRead2);
 		Assert.assertEquals(stringWrite, stringRead2);
 	}
 
 	@Test
-	public void partSCMPCacheWriteTest() throws SCMPCacheException {
-		SCMPCache scmpCache = this.scmpCacheManager.getCache("dummy");
+	public void partSCMPCacheWriteTest() throws SCCacheException {
+		SCCache scmpCache = this.scmpCacheManager.getCache("dummy");
 		String stringWrite = "this is the part buffer nr = ";
 		for (int i = 1; i <= 10; i++) {
 			String partWrite = stringWrite + i;		    
@@ -127,7 +127,7 @@ public class SCMPCacheTestCase {
 		    SCMPMessage scmpMessageRead = new SCMPMessage();
 		    scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, "1233/"+i);
 		    scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
-		    SCMPCacheMessage cacheMessage = scmpCache.getSCMP(scmpMessageRead);
+		    SCCacheMessage cacheMessage = scmpCache.getSCMP(scmpMessageRead);
 		    if (cacheMessage == null) {
 		    	if (i < 11) {
 		    	   Assert.fail("cacheMessage is null but should not");

@@ -80,8 +80,7 @@ public final class SC {
 			showError("no argumments");
 			System.exit(1);
 		}
-		String configFileName = CommandLineUtil.getArg(args,
-				Constants.CLI_CONFIG_ARG);
+		String configFileName = CommandLineUtil.getArg(args, Constants.CLI_CONFIG_ARG);
 		try {
 			SC.addShutdownHook();
 			SC.run(configFileName);
@@ -124,8 +123,7 @@ public final class SC {
 
 		// initialize statistics
 		Statistics statistics = Statistics.getInstance();
-		statistics.setStartupDateTime(new Timestamp(Calendar.getInstance()
-				.getTime().getTime()));
+		statistics.setStartupDateTime(new Timestamp(Calendar.getInstance().getTime().getTime()));
 
 		// load servers
 		ServerLoader.load(configFileName);
@@ -138,14 +136,11 @@ public final class SC {
 		// Cache cache = Cache.initialize();
 
 		// create configured responders / listeners
-		List<CommunicatorConfig> responderList = configuration
-				.getResponderConfigList();
+		List<CommunicatorConfig> responderList = configuration.getResponderConfigList();
 		for (CommunicatorConfig respConfig : responderList) {
 			IResponder responder = new Responder(respConfig);
 			responder.create();
-			logger.info("Start listener " + respConfig.getName()
-					+ " on " + respConfig.getHost() + ":"
-					+ respConfig.getPort());
+			logger.info("Start listener " + respConfig.getName() + " on " + respConfig.getHost() + ":" + respConfig.getPort());
 			responder.startListenAsync();
 		}
 		if (configuration.writePID()) {
@@ -164,14 +159,10 @@ public final class SC {
 		AppContext appContext = AppContext.getCurrentContext();
 		// Necessary to make access for JMX client available
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-		ObjectName mxbeanNameSessReg = new ObjectName(
-				"org.serviceconnector.registry:type=SessionRegistry");
-		ObjectName mxbeanNameServiceReg = new ObjectName(
-				"org.serviceconnector.registry:type=ServiceRegistry");
-		ObjectName mxbeanNameServerReg = new ObjectName(
-				"org.serviceconnector.registry:type=ServerRegistry");
-		ObjectName mxbeanNameLoggingManager = new ObjectName(
-				"org.serviceconnector.logging:type=LoggingManager");
+		ObjectName mxbeanNameSessReg = new ObjectName("org.serviceconnector.registry:type=SessionRegistry");
+		ObjectName mxbeanNameServiceReg = new ObjectName("org.serviceconnector.registry:type=ServiceRegistry");
+		ObjectName mxbeanNameServerReg = new ObjectName("org.serviceconnector.registry:type=ServerRegistry");
+		ObjectName mxbeanNameLoggingManager = new ObjectName("org.serviceconnector.logging:type=LoggingManager");
 
 		// Register the Queue Sampler MXBean
 		mbs.registerMBean(appContext.getSessionRegistry(), mxbeanNameSessReg);
@@ -182,15 +173,13 @@ public final class SC {
 	}
 
 	/**
-	 * Writes a file. PID of SC gets written in. Is used for testing purpose to
-	 * verify that SC is running properly.
+	 * Writes a file. PID of SC gets written in. Is used for testing purpose to verify that SC is running properly.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
 	private static void writePIDFile() throws Exception {
-		String processName = java.lang.management.ManagementFactory
-				.getRuntimeMXBean().getName();
+		String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
 		long pid = Long.parseLong(processName.split("@")[0]);
 		FileWriter fw = null;
 		try {
@@ -227,11 +216,8 @@ public final class SC {
 	 */
 	private static void writeSystemInfoToLog() throws Exception {
 		logger.log(Level.OFF, " ");
-		logger.log(Level.OFF,
-				"Service Connector " + SCVersion.CURRENT.toString()
-						+ " starting ...");
-		logger.log(Level.OFF,
-				"SC configuration: " + SystemInfo.getConfigFileName());
+		logger.log(Level.OFF, "Service Connector " + SCVersion.CURRENT.toString() + " starting ...");
+		logger.log(Level.OFF, "SC configuration: " + SystemInfo.getConfigFileName());
 		logger.log(Level.OFF, "Java version: " + SystemInfo.getJavaVersion());
 		logger.log(Level.OFF, "VM version: " + SystemInfo.getVmVersion());
 		logger.log(Level.OFF, "Local host: " + SystemInfo.getLocalHostId());
@@ -239,26 +225,21 @@ public final class SC {
 		logger.log(Level.OFF, "OS patch level: " + SystemInfo.getOsPatchLevel());
 		logger.log(Level.OFF, "CPU type: " + SystemInfo.getCpuType());
 		logger.log(Level.OFF, "User dir: " + SystemInfo.getUserDir());
-		logger.log(Level.OFF,
-				"Country setting: " + SystemInfo.getCountrySetting());
+		logger.log(Level.OFF, "Country setting: " + SystemInfo.getCountrySetting());
 		logger.log(Level.OFF, "User timezone: " + SystemInfo.getUserTimezone());
 		logger.log(Level.OFF, "UTC Offset: " + SystemInfo.getUtcOffset());
 		logger.log(Level.OFF, "Local date: " + SystemInfo.getLocalDate());
-		logger.log(Level.OFF,
-				"Available processors: " + SystemInfo.getAvailableProcessors());
+		logger.log(Level.OFF, "Available processors: " + SystemInfo.getAvailableProcessors());
 		logger.log(Level.OFF, "Max memory: " + SystemInfo.getMaxMemory());
 		logger.log(Level.OFF, "Free memory: " + SystemInfo.getFreeMemory());
 		logger.log(Level.OFF, "Total memory: " + SystemInfo.getTotalMemory());
-		logger.log(Level.OFF,
-				"Available disk memory: " + SystemInfo.getAvailableDiskSpace());
+		logger.log(Level.OFF, "Available disk memory: " + SystemInfo.getAvailableDiskSpace());
 	}
 
 	private static void showError(String msg) {
 		System.err.println("error: " + msg);
-		System.out
-				.println("\nusage  : java -jar sc.jar -sc.configuration <sc.properties file>");
-		System.out
-				.println("\nsamples: java -jar sc.jar -sc.configuration sc.properties");
+		System.out.println("\nusage  : java -jar sc.jar -sc.configuration <sc.properties file>");
+		System.out.println("\nsamples: java -jar sc.jar -sc.configuration sc.properties");
 	}
 
 	/**

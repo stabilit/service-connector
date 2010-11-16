@@ -13,63 +13,25 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.scmp.cache;
+package org.serviceconnector.cache;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Interface ISCMPCacheImpl.
- */
-public interface ISCMPCacheImpl {
-	
+public class SCCacheException extends Exception {
+
 	/**
-	 * Gets the.
-	 *
-	 * @param key the key
-	 * @return the object
+	 * Instantiates a new sCMP cache exception.
 	 */
-	public abstract Object get(Object key);
-	
+	public SCCacheException() {
+		super();
+	}
+
 	/**
-	 * Put.
+	 * Instantiates a new sCMP cache exception.
 	 *
-	 * @param key the key
-	 * @param value the value
+	 * @param message the message
 	 */
-	public abstract void put(Object key, Object value);
+	public SCCacheException(String message) {
+		super(message);
+	}
+
 	
-	/**
-	 * Removes the.
-	 *
-	 * @param key the key
-	 * @return true, if successful
-	 */
-	public abstract boolean remove(Object key);
-	
-	/**
-	 * Gets the element size.
-	 *
-	 * @return the element size
-	 */
-	public abstract int getElementSize();
-	
-	/**
-	 * Gets the cache name.
-	 *
-	 * @return the cache name
-	 */
-	public abstract String getCacheName();
-	
-	/**
-	 * Gets the memory store size.
-	 *
-	 * @return the memory store size
-	 */
-	public abstract long getMemoryStoreSize();
-	
-	/**
-	 * Gets the disk store size.
-	 *
-	 * @return the disk store size
-	 */
-	public abstract int getDiskStoreSize();
 }

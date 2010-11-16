@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.scmp.cache.impl;
+package org.serviceconnector.cache.impl;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -26,14 +26,13 @@ import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.Configuration;
 import net.sf.ehcache.config.DiskStoreConfiguration;
 
-import org.serviceconnector.scmp.cache.ISCMPCacheImpl;
-import org.serviceconnector.scmp.cache.SCMPCacheConfiguration;
+import org.serviceconnector.cache.SCCacheConfiguration;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class EHCacheSCMPCacheImpl.
  */
-public class EHCacheSCMPCacheImpl implements ISCMPCacheImpl {
+public class EHCacheImpl implements ICacheImpl {
 
 	/** The sync obj. */
 	private static Object syncObj = new Object();
@@ -55,7 +54,7 @@ public class EHCacheSCMPCacheImpl implements ISCMPCacheImpl {
 	 * @param serviceName
 	 *            the service name
 	 */
-	public EHCacheSCMPCacheImpl(SCMPCacheConfiguration scmpCacheConfiguration,
+	public EHCacheImpl(SCCacheConfiguration scmpCacheConfiguration,
 			String serviceName) {
 		synchronized (syncObj) {
 			if (manager == null) {

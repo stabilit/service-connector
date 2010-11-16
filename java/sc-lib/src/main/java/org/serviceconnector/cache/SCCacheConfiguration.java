@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.scmp.cache;
+package org.serviceconnector.cache;
 
 import java.security.InvalidParameterException;
 
@@ -27,14 +27,13 @@ import org.serviceconnector.net.res.netty.http.NettyHttpEndpoint;
 /**
  * The Class SCMPCacheConfiguration.
  */
-public class SCMPCacheConfiguration {
+public class SCCacheConfiguration {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(SCMPCacheConfiguration.class);
+	protected final static Logger logger = Logger.getLogger(SCCacheConfiguration.class);
 
 	/** The scmp cache configuration. */
-	private static SCMPCacheConfiguration scmpCacheConfiguration = new SCMPCacheConfiguration();
+	private static SCCacheConfiguration scmpCacheConfiguration = new SCCacheConfiguration();
 
 	/** The cache enabled. */
 	private boolean cacheEnabled;
@@ -57,7 +56,7 @@ public class SCMPCacheConfiguration {
 	/**
 	 * Instantiates a new sCMP cache configuration.
 	 */
-	private SCMPCacheConfiguration() {
+	private SCCacheConfiguration() {
 		this.cacheEnabled = false;
 		this.cacheName = "scmpCache";
 		this.diskPath = "";
@@ -71,17 +70,16 @@ public class SCMPCacheConfiguration {
 	 * 
 	 * @return single instance of SCMPCacheConfiguration
 	 */
-	public static SCMPCacheConfiguration getInstance() {
+	public static SCCacheConfiguration getInstance() {
 		return scmpCacheConfiguration;
 	}
 
 	/**
 	 * Loads cache parameters from properties file.
 	 * 
-	 * # Service Connector cache parameters cache.enabled=true
-	 * cache.name=scCache cache.diskPersistent=true cache.diskPath=../../dev/
-	 * cache cache.timeIdleSeconds=60 cache.timeToLiveSeconds=120
-	 * cache.maxElementsInMemory=10000 cache.maxElementsOnDisk=1000000
+	 * # Service Connector cache parameters cache.enabled=true cache.name=scCache cache.diskPersistent=true
+	 * cache.diskPath=../../dev/ cache cache.timeIdleSeconds=60 cache.timeToLiveSeconds=120 cache.maxElementsInMemory=10000
+	 * cache.maxElementsOnDisk=1000000
 	 * 
 	 * @param fileName
 	 *            the file name
@@ -113,8 +111,7 @@ public class SCMPCacheConfiguration {
 			logger.error("CACHE_NAME = " + e.toString());
 		}
 		try {
-			this.diskPersistent = config
-					.getBoolean(Constants.CACHE_DISK_PERSISTENT);
+			this.diskPersistent = config.getBoolean(Constants.CACHE_DISK_PERSISTENT);
 			logger.info("cache configuration: cache disk persistent is " + this.diskPersistent);
 		} catch (Exception e) {
 			logger.error("CACHE_DISK_PERSISTENT = " + e.toString());
@@ -129,8 +126,7 @@ public class SCMPCacheConfiguration {
 			logger.error("CACHE_DISK_PATH = " + e.toString());
 		}
 		try {
-			int maxElementsInMemory = config
-					.getInt(Constants.CACHE_MAX_ELEMENTS_IN_MEMORY);
+			int maxElementsInMemory = config.getInt(Constants.CACHE_MAX_ELEMENTS_IN_MEMORY);
 			if (maxElementsInMemory > 0) {
 				this.maxElementsInMemory = maxElementsInMemory;
 			}
@@ -139,8 +135,7 @@ public class SCMPCacheConfiguration {
 			logger.error("CACHE_MAX_ELEMENTS_IN_MEMORY = " + e.toString());
 		}
 		try {
-			int maxElementsOnDisk = config
-					.getInt(Constants.CACHE_MAX_ELEMENTS_ON_DISK);
+			int maxElementsOnDisk = config.getInt(Constants.CACHE_MAX_ELEMENTS_ON_DISK);
 			if (maxElementsOnDisk > 0) {
 				this.maxElementsOnDisk = maxElementsOnDisk;
 			}

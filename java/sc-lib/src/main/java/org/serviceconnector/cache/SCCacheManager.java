@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.scmp.cache;
+package org.serviceconnector.cache;
 
 import java.util.Collection;
 import java.util.Map;
@@ -24,19 +24,19 @@ import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceType;
 
-public class SCMPCacheManager {
+public class SCCacheManager {
 
 	/** The scmp cache map. */
-	private Map<String, SCMPCache> scmpCacheMap;
-	private SCMPCacheConfiguration scmpCacheConfiguration;
+	private Map<String, SCCache> scmpCacheMap;
+	private SCCacheConfiguration scmpCacheConfiguration;
 
 	
 	/**
 	 * Instantiates a new sCMP cache manager.
 	 */
-	public SCMPCacheManager() {
+	public SCCacheManager() {
 		// load scmp caches from configuration
-		this.scmpCacheMap = new ConcurrentHashMap<String, SCMPCache>();
+		this.scmpCacheMap = new ConcurrentHashMap<String, SCCache>();
 		this.scmpCacheConfiguration = null;
 	}
 
@@ -44,7 +44,7 @@ public class SCMPCacheManager {
 	 * Inits the scmp cache map according the service registry.
 	 */
 	public void initialize(String configFile) throws Exception {
-		this.scmpCacheConfiguration = SCMPCacheConfiguration.getInstance();
+		this.scmpCacheConfiguration = SCCacheConfiguration.getInstance();
 		this.scmpCacheConfiguration.load(configFile);
 		
 		ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
@@ -54,13 +54,13 @@ public class SCMPCacheManager {
 			String serviceName = service.getServiceName();
 			ServiceType serviceType = service.getType();
 			if (serviceType == ServiceType.SESSION_SERVICE) {
-				this.scmpCacheMap.put(serviceName, new SCMPCache(this, serviceName));
+				this.scmpCacheMap.put(serviceName, new SCCache(this, serviceName));
 			}
 		}
 	}
 
 	public void destroy() {
-		SCMPCacheImplFactory.destroy();
+		SCCacheImplFactory.destroy();
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class SCMPCacheManager {
 	 * @param serviceName the service name
 	 * @return the cache
 	 */
-	public SCMPCache getCache(String serviceName) {
+	public SCCache getCache(String serviceName) {
 		return this.scmpCacheMap.get(serviceName);
 	}
 
@@ -82,7 +82,7 @@ public class SCMPCacheManager {
 		return (Object[]) this.scmpCacheMap.values().toArray();
 	}
 
-	public SCMPCacheConfiguration getScmpCacheConfiguration() {
+	public SCCacheConfiguration getScmpCacheConfiguration() {
 		return scmpCacheConfiguration;
 	}
 }

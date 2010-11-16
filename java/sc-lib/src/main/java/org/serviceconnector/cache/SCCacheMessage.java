@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.scmp.cache;
+package org.serviceconnector.cache;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 /**
  * The Class SCMPCacheMessage.
  */
-public class SCMPCacheMessage implements Serializable {
+public class SCCacheMessage implements Serializable {
 
 	/** The header. */
 	private Map<String, String> header;
@@ -39,7 +39,7 @@ public class SCMPCacheMessage implements Serializable {
 	 *
 	 * @param body the body
 	 */
-	public SCMPCacheMessage(Object body) {
+	public SCCacheMessage(Object body) {
 		this.body = body;
 		this.header = new HashMap<String, String>();
 	}
