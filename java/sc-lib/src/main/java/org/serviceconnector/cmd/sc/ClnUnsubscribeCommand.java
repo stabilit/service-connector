@@ -61,9 +61,10 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		// lookup session and checks properness
 		Subscription subscription = this.getSubscriptionById(subscriptionId);
 		// delete entry from session registry
-		this.subscriptionRegistry.removeSubscription(subscription);
 		// looks up subscription queue and stops publish mechanism
 		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(subscriptionId);
+		//first remove subscription than unsubscribe
+		this.subscriptionRegistry.removeSubscription(subscription);
 		subscriptionQueue.unsubscribe(subscriptionId);
 		String serviceName = reqMessage.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 		subscriptionLogger.logUnsubscribe(serviceName, subscriptionId);

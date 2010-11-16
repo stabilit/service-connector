@@ -32,7 +32,7 @@ public class SCServerStartListenerTest {
 	
 	@After
 	public void tearDown() {
-		server.destroyServer();
+		server.destroy();
 	}
 	
 	@Test

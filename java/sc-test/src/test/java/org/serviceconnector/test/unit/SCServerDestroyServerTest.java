@@ -24,7 +24,7 @@ public class SCServerDestroyServerTest {
 	@Test
 	public void destroyServer_withoutPreviousisListening_notListening()
 	{
-		server.destroyServer();
+		server.destroy();
 		assertEquals(false, server.isListening());
 	}
 	
@@ -33,7 +33,7 @@ public class SCServerDestroyServerTest {
 	{
 		server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, 1);
 		assertEquals(true, server.isListening());
-		server.destroyServer();
+		server.destroy();
 		assertEquals(false, server.isListening());
 	}
 	
@@ -43,7 +43,7 @@ public class SCServerDestroyServerTest {
 		for (int i = 0; i < 400; i++) {
 			server.startListener(TestConstants.HOST, TestConstants.PORT_HTTP, 1);
 			assertEquals(true, server.isListening());
-			server.destroyServer();
+			server.destroy();
 			assertEquals(false, server.isListening());
 		}
 	}

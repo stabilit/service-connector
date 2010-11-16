@@ -54,7 +54,7 @@ public class RegisterServerDeregisterServerConnectionTypeHttpTest {
 
 	@After
 	public void tearDown() throws Exception {
-		server.destroyServer();
+		server.destroy();
 		server = null;
 //		Thread.sleep(5); // little sleep because threads needs to end
 //		assertEquals("number of threads", threadCount, Thread.activeCount());
@@ -160,7 +160,7 @@ public class RegisterServerDeregisterServerConnectionTypeHttpTest {
 			assertEquals(true, server.isRegistered(TestConstants.serviceName));
 			server.deregisterServer(TestConstants.serviceName);
 			assertEquals(false, server.isRegistered(TestConstants.serviceName));
-			server.destroyServer();
+			server.destroy();
 			server = null;
 			server = new SCSessionServer();
 			((SCSessionServer) server).setConnectionType("netty.tcp");
@@ -169,7 +169,7 @@ public class RegisterServerDeregisterServerConnectionTypeHttpTest {
 			assertEquals(true, server.isRegistered(TestConstants.serviceName));
 			server.deregisterServer(TestConstants.serviceName);
 			assertEquals(false, server.isRegistered(TestConstants.serviceName));
-			server.destroyServer();
+			server.destroy();
 			System.gc();
 		}
 	}

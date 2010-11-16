@@ -27,6 +27,8 @@ import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPCompositeSender;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
@@ -34,8 +36,8 @@ import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
 
 /**
- * The Class Requester. Implements a general behavior of a requester in the context of the Client or the Server. Defines
- * how to connect/disconnect, send/receive has to process. Handling of large request/response is defined on this level.
+ * The Class Requester. Implements a general behavior of a requester in the context of the Client or the Server. Defines how to
+ * connect/disconnect, send/receive has to process. Handling of large request/response is defined on this level.
  * 
  * @author JTraber
  */
@@ -71,8 +73,7 @@ public class SCRequester implements IRequester {
 			if (message.isLargeMessage()) {
 				// SCMPCompositeSender handles splitting, works like an iterator
 				SCMPCompositeSender compositeSender = new SCMPCompositeSender(message);
-				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext,
-						compositeSender, msgId);
+				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, compositeSender, msgId);
 				// setting up operation timeout after successful send
 				TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
 				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
@@ -126,9 +127,8 @@ public class SCRequester implements IRequester {
 	}
 
 	/**
-	 * The Class RequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a
-	 * reply is received. Handles freeing up earlier requested connections. Provides functionality to deal with large
-	 * messages.
+	 * The Class RequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a reply is
+	 * received. Handles freeing up earlier requested connections. Provides functionality to deal with large messages.
 	 */
 	private class SCRequesterSCMPCallback implements ISCMPCallback, ITimerRun {
 
@@ -149,8 +149,7 @@ public class SCRequester implements IRequester {
 		/** The timeout in milliseconds. */
 		private int timeoutInMillis;
 
-		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, ConnectionContext conCtx,
-				SCMPMessageId msgId) {
+		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, ConnectionContext conCtx, SCMPMessageId msgId) {
 			this(reqMsg, scmpCallback, conCtx, null, msgId);
 		}
 
@@ -276,16 +275,16 @@ public class SCRequester implements IRequester {
 			part = compositeSender.getCurrentPart();
 			if (part.isRequest()) {
 				/*
-				 * request has been sent completely. The response can be small or large, this doesn't matter, we
-				 * continue reading any large response later
+				 * request has been sent completely. The response can be small or large, this doesn't matter, we continue reading any
+				 * large response later
 				 */
 				return true;
 			}
 			if (compositeSender.hasNext() == false) {
 				if (this.requestMsg.isGroup()) {
 					/*
-					 * client processes group call, he needs to get the response - happens in special case: client sends
-					 * a single part of a group but content is to large and we need to split
+					 * client processes group call, he needs to get the response - happens in special case: client sends a single
+					 * part of a group but content is to large and we need to split
 					 */
 					return true;
 				}
@@ -338,8 +337,8 @@ public class SCRequester implements IRequester {
 		}
 
 		/**
-		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if connection
-		 * has a curious state.
+		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if connection has a curious
+		 * state.
 		 */
 		private void disconnectConnection() {
 			try {
@@ -382,8 +381,9 @@ public class SCRequester implements IRequester {
 		public void timeout() {
 			this.disconnectConnection();
 			try {
-				this.scmpCallback
-						.callback(new IdleTimeoutException("idle timeout. operation - could not be completed."));
+				SCMPFault fault = new SCMPFault(SCMPError.REQUEST_TIMEOUT, "OTI run out on client");
+				fault.setMessageType(requestMsg.getMessageType());
+				this.scmpCallback.callback(fault);
 			} catch (Exception e) {
 				this.scmpCallback.callback(e);
 			}

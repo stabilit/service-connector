@@ -26,6 +26,7 @@ import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
+import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -43,10 +44,14 @@ public class SetupTestCases {
 	private static SetupTestCases setupTestCases = null;
 	private static boolean killPublishServer = false;
 	private static boolean large = false;
-	private static SCSessionServer scSim1ConSrv;
-	private static SCSessionServer scSim10ConSrv;
-	private static SCSessionServer scSimEnableSrv;
-	private static SCSessionServer scSim1Sess;
+	private static SCServer scSim1ConSrv;
+	private static SCSessionServer scSessionSim1ConSrv;
+	private static SCServer scSim10ConSrv;
+	private static SCSessionServer scSessionSim10ConSrv;
+	private static SCServer scSimEnableSrv;
+	private static SCSessionServer scSessionSimEnableSrv;
+	private static SCServer scSim1Sess;
+	private static SCSessionServer scSessionSim1Sess;
 
 	private SetupTestCases() {
 	}
@@ -55,10 +60,11 @@ public class SetupTestCases {
 		ResponderConfiguration config = new ResponderConfiguration();
 		config.load("sc.properties");
 		deleteLog();
-		scSimEnableSrv = new SCSessionServer();
+		scSimEnableSrv = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, 7001);
+		scSimEnableSrv.setKeepAliveIntervalInSeconds(0);
 		// connect to SC as server
 		scSimEnableSrv.setImmediateConnect(true);
-		scSimEnableSrv.startListener(TestConstants.HOST, 7001, 0);
+		scSimEnableSrv.startListener();
 	}
 
 	public static void deleteLog() {
@@ -155,39 +161,46 @@ public class SetupTestCases {
 	}
 
 	private static void startSessionServer1Session() throws Exception {
-		scSim1Sess = new SCSessionServer();
+		scSim1Sess = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, 42000);
 		// connect to SC as server
 		scSim1Sess.setImmediateConnect(true);
-		scSim1Sess.startListener(TestConstants.HOST, 42000, 0);
+		scSim1Sess.setKeepAliveIntervalInSeconds(0);
+		scSim1Sess.startListener();
+		scSessionSim1Sess = scSim1Sess.newSessionServer();
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim1Sess.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "1sess", 1, 1, srvCallback);
+		scSessionSim1Sess.registerServer("1sess", 1, 1, srvCallback);
 	}
 
 	private static void startSessionServer1Connection() throws Exception {
-		scSim1ConSrv = new SCSessionServer();
+		scSim1ConSrv = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, 41000);
 		// connect to SC as server
 		scSim1ConSrv.setImmediateConnect(true);
-		scSim1ConSrv.startListener(TestConstants.HOST, 41000, 0);
+		scSim1ConSrv.setKeepAliveIntervalInSeconds(0);
+		scSessionSim1ConSrv = scSim1ConSrv.newSessionServer();
+		scSim1ConSrv.startListener();
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim1ConSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "1conn", 10, 1, srvCallback);
+		scSessionSim1ConSrv.registerServer("1conn", 10, 1, srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
-		scSim10ConSrv = new SCSessionServer();
+		scSim10ConSrv = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
 		// connect to SC as server
 		scSim10ConSrv.setImmediateConnect(true);
-		scSim10ConSrv.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
+		scSim10ConSrv.setKeepAliveIntervalInSeconds(0);
+		scSim10ConSrv.startListener();
+		scSessionSim10ConSrv = scSim10ConSrv.newSessionServer();
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSim10ConSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "simulation", 10, 10, srvCallback);
+		scSessionSim10ConSrv.registerServer("simulation", 10, 10, srvCallback);
 	}
 
 	public static void registerSessionServiceEnable() throws Exception {
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSimEnableSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, "enableService", 10, 10, srvCallback);
+		scSessionSimEnableSrv = scSimEnableSrv.newSessionServer();
+		scSessionSimEnableSrv.registerServer("enableService", 10, 10, srvCallback);
 	}
 
 	public static void deregisterSessionServiceEnable() throws Exception {
-		scSimEnableSrv.deregisterServer("enableService");
+		scSessionSimEnableSrv.deregisterServer("enableService");
 	}
 
 	private static class SessionServerCallback extends SCSessionServerCallback {
@@ -287,12 +300,13 @@ public class SetupTestCases {
 
 	public static void startPublishServer() throws Exception {
 		String serviceName = "publish-simulation";
-		SCPublishServer publishSrv = new SCPublishServer();
+		SCServer scPubServer = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, 51000);
+		SCPublishServer publishSrv = scPubServer.newPublishServer();
 		// connect to SC as server
 		publishSrv.setImmediateConnect(true);
-		publishSrv.startListener(TestConstants.HOST, 51000, 0);
+		scPubServer.startListener();
 		PublishServerCallback publishCallback = new PublishServerCallback();
-		publishSrv.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, serviceName, 1, 1, publishCallback);
+		publishSrv.registerServer(serviceName, 1, 1, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
 		Thread thread = new Thread(run);
 		thread.start();

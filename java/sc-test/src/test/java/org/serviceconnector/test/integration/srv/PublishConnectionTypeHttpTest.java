@@ -56,7 +56,7 @@ public class PublishConnectionTypeHttpTest {
 	@After
 	public void tearDown() throws Exception {
 		server.deregisterServer(TestConstants.serviceNamePublish);
-		server.destroyServer();
+		server.destroy();
 		server = null;
 		ex = null;
 	}

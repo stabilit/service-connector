@@ -27,9 +27,9 @@ public class DemoSessionClient extends Thread {
 		SCSessionService service = null;
 		try {
 			sc.setMaxConnections(20); // can be set before attach
-			sc.setKeepAliveIntervalInSeconds(10); // can be set before attach
+			sc.setKeepAliveIntervalInSeconds(0); // can be set before attach
 			sc.attach(); // regular
-			sc.attach(10); // alternative with operation timeout
+//			sc.attach(10); // alternative with operation timeout
 
 			String serviceName = "simulation";
 			service = sc.newSessionService(serviceName); // regular, no other params possible
@@ -37,19 +37,19 @@ public class DemoSessionClient extends Thread {
 			service.setEchoTimeoutInSeconds(2); // can be set before create session
 
 			service.createSession(); // regular
-			service.createSession(10); // alternative with operation timeout
-			SCMessage msg = new SCMessage();
-			msg.setSessionInfo("session-info"); // optional
-			msg.setData("certificate or what so ever"); // optional
-			service.createSession(10, msg); // alternative with operation timeout and message
-			service.createSession(msg); // alternative with message
+//			service.createSession(10); // alternative with operation timeout
+//			SCMessage msg = new SCMessage();
+//			msg.setSessionInfo("session-info"); // optional
+//			msg.setData("certificate or what so ever"); // optional
+//			service.createSession(10, msg); // alternative with operation timeout and message
+//			service.createSession(msg); // alternative with message
 
 			String sid = service.getSessionId();
 
 			SCMessage requestMsg = new SCMessage();
 			SCMessage responseMsg = new SCMessage();
 			SCMessageCallback cbk = new DemoSessionClientCallback(service); // callback on service!!
-			for (int i = 0; i < 100; i++) {
+			for (int i = 0; i < 10; i++) {
 				requestMsg.setData("body nr : " + i);
 				logger.info("Message sent: " + requestMsg.getData());
 
@@ -61,7 +61,7 @@ public class DemoSessionClient extends Thread {
 
 				// synchronous call encapsulates asynchronous call!
 				responseMsg = service.execute(requestMsg); // regular synchronous call
-				responseMsg = service.execute(requestMsg, 10); // alternative with operation timeout
+//				responseMsg = service.execute(requestMsg, 10); // alternative with operation timeout
 
 				logger.info("Message received: " + responseMsg.getData());
 				Thread.sleep(1000);
@@ -74,11 +74,11 @@ public class DemoSessionClient extends Thread {
 		} finally {
 			try {
 				service.deleteSession(); // regular
-				service.deleteSession(10); // alternative with operation timeout
-				SCMessage msg = new SCMessage();
-				msg.setSessionInfo("session-info"); // optional
-				service.deleteSession(10, msg); // alternative with operation timeout and message
-				service.deleteSession(msg); // alternative with message
+//				service.deleteSession(10); // alternative with operation timeout
+//				SCMessage msg = new SCMessage();
+//				msg.setSessionInfo("session-info"); // optional
+//				service.deleteSession(10, msg); // alternative with operation timeout and message
+//				service.deleteSession(msg); // alternative with message
 				sc.detach();
 			} catch (Exception e) {
 				logger.error("cleanup", e);

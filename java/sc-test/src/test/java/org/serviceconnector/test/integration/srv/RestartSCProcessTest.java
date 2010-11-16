@@ -48,7 +48,7 @@ public class RestartSCProcessTest {
 		} catch (Exception e) {
 			// might fail - but doesn't matter
 		}
-		server.destroyServer();
+		server.destroy();
 		server = null;
 		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
 		scProcess = null;

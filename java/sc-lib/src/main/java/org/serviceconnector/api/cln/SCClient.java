@@ -77,7 +77,7 @@ public class SCClient {
 	public SCClient(String host, int port, ConnectionType connectionType) {
 		this.host = host;
 		this.port = port;
-		this.connectionType = connectionType.toString();
+		this.connectionType = connectionType.getValue();
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 		this.scContext = new SCContext(this);
 		this.attached = false;

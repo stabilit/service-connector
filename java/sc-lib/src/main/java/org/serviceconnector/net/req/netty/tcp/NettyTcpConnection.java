@@ -194,7 +194,7 @@ public class NettyTcpConnection implements IConnection {
 		ChannelFuture future = channel.write(chBuffer);
 		future.addListener(operationListener);
 		try {
-			operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
+			operationListener.awaitUninterruptibly(10000);
 		} catch (CommunicationException ex) {
 			logger.error("send", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on "

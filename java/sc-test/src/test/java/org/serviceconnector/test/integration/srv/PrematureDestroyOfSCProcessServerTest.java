@@ -52,7 +52,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 		} catch (Exception e) {
 			// might happen nothing to do
 		}
-		server.destroyServer();
+		server.destroy();
 		server = null;
 		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
 		scProcess = null;

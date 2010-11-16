@@ -59,7 +59,7 @@ public class SessionServerTest {
 	@After
 	public void tearDown() throws Exception {
 		server.deregisterServer(TestConstants.serviceName);
-		server.destroyServer();
+		server.destroy();
 		server = null;
 		srvCallback = null;
 	}

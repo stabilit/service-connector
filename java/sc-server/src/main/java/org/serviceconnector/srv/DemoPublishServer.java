@@ -26,6 +26,8 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
+import org.serviceconnector.api.srv.SCServer;
+import org.serviceconnector.net.ConnectionType;
 
 public class DemoPublishServer {
 
@@ -40,118 +42,117 @@ public class DemoPublishServer {
 		DemoPublishServer publishServer = new DemoPublishServer();
 		publishServer.runPublishServer();
 	}
-//
-//	public void runPublishServer() {
-//	
-//		SCServer sc = new SCServer("localhost", 9000, "localhost", 9001);		// regular, defaults documented in javadoc
-//		sc = new SCServer("localhost", 9000, "localhost", 9001, ConnectionType.NETTY_HTTP);	// alternative with connection type
-//			
-//		try {
-//			sc.setKeepaliveIntervalInSeconds(10);					// can be set before register
-//			sc.setImmediateConnect(true);							// can be set before register
-//			
-//			sc.startListener();										// regular
-//
-//			String serviceName = "simulation";
-//			publishSrv = sc.newPublishServer(serviceName);	// no other params possible
-//			
-//			
-//			PublishServerContext context = new PublishServerContext();
-//			int maxSessions = 10;
-//			int maxConnections = 5;
-//			SCPublishServerCallback cbk = new SrvCallback(context);
-//			try {
-//				server.register(maxSessions, maxConnections, cbk);	//	regular
-//				server.register(10,maxSessions, maxConnections, cbk);	// alternative with operation timeout		
-//							
-//				SCPublishMessage pubMessage = new SCPublishMessage();
-//				for (int i = 0; i < 100; i++) {
-//					pubMessage.setData("publish message nr : " + i);
-//					pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-//					server.publish(serviceName,pubMessage);							// regular
-//					server.publish(10, serviceName, pubMessage);						// alternative with operation timeout
-//					
-//					Thread.sleep(1000);
-//				}
-//			} catch	(Exception e) {
-//				logger.error("runPublishServer", e);
-//				server.deregister();
-//				server.deregister(10);
-//		} catch (Exception e) {
-//			logger.error("runPublishServer", e);
-//		} finally {
-//			sc.stopListener();
-//		}
-//	}
-//		}
 
-	
 	public void runPublishServer() {
+
+		SCServer sc = new SCServer("localhost", 9000, 9001); // regular, defaults documented in javadoc
+		sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY_TCP); // alternative with connection type
+
+		sc.setKeepAliveIntervalInSeconds(10); // can be set before register
+		sc.setImmediateConnect(true); // can be set before register
 		try {
-			this.publishSrv = new SCPublishServer();
-			// connect to SC as server
-			this.publishSrv.setImmediateConnect(true);
-			this.publishSrv.startListener("localhost", 9002, 0);
-			SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
-			this.publishSrv.registerServer("localhost", 9000, serviceName, 10, 10, srvCallback);
-			Runnable runnable = new PublishRun(publishSrv, serviceName);
-			Thread thread = new Thread(runnable);
-			thread.start();
-		} catch (Exception ex) {
-			logger.error("runPublishServer", ex);
-			this.shutdown();
-		}
-	}
+			sc.startListener(); // regular
 
-	private static class PublishRun implements Runnable {
-		SCPublishServer server;
-		String serviceName;
+			String serviceName = "publish-simulation";
+			publishSrv = sc.newPublishServer(); // no other params possible
 
-		public PublishRun(SCPublishServer server, String serviceName) {
-			this.server = server;
-			this.serviceName = serviceName;
-		}
+			int maxSessions = 10;
+			int maxConnections = 5;
+			SCPublishServerCallback cbk = new SrvCallback(publishSrv);
 
-		@Override
-		public void run() {
-			int index = 0;
-			while (!DemoPublishServer.killPublishServer) {
-				try {
-					if (index % 3 == 0) {
-						Thread.sleep(1000);
-					} else {
-						Thread.sleep(5000);
-					}
-					Object data = "publish message nr " + ++index;
-					SCPublishMessage publishMessage = new SCPublishMessage();
-					publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-					publishMessage.setData(data);
-					server.publish(serviceName, publishMessage);
-					logger.info("Message published: " + data);
-				} catch (Exception ex) {
-					logger.error("run", ex);
-					return;
-				}
+			publishSrv.registerServer(serviceName, maxSessions, maxConnections, cbk); // regular
+//			publishSrv.registerServer(10, serviceName, maxSessions, maxConnections, cbk); // alternative with operation timeout
+
+			SCPublishMessage pubMessage = new SCPublishMessage();
+			for (int i = 0; i < 10; i++) {
+				pubMessage.setData("publish message nr : " + i);
+				pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
+				publishSrv.publish(serviceName, pubMessage); // regular
+				publishSrv.publish(10, serviceName, pubMessage); // alternative with operation timeout
+
+				Thread.sleep(1000);
 			}
+		} catch (Exception e) {
+			logger.error("runPublishServer", e);
+		} finally {
+			try {
+				publishSrv.deregisterServer(serviceName);
+//				publishSrv.deregisterServer(10, serviceName);
+			} catch (Exception e1) {
+				logger.error("run", e1);
+			}
+			sc.stopListener();
 		}
 	}
 
-	private void shutdown() {
-		DemoPublishServer.killPublishServer = true;
-		try {
-			this.publishSrv.deregisterServer(serviceName);
-		} catch (Exception ex) {
-			logger.error("shutdown", ex);
-			this.publishSrv = null;
-		}
-	}
+	// public void runPublishServer() {
+	// try {
+	// this.publishSrv = new SCPublishServer();
+	// // connect to SC as server
+	// this.publishSrv.setImmediateConnect(true);
+	// this.publishSrv.startListener("localhost", 9002, 0);
+	// SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
+	// this.publishSrv.registerServer("localhost", 9000, serviceName, 10, 10, srvCallback);
+	// Runnable runnable = new PublishRun(publishSrv, serviceName);
+	// Thread thread = new Thread(runnable);
+	// thread.start();
+	// } catch (Exception ex) {
+	// logger.error("runPublishServer", ex);
+	// this.shutdown();
+	// }
+	// }
+	//
+	// private static class PublishRun implements Runnable {
+	// SCPublishServer server;
+	// String serviceName;
+	//
+	// public PublishRun(SCPublishServer server, String serviceName) {
+	// this.server = server;
+	// this.serviceName = serviceName;
+	// }
+	//
+	// @Override
+	// public void run() {
+	// int index = 0;
+	// while (!DemoPublishServer.killPublishServer) {
+	// try {
+	// if (index % 3 == 0) {
+	// Thread.sleep(1000);
+	// } else {
+	// Thread.sleep(5000);
+	// }
+	// Object data = "publish message nr " + ++index;
+	// SCPublishMessage publishMessage = new SCPublishMessage();
+	// publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
+	// publishMessage.setData(data);
+	// server.publish(serviceName, publishMessage);
+	// logger.info("Message published: " + data);
+	// } catch (Exception ex) {
+	// logger.error("run", ex);
+	// return;
+	// }
+	// }
+	// }
+	// }
+	//
+	// private void shutdown() {
+	// DemoPublishServer.killPublishServer = true;
+	// try {
+	// this.publishSrv.deregisterServer(serviceName);
+	// } catch (Exception ex) {
+	// logger.error("shutdown", ex);
+	// this.publishSrv = null;
+	// }
+	// }
 
 	private class SrvCallback extends SCPublishServerCallback {
 
-		private PublishServerContext outerContext;
+		/** The Constant logger. */
+		protected final Logger logger = Logger.getLogger(SrvCallback.class);
+		private SCPublishServer publishSrv;
 
-		public SrvCallback(PublishServerContext context) {
-			this.outerContext = context;
+		public SrvCallback(SCPublishServer publishSrv) {
+			this.publishSrv = publishSrv;
 		}
 
 		@Override
@@ -180,18 +181,13 @@ public class DemoPublishServer {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {
-						this.outerContext.getServer().deregisterServer(serviceName);
+						this.publishSrv.deregisterServer("simulation");
 					} catch (Exception ex) {
 						logger.error("unsubscribe", ex);
 					}
 				}
 			}
 		}
-	}
 
-	private class PublishServerContext {
-		public SCPublishServer getServer() {
-			return publishSrv;
-		}
 	}
 }

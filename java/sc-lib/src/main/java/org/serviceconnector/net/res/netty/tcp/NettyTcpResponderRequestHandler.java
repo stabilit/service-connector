@@ -23,6 +23,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
@@ -192,6 +193,14 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			response.setSCMP(scmpFault);
 		}
 		response.write();
+	}	
+
+	/** {@inheritDoc} */
+	@Override
+	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+		super.channelClosed(ctx, e);
+		InetSocketAddress socketAddress = (InetSocketAddress) e.getChannel().getRemoteAddress();
+		this.cleanUpDeadServer(socketAddress.getHostName(), socketAddress.getPort());
 	}
 
 	/** {@inheritDoc} */
@@ -200,9 +209,6 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		Throwable th = e.getCause();
 		logger.info(th.toString());
 		NettyTcpResponse response = new NettyTcpResponse(e);
-		InetSocketAddress socketAddress = (InetSocketAddress) e.getChannel().getRemoteAddress();
-		this.cleanUpDeadServer(socketAddress.getHostName(), socketAddress.getPort());
-
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
 			return;

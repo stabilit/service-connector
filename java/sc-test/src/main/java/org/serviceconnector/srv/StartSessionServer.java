@@ -236,7 +236,7 @@ public class StartSessionServer {
 				for (int i = 0; i < serviceNames.length; i++) {
 					this.server.deregisterServer(serviceNames[i]);
 				}
-				this.server.destroyServer();
+				this.server.destroy();
 			} catch (Exception e) {
 				logger.error("run", e);
 			}

@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.SCCache;
@@ -26,12 +28,14 @@ import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
+import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -75,7 +79,6 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				String serviceName = message.getServiceName();
 				SCCache scmpCache = scmpCacheManager.getCache(serviceName);
 				if (scmpCache == null) {
-					// schedule session timeout
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
 							"no cache instance, service name = " + message.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
@@ -251,7 +254,18 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		/** {@inheritDoc} */
 		@Override
 		public void callback(Exception ex) {
-			super.callback(ex);
+			SCMPMessage fault = null;
+			if (ex instanceof IdleTimeoutException) {
+				// operation timeout handling
+				fault = new SCMPFault(SCMPError.PROXY_TIMEOUT, ERROR_STRING_TIMEOUT);
+			} else if (ex instanceof IOException) {
+				fault = new SCMPFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
+			} else if (ex instanceof ConnectionPoolBusyException) {
+				fault = new SCMPFault(ex, SCMPError.SC_ERROR, ERROR_STRING_FAIL);
+			} else {
+				fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
+			}
+			this.callback(fault);
 			// schedule session timeout
 			Session session = this.sessionRegistry.getSession(this.sessionId);
 			this.sessionRegistry.scheduleSessionTimeout(session);

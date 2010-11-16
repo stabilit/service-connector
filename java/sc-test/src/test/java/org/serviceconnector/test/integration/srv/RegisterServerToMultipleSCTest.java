@@ -55,7 +55,7 @@ public class RegisterServerToMultipleSCTest {
 
 	@After
 	public void tearDown() throws Exception {
-		server.destroyServer();
+		server.destroy();
 		server = null;
 //		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}

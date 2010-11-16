@@ -56,7 +56,7 @@ public class RegisterServerConnectionTypeTcpTest {
 
 	@After
 	public void tearDown() throws Exception {
-		server.destroyServer();
+		server.destroy();
 		server = null;
 		ex = null;
 	}

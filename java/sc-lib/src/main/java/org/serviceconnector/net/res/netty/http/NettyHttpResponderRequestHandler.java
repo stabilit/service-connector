@@ -23,6 +23,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
@@ -54,9 +55,8 @@ import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
 
 /**
- * The Class NettyHttpResponderRequestHandler. This class is responsible for handling Http requests. Is called from the
- * Netty framework by catching events (message received, exception caught). Functionality to handle large messages is
- * also inside.
+ * The Class NettyHttpResponderRequestHandler. This class is responsible for handling Http requests. Is called from the Netty
+ * framework by catching events (message received, exception caught). Functionality to handle large messages is also inside.
  * 
  * @author JTraber
  */
@@ -67,8 +67,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	/** The Constant performanceLogger. */
 	private final static PerformanceLogger performanceLogger = PerformanceLogger.getInstance();
 
-	private static SCMPSessionCompositeRegistry compositeRegistry = AppContext.getCurrentContext()
-			.getSCMPSessionCompositeRegistry();
+	private static SCMPSessionCompositeRegistry compositeRegistry = AppContext.getCurrentContext().getSCMPSessionCompositeRegistry();
 
 	/** {@inheritDoc} */
 	@Override
@@ -199,12 +198,18 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 	/** {@inheritDoc} */
 	@Override
+	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+		super.channelClosed(ctx, e);
+		InetSocketAddress socketAddress = (InetSocketAddress) e.getChannel().getRemoteAddress();
+		this.cleanUpDeadServer(socketAddress.getHostName(), socketAddress.getPort());
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
 		logger.info(th.toString());
 		NettyHttpResponse response = new NettyHttpResponse(e);
-		InetSocketAddress socketAddress = (InetSocketAddress) e.getChannel().getRemoteAddress();
-		this.cleanUpDeadServer(socketAddress.getHostName(), socketAddress.getPort());
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
 			return;
@@ -226,8 +231,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			SCMPMessage scmpRequest = request.getMessage();
 			String sessionId = scmpRequest.getSessionId();
 			if (response.isLarge()) {
-				SCMPMessageId messageId = NettyHttpResponderRequestHandler.compositeRegistry
-						.getSCMPMessageId(sessionId);
+				SCMPMessageId messageId = NettyHttpResponderRequestHandler.compositeRegistry.getSCMPMessageId(sessionId);
 				// response is large, create a large response for reply
 				SCMPCompositeSender compositeSender = new SCMPCompositeSender(response.getSCMP());
 				SCMPMessage firstSCMP = compositeSender.getFirst();

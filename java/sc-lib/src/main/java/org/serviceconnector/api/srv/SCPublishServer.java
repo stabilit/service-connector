@@ -21,8 +21,6 @@
  */
 package org.serviceconnector.api.srv;
 
-import java.security.InvalidParameterException;
-
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCPublishMessage;
@@ -42,22 +40,30 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class SCPublishServer extends SCSessionServer {
 
+	public SCPublishServer(SCServerContext scServerContext) {
+		super(scServerContext);
+	}
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCPublishServer.class);
+
+	public void publish(String serviceName, SCPublishMessage publishMessage) throws Exception {
+		this.publish(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName, publishMessage);
+	}
 
 	/**
 	 * Publish data.
 	 * 
+	 * @param operationTimeoutSeconds
+	 *            the operation timeout seconds
 	 * @param serviceName
 	 *            the service name
-	 * @param mask
-	 *            the mask
-	 * @param data
-	 *            the data
+	 * @param publishMessage
+	 *            the publish message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void publish(String serviceName, SCPublishMessage publishMessage) throws Exception {
+	public void publish(int operationTimeoutSeconds, String serviceName, SCPublishMessage publishMessage) throws Exception {
 		if (publishMessage == null) {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "subscibeMessage can not be null");
 		}
@@ -68,37 +74,16 @@ public class SCPublishServer extends SCSessionServer {
 		if (srvService == null) {
 			throw new SCServiceException("Service not found, service name: " + serviceName);
 		}
-		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(srvService
-				.getRequester(), serviceName);
+		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(srvService.getRequester(),
+				serviceName);
 		publishCall.setRequestBody(publishMessage.getData());
 		publishCall.setMask(publishMessage.getMask());
 		SCServerCallback callback = new SCServerCallback(true);
-		publishCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
-		SCMPMessage message = callback.getMessageSync();
+		publishCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		SCMPMessage message = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (message.isFault()) {
 			SCMPFault fault = (SCMPFault) message;
 			throw new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 		}
-	}
-
-	/**
-	 * Register server for a service.
-	 * 
-	 * @param scHost
-	 *            the sc host
-	 * @param scPort
-	 *            the sc port
-	 * @param serviceName
-	 *            the service name
-	 * @param scCallback
-	 *            the sc callback
-	 * @throws Exception
-	 *             the exception
-	 * @throws InvalidParameterException
-	 *             port is not within limits 0 to 0xFFFF, host unset
-	 */
-	public void registerServer(String scHost, int scPort, String serviceName, int maxSessions, int maxConnections,
-			SCPublishServerCallback scCallback) throws Exception {
-		super.registerServer(scHost, scPort, serviceName, maxSessions, maxConnections, scCallback);
 	}
 }

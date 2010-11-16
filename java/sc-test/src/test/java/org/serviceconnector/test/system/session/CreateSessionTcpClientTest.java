@@ -49,7 +49,7 @@ public class CreateSessionTcpClientTest {
 
 	@Before
 	public void setUp() throws Exception {
-		client = new SCMgmtClient();
+		client = new SCClient();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.serviceName));

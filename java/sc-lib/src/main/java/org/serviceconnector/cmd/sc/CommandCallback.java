@@ -20,11 +20,11 @@ public class CommandCallback extends SynchronousCallback {
 	protected final static Logger logger = Logger.getLogger(CommandCallback.class);
 
 	/** The Constant ERROR_STRING. */
-	private static final String ERROR_STRING_TIMEOUT = "executing command timed out";
+	protected static final String ERROR_STRING_TIMEOUT = "executing command timed out";
 	/** The Constant ERROR_STRING_CONNECTION. */
-	private static final String ERROR_STRING_CONNECTION = "broken connection";
+	protected static final String ERROR_STRING_CONNECTION = "broken connection";
 	/** The Constant ERROR_STRING_FAIL. */
-	private static final String ERROR_STRING_FAIL = "executing command failed";
+	protected static final String ERROR_STRING_FAIL = "executing command failed";
 
 	public CommandCallback() {
 		super();

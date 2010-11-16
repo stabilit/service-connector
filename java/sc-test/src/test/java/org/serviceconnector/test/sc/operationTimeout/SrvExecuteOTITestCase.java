@@ -40,7 +40,7 @@ public class SrvExecuteOTITestCase extends SuperSessionTestCase {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
 				"simulation", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
-		clnExecuteCall.setRequestBody("wait:2000");
+		clnExecuteCall.setRequestBody("wait:3000");
 		TestWaitMechanismCallback callback = new TestWaitMechanismCallback(true);
 
 		clnExecuteCall.invoke(callback, 1000);
@@ -54,7 +54,7 @@ public class SrvExecuteOTITestCase extends SuperSessionTestCase {
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		clnExecuteCall.invoke(callback1, 1000);
 		SCMPMessage responseMessage1 = callback1.getMessageSync();
-		SCTest.verifyError(responseMessage1, SCMPError.NOT_FOUND, "", SCMPMsgType.CLN_EXECUTE);
+		SCTest.checkReply(responseMessage1);
 	}
 
 	protected class TestWaitMechanismCallback extends SynchronousCallback {
