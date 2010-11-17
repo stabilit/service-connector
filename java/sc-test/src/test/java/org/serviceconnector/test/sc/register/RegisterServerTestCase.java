@@ -151,7 +151,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
 		// TODO this will not work if configuration is changed
-		String expectedScEntry = "P01_logging:P01_logging:ENABLED:file|local-publish-service:0 - local-publish-service_localhost/:51000 : 1|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|publish:0 - publish_localhost/:51000 : 10|local-session-service:0 - local-session-service_localhost/:30000 : 10|1sess:0 - 1sess_localhost/:42000 : 1|";
+		String expectedScEntry = "file-service:file-service:ENABLED:file|local-publish-service:0 - local-publish-service_localhost/:51000 : 1|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|publish:0 - publish_localhost/:51000 : 10|local-session-service:0 - local-session-service_localhost/:30000 : 10|1sess:0 - 1sess_localhost/:42000 : 1|";
 		String scEntry = inspectMap.get("serviceRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
