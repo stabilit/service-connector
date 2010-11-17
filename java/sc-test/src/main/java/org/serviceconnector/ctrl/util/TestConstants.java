@@ -9,7 +9,7 @@ public class TestConstants {
 	public static final int PORT_MAX = 65535;
 	public static final int PORT_LISTENER = 30000; 
 
-	public static final String log4jSrvProperties = "log4jSrv.properties";
+	public static final String log4jSrvProperties = "log4j-srv.properties";
 
 	public static final String log4jSCProperties = "log4j-sc.properties";
 	public static final String log4jSC1Properties = "log4j-sc1.properties";

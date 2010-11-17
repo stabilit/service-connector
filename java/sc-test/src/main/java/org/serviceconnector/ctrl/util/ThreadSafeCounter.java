@@ -3,10 +3,6 @@ package org.serviceconnector.ctrl.util;
 import org.apache.log4j.Logger;
 
 public class ThreadSafeCounter {
-
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ThreadSafeCounter.class);
-
 	private volatile int counter = 0;
 
 	public synchronized void increment() {
