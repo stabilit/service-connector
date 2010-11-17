@@ -36,7 +36,7 @@ public class NettyConnectTestCase {
 
 	@Before
 	public void setup() throws Exception {
-		SetupTestCases.setupSCOverFile("scPerf.properties");
+		SetupTestCases.setupSCOverFile(TestConstants.SCProperties);
 	}
 
 	@Test

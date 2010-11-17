@@ -32,8 +32,8 @@ public class AttachToMultipleSCTest {
 		new SCSessionServer();
 		ctrl = new ProcessesController();
 		try {
-			scProcess0 = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
-			scProcess1 = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scProperties1);
+			scProcess0 = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+			scProcess1 = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -42,7 +42,7 @@ public class AttachToMultipleSCTest {
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
 		ctrl.stopProcess(scProcess0, TestConstants.log4jSCProperties);
-		ctrl.stopProcess(scProcess1, TestConstants.log4jSC1Properties);
+		ctrl.stopProcess(scProcess1, TestConstants.log4jSCcascadedProperties);
 		ctrl = null;
 		scProcess0 = null;
 		scProcess1 = null;

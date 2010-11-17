@@ -31,7 +31,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	@Before
 	public void setUp() throws Exception {
 		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}

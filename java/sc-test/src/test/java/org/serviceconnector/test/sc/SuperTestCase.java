@@ -31,8 +31,6 @@ import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.test.sc.connectionPool.TestContext;
 
-
-
 /**
  * @author JTraber
  */
@@ -52,8 +50,7 @@ public abstract class SuperTestCase {
 
 	@Parameters
 	public static Collection<String[]> getParameters() {
-		return Arrays.asList(new String[] { "sc-unit-netty-http.properties" },
-				new String[] { "sc-unit-netty-tcp.properties" });
+		return Arrays.asList(new String[] { "sc-unit-netty-http.properties" }, new String[] { "sc-unit-netty-tcp.properties" });
 	}
 
 	public void setReq(IRequester req) {

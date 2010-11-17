@@ -39,7 +39,7 @@ public class SubscribeClientTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new ProcessesController();
 		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			srvProcess = ctrl.startServer(TestConstants.publishSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
 					new String[] { TestConstants.serviceNamePublish });

@@ -36,7 +36,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	@Before
 	public void setUp() throws Exception {
 		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
 							TestConstants.serviceNameAlt });

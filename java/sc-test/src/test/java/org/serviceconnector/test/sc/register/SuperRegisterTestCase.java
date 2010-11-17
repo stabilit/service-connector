@@ -24,6 +24,7 @@ import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.conf.RequesterConfiguration;
 import org.serviceconnector.conf.ResponderConfiguration;
+import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -39,7 +40,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 
 	protected IRequester registerRequester;
 	private RequesterContext registerContext;
-	private String registerFileName = "session-server.properties";
+	private String registerFileName = TestConstants.SCProperties;
 	private RequesterConfiguration registerConfig = null;
 	private ResponderConfiguration responderConfig = null;
 

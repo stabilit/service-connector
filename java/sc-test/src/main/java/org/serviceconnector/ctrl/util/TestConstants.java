@@ -12,19 +12,12 @@ public class TestConstants {
 	public static final String log4jSrvProperties = "log4j-srv.properties";
 
 	public static final String log4jSCProperties = "log4j-sc.properties";
-	public static final String log4jSC1Properties = "log4j-sc1.properties";		//cascaded configuration
-	public static final String log4jSC2Properties = "log4j-sc2.properties";		//cascaded configuration
-	
-	public static final String scProperties0 = "scIntegration.properties";
-	public static final String scProperties1 = "scIntegrationChanged.properties";
-	public static final String sc1Properties = "sc1.properties";
-	public static final String sc2Properties = "sc2.properties";
+	public static final String log4jSCcascadedProperties = "log4j-sc-cascaded.properties";
+	public static final String SCProperties = "sc.properties";
+	public static final String SCcascadedProperties = "sc-cascaded.properties";
 	
 	public static final String serviceNameSession = "local-session-service";
-	public static final String serviceNameAlt = "sc1-session-service";
-	public static final String serviceNameSessionDisabled = "disabledService";
 	public static final String serviceNamePublish = "local-publish-service";
-	public static final String serviceNamePublishDisabled = "disabledPublish";
 	
 	public static final String pangram = "The quick brown fox jumps over a lazy dog.";
 	public static final String stringLength32 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";

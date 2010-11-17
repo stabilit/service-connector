@@ -43,8 +43,8 @@ public class CreateSessionHttpClientToSCTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new ProcessesController();
 		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
-			sc1Process = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.sc1Properties);
+			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+			sc1Process = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
 							TestConstants.serviceNameAlt });
@@ -74,7 +74,7 @@ public class CreateSessionHttpClientToSCTest {
 	public static void oneTimeTearDown() throws Exception {
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
 		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
-		ctrl.stopProcess(sc1Process, TestConstants.log4jSC1Properties);
+		ctrl.stopProcess(sc1Process, TestConstants.log4jSCcascadedProperties);
 		srvProcess = null;
 		scProcess = null;
 		sc1Process = null;

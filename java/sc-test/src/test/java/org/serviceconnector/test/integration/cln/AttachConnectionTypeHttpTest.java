@@ -32,7 +32,7 @@ public class AttachConnectionTypeHttpTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new ProcessesController();
 		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}

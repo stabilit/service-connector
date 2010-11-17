@@ -33,7 +33,7 @@ public class RestartSCProcessTest {
 	@Before
 	public void setUp() throws Exception {
 		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -61,7 +61,7 @@ public class RestartSCProcessTest {
 
 	@Test
 	public void registerServer_afterSCRestartValidValues_isRegistered() throws Exception {
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10,
 				new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceNameSession));
@@ -70,27 +70,27 @@ public class RestartSCProcessTest {
 
 	@Test(expected = SCMPValidatorException.class)
 	public void registerServer_afterSCRestartInvalidMaxSessions_throwsException() throws Exception {
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, -1, 10,
 				new CallBack());
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void registerServer_afterSCRestartInvalidHost_throwsException() throws Exception {
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.registerServer("something", TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10, new CallBack());
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void registerServer_withImmediateConnectFalseAfterSCRestartInvalidHost_throwsException() throws Exception {
 		server.setImmediateConnect(false);
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.registerServer("something", TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10, new CallBack());
 	}
 
 	@Test
 	public void deregisterServer_afterSCRestart_passes() throws Exception {
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.deregisterServer(TestConstants.serviceNameSession);
 	}
 
@@ -99,7 +99,7 @@ public class RestartSCProcessTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10,
 				new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceNameSession));
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		try {
 			server.deregisterServer(TestConstants.serviceNameSession);
 		} catch (SCServiceException e) {
@@ -112,7 +112,7 @@ public class RestartSCProcessTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10,
 				new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceNameSession));
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		assertEquals(true, server.isRegistered(TestConstants.serviceNameSession));
 	}
 
@@ -121,7 +121,7 @@ public class RestartSCProcessTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10,
 				new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceNameSession));
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		try {
 			server.deregisterServer(TestConstants.serviceNameSession);
 		} catch (Exception e) { // ignore failing, just registering is important!

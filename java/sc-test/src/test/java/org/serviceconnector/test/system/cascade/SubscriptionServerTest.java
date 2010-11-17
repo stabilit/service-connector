@@ -32,8 +32,8 @@ public class SubscriptionServerTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new ProcessesController();
 		try {
-			sc0Process = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
-			scCascadedProcess = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.sc1Properties);
+			sc0Process = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+			scCascadedProcess = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 			throw e;
@@ -43,7 +43,7 @@ public class SubscriptionServerTest {
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
 		ctrl.stopProcess(sc0Process, TestConstants.log4jSCProperties);
-		ctrl.stopProcess(scCascadedProcess, TestConstants.log4jSC1Properties);
+		ctrl.stopProcess(scCascadedProcess, TestConstants.log4jSCcascadedProperties);
 		ctrl = null;
 		sc0Process = null;
 		scCascadedProcess = null;

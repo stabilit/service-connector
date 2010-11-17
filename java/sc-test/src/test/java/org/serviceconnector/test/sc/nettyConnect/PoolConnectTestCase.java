@@ -35,7 +35,7 @@ public class PoolConnectTestCase {
 
 	@Before
 	public void setup() throws Exception {
-		SetupTestCases.setupSCOverFile("scPerf.properties");
+		SetupTestCases.setupSCOverFile(TestConstants.SCProperties);
 	}
 
 	public void connect() throws Exception {
