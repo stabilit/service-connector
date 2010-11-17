@@ -26,9 +26,13 @@ public class SCFileService extends SCService {
 		this.scServiceContext = new SCServiceContext(this);
 	}
 
-	public synchronized void uploadFile(String remoteFileName, InputStream inStream, int timeoutInSeconds) throws Exception {
+	public synchronized void uploadFile(String remoteFileName, InputStream inStream) throws Exception {
+		this.uploadFile(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, remoteFileName, inStream);
+	}
+
+	public synchronized void uploadFile(int operationTimeoutSeconds, String remoteFileName, InputStream inStream) throws Exception {
 		// first create file session
-		this.createFileSession(timeoutInSeconds);
+		this.createFileSession(operationTimeoutSeconds);
 		try {
 			SCMPFileUploadCall uploadFileCall = (SCMPFileUploadCall) SCMPCallFactory.FILE_UPLOAD_CALL.newInstance(this.requester,
 					this.serviceName, this.sessionId);
@@ -37,32 +41,37 @@ public class SCFileService extends SCService {
 			uploadFileCall.setRequestBody(inStream);
 			uploadFileCall.setRemoteFileName(remoteFileName);
 			try {
-				uploadFileCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+				uploadFileCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("upload file failed ", e);
 			}
-			SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				throw new SCServiceException("upload file failed " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			}
 		} finally {
 			// always delete file session
-			this.deleteFileSession(timeoutInSeconds);
+			this.deleteFileSession(operationTimeoutSeconds);
 		}
 	}
 
-	public synchronized void downloadFile(String remoteFileName, OutputStream outStream, int timeoutInSeconds) throws Exception {
+	public synchronized void downloadFile(String remoteFileName, OutputStream outStream) throws Exception {
+		this.downloadFile(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, remoteFileName, outStream);
+	}
+
+	public synchronized void downloadFile(int operationTimeoutSeconds, String remoteFileName, OutputStream outStream)
+			throws Exception {
 		// first create file session
-		this.createFileSession(timeoutInSeconds);
+		this.createFileSession(operationTimeoutSeconds);
 		try {
 			SCMPFileDownloadCall downloadFileCall = (SCMPFileDownloadCall) SCMPCallFactory.FILE_DOWNLOAD_CALL.newInstance(
 					this.requester, this.serviceName, this.sessionId);
 			SCServiceCallback callback = new SCServiceCallback(true);
 
 			downloadFileCall.setRemoteFileName(remoteFileName);
-			downloadFileCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			downloadFileCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 
-			SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				throw new SCServiceException("download file failed " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			}
@@ -73,7 +82,7 @@ public class SCFileService extends SCService {
 			outStream.write((byte[]) reply.getBody());
 		} finally {
 			// always delete file session
-			this.deleteFileSession(timeoutInSeconds);
+			this.deleteFileSession(operationTimeoutSeconds);
 		}
 	}
 

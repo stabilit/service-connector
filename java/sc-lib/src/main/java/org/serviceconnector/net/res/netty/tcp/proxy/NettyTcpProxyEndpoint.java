@@ -98,7 +98,7 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 			if (remoteHostConfig == null) {
 				throw new SystemConfigurationException("no remote host configuration");
 			}
-			String remoteHost = remoteHostConfig.getHost();
+			String remoteHost = remoteHostConfig.getHosts().get(0);
 			int remotePort = remoteHostConfig.getPort();
 			this.remoteHost = remoteHost;
 			this.remotePort = remotePort;

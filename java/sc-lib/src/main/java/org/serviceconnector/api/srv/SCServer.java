@@ -1,6 +1,8 @@
 package org.serviceconnector.api.srv;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.activity.InvalidActivityException;
 
@@ -88,16 +90,17 @@ public class SCServer {
 		respConfig.setConnectionType(this.scServerContext.getConnectionType().getValue());
 
 		int port = this.scServerContext.getListenerPort();
-		String host = "localhost";
+		List<String> hosts = new ArrayList<String>();
+		hosts.add("localhost");
 
-		if (host == null) {
-			throw new InvalidParameterException("host must be set.");
+		if (hosts.size() == 0) {
+			throw new InvalidParameterException("at least one host must be set.");
 		}
 		ValidatorUtility.validateInt(0, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		ValidatorUtility.validateInt(0, this.scServerContext.getKeepAliveIntervalSeconds(), 3600,
 				SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 
-		respConfig.setHost(host);
+		respConfig.setHosts(hosts);
 		respConfig.setPort(port);
 
 		responder = new Responder(respConfig);

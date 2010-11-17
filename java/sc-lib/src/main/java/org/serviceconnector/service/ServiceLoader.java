@@ -76,6 +76,10 @@ public class ServiceLoader {
 				service = new FileService(serviceName, path);
 				String remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
 				Server server = AppContext.getCurrentContext().getServerRegistry().getServer(remoteHost);
+				if (server == null) {
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "service " + serviceName
+							+ " references an non existents file server named " + remoteHost);
+				}
 				((FileService) service).setServer((FileServer) server);
 				// TODO fehlerhandling
 				break;

@@ -17,6 +17,7 @@
 package org.serviceconnector.scmp;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -509,6 +510,24 @@ public class SCMPMessage {
 		default:
 			return;
 		}
+	}
+
+	/**
+	 * Sets the body.
+	 * 
+	 * @param body
+	 *            the new body
+	 */
+	public void setBody(byte[] buffer, int offset, int length) {
+		if (buffer== null) {
+			return;
+		}
+		if (offset == 0 && buffer.length == length) {
+			this.setBody(buffer);
+			return;
+		}
+		byte[] temp = Arrays.copyOfRange(buffer, offset, length);
+		this.setBody(temp);
 	}
 
 	/**

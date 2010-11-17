@@ -1,5 +1,8 @@
 package org.serviceconnector.server;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -17,19 +20,26 @@ import org.serviceconnector.service.FileSession;
 
 public class FileServer extends Server {
 
+	FileOutputStream outStream = null;
+
 	public FileServer(String serverKey, InetSocketAddress socketAddress, String serviceName, int portNr, int maxConnections,
 			String connectionType, int keepAliveInterval) {
 		super(ServerType.FILE_SERVER, socketAddress, serviceName, portNr, maxConnections, connectionType, keepAliveInterval,
 				Constants.OPERATION_TIMEOUT_MULTIPLIER);
 		this.serverKey = serverKey;
+		File localFile = new File("src/main/resources/SCApacheContent.txt");
+		try {
+			outStream = new FileOutputStream(localFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public SCMPMessage serverUploadFile(FileSession session, SCMPMessage message, String remoteFileName, int timeoutMillis)
 			throws Exception {
-
 		OutputStream out = null;
 		HttpURLConnection httpCon = null;
-
+		
 		if (session.isStreaming()) {
 			// streaming already started
 			httpCon = session.getHttpURLConnection();
@@ -37,8 +47,8 @@ public class FileServer extends Server {
 		} else {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
-			URL url = new URL("http://" + this.host + ":" + this.portNr + path + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT_NAME + "?name="
-					+ remoteFileName);
+			URL url = new URL("http://" + this.host + ":" + this.portNr + path + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT_NAME
+					+ "?name=" + remoteFileName);
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("PUT");
 			httpCon.setDoOutput(true);
@@ -86,17 +96,13 @@ public class FileServer extends Server {
 
 		if (session.isStreaming()) {
 			// streaming already started
-			httpCon = session.getHttpURLConnection();
-			in = httpCon.getInputStream();
+			in = session.getInputStream();
 		} else {
 			// download request arrived - set up URL connection
 			String path = session.getPath();
 			try {
 				URL url = new URL("http://" + this.host + ":" + this.portNr + path + remoteFileName);
 				httpCon = (HttpURLConnection) url.openConnection();
-				httpCon.setDoOutput(true);
-				httpCon.setDoInput(true);
-				httpCon.setChunkedStreamingMode(2048);
 				httpCon.connect();
 				in = httpCon.getInputStream();
 			} catch (Exception e) {
@@ -106,39 +112,28 @@ public class FileServer extends Server {
 			// set session to streaming mode
 			session.startStreaming();
 			session.setHttpUrlConnection(httpCon);
-			session.setOutstandingDownloadContentLength(httpCon.getContentLength());
+			session.setInputStream(in);
 		}
 		try {
-			int outstandingDownloadLength = session.getOutstandingDownloadLength();
 			// write the data to the client
 			SCMPMessage reply = null;
-			byte[] fullBuffer = null;
-
-			if (outstandingDownloadLength <= Constants.MAX_MESSAGE_SIZE) {
-				// last package should be done now
-				fullBuffer = new byte[outstandingDownloadLength];
-				reply = new SCMPMessage();
-			} else {
-				// continue polling still packages available
-				fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
-				reply = new SCMPPart();
-			}
+			byte[] fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
 			int readBytes = in.read(fullBuffer);
-			byte[] buffer = new byte[readBytes];
-			// wrap to proper size
-			for (int i = 0; i < readBytes; i++) {
-				buffer[i] = fullBuffer[i];
-			}
-			reply.setBody(buffer);
-			// update outstandingDownloadLength
-			outstandingDownloadLength -= buffer.length;
-			session.setOutstandingDownloadContentLength(outstandingDownloadLength);
-			if (outstandingDownloadLength <= 0) {
-				// donwload done!
+			if (readBytes < 0) {
+				// this is the end
+				reply = new SCMPMessage();
+				reply.setBody(new byte[0]);
 				in.close();
-				httpCon.disconnect();
+				outStream.close();
+				session.getHttpURLConnection().disconnect();
 				session.stopStreaming();
+				return reply;
 			}
+			reply = new SCMPPart();
+			System.out.println(readBytes);
+			outStream.write(fullBuffer, 0, readBytes);
+			outStream.flush();
+			reply.setBody(fullBuffer, 0, readBytes);
 			return reply;
 		} catch (Exception e) {
 			SCMPFault fault = new SCMPFault(e);

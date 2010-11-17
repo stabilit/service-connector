@@ -16,6 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.conf;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -34,10 +37,10 @@ public class CommunicatorConfig {
 	private String name;
 	/** The port. */
 	private int port;
-	/** The host. */
-	private String host;
+	/** The hosts. */
+	private List<String> hosts;
 	/** The connectionType. */
-	private String connectionType;	
+	private String connectionType;
 	/** The max pool size. */
 	private int maxPoolSize;
 	/** The keep alive interval. */
@@ -49,11 +52,11 @@ public class CommunicatorConfig {
 	/** The remote host configuration. */
 	private CommunicatorConfig remoteHostConfiguration;
 
-	public CommunicatorConfig(String name, String host, int port, String connectionType, int maxPoolSize,
+	public CommunicatorConfig(String name, List<String> hosts, int port, String connectionType, int maxPoolSize,
 			int keepAliveInterval, int keepAliveTimeout) {
 		this.name = name;
 		this.port = port;
-		this.host = host;
+		this.hosts = hosts;
 		this.connectionType = connectionType;
 		this.maxPoolSize = maxPoolSize;
 		this.keepAliveInterval = keepAliveInterval;
@@ -72,21 +75,26 @@ public class CommunicatorConfig {
 
 	public void initialize(CompositeConfiguration configurations) {
 		int port = Integer.parseInt((String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_PORT));
-		String maxPoolSizeValue = (String) configurations.getString(this.name	+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE);
+		String maxPoolSizeValue = (String) configurations
+				.getString(this.name + Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE);
 		if (maxPoolSizeValue != null) {
 			int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
 			this.setMaxPoolSize(maxPoolSize);
 		} // TODO TRN where is the else setting the default?
-		String keepAliveIntervalValue = (String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL);
+		String keepAliveIntervalValue = (String) configurations.getString(this.name
+				+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL);
 		int keepAliveInterval = 0;
 		if (keepAliveIntervalValue != null) {
 			keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
 		} // TODO TRN where is the else setting the default?
 		this.setKeepAliveInterval(keepAliveInterval);
 		this.setPort(port);
-		this.setHost((String) configurations.getString(this.name  + Constants.PROPERTY_QUALIFIER_HOST));
-		this.setConnectionType((String) configurations.getString(this.name	+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
-		this.setUsername((String) configurations.getString(this.name  + Constants.PROPERTY_QUALIFIER_USERNAME));
+		// TODO JOT list of host not get(0)!!!
+		List<String> hosts = new ArrayList<String>();
+		hosts.add(configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_HOST));
+		this.setHosts(hosts);
+		this.setConnectionType((String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
+		this.setUsername((String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_USERNAME));
 		this.setPassword((String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_PASSWORD));
 		// get remote host
 		String remoteHost = (String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
@@ -96,6 +104,7 @@ public class CommunicatorConfig {
 			this.setRemoteHostConfiguration(remoteHostConfig);
 		}
 	}
+
 	/**
 	 * Gets the communicator name.
 	 * 
@@ -139,18 +148,18 @@ public class CommunicatorConfig {
 	 * 
 	 * @return the host
 	 */
-	public String getHost() {
-		return host;
+	public List<String> getHosts() {
+		return hosts;
 	}
 
 	/**
-	 * Sets the host.
+	 * Sets the hosts.
 	 * 
-	 * @param host
-	 *            the new host
+	 * @param hosts
+	 *            the new hosts
 	 */
-	public void setHost(String host) {
-		this.host = host;
+	public void setHosts(List<String> hosts) {
+		this.hosts = hosts;
 	}
 
 	/**
@@ -200,11 +209,12 @@ public class CommunicatorConfig {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	/**
 	 * Sets the remote host.
-	 *
-	 * @param remoteHostConfig the new remote host
+	 * 
+	 * @param remoteHostConfig
+	 *            the new remote host
 	 */
 	public void setRemoteHostConfiguration(CommunicatorConfig remoteHostConfig) {
 		this.remoteHostConfiguration = remoteHostConfig;
@@ -212,12 +222,13 @@ public class CommunicatorConfig {
 
 	/**
 	 * Gets the remote host config.
-	 *
+	 * 
 	 * @return the remote host config
 	 */
 	public CommunicatorConfig getRemoteHostConfiguration() {
 		return remoteHostConfiguration;
 	}
+
 	/**
 	 * Gets the password.
 	 * 

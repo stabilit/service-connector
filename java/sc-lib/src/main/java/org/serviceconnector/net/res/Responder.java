@@ -16,13 +16,16 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.ctx.AppContext;
 
 /**
- * The Class Responder. Abstracts responder functionality from a application view. It is not the technical
- * representation of a responder connection.
+ * The Class Responder. Abstracts responder functionality from a application view. It is not the technical representation of a
+ * responder connection.
  * 
  * @author JTraber
  */
@@ -34,48 +37,61 @@ public class Responder implements IResponder {
 	/** The responder configuration. */
 	private CommunicatorConfig respConfig;
 	/** The endpoint connection. */
-	private IEndpoint endpoint;
+	private List<IEndpoint> endpoints;
 
 	public Responder() {
+		this(null);
 	}
 
 	public Responder(CommunicatorConfig respConfig) {
 		this.respConfig = respConfig;
+		this.endpoints = new ArrayList<IEndpoint>();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void create() throws Exception {
-		EndpointFactory endpointFactory = AppContext.getCurrentContext().getEndpointFactory();
-		this.endpoint = endpointFactory.createEndpoint(this.respConfig.getConnectionType());
-		this.endpoint.setResponder(this);
-		this.endpoint.setHost(this.respConfig.getHost());
-		this.endpoint.setPort(this.respConfig.getPort());
-		this.endpoint.create();
+		for (String host : this.respConfig.getHosts()) {
+			EndpointFactory endpointFactory = AppContext.getCurrentContext().getEndpointFactory();
+			IEndpoint endpoint = endpointFactory.createEndpoint(this.respConfig.getConnectionType());
+			endpoint.setResponder(this);
+			endpoint.setHost(host);
+			endpoint.setPort(this.respConfig.getPort());
+			endpoint.create();
+			endpoints.add(endpoint);
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void startListenAsync() throws Exception {
-		this.endpoint.startsListenAsync();
+		for (IEndpoint endpoint : this.endpoints) {
+			endpoint.startsListenAsync();
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void startListenSync() throws Exception {
-		this.endpoint.startListenSync();
+		for (IEndpoint endpoint : this.endpoints) {
+			endpoint.startListenSync();
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void stopListening() {
-		this.endpoint.stopListening();
+		for (IEndpoint endpoint : this.endpoints) {
+			endpoint.stopListening();
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
-		this.endpoint.destroy();
+		for (IEndpoint endpoint : this.endpoints) {
+			endpoint.destroy();
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -89,13 +105,14 @@ public class Responder implements IResponder {
 	public void setResponderConfig(CommunicatorConfig respConfig) {
 		this.respConfig = respConfig;
 	}
-	
+
 	/**
 	 * Gets the endpoint.
-	 *
+	 * 
 	 * @return the endpoint
 	 */
 	public IEndpoint getEndpoint() {
-		return endpoint;
+		// TODO DANI liste hier zurückgeben und im loadBody verarbeiten
+		return endpoints.get(0);
 	}
 }
