@@ -166,7 +166,7 @@ public class SetupTestCases {
 		scSim1Sess.setImmediateConnect(true);
 		scSim1Sess.setKeepAliveIntervalInSeconds(0);
 		scSim1Sess.startListener();
-		scSessionSim1Sess = scSim1Sess.newSessionServer("1sess");
+		scSessionSim1Sess = scSim1Sess.newSessionServer("local-session-service");
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSessionSim1Sess.registerServer(1, 1, srvCallback);
 	}
@@ -176,7 +176,7 @@ public class SetupTestCases {
 		// connect to SC as server
 		scSim1ConSrv.setImmediateConnect(true);
 		scSim1ConSrv.setKeepAliveIntervalInSeconds(0);
-		scSessionSim1ConSrv = scSim1ConSrv.newSessionServer("1conn");
+		scSessionSim1ConSrv = scSim1ConSrv.newSessionServer("local-session-service");
 		scSim1ConSrv.startListener();
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSessionSim1ConSrv.registerServer(10, 1, srvCallback);
@@ -195,7 +195,7 @@ public class SetupTestCases {
 
 	public static void registerSessionServiceEnable() throws Exception {
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSessionSimEnableSrv = scSimEnableSrv.newSessionServer("enableService");
+		scSessionSimEnableSrv = scSimEnableSrv.newSessionServer("local-session-service");
 		scSessionSimEnableSrv.registerServer(10, 10, srvCallback);
 	}
 

@@ -36,7 +36,7 @@ public class ExecuteClientToSCTest {
 		ctrl = new ProcessesController();
 		try {
 			sc0Process = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
-			scCascadedProcess = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scPropertiesCascaded);
+			scCascadedProcess = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.sc1Properties);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
 							TestConstants.serviceNameAlt });

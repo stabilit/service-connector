@@ -45,7 +45,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 	public void waitForConnectionInCreateSession_secondCCSTimesOut() throws Exception {
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "1conn");
+				.newInstance(req, "local-session-service");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(100);
 		createSessionCall.setRequestBody("wait:2000");
@@ -56,7 +56,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		Thread.sleep(20);
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall1 = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "1conn");
+				.newInstance(req, "local-session-service");
 		createSessionCall1.setSessionInfo("sessionInfo");
 		createSessionCall1.setEchoIntervalSeconds(100);
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
@@ -68,7 +68,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		SCTest.checkReply(responseMessage);
 		Assert.assertFalse(responseMessage.isFault());
 		Assert.assertTrue(responseMessage1.isFault());
-		SCTest.verifyError(responseMessage1, SCMPError.SC_ERROR, "[no free connection on server for service 1conn]",
+		SCTest.verifyError(responseMessage1, SCMPError.SC_ERROR, "[no free connection on server for service local-session-service]",
 				SCMPMsgType.CLN_CREATE_SESSION);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
@@ -81,7 +81,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 	public void waitForConnectionInCreateSession_secondCCSWaits() throws Exception {
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "1conn");
+				.newInstance(req, "local-session-service");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(100);
 		createSessionCall.setRequestBody("wait:1000");
@@ -92,7 +92,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		Thread.sleep(20);
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall1 = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "1conn");
+				.newInstance(req, "local-session-service");
 		createSessionCall1.setSessionInfo("sessionInfo");
 		createSessionCall1.setEchoIntervalSeconds(100);
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
@@ -118,7 +118,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 	public void waitForSessionInCreateSession_secondCCSTimesOut() throws Exception {
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "1sess");
+				.newInstance(req, "local-session-service");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(100);
 		createSessionCall.setRequestBody("wait:2000");
@@ -129,7 +129,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		Thread.sleep(20);
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall1 = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "1sess");
+				.newInstance(req, "local-session-service");
 		createSessionCall1.setSessionInfo("sessionInfo");
 		createSessionCall1.setEchoIntervalSeconds(100);
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
@@ -141,7 +141,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		SCTest.checkReply(responseMessage);
 		Assert.assertFalse(responseMessage.isFault());
 		Assert.assertTrue(responseMessage1.isFault());
-		SCTest.verifyError(responseMessage1, SCMPError.NO_FREE_SESSION, "[for service 1sess]",
+		SCTest.verifyError(responseMessage1, SCMPError.NO_FREE_SESSION, "[for service local-session-service]",
 				SCMPMsgType.CLN_CREATE_SESSION);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
@@ -154,7 +154,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 	public void waitForSessionInCreateSession_secondCCSWaits() throws Exception {
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "1sess");
+				.newInstance(req, "local-session-service");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(100);
 		createSessionCall.setRequestBody("wait:1000");
@@ -165,7 +165,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		Thread.sleep(20);
 		// sets up a create session call
 		SCMPClnCreateSessionCall createSessionCall1 = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "1sess");
+				.newInstance(req, "local-session-service");
 		createSessionCall1.setSessionInfo("sessionInfo");
 		createSessionCall1.setEchoIntervalSeconds(100);
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);

@@ -18,6 +18,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.log.Loggers;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
 public class CreateSessionHttpClientToSCTest {
@@ -27,8 +28,9 @@ public class CreateSessionHttpClientToSCTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CreateSessionHttpClientToSCTest.class);
 
-	private static Process sc0Process;
-	private static Process scCascadedProcess;
+	private static Process scProcess;
+	private static Process sc1Process;	// cascaded
+	private static Process sc2Process;	// cascaded
 	private static Process srvProcess;
 
 	private int threadCount = 0;
@@ -41,8 +43,8 @@ public class CreateSessionHttpClientToSCTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new ProcessesController();
 		try {
-			sc0Process = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
-			scCascadedProcess = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scPropertiesCascaded);
+			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
+			sc1Process = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.sc1Properties);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
 							TestConstants.serviceNameAlt });
@@ -54,8 +56,8 @@ public class CreateSessionHttpClientToSCTest {
 	@Before
 	public void setUp() throws Exception {
 		threadCount = Thread.activeCount();
-		client = new SCMgmtClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP,ConnectionType.NETTY_HTTP);
+		client.attach();
 		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.serviceNameSession));
 	}
 
@@ -71,11 +73,11 @@ public class CreateSessionHttpClientToSCTest {
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-		ctrl.stopProcess(sc0Process, TestConstants.log4jSCProperties);
-		ctrl.stopProcess(scCascadedProcess, TestConstants.log4jSC1Properties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
+		ctrl.stopProcess(sc1Process, TestConstants.log4jSC1Properties);
 		srvProcess = null;
-		sc0Process = null;
-		scCascadedProcess = null;
+		scProcess = null;
+		sc1Process = null;
 		ctrl = null;
 	}
 

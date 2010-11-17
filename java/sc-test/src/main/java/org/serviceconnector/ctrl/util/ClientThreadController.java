@@ -91,15 +91,15 @@ public class ClientThreadController {
 			sum += messages[i].value();
 		}
 		try {
-			SCClient client = new SCClient();
-			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-			SCSessionService service = client.newSessionService(TestConstants.serviceNameSession);
+			SCClient sc = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP);
+			sc.attach();
+			SCSessionService service = sc.newSessionService(TestConstants.serviceNameSession);
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
 			service.createSession(300, scMessage);
 			response = service.execute(new SCMessage("executed"));
 			service.deleteSession();
-			client.detach();
+			sc.detach();
 		} catch (Exception e) {
 		}
 

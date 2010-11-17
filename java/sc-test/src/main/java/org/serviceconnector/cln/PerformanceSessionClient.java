@@ -9,6 +9,7 @@ import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.Loggers;
+import org.serviceconnector.net.ConnectionType;
 
 public class PerformanceSessionClient implements Runnable {
 
@@ -43,16 +44,13 @@ public class PerformanceSessionClient implements Runnable {
 
 	@Override
 	public void run() {
-		SCClient client = new SCClient();
-		((SCClient) client).setConnectionType("netty.tcp");
+		SCClient sc = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		long start = System.currentTimeMillis();
-
 		try {
 			// wait for signal to start cycle
 			beforeAttachSignal.await();
-
 			try {
-				client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
+				sc.attach();
 			} catch (Exception e) {
 				testLogger.info("attach failed");
 			} finally {
@@ -62,7 +60,7 @@ public class PerformanceSessionClient implements Runnable {
 			afterAttachSignal.await();
 
 			for (int i = 0; i < sessionCycles; i++) {
-				SCSessionService service = client.newSessionService(TestConstants.serviceNameSession);
+				SCSessionService service = sc.newSessionService(TestConstants.serviceNameSession);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
 				service.createSession(300, scMessage);
@@ -77,7 +75,7 @@ public class PerformanceSessionClient implements Runnable {
 			logger.fatal("run", e);
 		} finally {
 			try {
-				client.detach();
+				sc.detach();
 			} catch (Exception e) {
 				testLogger.info("detach failed");
 			}

@@ -28,14 +28,12 @@ public class StartSessionServer {
 
 	public static void main(String[] args) throws Exception {
 		StartSessionServer sessionServer = new StartSessionServer();
-
 		sessionServer.runSessionServer(args);
 	}
 
 	public void runSessionServer(String[] args) {
 		try {
 			this.scSrv = new SCSessionServer();
-
 			try {
 				this.listenerPort = Integer.parseInt(args[0]);
 				this.port = Integer.parseInt(args[1]);

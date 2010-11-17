@@ -9,6 +9,7 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnector.net.ConnectionType;
 
 public class StartPublishClient extends Thread {
 
@@ -32,41 +33,41 @@ public class StartPublishClient extends Thread {
 
 	@Override
 	public void run() {
-		SCClient client = new SCClient();
+		SCClient sc = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 
 		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+			sc.attach();
 
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
 			subscibeMessage.setSessionInfo("sessionInfo");
 
 			if (getMethodName() == "subscribe_serviceNameValidMaskSameAsInServer_isSubscribedSessionIdExists") {
-				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = sc.newPublishService(TestConstants.serviceNamePublish);
 				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 				service.unsubscribe();
 
 			} else if (getMethodName() == "subscribe_timeoutMaxAllowed_isSubscribedSessionIdExists") {
-				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
-				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), 3600);
+				SCPublishService service = sc.newPublishService(TestConstants.serviceNamePublish);
+				service.subscribe(3600, subscibeMessage, new DemoPublishClientCallback(service));
 				service.unsubscribe();
 
 			} else if (getMethodName() == "changeSubscription_toMaskWhiteSpace_passes") {
-				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = sc.newPublishService(TestConstants.serviceNamePublish);
 				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 				subscibeMessage.setMask(" ");
 				service.changeSubscription(subscibeMessage);
 				service.unsubscribe();
 
 			} else if (getMethodName() == "subscribeUnsubscribe_twice_isSubscribedThenNot") {
-				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = sc.newPublishService(TestConstants.serviceNamePublish);
 				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 				service.unsubscribe();
 				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 				service.unsubscribe();
 
 			} else if (getMethodName() == "changeSubscription_twice_passes") {
-				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = sc.newPublishService(TestConstants.serviceNamePublish);
 				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 
 				service.changeSubscription(subscibeMessage);
@@ -75,30 +76,30 @@ public class StartPublishClient extends Thread {
 				service.unsubscribe();
 
 			} else if (getMethodName() == "unsubscribe_serviceNameValid_notSubscribedEmptySessionId") {
-				SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = sc.newPublishService(TestConstants.serviceNamePublish);
 				service.unsubscribe();
 
 			} else if (getMethodName() == "createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
+				SCSessionService sessionService = sc.newSessionService(TestConstants.serviceNameSession);
 
 				try {
 					SCMessage scMessage = new SCMessage("reject");
 					scMessage.setSessionInfo("sessionInfo");
-					sessionService.createSession(300, 10, scMessage);
+					sessionService.createSession(10, scMessage);
 				} catch (Exception e) {
 				}
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				sessionService.createSession(300, 10, scMessage);
+				sessionService.createSession(10, scMessage);
 
 				sessionService.execute(new SCMessage());
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "execute_messageData1MBArray_returnsTheSameMessageData") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
+				SCSessionService sessionService = sc.newSessionService(TestConstants.serviceNameSession);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				sessionService.createSession(300, 10, scMessage);
+				sessionService.createSession(10, scMessage);
 
 				SCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
 				message.setCompressed(false);
@@ -112,7 +113,7 @@ public class StartPublishClient extends Thread {
 			logger.error("run", e);
 		} finally {
 			try {
-				client.detach();
+				sc.detach();
 			} catch (Exception e) {
 				logger.error("run", e);
 			}

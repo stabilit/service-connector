@@ -74,7 +74,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 	public void executeWaitsForConnection_TimesOutTest() throws Exception {
 		this.clnCreateSession1Conn();
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
-				"1conn", this.sessionId);
+				"local-session-service", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("wait:2000");
 		TestWaitMechanismCallback callback = new TestWaitMechanismCallback(true);
@@ -84,7 +84,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 		// to assure second create is not faster
 		Thread.sleep(20);
 		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL
-				.newInstance(req, "1conn", this.sessionId);
+				.newInstance(req, "local-session-service", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		clnExecuteCall.invoke(callback1, 1000);
@@ -95,7 +95,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 		SCTest.checkReply(responseMessage);
 		Assert.assertFalse(responseMessage.isFault());
 		Assert.assertTrue(responseMessage1.isFault());
-		SCTest.verifyError(responseMessage1, SCMPError.SC_ERROR, "[no free connection on server for service 1conn]",
+		SCTest.verifyError(responseMessage1, SCMPError.SC_ERROR, "[no free connection on server for service local-session-service]",
 				SCMPMsgType.CLN_EXECUTE);
 		this.clnDeleteSession1Conn();
 	}
@@ -104,7 +104,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 	public void executeWaitsForConnection_WaitsTest() throws Exception {
 		this.clnCreateSession1Conn();
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
-				"1conn", this.sessionId);
+				"local-session-service", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("wait:2000");
 		TestWaitMechanismCallback callback = new TestWaitMechanismCallback(true);
@@ -114,7 +114,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 		// to assure second create is not faster
 		Thread.sleep(20);
 		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL
-				.newInstance(req, "1conn", this.sessionId);
+				.newInstance(req, "local-session-service", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		clnExecuteCall.invoke(callback1, 10000);

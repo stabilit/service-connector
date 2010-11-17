@@ -33,7 +33,7 @@ public class SubscriptionServerTest {
 		ctrl = new ProcessesController();
 		try {
 			sc0Process = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
-			scCascadedProcess = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scPropertiesCascaded);
+			scCascadedProcess = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.sc1Properties);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 			throw e;

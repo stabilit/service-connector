@@ -59,7 +59,7 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
 		String scEntry = (String) inspectMap.get("serviceRegistry"); // TODO TRN this will not work if config is changed!
-		String expectedEntry = "file-service:file-service:ENABLED:file|local-publish-service:0 - local-publish-service_localhost/:51000 : 1|1conn:0 - 1conn_localhost/:41000 : 10|enableService:0|publish:0|local-session-service:0 - local-session-service_localhost/:30000 : 10|1sess:0 - 1sess_localhost/:42000 : 1|";
+		String expectedEntry = "file-service:file-service:ENABLED:file|local-publish-service:0 - local-publish-service_localhost/:51000 : 1|local-session-service:0 - local-session-service_localhost/:30000 : 10|";
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedEntry, scEntry);
 		super.registerServerBefore();
 	}
