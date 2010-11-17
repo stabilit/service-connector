@@ -32,7 +32,7 @@ import org.serviceconnector.scmp.SCMPMessageId;
 public class TestContext extends RequesterContext {
 
 	public TestContext(CommunicatorConfig config, SCMPMessageId msgId) {
-		super(new ConnectionPool(config.getHost(), config.getPort(), config.getConnectionType()), msgId);
+		super(new ConnectionPool(config.getHosts().get(0), config.getPort(), config.getConnectionType()), msgId);
 		this.connectionPool.setMinConnections(1);
 	}
 

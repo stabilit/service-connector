@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.sc.register;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import junit.framework.Assert;
@@ -125,8 +127,10 @@ public class RegisterServerTestCase extends SuperTestCase {
 
 	@Test
 	public void registerServerCall() throws Exception {
-		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", TestConstants.HOST, TestConstants.PORT_TCP,
-				"netty.tcp", 1000, 60, 10);
+		List<String> hosts = new ArrayList<String>();
+		hosts.add(TestConstants.HOST);
+		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", hosts, TestConstants.PORT_TCP, "netty.tcp",
+				1000, 60, 10);
 		RequesterContext context = new TestContext(config, this.msgId);
 		IRequester req = new SCRequester(context);
 
