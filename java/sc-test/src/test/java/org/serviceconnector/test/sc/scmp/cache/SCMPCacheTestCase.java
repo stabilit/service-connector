@@ -39,7 +39,7 @@ import org.serviceconnector.service.SessionService;
  */
 public class SCMPCacheTestCase {
 
-	private CacheManager scmpCacheManager;
+	private CacheManager cacheManager;
 	/**
 	 * Scmp cache write test.
 	 * @throws Exception 
@@ -57,18 +57,18 @@ public class SCMPCacheTestCase {
        serviceRegistry.addService("dummy1", service);
 	   service = new SessionService("dummy2");
        serviceRegistry.addService("dummy2", service);
-	   scmpCacheManager = new CacheManager();
-	   scmpCacheManager.initialize(null);
+	   cacheManager = new CacheManager();
+	   cacheManager.initialize();
 	}
 
 	@After
 	public void afterTest() {
-		scmpCacheManager.destroy();
+		cacheManager.destroy();
 	}
 
 	@Test
 	public void simpleSCMPCacheWriteTest() throws CacheException {
-		Cache scmpCache = this.scmpCacheManager.getCache("dummy");
+		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the buffer";
 		byte[] buffer = stringWrite.getBytes();
 		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
@@ -87,8 +87,8 @@ public class SCMPCacheTestCase {
 
 	@Test
 	public void duplicateSCMPCacheWriteTest() throws CacheException {
-		Cache scmpCache1 = this.scmpCacheManager.getCache("dummy1");
-		Cache scmpCache2 = this.scmpCacheManager.getCache("dummy2");
+		Cache scmpCache1 = this.cacheManager.getCache("dummy1");
+		Cache scmpCache2 = this.cacheManager.getCache("dummy2");
 		String stringWrite = "this is the buffer";
 		byte[] buffer = stringWrite.getBytes();
 		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
@@ -112,7 +112,7 @@ public class SCMPCacheTestCase {
 
 	@Test
 	public void partSCMPCacheWriteTest() throws CacheException {
-		Cache scmpCache = this.scmpCacheManager.getCache("dummy");
+		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the part buffer nr = ";
 		for (int i = 1; i <= 10; i++) {
 			String partWrite = stringWrite + i;		    
