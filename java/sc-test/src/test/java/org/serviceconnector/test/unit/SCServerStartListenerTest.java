@@ -11,8 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.net.SCMPCommunicationException;
+import org.serviceconnetor.TestConstants;
 
 
 public class SCServerStartListenerTest {

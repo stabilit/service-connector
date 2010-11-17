@@ -23,8 +23,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.test.sc.SetupTestCases;
+import org.serviceconnetor.TestConstants;
 
 public class ClnAPIFileTestCase {
 

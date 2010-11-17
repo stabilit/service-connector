@@ -12,9 +12,9 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnetor.TestConstants;
 
 public class EnableServiceDisableServiceClientToSCTest {
 	/** The Constant logger. */
@@ -46,7 +46,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
-						TestConstants.serviceNameAlt, TestConstants.serviceNameSessionDisabled });
+						TestConstants.serviceNamePublish, TestConstants.serviceNameSession });
 	}
 
 	@After
@@ -95,20 +95,20 @@ public class EnableServiceDisableServiceClientToSCTest {
 	// TODO doubt this test case is useful ?
 	@Test
 	public void createSession_2() throws Exception {
-		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
-		client.enableService(TestConstants.serviceNameSessionDisabled);
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
+		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSession));
+		client.enableService(TestConstants.serviceNameSession);
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
 
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSessionDisabled);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession(300, 60, scMessage);
 
-		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSessionDisabled));
+		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
-		client.disableService(TestConstants.serviceNameSessionDisabled);
+		client.disableService(TestConstants.serviceNameSession);
 	}
 
 	/**

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.srv.SCSessionServer;
-import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnetor.TestConstants;
 
 
 

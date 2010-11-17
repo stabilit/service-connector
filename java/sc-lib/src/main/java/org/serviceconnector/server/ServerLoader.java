@@ -23,11 +23,9 @@ package org.serviceconnector.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.security.InvalidParameterException;
 import java.util.List;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;

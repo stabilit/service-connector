@@ -10,8 +10,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnetor.TestConstants;
 
 
 public class RestartOfSCProcessClientTest {

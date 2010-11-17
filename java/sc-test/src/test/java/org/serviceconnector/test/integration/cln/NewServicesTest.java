@@ -15,7 +15,7 @@ import org.serviceconnector.api.cln.SCFileService;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnetor.TestConstants;
 
 public class NewServicesTest {
 	/** The Constant logger. */
@@ -89,7 +89,7 @@ public class NewServicesTest {
 	@Test
 	public void newSessionService_validDisabledServiceName_returnsSCSessionService() throws Exception {
 		assertEquals(true,
-				client.newSessionService(TestConstants.serviceNameSessionDisabled) instanceof SCSessionService);
+				client.newSessionService(TestConstants.serviceNameSession) instanceof SCSessionService);
 	}
 
 	@Test
@@ -101,14 +101,14 @@ public class NewServicesTest {
 	@Test
 	public void newSessionService_twiceDifferentServiceName_returnsSCSessionService() throws Exception {
 		assertEquals(true, client.newSessionService(TestConstants.serviceNameSession) instanceof SCSessionService);
-		assertEquals(true, client.newSessionService(TestConstants.serviceNameAlt) instanceof SCSessionService);
+		assertEquals(true, client.newSessionService(TestConstants.serviceNamePublish) instanceof SCSessionService);
 	}
 
 	@Test
 	public void newSessionService_1000TimesDifferentServiceName_returnsSCSessionService() throws Exception {
 		for (int i = 0; i < 500; i++) {
 			assertEquals(true, client.newSessionService(TestConstants.serviceNameSession) instanceof SCSessionService);
-			assertEquals(true, client.newSessionService(TestConstants.serviceNameAlt) instanceof SCSessionService);
+			assertEquals(true, client.newSessionService(TestConstants.serviceNamePublish) instanceof SCSessionService);
 		}
 	}
 
@@ -146,7 +146,7 @@ public class NewServicesTest {
 	@Test
 	public void newPublishService_validDisabledServiceName_returnsSCPublishService() throws Exception {
 		assertEquals(true,
-				client.newPublishService(TestConstants.serviceNameSessionDisabled) instanceof SCPublishService);
+				client.newPublishService(TestConstants.serviceNameSession) instanceof SCPublishService);
 	}
 
 	@Test
@@ -158,14 +158,14 @@ public class NewServicesTest {
 	@Test
 	public void newPublishService_twiceDifferentServiceName_returnsSCPublishService() throws Exception {
 		assertEquals(true, client.newPublishService(TestConstants.serviceNameSession) instanceof SCPublishService);
-		assertEquals(true, client.newPublishService(TestConstants.serviceNameAlt) instanceof SCPublishService);
+		assertEquals(true, client.newPublishService(TestConstants.serviceNamePublish) instanceof SCPublishService);
 	}
 
 	@Test
 	public void newPublishService_1000TimesDifferentServiceName_returnsSCPublishService() throws Exception {
 		for (int i = 0; i < 500; i++) {
 			assertEquals(true, client.newPublishService(TestConstants.serviceNameSession) instanceof SCPublishService);
-			assertEquals(true, client.newPublishService(TestConstants.serviceNameAlt) instanceof SCPublishService);
+			assertEquals(true, client.newPublishService(TestConstants.serviceNamePublish) instanceof SCPublishService);
 		}
 	}
 
@@ -196,7 +196,7 @@ public class NewServicesTest {
 
 	@Test
 	public void newFileService_validDisabledServiceName_returnsSCFileService() throws Exception {
-		assertEquals(true, client.newFileService(TestConstants.serviceNameSessionDisabled) instanceof SCFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceNameSession) instanceof SCFileService);
 	}
 
 	@Test
@@ -208,14 +208,14 @@ public class NewServicesTest {
 	@Test
 	public void newFileService_twiceDifferentServiceName_returnsSCFileService() throws Exception {
 		assertEquals(true, client.newFileService(TestConstants.serviceNameSession) instanceof SCFileService);
-		assertEquals(true, client.newFileService(TestConstants.serviceNameAlt) instanceof SCFileService);
+		assertEquals(true, client.newFileService(TestConstants.serviceNamePublish) instanceof SCFileService);
 	}
 
 	@Test
 	public void newFileService_1000TimesDifferentServiceName_returnsSCFileService() throws Exception {
 		for (int i = 0; i < 500; i++) {
 			assertEquals(true, client.newFileService(TestConstants.serviceNameSession) instanceof SCFileService);
-			assertEquals(true, client.newFileService(TestConstants.serviceNameAlt) instanceof SCFileService);
+			assertEquals(true, client.newFileService(TestConstants.serviceNamePublish) instanceof SCFileService);
 		}
 	}
 }

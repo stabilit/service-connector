@@ -24,7 +24,6 @@ import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.conf.RequesterConfiguration;
 import org.serviceconnector.conf.ResponderConfiguration;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -32,6 +31,7 @@ import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 import org.serviceconnector.test.sc.connectionPool.TestContext;
+import org.serviceconnetor.TestConstants;
 
 /**
  * @author JTraber

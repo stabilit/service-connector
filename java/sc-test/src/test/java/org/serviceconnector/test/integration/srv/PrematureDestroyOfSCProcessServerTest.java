@@ -13,8 +13,8 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnetor.TestConstants;
 
 public class PrematureDestroyOfSCProcessServerTest {
 
@@ -47,7 +47,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 	@After
 	public void tearDown() throws Exception {
 		try {
-			server.deregisterServer(TestConstants.serviceNameAlt);
+			server.deregisterServer(TestConstants.serviceNamePublish);
 			server.deregisterServer(TestConstants.serviceNameSession);
 		} catch (Exception e) {
 			// might happen nothing to do
@@ -115,7 +115,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 				new CallBack());
 		scProcess.destroy();
 		scProcess.waitFor();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameAlt, 10, 10,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNamePublish, 10, 10,
 				new CallBack());
 	}
 

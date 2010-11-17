@@ -8,8 +8,8 @@ import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnetor.TestConstants;
 
 public class StartPublishClient extends Thread {
 

@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnetor.TestConstants;
 
 
 public class AttachToMultipleSCTest {

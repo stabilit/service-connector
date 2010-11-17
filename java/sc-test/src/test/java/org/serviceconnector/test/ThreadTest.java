@@ -1,7 +1,7 @@
 package org.serviceconnector.test;
 
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnetor.TestConstants;
 
 public class ThreadTest {
 

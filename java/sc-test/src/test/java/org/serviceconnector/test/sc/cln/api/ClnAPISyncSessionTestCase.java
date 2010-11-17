@@ -21,8 +21,8 @@ import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.test.sc.SetupTestCases;
+import org.serviceconnetor.TestConstants;
 
 public class ClnAPISyncSessionTestCase {
 

@@ -12,8 +12,8 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.log.Loggers;
+import org.serviceconnetor.TestConstants;
 
 public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 
@@ -113,11 +113,11 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 	@Test
 	public void deregisterServer_afterValidRegisterDifferentServiceName_registeredThenNotRegistered() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 1);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameAlt, 1, 1,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNamePublish, 1, 1,
 				new CallBack());
-		assertEquals(true, server.isRegistered(TestConstants.serviceNameAlt));
-		server.deregisterServer(TestConstants.serviceNameAlt);
-		assertEquals(false, server.isRegistered(TestConstants.serviceNameAlt));
+		assertEquals(true, server.isRegistered(TestConstants.serviceNamePublish));
+		server.deregisterServer(TestConstants.serviceNamePublish);
+		assertEquals(false, server.isRegistered(TestConstants.serviceNamePublish));
 	}
 
 	@Test
@@ -126,7 +126,7 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 1, 1,
 				new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.serviceNameSession));
-		server.deregisterServer(TestConstants.serviceNameAlt);
+		server.deregisterServer(TestConstants.serviceNamePublish);
 		assertEquals(true, server.isRegistered(TestConstants.serviceNameSession));
 		server.deregisterServer(TestConstants.serviceNameSession);
 	}

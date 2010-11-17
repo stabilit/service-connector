@@ -12,8 +12,8 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnetor.TestConstants;
 
 public class PrematureDestroyOfServerProcessClientTest {
 	/** The Constant logger. */
@@ -42,7 +42,7 @@ public class PrematureDestroyOfServerProcessClientTest {
 		try {
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
-							TestConstants.serviceNameAlt });
+							TestConstants.serviceNamePublish });
 		} catch (Exception e) {
 			logger.error("setUp", e);
 		}

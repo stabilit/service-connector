@@ -26,7 +26,6 @@ import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -38,6 +37,7 @@ import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.SuperTestCase;
 import org.serviceconnector.test.sc.connectionPool.TestContext;
 import org.serviceconnector.util.SynchronousCallback;
+import org.serviceconnetor.TestConstants;
 
 public class RegisterServerTestCase extends SuperTestCase {
 

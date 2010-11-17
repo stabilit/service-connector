@@ -17,9 +17,9 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnetor.TestConstants;
 
 public class RegisterServerConnectionTypeTcpTest {
 
@@ -104,10 +104,10 @@ public class RegisterServerConnectionTypeTcpTest {
 	@Test
 	public void registerServer_withDisabledService_throwsException() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSessionDisabled, 1,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 1,
 				1, new CallBack());
-		assertEquals(true, server.isRegistered(TestConstants.serviceNameSessionDisabled));
-		server.deregisterServer(TestConstants.serviceNameSessionDisabled);
+		assertEquals(true, server.isRegistered(TestConstants.serviceNameSession));
+		server.deregisterServer(TestConstants.serviceNameSession);
 	}
 
 	@Test
@@ -700,18 +700,18 @@ public class RegisterServerConnectionTypeTcpTest {
 				new CallBack());
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNamePublish, 1, 1,
 				new CallBack());
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameAlt, 1, 1,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNamePublish, 1, 1,
 				new CallBack());
 
 		assertEquals(true, server.isRegistered(TestConstants.serviceNameSession));
 		assertEquals(true, server.isRegistered(TestConstants.serviceNamePublish));
-		assertEquals(true, server.isRegistered(TestConstants.serviceNameAlt));
+		assertEquals(true, server.isRegistered(TestConstants.serviceNamePublish));
 		server.deregisterServer(TestConstants.serviceNameSession);
 		server.deregisterServer(TestConstants.serviceNamePublish);
-		server.deregisterServer(TestConstants.serviceNameAlt);
+		server.deregisterServer(TestConstants.serviceNamePublish);
 		assertEquals(false, server.isRegistered(TestConstants.serviceNameSession));
 		assertEquals(false, server.isRegistered(TestConstants.serviceNamePublish));
-		assertEquals(false, server.isRegistered(TestConstants.serviceNameAlt));
+		assertEquals(false, server.isRegistered(TestConstants.serviceNamePublish));
 	}
 
 	private class CallBack extends SCSessionServerCallback {

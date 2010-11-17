@@ -19,7 +19,6 @@ package org.serviceconnector.test.sc.nettyConnect;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.SCVersion;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -28,6 +27,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.sc.SetupTestCases;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.SynchronousCallback;
+import org.serviceconnetor.TestConstants;
 
 
 

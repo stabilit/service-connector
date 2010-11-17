@@ -13,7 +13,7 @@ import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.cln.StartPublishClient;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnetor.TestConstants;
 
 public class SubscriptionServerTest {
 	/** The Constant logger. */

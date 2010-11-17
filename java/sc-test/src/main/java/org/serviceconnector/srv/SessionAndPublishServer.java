@@ -1,6 +1,6 @@
 package org.serviceconnector.srv;
 
-import org.serviceconnector.ctrl.util.TestConstants;
+import org.serviceconnetor.TestConstants;
 
 public class SessionAndPublishServer {
 

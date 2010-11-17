@@ -16,7 +16,6 @@
 package org.serviceconnector.cache;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 

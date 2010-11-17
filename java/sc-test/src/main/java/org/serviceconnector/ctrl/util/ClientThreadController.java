@@ -8,6 +8,7 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cln.PerformanceSessionClient;
 import org.serviceconnector.log.Loggers;
+import org.serviceconnetor.TestConstants;
 
 public class ClientThreadController {
 

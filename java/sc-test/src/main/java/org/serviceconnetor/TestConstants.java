@@ -1,4 +1,4 @@
-package org.serviceconnector.ctrl.util;
+package org.serviceconnetor;
 
 public class TestConstants {
 	public static final String LOCALHOST = "localhost";

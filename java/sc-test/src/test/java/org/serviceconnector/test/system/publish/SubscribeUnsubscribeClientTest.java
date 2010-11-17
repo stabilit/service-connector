@@ -16,9 +16,9 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnetor.TestConstants;
 
 public class SubscribeUnsubscribeClientTest {
 
@@ -102,7 +102,7 @@ public class SubscribeUnsubscribeClientTest {
 
 	@Test
 	public void unsubscribe_serviceNameDisabledService_notSubscribedEmptySessionId() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublishDisabled);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		service.unsubscribe();
 		assertEquals(null, service.getSessionId());
 		assertEquals(false, service.isSubscribed());

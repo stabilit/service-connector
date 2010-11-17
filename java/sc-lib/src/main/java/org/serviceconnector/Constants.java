@@ -17,7 +17,6 @@
 package org.serviceconnector;
 
 import org.apache.log4j.Logger;
-import org.jboss.netty.handler.codec.http.HttpHeaders;
 
 /**
  * The Interface IConstants. SCM constants.

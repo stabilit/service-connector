@@ -16,9 +16,9 @@ import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnetor.TestConstants;
 
 public class CreateSessionTcpClientTest {
 
@@ -41,7 +41,7 @@ public class CreateSessionTcpClientTest {
 			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
-							TestConstants.serviceNameAlt });
+							TestConstants.serviceNamePublish });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -102,7 +102,7 @@ public class CreateSessionTcpClientTest {
 
 	@Test
 	public void deleteSession_sessionServiceNameDisabled_passes() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSessionDisabled);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
@@ -154,7 +154,7 @@ public class CreateSessionTcpClientTest {
 
 	@Test
 	public void createSession_disabledService_throwsException() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSessionDisabled);
+		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
 		try {
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("something");
@@ -280,7 +280,7 @@ public class CreateSessionTcpClientTest {
 	@Test
 	public void createSession_twiceWithDifferentSessionServices_differentSessionIds() throws Exception {
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.serviceNameSession);
-		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNameAlt);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNamePublish);
 
 		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
 		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
@@ -652,7 +652,7 @@ public class CreateSessionTcpClientTest {
 	@Test
 	public void createSession_twiceWithDifferentSessionServicesDataNull_differentSessionIds() throws Exception {
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.serviceNameSession);
-		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNameAlt);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNamePublish);
 
 		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
 		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
@@ -822,7 +822,7 @@ public class CreateSessionTcpClientTest {
 	@Test
 	public void createSession_twiceWithDifferentSessionServicesDataWhiteSpace_differentSessionIds() throws Exception {
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.serviceNameSession);
-		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNameAlt);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNamePublish);
 
 		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
 		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
@@ -1010,7 +1010,7 @@ public class CreateSessionTcpClientTest {
 	@Test
 	public void createSession_twiceWithDifferentSessionServicesDataOneChar_differentSessionIds() throws Exception {
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.serviceNameSession);
-		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNameAlt);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNamePublish);
 
 		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
 		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
@@ -1175,7 +1175,7 @@ public class CreateSessionTcpClientTest {
 	@Test
 	public void createSession_twiceWithDifferentSessionServicesData60kBByteArray_differentSessionIds() throws Exception {
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.serviceNameSession);
-		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNameAlt);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNamePublish);
 
 		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
 		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
@@ -1316,7 +1316,7 @@ public class CreateSessionTcpClientTest {
 		client2.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 
 		SCSessionService session1 = client.newSessionService(TestConstants.serviceNameSession);
-		SCSessionService session2 = client2.newSessionService(TestConstants.serviceNameAlt);
+		SCSessionService session2 = client2.newSessionService(TestConstants.serviceNamePublish);
 
 		session1.createSession(60, 10, new SCMessage());
 		session2.createSession(60, 10, new SCMessage());

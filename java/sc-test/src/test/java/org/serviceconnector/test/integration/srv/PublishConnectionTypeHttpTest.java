@@ -14,8 +14,8 @@ import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnetor.TestConstants;
 
 public class PublishConnectionTypeHttpTest {
 	/** The Constant logger. */
@@ -122,7 +122,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData("something");
-		server.publish(TestConstants.serviceNamePublishDisabled, publishMessage);
+		server.publish(TestConstants.serviceNamePublish, publishMessage);
 	}
 
 	@Test

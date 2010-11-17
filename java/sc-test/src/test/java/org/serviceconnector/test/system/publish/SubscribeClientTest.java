@@ -18,8 +18,8 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnetor.TestConstants;
 
 public class SubscribeClientTest {
 
@@ -107,7 +107,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void isSubscribed_serviceNameDisabled_false() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		assertEquals(false, service.isSubscribed());
 	}
 
@@ -504,7 +504,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameDisabledMaskNull_throwsValidatorException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(null);
@@ -520,7 +520,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameDisabledMaskEmpty_throwsValidatorException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("");
@@ -536,7 +536,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameDisabledMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("a");
@@ -552,7 +552,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameDisabledMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(" ");
@@ -568,7 +568,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameDisabledMask256LongString_throwsSCExceptionNotSubscribed() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.stringLength256);
@@ -584,7 +584,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameDisabledMask257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.stringLength257);
@@ -601,7 +601,7 @@ public class SubscribeClientTest {
 	@Test
 	public void subscribe_serviceNameDisabledMaskContainingPercentSign_throwsValidatorExceptionNotSubscribed()
 			throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceNameSessionDisabled);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNameSession);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO%----------X-----------");
@@ -617,7 +617,7 @@ public class SubscribeClientTest {
 
 	@Test
 	public void subscribe_serviceNameDisabledMaskSameAsInServer_throwsSCExceptionNotSubscribed() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublishDisabled);
+		SCPublishService service = client.newPublishService(TestConstants.serviceNamePublish);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);

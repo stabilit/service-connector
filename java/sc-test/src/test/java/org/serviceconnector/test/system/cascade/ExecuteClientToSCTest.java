@@ -13,8 +13,8 @@ import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnetor.TestConstants;
 
 public class ExecuteClientToSCTest {
 
@@ -39,7 +39,7 @@ public class ExecuteClientToSCTest {
 			scCascadedProcess = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
-							TestConstants.serviceNameAlt });
+							TestConstants.serviceNamePublish });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -417,7 +417,7 @@ public class ExecuteClientToSCTest {
 		message.setSessionInfo("sessionInfo");
 		sessionService0.createSession(300, 10, message);
 
-		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNameAlt);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.serviceNamePublish);
 		message.setSessionInfo("sessionInfo");
 		sessionService1.createSession(300, 10, message);
 

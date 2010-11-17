@@ -1,6 +1,5 @@
 package org.serviceconnector.ctrl.util;
 
-import org.apache.log4j.Logger;
 
 public class ThreadSafeCounter {
 	private volatile int counter = 0;
