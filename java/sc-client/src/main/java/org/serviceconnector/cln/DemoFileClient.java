@@ -15,47 +15,53 @@
  */
 package org.serviceconnector.cln;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
 import org.apache.log4j.Logger;
+import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCFileService;
+import org.serviceconnector.net.ConnectionType;
 
 public class DemoFileClient extends Thread {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DemoFileClient.class);
-	
+
 	public static void main(String[] args) {
 		DemoFileClient demoFileClient = new DemoFileClient();
 		demoFileClient.start();
 	}
 
-	/*
 	@Override
 	public void run() {
-	
-		SCClient sc = new SCClient("localhost", 7000);				// regular defaults must be documented in javadoc
-		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY-HTTP);	// alternative with connection type
-		
+
+		SCClient sc = new SCClient("localhost", 7000); // regular defaults must be documented in javadoc
+		sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP); // alternative with connection type
+
 		try {
-			sc.setMaxConnections(20);								// can be set before attach
-			sc.setKeepaliveIntervalInSeconds(10);					// can be set before attach
-			sc.attach();											// regular
-			sc.attach(10);											// alternative with operation timeout
-		
-			SCFileService service = sc.newFileService("file-service");	// no other params possible
+			sc.setMaxConnections(20); // can be set before attach
+			sc.setKeepAliveIntervalInSeconds(10); // can be set before attach
+			sc.attach(); // regular
+//			sc.attach(10); // alternative with operation timeout
 
-			localFile = new File("src/main/resources/ClientContent.zip");
-			inpStream = new FileInputStream(localFile);
-			targetFileName = "uploadedContent.txt";
-						
-			service.uploadFile(targetFileName, inpStream);			// regular
-			service.uploadFile(targetFileName, inpStream, 600);		// alternative with operation timeout
+			SCFileService service = sc.newFileService("file-service"); // no other params possible
 
-			localFile = new File("src/main/resources/ServerContent.zip");
-			FileOutputStream outStream = new FileOutputStream(new File("localFile"));
-			
-			service.downloadFile(targetFileName, outStream);		// regular
-			service.downloadFile(targetFileName, outStream, 600);	// alternative with operation timeout
+			File localFile = new File("src/main/resources/ClientContent.txt");
+			InputStream inpStream = new FileInputStream(localFile);
+			String targetFileName = "uploadedContent.txt";
+
+			service.uploadFile(targetFileName, inpStream); // regular
+			// service.uploadFile(600, targetFileName, inpStream); // alternative with operation timeout
+
+			localFile = new File("src/main/resources/ServerContent.txt");
+			FileOutputStream outStream = new FileOutputStream(localFile);
+			targetFileName = "ClientContentCopied.txt";
+			service.downloadFile(targetFileName, outStream); // regular
+			// service.downloadFile(600, targetFileName, outStream); // alternative with operation timeout
 			outStream.close();
-						
 		} catch (Exception e) {
 			logger.error("run", e);
 		} finally {
@@ -66,6 +72,4 @@ public class DemoFileClient extends Thread {
 			}
 		}
 	}
-	*/
-	
 }
