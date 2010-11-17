@@ -35,8 +35,8 @@ public class SCClientTest {
 	@Test
 	public void t01_construtor() {
 		client = new SCClient("localhost", 7000);
-		assertEquals("Host:", "localhost", client.getHost());
-		assertEquals("Port:", 7000, client.getPort());
+		assertEquals("Host not equal", "localhost", client.getHost());
+		assertEquals("Port not equal", 7000, client.getPort());
 		assertNotNull(client);
 	}
 
@@ -47,9 +47,9 @@ public class SCClientTest {
 	@Test
 	public void t02_construtor() {
 		client = new SCClient("localhost", 6000, ConnectionType.NETTY_TCP );
-		assertEquals("Host:", "localhost", client.getHost());
-		assertEquals("Port:", 6000, client.getPort());
-		assertEquals("Connection Type:", "netty.tcp", client.getConnectionType());
+		assertEquals("Host not equal", "localhost", client.getHost());
+		assertEquals("Port not equal", 6000, client.getPort());
+		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, client.getConnectionType());
 		assertNotNull(client);
 	}
 
@@ -61,8 +61,8 @@ public class SCClientTest {
 	@Test
 	public void t03_construtor() {
 		client = new SCClient(null, 6000);
-		assertEquals("Host:", null, client.getHost());
-		assertEquals("Port:", 6000, client.getPort());
+		assertEquals("Host not equal", null, client.getHost());
+		assertEquals("Port not equal", 6000, client.getPort());
 		assertNotNull(client);
 	}
 
@@ -73,8 +73,8 @@ public class SCClientTest {
 	@Test
 	public void t04_construtor() {
 		client = new SCClient(null, -1);
-		assertEquals("Host:", null, client.getHost());
-		assertEquals("Port:", -1, client.getPort());
+		assertEquals("Host not equal", null, client.getHost());
+		assertEquals("Port not equal", -1, client.getPort());
 		assertNotNull(client);
 	}
 
@@ -87,7 +87,6 @@ public class SCClientTest {
 		client = new SCClient("localhost", 6000 );
 		client.setMaxConnections(0);
 	}
-
 	
 	/**
 	 * Description: Invoke setMaxConnections with value = Integer.MIN_VALUE<br>
@@ -107,7 +106,7 @@ public class SCClientTest {
 	public void t12_maxConnections() throws SCMPValidatorException {
 		client = new SCClient("localhost", 6000 );
 		client.setMaxConnections(Integer.MAX_VALUE);
-		assertEquals("MaxConnections ", Integer.MAX_VALUE, client.getMaxConnections());
+		assertEquals("MaxConnections not equal", Integer.MAX_VALUE, client.getMaxConnections());
 	}
 
 	/**
@@ -128,7 +127,7 @@ public class SCClientTest {
 	public void t14_maxConnections() throws SCMPValidatorException {
 		client = new SCClient("localhost", 6000 );
 		client.setMaxConnections(1);
-		assertEquals("MaxConnections ", 1, client.getMaxConnections());
+		assertEquals("MaxConnections not equal", 1, client.getMaxConnections());
 	}
 	
 	/**
@@ -139,7 +138,7 @@ public class SCClientTest {
 	public void t20_keepAliveInterval() {
 		client = new SCClient("localhost", 6000 );
 		client.setKeepAliveIntervalInSeconds(0); // can be set before attach
-		assertEquals("MaxConnections ", 0, client.getKeepAliveIntervalInSeconds());
+		assertEquals("MaxConnections not equal", 0, client.getKeepAliveIntervalInSeconds());
 	}
 	
 	/**
@@ -150,7 +149,7 @@ public class SCClientTest {
 	public void t21_keepAliveInterval() {
 		client = new SCClient("localhost", 6000 );
 		client.setKeepAliveIntervalInSeconds(Integer.MAX_VALUE); // can be set before attach
-		assertEquals("MaxConnections ", Integer.MAX_VALUE, client.getKeepAliveIntervalInSeconds());
+		assertEquals("MaxConnections not equal", Integer.MAX_VALUE, client.getKeepAliveIntervalInSeconds());
 	}
 
 	/**
@@ -161,9 +160,7 @@ public class SCClientTest {
 	public void t22_keepAliveInterval() {
 		client = new SCClient("localhost", 6000 );
 		client.setKeepAliveIntervalInSeconds(Integer.MIN_VALUE); // can be set before attach
-		assertEquals("MaxConnections ", Integer.MIN_VALUE, client.getKeepAliveIntervalInSeconds());
+		assertEquals("MaxConnections not equal", Integer.MIN_VALUE, client.getKeepAliveIntervalInSeconds());
 	}
-
-	
 }
 	
