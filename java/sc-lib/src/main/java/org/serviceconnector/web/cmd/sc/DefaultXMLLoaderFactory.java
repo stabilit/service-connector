@@ -35,9 +35,9 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.serviceconnector.cache.SCCache;
-import org.serviceconnector.cache.SCCacheConfiguration;
-import org.serviceconnector.cache.SCCacheManager;
+import org.serviceconnector.cache.ICacheConfiguration;
+import org.serviceconnector.cache.Cache;
+import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.res.IResponder;
@@ -495,8 +495,8 @@ public class DefaultXMLLoaderFactory {
 				throws Exception {
 			writer.writeStartElement("cache");
 			AppContext appContext = AppContext.getCurrentContext();
-			SCCacheManager cacheManager = appContext.getCacheManager();
-			SCCacheConfiguration cacheConfiguration = cacheManager
+			CacheManager cacheManager = appContext.getCacheManager();
+			ICacheConfiguration cacheConfiguration = cacheManager
 					.getScmpCacheConfiguration();
 			this.writeCacheConfiguration(writer, cacheConfiguration);
 			writer.writeEndElement(); // close cache tag
@@ -507,7 +507,7 @@ public class DefaultXMLLoaderFactory {
 		}
 
 		private void writeCacheConfiguration(XMLStreamWriter writer,
-				SCCacheConfiguration cacheConfiguration)
+				ICacheConfiguration cacheConfiguration)
 				throws XMLStreamException {
 			writer.writeStartElement("config");
 			writer.writeStartElement("name");
@@ -538,10 +538,10 @@ public class DefaultXMLLoaderFactory {
 		private void writeCaches(XMLStreamWriter writer, Object[] caches)
 				throws XMLStreamException {
 			for (Object obj : caches) {
-				if (obj instanceof SCCache == false) {
+				if (obj instanceof Cache == false) {
 					continue;
 				}
-				SCCache cache = (SCCache) obj;
+				Cache cache = (Cache) obj;
 				writer.writeStartElement("cache");
 				writer.writeStartElement("serviceName");
 				writer.writeCharacters(cache.getServiceName());

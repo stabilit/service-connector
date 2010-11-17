@@ -26,7 +26,7 @@ import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.Configuration;
 import net.sf.ehcache.config.DiskStoreConfiguration;
 
-import org.serviceconnector.cache.SCCacheConfiguration;
+import org.serviceconnector.cache.ICacheConfiguration;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -49,38 +49,38 @@ public class EHCacheImpl implements ICacheImpl {
 	/**
 	 * Instantiates a new eH cache scmp cache impl.
 	 * 
-	 * @param scmpCacheConfiguration
+	 * @param acheConfiguration
 	 *            the scmp cache configuration
 	 * @param serviceName
 	 *            the service name
 	 */
-	public EHCacheImpl(SCCacheConfiguration scmpCacheConfiguration,
+	public EHCacheImpl(ICacheConfiguration acheConfiguration,
 			String serviceName) {
 		synchronized (syncObj) {
 			if (manager == null) {
 				Configuration configuration = new Configuration();
 				DiskStoreConfiguration diskStoreConfiguration = new DiskStoreConfiguration();
-				diskStoreConfiguration.setPath(scmpCacheConfiguration
+				diskStoreConfiguration.setPath(acheConfiguration
 						.getDiskPath());
 				configuration.addDiskStore(diskStoreConfiguration);
-				configuration.setName(scmpCacheConfiguration.getCacheName());
+				configuration.setName(acheConfiguration.getCacheName());
 				CacheConfiguration defaultCacheConfiguration = new CacheConfiguration(
-						scmpCacheConfiguration.getCacheName(),
-						scmpCacheConfiguration.getMaxElementsInMemory());
+						acheConfiguration.getCacheName(),
+						acheConfiguration.getMaxElementsInMemory());
 				defaultCacheConfiguration.setEternal(true); // ignore any
 															// timeouts
 				// defaultCacheConfiguration.setTimeToIdleSeconds(60);
 				// defaultCacheConfiguration.setTimeToLiveSeconds(120);
 				defaultCacheConfiguration
-						.setMaxElementsInMemory(scmpCacheConfiguration
+						.setMaxElementsInMemory(acheConfiguration
 								.getMaxElementsInMemory());
 				defaultCacheConfiguration
-						.setMaxElementsOnDisk(scmpCacheConfiguration
+						.setMaxElementsOnDisk(acheConfiguration
 								.getMaxElementsOnDisk());
 				defaultCacheConfiguration
-						.setDiskPersistent(scmpCacheConfiguration
+						.setDiskPersistent(acheConfiguration
 								.isDiskPersistent());
-				defaultCacheConfiguration.setName(scmpCacheConfiguration
+				defaultCacheConfiguration.setName(acheConfiguration
 						.getCacheName());
 				configuration
 						.setDefaultCacheConfiguration(defaultCacheConfiguration);
@@ -89,21 +89,21 @@ public class EHCacheImpl implements ICacheImpl {
 			}
 		}
 		this.config = new CacheConfiguration(serviceName,
-				scmpCacheConfiguration.getMaxElementsInMemory());
+				acheConfiguration.getMaxElementsInMemory());
 		// TODO from configuration file
 		this.config.setEternal(true);
 		// this.config.setTimeToIdleSeconds(60);
 		// this.config.setTimeToLiveSeconds(120);
-		this.config.setMaxElementsInMemory(scmpCacheConfiguration
+		this.config.setMaxElementsInMemory(acheConfiguration
 				.getMaxElementsInMemory());
-		this.config.setMaxElementsOnDisk(scmpCacheConfiguration
+		this.config.setMaxElementsOnDisk(acheConfiguration
 				.getMaxElementsOnDisk());
 		this.config
-				.setDiskPersistent(scmpCacheConfiguration.isDiskPersistent());
-		this.config.setName(scmpCacheConfiguration.getCacheName() + "."
+				.setDiskPersistent(acheConfiguration.isDiskPersistent());
+		this.config.setName(acheConfiguration.getCacheName() + "."
 				+ serviceName);
 		this.cache = new Cache(this.config);
-		this.cache.setName(scmpCacheConfiguration.getCacheName() + "."
+		this.cache.setName(acheConfiguration.getCacheName() + "."
 				+ serviceName);
 		this.cache.setDiskStorePath(serviceName);
 		manager.addCache(this.cache);

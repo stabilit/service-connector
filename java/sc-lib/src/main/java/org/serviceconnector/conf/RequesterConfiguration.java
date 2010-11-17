@@ -17,9 +17,14 @@
 package org.serviceconnector.conf;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class RequesterConfiguration. It may hold more than one configuration for a requester, is represented by
@@ -27,39 +32,45 @@ import org.apache.log4j.Logger;
  * 
  * @author JTraber
  */
-public class RequesterConfiguration extends Configuration {
+public class RequesterConfiguration {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RequesterConfiguration.class);
 
-	/**
-	 * Loads configuration from a file.
-	 * 
-	 * @param fileName
-	 *            the file name
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public void load(String fileName) throws Exception {
-		this.loadRequesterConfig(fileName);
+	private List<CommunicatorConfig> requesterConfigList;
+
+	public RequesterConfiguration() {
 	}
 
 	/**
-	 * Gets the requester configuration list.
+	 * Gets the responder configuration list.
 	 * 
-	 * @return the requester configuration list
+	 * @return the responder configuration list
 	 */
 	public List<CommunicatorConfig> getRequesterConfigList() {
-		return this.getCommunicatorConfigList();
+		return this.requesterConfigList;
 	}
 
 	/**
-	 * Gets the first requester configuration in the configuration file.<br> 
-	 * Usually only one requester is configured.
-	 * 
-	 * @return the first requester configuration  
+	 * Inits the.
+	 *
+	 * @param apacheCompositeConfig the apache composite config
+	 * @throws SCMPValidatorException the sCMP validator exception
 	 */
-	public CommunicatorConfig getFirstRequesterConfig() {	
-		return this.getCommunicatorConfigList().get(0); // TODO TRN are you sure? What are the other requesters in list? Is this a helper?
+	public void init(CompositeConfiguration apacheCompositeConfig) throws SCMPValidatorException {
+		@SuppressWarnings("unchecked")
+		List<String> requesterList = apacheCompositeConfig.getList(Constants.PROPERTY_REMOTE_HOSTS);
+		if (requesterList == null) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property:"
+					+ Constants.PROPERTY_REMOTE_HOSTS + " not found");
+		}
+		// load all communicators in the list into the array
+		this.requesterConfigList = new ArrayList<CommunicatorConfig>();
+		for (String requesterName : requesterList) {
+			requesterName = requesterName.trim(); // remove blanks in name
+			CommunicatorConfig commConfig = new CommunicatorConfig(requesterName);
+			commConfig.initialize(apacheCompositeConfig);
+			this.requesterConfigList.add(commConfig);
+		}
 	}
 }

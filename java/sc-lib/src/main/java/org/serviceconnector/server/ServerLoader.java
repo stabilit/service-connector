@@ -51,13 +51,7 @@ public class ServerLoader {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public static void load(String fileName) throws Exception {
-		CompositeConfiguration config = new CompositeConfiguration();
-		try {
-			config.addConfiguration(new PropertiesConfiguration(fileName));
-		} catch (Exception e) {
-			throw new InvalidParameterException("could not find property file : " + fileName);
-		}
+	public static void load(CompositeConfiguration config) throws Exception {
 		@SuppressWarnings("unchecked")
 		List<String> serverNames = config.getList(Constants.PROPERTY_REMOTE_HOSTS);
 

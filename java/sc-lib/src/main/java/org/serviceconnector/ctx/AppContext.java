@@ -1,7 +1,7 @@
 package org.serviceconnector.ctx;
 
 import org.serviceconnector.api.srv.SrvServiceRegistry;
-import org.serviceconnector.cache.SCCacheManager;
+import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cmd.FlyweightCommandFactory;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.FlyweightFrameDecoderFactory;
@@ -22,6 +22,9 @@ public class AppContext {
 
 	private static final AppContext instance = new AppContext();
 
+	// configuration context
+	private static ConfigurationContext configurationContext = ConfigurationContext.getCurrentContext();
+	
 	// Factories
 	private static FlyweightCommandFactory commandFactory;
 	private static final ResponderRegistry responderRegistry = new ResponderRegistry();
@@ -39,7 +42,7 @@ public class AppContext {
 	private static final SCMPSessionCompositeRegistry scmpSessionCompositeRegistry = new SCMPSessionCompositeRegistry();
 
 	// scmp cache
-	private static final SCCacheManager scmpCacheManager = new SCCacheManager();
+	private static final CacheManager cacheManager = new CacheManager();
 	/**
 	 * Instantiates a new AppContext. Singelton.
 	 */
@@ -58,6 +61,10 @@ public class AppContext {
 		return AppContext.instance;
 	}
 
+	public static ConfigurationContext getConfigurationContext() {
+		return AppContext.configurationContext;
+	}
+	
 	public FlyweightCommandFactory getCommandFactory() {
 		return AppContext.commandFactory;
 	}
@@ -106,8 +113,8 @@ public class AppContext {
 		return AppContext.scmpSessionCompositeRegistry;
 	}
 	
-	public SCCacheManager getCacheManager() {
-		return AppContext.scmpCacheManager;
+	public CacheManager getCacheManager() {
+		return AppContext.cacheManager;
 	}
 	
 }

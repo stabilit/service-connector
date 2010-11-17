@@ -305,8 +305,18 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					continue;
 				}
 			}
+			if ("connection".equals(name)) {
+				if (obj instanceof ConnectionPool) {
+					continue;
+				}
+			}
 			try {
-				Object value = method.invoke(obj);
+				Object value = null;
+				try {
+				    value = method.invoke(obj);
+				} catch(Exception e){
+					System.err.println(e);
+				}
 				if (value == obj) {
 					continue;
 				}

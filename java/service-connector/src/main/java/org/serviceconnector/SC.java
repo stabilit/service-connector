@@ -34,15 +34,13 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.conf.ResponderConfiguration;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.ctx.ConfigurationContext;
 import org.serviceconnector.log.ILoggingManagerMXBean;
 import org.serviceconnector.log.JMXLoggingManager;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
-import org.serviceconnector.server.ServerLoader;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
@@ -103,10 +101,8 @@ public final class SC {
 		if (configFileName == null) {
 			throw new SCServiceException("Configuration file is missing");
 		}
-
-		// load the configuration
-		ResponderConfiguration configuration = new ResponderConfiguration();
-		configuration.load(configFileName);
+		ConfigurationContext configurationContext = ConfigurationContext.getCurrentContext();
+		configurationContext.initContext(configFileName);
 
 		// write system information to log
 		SystemInfo.setConfigFileName(configFileName);
@@ -124,26 +120,21 @@ public final class SC {
 		// initialize statistics
 		Statistics statistics = Statistics.getInstance();
 		statistics.setStartupDateTime(new Timestamp(Calendar.getInstance().getTime().getTime()));
-
-		// load servers
-		ServerLoader.load(configFileName);
-		// load services
-		ServiceLoader.load(configFileName);
 		// load cache manager
-		appContext.getCacheManager().initialize(configFileName);
+		appContext.getCacheManager().initialize();
 
 		// clean up and initialize cache
 		// Cache cache = Cache.initialize();
 
 		// create configured responders / listeners
-		List<CommunicatorConfig> responderList = configuration.getResponderConfigList();
+		List<CommunicatorConfig> responderList = configurationContext.getResponderConfiguration().getResponderConfigList();
 		for (CommunicatorConfig respConfig : responderList) {
 			IResponder responder = new Responder(respConfig);
 			responder.create();
 			logger.info("Start listener " + respConfig.getName() + " on " + respConfig.getHost() + ":" + respConfig.getPort());
 			responder.startListenAsync();
 		}
-		if (configuration.writePID()) {
+		if (configurationContext.getBasicConfiguration().isWritePID()) {
 			SC.writePIDFile();
 		}
 		logger.log(Level.OFF, "Service Connector is running ...");
