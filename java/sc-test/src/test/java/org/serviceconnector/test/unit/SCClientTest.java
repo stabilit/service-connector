@@ -31,8 +31,8 @@ public class SCClientTest {
 	}
 
 	/**
-	 * Description:	Check initial values set by constructor<br>
-	 * Expectation:	Initial values are properly set.
+	 * Description: Check initial values set by constructor<br>
+	 * Expectation: Initial values are properly set.
 	 */
 	@Test
 	public void construtor_1() {
@@ -46,8 +46,8 @@ public class SCClientTest {
 	}
 
 	/**
-	 * Description:	Invoke setConnectionType with null parameter <br>
-	 * Expectation:	connectionType was set to null
+	 * Description: Invoke setConnectionType with null parameter <br>
+	 * Expectation: connectionType was set to null
 	 */
 	@Test
 	public void setConnectionType_1() {
@@ -56,8 +56,8 @@ public class SCClientTest {
 	}
 
 	/**
-	 * Description:	Invoke setConnectionType with empty string<br>
-	 * Expectation:	connectionType was set to empty string
+	 * Description: Invoke setConnectionType with empty string<br>
+	 * Expectation: connectionType was set to empty string
 	 */
 	@Test
 	public void setConnectionType_2() {
@@ -66,8 +66,8 @@ public class SCClientTest {
 	}
 
 	/**
-	 * Description:	Invoke setConnectionType with blank string<br>
-	 * Expectation:	connectionType was set to blank
+	 * Description: Invoke setConnectionType with blank string<br>
+	 * Expectation: connectionType was set to blank
 	 */
 	@Test
 	public void setConnectionType_3() {
@@ -76,8 +76,8 @@ public class SCClientTest {
 	}
 
 	/**
-	 * Description:	Invoke setConnectionType with "a" string<br>
-	 * Expectation:	connectionType was set to "a"
+	 * Description: Invoke setConnectionType with "a" string<br>
+	 * Expectation: connectionType was set to "a"
 	 */
 	@Test
 	public void setConnectionType_4() {
@@ -86,8 +86,8 @@ public class SCClientTest {
 	}
 
 	/**
-	 * Description:	Invoke setConnectionType with some string<br>
-	 * Expectation:	connectionType was set to some value
+	 * Description: Invoke setConnectionType with some string<br>
+	 * Expectation: connectionType was set to some value
 	 */
 	@Test
 	public void setConnectionType_5() {
@@ -96,8 +96,8 @@ public class SCClientTest {
 	}
 
 	/**
-	 * Description:	Invoke setMaxConnections with 0 value<br>
-	 * Expectation:	throws validation exception
+	 * Description: Invoke setMaxConnections with 0 value<br>
+	 * Expectation: throws validation exception
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void setMaxConnections_1() throws SCMPValidatorException {
@@ -105,35 +105,26 @@ public class SCClientTest {
 	}
 
 	/**
-	 * Description:	Invoke setMaxConnections with value = MIN<br>
-	 * Expectation:	throws validation exception
+	 * Description: Invoke setMaxConnections with value = MIN<br>
+	 * Expectation: throws validation exception
 	 */
-	@Test
-	public void setMaxConnections_2() throws SCMPValidatorException {
-		Throwable e = null;
+	@Test(expected = SCMPValidatorException.class)
+	public void setMaxConnections_20() throws SCMPValidatorException {
+		client.setMaxConnections(Integer.MIN_VALUE);
+	}
 
-		/*
-		 * Description:	Invoke setMaxConnections with value = MIN<br>
-		 * Expectation:	throws validation exception
-		 */
-		e = null;
-		try {
-			client.setMaxConnections(Integer.MIN_VALUE);
-		} catch (Throwable ex) {
-			e = ex;
-		}
-		assertEquals("MIN_VALUE", true, e instanceof SCMPValidatorException);
-
-		/*
-		 * Description:	Invoke setMaxConnections with value = MAX<br>
-		 * Expectation:	value = MAX was properly set
-		 */
+	/**
+	 * Description: Invoke setMaxConnections with value = MAX<br>
+	 * Expectation: value = MAX was properly set
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void setMaxConnections_21() throws SCMPValidatorException {
 		assertEquals(Integer.MAX_VALUE, client.getMaxConnections());
 	}
 
 	/**
-	 * Description:	Invoke setMaxConnections with value = MAX<br>
-	 * Expectation:	value = MAX was properly set
+	 * Description: Invoke setMaxConnections with value = MAX<br>
+	 * Expectation: value = MAX was properly set
 	 */
 	@Test
 	public void setMaxConnections_3() throws SCMPValidatorException {
@@ -142,8 +133,8 @@ public class SCClientTest {
 	}
 
 	/**
-	 * Description:	Invoke setMaxConnections with value = -1<br>
-	 * Expectation:	throws validation exception
+	 * Description: Invoke setMaxConnections with value = -1<br>
+	 * Expectation: throws validation exception
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void setMaxConnections_4() throws SCMPValidatorException {

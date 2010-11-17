@@ -35,7 +35,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 	public void setUp() throws Exception {
 		ctrl = new ProcessesController();
 		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -54,7 +54,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 		}
 		server.destroy();
 		server = null;
-		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
 		scProcess = null;
 	}
 

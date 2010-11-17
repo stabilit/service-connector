@@ -340,7 +340,8 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 7000 state=something" parameters<br>
-	 * HTTP port Expectation: throws exception with exitCode = 5 "Communication error" Pre-condition: SC must be running!
+	 * HTTP port Expectation: throws exception with exitCode = 5 "Communication error" <br>
+	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t23_start() throws Exception {
@@ -354,7 +355,8 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 81 state=something" parameters<br>
-	 * Management port Expectation: throws exception with exitCode = 5 "Communication error" Pre-condition: SC must be running!
+	 * Management port Expectation: throws exception with exitCode = 5 "Communication error" <br>
+	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t24_start() throws Exception {
@@ -368,13 +370,14 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 state=something" parameters<br>
-	 * Expectation: throws exception with exitCode = 4 "Unknown service" Pre-condition: SC must be running!
+	 * Expectation: throws exception with exitCode = 4 "Unknown service" <br>
+	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t25_start() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					Constants.STATE + "=something" });
+			SCConsole
+					.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, Constants.STATE + "=something" });
 		} catch (ExitException e) {
 			assertEquals(4, e.status);
 		}
@@ -382,7 +385,8 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h 127.0.0.1 -p 9000 state=local-session-service" parameters<br>
-	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running!
+	 * Expectation: passes though with exitCode = 0 "Success" <br>
+	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t26_start() throws Exception {
@@ -396,7 +400,8 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 enable=local-session-service" parameters<br>
-	 * Expectation: passes though with exitCode = 0 "Success", service is enabled Pre-condition: SC must be running!
+	 * Expectation: passes though with exitCode = 0 "Success", service is enabled.<br>
+	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t27_enable_command() throws Exception {
@@ -415,7 +420,8 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 disable=local-session-service" parameters<br>
-	 * Expectation: passes though with exitCode = 0 "Success", service is disabled Pre-condition: SC must be running!
+	 * Expectation: passes though with exitCode = 0 "Success", service is disabled.<br>
+	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t28_disable_command() throws Exception {
@@ -442,7 +448,8 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 sessions=local-session-service" parameters<br>
-	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running!
+	 * Expectation: passes though with exitCode = 0 "Success" <br>
+	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t29_sessions_command() throws Exception {
@@ -456,7 +463,8 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 sessions=local-publish-service<br>
-	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running!
+	 * Expectation: passes though with exitCode = 0 "Success" <br>
+	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t30_sessions_command() throws Exception {
@@ -470,7 +478,8 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 sessions=notExistingService<br>
-	 * Expectation: throws exception with exitCode = 4 "Unknown service" Pre-condition: SC must be running!
+	 * Expectation: throws exception with exitCode = 4 "Unknown service"<br>
+	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t31_sessions_command() throws Exception {
@@ -484,13 +493,13 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 gaga=notExistingService<br>
-	 * Expectation: throws exception with exitCode = 3 "invalid command" Pre-condition: SC must be running!
+	 * Expectation: throws exception with exitCode = 3 "invalid command"<br>
+	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t32_undefined_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					"gaga=notExistingService" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, "gaga=notExistingService" });
 		} catch (ExitException e) {
 			assertEquals(3, e.status);
 		}
@@ -498,13 +507,14 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 gaga=local-session-service<br>
-	 * Expectation: throws exception with exitCode = 3 "invalid command" Pre-condition: SC must be running!
+	 * Expectation: throws exception with exitCode = 3 "invalid command" <br>
+	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t33_undefined_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					"gaga=local-session-service" });
+			SCConsole
+					.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, "gaga=local-session-service" });
 		} catch (ExitException e) {
 			assertEquals(3, e.status);
 		}
@@ -512,7 +522,8 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 kill<br>
-	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running! Post-condition: SC will be killed!
+	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running!<br>
+	 * Post-condition: SC will be killed!
 	 */
 	@Test
 	public void t99_kill_command() throws Exception {

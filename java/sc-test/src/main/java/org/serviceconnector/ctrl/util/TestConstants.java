@@ -11,8 +11,10 @@ public class TestConstants {
 
 	public static final String log4jSrvProperties = "log4jSrv.properties";
 
-	public static final String log4jSC0Properties = "log4jSC0.properties";
-	public static final String log4jSC1Properties = "log4jSC1.properties";
+	public static final String log4jSCProperties = "log4j-sc.properties";
+	public static final String log4jSC1Properties = "log4j-sc1.properties";
+	public static final String log4jSC2Properties = "log4j-sc2.properties";
+	
 	public static final String scProperties0 = "scIntegration.properties";
 	public static final String scProperties1 = "scIntegrationChanged.properties";
 	public static final String scPropertiesCascaded = "scCascaded.properties";

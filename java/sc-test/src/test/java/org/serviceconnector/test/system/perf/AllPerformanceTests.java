@@ -38,7 +38,7 @@ public class AllPerformanceTests {
 
 	@Before
 	public void setUp() throws Exception {
-		scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
 				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession });
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
@@ -52,7 +52,7 @@ public class AllPerformanceTests {
 		} catch (Exception e) {
 		}
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
 		client = null;
 		srvProcess = null;
 		scProcess = null;
@@ -126,7 +126,7 @@ public class AllPerformanceTests {
 
 			result = clientCtrl.perform();
 
-			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
 							TestConstants.serviceNameAlt });
@@ -152,7 +152,7 @@ public class AllPerformanceTests {
 
 			result = clientCtrl.perform();
 
-			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
 							TestConstants.serviceNameAlt });
@@ -211,7 +211,7 @@ public class AllPerformanceTests {
 
 			result = clientCtrl.perform();
 
-			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
 							TestConstants.serviceNameAlt });

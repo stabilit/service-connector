@@ -29,11 +29,10 @@ public class AttachToMultipleSCTest {
 
 	@BeforeClass
 	public static void oneTimeSetUp() throws Exception {
-		// needed to init AppContext
 		new SCSessionServer();
 		ctrl = new ProcessesController();
 		try {
-			scProcess0 = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess0 = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
 			scProcess1 = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scProperties1);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
@@ -42,7 +41,7 @@ public class AttachToMultipleSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(scProcess0, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess0, TestConstants.log4jSCProperties);
 		ctrl.stopProcess(scProcess1, TestConstants.log4jSC1Properties);
 		ctrl = null;
 		scProcess0 = null;

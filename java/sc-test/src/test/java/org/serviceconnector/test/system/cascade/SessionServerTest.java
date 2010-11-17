@@ -34,7 +34,7 @@ public class SessionServerTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new ProcessesController();
 		try {
-			sc0Process = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			sc0Process = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
 			sc0Process = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scPropertiesCascaded);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
@@ -44,7 +44,7 @@ public class SessionServerTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(sc0Process, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(sc0Process, TestConstants.log4jSCProperties);
 		ctrl.stopProcess(scProcessCascaded, TestConstants.log4jSC1Properties);
 		ctrl = null;
 		sc0Process = null;

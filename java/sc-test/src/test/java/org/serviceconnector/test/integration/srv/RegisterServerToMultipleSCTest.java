@@ -31,7 +31,7 @@ public class RegisterServerToMultipleSCTest {
 	public static void oneTimeSetUp() throws Exception {
 		ctrl = new ProcessesController();
 		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
 			r = ctrl.startSC(TestConstants.log4jSC1Properties, TestConstants.scProperties1);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
@@ -40,7 +40,7 @@ public class RegisterServerToMultipleSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
 		ctrl.stopProcess(r, TestConstants.log4jSC1Properties);
 		ctrl = null;
 		scProcess = null;

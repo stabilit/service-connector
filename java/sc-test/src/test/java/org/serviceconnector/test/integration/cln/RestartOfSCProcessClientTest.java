@@ -32,7 +32,7 @@ public class RestartOfSCProcessClientTest {
 	@Before
 	public void setUp() throws Exception {
 		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.scProperties0);
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -41,7 +41,7 @@ public class RestartOfSCProcessClientTest {
 
 	@After
 	public void tearDown() throws Exception {
-		ctrl.stopProcess(scProcess, TestConstants.log4jSC0Properties);
+		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
 		client = null;
 		scProcess = null;
 	}
@@ -56,42 +56,42 @@ public class RestartOfSCProcessClientTest {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
 		// restart SC
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void detach_afterSCRestart_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
 		client.detach();
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void enableService_afterSCRestart_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
 		client.enableService(TestConstants.serviceNameSession);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void disableService_afterSCRestart_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
 		client.enableService(TestConstants.serviceNameSession);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void workload_afterSCRestart_throwsException() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
 		client.getWorkload(TestConstants.serviceNameSession);
 	}
 
 	@Test
 	public void setMaxConnection_afterAttachAfterSCRestart_passes() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
 		client.setMaxConnections(10);
 		assertEquals(10, client.getMaxConnections());
 	}
@@ -100,7 +100,7 @@ public class RestartOfSCProcessClientTest {
 	public void isAttached_afterAttachAfterSCRestart_true() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals(true, client.isAttached());
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
 		assertEquals(true, client.isAttached());
 	}
 	
@@ -108,7 +108,7 @@ public class RestartOfSCProcessClientTest {
 	public void attach_afterAttachAndSCRestartAndDetach_attached() throws Exception {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals(true, client.isAttached());
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
 		try {
 			client.detach();
 		} catch (SCServiceException e) {
@@ -124,7 +124,7 @@ public class RestartOfSCProcessClientTest {
 		assertEquals(true, client.isServiceEnabled(TestConstants.serviceNameSession));
 		client.disableService(TestConstants.serviceNameSession);
 		assertEquals(false, client.isServiceEnabled(TestConstants.serviceNameSession));
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSC0Properties, TestConstants.scProperties0);
+		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.scProperties0);
 		try {
 			client.detach();
 		} catch (SCServiceException e) {
