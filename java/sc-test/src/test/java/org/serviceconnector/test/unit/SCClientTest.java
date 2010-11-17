@@ -6,6 +6,7 @@ package org.serviceconnector.test.unit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.Constants;
@@ -26,73 +27,58 @@ public class SCClientTest {
 	 * @throws java.lang.Exception
 	 */
 	@Before
-	public void setUp() throws Exception {
-		client = new SCClient();
+	public void init() throws Exception {
+		client = null;
 	}
 
 	/**
-	 * Description: Check initial values set by constructor<br>
-	 * Expectation: Initial values are properly set.
+	 * Description: Invoke Constructor with Host and Port<br>
+	 * Expectation: Host and Port was set
 	 */
 	@Test
-	public void construtor_1() {
-		assertEquals(null, client.getHost());
-		assertEquals(-1, client.getPort());
-		assertEquals(ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE, client.getConnectionType());
-		assertEquals(Constants.DEFAULT_KEEP_ALIVE_INTERVAL, client.getKeepAliveIntervalInSeconds());
-		assertEquals(Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE, client.getMaxConnections());
-		assertEquals(false, client.isAttached());
-		assertNotNull(client.getSCContext());
+	public void t01_construtor() {
+		client = new SCClient("localhost", 7000);
+		assertEquals("Host:", "localhost", client.getHost());
+		assertEquals("Port:", 7000, client.getPort());
+		assertNotNull(client);
 	}
 
 	/**
-	 * Description: Invoke setConnectionType with null parameter <br>
-	 * Expectation: connectionType was set to null
+	 * Description: Invoke Constructor with Host, Port and connection Type<br>
+	 * Expectation: Host, Port and connection Type was set
 	 */
 	@Test
-	public void setConnectionType_1() {
-		client.setConnectionType(null);
-		assertEquals(null, client.getConnectionType());
+	public void t02_construtor() {
+		client = new SCClient("localhost", 6000, ConnectionType.NETTY_TCP );
+		assertEquals("Host:", "localhost", client.getHost());
+		assertEquals("Port:", 6000, client.getPort());
+		assertEquals("Connection Type:", "netty.tcp", client.getConnectionType());
+		assertNotNull(client);
+	}
+
+	
+	/**
+	 * Description: Invoke Constructor with Host, Port and connection Type<br>
+	 * Expectation: Host, Port and connection Type was set
+	 */
+	@Test
+	public void t03_construtor() {
+		client = new SCClient(null, 6000);
+		assertEquals("Host:", null, client.getHost());
+		assertEquals("Port:", 6000, client.getPort());
+		assertNotNull(client);
 	}
 
 	/**
-	 * Description: Invoke setConnectionType with empty string<br>
-	 * Expectation: connectionType was set to empty string
+	 * Description: Invoke Constructor with Host, Port and connection Type<br>
+	 * Expectation: Host, Port and connection Type was set
 	 */
 	@Test
-	public void setConnectionType_2() {
-		client.setConnectionType(new String());
-		assertEquals("", client.getConnectionType());
-	}
-
-	/**
-	 * Description: Invoke setConnectionType with blank string<br>
-	 * Expectation: connectionType was set to blank
-	 */
-	@Test
-	public void setConnectionType_3() {
-		client.setConnectionType(" ");
-		assertEquals(" ", client.getConnectionType());
-	}
-
-	/**
-	 * Description: Invoke setConnectionType with "a" string<br>
-	 * Expectation: connectionType was set to "a"
-	 */
-	@Test
-	public void setConnectionType_4() {
-		client.setConnectionType("a");
-		assertEquals("a", client.getConnectionType());
-	}
-
-	/**
-	 * Description: Invoke setConnectionType with some string<br>
-	 * Expectation: connectionType was set to some value
-	 */
-	@Test
-	public void setConnectionType_5() {
-		client.setConnectionType(TestConstants.HOST);
-		assertEquals(TestConstants.HOST, client.getConnectionType());
+	public void t04_construtor() {
+		client = new SCClient(null, -1);
+		assertEquals("Host:", null, client.getHost());
+		assertEquals("Port:", -1, client.getPort());
+		assertNotNull(client);
 	}
 
 	/**
@@ -100,36 +86,31 @@ public class SCClientTest {
 	 * Expectation: throws validation exception
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void setMaxConnections_1() throws SCMPValidatorException {
+	public void t10_maxConnections() throws SCMPValidatorException {
+		client = new SCClient("localhost", 6000 );
 		client.setMaxConnections(0);
 	}
 
+	
 	/**
-	 * Description: Invoke setMaxConnections with value = MIN<br>
+	 * Description: Invoke setMaxConnections with value = Integer.MIN_VALUE<br>
 	 * Expectation: throws validation exception
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void setMaxConnections_20() throws SCMPValidatorException {
+	public void t11_maxConnections() throws SCMPValidatorException {
+		client = new SCClient("localhost", 6000 );
 		client.setMaxConnections(Integer.MIN_VALUE);
 	}
 
 	/**
-	 * Description: Invoke setMaxConnections with value = MAX<br>
-	 * Expectation: value = MAX was properly set
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void setMaxConnections_21() throws SCMPValidatorException {
-		assertEquals(Integer.MAX_VALUE, client.getMaxConnections());
-	}
-
-	/**
-	 * Description: Invoke setMaxConnections with value = MAX<br>
+	 * Description: Invoke setMaxConnections with value = Integer.MAX_VALUE<br>
 	 * Expectation: value = MAX was properly set
 	 */
 	@Test
-	public void setMaxConnections_3() throws SCMPValidatorException {
+	public void t12_maxConnections() throws SCMPValidatorException {
+		client = new SCClient("localhost", 6000 );
 		client.setMaxConnections(Integer.MAX_VALUE);
-		assertEquals(Integer.MAX_VALUE, client.getMaxConnections());
+		assertEquals("MaxConnections ", Integer.MAX_VALUE, client.getMaxConnections());
 	}
 
 	/**
@@ -137,7 +118,8 @@ public class SCClientTest {
 	 * Expectation: throws validation exception
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void setMaxConnections_4() throws SCMPValidatorException {
+	public void t13_maxConnections() throws SCMPValidatorException {
+		client = new SCClient("localhost", 6000 );
 		client.setMaxConnections(-1);
 	}
 
@@ -146,8 +128,45 @@ public class SCClientTest {
 	 * Expectation: value = 1 was properly set
 	 */
 	@Test
-	public void setMaxConnections_5() throws SCMPValidatorException {
+	public void t14_maxConnections() throws SCMPValidatorException {
+		client = new SCClient("localhost", 6000 );
 		client.setMaxConnections(1);
-		assertEquals(1, client.getMaxConnections());
+		assertEquals("MaxConnections ", 1, client.getMaxConnections());
 	}
+	
+	/**
+	 * Description: Invoke keep alive Interval with value = 0<br>
+	 * Expectation: value = 0 was properly set
+	 */
+	@Test
+	public void t20_keepAliveInterval() {
+		client = new SCClient("localhost", 6000 );
+		client.setKeepAliveIntervalInSeconds(0); // can be set before attach
+		assertEquals("MaxConnections ", 0, client.getKeepAliveIntervalInSeconds());
+	}
+	
+	/**
+	 * Description: Invoke keep alive Interval with value = Integer.MAX_VALUE<br>
+	 * Expectation: value = Integer.MAX_VALUE was properly set
+	 */
+	@Test
+	public void t21_keepAliveInterval() {
+		client = new SCClient("localhost", 6000 );
+		client.setKeepAliveIntervalInSeconds(Integer.MAX_VALUE); // can be set before attach
+		assertEquals("MaxConnections ", Integer.MAX_VALUE, client.getKeepAliveIntervalInSeconds());
+	}
+
+	/**
+	 * Description: Invoke keep alive Interval with value = Integer.MIN_VALUE<br>
+	 * Expectation: value = Integer.MMIN_VALUE was properly set
+	 */
+	@Test
+	public void t22_keepAliveInterval() {
+		client = new SCClient("localhost", 6000 );
+		client.setKeepAliveIntervalInSeconds(Integer.MIN_VALUE); // can be set before attach
+		assertEquals("MaxConnections ", Integer.MIN_VALUE, client.getKeepAliveIntervalInSeconds());
+	}
+
+	
 }
+	
