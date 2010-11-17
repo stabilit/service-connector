@@ -6,9 +6,7 @@ import javax.activity.InvalidActivityException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
 import org.serviceconnector.scmp.SCMPError;
@@ -129,11 +127,11 @@ public class SCServer {
 		this.responder.destroy();
 	}
 
-	public SCSessionServer newSessionServer() {
-		return new SCSessionServer(this.scServerContext);
+	public SCSessionServer newSessionServer(String serviceName) {
+		return new SCSessionServer(this.scServerContext, serviceName);
 	}
 
-	public SCPublishServer newPublishServer() {
-		return new SCPublishServer(this.scServerContext);
+	public SCPublishServer newPublishServer(String serviceName) {
+		return new SCPublishServer(this.scServerContext, serviceName);
 	}
 }

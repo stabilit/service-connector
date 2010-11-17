@@ -30,9 +30,7 @@ import org.serviceconnector.net.ConnectionType;
 
 public class DemoSessionServer {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DemoSessionServer.class);
-
-	private SCSessionServer scSrv = null;
+	private final static Logger logger = Logger.getLogger(DemoSessionServer.class);
 	private static String serviceName = "local-session-service";
 
 	public static void main(String[] args) throws Exception {
@@ -51,20 +49,18 @@ public class DemoSessionServer {
 
 			sc.startListener(); // regular
 
-			// TODO TRN better solution next line
-			//SCSessionServer server = sc.newSessionServer(serviceName); // no other params possible
-			SCSessionServer server = sc.newSessionServer(); // no other params possible
+			SCSessionServer server = sc.newSessionServer(serviceName); // no other params possible
 
 			int maxSess = 10;
 			int maxConn = 5;
 			SCSessionServerCallback cbk = new SrvCallback(server);
 			try {
-				server.registerServer(serviceName, maxSess, maxConn, cbk); // regular
-//				server.registerServer(10, serviceName, maxSess, maxConn, cbk); // alternative with operation timeout
+				server.registerServer(maxSess, maxConn, cbk); // regular
+				// server.registerServer(10, maxSess, maxConn, cbk); // alternative with operation timeout
 			} catch (Exception e) {
 				logger.error("runSessionServer", e);
-				server.deregisterServer(serviceName);
-//				server.deregisterServer(10, serviceName);
+				server.deregisterServer();
+				// server.deregisterServer(10);
 			}
 			server.destroy();
 		} catch (Exception e) {
@@ -212,7 +208,7 @@ public class DemoSessionServer {
 			// sleep for 2 seconds before killing the server
 			try {
 				Thread.sleep(2000);
-				this.server.deregisterServer(serviceName);
+				this.server.deregisterServer();
 			} catch (Exception e) {
 				logger.error("run", e);
 			}

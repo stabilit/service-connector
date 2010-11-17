@@ -166,9 +166,9 @@ public class SetupTestCases {
 		scSim1Sess.setImmediateConnect(true);
 		scSim1Sess.setKeepAliveIntervalInSeconds(0);
 		scSim1Sess.startListener();
-		scSessionSim1Sess = scSim1Sess.newSessionServer();
+		scSessionSim1Sess = scSim1Sess.newSessionServer("1sess");
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSessionSim1Sess.registerServer("1sess", 1, 1, srvCallback);
+		scSessionSim1Sess.registerServer(1, 1, srvCallback);
 	}
 
 	private static void startSessionServer1Connection() throws Exception {
@@ -176,10 +176,10 @@ public class SetupTestCases {
 		// connect to SC as server
 		scSim1ConSrv.setImmediateConnect(true);
 		scSim1ConSrv.setKeepAliveIntervalInSeconds(0);
-		scSessionSim1ConSrv = scSim1ConSrv.newSessionServer();
+		scSessionSim1ConSrv = scSim1ConSrv.newSessionServer("1conn");
 		scSim1ConSrv.startListener();
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSessionSim1ConSrv.registerServer("1conn", 10, 1, srvCallback);
+		scSessionSim1ConSrv.registerServer(10, 1, srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
@@ -188,19 +188,19 @@ public class SetupTestCases {
 		scSim10ConSrv.setImmediateConnect(true);
 		scSim10ConSrv.setKeepAliveIntervalInSeconds(0);
 		scSim10ConSrv.startListener();
-		scSessionSim10ConSrv = scSim10ConSrv.newSessionServer();
+		scSessionSim10ConSrv = scSim10ConSrv.newSessionServer("local-session-service");
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSessionSim10ConSrv.registerServer("local-session-service", 10, 10, srvCallback);
+		scSessionSim10ConSrv.registerServer(10, 10, srvCallback);
 	}
 
 	public static void registerSessionServiceEnable() throws Exception {
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSessionSimEnableSrv = scSimEnableSrv.newSessionServer();
-		scSessionSimEnableSrv.registerServer("enableService", 10, 10, srvCallback);
+		scSessionSimEnableSrv = scSimEnableSrv.newSessionServer("enableService");
+		scSessionSimEnableSrv.registerServer(10, 10, srvCallback);
 	}
 
 	public static void deregisterSessionServiceEnable() throws Exception {
-		scSessionSimEnableSrv.deregisterServer("enableService");
+		scSessionSimEnableSrv.deregisterServer();
 	}
 
 	private static class SessionServerCallback extends SCSessionServerCallback {
@@ -301,12 +301,12 @@ public class SetupTestCases {
 	public static void startPublishServer() throws Exception {
 		String serviceName = "local-publish-service";
 		SCServer scPubServer = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, 51000);
-		SCPublishServer publishSrv = scPubServer.newPublishServer();
+		SCPublishServer publishSrv = scPubServer.newPublishServer(serviceName);
 		// connect to SC as server
 		publishSrv.setImmediateConnect(true);
 		scPubServer.startListener();
 		PublishServerCallback publishCallback = new PublishServerCallback();
-		publishSrv.registerServer(serviceName, 1, 1, publishCallback);
+		publishSrv.registerServer(1, 1, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
 		Thread thread = new Thread(run);
 		thread.start();
@@ -359,11 +359,9 @@ public class SetupTestCases {
 
 	private static class PublishRun implements Runnable {
 		SCPublishServer server;
-		String serviceName;
 
 		public PublishRun(SCPublishServer server, String serviceName) {
 			this.server = server;
-			this.serviceName = serviceName;
 		}
 
 		@Override
@@ -393,7 +391,7 @@ public class SetupTestCases {
 					SCPublishMessage publishMessage = new SCPublishMessage();
 					publishMessage.setData(data);
 					publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-					server.publish(serviceName, publishMessage);
+					server.publish(publishMessage);
 				} catch (Exception ex) {
 					logger.error("run", ex);
 				}

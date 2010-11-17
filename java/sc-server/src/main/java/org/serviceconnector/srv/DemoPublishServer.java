@@ -36,7 +36,6 @@ public class DemoPublishServer {
 
 	private SCPublishServer publishSrv = null;
 	private static String serviceName = "local-publish-service";
-	private static boolean killPublishServer = false;
 
 	public static void main(String[] args) throws Exception {
 		DemoPublishServer publishServer = new DemoPublishServer();
@@ -52,24 +51,21 @@ public class DemoPublishServer {
 		sc.setImmediateConnect(true); // can be set before register
 		try {
 			sc.startListener(); // regular
-
-			// TODO TRN better solution next line
-			// publishSrv = sc.newPublishServer(serviceName); // no other params possible
-			publishSrv = sc.newPublishServer(); // no other params possible
+			publishSrv = sc.newPublishServer(serviceName); // no other params possible
 
 			int maxSessions = 10;
 			int maxConnections = 5;
 			SCPublishServerCallback cbk = new SrvCallback(publishSrv);
 
-			publishSrv.registerServer(serviceName, maxSessions, maxConnections, cbk); // regular
-//			publishSrv.registerServer(10, serviceName, maxSessions, maxConnections, cbk); // alternative with operation timeout
+			publishSrv.registerServer(maxSessions, maxConnections, cbk); // regular
+			// publishSrv.registerServer(10, maxSessions, maxConnections, cbk); // alternative with operation timeout
 
 			SCPublishMessage pubMessage = new SCPublishMessage();
 			for (int i = 0; i < 10; i++) {
 				pubMessage.setData("publish message nr : " + i);
 				pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-				publishSrv.publish(serviceName, pubMessage); // regular
-				publishSrv.publish(10, serviceName, pubMessage); // alternative with operation timeout
+				publishSrv.publish(pubMessage); // regular
+				publishSrv.publish(10, pubMessage); // alternative with operation timeout
 
 				Thread.sleep(1000);
 			}
@@ -77,8 +73,8 @@ public class DemoPublishServer {
 			logger.error("runPublishServer", e);
 		} finally {
 			try {
-				publishSrv.deregisterServer(serviceName);
-//				publishSrv.deregisterServer(10, serviceName);
+				publishSrv.deregisterServer();
+				// publishSrv.deregisterServer(10, serviceName);
 			} catch (Exception e1) {
 				logger.error("run", e1);
 			}
@@ -182,7 +178,7 @@ public class DemoPublishServer {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {
-						this.publishSrv.deregisterServer("local-publish-service");
+						this.publishSrv.deregisterServer();
 					} catch (Exception ex) {
 						logger.error("unsubscribe", ex);
 					}

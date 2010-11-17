@@ -40,39 +40,27 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class SCPublishServer extends SCSessionServer {
 
-	public SCPublishServer(SCServerContext scServerContext) {
-		super(scServerContext);
+	public SCPublishServer(SCServerContext scServerContext, String serviceName) {
+		super(scServerContext, serviceName);
 	}
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCPublishServer.class);
 
-	public void publish(String serviceName, SCPublishMessage publishMessage) throws Exception {
-		this.publish(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName, publishMessage);
+	public void publish(SCPublishMessage publishMessage) throws Exception {
+		this.publish(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, publishMessage);
 	}
 
-	/**
-	 * Publish data.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the operation timeout seconds
-	 * @param serviceName
-	 *            the service name
-	 * @param publishMessage
-	 *            the publish message
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void publish(int operationTimeoutSeconds, String serviceName, SCPublishMessage publishMessage) throws Exception {
+	public void publish(int operationTimeoutSeconds, SCPublishMessage publishMessage) throws Exception {
 		if (publishMessage == null) {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "subscibeMessage can not be null");
 		}
-		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
-		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateStringLength(1, this.serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateAllowedCharacters(this.serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
-		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
+		SrvService srvService = srvServiceRegistry.getSrvService(this.serviceName);
 		if (srvService == null) {
-			throw new SCServiceException("Service not found, service name: " + serviceName);
+			throw new SCServiceException("Service not found, service name: " + this.serviceName);
 		}
 		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(srvService.getRequester(),
 				serviceName);
