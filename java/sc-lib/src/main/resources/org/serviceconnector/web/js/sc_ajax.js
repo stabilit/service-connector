@@ -30,6 +30,10 @@ function setStatusError() {
    	if (obj != null) {
 		obj.style.visibility = "hidden";
    	}
+   	obj = document.getElementById("sc_stop");
+   	if (obj != null) {
+        obj.innerHTML = "Service Connector is stopped";   		
+   	}
 }
 
 function setStatusSuccess() {
@@ -51,7 +55,20 @@ function runGC() {
 	ajaxSystem.ajaxCall('ajax/system?action=gc');	
 }
 
+function stopSC() {
+	var check = window.confirm("Stop SC! Are you sure?");
+	if (check == false) {
+		return;
+    }
+	var stopDiv = document.getElementById("sc_stop");
+	if (stopDiv != null) {
+		stopDiv.innerHTML = "service connector is stopping ...";
+	}
+	ajaxSystem.ajaxCall('ajax/system?action=stop');	
+}
+
 function systemCallback() {
+	alert(this.req.responseText);
    	setStatusSuccess();
 }
 

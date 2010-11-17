@@ -89,7 +89,8 @@ public class SCCacheConfiguration {
 	public synchronized void load(String fileName) throws Exception {
 		CompositeConfiguration config = new CompositeConfiguration();
 		try {
-			config.addConfiguration(new PropertiesConfiguration(fileName));
+			PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration(fileName);
+			config.addConfiguration(propertiesConfiguration);
 		} catch (Exception e) {
 			logger.error("could not find property file : " + fileName);
 			logger.info("cache uses default configuration");

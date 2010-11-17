@@ -392,6 +392,11 @@ div.sc_table_title {
 	height:1px;
 }
 
+.sc_separator_big {
+	background:white;
+	height:10px;
+}
+
 .sc_table_details {
 	padding:1px;
 	border:2px solid #B61F34;

@@ -18,6 +18,7 @@
           <tr class="sc_table_header">
             <th class="sc_table">Host</th>
             <th class="sc_table">Port</th>
+            <th class="sc_table">Server Key</th>
             <th class="sc_table">Service Name</th>
             <th class="sc_table">Max Sessions</th>
             <th class="sc_table">Max Connections</th>
@@ -62,6 +63,7 @@
 	    <xsl:param name="class"/> 
 	    <td class="{$class}"><xsl:value-of select="host"/></td>
 	    <td class="{$class}"><xsl:value-of select="portNr"/></td>
+	    <td class="{$class}"><xsl:value-of select="serverKey"/></td>
 	    <td class="{$class}"><xsl:value-of select="serviceName"/></td>
 	    <td class="{$class}"><xsl:value-of select="maxSessions"/></td>
 	    <td class="{$class}"><xsl:value-of select="maxConnections"/></td>

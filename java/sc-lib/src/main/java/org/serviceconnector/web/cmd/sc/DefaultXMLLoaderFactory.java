@@ -89,7 +89,7 @@ public class DefaultXMLLoaderFactory {
 		loader = new ServersXMLLoader();
 		this.addXMLLoader("/servers", loader);
 		loader = new RespondersXMLLoader();
-		this.addXMLLoader("/responders", loader);
+		this.addXMLLoader("/listeners", loader);
 		loader = new ResourceXMLLoader();
 		this.addXMLLoader("/resource", loader);
 		loader = new LogsXMLLoader();
@@ -496,7 +496,8 @@ public class DefaultXMLLoaderFactory {
 			writer.writeStartElement("cache");
 			AppContext appContext = AppContext.getCurrentContext();
 			SCCacheManager cacheManager = appContext.getCacheManager();
-			SCCacheConfiguration cacheConfiguration = cacheManager.getScmpCacheConfiguration();
+			SCCacheConfiguration cacheConfiguration = cacheManager
+					.getScmpCacheConfiguration();
 			this.writeCacheConfiguration(writer, cacheConfiguration);
 			writer.writeEndElement(); // close cache tag
 			writer.writeStartElement("caches");
@@ -506,7 +507,8 @@ public class DefaultXMLLoaderFactory {
 		}
 
 		private void writeCacheConfiguration(XMLStreamWriter writer,
-				SCCacheConfiguration cacheConfiguration) throws XMLStreamException {
+				SCCacheConfiguration cacheConfiguration)
+				throws XMLStreamException {
 			writer.writeStartElement("config");
 			writer.writeStartElement("name");
 			writer.writeCharacters(cacheConfiguration.getCacheName());
@@ -515,22 +517,26 @@ public class DefaultXMLLoaderFactory {
 			writer.writeCharacters(cacheConfiguration.getDiskPath());
 			writer.writeEndElement(); // close diskPath tag
 			writer.writeStartElement("maxElementsInMemory");
-			writer.writeCharacters(String.valueOf(cacheConfiguration.getMaxElementsInMemory()));
+			writer.writeCharacters(String.valueOf(cacheConfiguration
+					.getMaxElementsInMemory()));
 			writer.writeEndElement(); // close maxElementsInMemory tag
 			writer.writeStartElement("maxElementsOnDisk");
-			writer.writeCharacters(String.valueOf(cacheConfiguration.getMaxElementsOnDisk()));
+			writer.writeCharacters(String.valueOf(cacheConfiguration
+					.getMaxElementsOnDisk()));
 			writer.writeEndElement(); // close maxElementsOnDisk tag
 			writer.writeStartElement("enabled");
-			writer.writeCharacters(String.valueOf(cacheConfiguration.isCacheEnabled()));
+			writer.writeCharacters(String.valueOf(cacheConfiguration
+					.isCacheEnabled()));
 			writer.writeEndElement(); // close enabled tag
 			writer.writeStartElement("diskPersistent");
-			writer.writeCharacters(String.valueOf(cacheConfiguration.isDiskPersistent()));
-			writer.writeEndElement(); // close diskPersistent tag			
-			writer.writeEndElement(); // close config tag			
+			writer.writeCharacters(String.valueOf(cacheConfiguration
+					.isDiskPersistent()));
+			writer.writeEndElement(); // close diskPersistent tag
+			writer.writeEndElement(); // close config tag
 		}
 
-		private void writeCaches(XMLStreamWriter writer,
-				Object[] caches) throws XMLStreamException {
+		private void writeCaches(XMLStreamWriter writer, Object[] caches)
+				throws XMLStreamException {
 			for (Object obj : caches) {
 				if (obj instanceof SCCache == false) {
 					continue;
@@ -547,12 +553,13 @@ public class DefaultXMLLoaderFactory {
 				writer.writeCharacters(String.valueOf(cache.getElementSize()));
 				writer.writeEndElement(); // close elementSize tag
 				writer.writeStartElement("memoryStoreSize");
-				writer.writeCharacters(String.valueOf(cache.getMemoryStoreSize()));
+				writer.writeCharacters(String.valueOf(cache
+						.getMemoryStoreSize()));
 				writer.writeEndElement(); // close memoryStoreSize tag
 				writer.writeStartElement("diskStoreSize");
 				writer.writeCharacters(String.valueOf(cache.getDiskStoreSize()));
 				writer.writeEndElement(); // close diskStoreSize tag
-				writer.writeEndElement(); // close cache tag							
+				writer.writeEndElement(); // close cache tag
 			}
 		}
 
@@ -730,6 +737,10 @@ public class DefaultXMLLoaderFactory {
 			if ("gc".equals(action)) {
 				System.gc();
 				logger.info("run gc");
+			}
+			if ("stop".equals(action)) {
+				logger.warn("sc has been stopped by user interface");
+				System.exit(1);
 			}
 		}
 	}
