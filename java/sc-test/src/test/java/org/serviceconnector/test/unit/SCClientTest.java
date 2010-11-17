@@ -6,13 +6,10 @@ package org.serviceconnector.test.unit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.Constants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.TestConstants;
 import org.serviceconnector.net.ConnectionType;
 
 /**
@@ -27,7 +24,7 @@ public class SCClientTest {
 	 * @throws java.lang.Exception
 	 */
 	@Before
-	public void init() throws Exception {
+	public void init() {
 		client = null;
 	}
 
