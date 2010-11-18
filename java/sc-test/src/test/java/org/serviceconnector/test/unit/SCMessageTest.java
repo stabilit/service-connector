@@ -7,6 +7,7 @@ import java.security.InvalidParameterException;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnetor.TestConstants;
 
 
 /**
@@ -53,27 +54,29 @@ public class SCMessageTest {
 		assertEquals(false, message.isFault());
 	}
 
-	@Test(expected = InvalidParameterException.class)
-	public void t03_constructor() {
-		Object obj = new Object();
-		message = new SCMessage();
-		message.setData(obj);
-	}
-
+	/**
+	 * Description:	Set compress modus to true<br>
+	 * Expectation:	Compress is set to true
+	 */
 	@Test
 	public void t10_Compressed() {
 		message.setCompressed(true);
-		assertEquals(true, message.isCompressed());
-	}
-
-	@Test
-	public void t11_Compressed() {
-		message.setCompressed(false);
-		assertEquals(false, message.isCompressed());
+		assertEquals("Compressed", true, message.isCompressed());
 	}
 
 	/**
-	 * _emptyObject_emptyObject
+	 * Description:	Set compress modus to false<br>
+	 * Expectation:	Compress is set to false
+	 */
+	@Test
+	public void t11_Compressed() {
+		message.setCompressed(false);
+		assertEquals("Compressed", false, message.isCompressed());
+	}
+
+	/**
+	 * Description:	Create empty message with Object-DataParameter<br>
+	 * Expectation:	InvalidParameter Exception
 	 */
 	@Test(expected = InvalidParameterException.class)
 	public void t20_Data() {
@@ -82,26 +85,28 @@ public class SCMessageTest {
 	}
 
 	/**
-	 * _arbitraryString_givenString
+	 * Description:	Set arbitrary string to DataParameter<br>
+	 * Expectation:	DataParameter is set to arbitrary string
 	 */
 	@Test
 	public void t21_Data() {
-		message.setData("The quick brown fox jumps over a lazy dog.");
-		assertEquals("The quick brown fox jumps over a lazy dog.", message
-				.getData());
+		message.setData(TestConstants.pangram);
+		assertEquals("DataParameter ",TestConstants.pangram, message.getData());
 	}
 
 	/**
-	 * _1MBArray_allocated1MBArray
+	 * Description:	Set 1MB Array to DataParameter<br>
+	 * Expectation:	DataParameter is set to 1MB Array
 	 */
 	@Test
 	public void t22_Data() {
 		message.setData(new byte[1048576]);
-		assertEquals(1048576, ((byte[]) message.getData()).length);
+		assertEquals("DataParameter ",1048576, ((byte[]) message.getData()).length);
 	}
 
 	/**
-	 * _nullParam_acceptValue
+	 * Description:	Set Null-Value as MessageInfo<br>
+	 * Expectation:	MessageInfo is set to Null
 	 */
 	@Test
 	public void t30_MessageInfo() {
@@ -110,7 +115,8 @@ public class SCMessageTest {
 	}
 
 	/**
-	 * _emptyParam_throwInvalidParamException
+	 * Description:	Set Empty-Value as MessageInfo<br>
+	 * Expectation:	InvalidParameter Exception
 	 */
 	@Test(expected = InvalidParameterException.class)
 	public void t31_MessageInfo() {
@@ -118,7 +124,8 @@ public class SCMessageTest {
 	}
 	
 	/**
-	 * _whiteCharParam_throwInvalidParamException
+	 * Description:	Set empty Char as MessageInfo<br>
+	 * Expectation:	MessageInfo is set to empty Char
 	 */
 	@Test
 	public void t32_MessageInfo() {
@@ -127,7 +134,8 @@ public class SCMessageTest {
 	}
 
 	/**
-	 * _sinlgeCharParam_length1MessageInfo
+	 * Description:	Set sinlge Char as MessageInfo<br>
+	 * Expectation:	MessageInfo is set to a single char Char
 	 */
 	@Test
 	public void t33_MessageInfo() {
@@ -137,7 +145,8 @@ public class SCMessageTest {
 	}
 
 	/**
-	 * _256CharParam_length256MessageInfo
+	 * Description:	Set 256 Chars as MessageInfo<br>
+	 * Expectation:	MessageInfo is set to a single 256 chars
 	 */
 	@Test
 	public void t34_MessageInfo() {
@@ -151,7 +160,8 @@ public class SCMessageTest {
 	}
 
 	/**
-	 * _257CharParam_throwInvalidParameterException
+	 * Description:	Set 257 Chars as MessageInfo<br>
+	 * Expectation:	InvalidParameter Exception
 	 */
 	@Test(expected = InvalidParameterException.class)
 	public void t35_MessageInfo() {
@@ -161,10 +171,12 @@ public class SCMessageTest {
 		}
 		message.setMessageInfo(sb.toString());
 	}
-
+	
 	/**
-	 * @Test(expected = InvalidParameterException.class)
+	 * Description:	Set 32767 Chars as MessageInfo<br>
+	 * Expectation:	InvalidParameter Exception
 	 */
+	@Test(expected = InvalidParameterException.class)
 	public void t36_setMessageInfo() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Short.MAX_VALUE; i++) {
@@ -174,7 +186,8 @@ public class SCMessageTest {
 	}
 
 	/**
-	 * _nullParam_nullSessionId
+	 * Description:	Set Null-Value as session Id<br>
+	 * Expectation:	SessionId is set to Null
 	 */
 	@Test
 	public void t40_SessionId() {
@@ -183,7 +196,8 @@ public class SCMessageTest {
 	}
 
 	/**
-	 * _emptyString_emptySessionId
+	 * Description:	Set empty String as session Id<br>
+	 * Expectation:	SessionId is set to empty String
 	 */
 	@Test
 	public void t41_SessionId() {
@@ -192,7 +206,8 @@ public class SCMessageTest {
 	}
 
 	/**
-	 * _emptyString_emptySessionId
+	 * Description:	Set single char as session Id<br>
+	 * Expectation:	SessionId is set to single char.
 	 */
 	@Test
 	public void t42_SessionId()
@@ -202,7 +217,8 @@ public class SCMessageTest {
 	}
 
 	/**
-	 * _shortMaxString_givenStringSessionId
+	 * Description:	Set 32767 Chars as SessionId<br>
+	 * Expectation:	The sessionId is set to 2767 Chars
 	 */
 	@Test
 	public void T43_SessionId() {
