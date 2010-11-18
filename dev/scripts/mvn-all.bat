@@ -1,6 +1,6 @@
 @echo off
-rem kick-off maven to build all
-
+rem build all
+rem
 call mvn-sc.bat
 call mvn-sc-console.bat
 call mvn-sc-server.bat

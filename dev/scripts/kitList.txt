@@ -1,5 +1,5 @@
 bin\
 scripts\
-documentation\
-config\
-test\
+doc\
+cfg\
+tst\
