@@ -1,61 +1,22 @@
 package org.serviceconnector.test.unit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.Constants;
-import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
-import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.web.InvalidParameterException;
 
 
 public class SCServerTest {
 
 	private SCServer server;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void init() {
 		server = null;
 	}
-	
-	/**
-	 * Description:	Check initial values set by constructor<br>
-	 * Expectation:	Initial values are properly set.
-	 */
-	public void constructor_1(){
-		/*
-		assertEquals(false, server.isListening());
-		assertEquals(ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
-		assertEquals(true, server.isImmediateConnect());
-		assertEquals(null, server.getHost());
-		assertEquals(Constants.DEFAULT_KEEP_ALIVE_INTERVAL, server.getKeepAliveIntervalInSeconds());
-		assertEquals(-1, server.getPort());
-		*/		
-	}
-
-	/*
-		SCServer sc = new SCServer("localhost", 9000, 9001); // regular, defaults documented in javadoc
-		sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY_TCP); // alternative with connection type
-
-		sc.setKeepAliveIntervalInSeconds(10); // can be set before register
-		sc.setImmediateConnect(true); // can be set before register
-		try {
-			sc.startListener(); // regular
-			publishSrv = sc.newPublishServer(serviceName); // no other params possible
-
-			int maxSessions = 10;
-			int maxConnections = 5;
-			SCPublishServerCallback cbk = new SrvCallback(publishSrv);
-
-			publishSrv.registerServer(maxSessions, maxConnections, cbk); // regular
-
-	 */
 	
 	/**
 	 * Description:	Invoke SCServer constructor with host, port and listener port. <br>
@@ -152,91 +113,42 @@ public class SCServerTest {
 	}
 
 	/**
-	 * Description:	Set KeepAliveInterval with valid value. <br>
-	 * Expectation: KeepAliveInterval was set
+	 * Description:	Set ImmediateConnect with valid value. <br>
+	 * Expectation: ImmediateConnect was set
 	 */
 	@Test
 	public void t20_ImmediateConnect() {
 		server = new SCServer("localhost", 9000, 9001);
+		// TODO method server.isImmediateConnect() is missing
 		//assertEquals("ImmediateConnect not equal", false, server.isImmediateConnect());
 		server.setImmediateConnect(true);
+		//assertEquals("ImmediateConnect not equal", true, server.isImmediateConnect());
+		server.setImmediateConnect(false);
 		//assertEquals("ImmediateConnect not equal", true, server.isImmediateConnect());
 		assertNotNull(server);
 	}
 
-	
 	/**
-	 * Description:	Invoke setConnectionType with empty string<br>
-	 * Expectation:	connectionType was set to empty string
+	 * Description:	Start and stop Listener. <br>
+	 * Expectation: Listener is stopped
 	 */
 	@Test
-	public void setConnectionType_2() {
-		((SCSessionServer) server).setConnectionType("");
-		assertEquals("", server.getConnectionType());
-	}
+	public void t30_Listener() {
+		server = new SCServer("localhost", 9000, 9001);
+		assertNotNull(server);
+		
+		try {
+			server.startListener();
+			assertEquals("Listener is not running", true, server.isListening());
 
-	/**
-	 * Description:	Invoke setConnectionType with blank string<br>
-	 * Expectation:	connectionType was set to blank
-	 */
-	@Test
-	public void setConnectionType_3() {
-		((SCSessionServer) server).setConnectionType(" ");
-		assertEquals(" ", server.getConnectionType());
-	}
-
-	/**
-	 * Description:	Invoke setConnectionType with "a" string<br>
-	 * Expectation:	connectionType was set to "a"
-	 */
-	@Test
-	public void setConnectionType_5() {
-		((SCSessionServer) server).setConnectionType("a");
-		assertEquals("a", server.getConnectionType());
-	}
-
-	/**
-	 * Description:	Invoke setConnectionType with "aaa" string<br>
-	 * Expectation:	connectionType was set to "aaa"
-	 */
-	@Test
-	public void setConnectionType_6() {
-		((SCSessionServer) server).setConnectionType("aaa");
-		assertEquals("aaa", server.getConnectionType());
-	}
-
-	/**
-	 * Description:	Invoke setConnectionType with characters "a" and lengths "Short.MAX_VALUE"<br>
-	 * Expectation:	connectionType was set
-	 */
-	@Test
-	public void setConnectionType_7() {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < Short.MAX_VALUE; i++) {
-			sb.append('a');
+		} catch (InvalidParameterException ex) {
+			assertFalse("InvalidParameterException:" + ex.getMessage(), false);
+		} catch (Exception ex) {
+			assertFalse("Exception:" + ex.getMessage(), false);
 		}
-		((SCSessionServer) server).setConnectionType(sb.toString());
-		assertEquals(sb.toString(), server.getConnectionType());
+		server.stopListener();
+		assertEquals("Listener is running", false, server.isListening());
 	}
-
-	/**
-	 * Description:	Invoke setImmediateConnect with "true"<br>
-	 * Expectation:	ImmediateConnect was set to "true"
-	 */
-	@Test
-	public void setImmediateConnect_1() {
-		server.setImmediateConnect(true);
-		assertEquals(true, server.isImmediateConnect());
-	}
-
-	/**
-	 * Description:	Invoke setImmediateConnect with "false"<br>
-	 * Expectation:	ImmediateConnect was set to "false"
-	 */
-	@Test
-	public void setImmediateConnect_2() {
-		server.setImmediateConnect(false);
-		assertEquals(false, server.isImmediateConnect());
-	}
+	
 
 }
