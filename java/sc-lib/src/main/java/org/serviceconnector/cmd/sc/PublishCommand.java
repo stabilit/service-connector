@@ -67,8 +67,9 @@ public class PublishCommand extends CommandAdapter {
 		// reply to server
 		SCMPMessage reply = null;
 		if (message.isPart()) {
-			// incoming message is of type part - outgoing must be part too
-			reply = new SCMPPart();
+			// incoming message is of type part - outgoing must be part too, poll request
+			reply = new SCMPPart(true);
+			
 		} else {
 			reply = new SCMPMessage();
 		}

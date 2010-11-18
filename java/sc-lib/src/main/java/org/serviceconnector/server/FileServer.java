@@ -35,8 +35,8 @@ public class FileServer extends Server {
 		} else {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
-			URL url = new URL("http://" + this.host + ":" + this.portNr + path + Constants.DEFAULT_UPLOAD_SCRIPT_NAME
-					+ "?name=" + remoteFileName);
+			URL url = new URL("http://" + this.host + ":" + this.portNr + path + Constants.DEFAULT_UPLOAD_SCRIPT_NAME + "?name="
+					+ remoteFileName);
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("PUT");
 			httpCon.setDoOutput(true);
@@ -72,7 +72,7 @@ public class FileServer extends Server {
 			reply = new SCMPMessage();
 		} else {
 			// set up poll request
-			reply = new SCMPPart();
+			reply = new SCMPPart(true);
 		}
 		return reply;
 	}
@@ -116,7 +116,8 @@ public class FileServer extends Server {
 				session.stopStreaming();
 				return reply;
 			}
-			reply = new SCMPPart();
+			// set up part request, no poll request
+			reply = new SCMPPart(false);
 			reply.setBody(fullBuffer, 0, readBytes);
 			return reply;
 		} catch (Exception e) {

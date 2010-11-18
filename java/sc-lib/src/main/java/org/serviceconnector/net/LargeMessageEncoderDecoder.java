@@ -66,14 +66,22 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				headerKey = SCMPHeadlineKey.EXC;
 			} else {
 				if (scmpMsg.isPart()) {
-					headerKey = SCMPHeadlineKey.PRS;
+					if (scmpMsg.isPollRequest()) {
+						headerKey = SCMPHeadlineKey.PAC;
+					} else {
+						headerKey = SCMPHeadlineKey.PRS;
+					}
 				} else {
 					headerKey = SCMPHeadlineKey.RES;
 				}
 			}
 		} else {
 			if (scmpMsg.isPart() || scmpMsg.isComposite()) {
-				headerKey = SCMPHeadlineKey.PRQ;
+				if (scmpMsg.isPollRequest()) {
+					headerKey = SCMPHeadlineKey.PAC;
+				} else {
+					headerKey = SCMPHeadlineKey.PRQ;
+				}
 			} else {
 				headerKey = SCMPHeadlineKey.REQ;
 			}

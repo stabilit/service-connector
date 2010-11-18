@@ -67,8 +67,8 @@ public class SCMPLargeResponse extends SCMPMessage {
 		// default compositeReceiver is not complete
 		this.complete = false;
 		scmpList = new ArrayList<SCMPMessage>();
-		// builds up request to pull later
-		currentPart = new SCMPPart();
+		// builds up request to poll later
+		currentPart = new SCMPPart(true);
 		currentPart.setMessageType(request.getMessageType());
 		currentPart.setSessionId(request.getSessionId());
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.OPERATION_TIMEOUT); // tries to set operation timeout

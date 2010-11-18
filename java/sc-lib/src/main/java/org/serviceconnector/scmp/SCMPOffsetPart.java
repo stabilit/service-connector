@@ -23,14 +23,15 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 
 /**
- * The Class SCMPSendPart. Represents an outgoing part SCMP of a large message.
+ * The Class SCMPOffsetPart. Represents an outgoing part SCMP of a large message. Extends SCMPPart and adds information of current
+ * body like offset, totalBodyLength.
  * 
  * @author JTraber
  */
-public class SCMPSendPart extends SCMPPart {
+public class SCMPOffsetPart extends SCMPPart {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPSendPart.class);
+	protected static final Logger logger = Logger.getLogger(SCMPOffsetPart.class);
 
 	/** The offset where body starts. */
 	private int offset;
@@ -40,14 +41,14 @@ public class SCMPSendPart extends SCMPPart {
 	private int callLength;
 
 	/**
-	 * Instantiates a new SCMPSendPart.
+	 * Instantiates a new SCMPOffsetPart.
 	 * 
 	 * @param message
 	 *            the scmp message
 	 * @param offset
 	 *            the offset
 	 */
-	public SCMPSendPart(SCMPMessage message, int offset, int largeMessageLength) {
+	public SCMPOffsetPart(SCMPMessage message, int offset, int largeMessageLength) {
 		this.offset = offset;
 		this.callLength = largeMessageLength;
 		// evaluates the size of this part

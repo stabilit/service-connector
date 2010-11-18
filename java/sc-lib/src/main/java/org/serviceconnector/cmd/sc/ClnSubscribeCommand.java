@@ -18,6 +18,7 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
@@ -296,8 +297,8 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				// set up reply
 				SCMPMessage reply = null;
 				if (message.isPart()) {
-					// incoming message is of type part - outgoing must be part too
-					reply = new SCMPPart();
+					// message from queue is of type part - outgoing must be part too, no poll request
+					reply = new SCMPPart(false);
 				} else {
 					reply = new SCMPMessage();
 				}

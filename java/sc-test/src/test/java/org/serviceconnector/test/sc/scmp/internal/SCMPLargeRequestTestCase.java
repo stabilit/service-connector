@@ -21,7 +21,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.serviceconnector.scmp.SCMPLargeRequest;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPSendPart;
+import org.serviceconnector.scmp.SCMPOffsetPart;
 
 
 /**
@@ -53,7 +53,7 @@ public class SCMPLargeRequestTestCase extends SCMPMessage {
 		int offset = 0;
 		while (largeRequest.hasNext()) {
 
-			SCMPSendPart responsePart = new SCMPSendPart(largeScmp, offset, sb.length());
+			SCMPOffsetPart responsePart = new SCMPOffsetPart(largeScmp, offset, sb.length());
 			offset += responsePart.getBodyLength();
 
 			SCMPMessage message = largeRequest.getNext();
@@ -63,7 +63,7 @@ public class SCMPLargeRequestTestCase extends SCMPMessage {
 			Assert.assertEquals(responsePart.getBodyType(), message.getBodyType());
 		}
 
-		SCMPSendPart firstPart = new SCMPSendPart(largeScmp, 0, sb.length());
+		SCMPOffsetPart firstPart = new SCMPOffsetPart(largeScmp, 0, sb.length());
 		SCMPMessage message = largeRequest.getFirst();
 		Assert.assertEquals(firstPart.getBody().toString(), message.getBody().toString());
 		Assert.assertEquals(firstPart.getBodyLength(), message.getBodyLength());

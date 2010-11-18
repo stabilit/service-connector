@@ -20,10 +20,9 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-
 /**
- * The Class SCMPPart. Indicates this SCMP is a part of a bigger request/response. Request/Response is complete at
- * the time all parts are sent and put together.
+ * The Class SCMPPart. Indicates this SCMP is a part of a bigger request/response. Request/Response is complete at the time all parts
+ * are sent and put together.
  * 
  * @author JTraber
  */
@@ -31,11 +30,17 @@ public class SCMPPart extends SCMPMessage {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPPart.class);
-	
+	private boolean pollRequest;
+
 	/**
 	 * Instantiates a new SCMPPart.
 	 */
 	public SCMPPart() {
+		this(false);
+	}
+
+	public SCMPPart(boolean pollRequest) {
+		this.pollRequest = pollRequest;
 	}
 
 	/**
@@ -51,5 +56,24 @@ public class SCMPPart extends SCMPMessage {
 	/** {@inheritDoc} */
 	public boolean isPart() {
 		return true;
+	}
+
+	/**
+	 * Checks if the message is a poll request in large message sequence.
+	 * 
+	 * @return true, if is poll
+	 */
+	public boolean isPollRequest() {
+		return this.pollRequest;
+	}
+
+	/**
+	 * Sets the checks if is poll request.
+	 * 
+	 * @param pollRequest
+	 *            the new checks if is poll request
+	 */
+	public void setIsPollRequest(boolean pollRequest) {
+		this.pollRequest = pollRequest;
 	}
 }

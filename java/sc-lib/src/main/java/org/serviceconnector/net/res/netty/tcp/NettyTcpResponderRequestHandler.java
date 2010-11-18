@@ -304,8 +304,8 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		if (scmpReq.isPart()) {
 			// received message part - request not complete yet
 			compositeReceiver.incomplete();
-			// set up pull request
-			SCMPMessage scmpReply = new SCMPPart();
+			// set up poll request
+			SCMPMessage scmpReply = new SCMPPart(true);
 			scmpReply.setIsReply(true);
 			scmpReply.setMessageType(scmpReq.getMessageType());
 			response.setSCMP(scmpReply);

@@ -207,6 +207,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 				SCMPPart scmpPart = new SCMPPart();
 				scmpPart.setHeader(callSCMP);
 				scmpPart.setBody(callSCMP.getBody());
+				scmpPart.setIsPollRequest(callSCMP.isPollRequest());
 				SCMPCallAdapter.this.requestMessage = scmpPart; // SCMPCallAdapter.this points to this.parentCall
 				callSCMP = null;
 			}

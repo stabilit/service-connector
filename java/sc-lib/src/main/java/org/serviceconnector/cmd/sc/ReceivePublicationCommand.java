@@ -75,8 +75,8 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 			// message found in subscription queue set up reply
 			SCMPMessage reply = new SCMPMessage();
 			if (message.isPart()) {
-				// message is part
-				reply = new SCMPPart();
+				// message from queue is of type part - outgoing must be part too, no poll request
+				reply = new SCMPPart(false);
 			}
 			reply.setServiceName(reqMessage.getServiceName());
 			reply.setSessionId(reqMessage.getSessionId());

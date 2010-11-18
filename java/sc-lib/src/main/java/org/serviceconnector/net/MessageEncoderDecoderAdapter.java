@@ -79,8 +79,12 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			return scmpMsg;
 		case PRQ:
 		case PRS:
-			scmpMsg = new SCMPPart();
+			// no poll request
+			scmpMsg = new SCMPPart(false);
 			break;
+		case PAC:
+			// poll request
+			scmpMsg = new SCMPPart(true);
 		case EXC:
 			scmpMsg = new SCMPFault();
 			break;

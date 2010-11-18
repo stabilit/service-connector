@@ -164,7 +164,7 @@ public class SCMPMessage {
 	 * 
 	 * @return true, if is poll
 	 */
-	public boolean isPoll() {
+	public boolean isPollRequest() {
 		// this is the default value!
 		return false;
 	}

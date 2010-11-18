@@ -61,7 +61,7 @@ public class SCMPLargeRequest extends SCMPMessage {
 	 */
 	public SCMPMessage getFirst() {
 		this.offset = 0;
-		this.currentPart = new SCMPSendPart(this.message, this.offset, this.largeMessageLength);
+		this.currentPart = new SCMPOffsetPart(this.message, this.offset, this.largeMessageLength);
 		this.offset += currentPart.getBodyLength();
 		return this.currentPart;
 	}
@@ -92,7 +92,7 @@ public class SCMPLargeRequest extends SCMPMessage {
 	 */
 	public SCMPMessage getNext() {
 		if (this.hasNext()) {
-			this.currentPart = new SCMPSendPart(message, this.offset, this.largeMessageLength);
+			this.currentPart = new SCMPOffsetPart(message, this.offset, this.largeMessageLength);
 			this.offset += currentPart.getBodyLength();
 			return this.currentPart;
 		}
