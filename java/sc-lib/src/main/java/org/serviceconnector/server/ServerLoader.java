@@ -51,13 +51,13 @@ public class ServerLoader {
 	 */
 	public static void load(CompositeConfiguration config) throws Exception {
 		@SuppressWarnings("unchecked")
-		List<String> serverNames = config.getList(Constants.PROPERTY_REMOTE_HOSTS);
+		List<String> serverNames = config.getList(Constants.PROPERTY_REMOTE_NODES);
 
 		for (String serverName : serverNames) {
 			serverName = serverName.trim(); // remove blanks in serverName
 
 			int portNr = Integer.parseInt((String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_PORT));
-			String host = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_HOST);
+			String host = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_INTERFACES);
 			String connectionType = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
 
 			if (connectionType == null) {

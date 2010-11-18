@@ -71,6 +71,9 @@ public final class Constants {
 	/** The default maximal connection pool size */
 	public static final int DEFAULT_MAX_CONNECTION_POOL_SIZE = 100;
 
+	/** The default upload script name */
+	public static final String DEFAULT_UPLOAD_SCRIPT_NAME = "scupload.php";
+	
 	/** Default number of threads for the server. */
 	public static final int DEFAULT_NR_OF_THREADS_SERVER = 10000; // TODO not used
 
@@ -178,14 +181,14 @@ public final class Constants {
 
 	public static final String PROPERTY_LISTENERS = "listeners";
 	public static final String PROPERTY_SERVICE_NAMES = "serviceNames";
-	public static final String PROPERTY_REMOTE_HOSTS = "remoteHosts";
+	public static final String PROPERTY_REMOTE_NODES = "remoteNodes";
 
 	public static final String PROPERTY_QUALIFIER_CONNECTION_TYPE = ".connectionType";
 	public static final String PROPERTY_QUALIFIER_USERNAME = ".username";
 	public static final String PROPERTY_QUALIFIER_PASSWORD = ".password";
-	public static final String PROPERTY_QUALIFIER_UPLOAD_SCRIPT_NAME = "scupload.php";
+	public static final String PROPERTY_QUALIFIER_UPLOAD_SCRIPT_NAME = ".uploadScriptName";
 	public static final String PROPERTY_QUALIFIER_REMOTE_HOST = ".remoteHost";
-	public static final String PROPERTY_QUALIFIER_HOST = ".host";
+	public static final String PROPERTY_QUALIFIER_INTERFACES = ".interfaces";
 	public static final String PROPERTY_QUALIFIER_PORT = ".port";
 	public static final String PROPERTY_QUALIFIER_TYPE = ".type";
 	public static final String PROPERTY_QUALIFIER_ENABLED = ".enabled";

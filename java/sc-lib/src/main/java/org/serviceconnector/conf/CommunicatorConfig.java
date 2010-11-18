@@ -91,7 +91,7 @@ public class CommunicatorConfig {
 		this.setPort(port);
 		// TODO JOT list of host not get(0)!!!
 		List<String> hosts = new ArrayList<String>();
-		hosts.add(configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_HOST));
+		hosts.add(configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_INTERFACES));
 		this.setHosts(hosts);
 		this.setConnectionType((String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
 		this.setUsername((String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_USERNAME));

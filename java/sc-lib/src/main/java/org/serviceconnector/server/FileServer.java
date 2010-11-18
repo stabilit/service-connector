@@ -36,7 +36,7 @@ public class FileServer extends Server {
 		} else {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
-			URL url = new URL("http://" + this.host + ":" + this.portNr + path + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT_NAME
+			URL url = new URL("http://" + this.host + ":" + this.portNr + path + Constants.DEFAULT_UPLOAD_SCRIPT_NAME
 					+ "?name=" + remoteFileName);
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("PUT");
