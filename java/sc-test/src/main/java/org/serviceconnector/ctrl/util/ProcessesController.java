@@ -36,7 +36,7 @@ public class ProcessesController {
 			properties.load(new FileInputStream(log4jPath));
 		} catch (IOException e) {
 		}
-		String logDir = properties.getProperty("log.dir");
+		String logDir = properties.getProperty("log-directory");
 		String fileName = userDir + fs + logDir + fs + TestConstants.pidLogFile;
 
 		return fileName;
