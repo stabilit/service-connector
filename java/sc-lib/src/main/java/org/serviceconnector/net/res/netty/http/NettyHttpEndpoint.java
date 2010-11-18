@@ -56,8 +56,8 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 	/** The port. */
 	private int port;
 	/** The channel factory. */
-	private NioServerSocketChannelFactory channelFactory = new NioServerSocketChannelFactory(Executors
-			.newCachedThreadPool(), Executors.newCachedThreadPool());
+	private NioServerSocketChannelFactory channelFactory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
+			Executors.newCachedThreadPool());
 
 	/**
 	 * Instantiates a NettyHttpEndpoint.
@@ -85,17 +85,15 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 		this.serverThread.start();
 		Boolean bool = null;
 		try {
-			bool = this.answer.poll(Constants.CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+			bool = this.answer.poll(baseConf.getConnectionTimeoutMillis(), TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
-					"listener could not start up succesfully");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
 		}
 		if (bool == null) {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "startup listener timed out");
 		}
 		if (bool == false) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
-					"listener could not start up succesfully");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
 		}
 	}
 
@@ -105,7 +103,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 			// adds responder to registry
-			ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+			ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 			responderRegistry.addResponder(this.channel.getId(), this.resp);
 		} catch (Exception ex) {
 			this.answer.add(Boolean.FALSE);
@@ -142,7 +140,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			if (this.channel != null) {
 				// removes responder to registry
-				ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+				ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 				responderRegistry.addResponder(this.channel.getId(), this.resp);
 				this.channel.unbind();
 				ChannelFuture future = this.channel.close();
@@ -151,7 +149,7 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 				try {
 					operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 				} catch (CommunicationException ex) {
-					logger.error("disconnect", ex);	// stopListening must continue
+					logger.error("disconnect", ex); // stopListening must continue
 				}
 			}
 			if (this.serverThread != null) {

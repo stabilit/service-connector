@@ -50,12 +50,12 @@ public abstract class Server {
 	private int maxConnections;
 	/** The requester. */
 	protected IRequester requester;
-	/** The operation timeout multiplier. */
-	protected double operationTimeoutMultiplier;
 	/** The type. */
 	private ServerType type;
 	/** The server key. */
 	protected String serverKey;
+	/** The operation timeout mulitplier. */
+	protected final double operationTimeoutMultiplier = AppContext.getBasicConfiguration().getOperationTimeoutMultiplier();
 
 	/**
 	 * Instantiates a new server.
@@ -67,24 +67,21 @@ public abstract class Server {
 	 * @param serviceName
 	 *            the service name
 	 * @param portNr
-	 *            the port number
+	 *            the port nr
 	 * @param maxConnections
 	 *            the max connections
 	 * @param connectionType
 	 *            the connection type
 	 * @param keepAliveInterval
 	 *            the keep alive interval
-	 * @param operationTimeoutMultiplier
-	 *            the operation timeout multiplier
 	 */
 	public Server(ServerType type, InetSocketAddress socketAddress, String serviceName, int portNr, int maxConnections,
-			String connectionType, int keepAliveInterval, double operationTimeoutMultiplier) {
+			String connectionType, int keepAliveInterval) {
 		this.serviceName = serviceName;
 		this.socketAddress = socketAddress;
 		this.type = type;
 		this.portNr = portNr;
 		this.maxConnections = maxConnections;
-		this.operationTimeoutMultiplier = operationTimeoutMultiplier;
 		this.host = socketAddress.getHostName();
 		ConnectionPool connectionPool = new ConnectionPool(host, portNr, connectionType, keepAliveInterval);
 		connectionPool.setMaxConnections(maxConnections);
@@ -123,13 +120,13 @@ public abstract class Server {
 	 *            the abort message
 	 */
 	public abstract void abortSession(AbstractSession session);
-	
+
 	/**
 	 * Destroy server.
 	 */
 	public void destroy() {
 		this.requester.getContext().getConnectionPool().destroy();
-		AppContext.getCurrentContext().getServerRegistry().removeServer(this.getServerKey());
+		AppContext.getServerRegistry().removeServer(this.getServerKey());
 		this.requester = null;
 	}
 

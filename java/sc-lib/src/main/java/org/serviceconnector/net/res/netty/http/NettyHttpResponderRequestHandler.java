@@ -42,11 +42,11 @@ import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.scmp.SCMPCompositeReceiver;
-import org.serviceconnector.scmp.SCMPCompositeSender;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPLargeRequest;
+import org.serviceconnector.scmp.SCMPLargeResponse;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -67,7 +67,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	/** The Constant performanceLogger. */
 	private final static PerformanceLogger performanceLogger = PerformanceLogger.getInstance();
 
-	private static SCMPSessionCompositeRegistry compositeRegistry = AppContext.getCurrentContext().getSCMPSessionCompositeRegistry();
+	private static SCMPSessionCompositeRegistry compositeRegistry = AppContext.getSCMPSessionCompositeRegistry();
 
 	/** {@inheritDoc} */
 	@Override
@@ -98,12 +98,11 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			}
 
 			// needs to set a key in thread local to identify thread later and get access to the responder
-			ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+			ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 			responderRegistry.setThreadLocal(channel.getParent().getId());
 
 			request.read();
-			AppContext appContext = AppContext.getCurrentContext();
-			ICommand command = appContext.getCommandFactory().getCommand(request.getKey());
+			ICommand command = AppContext.getCommandFactory().getCommand(request.getKey());
 			// gets the command
 			// ICommand command = CommandFactory.getCurrentCommandFactory().getCommand(request.getKey());
 			if (command == null) {
@@ -113,8 +112,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 			if (command.isPassThroughPartMsg() == false) {
 				// large messages needs to be handled
-				SCMPCompositeSender compositeSender = NettyHttpResponderRequestHandler.compositeRegistry
-						.getSCMPCompositeSender(sessionId);
+				SCMPLargeRequest compositeSender = NettyHttpResponderRequestHandler.compositeRegistry.getSCMPLargeRequest(sessionId);
 
 				if (compositeSender != null && scmpReq.isPart()) {
 					// sending of a large response has already been started and incoming scmp is a pull request
@@ -136,12 +134,12 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 						response.write();
 						return;
 					}
-					NettyHttpResponderRequestHandler.compositeRegistry.removeSCMPCompositeSender(sessionId);
+					NettyHttpResponderRequestHandler.compositeRegistry.removeSCMPLargeRequest(sessionId);
 				}
 				// command needs buffered message - buffer message
-				SCMPCompositeReceiver compositeReceiver = this.getCompositeReceiver(request, response);
+				SCMPLargeResponse largeResponse = this.getSCMPLargeResponse(request, response);
 
-				if (compositeReceiver != null && compositeReceiver.isComplete() == false) {
+				if (largeResponse != null && largeResponse.isComplete() == false) {
 					// request is not complete yet
 					SCMPMessage message = response.getSCMP();
 					// handling messageId
@@ -152,8 +150,8 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 					response.write();
 					return;
 				}
-				// removes compositeReceiver - request is complete don't need to know preceding messages any more
-				NettyHttpResponderRequestHandler.compositeRegistry.removeSCMPCompositeReceiver(scmpReq.getSessionId());
+				// removes largeResponse - request is complete don't need to know preceding messages any more
+				NettyHttpResponderRequestHandler.compositeRegistry.removeSCMPLargeResponse(scmpReq.getSessionId());
 			}
 			// validate request and run command
 			try {
@@ -174,7 +172,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			}
 			if (response.isLarge()) {
 				// response is large, create a large response for reply
-				SCMPCompositeSender compositeSender = new SCMPCompositeSender(response.getSCMP());
+				SCMPLargeRequest compositeSender = new SCMPLargeRequest(response.getSCMP());
 				SCMPMessage firstSCMP = compositeSender.getFirst();
 				response.setSCMP(firstSCMP);
 				// handling messageId
@@ -184,7 +182,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 					firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 				}
 				// adding compositeReceiver to the composite registry
-				NettyHttpResponderRequestHandler.compositeRegistry.addSCMPCompositeSender(sessionId, compositeSender);
+				NettyHttpResponderRequestHandler.compositeRegistry.addSCMPLargeRequest(sessionId, compositeSender);
 			}
 		} catch (Throwable th) {
 			logger.error("messageReceived", th);
@@ -233,7 +231,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			if (response.isLarge()) {
 				SCMPMessageId messageId = NettyHttpResponderRequestHandler.compositeRegistry.getSCMPMessageId(sessionId);
 				// response is large, create a large response for reply
-				SCMPCompositeSender compositeSender = new SCMPCompositeSender(response.getSCMP());
+				SCMPLargeRequest compositeSender = new SCMPLargeRequest(response.getSCMP());
 				SCMPMessage firstSCMP = compositeSender.getFirst();
 				response.setSCMP(firstSCMP);
 				// handling messageId
@@ -243,7 +241,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 					firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 				}
 				// adding compositeReceiver to the composite registry
-				NettyHttpResponderRequestHandler.compositeRegistry.addSCMPCompositeSender(sessionId, compositeSender);
+				NettyHttpResponderRequestHandler.compositeRegistry.addSCMPLargeRequest(sessionId, compositeSender);
 			}
 			response.write();
 		} catch (Exception ex) {
@@ -276,16 +274,6 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		}
 	}
 
-	/**
-	 * Send unknown request error.
-	 * 
-	 * @param response
-	 *            the response
-	 * @param scmpReq
-	 *            the scmp req
-	 * @throws Exception
-	 *             the exception
-	 */
 	private void sendUnknownRequestError(IResponse response, SCMPMessage scmpReq) throws Exception {
 		SCMPFault scmpFault = new SCMPFault(SCMPError.BAD_REQUEST, "messagType " + scmpReq.getMessageType());
 		scmpFault.setMessageType(scmpReq.getMessageType());
@@ -295,40 +283,40 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	}
 
 	/**
-	 * Gets the composite receiver.
+	 * Gets the sCMP large response.
 	 * 
 	 * @param request
 	 *            the request
 	 * @param response
 	 *            the response
-	 * @return the composite receiver
+	 * @return the sCMP large response
 	 * @throws Exception
 	 *             the exception
 	 */
-	private SCMPCompositeReceiver getCompositeReceiver(IRequest request, IResponse response) throws Exception {
+	private SCMPLargeResponse getSCMPLargeResponse(IRequest request, IResponse response) throws Exception {
 		SCMPMessage scmpReq = request.getMessage();
 		String sessionId = scmpReq.getSessionId();
-		SCMPCompositeReceiver compositeReceiver = NettyHttpResponderRequestHandler.compositeRegistry
-				.getSCMPCompositeReceiver(scmpReq.getSessionId());
+		SCMPLargeResponse largeResponse = NettyHttpResponderRequestHandler.compositeRegistry.getSCMPLargeResponse(scmpReq
+				.getSessionId());
 
-		if (compositeReceiver == null) {
+		if (largeResponse == null) {
 			// no compositeReceiver used before
 			if (scmpReq.isPart() == false) {
 				// request not chunk
-				return compositeReceiver;
+				return largeResponse;
 			}
-			// first part of a large request received - introduce composite receiver
-			compositeReceiver = new SCMPCompositeReceiver(scmpReq, (SCMPMessage) scmpReq);
-			// add compositeReceiver to the registry
-			NettyHttpResponderRequestHandler.compositeRegistry.addSCMPCompositeReceiver(sessionId, compositeReceiver);
+			// first part of a large request received - create large response
+			largeResponse = new SCMPLargeResponse(scmpReq, (SCMPMessage) scmpReq);
+			// add largeResponse to the registry
+			NettyHttpResponderRequestHandler.compositeRegistry.addSCMPLargeResponse(sessionId, largeResponse);
 		} else {
-			// next part of a large request received - add to composite receiver
-			compositeReceiver.add(scmpReq);
+			// next part of a large request received - add to large response
+			largeResponse.add(scmpReq);
 		}
 
 		if (scmpReq.isPart()) {
 			// received message part - request not complete yet
-			compositeReceiver.incomplete();
+			largeResponse.incomplete();
 			// set up pull request
 			SCMPMessage scmpReply = new SCMPPart();
 			scmpReply.setIsReply(true);
@@ -336,16 +324,16 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			response.setSCMP(scmpReply);
 		} else {
 			// last message of a chunk message received - request complete now
-			compositeReceiver.complete();
-			request.setMessage(compositeReceiver);
+			largeResponse.complete();
+			request.setMessage(largeResponse);
 		}
-		return compositeReceiver;
+		return largeResponse;
 	}
 
 	private void cleanUpDeadServer(String host, int port) {
 		String wildKey = "_" + host + "/" + port;
 
-		ServerRegistry serverRegistry = AppContext.getCurrentContext().getServerRegistry();
+		ServerRegistry serverRegistry = AppContext.getServerRegistry();
 		Set<String> keySet = serverRegistry.keySet();
 
 		for (String key : keySet) {

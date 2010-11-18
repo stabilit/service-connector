@@ -29,19 +29,18 @@ import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.ResponseAdapter;
 import org.serviceconnector.scmp.SCMPMessage;
 
-
 /**
- * The Class NettyTcpResponse is responsible for writing a response to a ChannelBuffer. Encodes SCMP to a TCP
- * frame. Based on JBoss Netty.
+ * The Class NettyTcpResponse is responsible for writing a response to a ChannelBuffer. Encodes SCMP to a TCP frame. Based on JBoss
+ * Netty.
  */
 public class NettyTcpResponse extends ResponseAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyTcpResponse.class);
-	
+
 	/** The Constant connectionLogger. */
 	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-	
+
 	/** The event from Netty framework. */
 	private ChannelEvent event;
 	/** The encoder decoder. */
@@ -76,7 +75,7 @@ public class NettyTcpResponse extends ResponseAdapter {
 	 */
 	public ChannelBuffer getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory().createEncoderDecoder(this.scmp);
+		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(this.scmp);
 		encoderDecoder.encode(baos, scmp);
 		byte[] buf = baos.toByteArray();
 		return ChannelBuffers.copiedBuffer(buf);

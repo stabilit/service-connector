@@ -29,19 +29,18 @@ import org.serviceconnector.scmp.RequestAdapter;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.Statistics;
 
-
 /**
- * The Class NettyHttpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Http frame.
- * Based on JBoss Netty.
+ * The Class NettyHttpRequest is responsible for reading a request from a ChannelBuffer. Decodes scmp from a Http frame. Based on
+ * JBoss Netty.
  */
 public class NettyHttpRequest extends RequestAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpRequest.class);
-	
+
 	/** The Constant connectionLogger. */
 	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-	
+
 	/** The request. */
 	private HttpRequest request;
 
@@ -66,9 +65,10 @@ public class NettyHttpRequest extends RequestAdapter {
 		channelBuffer.readBytes(buffer);
 		Statistics.getInstance().incrementTotalMessages(buffer.length);
 		if (connectionLogger.isEnabledFull()) {
-			connectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getLocalSocketAddress().getHostName(), this.getLocalSocketAddress().getPort(), buffer, 0, buffer.length);
+			connectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getLocalSocketAddress().getHostName(), this
+					.getLocalSocketAddress().getPort(), buffer, 0, buffer.length);
 		}
-		IEncoderDecoder encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory().createEncoderDecoder(buffer);
+		IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);
 		this.setMessage(message);

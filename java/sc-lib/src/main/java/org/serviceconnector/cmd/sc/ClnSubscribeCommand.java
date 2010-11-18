@@ -92,7 +92,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		try {
 			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
-			int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+			int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 			// Following loop implements the wait mechanism in case of a busy connection pool
 			int i = 0;
 			int otiOnServerMillis = 0;
@@ -268,7 +268,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				return;
 			}
 			// set up subscription timeout
-			SubscriptionRegistry subscriptionRegistry = AppContext.getCurrentContext().getSubscriptionRegistry();
+			SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 			String subscriptionId = reqMsg.getSessionId();
 
 			Subscription subscription = subscriptionRegistry.getSubscription(subscriptionId);

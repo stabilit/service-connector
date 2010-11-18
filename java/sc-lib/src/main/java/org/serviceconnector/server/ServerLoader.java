@@ -70,7 +70,7 @@ public class ServerLoader {
 				maxConnections = Integer.parseInt(maxConnectionsValue);
 			}
 
-			String keepAliveIntervalValue = (String) config.getString(serverName + Constants.KEEP_ALIVE_INTERVAL);
+			String keepAliveIntervalValue = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL);
 			int keepAliveInterval = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
 			if (keepAliveIntervalValue != null) {
 				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
@@ -97,7 +97,7 @@ public class ServerLoader {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong serverType, serverName/serverType: "
 						+ serverName + "/" + serverTypeString);
 			}
-			AppContext.getCurrentContext().getServerRegistry().addServer(server.getServerKey(), server);
+			AppContext.getServerRegistry().addServer(server.getServerKey(), server);
 		}
 	}
 }

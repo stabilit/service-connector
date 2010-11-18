@@ -20,7 +20,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.serviceconnector.scmp.SCMPBodyType;
-import org.serviceconnector.scmp.SCMPCompositeReceiver;
+import org.serviceconnector.scmp.SCMPLargeResponse;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -49,20 +49,20 @@ public class SCMPCompositeTestCase {
 		SCMPPart firstPart = new SCMPPart();
 		String bodyString = "first part request";
 		firstPart.setBody(bodyString);
-		SCMPCompositeReceiver composite = new SCMPCompositeReceiver(request, firstPart);
+		SCMPLargeResponse largeResponse = new SCMPLargeResponse(request, firstPart);
 
 		bodyLength += bodyString.length();
 		body.append(bodyString);
-		Assert.assertEquals(bodyLength, composite.getOffset());
+		Assert.assertEquals(bodyLength, largeResponse.getOffset());
 
 		for (int i = 0; i < 10; i++) {
 			SCMPPart part = new SCMPPart();
 			bodyString = "part nr: " + i;
 			part.setBody(bodyString);
-			composite.add(part);
+			largeResponse.add(part);
 			bodyLength += bodyString.length();
 			body.append(bodyString);
-			Assert.assertEquals(bodyLength, composite.getOffset());
+			Assert.assertEquals(bodyLength, largeResponse.getOffset());
 		}
 		// needed to compare to requestPart of the composite
 		// body of the requestPart is null because body is split into several parts
@@ -70,8 +70,8 @@ public class SCMPCompositeTestCase {
 		request.setBody(null);
 		request.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, SCMPBodyType.TEXT.getValue());
 
-		Assert.assertEquals(bodyLength, composite.getBodyLength());
-		Assert.assertEquals(body.toString(), composite.getBody() + "");
-		Assert.assertEquals(request.toString(), composite.getPart().toString());
+		Assert.assertEquals(bodyLength, largeResponse.getBodyLength());
+		Assert.assertEquals(body.toString(), largeResponse.getBody() + "");
+		Assert.assertEquals(request.toString(), largeResponse.getPart().toString());
 	}
 }

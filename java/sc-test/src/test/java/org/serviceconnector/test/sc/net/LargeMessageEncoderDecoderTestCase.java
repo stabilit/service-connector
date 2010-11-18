@@ -44,7 +44,7 @@ import org.serviceconnector.test.sc.SCImplTest;
 public class LargeMessageEncoderDecoderTestCase {
 
 	/** The coder factory. */
-	private FlyweightEncoderDecoderFactory coderFactory = AppContext.getCurrentContext().getEncoderDecoderFactory();
+	private FlyweightEncoderDecoderFactory coderFactory = AppContext.getEncoderDecoderFactory();
 	/** The head key. */
 	private SCMPHeadlineKey headKey;
 	/** The msg type. */

@@ -89,7 +89,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		StatefulServer statefulServer = (StatefulServer) abstractServer;
 		CommandCallback callback;
 		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 		int otiOnServerMillis = 0;

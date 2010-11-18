@@ -52,7 +52,7 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 		this.scmpFrameSize = 0;
 		this.decodeState = DecodeState.READY;
 		// warning, returns always the same instance, singleton
-		this.scmpFrameDecoder = AppContext.getCurrentContext().getFrameDecoderFactory().getFrameDecoder(Constants.TCP);
+		this.scmpFrameDecoder = AppContext.getFrameDecoderFactory().getFrameDecoder(Constants.TCP);
 	}
 
 	/** {@inheritDoc} */

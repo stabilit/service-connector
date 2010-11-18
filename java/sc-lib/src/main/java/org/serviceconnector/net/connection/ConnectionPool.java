@@ -94,7 +94,7 @@ public class ConnectionPool {
 		this.minConnections = 1;
 		this.freeConnections = Collections.synchronizedList(new ArrayList<IConnection>());
 		this.usedConnections = Collections.synchronizedList(new ArrayList<IConnection>());
-		this.connectionFactory = AppContext.getCurrentContext().getConnectionFactory();
+		this.connectionFactory = AppContext.getConnectionFactory();
 		this.keepAliveInterval = keepAliveInterval;
 	}
 
@@ -398,7 +398,7 @@ public class ConnectionPool {
 		try {
 			ConnectionPoolCallback callback = new ConnectionPoolCallback();
 			connection.send(keepAliveMessage, callback);
-			callback.getMessageSync(Constants.KEEP_ALIVE_TIMEOUT);
+			callback.getMessageSync(AppContext.getBasicConfiguration().getKeepAliveTimeout());
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception ex) {

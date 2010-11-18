@@ -17,6 +17,8 @@
 package org.serviceconnector.net.res;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.conf.BasicConfiguration;
+import org.serviceconnector.ctx.AppContext;
 
 /**
  * The Class EndpointAdapter. Provides basic functionality for endpoints.
@@ -27,7 +29,9 @@ public abstract class EndpointAdapter implements IEndpoint {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(EndpointAdapter.class);
-	
+	/** The base conf. */
+	protected final BasicConfiguration baseConf = AppContext.getBasicConfiguration();
+
 	/** The responder. */
 	protected IResponder resp;
 
@@ -48,5 +52,5 @@ public abstract class EndpointAdapter implements IEndpoint {
 	@Override
 	public void setResponder(IResponder resp) {
 		this.resp = resp;
-	}	
+	}
 }

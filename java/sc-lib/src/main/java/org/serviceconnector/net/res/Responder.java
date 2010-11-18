@@ -52,7 +52,7 @@ public class Responder implements IResponder {
 	@Override
 	public void create() throws Exception {
 		for (String host : this.respConfig.getHosts()) {
-			EndpointFactory endpointFactory = AppContext.getCurrentContext().getEndpointFactory();
+			EndpointFactory endpointFactory = AppContext.getEndpointFactory();
 			IEndpoint endpoint = endpointFactory.createEndpoint(this.respConfig.getConnectionType());
 			endpoint.setResponder(this);
 			endpoint.setHost(host);

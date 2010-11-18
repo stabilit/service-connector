@@ -13,7 +13,7 @@ import org.serviceconnector.call.SCMPFileListCall;
 import org.serviceconnector.call.SCMPFileUploadCall;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.scmp.SCMPCompositeReceiver;
+import org.serviceconnector.scmp.SCMPLargeResponse;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
@@ -76,7 +76,7 @@ public class SCFileService extends SCService {
 				throw new SCServiceException("download file failed " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			}
 			if (reply.isComposite()) {
-				((SCMPCompositeReceiver) reply).getBodyAsStream(outStream);
+				((SCMPLargeResponse) reply).getBodyAsStream(outStream);
 				return;
 			}
 			outStream.write((byte[]) reply.getBody());

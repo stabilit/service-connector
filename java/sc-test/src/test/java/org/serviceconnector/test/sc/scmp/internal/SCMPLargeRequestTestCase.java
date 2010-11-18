@@ -19,7 +19,7 @@ package org.serviceconnector.test.sc.scmp.internal;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.serviceconnector.scmp.SCMPCompositeSender;
+import org.serviceconnector.scmp.SCMPLargeRequest;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPSendPart;
 
@@ -48,7 +48,7 @@ public class SCMPLargeRequestTestCase extends SCMPMessage {
 		SCMPMessage largeScmp = new SCMPMessage();
 		largeScmp.setBody(sb.toString());
 
-		SCMPCompositeSender largeRequest = new SCMPCompositeSender(largeScmp);
+		SCMPLargeRequest largeRequest = new SCMPLargeRequest(largeScmp);
 
 		int offset = 0;
 		while (largeRequest.hasNext()) {

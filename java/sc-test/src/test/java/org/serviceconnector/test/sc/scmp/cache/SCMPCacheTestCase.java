@@ -50,7 +50,7 @@ public class SCMPCacheTestCase {
 
 	@Before
 	public void beforeTest() throws Exception {		
-       ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
+       ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 	   Service service = new SessionService("dummy");
        serviceRegistry.addService("dummy", service);
 	   service = new SessionService("dummy1");

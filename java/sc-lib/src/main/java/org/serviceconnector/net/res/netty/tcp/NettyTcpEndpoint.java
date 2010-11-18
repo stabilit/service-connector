@@ -36,8 +36,7 @@ import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
- * The Class NettyTcpEndpoint. Concrete responder implementation with JBoss
- * Netty for Tcp.
+ * The Class NettyTcpEndpoint. Concrete responder implementation with JBoss Netty for Tcp.
  * 
  * @author JTraber
  */
@@ -87,7 +86,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 		this.serverThread.start();
 		Boolean bool = null;
 		try {
-			bool = this.answer.poll(Constants.CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+			bool = this.answer.poll(baseConf.getConnectionTimeoutMillis(), TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
 		}
@@ -105,7 +104,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
 			// adds server to registry
-			ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+			ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 			responderRegistry.addResponder(this.channel.getId(), this.resp);
 		} catch (Exception ex) {
 			this.answer.add(Boolean.FALSE);
@@ -142,7 +141,7 @@ public class NettyTcpEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			if (this.channel != null) {
 				// removes responder to registry
-				ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+				ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 				responderRegistry.removeResponder(this.channel.getId());
 				ChannelFuture future = this.channel.close();
 				NettyOperationListener operationListener = new NettyOperationListener();

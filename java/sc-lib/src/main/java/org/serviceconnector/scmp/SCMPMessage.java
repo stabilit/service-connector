@@ -71,26 +71,27 @@ public class SCMPMessage {
 
 	/**
 	 * Parses the message id.
-	 *
-	 * @param messageId the message id
+	 * 
+	 * @param messageId
+	 *            the message id
 	 * @return the sCMP message id
 	 */
 	public static SCMPMessageId parseMessageId(String messageId) {
-	   if (messageId == null) {
-		   return null;
-	   }
-	   String [] splitted = messageId.split("/");
-	   if (splitted.length <= 0 || splitted.length > 2) {
-		   return null;
-	   }
-	   int sequenceNr = Integer.parseInt(splitted[0]);
-	   if (splitted.length == 1) {
-	       return new SCMPMessageId(sequenceNr, 0);
-	   }
-	   int partSequenceNr = Integer.parseInt(splitted[1]);
-       return new SCMPMessageId(sequenceNr, partSequenceNr);
+		if (messageId == null) {
+			return null;
+		}
+		String[] splitted = messageId.split("/");
+		if (splitted.length <= 0 || splitted.length > 2) {
+			return null;
+		}
+		int sequenceNr = Integer.parseInt(splitted[0]);
+		if (splitted.length == 1) {
+			return new SCMPMessageId(sequenceNr, 0);
+		}
+		int partSequenceNr = Integer.parseInt(splitted[1]);
+		return new SCMPMessageId(sequenceNr, partSequenceNr);
 	}
-	
+
 	/**
 	 * Sets the message type.
 	 * 
@@ -122,22 +123,22 @@ public class SCMPMessage {
 
 	/**
 	 * Gets the message id.
-	 *
+	 * 
 	 * @return the message id
 	 */
 	public String getMessageId() {
-		return this.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);		
+		return this.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
 	}
-	
+
 	/**
 	 * Gets the cache id.
-	 *
+	 * 
 	 * @return the cache id
 	 */
 	public String getCacheId() {
 		return this.getHeader(SCMPHeaderAttributeKey.CACHE_ID);
 	}
-	
+
 	/**
 	 * Checks if the message is a fault.
 	 * 
@@ -159,8 +160,18 @@ public class SCMPMessage {
 	}
 
 	/**
+	 * Checks if the message is a poll request in large message sequence.
+	 * 
+	 * @return true, if is poll
+	 */
+	public boolean isPoll() {
+		// this is the default value!
+		return false;
+	}
+
+	/**
 	 * Checks if is keep alive.
-	 *
+	 * 
 	 * @return true, if is keep alive
 	 */
 	public boolean isKeepAlive() {
@@ -519,7 +530,7 @@ public class SCMPMessage {
 	 *            the new body
 	 */
 	public void setBody(byte[] buffer, int offset, int length) {
-		if (buffer== null) {
+		if (buffer == null) {
 			return;
 		}
 		if (offset == 0 && buffer.length == length) {
@@ -589,9 +600,8 @@ public class SCMPMessage {
 
 	/**
 	 * To string.
-	 *
-	 * @return the string
-	 * {@inheritDoc}
+	 * 
+	 * @return the string {@inheritDoc}
 	 */
 	@Override
 	public String toString() {

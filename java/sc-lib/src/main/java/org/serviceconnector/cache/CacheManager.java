@@ -43,11 +43,11 @@ public class CacheManager {
 	 * Inits the scmp cache map according the service registry.
 	 */
 	public void initialize() throws Exception {
-		this.cacheConfiguration = AppContext.getCurrentContext().getConfigurationContext().getCacheConfiguration();
+		this.cacheConfiguration = AppContext.getCacheConfiguration();
 		if (this.cacheConfiguration == null) {
 			this.cacheConfiguration = new CacheConfiguration();
 		}
-		ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
+		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		Service services[] = serviceRegistry.getServices();
 		for (int i = 0; i < services.length; i++) {
 			Service service = services[i];

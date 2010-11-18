@@ -75,7 +75,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		if (message.getCacheId() != null) {
 			// try to load response from cache
 			try {
-				CacheManager scmpCacheManager = AppContext.getCurrentContext().getCacheManager();
+				CacheManager scmpCacheManager = AppContext.getCacheManager();
 				String serviceName = message.getServiceName();
 				Cache scmpCache = scmpCacheManager.getCache(serviceName);
 				if (scmpCache == null) {
@@ -113,7 +113,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		StatefulServer server = session.getStatefulServer();
 		// try sending to the server
 		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
@@ -205,7 +205,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		/** The session id. */
 		private String sessionId;
 
-		private SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
+		private SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 
 		/**
 		 * Instantiates a new ClnExecuteCommandCallback.
@@ -231,7 +231,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			if (scmpReply.getCacheId() != null) {
 				// try save reply in cache
 				try {
-					CacheManager scmpCacheManager = AppContext.getCurrentContext().getCacheManager();
+					CacheManager scmpCacheManager = AppContext.getCacheManager();
 					String serviceName = scmpReply.getServiceName();
 					Cache scmpCache = scmpCacheManager.getCache(serviceName);
 					if (scmpCache == null) {

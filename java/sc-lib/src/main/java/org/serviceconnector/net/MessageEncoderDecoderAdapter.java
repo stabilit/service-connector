@@ -55,8 +55,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
 	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.SCMP_FORMAT_OF_HEADER_SIZE);
-	protected IFrameDecoder defaultFrameDecoder = AppContext.getCurrentContext().getFrameDecoderFactory().getFrameDecoder(
-			Constants.TCP);
+	protected IFrameDecoder defaultFrameDecoder = AppContext.getFrameDecoderFactory().getFrameDecoder(Constants.TCP);
 
 	/** {@inheritDoc} */
 	@Override

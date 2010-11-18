@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPSrvAbortSessionCall;
 import org.serviceconnector.call.SCMPSrvChangeSubscriptionCall;
@@ -50,8 +49,8 @@ import org.serviceconnector.service.Subscription;
 public class StatefulServer extends Server {
 
 	private SessionLogger sessionLogger = SessionLogger.getInstance();
-	private static SessionRegistry sessionRegistry = AppContext.getCurrentContext().getSessionRegistry();
-	private static SubscriptionRegistry subscriptionRegistry = AppContext.getCurrentContext().getSubscriptionRegistry();
+	private static SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
+	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 	/** The sessions, list of sessions allocated to the server. */
 	private List<AbstractSession> sessions;
 	/** The max sessions. */
@@ -59,9 +58,8 @@ public class StatefulServer extends Server {
 	private StatefulService service;
 
 	public StatefulServer(InetSocketAddress socketAddress, String serviceName, int portNr, int maxSessions, int maxConnections,
-			String connectionType, int keepAliveInterval, double operationTimeoutMultiplier) {
-		super(ServerType.STATEFUL_SERVER, socketAddress, serviceName, portNr, maxConnections, connectionType, keepAliveInterval,
-				operationTimeoutMultiplier);
+			String connectionType, int keepAliveInterval) {
+		super(ServerType.STATEFUL_SERVER, socketAddress, serviceName, portNr, maxConnections, connectionType, keepAliveInterval);
 		this.sessions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 		this.maxSessions = maxSessions;
 		this.service = null;
@@ -291,7 +289,7 @@ public class StatefulServer extends Server {
 					+ " [delete session failed]");
 			abortMessage.setServiceName(this.getServiceName());
 			abortMessage.setSessionId(session.getId());
-			this.serverAbortSession(abortMessage, callback, Constants.SERVER_ABORT_OTI_MILLIS);
+			this.serverAbortSession(abortMessage, callback, AppContext.getBasicConfiguration().getSrvAbortTimeout());
 		} catch (Exception e) {
 			// server session abort failed - clean up server
 			this.abortSessionsAndDestroy();
@@ -328,7 +326,8 @@ public class StatefulServer extends Server {
 			}
 			abortMessage.setSessionId(session.getId());
 			abortMessage.setServiceName(this.getServiceName());
-			this.serverAbortSession(abortMessage, new CommandCallback(false), Constants.SERVER_ABORT_OTI_MILLIS);
+			this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
+					.getSrvAbortTimeout());
 			sessionLogger.logAbortSession(this.getClass().getName(), abortMessage.getSessionId());
 		}
 		super.destroy();

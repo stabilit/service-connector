@@ -20,7 +20,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.StatefulServer;
@@ -43,7 +43,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	/** The timer. Timer instance is responsible to observe subscription timeouts. */
 	private Timer timer;
 	/** The subscription timeout. */
-	private int subscriptionTimeout = Constants.SUBSCRIPTION_TIMEOUT_MILLIS;
+	private int subscriptionTimeout = AppContext.getBasicConfiguration().getSubscriptionTimeout();
 
 	public SubscriptionRegistry() {
 		this.timer = new Timer("SubscriptionRegistryTimer");
@@ -147,8 +147,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	}
 
 	/**
-	 * The Class SubscriptionTimerRun. Gets control when a subscription times out. Responsible for cleaning up when
-	 * subscription gets broken.
+	 * The Class SubscriptionTimerRun. Gets control when a subscription times out. Responsible for cleaning up when subscription gets
+	 * broken.
 	 */
 	private class SubscriptionTimerRun implements ITimerRun {
 

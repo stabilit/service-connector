@@ -117,8 +117,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 				connectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
 			}
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			IEncoderDecoder encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory()
-					.createEncoderDecoder(buffer);
+			IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
 			ret = (SCMPMessage) encoderDecoder.decode(bais);
 		} catch (Exception ex) {
 			logger.info("receive" + ex.toString());

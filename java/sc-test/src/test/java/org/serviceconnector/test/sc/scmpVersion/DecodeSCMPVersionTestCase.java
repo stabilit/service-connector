@@ -29,7 +29,7 @@ import org.serviceconnector.scmp.SCMPPart;
 public class DecodeSCMPVersionTestCase {
 
 	/** The coder factory. */
-	private FlyweightEncoderDecoderFactory coderFactory = AppContext.getCurrentContext().getEncoderDecoderFactory();
+	private FlyweightEncoderDecoderFactory coderFactory = AppContext.getEncoderDecoderFactory();
 
 	@Test
 	public void invalidSCMPVersionFormatTest() {

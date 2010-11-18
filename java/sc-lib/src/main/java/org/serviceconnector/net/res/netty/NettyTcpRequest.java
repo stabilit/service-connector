@@ -30,8 +30,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.Statistics;
 
 /**
- * The Class NettyTcpRequest is responsible for reading a request from a ChannelBuffer. Decodes SCMP from a TCP frame.
- * Based on JBoss Netty.
+ * The Class NettyTcpRequest is responsible for reading a request from a ChannelBuffer. Decodes SCMP from a TCP frame. Based on JBoss
+ * Netty.
  */
 public class NettyTcpRequest extends RequestAdapter {
 
@@ -63,11 +63,10 @@ public class NettyTcpRequest extends RequestAdapter {
 		request.readBytes(buffer);
 		Statistics.getInstance().incrementTotalMessages(buffer.length);
 		if (connectionLogger.isEnabledFull()) {
-			connectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getLocalSocketAddress().getHostName(),
-					this.getLocalSocketAddress().getPort(), buffer, 0, buffer.length);
+			connectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getLocalSocketAddress().getHostName(), this
+					.getLocalSocketAddress().getPort(), buffer, 0, buffer.length);
 		}
-		IEncoderDecoder encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory()
-				.createEncoderDecoder(buffer);
+		IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
 		ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 		SCMPMessage message = (SCMPMessage) encoderDecoder.decode(bais);
 		this.setMessage(message);

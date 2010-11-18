@@ -36,8 +36,8 @@ import org.serviceconnector.scmp.ResponseAdapter;
 import org.serviceconnector.scmp.SCMPMessage;
 
 /**
- * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http frame.
- * Based on JBoss Netty.
+ * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http frame. Based on JBoss
+ * Netty.
  */
 public class NettyHttpResponse extends ResponseAdapter {
 
@@ -81,7 +81,7 @@ public class NettyHttpResponse extends ResponseAdapter {
 	 */
 	public ChannelBuffer getBuffer() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		FlyweightEncoderDecoderFactory encoderDecoderFactory = AppContext.getCurrentContext().getEncoderDecoderFactory();
+		FlyweightEncoderDecoderFactory encoderDecoderFactory = AppContext.getEncoderDecoderFactory();
 		encoderDecoder = encoderDecoderFactory.createEncoderDecoder(this.scmp);
 		encoderDecoder.encode(baos, this.scmp);
 		byte[] buf = baos.toByteArray();
@@ -109,10 +109,9 @@ public class NettyHttpResponse extends ResponseAdapter {
 		// Write the response.
 		event.getChannel().write(httpResponse);
 		if (connectionLogger.isEnabledFull()) {
-			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.event
-					.getChannel().getLocalAddress()).getHostName(), ((InetSocketAddress) this.event.getChannel()
-					.getLocalAddress()).getPort(), buffer.toByteBuffer().array(), 0,
-					buffer.toByteBuffer().array().length);
+			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.event.getChannel()
+					.getLocalAddress()).getHostName(), ((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(),
+					buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
 		}
 	}
 }

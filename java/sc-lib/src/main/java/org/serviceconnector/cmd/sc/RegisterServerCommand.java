@@ -41,8 +41,8 @@ import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class RegisterServerCommand. Responsible for validation and execution of register command. Used to register
- * backend server in SC. Backend server will be registered in server registry of SC.
+ * The Class RegisterServerCommand. Responsible for validation and execution of register command. Used to register backend server in
+ * SC. Backend server will be registered in server registry of SC.
  * 
  * @author JTraber
  */
@@ -83,14 +83,14 @@ public class RegisterServerCommand extends CommandAdapter {
 		boolean immediateConnect = message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 		int keepAliveInterval = message.getHeaderInt(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
 
-		ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 		IResponder responder = responderRegistry.getCurrentResponder();
 		CommunicatorConfig respConfig = responder.getResponderConfig();
 		String connectionType = respConfig.getConnectionType();
 
 		// create new server
-		StatefulServer server = new StatefulServer(socketAddress, serviceName, portNr, maxSessions, maxConnections,
-				connectionType, keepAliveInterval, Constants.OPERATION_TIMEOUT_MULTIPLIER);
+		StatefulServer server = new StatefulServer(socketAddress, serviceName, portNr, maxSessions, maxConnections, connectionType,
+				keepAliveInterval);
 		try {
 			if (immediateConnect) {
 				// server connections get connected immediately
@@ -98,8 +98,8 @@ public class RegisterServerCommand extends CommandAdapter {
 			}
 		} catch (Exception ex) {
 			logger.error("immediate connect", ex);
-			HasFaultResponseException communicationException = new SCMPCommunicationException(
-					SCMPError.CONNECTION_EXCEPTION, "immediate connect failed for server key " + serverKey);
+			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
+					"immediate connect failed for server key " + serverKey);
 			communicationException.setMessageType(getKey());
 			throw communicationException;
 		}
@@ -130,8 +130,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		Server server = this.serverRegistry.getServer(key);
 		if (server != null) {
 			// server registered two times for this service
-			SCMPCommandException cmdExc = new SCMPCommandException(SCMPError.SERVER_ALREADY_REGISTERED, "server key "
-					+ key);
+			SCMPCommandException cmdExc = new SCMPCommandException(SCMPError.SERVER_ALREADY_REGISTERED, "server key " + key);
 			cmdExc.setMessageType(getKey());
 			throw cmdExc;
 		}

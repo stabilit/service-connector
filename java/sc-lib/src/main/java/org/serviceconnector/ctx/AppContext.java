@@ -1,8 +1,15 @@
 package org.serviceconnector.ctx;
 
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
+import org.serviceconnector.cache.CacheConfiguration;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cmd.FlyweightCommandFactory;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.conf.BasicConfiguration;
+import org.serviceconnector.conf.RequesterConfiguration;
+import org.serviceconnector.conf.ResponderConfiguration;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.FlyweightFrameDecoderFactory;
 import org.serviceconnector.net.connection.ConnectionFactory;
@@ -13,18 +20,26 @@ import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionRegistry;
+import org.serviceconnector.scmp.SCMPError;
 
 /**
- * The Class AppContext. The AppContext is singelton and holds all factories and registries. Its the top context in a
- * service connector, server or even in clients. Its a superset of the specific contexts and unifies the data.
+ * The Class AppContext. The AppContext is singelton and holds all factories and registries. Its the top context in a service
+ * connector, server or even in clients. Its a superset of the specific contexts and unifies the data.
  */
-public class AppContext {
+public final class AppContext {
 
-	private static final AppContext instance = new AppContext();
+	// configurations
+	/** The composite configuration. */
+	private static CompositeConfiguration apacheCompositeConfig;
+	/** The basic configuration. */
+	private static BasicConfiguration basicConfiguration;
+	/** The cache configuration. */
+	private static CacheConfiguration cacheConfiguration;
+	/** The responder configuration. */
+	private static ResponderConfiguration responderConfiguration;
+	/** The requester configuration. */
+	private static RequesterConfiguration requesterConfiguration;
 
-	// configuration context
-	private static ConfigurationContext configurationContext = ConfigurationContext.getCurrentContext();
-	
 	// Factories
 	private static FlyweightCommandFactory commandFactory;
 	private static final ResponderRegistry responderRegistry = new ResponderRegistry();
@@ -43,13 +58,14 @@ public class AppContext {
 
 	// scmp cache
 	private static final CacheManager cacheManager = new CacheManager();
+
 	/**
 	 * Instantiates a new AppContext. Singelton.
 	 */
 	private AppContext() {
 	}
 
-	public void initContext(FlyweightCommandFactory commandFactory) {
+	public static void initContext(FlyweightCommandFactory commandFactory) {
 		if (AppContext.commandFactory != null) {
 			// set only one time
 			return;
@@ -57,64 +73,92 @@ public class AppContext {
 		AppContext.commandFactory = commandFactory;
 	}
 
-	public static AppContext getCurrentContext() {
-		return AppContext.instance;
-	}
-
-	public static ConfigurationContext getConfigurationContext() {
-		return AppContext.configurationContext;
-	}
-	
-	public FlyweightCommandFactory getCommandFactory() {
+	public static FlyweightCommandFactory getCommandFactory() {
 		return AppContext.commandFactory;
 	}
 
-	public ConnectionFactory getConnectionFactory() {
+	public static ConnectionFactory getConnectionFactory() {
 		return AppContext.connectionFactory;
 	}
 
-	public FlyweightEncoderDecoderFactory getEncoderDecoderFactory() {
+	public static FlyweightEncoderDecoderFactory getEncoderDecoderFactory() {
 		return AppContext.encoderDecoderFactory;
 	}
 
-	public FlyweightFrameDecoderFactory getFrameDecoderFactory() {
+	public static FlyweightFrameDecoderFactory getFrameDecoderFactory() {
 		return AppContext.frameDecoderFactory;
 	}
 
-	public EndpointFactory getEndpointFactory() {
+	public static EndpointFactory getEndpointFactory() {
 		return AppContext.endpointFactory;
 	}
 
-	public ResponderRegistry getResponderRegistry() {
+	public static ResponderRegistry getResponderRegistry() {
 		return AppContext.responderRegistry;
 	}
 
-	public SrvServiceRegistry getSrvServiceRegistry() {
+	public static SrvServiceRegistry getSrvServiceRegistry() {
 		return AppContext.srvServiceRegistry;
 	}
 
-	public ServerRegistry getServerRegistry() {
+	public static ServerRegistry getServerRegistry() {
 		return AppContext.serverRegistry;
 	}
 
-	public ServiceRegistry getServiceRegistry() {
+	public static ServiceRegistry getServiceRegistry() {
 		return AppContext.serviceRegistry;
 	}
 
-	public SessionRegistry getSessionRegistry() {
+	public static SessionRegistry getSessionRegistry() {
 		return AppContext.sessionRegistry;
 	}
 
-	public SubscriptionRegistry getSubscriptionRegistry() {
+	public static SubscriptionRegistry getSubscriptionRegistry() {
 		return AppContext.subscriptionRegistry;
 	}
 
-	public SCMPSessionCompositeRegistry getSCMPSessionCompositeRegistry() {
+	public static SCMPSessionCompositeRegistry getSCMPSessionCompositeRegistry() {
 		return AppContext.scmpSessionCompositeRegistry;
 	}
-	
-	public CacheManager getCacheManager() {
+
+	public static CacheManager getCacheManager() {
 		return AppContext.cacheManager;
 	}
-	
+
+	public static void initConfiguration(String configFile) throws Exception {
+		AppContext.apacheCompositeConfig = new CompositeConfiguration();
+		try {
+			AppContext.apacheCompositeConfig.addConfiguration(new PropertiesConfiguration(configFile));
+		} catch (Exception e) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.toString());
+		}
+		AppContext.basicConfiguration = new BasicConfiguration();
+		AppContext.basicConfiguration.init(AppContext.apacheCompositeConfig);
+		AppContext.cacheConfiguration = new CacheConfiguration();
+		AppContext.cacheConfiguration.init(AppContext.apacheCompositeConfig);
+		AppContext.responderConfiguration = new ResponderConfiguration();
+		AppContext.responderConfiguration.init(AppContext.apacheCompositeConfig);
+		AppContext.requesterConfiguration = new RequesterConfiguration();
+		AppContext.requesterConfiguration.init(AppContext.apacheCompositeConfig);
+	}
+
+	public static CompositeConfiguration getApacheCompositeConfig() {
+		return apacheCompositeConfig;
+	}
+
+	public static BasicConfiguration getBasicConfiguration() {
+		return basicConfiguration;
+	}
+
+	public static CacheConfiguration getCacheConfiguration() {
+		return cacheConfiguration;
+	}
+
+	public static ResponderConfiguration getResponderConfiguration() {
+		return responderConfiguration;
+	}
+
+	public static RequesterConfiguration getRequesterConfiguration() {
+		return requesterConfiguration;
+	}
 }

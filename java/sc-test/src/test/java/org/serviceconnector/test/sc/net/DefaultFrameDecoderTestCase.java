@@ -31,7 +31,7 @@ import org.serviceconnector.net.IFrameDecoder;
 public class DefaultFrameDecoderTestCase {
 
 	/** The decoder. */
-	private IFrameDecoder decoder = AppContext.getCurrentContext().getFrameDecoderFactory().getFrameDecoder(
+	private IFrameDecoder decoder = AppContext.getFrameDecoderFactory().getFrameDecoder(
 			Constants.TCP);
 
 	/**

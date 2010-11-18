@@ -26,15 +26,15 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 /**
- * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together to complete
+ * The Class SCMPLargeResponse. Used to handle incoming large request/response. Stores parts and put them together to complete
  * request/response.
  * 
  * @author JTraber
  */
-public class SCMPCompositeReceiver extends SCMPMessage {
+public class SCMPLargeResponse extends SCMPMessage {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPCompositeReceiver.class);
+	protected static final Logger logger = Logger.getLogger(SCMPLargeResponse.class);
 
 	/** The list of message parts. */
 	private List<SCMPMessage> scmpList;
@@ -52,14 +52,14 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	private boolean complete;
 
 	/**
-	 * Instantiates a new SCMPCompositeReceiver.
+	 * Instantiates a new SCMPLargeResponse.
 	 * 
 	 * @param request
 	 *            the request message
 	 * @param messagePart
 	 *            the message part
 	 */
-	public SCMPCompositeReceiver(SCMPMessage request, SCMPMessage messagePart) {
+	public SCMPLargeResponse(SCMPMessage request, SCMPMessage messagePart) {
 		this.outputStream = null;
 		this.writer = null;
 		this.offest = 0;
@@ -74,7 +74,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.OPERATION_TIMEOUT); // tries to set operation timeout
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
 		currentPart.setHeader(messagePart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
-		// necessary for downloading file
+		// necessary for download file
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.REMOTE_FILE_NAME); // tries to set remote file name
 		this.add(messagePart);
 	}

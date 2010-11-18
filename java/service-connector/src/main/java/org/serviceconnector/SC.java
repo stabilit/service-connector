@@ -35,12 +35,13 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.ctx.ConfigurationContext;
 import org.serviceconnector.log.ILoggingManagerMXBean;
 import org.serviceconnector.log.JMXLoggingManager;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
+import org.serviceconnector.server.ServerLoader;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
@@ -100,18 +101,20 @@ public final class SC {
 		if (configFileName == null) {
 			throw new SCServiceException("Configuration file is missing");
 		}
-		ConfigurationContext configurationContext = ConfigurationContext.getCurrentContext();
-		configurationContext.initContext(configFileName);
-
 		// write system information to log
 		SystemInfo.setConfigFileName(configFileName);
 		SC.writeSystemInfoToLog();
 
 		// Initialize service connector command factory
-		AppContext appContext = AppContext.getCurrentContext();
-		appContext.initContext(new ServiceConnectorCommandFactory());
-		WebContext webContext = WebContext.getCurrentContext();
-		webContext.initContext(new ServiceConnectorWebCommandFactory());
+		AppContext.initContext(new ServiceConnectorCommandFactory());
+		AppContext.initConfiguration(configFileName);
+
+		WebContext.initContext(new ServiceConnectorWebCommandFactory());
+
+		// load servers
+		ServerLoader.load(AppContext.getApacheCompositeConfig());
+		// load services
+		ServiceLoader.load(AppContext.getApacheCompositeConfig());
 
 		// initialize JMX
 		SC.initializeJMX();
@@ -120,20 +123,20 @@ public final class SC {
 		Statistics statistics = Statistics.getInstance();
 		statistics.setStartupDateTime(new Timestamp(Calendar.getInstance().getTime().getTime()));
 		// load cache manager
-		appContext.getCacheManager().initialize();
+		AppContext.getCacheManager().initialize();
 
 		// clean up and initialize cache
 		// Cache cache = Cache.initialize();
 
 		// create configured responders / listeners
-		List<CommunicatorConfig> responderList = configurationContext.getResponderConfiguration().getResponderConfigList();
+		List<CommunicatorConfig> responderList = AppContext.getResponderConfiguration().getResponderConfigList();
 		for (CommunicatorConfig respConfig : responderList) {
 			IResponder responder = new Responder(respConfig);
 			responder.create();
 			logger.info("Start listener " + respConfig.getName() + " on " + respConfig.getHosts() + ":" + respConfig.getPort());
 			responder.startListenAsync();
 		}
-		if (configurationContext.getBasicConfiguration().isWritePID()) {
+		if (AppContext.getBasicConfiguration().isWritePID()) {
 			SC.writePIDFile();
 		}
 		logger.log(Level.OFF, "Service Connector is running ...");
@@ -146,7 +149,6 @@ public final class SC {
 	 *             the exception
 	 */
 	private static void initializeJMX() throws Exception {
-		AppContext appContext = AppContext.getCurrentContext();
 		// Necessary to make access for JMX client available
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 		ObjectName mxbeanNameSessReg = new ObjectName("org.serviceconnector.registry:type=SessionRegistry");
@@ -155,9 +157,9 @@ public final class SC {
 		ObjectName mxbeanNameLoggingManager = new ObjectName("org.serviceconnector.logging:type=LoggingManager");
 
 		// Register the Queue Sampler MXBean
-		mbs.registerMBean(appContext.getSessionRegistry(), mxbeanNameSessReg);
-		mbs.registerMBean(appContext.getServiceRegistry(), mxbeanNameServiceReg);
-		mbs.registerMBean(appContext.getServerRegistry(), mxbeanNameServerReg);
+		mbs.registerMBean(AppContext.getSessionRegistry(), mxbeanNameSessReg);
+		mbs.registerMBean(AppContext.getServiceRegistry(), mxbeanNameServiceReg);
+		mbs.registerMBean(AppContext.getServerRegistry(), mxbeanNameServerReg);
 		ILoggingManagerMXBean loggingManager = new JMXLoggingManager();
 		mbs.registerMBean(loggingManager, mxbeanNameLoggingManager);
 	}
@@ -246,14 +248,12 @@ public final class SC {
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see java.lang.Thread#run()
 		 */
 		@Override
 		public void run() {
 			logger.log(Level.INFO, "sc shutdown");
-			AppContext appContext = AppContext.getCurrentContext();
-			appContext.getCacheManager().destroy();
+			AppContext.getCacheManager().destroy();
 		}
 	}
 }

@@ -18,21 +18,20 @@ package org.serviceconnector.net.res;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.registry.Registry;
-import org.serviceconnector.scmp.SCMPCompositeReceiver;
-import org.serviceconnector.scmp.SCMPCompositeSender;
+import org.serviceconnector.scmp.SCMPLargeRequest;
+import org.serviceconnector.scmp.SCMPLargeResponse;
 import org.serviceconnector.scmp.SCMPMessageId;
 
-
 /**
- * The Class SCMPSessionCompositeRegistry. Stores composite components of a communication to resume at the time it gets
- * active again.
+ * The Class SCMPSessionCompositeRegistry. Stores composite components (large response/requests) of a communication to resume at the
+ * time it gets active again.
  * 
  * @author JTraber
  */
 public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSessionCompositeItem> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPSessionCompositeRegistry.class);	
+	protected final static Logger logger = Logger.getLogger(SCMPSessionCompositeRegistry.class);
 
 	/**
 	 * Adds the session.
@@ -55,101 +54,101 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 	}
 
 	/**
-	 * Adds the scmp composite receiver.
+	 * Adds the scmp large response.
 	 * 
 	 * @param key
 	 *            the key
-	 * @param compositeReceiver
-	 *            the composite receiver
+	 * @param largeResponse
+	 *            the large response
 	 */
-	public void addSCMPCompositeReceiver(String key, SCMPCompositeReceiver compositeReceiver) {
+	public void addSCMPLargeResponse(String key, SCMPLargeResponse largeResponse) {
 		SCMPSessionCompositeItem item = this.get(key);
 		if (item == null) {
 			return;
 		}
-		item.setCompositeReceiver(compositeReceiver);
+		item.setSCMPLargeResponse(largeResponse);
 	}
 
 	/**
-	 * Gets the sCMP composite receiver.
+	 * Gets the SCMP large response.
 	 * 
 	 * @param key
 	 *            the key
-	 * @return the sCMP composite receiver
+	 * @return the SCMP large response
 	 */
-	public SCMPCompositeReceiver getSCMPCompositeReceiver(String key) {
+	public SCMPLargeResponse getSCMPLargeResponse(String key) {
 		SCMPSessionCompositeItem item = super.get(key);
 		if (item == null) {
 			return null;
 		}
-		return item.getCompositeReceiver();
+		return item.getSCMPLargeResponse();
 	}
 
 	/**
-	 * Removes the scmp composite receiver.
+	 * Removes the scmp large response.
 	 * 
 	 * @param key
 	 *            the key
 	 */
-	public void removeSCMPCompositeReceiver(String key) {
+	public void removeSCMPLargeResponse(String key) {
 		SCMPSessionCompositeItem item = super.get(key);
 		if (item == null) {
 			return;
 		}
-		item.setCompositeReceiver(null);
+		item.setSCMPLargeResponse(null);
 	}
 
 	/**
-	 * Adds the scmp composite sender.
+	 * Adds the SCMP large request.
 	 * 
 	 * @param key
 	 *            the key
-	 * @param compositeSender
-	 *            the composite sender
+	 * @param largeRequest
+	 *            the large request
 	 */
-	public void addSCMPCompositeSender(String key, SCMPCompositeSender compositeSender) {
+	public void addSCMPLargeRequest(String key, SCMPLargeRequest largeRequest) {
 		SCMPSessionCompositeItem item = this.get(key);
 		if (item == null) {
 			return;
 		}
-		item.setCompositeSender(compositeSender);
+		item.setSCMPLargeRequest(largeRequest);
 	}
 
 	/**
-	 * Gets the sCMP composite sender.
+	 * Gets the SCMP large request.
 	 * 
 	 * @param key
 	 *            the key
-	 * @return the sCMP composite sender
+	 * @return the SCMP large request
 	 */
-	public SCMPCompositeSender getSCMPCompositeSender(String key) {
+	public SCMPLargeRequest getSCMPLargeRequest(String key) {
 		SCMPSessionCompositeItem item = super.get(key);
 		if (item == null) {
 			return null;
 		}
-		return item.getCompositeSender();
+		return item.getSCMPLargeRequest();
 	}
 
 	/**
-	 * Removes the scmp composite sender.
+	 * Removes the scmp large request.
 	 * 
 	 * @param key
 	 *            the key
 	 */
-	public void removeSCMPCompositeSender(String key) {
+	public void removeSCMPLargeRequest(String key) {
 		SCMPSessionCompositeItem item = super.get(key);
 		if (item == null) {
 			return;
 		}
-		item.setCompositeSender(null);
+		item.setSCMPLargeRequest(null);
 	}
 
 	/**
-	 * Gets the sCMP message id.
+	 * Gets the SCMP message id.
 	 * 
 	 * @param key
 	 *            the key
-	 * @return the sCMP message id
+	 * @return the SCMP message id
 	 */
 	public SCMPMessageId getSCMPMessageId(String key) {
 		SCMPSessionCompositeItem item = super.get(key);

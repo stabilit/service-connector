@@ -83,7 +83,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			FileServer fileServer = ((FileService) abstractService).getServer();
 			// add server to session
 			fileSession.setServer(fileServer);
-			fileSession.setSessionTimeoutSeconds(eci * Constants.ECHO_INTERVAL_MULTIPLIER);
+			fileSession.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());
 			// finally add file session to the registry
 			this.sessionRegistry.addSession(fileSession.getId(), fileSession);
 			// reply to client
@@ -109,7 +109,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		try {
 			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
-			int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+			int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 			// Following loop implements the wait mechanism in case of a busy connection pool
 			int i = 0;
 			int otiOnServerMillis = 0;
@@ -148,7 +148,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 				if (Boolean.FALSE.equals(rejectSessionFlag)) {
 					// session has not been rejected, add server to session
 					session.setServer(server);
-					session.setSessionTimeoutSeconds(eci * Constants.ECHO_INTERVAL_MULTIPLIER);
+					session.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());
 					// finally add session to the registry
 					this.sessionRegistry.addSession(session.getId(), session);
 				} else {

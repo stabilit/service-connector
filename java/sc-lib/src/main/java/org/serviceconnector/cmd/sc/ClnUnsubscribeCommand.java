@@ -63,7 +63,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		// delete entry from session registry
 		// looks up subscription queue and stops publish mechanism
 		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(subscriptionId);
-		//first remove subscription than unsubscribe
+		// first remove subscription than unsubscribe
 		this.subscriptionRegistry.removeSubscription(subscription);
 		subscriptionQueue.unsubscribe(subscriptionId);
 		String serviceName = reqMessage.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
@@ -74,7 +74,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 
 		CommandCallback callback;
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-		int tries = (int) ((oti * Constants.OPERATION_TIMEOUT_MULTIPLIER) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 		int otiOnServerMillis = 0;

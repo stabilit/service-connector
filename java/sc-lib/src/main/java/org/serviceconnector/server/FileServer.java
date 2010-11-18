@@ -19,8 +19,7 @@ public class FileServer extends Server {
 
 	public FileServer(String serverKey, InetSocketAddress socketAddress, String serviceName, int portNr, int maxConnections,
 			String connectionType, int keepAliveInterval) {
-		super(ServerType.FILE_SERVER, socketAddress, serviceName, portNr, maxConnections, connectionType, keepAliveInterval,
-				Constants.OPERATION_TIMEOUT_MULTIPLIER);
+		super(ServerType.FILE_SERVER, socketAddress, serviceName, portNr, maxConnections, connectionType, keepAliveInterval);
 		this.serverKey = serverKey;
 	}
 
@@ -28,7 +27,7 @@ public class FileServer extends Server {
 			throws Exception {
 		OutputStream out = null;
 		HttpURLConnection httpCon = null;
-		
+
 		if (session.isStreaming()) {
 			// streaming already started
 			httpCon = session.getHttpURLConnection();

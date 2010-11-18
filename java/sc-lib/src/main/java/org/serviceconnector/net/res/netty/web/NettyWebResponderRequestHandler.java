@@ -56,14 +56,13 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 		// needs to set a key in thread local to identify thread later and get
 		// access to the responder
 		Channel channel = ctx.getChannel();
-		ResponderRegistry responderRegistry = AppContext.getCurrentContext().getResponderRegistry();
+		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 		responderRegistry.setThreadLocal(channel.getParent().getId());
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-		WebContext webContext = WebContext.getCurrentContext();
 		IWebRequest webRequest = new NettyWebRequest(httpRequest);
 		IWebResponse webResponse = new NettyWebResponse(httpResponse);
-		IWebCommand webCommand = webContext.getWebCommand(webRequest);
+		IWebCommand webCommand = WebContext.getWebCommand(webRequest);
 		webCommand.run(webRequest, webResponse);
 		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(webResponse.getBytes());
 		httpResponse.setContent(buffer);

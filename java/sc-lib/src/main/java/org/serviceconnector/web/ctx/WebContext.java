@@ -49,23 +49,14 @@ public class WebContext {
 	 * @param webCommandFactory
 	 *            the web command factory
 	 */
-	public void initContext(FlyweightWebCommandFactory webCommandFactory) {
+	public static void initContext(FlyweightWebCommandFactory webCommandFactory) {
 		if (WebContext.webCommandFactory != null) {
 			// set only one time
 			return;
 		}
 		WebContext.webCommandFactory = webCommandFactory;
 	}
-
-	/**
-	 * Gets the current context.
-	 * 
-	 * @return the current context
-	 */
-	public static WebContext getCurrentContext() {
-		return WebContext.instance;
-	}
-
+	
 	/**
 	 * Gets the web command.
 	 * 
@@ -73,8 +64,8 @@ public class WebContext {
 	 *            the web request
 	 * @return the web command
 	 */
-	public IWebCommand getWebCommand(IWebRequest webRequest) {
-		return this.webCommandFactory.getWebCommand(webRequest);
+	public static IWebCommand getWebCommand(IWebRequest webRequest) {
+		return WebContext.webCommandFactory.getWebCommand(webRequest);
 	}
 
 	/**
@@ -84,7 +75,7 @@ public class WebContext {
 	 *            the key
 	 * @return the xML loader
 	 */
-	public IXMLLoader getXMLLoader(String url) {
-		return this.loaderFactory.getXMLLoader(url);
+	public static IXMLLoader getXMLLoader(String url) {
+		return WebContext.loaderFactory.getXMLLoader(url);
 	}
 }

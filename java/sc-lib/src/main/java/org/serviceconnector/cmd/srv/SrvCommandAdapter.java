@@ -40,8 +40,7 @@ public abstract class SrvCommandAdapter implements ICommand {
 	protected final static Logger logger = Logger.getLogger(SrvCommandAdapter.class);
 
 	/** The session composite registry. */
-	protected static SCMPSessionCompositeRegistry sessionCompositeRegistry = AppContext.getCurrentContext()
-			.getSCMPSessionCompositeRegistry();
+	protected static SCMPSessionCompositeRegistry sessionCompositeRegistry = AppContext.getSCMPSessionCompositeRegistry();
 
 	/** {@inheritDoc} */
 	@Override
@@ -79,14 +78,14 @@ public abstract class SrvCommandAdapter implements ICommand {
 	 *             the sCMP command exception
 	 */
 	protected SrvSessionService getSrvSessionServiceByServiceName(String serviceName) throws SCMPCommandException {
-		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
 
 		if (srvService == null || (srvService instanceof SrvSessionService == false)) {
 			// incoming srvService not found
 			logger.warn("command error: no srvService found for serviceName :" + serviceName);
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
-					"no service found for " + serviceName);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "no service found for "
+					+ serviceName);
 			scmpCommandException.setMessageType(this.getKey());
 			throw scmpCommandException;
 		}
@@ -103,14 +102,14 @@ public abstract class SrvCommandAdapter implements ICommand {
 	 *             the sCMP command exception
 	 */
 	protected SrvPublishService getSrvPublishServiceByServiceName(String serviceName) throws SCMPCommandException {
-		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
 
 		if (srvService == null || (srvService instanceof SrvPublishService == false)) {
 			// incoming srvService not found
 			logger.warn("command error: no srvService found for serviceName :" + serviceName);
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
-					"no service found for " + serviceName);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "no service found for "
+					+ serviceName);
 			scmpCommandException.setMessageType(this.getKey());
 			throw scmpCommandException;
 		}

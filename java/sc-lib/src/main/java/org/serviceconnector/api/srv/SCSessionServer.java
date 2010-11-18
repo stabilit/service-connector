@@ -81,8 +81,7 @@ public class SCSessionServer {
 		this.localServerPort = -1;
 		this.msgId = new SCMPMessageId();
 		// Initialize server command factory
-		AppContext appContext = AppContext.getCurrentContext();
-		appContext.initContext(new ServerCommandFactory());
+		AppContext.initContext(new ServerCommandFactory());
 	}
 
 	/**
@@ -95,12 +94,12 @@ public class SCSessionServer {
 	}
 
 	public int getMaxSessions() {
-		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		return srvServiceRegistry.getSrvService(serviceName).getMaxSessions();
 	}
 
 	public int getMaxConnections() {
-		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		return srvServiceRegistry.getSrvService(this.serviceName).getMaxConnections();
 	}
 
@@ -114,7 +113,7 @@ public class SCSessionServer {
 		if (scCallback == null) {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "callback must be set");
 		}
-		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		IRequester requester = this.doRegisterServer(operationTimeoutSeconds, maxSessions, maxConnections);
 		// creating srvService & adding to registry
 		SrvService srvService = new SrvSessionService(this.serviceName, maxSessions, maxConnections, requester, scCallback);
@@ -134,7 +133,7 @@ public class SCSessionServer {
 		}
 		IRequester requester = this.doRegisterServer(operationTimeoutSeconds, maxSessions, maxConnections);
 		// creating srvService & adding to registry
-		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		SrvService srvService = new SrvPublishService(this.serviceName, maxSessions, maxConnections, requester, scCallback);
 		srvServiceRegistry.addSrvService(this.serviceName, srvService);
 		this.registered = true;
@@ -199,7 +198,7 @@ public class SCSessionServer {
 	}
 
 	public synchronized void deregisterServer(int operationTimeoutSeconds) throws Exception {
-		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		if (this.registered == false) {
 			// sc server not registered - deregister not necessary
 			return;
@@ -273,7 +272,7 @@ public class SCSessionServer {
 	 * @return the sC host
 	 */
 	public String getSCHost() {
-		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		return srvServiceRegistry.getSrvService(this.serviceName).getRequester().getContext().getConnectionPool().getHost();
 	}
 
@@ -283,7 +282,7 @@ public class SCSessionServer {
 	 * @return the sC port
 	 */
 	public int getSCPort() {
-		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		return srvServiceRegistry.getSrvService(this.serviceName).getRequester().getContext().getConnectionPool().getPort();
 	}
 
@@ -329,8 +328,8 @@ public class SCSessionServer {
 	 * 
 	 * @return the sC server context
 	 */
-	public AppContext getSCServerContext() {
-		return (AppContext) AppContext.getCurrentContext();
+	public SCServerContext getSCServerContext() {
+		return this.scServerContext;
 	}
 
 	/**
@@ -351,7 +350,7 @@ public class SCSessionServer {
 	}
 
 	public void destroy() {
-		SrvService srvService = AppContext.getCurrentContext().getSrvServiceRegistry().getSrvService(this.serviceName);
+		SrvService srvService = AppContext.getSrvServiceRegistry().getSrvService(this.serviceName);
 		srvService.getRequester().getContext().getConnectionPool().destroy();
 	}
 }

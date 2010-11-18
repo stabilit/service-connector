@@ -166,7 +166,7 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 			/** {@inheritDoc} */
 			@Override
 			public String getUserid() {
-				IResponder responder = AppContext.getCurrentContext().getResponderRegistry().getCurrentResponder();
+				IResponder responder = AppContext.getResponderRegistry().getCurrentResponder();
 				CommunicatorConfig respConfig = responder.getResponderConfig();
 				return respConfig.getUsername();
 			}
@@ -174,7 +174,7 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 			/** {@inheritDoc} */
 			@Override
 			public String getPassword() {
-				IResponder responder = AppContext.getCurrentContext().getResponderRegistry().getCurrentResponder();
+				IResponder responder = AppContext.getResponderRegistry().getCurrentResponder();
 				CommunicatorConfig respConfig = responder.getResponderConfig();
 				return respConfig.getPassword();
 			}

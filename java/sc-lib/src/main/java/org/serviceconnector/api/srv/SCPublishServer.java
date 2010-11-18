@@ -57,7 +57,7 @@ public class SCPublishServer extends SCSessionServer {
 		}
 		ValidatorUtility.validateStringLength(1, this.serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		ValidatorUtility.validateAllowedCharacters(this.serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
-		SrvServiceRegistry srvServiceRegistry = AppContext.getCurrentContext().getSrvServiceRegistry();
+		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		SrvService srvService = srvServiceRegistry.getSrvService(this.serviceName);
 		if (srvService == null) {
 			throw new SCServiceException("Service not found, service name: " + this.serviceName);

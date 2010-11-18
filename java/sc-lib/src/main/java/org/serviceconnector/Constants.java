@@ -73,59 +73,17 @@ public final class Constants {
 
 	/** The default upload script name */
 	public static final String DEFAULT_UPLOAD_SCRIPT_NAME = "scupload.php";
-	
-	/** Default number of threads for the server. */
-	public static final int DEFAULT_NR_OF_THREADS_SERVER = 10000; // TODO not used
-
-	/** Default number of threads for the client. */
-	public static final int DEFAULT_NR_OF_THREADS_CLIENT = 5000; // TODO not used
-
 	/*
 	 * Constants *********
 	 */
-	/**
-	 * Multiplier to calculate the echo timeout of a session. <br>
-	 * SC must adapt (extend) echo interval passed from client to get the right interval for echo messages.
-	 */
-	public static double ECHO_INTERVAL_MULTIPLIER = DEFAULT_ECHO_INTERVAL_MULTIPLIER;
-
-	/**
-	 * Multiplier to calculate the operation timeout.<br>
-	 * SC must adapt (shorten) the timeout passed from client to get the right timeout.
-	 */
-	public static double OPERATION_TIMEOUT_MULTIPLIER = DEFAULT_OPERATION_TIMEOUT_MULTIPLIER;
-
-	/**
-	 * Used to observe the reply of a keep alive message. <br>
-	 * If the peer does not reply within this time, connection will be cleaned up.
-	 */
-	public static int KEEP_ALIVE_TIMEOUT = DEFAULT_KEEP_ALIVE_TIMEOUT;
-
-	/**
-	 * Used to send keep alive message to the peer. <br>
-	 */
-	public static int KEEP_ALIVE_INTERVAL = DEFAULT_KEEP_ALIVE_INTERVAL;
-
-	/**
-	 * Used to observe the reply of a abort session. <br>
-	 * If server does not reply within this time, the server will be cleaned up.
-	 */
-	public static int SERVER_ABORT_OTI_MILLIS = DEFAULT_SERVER_ABORT_OTI_MILLIS;
-
 	/**
 	 * Technical operation timeout. <br>
 	 * It is the time a single WRITE/READ/CLOSE/OPEN can take. Must be reasonably sort.
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
-
-	/** Timeout to prevent stocking in technical connect process. */
-	public static final int CONNECT_TIMEOUT_MILLIS = DEFAULT_CONNECT_TIMEOUT_MILLIS;
-
+	
 	/** The wait time in a loop waiting for a busy connection. */
 	public static final int WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS = 200;
-
-	/** The time after a subscription is marked as dead. */
-	public static final int SUBSCRIPTION_TIMEOUT_MILLIS = DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS;
 
 	/** Maximum size of a message. Larger data is treated as large message */
 	public static final int MAX_MESSAGE_SIZE = 60 << 10; // 64K

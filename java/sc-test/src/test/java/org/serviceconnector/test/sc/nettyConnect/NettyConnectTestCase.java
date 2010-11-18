@@ -41,7 +41,7 @@ public class NettyConnectTestCase {
 
 	@Test
 	public void connectDisconnect50000() throws Exception {
-		ConnectionFactory connectionFactory = AppContext.getCurrentContext().getConnectionFactory();
+		ConnectionFactory connectionFactory = AppContext.getConnectionFactory();
 		IConnection connection = connectionFactory.createConnection("netty.http");
 		connection.setHost(TestConstants.HOST);
 		connection.setPort(TestConstants.PORT_HTTP);
@@ -71,7 +71,7 @@ public class NettyConnectTestCase {
 	public void connect1000WithoutDisconnect() throws Exception {
 		IConnection[] connections = new IConnection[1000];
 		for (int i = 0; i < 1000; i++) {
-			ConnectionFactory connectionFactory = AppContext.getCurrentContext().getConnectionFactory();
+			ConnectionFactory connectionFactory = AppContext.getConnectionFactory();
 			IConnection connection = connectionFactory.createConnection("netty.http");
 			connections[i] = connection;
 			connection.setHost(TestConstants.HOST);

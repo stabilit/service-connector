@@ -25,11 +25,11 @@ import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
-import org.serviceconnector.scmp.SCMPCompositeReceiver;
-import org.serviceconnector.scmp.SCMPCompositeSender;
+import org.serviceconnector.scmp.SCMPLargeRequest;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPLargeResponse;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.util.ITimerRun;
@@ -71,9 +71,9 @@ public class SCRequester implements IRequester {
 			ISCMPCallback requesterCallback = null;
 			// differ if message is large or not, sending procedure is different
 			if (message.isLargeMessage()) {
-				// SCMPCompositeSender handles splitting, works like an iterator
-				SCMPCompositeSender compositeSender = new SCMPCompositeSender(message);
-				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, compositeSender, msgId);
+				// SCMPLargeRequest handles splitting, works like an iterator
+				SCMPLargeRequest largeResponse = new SCMPLargeRequest(message);
+				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, largeResponse, msgId);
 				// setting up operation timeout after successful send
 				TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
 				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
@@ -81,7 +81,7 @@ public class SCRequester implements IRequester {
 				reqCallback.setTimeoutMillis(timeoutInMillis);
 				timer.schedule(task, (long) timeoutInMillis);
 				// extract first part message & send
-				SCMPMessage part = compositeSender.getFirst();
+				SCMPMessage part = largeResponse.getFirst();
 				// handling messageId
 				if (SCMPMessageId.necessaryToWrite(part.getMessageType())) {
 					msgId.incrementPartSequenceNr();
@@ -138,10 +138,10 @@ public class SCRequester implements IRequester {
 		private ConnectionContext connectionCtx;
 		/** The request message, initial message sent by requester. */
 		private SCMPMessage requestMsg;
-		/** The composite receiver. */
-		private SCMPCompositeReceiver compositeReceiver;
-		/** The composite sender. */
-		private SCMPCompositeSender compositeSender;
+		/** The large response. */
+		private SCMPLargeResponse largeResponse;
+		/** The large request. */
+		private SCMPLargeRequest largeRequest;
 		/** The message id. */
 		private SCMPMessageId msgId;
 		/** The operation timeout task. */
@@ -154,11 +154,11 @@ public class SCRequester implements IRequester {
 		}
 
 		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, ConnectionContext conCtx,
-				SCMPCompositeSender compositeSender, SCMPMessageId msgId) {
+				SCMPLargeRequest largeRequest, SCMPMessageId msgId) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = conCtx;
 			this.requestMsg = reqMsg;
-			this.compositeSender = compositeSender;
+			this.largeRequest = largeRequest;
 			this.msgId = msgId;
 			this.timeoutInMillis = 0;
 			this.operationTimeoutTask = null;
@@ -168,7 +168,7 @@ public class SCRequester implements IRequester {
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
 			// ------------------- handling large request --------------------
-			if (compositeSender != null) {
+			if (largeRequest != null) {
 				// handle large messages
 				boolean largeRequestDone = this.handlingLargeRequest(scmpReply);
 
@@ -177,7 +177,7 @@ public class SCRequester implements IRequester {
 					return;
 				}
 
-				this.compositeSender = null;
+				this.largeRequest = null;
 				if (scmpReply.isPart() && this.requestMsg.isGroup() == false) {
 					// response is a part - response is large, continue pulling
 					// delete compositeSender - large request done!
@@ -194,21 +194,21 @@ public class SCRequester implements IRequester {
 			}
 
 			// ------------------- handling large response -------------------
-			if (this.compositeReceiver != null) {
+			if (this.largeResponse != null) {
 				// large response message is processing - continue procedure
-				this.compositeReceiver.add(scmpReply);
+				this.largeResponse.add(scmpReply);
 				if (scmpReply.isPart() == false) {
 					// response received
 					// cancel operation timeout
 					operationTimeoutTask.cancel();
 					// first handle connection - that user has a connection to work, if he has only 1
 					this.freeConnection();
-					this.scmpCallback.callback(this.compositeReceiver);
+					this.scmpCallback.callback(this.largeResponse);
 					// delete compositeReceiver - large response done!
-					this.compositeReceiver = null;
+					this.largeResponse = null;
 					return;
 				}
-				SCMPMessage message = compositeReceiver.getPart();
+				SCMPMessage message = largeResponse.getPart();
 				// pull & exit
 				this.connectionCtx.getConnection().send(message, this);
 				return;
@@ -246,10 +246,10 @@ public class SCRequester implements IRequester {
 		 *             the exception
 		 */
 		private void handlingLargeResponse(SCMPMessage scmpReply) throws Exception {
-			// response is a part - response is large, continue pulling
-			// SCMPComposite handles parts of large requests, putting all together
-			this.compositeReceiver = new SCMPCompositeReceiver(requestMsg, scmpReply);
-			SCMPMessage message = compositeReceiver.getPart();
+			// response is a part - response is large, continue polling
+			// SCMPLargeResponse handles parts of large requests, putting all together
+			this.largeResponse = new SCMPLargeResponse(requestMsg, scmpReply);
+			SCMPMessage message = largeResponse.getPart();
 			// handling messageId
 			if (SCMPMessageId.necessaryToWrite(message.getMessageType())) {
 				// increment part number in case of large response
@@ -272,7 +272,7 @@ public class SCRequester implements IRequester {
 		private boolean handlingLargeRequest(SCMPMessage scmpReply) throws Exception {
 			SCMPMessage part = null;
 
-			part = compositeSender.getCurrentPart();
+			part = largeRequest.getCurrentPart();
 			if (part.isRequest()) {
 				/*
 				 * request has been sent completely. The response can be small or large, this doesn't matter, we continue reading any
@@ -280,7 +280,7 @@ public class SCRequester implements IRequester {
 				 */
 				return true;
 			}
-			if (compositeSender.hasNext() == false) {
+			if (largeRequest.hasNext() == false) {
 				if (this.requestMsg.isGroup()) {
 					/*
 					 * client processes group call, he needs to get the response - happens in special case: client sends a single
@@ -288,13 +288,14 @@ public class SCRequester implements IRequester {
 					 */
 					return true;
 				}
+				//TODO @JAN .. what warning should be here
 				logger.warn("compositeSender.hasNext() == false but part request not done");
 				return true;
 			}
-			part = compositeSender.getNext();
+			part = largeRequest.getNext();
 			// handling messageId
 			if (SCMPMessageId.necessaryToWrite(part.getMessageType())) {
-				if (compositeSender.hasNext() == false) {
+				if (largeRequest.hasNext() == false) {
 					// last part to send - will be a REQ message, increment message number
 					this.msgId.incrementMsgSequenceNr();
 				} else {
@@ -313,8 +314,8 @@ public class SCRequester implements IRequester {
 			// cancel operation timeout
 			this.operationTimeoutTask.cancel();
 			// delete composites
-			this.compositeReceiver = null;
-			this.compositeSender = null;
+			this.largeResponse = null;
+			this.largeRequest = null;
 			this.scmpCallback.callback(ex);
 			if (ex instanceof IdleTimeoutException || ex instanceof ClosedChannelException) {
 				// operation timed out - delete this specific connection, prevents race conditions

@@ -48,9 +48,8 @@ import org.serviceconnector.web.ctx.WebContext;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class DefaultWebCommand. Responsible for validation and execution of any
- * pure http web command. This Class uses a xml based model and the view is
- * built using xsl transformation.
+ * The Class DefaultWebCommand. Responsible for validation and execution of any pure http web command. This Class uses a xml based
+ * model and the view is built using xsl transformation.
  * 
  * @author JTraber
  */
@@ -131,7 +130,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		}
 		response.addHeader("Pragma", "no-cache");
 		response.addHeader("Expires", "-1");
-	    response.addHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+		response.addHeader("Cache-Control", "no-store, no-cache, must-revalidate");
 
 		// load stylesheet as stream
 		XSLDocument xslDocument = new XSLDocument(request);
@@ -323,7 +322,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			this.exceptionList = new ArrayList<Exception>();
 			this.messageList = new ArrayList<Message>();
 			this.accessibleContext = null;
-			this.loader = WebContext.getCurrentContext().getXMLLoader(this.request.getURL());
+			this.loader = WebContext.getXMLLoader(this.request.getURL());
 		}
 
 		public boolean isText() {
@@ -536,9 +535,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 
 			/*
 			 * (non-Javadoc)
-			 * 
-			 * @see javax.xml.transform.URIResolver#resolve(java.lang.String,
-			 * java.lang.String)
+			 * @see javax.xml.transform.URIResolver#resolve(java.lang.String, java.lang.String)
 			 */
 			public Source resolve(String href, String base) throws TransformerException {
 				InputStream is = WebUtil.loadResource("/org/serviceconnector/web/xsl/" + href);

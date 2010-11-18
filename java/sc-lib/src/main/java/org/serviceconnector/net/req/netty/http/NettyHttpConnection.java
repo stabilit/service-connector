@@ -35,6 +35,7 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.util.Timer;
 import org.serviceconnector.Constants;
+import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.CommunicationException;
@@ -56,10 +57,11 @@ public class NettyHttpConnection implements IConnection {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpConnection.class);
-
 	/** The Constant connectionLogger. */
 	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-
+	/** The base conf. */
+	protected final BasicConfiguration baseConf = AppContext.getBasicConfiguration();
+	
 	/** The url. */
 	private URL url;
 	/** The bootstrap. */
@@ -89,8 +91,8 @@ public class NettyHttpConnection implements IConnection {
 	/** The timer to observe timeouts, static because should be shared. */
 	private static Timer timer;
 	/*
-	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts
-	 * incoming connections on a socket. A worker thread performs non-blocking read and write on a channel.
+	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
+	 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
 	 */
 	private static NioClientSocketChannelFactory channelFactory;
 
@@ -137,7 +139,7 @@ public class NettyHttpConnection implements IConnection {
 	@Override
 	public void connect() throws Exception {
 		this.bootstrap = new ClientBootstrap(channelFactory);
-		this.bootstrap.setOption("connectTimeoutMillis", Constants.CONNECT_TIMEOUT_MILLIS);
+		this.bootstrap.setOption("connectTimeoutMillis", baseConf.getConnectionTimeoutMillis());
 		this.pipelineFactory = new NettyHttpRequesterPipelineFactory(this.connectionContext, NettyHttpConnection.timer);
 		this.bootstrap.setPipelineFactory(this.pipelineFactory);
 		// Starts the connection attempt.
@@ -147,7 +149,7 @@ public class NettyHttpConnection implements IConnection {
 		future.addListener(this.operationListener);
 		try {
 			// waits until operation is done
-			this.channel = this.operationListener.awaitUninterruptibly(Constants.CONNECT_TIMEOUT_MILLIS).getChannel();
+			this.channel = this.operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis()).getChannel();
 			// complete localSocketAdress
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
@@ -168,7 +170,7 @@ public class NettyHttpConnection implements IConnection {
 		ChannelFuture future = this.channel.disconnect();
 		future.addListener(this.operationListener);
 		try {
-			this.operationListener.awaitUninterruptibly(Constants.CONNECT_TIMEOUT_MILLIS);
+			this.operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis());
 		} catch (CommunicationException ex) {
 			logger.error("disconnect", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
@@ -196,7 +198,7 @@ public class NettyHttpConnection implements IConnection {
 	@Override
 	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		encoderDecoder = AppContext.getCurrentContext().getEncoderDecoderFactory().createEncoderDecoder(scmp);
+		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scmp);
 		encoderDecoder.encode(baos, scmp);
 		url = new URL(Constants.HTTP, host, port, Constants.HTTP_FILE);
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath());
@@ -220,8 +222,7 @@ public class NettyHttpConnection implements IConnection {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (CommunicationException ex) {
 			logger.error("send", ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on "
-					+ this.localSocketAddress);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on " + this.localSocketAddress);
 		}
 		if (connectionLogger.isEnabledFull()) {
 			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),

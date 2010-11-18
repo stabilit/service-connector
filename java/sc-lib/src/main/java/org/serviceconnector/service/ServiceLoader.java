@@ -54,7 +54,7 @@ public class ServiceLoader {
 		@SuppressWarnings("unchecked")
 		List<String> serviceNames = config.getList(Constants.PROPERTY_SERVICE_NAMES);
 
-		ServiceRegistry serviceRegistry = AppContext.getCurrentContext().getServiceRegistry();
+		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 
 		for (String serviceName : serviceNames) {
 			// remove blanks in serviceName
@@ -75,7 +75,7 @@ public class ServiceLoader {
 				String path = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_PATH);
 				service = new FileService(serviceName, path);
 				String remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
-				Server server = AppContext.getCurrentContext().getServerRegistry().getServer(remoteHost);
+				Server server = AppContext.getServerRegistry().getServer(remoteHost);
 				if (server == null) {
 					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "service " + serviceName
 							+ " references an non existents file server named " + remoteHost);
