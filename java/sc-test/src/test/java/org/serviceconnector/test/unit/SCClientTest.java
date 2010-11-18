@@ -49,7 +49,7 @@ public class SCClientTest {
 		client = new SCClient("localhost", 6000, ConnectionType.NETTY_TCP );
 		assertEquals("Host not equal", "localhost", client.getHost());
 		assertEquals("Port not equal", 6000, client.getPort());
-		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, client.getConnectionType());
+		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP.getValue(), client.getConnectionType());
 		assertNotNull(client);
 	}
 
