@@ -16,8 +16,8 @@ public class TestConstants {
 	public static final String SCProperties = "sc.properties";
 	public static final String SCcascadedProperties = "sc-cascaded.properties";
 	
-	public static final String serviceNameSession = "local-session-service";
-	public static final String serviceNamePublish = "local-publish-service";
+	public static final String serviceNameSession = "session-1";
+	public static final String serviceNamePublish = "publish-1";
 	
 	public static final String pangram = "The quick brown fox jumps over a lazy dog.";
 	public static final String stringLength32 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";

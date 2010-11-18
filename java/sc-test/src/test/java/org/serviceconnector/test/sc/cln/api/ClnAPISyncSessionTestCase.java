@@ -41,7 +41,7 @@ public class ClnAPISyncSessionTestCase {
 			// connects to SC, checks connection to SC
 			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
-			SCSessionService sessionServiceA = sc.newSessionService("local-session-service");
+			SCSessionService sessionServiceA = sc.newSessionService("session-1");
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
 			sessionServiceA.createSession(10, 10, scMessage);

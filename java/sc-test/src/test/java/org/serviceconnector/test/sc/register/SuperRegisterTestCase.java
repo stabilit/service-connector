@@ -75,7 +75,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 
 	public void registerServerBefore() throws Exception {
 		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
-				registerRequester, "local-publish-service");
+				registerRequester, "publish-1");
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
 		registerServerCall.setPortNumber(this.responderConfig.getResponderConfigList().get(0).getPort());
@@ -86,7 +86,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	}
 
 	public void deRegisterServerAfter() throws Exception {
-		this.deRegisterServerAfter("local-publish-service");
+		this.deRegisterServerAfter("publish-1");
 	}
 
 	public void deRegisterServerAfter(String serviceName) throws Exception {

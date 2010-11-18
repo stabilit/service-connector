@@ -54,7 +54,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 			sb.append(i);
 		}
 
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "local-session-service",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody(sb.toString());
@@ -87,7 +87,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 
 	@Test
 	public void srvExecuteLargeRequestSmallResponseTest() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "local-session-service",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		StringBuilder sb = new StringBuilder();
@@ -103,13 +103,13 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(scmpReply.getSessionId());
 		Assert.assertEquals(expectedBody.length(), scmpReply.getBodyLength());
-		Assert.assertEquals("local-session-service", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+		Assert.assertEquals("session-1", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		Assert.assertEquals(expectedBody, scmpReply.getBody());
 	}
 
 	@Test
 	public void srvExecuteLargeRequestLargeResponseTest() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "local-session-service",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		StringBuilder sb = new StringBuilder();
@@ -128,7 +128,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(scmpReply.getSessionId());
 		Assert.assertEquals(sb.length() + "", scmpReply.getBodyLength() + "");
-		Assert.assertEquals("local-session-service", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+		Assert.assertEquals("session-1", scmpReply.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
 		Assert.assertEquals(sb.toString(), scmpReply.getBody());
 	}
 }

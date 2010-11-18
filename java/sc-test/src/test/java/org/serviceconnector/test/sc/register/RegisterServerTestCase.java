@@ -76,7 +76,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 	@Test
 	public void failRegisterServerCallWrongHeader() throws Exception {
 		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(req,
-				"local-session-service");
+				"session-1");
 
 		// keep alive interval not set
 		registerServerCall.setMaxSessions(10);
@@ -135,7 +135,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		IRequester req = new SCRequester(context);
 
 		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(req,
-				"local-publish-service");
+				"publish-1");
 
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
@@ -155,16 +155,16 @@ public class RegisterServerTestCase extends SuperTestCase {
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
 		// TODO this will not work if configuration is changed
-		String expectedScEntry = "file-service:file-service:ENABLED:file|local-publish-service:0 - local-publish-service_localhost/:51000 : 1|local-session-service:0 - local-session-service_localhost/:30000 : 10|";
+		String expectedScEntry = "file-1:file-1:ENABLED:file|publish-1:0 - publish-1_localhost/:51000 : 1|session-1:0 - session-1_localhost/:30000 : 10|";
 		String scEntry = inspectMap.get("serviceRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
-		expectedScEntry = "publish_localhost/:publish_localhost/:51000 : 10|fileServer:fileServer:80|local-session-service_localhost/:local-session-service_localhost/:30000 : 10|local-publish-service_localhost/:local-publish-service_localhost/:51000 : 1|";
+		expectedScEntry = "publish_localhost/:publish_localhost/:51000 : 10|fileServer:fileServer:80|session-1_localhost/:session-1_localhost/:30000 : 10|publish-1_localhost/:publish-1_localhost/:51000 : 1|";
 		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
-				.newInstance(req, "local-publish-service");
+				.newInstance(req, "publish-1");
 		deRegisterServerCall.invoke(this.registerCallback, 1000);
 		SCTest.checkReply(this.registerCallback.getMessageSync());
 
@@ -174,7 +174,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		inspect = this.registerCallback.getMessageSync();
 		inspectMsg = (String) inspect.getBody();
 		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		expectedScEntry = "local-session-service_localhost/:local-session-service_localhost/:30000 : 10|local-publish-service_localhost/:local-publish-service_localhost/:51000 : 1|fileServer:fileServer:80|";
+		expectedScEntry = "session-1_localhost/:session-1_localhost/:30000 : 10|publish-1_localhost/:publish-1_localhost/:51000 : 1|fileServer:fileServer:80|";
 		scEntry = (String) inspectMap.get("serverRegistry");
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 	}

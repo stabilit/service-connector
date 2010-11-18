@@ -44,7 +44,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 	@Test
 	public void subscribe() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(req,
-				"local-publish-service");
+				"publish-1");
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(3);
@@ -57,7 +57,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 
 		// receive publication - no data
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
-				.newInstance(this.req, "local-publish-service", sessionId);
+				.newInstance(this.req, "publish-1", sessionId);
 		callback = new TestSubscribeCallback(true);
 		receivePublicationCall.invoke(callback, 30000);
 		reply = callback.getMessageSync();
@@ -65,7 +65,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 
 		// receive publication first message
 		receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION.newInstance(this.req,
-				"local-publish-service", sessionId);
+				"publish-1", sessionId);
 		callback = new TestSubscribeCallback(true);
 		receivePublicationCall.invoke(callback, 10000);
 		reply = callback.getMessageSync();
@@ -74,14 +74,14 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		for (int i = 1; i < 3; i++) {
 			// receive publication first message
 			receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION.newInstance(
-					this.req, "local-publish-service", sessionId);
+					this.req, "publish-1", sessionId);
 			callback = new TestSubscribeCallback(true);
 			receivePublicationCall.invoke(callback, 3000);
 			reply = callback.getMessageSync();
 			Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 		}
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
-				.newInstance(req, "local-publish-service", sessionId);
+				.newInstance(req, "publish-1", sessionId);
 		callback = new TestSubscribeCallback(true);
 		unSubscribeCall.invoke(callback, 3000);
 		reply = callback.getMessageSync();
@@ -91,7 +91,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 	@Test
 	public void failSubscribeWrongHeader() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(req,
-				"local-publish-service");
+				"publish-1");
 
 		// mask not set
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");

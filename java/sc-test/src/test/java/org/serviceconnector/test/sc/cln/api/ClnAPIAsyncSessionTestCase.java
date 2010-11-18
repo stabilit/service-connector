@@ -48,7 +48,7 @@ public class ClnAPIAsyncSessionTestCase {
 			// set environment, e.g. keepAliveInterval
 			// connects to SC, checks connection to SC
 			sc.attach();
-			SCSessionService sessionServiceA = sc.newSessionService("local-session-service");
+			SCSessionService sessionServiceA = sc.newSessionService("session-1");
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
 			sessionServiceA.createSession(60, scMessage);

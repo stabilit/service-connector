@@ -41,7 +41,7 @@ public class ClnAPIFileTestCase {
 			sc = new SCClient();
 			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 
-			SCFileService fileServiceA = sc.newFileService("file-service");
+			SCFileService fileServiceA = sc.newFileService("file-1");
 
 			String targetFileName = "uploadFile.txt";
 

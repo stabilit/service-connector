@@ -35,7 +35,7 @@ public class DemoPublishServer {
 	protected final static Logger logger = Logger.getLogger(DemoPublishServer.class);
 
 	private SCPublishServer publishSrv = null;
-	private static String serviceName = "local-publish-service";
+	private static String serviceName = "publish-1";
 
 	public static void main(String[] args) throws Exception {
 		DemoPublishServer publishServer = new DemoPublishServer();

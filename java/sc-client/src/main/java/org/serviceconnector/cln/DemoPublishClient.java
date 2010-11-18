@@ -45,7 +45,7 @@ public class DemoPublishClient extends Thread {
 			sc.attach(); // regular
 			sc.attach(10); // alternative with operation timeout
 
-			String serviceName = "local-publish-service";
+			String serviceName = "publish-1";
 			service = sc.newPublishService(serviceName); // no other params possible
 			service.setNoDataIntervalInSeconds(100); // can be set before subscribe
 
@@ -110,7 +110,7 @@ public class DemoPublishClient extends Thread {
 	// SCPublishService publishService = null;
 	// try {
 	// sc.attach();
-	// publishService = sc.newPublishService("local-publish-service");
+	// publishService = sc.newPublishService("publish-1");
 	// SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 	// subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
 	// subscibeMessage.setSessionInfo("sessionInfo");

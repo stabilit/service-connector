@@ -31,7 +31,7 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoSessionServer {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(DemoSessionServer.class);
-	private static String serviceName = "local-session-service";
+	private static String serviceName = "session-1";
 
 	public static void main(String[] args) throws Exception {
 		DemoSessionServer sessionServer = new DemoSessionServer();

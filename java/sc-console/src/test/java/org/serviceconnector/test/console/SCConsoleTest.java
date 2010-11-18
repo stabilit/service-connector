@@ -384,7 +384,7 @@ public class SCConsoleTest {
 	}
 
 	/**
-	 * Description: start console with "-h 127.0.0.1 -p 9000 state=local-session-service" parameters<br>
+	 * Description: start console with "-h 127.0.0.1 -p 9000 state=session-1" parameters<br>
 	 * Expectation: passes though with exitCode = 0 "Success" <br>
 	 * Pre-condition: SC must be running!
 	 */
@@ -392,14 +392,14 @@ public class SCConsoleTest {
 	public void t26_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", TestConstants.PORT_SC_TCP,
-					Constants.STATE + "=local-session-service" });
+					Constants.STATE + "=session-1" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 enable=local-session-service" parameters<br>
+	 * Description: start console with "-h localhost -p 9000 enable=session-1" parameters<br>
 	 * Expectation: passes though with exitCode = 0 "Success", service is enabled.<br>
 	 * Pre-condition: SC must be running!
 	 */
@@ -407,19 +407,19 @@ public class SCConsoleTest {
 	public void t27_enable_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					Constants.ENABLE + "=local-session-service" });
+					Constants.ENABLE + "=session-1" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 		SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP),
 				ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals(true, client.isServiceEnabled("local-session-service"));
+		assertEquals(true, client.isServiceEnabled("session-1"));
 		client.detach();
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 disable=local-session-service" parameters<br>
+	 * Description: start console with "-h localhost -p 9000 disable=session-1" parameters<br>
 	 * Expectation: passes though with exitCode = 0 "Success", service is disabled.<br>
 	 * Pre-condition: SC must be running!
 	 */
@@ -427,27 +427,27 @@ public class SCConsoleTest {
 	public void t28_disable_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					Constants.DISABLE + "=local-session-service" });
+					Constants.DISABLE + "=session-1" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 		SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP),
 				ConnectionType.NETTY_HTTP);
 		client.attach();
-		assertEquals(false, client.isServiceEnabled("local-session-service"));
+		assertEquals(false, client.isServiceEnabled("session-1"));
 
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					Constants.ENABLE + "=local-session-service" });
+					Constants.ENABLE + "=session-1" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
-		assertEquals(true, client.isServiceEnabled("local-session-service"));
+		assertEquals(true, client.isServiceEnabled("session-1"));
 		client.detach();
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 sessions=local-session-service" parameters<br>
+	 * Description: start console with "-h localhost -p 9000 sessions=session-1" parameters<br>
 	 * Expectation: passes though with exitCode = 0 "Success" <br>
 	 * Pre-condition: SC must be running!
 	 */
@@ -455,14 +455,14 @@ public class SCConsoleTest {
 	public void t29_sessions_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					Constants.SESSIONS + "=local-session-service" });
+					Constants.SESSIONS + "=session-1" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 sessions=local-publish-service<br>
+	 * Description: start console with "-h localhost -p 9000 sessions=publish-1<br>
 	 * Expectation: passes though with exitCode = 0 "Success" <br>
 	 * Pre-condition: SC must be running!
 	 */
@@ -470,7 +470,7 @@ public class SCConsoleTest {
 	public void t30_sessions_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					Constants.SESSIONS + "=local-publish-service" });
+					Constants.SESSIONS + "=publish-1" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
@@ -506,7 +506,7 @@ public class SCConsoleTest {
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 gaga=local-session-service<br>
+	 * Description: start console with "-h localhost -p 9000 gaga=session-1<br>
 	 * Expectation: throws exception with exitCode = 3 "invalid command" <br>
 	 * Pre-condition: SC must be running!
 	 */
@@ -514,7 +514,7 @@ public class SCConsoleTest {
 	public void t33_undefined_command() throws Exception {
 		try {
 			SCConsole
-					.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, "gaga=local-session-service" });
+					.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, "gaga=session-1" });
 		} catch (ExitException e) {
 			assertEquals(3, e.status);
 		}

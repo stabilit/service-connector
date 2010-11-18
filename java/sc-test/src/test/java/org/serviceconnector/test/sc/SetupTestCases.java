@@ -166,7 +166,7 @@ public class SetupTestCases {
 		scSim1Sess.setImmediateConnect(true);
 		scSim1Sess.setKeepAliveIntervalInSeconds(0);
 		scSim1Sess.startListener();
-		scSessionSim1Sess = scSim1Sess.newSessionServer("local-session-service");
+		scSessionSim1Sess = scSim1Sess.newSessionServer("session-1");
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSessionSim1Sess.registerServer(1, 1, srvCallback);
 	}
@@ -176,7 +176,7 @@ public class SetupTestCases {
 		// connect to SC as server
 		scSim1ConSrv.setImmediateConnect(true);
 		scSim1ConSrv.setKeepAliveIntervalInSeconds(0);
-		scSessionSim1ConSrv = scSim1ConSrv.newSessionServer("local-session-service");
+		scSessionSim1ConSrv = scSim1ConSrv.newSessionServer("session-1");
 		scSim1ConSrv.startListener();
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSessionSim1ConSrv.registerServer(10, 1, srvCallback);
@@ -188,14 +188,14 @@ public class SetupTestCases {
 		scSim10ConSrv.setImmediateConnect(true);
 		scSim10ConSrv.setKeepAliveIntervalInSeconds(0);
 		scSim10ConSrv.startListener();
-		scSessionSim10ConSrv = scSim10ConSrv.newSessionServer("local-session-service");
+		scSessionSim10ConSrv = scSim10ConSrv.newSessionServer("session-1");
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSessionSim10ConSrv.registerServer(10, 10, srvCallback);
 	}
 
 	public static void registerSessionServiceEnable() throws Exception {
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSessionSimEnableSrv = scSimEnableSrv.newSessionServer("local-session-service");
+		scSessionSimEnableSrv = scSimEnableSrv.newSessionServer("session-1");
 		scSessionSimEnableSrv.registerServer(10, 10, srvCallback);
 	}
 
@@ -299,7 +299,7 @@ public class SetupTestCases {
 	}
 
 	public static void startPublishServer() throws Exception {
-		String serviceName = "local-publish-service";
+		String serviceName = "publish-1";
 		SCServer scPubServer = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, 51000);
 		SCPublishServer publishSrv = scPubServer.newPublishServer(serviceName);
 		// connect to SC as server

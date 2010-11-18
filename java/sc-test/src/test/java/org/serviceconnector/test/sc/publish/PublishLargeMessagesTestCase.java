@@ -61,7 +61,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 	@Test
 	public void receiveLargeMessage() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(req,
-				"local-publish-service");
+				"publish-1");
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(10);
@@ -84,7 +84,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 		for (int i = 1; i < 3; i++) {
 			// receive publication first message
 			SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
-					.newInstance(this.req, "local-publish-service", sessionId);
+					.newInstance(this.req, "publish-1", sessionId);
 			receivePublicationCall.invoke(this.callback, 10000);
 			reply = this.callback.getMessageSync();
 			Assert.assertTrue(reply.isLargeMessage());
@@ -92,7 +92,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 			Thread.sleep(2000);
 		}
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
-				.newInstance(req, "local-publish-service", sessionId);
+				.newInstance(req, "publish-1", sessionId);
 		unSubscribeCall.invoke(this.callback, 3000);
 		reply = callback.getMessageSync();
 		SCTest.checkReply(reply);

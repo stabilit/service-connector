@@ -45,7 +45,7 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 	@Test
 	public void deRegisterServerCall() throws Exception {
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
-				.newInstance(this.registerRequester, "local-publish-service");
+				.newInstance(this.registerRequester, "publish-1");
 
 		deRegisterServerCall.invoke(this.attachCallback, 1000);
 		SCTest.checkReply(this.attachCallback.getMessageSync());
@@ -59,7 +59,7 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
 		String scEntry = (String) inspectMap.get("serviceRegistry"); // TODO TRN this will not work if config is changed!
-		String expectedEntry = "file-service:file-service:ENABLED:file|local-publish-service:0 - local-publish-service_localhost/:51000 : 1|local-session-service:0 - local-session-service_localhost/:30000 : 10|";
+		String expectedEntry = "file-1:file-1:ENABLED:file|publish-1:0 - publish-1_localhost/:51000 : 1|session-1:0 - session-1_localhost/:30000 : 10|";
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedEntry, scEntry);
 		super.registerServerBefore();
 	}
@@ -68,7 +68,7 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 	public void secondDeRegisterServerCall() throws Exception {
 		super.deRegisterServerAfter();
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
-				.newInstance(this.registerRequester, "local-publish-service");
+				.newInstance(this.registerRequester, "publish-1");
 
 		deRegisterServerCall.invoke(this.attachCallback, 1000);
 		SCMPMessage fault = this.attachCallback.getMessageSync();

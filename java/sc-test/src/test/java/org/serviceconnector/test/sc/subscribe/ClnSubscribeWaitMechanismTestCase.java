@@ -41,7 +41,7 @@ public class ClnSubscribeWaitMechanismTestCase extends SuperTestCase {
 	@Test
 	public void waitForSessionInSubscribe_secondCCSTimesOut() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(req,
-				"local-publish-service");
+				"publish-1");
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(2);
@@ -53,7 +53,7 @@ public class ClnSubscribeWaitMechanismTestCase extends SuperTestCase {
 		// to assure second create is not faster
 		Thread.sleep(20);
 		subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL
-				.newInstance(req, "local-publish-service");
+				.newInstance(req, "publish-1");
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(2);
@@ -67,11 +67,11 @@ public class ClnSubscribeWaitMechanismTestCase extends SuperTestCase {
 		SCTest.checkReply(reply);
 		Assert.assertFalse(reply.isFault());
 		Assert.assertTrue(reply1.isFault());
-		SCTest.verifyError(reply1, SCMPError.NO_FREE_SESSION, "[for service local-publish-service]",
+		SCTest.verifyError(reply1, SCMPError.NO_FREE_SESSION, "[for service publish-1]",
 				SCMPMsgType.CLN_SUBSCRIBE);
 
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
-				.newInstance(req, "local-publish-service", reply.getSessionId());
+				.newInstance(req, "publish-1", reply.getSessionId());
 		unSubscribeCall.invoke(callback, 3000);
 		reply = callback.getMessageSync();
 		SCTest.checkReply(reply);

@@ -40,7 +40,7 @@ import org.serviceconnector.util.SynchronousCallback;
 
 public class ManageTestCase extends SuperAttachTestCase {
 
-	private String serviceName = "local-session-service";
+	private String serviceName = "session-1";
 
 	public ManageTestCase(String fileName) {
 		super(fileName);
