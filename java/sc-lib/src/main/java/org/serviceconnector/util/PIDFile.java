@@ -17,8 +17,8 @@ package org.serviceconnector.util;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Enumeration;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.Category;
@@ -98,4 +98,56 @@ public class PIDFile {
 		}
 	}
 
+	/**
+	 * Checks if the file containing the PID exists.
+	 * Is used for testing purpose to verify that SC is running properly.
+	 */
+	public static boolean exists() throws Exception {
+		Category rootLogger = logger.getParent();
+		Enumeration<?> appenders = rootLogger.getAllAppenders();
+		FileAppender fileAppender = null;
+		while (appenders.hasMoreElements()) {
+			Appender appender = (Appender) appenders.nextElement();
+			if (appender instanceof FileAppender) {
+				fileAppender = (FileAppender) appender;
+				break;
+			}
+		}
+		String fileName = fileAppender.getFile();
+		String path = fileName.substring(0, fileName.lastIndexOf("/"));
+		File pidFile = new File(path + Constants.PID_FILE_NAME);
+
+		return pidFile.exists();
+	}
+
+	/**
+	 * Checks if the file containing the PID exists.
+	 * Is used for testing purpose to verify that SC is running properly.
+	 */
+	public static void waitFor(int nrSeconds) throws Exception {
+		Category rootLogger = logger.getParent();
+		Enumeration<?> appenders = rootLogger.getAllAppenders();
+		FileAppender fileAppender = null;
+		while (appenders.hasMoreElements()) {
+			Appender appender = (Appender) appenders.nextElement();
+			if (appender instanceof FileAppender) {
+				fileAppender = (FileAppender) appender;
+				break;
+			}
+		}
+		String fileName = fileAppender.getFile();
+		String path = fileName.substring(0, fileName.lastIndexOf("/"));
+		File pidFile = new File(path + Constants.PID_FILE_NAME);
+
+		// wait max 10 seconds for file creation
+		for (int i = 0; i < nrSeconds; i++) {
+			if (pidFile.exists()) {
+				return;
+			}
+			Thread.sleep(1000);
+		}
+		throw new TimeoutException("Expected file:"+path + Constants.PID_FILE_NAME+" does not exist within "+nrSeconds+" seconds.");
+	}
+
+	
 }
