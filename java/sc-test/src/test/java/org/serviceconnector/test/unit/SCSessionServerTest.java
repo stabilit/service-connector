@@ -19,13 +19,10 @@ public class SCSessionServerTest {
 	private static String serviceName = "local-session-service";
 	
 	private SCServer server;
-	private SCSessionServer sessionServer;
 	
 	@Before
 	public void setUp() throws Exception {
 		server = null;
-		sessionServer = null;
-
 		server = new SCServer(hostname, port, listenerPort); 
 		server.setKeepAliveIntervalInSeconds(10); // can be set before register
 		server.setImmediateConnect(true); // can be set before register
@@ -35,6 +32,7 @@ public class SCSessionServerTest {
 	@After
 	public void tearDown() throws Exception {
 		//server.stopListener();
+		server = null;
 	}
 
 	
@@ -75,7 +73,7 @@ public class SCSessionServerTest {
 	 */
 	@Test
 	public void t01_newSessionServer() {
-		sessionServer = server.newSessionServer(serviceName);
+		SCSessionServer sessionServer = server.newSessionServer(serviceName);
 		assertNotNull("No SessionServer", sessionServer);
 	}
 

@@ -1,12 +1,15 @@
 package org.serviceconnector.test.unit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
+import java.security.InvalidParameterException;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.web.InvalidParameterException;
 
 
 public class SCServerTest {
@@ -28,6 +31,8 @@ public class SCServerTest {
 		assertEquals("Host not equal", "localhost", server.getSCHost());
 		assertEquals("Port not equal", 9000, server.getSCPort());
 		assertEquals("Listener Port not equal", 9001, server.getListenerPort());
+		assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
+		assertNotNull(server);
 	}
 
 	/**
@@ -40,6 +45,8 @@ public class SCServerTest {
 		assertEquals("Host not equal", null, server.getSCHost());
 		assertEquals("Port not equal", 9000, server.getSCPort());
 		assertEquals("Listener Port not equal", 9001, server.getListenerPort());
+		assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
+		assertNotNull(server);
 	}
 
 	/**
@@ -52,6 +59,8 @@ public class SCServerTest {
 		assertEquals("Host not equal", "localhost", server.getSCHost());
 		assertEquals("Port not equal", Integer.MIN_VALUE, server.getSCPort());
 		assertEquals("Listener Port not equal", 9001, server.getListenerPort());
+		assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
+		assertNotNull(server);
 	}
 
 	/**
@@ -64,6 +73,8 @@ public class SCServerTest {
 		assertEquals("Host not equal", "localhost", server.getSCHost());
 		assertEquals("Port not equal", 9000, server.getSCPort());
 		assertEquals("Listener Port not equal", Integer.MIN_VALUE, server.getListenerPort());
+		assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
+		assertNotNull(server);
 	}
 	
 	/**
@@ -73,6 +84,9 @@ public class SCServerTest {
 	@Test
 	public void t05_construtor() {
 		server = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY_TCP);
+		assertEquals("Host not equal", "localhost", server.getSCHost());
+		assertEquals("Port not equal", 9000, server.getSCPort());
+		assertEquals("Listener Port not equal", 9001, server.getListenerPort());
 		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, server.getConnectionType());
 		assertNotNull(server);
 	}
@@ -84,6 +98,9 @@ public class SCServerTest {
 	@Test
 	public void t06_construtor() {
 		server = new SCServer("localhost", 9000, 9001, null);
+		assertEquals("Host not equal", "localhost", server.getSCHost());
+		assertEquals("Port not equal", 9000, server.getSCPort());
+		assertEquals("Listener Port not equal", 9001, server.getListenerPort());
 		assertEquals("Connection Type not equal", null, server.getConnectionType());
 		assertNotNull(server);
 	}
@@ -119,7 +136,7 @@ public class SCServerTest {
 	@Test
 	public void t20_ImmediateConnect() {
 		server = new SCServer("localhost", 9000, 9001);
-		// TODO method server.isImmediateConnect() is missing
+		// TODO MRI method server.isImmediateConnect() is missing
 		//assertEquals("ImmediateConnect not equal", false, server.isImmediateConnect());
 		server.setImmediateConnect(true);
 		//assertEquals("ImmediateConnect not equal", true, server.isImmediateConnect());
@@ -133,19 +150,11 @@ public class SCServerTest {
 	 * Expectation: Listener is stopped
 	 */
 	@Test
-	public void t30_Listener() {
+	public void t30_Listener() throws Exception {
 		server = new SCServer("localhost", 9000, 9001);
 		assertNotNull(server);
-		
-		try {
-			server.startListener();
-			assertEquals("Listener is not running", true, server.isListening());
-
-		} catch (InvalidParameterException ex) {
-			assertFalse("InvalidParameterException:" + ex.getMessage(), false);
-		} catch (Exception ex) {
-			assertFalse("Exception:" + ex.getMessage(), false);
-		}
+		server.startListener();
+		assertEquals("Listener is not running", true, server.isListening());
 		server.stopListener();
 		assertEquals("Listener is running", false, server.isListening());
 	}
