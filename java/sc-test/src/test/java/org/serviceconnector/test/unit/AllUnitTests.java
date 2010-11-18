@@ -5,6 +5,6 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { SCClientTest.class, SCServerTest.class, SCMessageTest.class,
-		SCServerStartListenerTest.class, SCServerDestroyServerTest.class })
+		SCSessionServerTest.class })
 public class AllUnitTests {
 }
