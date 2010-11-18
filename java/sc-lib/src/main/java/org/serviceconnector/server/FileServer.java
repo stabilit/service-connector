@@ -1,8 +1,5 @@
 package org.serviceconnector.server;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -20,19 +17,11 @@ import org.serviceconnector.service.FileSession;
 
 public class FileServer extends Server {
 
-	FileOutputStream outStream = null;
-
 	public FileServer(String serverKey, InetSocketAddress socketAddress, String serviceName, int portNr, int maxConnections,
 			String connectionType, int keepAliveInterval) {
 		super(ServerType.FILE_SERVER, socketAddress, serviceName, portNr, maxConnections, connectionType, keepAliveInterval,
 				Constants.OPERATION_TIMEOUT_MULTIPLIER);
 		this.serverKey = serverKey;
-		File localFile = new File("src/main/resources/SCApacheContent.txt");
-		try {
-			outStream = new FileOutputStream(localFile);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public SCMPMessage serverUploadFile(FileSession session, SCMPMessage message, String remoteFileName, int timeoutMillis)
@@ -124,15 +113,11 @@ public class FileServer extends Server {
 				reply = new SCMPMessage();
 				reply.setBody(new byte[0]);
 				in.close();
-				outStream.close();
 				session.getHttpURLConnection().disconnect();
 				session.stopStreaming();
 				return reply;
 			}
 			reply = new SCMPPart();
-			System.out.println(readBytes);
-			outStream.write(fullBuffer, 0, readBytes);
-			outStream.flush();
 			reply.setBody(fullBuffer, 0, readBytes);
 			return reply;
 		} catch (Exception e) {
