@@ -59,6 +59,10 @@ public class SCServer {
 		this.scServerContext.setImmediateConnect(immediateConnect);
 	}
 
+	public boolean isImmediateConnect() {
+		return this.scServerContext.isImmediateConnect();
+	}
+	
 	public boolean isListening() {
 		return this.scServerContext.isListening();
 	}
@@ -68,7 +72,7 @@ public class SCServer {
 	}
 
 	/**
-	 * Start server.
+	 * Start Listener.
 	 * 
 	 * @param host
 	 *            the host to bind the listener
