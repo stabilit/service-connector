@@ -47,7 +47,6 @@ import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.cmd.sc.ServiceConnectorWebCommandFactory;
 import org.serviceconnector.web.ctx.WebContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SC. Starts the core (responders) of the Service Connector.
  * 
