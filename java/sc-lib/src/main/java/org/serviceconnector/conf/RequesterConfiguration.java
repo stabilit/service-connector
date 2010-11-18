@@ -52,9 +52,11 @@ public class RequesterConfiguration {
 
 	/**
 	 * Inits the.
-	 *
-	 * @param apacheCompositeConfig the apache composite config
-	 * @throws SCMPValidatorException the sCMP validator exception
+	 * 
+	 * @param apacheCompositeConfig
+	 *            the apache composite config
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
 	 */
 	public void init(CompositeConfiguration apacheCompositeConfig) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
@@ -68,7 +70,32 @@ public class RequesterConfiguration {
 		for (String requesterName : requesterList) {
 			requesterName = requesterName.trim(); // remove blanks in name
 			CommunicatorConfig commConfig = new CommunicatorConfig(requesterName);
-			commConfig.initialize(apacheCompositeConfig);
+			
+			// get port & connection type
+			commConfig.setPort(apacheCompositeConfig.getInt(requesterName + Constants.PROPERTY_QUALIFIER_PORT));
+			commConfig.setConnectionType((String) apacheCompositeConfig.getString(requesterName
+					+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
+			// get host for requester
+			List<String> hosts = new ArrayList<String>();
+			hosts.add(apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_INTERFACES));
+			commConfig.setInterfaces(hosts);
+
+			// get max connection pool size
+			String maxPoolSizeValue = (String) apacheCompositeConfig.getString(requesterName
+					+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE);
+			if (maxPoolSizeValue != null) {
+				int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
+				commConfig.setMaxPoolSize(maxPoolSize);
+			}
+			// get keep alive interval
+			String keepAliveIntervalValue = (String) apacheCompositeConfig.getString(requesterName
+					+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL);
+			int keepAliveInterval = 0;
+			if (keepAliveIntervalValue != null) {
+				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
+			}
+			commConfig.setKeepAliveInterval(keepAliveInterval);
+			// adding requester to list
 			this.requesterConfigList.add(commConfig);
 		}
 	}

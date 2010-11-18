@@ -51,7 +51,7 @@ public class Responder implements IResponder {
 	/** {@inheritDoc} */
 	@Override
 	public void create() throws Exception {
-		for (String host : this.respConfig.getHosts()) {
+		for (String host : this.respConfig.getInterfaces()) {
 			EndpointFactory endpointFactory = AppContext.getEndpointFactory();
 			IEndpoint endpoint = endpointFactory.createEndpoint(this.respConfig.getConnectionType());
 			endpoint.setResponder(this);

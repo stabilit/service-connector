@@ -98,14 +98,13 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 			if (remoteHostConfig == null) {
 				throw new SystemConfigurationException("no remote host configuration");
 			}
-			String remoteHost = remoteHostConfig.getHosts().get(0);
+			String remoteHost = remoteHostConfig.getInterfaces().get(0);
 			int remotePort = remoteHostConfig.getPort();
 			this.remoteHost = remoteHost;
 			this.remotePort = remotePort;
 			this.maxConnectionPoolSize = communicatorConfig.getMaxPoolSize();
 			if (this.maxConnectionPoolSize < 1) {
 				this.maxConnectionPoolSize = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
-				;
 			}
 			// limit threads
 			serverChannelFactory = new NioServerSocketChannelFactory(Executors.newFixedThreadPool(this.maxConnectionPoolSize),

@@ -62,9 +62,40 @@ public class ResponderConfiguration {
 		for (String responderName : respondersList) {
 			responderName = responderName.trim(); // remove blanks in name
 			CommunicatorConfig commConfig = new CommunicatorConfig(responderName);
-			commConfig.initialize(apacheCompositeConfig);
+
+			// get interfaces for responder
+			commConfig.setInterfaces(apacheCompositeConfig.getList(responderName + Constants.PROPERTY_QUALIFIER_INTERFACES));
+
+			// get port & connection type
+			commConfig.setPort(apacheCompositeConfig.getInt(responderName + Constants.PROPERTY_QUALIFIER_PORT));
+			commConfig.setConnectionType((String) apacheCompositeConfig.getString(responderName
+					+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
+			// get user & password
+			commConfig.setUsername((String) apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_USERNAME));
+			commConfig.setPassword((String) apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_PASSWORD));
+			// get remote host for responder
+			String remoteHost = (String) apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
+			if (remoteHost != null) {
+				// create configuration for remote host
+				CommunicatorConfig remoteHostConfig = new CommunicatorConfig(remoteHost);
+				// get host for remoteHost
+				List<String> hosts = new ArrayList<String>();
+				hosts.add(apacheCompositeConfig.getString(remoteHost + Constants.PROPERTY_QUALIFIER_HOST));
+				remoteHostConfig.setInterfaces(hosts);
+				// get port & connection type
+				remoteHostConfig.setPort(apacheCompositeConfig.getInt(remoteHost + Constants.PROPERTY_QUALIFIER_PORT));
+				remoteHostConfig.setConnectionType((String) apacheCompositeConfig.getString(remoteHost
+						+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
+				// get user & password
+				remoteHostConfig.setUsername((String) apacheCompositeConfig.getString(remoteHost
+						+ Constants.PROPERTY_QUALIFIER_USERNAME));
+				remoteHostConfig.setPassword((String) apacheCompositeConfig.getString(remoteHost
+						+ Constants.PROPERTY_QUALIFIER_PASSWORD));
+				// set remote host configuration responder configuration
+				commConfig.setRemoteHostConfiguration(remoteHostConfig);
+			}
+			// adding responder to list
 			this.responderConfigList.add(commConfig);
 		}
-
 	}
 }

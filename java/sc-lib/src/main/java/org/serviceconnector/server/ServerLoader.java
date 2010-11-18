@@ -57,7 +57,7 @@ public class ServerLoader {
 			serverName = serverName.trim(); // remove blanks in serverName
 
 			int portNr = Integer.parseInt((String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_PORT));
-			String host = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_INTERFACES);
+			String host = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_HOST);
 			String connectionType = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
 
 			if (connectionType == null) {

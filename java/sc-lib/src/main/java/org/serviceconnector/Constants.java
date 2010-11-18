@@ -81,7 +81,7 @@ public final class Constants {
 	 * It is the time a single WRITE/READ/CLOSE/OPEN can take. Must be reasonably sort.
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
-	
+
 	/** The wait time in a loop waiting for a busy connection. */
 	public static final int WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS = 200;
 
@@ -150,6 +150,7 @@ public final class Constants {
 	public static final String PROPERTY_QUALIFIER_UPLOAD_SCRIPT_NAME = ".uploadScriptName";
 	public static final String PROPERTY_QUALIFIER_REMOTE_HOST = ".remoteHost";
 	public static final String PROPERTY_QUALIFIER_INTERFACES = ".interfaces";
+	public static final String PROPERTY_QUALIFIER_HOST = ".host";
 	public static final String PROPERTY_QUALIFIER_PORT = ".port";
 	public static final String PROPERTY_QUALIFIER_TYPE = ".type";
 	public static final String PROPERTY_QUALIFIER_ENABLED = ".enabled";

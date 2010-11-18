@@ -42,8 +42,6 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	private final static SessionLogger sessionLogger = SessionLogger.getInstance();
 	/** The timer. Timer instance is responsible to observe subscription timeouts. */
 	private Timer timer;
-	/** The subscription timeout. */
-	private int subscriptionTimeout = AppContext.getBasicConfiguration().getSubscriptionTimeout();
 
 	public SubscriptionRegistry() {
 		this.timer = new Timer("SubscriptionRegistryTimer");
@@ -113,7 +111,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		subscriptionTimeouter = new TimerTaskWrapper(new SubscriptionTimerRun(subscription));
 		subscription.setSessionTimeouter(subscriptionTimeouter);
 		// schedule subscriptionTimeouter in registry timer
-		this.timer.schedule(subscriptionTimeouter, subscriptionTimeout);
+		this.timer.schedule(subscriptionTimeouter, AppContext.getBasicConfiguration().getSubscriptionTimeout());
 	}
 
 	public void scheduleSubscriptionTimeout(String key) {
@@ -189,7 +187,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
-			return SubscriptionRegistry.this.subscriptionTimeout;
+			return AppContext.getBasicConfiguration().getSubscriptionTimeout();
 		}
 	}
 }

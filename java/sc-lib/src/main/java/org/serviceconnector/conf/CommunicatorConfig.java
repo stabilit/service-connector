@@ -16,12 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.conf;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 
 /**
  * The Class CommunicatorConfig.
@@ -37,8 +34,8 @@ public class CommunicatorConfig {
 	private String name;
 	/** The port. */
 	private int port;
-	/** The hosts. */
-	private List<String> hosts;
+	/** The interfaces. */
+	private List<String> interfaces;
 	/** The connectionType. */
 	private String connectionType;
 	/** The max pool size. */
@@ -52,11 +49,11 @@ public class CommunicatorConfig {
 	/** The remote host configuration. */
 	private CommunicatorConfig remoteHostConfiguration;
 
-	public CommunicatorConfig(String name, List<String> hosts, int port, String connectionType, int maxPoolSize,
+	public CommunicatorConfig(String name, List<String> interfaces, int port, String connectionType, int maxPoolSize,
 			int keepAliveInterval, int keepAliveTimeout) {
 		this.name = name;
 		this.port = port;
-		this.hosts = hosts;
+		this.interfaces = interfaces;
 		this.connectionType = connectionType;
 		this.maxPoolSize = maxPoolSize;
 		this.keepAliveInterval = keepAliveInterval;
@@ -71,38 +68,6 @@ public class CommunicatorConfig {
 	 */
 	public CommunicatorConfig(String name) {
 		this.name = name;
-	}
-
-	public void initialize(CompositeConfiguration configurations) {
-		int port = Integer.parseInt((String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_PORT));
-		String maxPoolSizeValue = (String) configurations
-				.getString(this.name + Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE);
-		if (maxPoolSizeValue != null) {
-			int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
-			this.setMaxPoolSize(maxPoolSize);
-		} // TODO TRN where is the else setting the default?
-		String keepAliveIntervalValue = (String) configurations.getString(this.name
-				+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL);
-		int keepAliveInterval = 0;
-		if (keepAliveIntervalValue != null) {
-			keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
-		} // TODO TRN where is the else setting the default?
-		this.setKeepAliveInterval(keepAliveInterval);
-		this.setPort(port);
-		// TODO JOT list of host not get(0)!!!
-		List<String> hosts = new ArrayList<String>();
-		hosts.add(configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_INTERFACES));
-		this.setHosts(hosts);
-		this.setConnectionType((String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
-		this.setUsername((String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_USERNAME));
-		this.setPassword((String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_PASSWORD));
-		// get remote host
-		String remoteHost = (String) configurations.getString(this.name + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
-		if (remoteHost != null) {
-			CommunicatorConfig remoteHostConfig = new CommunicatorConfig(remoteHost);
-			remoteHostConfig.initialize(configurations);
-			this.setRemoteHostConfiguration(remoteHostConfig);
-		}
 	}
 
 	/**
@@ -144,22 +109,22 @@ public class CommunicatorConfig {
 	}
 
 	/**
-	 * Gets the host.
+	 * Gets the interfaces.
 	 * 
-	 * @return the host
+	 * @return the interfaces
 	 */
-	public List<String> getHosts() {
-		return hosts;
+	public List<String> getInterfaces() {
+		return interfaces;
 	}
 
 	/**
-	 * Sets the hosts.
+	 * Sets the interfaces.
 	 * 
-	 * @param hosts
+	 * @param interfaces
 	 *            the new hosts
 	 */
-	public void setHosts(List<String> hosts) {
-		this.hosts = hosts;
+	public void setInterfaces(List<String> interfaces) {
+		this.interfaces = interfaces;
 	}
 
 	/**

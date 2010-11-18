@@ -100,7 +100,7 @@ public class SCServer {
 		ValidatorUtility.validateInt(0, this.scServerContext.getKeepAliveIntervalSeconds(), 3600,
 				SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 
-		respConfig.setHosts(hosts);
+		respConfig.setInterfaces(hosts);
 		respConfig.setPort(port);
 
 		responder = new Responder(respConfig);
