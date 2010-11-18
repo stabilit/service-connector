@@ -53,6 +53,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with null parameter<br>
+	 * (no arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -66,6 +67,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with empty string array = no parameters<br>
+	 * (no arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -79,6 +81,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with empty parameter<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -92,6 +95,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with 5 empty parameters<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -105,6 +109,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with 1 blank parameter<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -118,6 +123,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with 5 blank parameters<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -131,6 +137,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "h" parameter<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -144,6 +151,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h" parameter<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -157,6 +165,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h" and empty parameter<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -170,6 +179,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h" and blank parameter<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -183,6 +193,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h h" parameters<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -196,6 +207,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h -p" parameters<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -209,6 +221,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h -p" and empty parameters<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -222,6 +235,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h -p" and blank parameters<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -235,6 +249,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h -p h" parameters<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -248,6 +263,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-p -h h" parameters<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -261,6 +277,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h h -p something" parameters<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -274,6 +291,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h -p h something" parameters<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -300,6 +318,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h h -p key=something" parameters<br>
+	 * (not enough arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -313,6 +332,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h -h h -p p key=something" parameters<br>
+	 * (too many arguments)<br>
 	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
@@ -325,8 +345,9 @@ public class SCConsoleTest {
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 7000 state=something SHOW=something" parameters<br>
-	 * multiple commands Expectation: throws exception with exitCode = 1
+	 * Description: start console with "-h localhost -p 7000 state=something state=something" parameters<br>
+	 * (too many arguments)<br>
+	 * Expectation: throws exception with exitCode = 1
 	 */
 	@Test
 	public void t22_start() throws Exception {
@@ -340,7 +361,8 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 7000 state=something" parameters<br>
-	 * HTTP port Expectation: throws exception with exitCode = 5 "Communication error" <br>
+	 * (HTTP port)<br> 
+	 * Expectation: throws exception with exitCode = 5 "Communication error" <br>
 	 * Pre-condition: SC must be running!
 	 */
 	@Test
@@ -355,7 +377,8 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 81 state=something" parameters<br>
-	 * Management port Expectation: throws exception with exitCode = 5 "Communication error" <br>
+	 * (management port)<br> 
+	 * Expectation: throws exception with exitCode = 5 "Communication error" <br>
 	 * Pre-condition: SC must be running!
 	 */
 	@Test
@@ -370,11 +393,12 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 state=something" parameters<br>
+	 * (unknown service name)<br> 
 	 * Expectation: throws exception with exitCode = 4 "Unknown service" <br>
 	 * Pre-condition: SC must be running!
 	 */
 	@Test
-	public void t25_start() throws Exception {
+	public void t25_state() throws Exception {
 		try {
 			SCConsole
 					.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, Constants.STATE + "=something" });
@@ -389,53 +413,32 @@ public class SCConsoleTest {
 	 * Pre-condition: SC must be running!
 	 */
 	@Test
-	public void t26_start() throws Exception {
+	public void t26_state() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", TestConstants.PORT_SC_TCP,
-					Constants.STATE + "=session-1" });
+			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", TestConstants.PORT_SC_TCP, Constants.STATE + "=session-1" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 enable=session-1" parameters<br>
-	 * Expectation: passes though with exitCode = 0 "Success", service is enabled.<br>
-	 * Pre-condition: SC must be running!
+	 * Description: disable and re-enable the session service "session-1"<br>
+	 * Expectation: passes though with exitCode = 0 "Success".<br>
+	 * Pre-condition: SC must be running!<br>
+	 * Post-condition: session service "session-1" is enabled again
 	 */
 	@Test
-	public void t27_enable_command() throws Exception {
-		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
-					Constants.ENABLE + "=session-1" });
-		} catch (ExitException e) {
-			assertEquals(0, e.status);
-		}
+	public void t50_enable_disable_command() throws Exception {
 		SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP),
 				ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals(true, client.isServiceEnabled("session-1"));
-		client.detach();
-	}
-
-	/**
-	 * Description: start console with "-h localhost -p 9000 disable=session-1" parameters<br>
-	 * Expectation: passes though with exitCode = 0 "Success", service is disabled.<br>
-	 * Pre-condition: SC must be running!
-	 */
-	@Test
-	public void t28_disable_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.DISABLE + "=session-1" });
 		} catch (ExitException e) {
 			assertEquals(0, e.status);
 		}
-		SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP),
-				ConnectionType.NETTY_HTTP);
-		client.attach();
 		assertEquals(false, client.isServiceEnabled("session-1"));
-
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.ENABLE + "=session-1" });
@@ -452,7 +455,7 @@ public class SCConsoleTest {
 	 * Pre-condition: SC must be running!
 	 */
 	@Test
-	public void t29_sessions_command() throws Exception {
+	public void t52_sessions_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.SESSIONS + "=session-1" });
@@ -467,7 +470,7 @@ public class SCConsoleTest {
 	 * Pre-condition: SC must be running!
 	 */
 	@Test
-	public void t30_sessions_command() throws Exception {
+	public void t53_sessions_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.SESSIONS + "=publish-1" });
@@ -478,11 +481,12 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 sessions=notExistingService<br>
+	 * (unknown service name)<br> 
 	 * Expectation: throws exception with exitCode = 4 "Unknown service"<br>
 	 * Pre-condition: SC must be running!
 	 */
 	@Test
-	public void t31_sessions_command() throws Exception {
+	public void t54_sessions_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.SESSIONS + "=notExistingService" });
@@ -493,11 +497,12 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 gaga=notExistingService<br>
+	 * (unknown command)<br> 
 	 * Expectation: throws exception with exitCode = 3 "invalid command"<br>
 	 * Pre-condition: SC must be running!
 	 */
 	@Test
-	public void t32_undefined_command() throws Exception {
+	public void t55_undefined_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, "gaga=notExistingService" });
 		} catch (ExitException e) {
@@ -507,14 +512,14 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 gaga=session-1<br>
+	 * (unknown command)<br> 
 	 * Expectation: throws exception with exitCode = 3 "invalid command" <br>
 	 * Pre-condition: SC must be running!
 	 */
 	@Test
-	public void t33_undefined_command() throws Exception {
+	public void t56_undefined_command() throws Exception {
 		try {
-			SCConsole
-					.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, "gaga=session-1" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, "gaga=session-1" });
 		} catch (ExitException e) {
 			assertEquals(3, e.status);
 		}
@@ -522,7 +527,8 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 kill<br>
-	 * Expectation: passes though with exitCode = 0 "Success" Pre-condition: SC must be running!<br>
+	 * Expectation: passes though with exitCode = 0 "Success" <br>
+	 * Pre-condition: SC must be running!<br>
 	 * Post-condition: SC will be killed!
 	 */
 	@Test
