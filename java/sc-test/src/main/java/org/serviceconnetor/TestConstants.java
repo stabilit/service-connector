@@ -35,4 +35,7 @@ public class TestConstants {
 	
 	public static final String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
 
+	public static final String logDirectoryToken = "log-directory";
+	public static final String scRunable = "sc.jar";
+	public static final String serverRunable = "test-server.jar";
 }

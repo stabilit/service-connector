@@ -74,7 +74,7 @@ public final class Constants {
 	/** The default upload script name */
 	public static final String DEFAULT_UPLOAD_SCRIPT_NAME = "scupload.php";
 	/*
-	 * Constants *********
+	 * Various Constants *********
 	 */
 	/**
 	 * Technical operation timeout. <br>
@@ -115,6 +115,9 @@ public final class Constants {
 	/** Comma or semicolon REGEX. */
 	public static final String COMMA_OR_SEMICOLON = ",|;"; // TODO not used
 
+	/** File containing the Sc process PID. Created at startup and deleted on exit or error. Used to check is sc is running.*/
+	public static final String PID_FILE_NAME = "/pid.log";
+	
 	/*
 	 * console command constants *************************
 	 */

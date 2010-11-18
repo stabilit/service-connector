@@ -54,6 +54,7 @@ import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
+import org.serviceconnector.util.PIDFile;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
@@ -697,6 +698,7 @@ public class DefaultXMLLoaderFactory {
 			}
 			if ("stop".equals(action)) {
 				logger.warn("sc has been stopped by user interface");
+				PIDFile.delete();
 				System.exit(1);
 			}
 		}

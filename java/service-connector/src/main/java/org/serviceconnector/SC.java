@@ -16,20 +16,14 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.lang.management.ManagementFactory;
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.Category;
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;
@@ -43,6 +37,7 @@ import org.serviceconnector.server.ServerLoader;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
+import org.serviceconnector.util.PIDFile;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.cmd.sc.ServiceConnectorWebCommandFactory;
@@ -76,6 +71,7 @@ public final class SC {
 		// check arguments
 		if (args == null || args.length <= 0) {
 			showError("no argumments");
+			PIDFile.delete();
 			System.exit(1);
 		}
 		String configFileName = CommandLineUtil.getArg(args, Constants.CLI_CONFIG_ARG);
@@ -85,6 +81,7 @@ public final class SC {
 		} catch (Exception ex) {
 			logger.fatal(ex.getMessage(), ex);
 			showError(ex.toString());
+			PIDFile.delete();
 			System.exit(1);
 		}
 	}
@@ -137,7 +134,7 @@ public final class SC {
 			responder.startListenAsync();
 		}
 		if (AppContext.getBasicConfiguration().isWritePID()) {
-			SC.writePIDFile();
+			PIDFile.create();
 		}
 		logger.log(Level.OFF, "Service Connector is running ...");
 	}
@@ -164,42 +161,8 @@ public final class SC {
 		mbs.registerMBean(loggingManager, mxbeanNameLoggingManager);
 	}
 
-	/**
-	 * Writes a file. PID of SC gets written in. Is used for testing purpose to verify that SC is running properly.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	private static void writePIDFile() throws Exception {
-		String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-		long pid = Long.parseLong(processName.split("@")[0]);
-		FileWriter fw = null;
-		try {
-			Category rootLogger = logger.getParent();
-			Enumeration<?> appenders = rootLogger.getAllAppenders();
-			FileAppender fileAppender = null;
-			while (appenders.hasMoreElements()) {
-				Appender appender = (Appender) appenders.nextElement();
-				if (appender instanceof FileAppender) {
-					fileAppender = (FileAppender) appender;
-					break;
-				}
-			}
-			String fileName = fileAppender.getFile();
-			String path = fileName.substring(0, fileName.lastIndexOf("/"));
 
-			File pidFile = new File(path + "/pid.log");
-			fw = new FileWriter(pidFile);
-			fw.write("pid: " + pid);
-			fw.flush();
-			fw.close();
-		} finally {
-			if (fw != null) {
-				fw.close();
-			}
-		}
-	}
-
+	
 	/**
 	 * Write system info to log.
 	 * 

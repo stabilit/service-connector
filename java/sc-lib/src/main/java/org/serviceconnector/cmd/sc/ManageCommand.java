@@ -32,6 +32,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.ServiceState;
+import org.serviceconnector.util.PIDFile;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -80,6 +81,7 @@ public class ManageCommand extends CommandAdapter {
 		if ((ipAddress.equals(localHost.getHostAddress())) && (bodyString.equalsIgnoreCase(Constants.KILL))) {
 			// kill request is allowed from localhost only!
 			logger.warn("Kill request received, SC exiting ...");
+			PIDFile.delete();
 			System.exit(0);
 		}
 
