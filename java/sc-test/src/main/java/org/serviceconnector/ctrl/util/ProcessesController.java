@@ -95,6 +95,7 @@ public class ProcessesController {
 		}
 		logger.error("File "+fileName+" was not created within allowed wait time.");
 		throw new TimeoutException("File "+fileName+" was not created within allowed wait time.");
+		
 	}
 
 	public Process startSC(String log4jSCProperties, String scProperties) throws Exception {
