@@ -16,12 +16,13 @@
 package org.serviceconnector.cache;
 
 import java.util.Date;
+import java.util.Iterator;
 
-import org.serviceconnector.cache.impl.ICacheImpl;
 import org.serviceconnector.cache.impl.CacheImplFactory;
+import org.serviceconnector.cache.impl.ICacheImpl;
+import org.serviceconnector.scmp.SCMPCacheId;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.util.DateTimeUtility;
 
 // TODO: Auto-generated Javadoc
@@ -33,6 +34,7 @@ public class Cache {
 	/** The manager. */
 	private CacheManager manager;
 
+	/** The service name. */
 	private String serviceName;
 
 	/** The cache impl. */
@@ -49,71 +51,100 @@ public class Cache {
 	public Cache(CacheManager manager, String serviceName) {
 		this.manager = manager;
 		this.serviceName = serviceName;
-		this.cacheImpl = CacheImplFactory.getDefaultCacheImpl(
-				manager.getScmpCacheConfiguration(), serviceName);
+		this.cacheImpl = CacheImplFactory.getDefaultCacheImpl(manager.getScmpCacheConfiguration(), serviceName);
 	}
 
 	/**
-	 * Gets the sCMP.
+	 * Gets the composite.
 	 * 
-	 * @param msg
-	 *            the msg
-	 * @return the sCMP
+	 * @param cacheId
+	 *            the cache id
+	 * @return the composite
 	 * @throws CacheException
-	 *             the sCMP cache exception
+	 *             the cache exception
 	 */
-	public synchronized CacheMessage getSCMP(SCMPMessage msg)
-			throws CacheException {
+	public synchronized CacheComposite getComposite(String cacheId) throws CacheException {
+		if (cacheId == null) {
+			throw new CacheException("no cache id");
+		}
+		CacheKey rootCacheKey = null;
+		CacheComposite cacheRoot = null;
+		// check if this message is part of cache
+		rootCacheKey = new CacheKey(cacheId);
+		Object value = this.cacheImpl.get(rootCacheKey);
+		if (value == null) {
+			return null;
+		}
+		if (value != null && value instanceof CacheComposite) {
+			return (CacheComposite) value;
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the message.
+	 *
+	 * @param msg the msg
+	 * @return the message
+	 * @throws CacheException the cache exception
+	 */
+	public synchronized CacheMessage getMessage(SCMPMessage msg) throws CacheException {
 		String cacheId = msg.getCacheId();
 		if (cacheId == null) {
 			throw new CacheException("no cache id");
 		}
-		String seqNr = msg.getMessageSequenceNr();
-		if (seqNr == null) {
-			throw new CacheException("no message id");
-		}
-		SCMPMessageSequenceNr msgSequenceNr = SCMPMessage.parseMsgSequenceNr(seqNr);
-		CacheKey cacheKey = null;
+		SCMPCacheId scmpCacheId = new SCMPCacheId(cacheId);
+		return getMessage(scmpCacheId);
+	}
+
+	/**
+	 * Gets the message.
+	 *
+	 * @param scmpCacheId the scmp cache id
+	 * @return the message
+	 * @throws CacheException the cache exception
+	 */
+	public synchronized CacheMessage getMessage(SCMPCacheId scmpCacheId) throws CacheException {
+		CacheKey rootCacheKey = null;
 		CacheComposite cacheRoot = null;
 		// check if this message is part of cache
-		cacheKey = new CacheKey(cacheId);
-		Object value = this.cacheImpl.get(cacheKey);
+		rootCacheKey = new CacheKey(scmpCacheId.getCacheId());
+		Object value = this.cacheImpl.get(rootCacheKey);
 		if (value == null) {
 			return null;
 		}
 		if (value != null && value instanceof CacheComposite) {
 			cacheRoot = (CacheComposite) value;
 		}
-		//TODO DANI gibt nimmer!
-		int partSequenceNr = 0;
-//		int partSequenceNr = msgSequenceNr.getPartSequenceNr();
-		PartCacheKey cachePartKey = new PartCacheKey(cacheId,
-				partSequenceNr);
-		CacheMessage scmpCacheMessage = (CacheMessage) this.cacheImpl
-				.get(cachePartKey);
-		return scmpCacheMessage;
+		CacheKey msgCacheKey = new CacheKey(scmpCacheId.getFullCacheId());
+		Object obj = this.cacheImpl.get(msgCacheKey);
+		if (obj == null) {
+			return null;
+		}
+		if (obj instanceof CacheMessage) {
+			return (CacheMessage) obj;
+		}
+		throw new CacheException("invalid cache key");
 	}
 
 	/**
 	 * Put scmp.
-	 * 
-	 * @param scmpReply
-	 *            the scmp reply
-	 * @throws CacheException
-	 *             the sCMP cache exception
+	 *
+	 * @param scmpReply the scmp reply
+	 * @return the sCMP cache id
+	 * @throws CacheException the sCMP cache exception
 	 */
-	public synchronized void putSCMP(SCMPMessage scmpReply)
-			throws CacheException {
+	public synchronized SCMPCacheId putMessage(SCMPMessage scmpReply) throws CacheException {
 		try {
 			String cacheId = scmpReply.getCacheId();
 			if (cacheId == null) {
 				throw new CacheException("no cache id");
 			}
-			String seqNr = scmpReply.getMessageSequenceNr();
-			if (seqNr == null) {
+			SCMPCacheId scmpCacheId = new SCMPCacheId(cacheId);
+			String messageId = scmpReply.getMessageId();
+			if (messageId == null) {
 				throw new CacheException("no message id");
 			}
-			SCMPMessageSequenceNr msgSequenceNr = SCMPMessage.parseMsgSequenceNr(seqNr);
 			CacheKey cacheKey = null;
 			CacheComposite cacheRoot = null;
 			// check if this message is part of cache
@@ -122,62 +153,29 @@ public class Cache {
 			if (value != null && value instanceof CacheComposite) {
 				cacheRoot = (CacheComposite) value;
 			}
-			String cacheExpirationDateTime = scmpReply
-					.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
+			String cacheExpirationDateTime = scmpReply.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
 			Date expirationDateTime = null;
 			if (cacheExpirationDateTime != null) {
-				expirationDateTime = DateTimeUtility
-						.parseDateString(cacheExpirationDateTime);
+				expirationDateTime = DateTimeUtility.parseDateString(cacheExpirationDateTime);
 			}
-			//TODO DANI gibt nimmer!
-			int partSequenceNr = 0;
-//			int partSequenceNr = msgSequenceNr.getPartSequenceNr();
-			if (partSequenceNr > 0) {
-				// this is a multi part message (large message)
-				// cache root must exist
-				if (cacheRoot == null && partSequenceNr > 1) {
-					throw new CacheException("no cache root");
-				}
-			}
-			if (partSequenceNr == 0) {
-				// this is a simple scmp message (not large)
-				if ((cacheRoot != null)) {
-					// cache root exists, remove it, included all associated
-					// scmp parts
-					this.removeRoot(cacheKey);
-				} else {
-					cacheRoot = new CacheComposite();
-				}
+			if ((cacheRoot == null)) {
+				cacheRoot = new CacheComposite();
 				// insert cache root
 				cacheRoot.setSize(0);
 				cacheRoot.setExpiration(expirationDateTime);
 				this.cacheImpl.put(cacheKey, cacheRoot);
-				// insert cache part
-				PartCacheKey cachePartKey = new PartCacheKey(cacheId, 0);
-				CacheMessage scmpCacheMessage = new CacheMessage(
-						scmpReply.getBody());
-				this.cacheImpl.put(cachePartKey, scmpCacheMessage);
-				return;
 			}
-			if (cacheRoot == null) {
-				cacheRoot = new CacheComposite();
-			    cacheRoot.setExpiration(expirationDateTime);
-			    this.cacheImpl.put(cacheKey, cacheRoot);
+			value = this.cacheImpl.get(cacheKey);
+			if (value == null) {
+				throw new CacheException("no cache root");
 			}
-			// multi part message
-			// check if part sequence nr is valid
-			int size = cacheRoot.getSize();
- 			if (partSequenceNr != size+1) {
-				throw new CacheException("invalid part sequence nr = "
-						+ partSequenceNr + ", cache root size = " + size);
-			}
-			cacheRoot.setSize(partSequenceNr);
-		    this.cacheImpl.put(cacheKey, cacheRoot);
-			PartCacheKey cachePartKey = new PartCacheKey(cacheId,
-					partSequenceNr);
-			CacheMessage scmpCacheMessage = new CacheMessage(
-					scmpReply.getBody());
-			this.cacheImpl.put(cachePartKey, scmpCacheMessage);
+			int newSize = cacheRoot.getSize() + 1;
+			cacheRoot.setSize(newSize); // increment size
+			SCMPCacheId msgCacheId = new SCMPCacheId(scmpCacheId.getCacheId(), String.valueOf(newSize));
+			CacheKey msgCacheKey = new CacheKey(msgCacheId.getFullCacheId());
+			CacheMessage scmpCacheMessage = new CacheMessage(scmpReply.getBody());
+			this.cacheImpl.put(msgCacheKey, scmpCacheMessage);
+			return msgCacheId;
 		} catch (CacheException e) {
 			throw e;
 		} catch (Exception e) {
@@ -191,7 +189,7 @@ public class Cache {
 	 * @param cacheKey
 	 *            the cache key
 	 */
-	public synchronized void removeRoot(CacheKey cacheKey) {
+	public synchronized void removeComposite(CacheKey cacheKey) {
 		// remove all parts
 		CacheComposite cacheRoot = null;
 		Object value = this.cacheImpl.get(cacheKey);
@@ -203,14 +201,16 @@ public class Cache {
 		}
 		String cacheId = cacheKey.getCacheId();
 		int size = cacheRoot.getSize();
-		PartCacheKey partCacheKey = new PartCacheKey(cacheId, 0);
-		boolean ret = this.cacheImpl.remove(partCacheKey);
+		CacheKey localCacheKey = new CacheKey(cacheId);
+		boolean ret = this.cacheImpl.remove(cacheKey);
 		if (ret == false) {
 			return;
 		}
+		SCMPCacheId scmpCacheId = new SCMPCacheId(cacheId);
 		for (int i = 1; i < size; i++) {
-			partCacheKey.setNr(i);
-			ret = this.cacheImpl.remove(partCacheKey);
+			scmpCacheId.setSequenceNr(String.valueOf(i));
+			localCacheKey.setCacheId(scmpCacheId.getFullCacheId());
+			ret = this.cacheImpl.remove(localCacheKey);
 			if (ret == false) {
 				return;
 			}
@@ -236,20 +236,117 @@ public class Cache {
 		return serviceName;
 	}
 
+	/**
+	 * Gets the cache name.
+	 *
+	 * @return the cache name
+	 */
 	public String getCacheName() {
 		return this.cacheImpl.getCacheName();
 	}
 
+	/**
+	 * Gets the element size.
+	 *
+	 * @return the element size
+	 */
 	public int getElementSize() {
 		return this.cacheImpl.getElementSize();
 	}
 
+	/**
+	 * Gets the memory store size.
+	 *
+	 * @return the memory store size
+	 */
 	public long getMemoryStoreSize() {
 		return this.cacheImpl.getMemoryStoreSize();
 	}
 
+	/**
+	 * Gets the disk store size.
+	 *
+	 * @return the disk store size
+	 */
 	public int getDiskStoreSize() {
 		return this.cacheImpl.getDiskStoreSize();
 	}
 
+	/**
+	 * Gets the iterator.
+	 *
+	 * @param string the string
+	 * @return the iterator
+	 */
+	public Iterator iterator(String cacheId) {
+		return new CacheIterator(cacheId);
+	}
+
+	/**
+	 * The Class CacheIterator.
+	 */
+	private class CacheIterator implements Iterator<CacheMessage> {
+
+		/** The scmp cache id. */
+		private SCMPCacheId scmpCacheId;
+		
+		/** The index. */
+		private int index;
+		
+		/** The cache composite. */
+		private CacheComposite cacheComposite;
+
+		/**
+		 * Instantiates a new cache iterator.
+		 *
+		 * @param cacheId the cache id
+		 */
+		public CacheIterator(String cacheId) {
+			this.index = 1;
+			this.scmpCacheId = new SCMPCacheId(cacheId);
+			try {
+				this.cacheComposite = Cache.this.getComposite(cacheId);
+			} catch (CacheException e) {
+				this.cacheComposite = null;
+			}
+		}
+
+		/* (non-Javadoc)
+		 * @see java.util.Iterator#hasNext()
+		 */
+		@Override
+		public boolean hasNext() {
+			if (scmpCacheId == null || this.cacheComposite == null) {
+				return false;
+			}
+			if (this.index > this.cacheComposite.getSize()) {
+				return false;
+			}
+			return true;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.util.Iterator#next()
+		 */
+		@Override
+		public CacheMessage next() {
+			try {
+				this.scmpCacheId.setSequenceNr(String.valueOf(this.index));
+				CacheMessage cacheMessage = Cache.this.getMessage(this.scmpCacheId);
+				this.index++;
+				return cacheMessage;
+			} catch (CacheException e) {
+			}
+			throw new IllegalStateException("invalid iterator");
+		}
+
+		/* (non-Javadoc)
+		 * @see java.util.Iterator#remove()
+		 */
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException("not supported");
+		}
+
+	}
 }

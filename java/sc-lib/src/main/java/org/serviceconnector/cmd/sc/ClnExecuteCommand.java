@@ -84,7 +84,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
-				CacheMessage scmpCacheMessage = scmpCache.getSCMP(message);
+				CacheMessage scmpCacheMessage = scmpCache.getMessage(message);
 				if (scmpCacheMessage == null) {
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
 							"cache is loading, retry it later, service name = " + message.getServiceName());
@@ -237,7 +237,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					if (scmpCache == null) {
 						CommandCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
 					} else {
-						scmpCache.putSCMP(scmpReply);
+						scmpCache.putMessage(scmpReply);
 					}
 				} catch (Exception e) {
 					CommandCallback.logger.error(e.toString());

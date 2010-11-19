@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * The Class SCMPCacheRoot.
  */
-class CacheComposite implements Serializable {
+public class CacheComposite implements Serializable {
 
 	/** The size. */
 	private int size;
