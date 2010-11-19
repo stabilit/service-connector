@@ -39,9 +39,10 @@ public class CacheMessage implements Serializable {
 	 *
 	 * @param body the body
 	 */
-	public CacheMessage(Object body) {
+	public CacheMessage(String messageSequenceNr, Object body) {
 		this.body = body;
 		this.header = new HashMap<String, String>();
+		this.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, messageSequenceNr);
 	}
 	
 	/**

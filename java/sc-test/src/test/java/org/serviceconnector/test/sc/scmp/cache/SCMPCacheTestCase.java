@@ -77,11 +77,11 @@ public class SCMPCacheTestCase {
 		byte[] buffer = stringWrite.getBytes();
 		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
 		
-		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, 1233);
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		SCMPCacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
-		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, 1233);
+		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, msgCacheId.getFullCacheId());
 		CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead);
 		byte[] bufferRead = (byte[]) cacheMessage.getBody();
@@ -101,12 +101,12 @@ public class SCMPCacheTestCase {
 		byte[] buffer = stringWrite.getBytes();
 		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
 		
-		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, 1233);
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		SCMPCacheId msgCacheId1 = scmpCache1.putMessage(scmpMessageWrite);
 		SCMPCacheId msgCacheId2 = scmpCache2.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
-		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, 1233);
+		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		CacheMessage cacheMessage1 = scmpCache1.getMessage(msgCacheId1);
 		byte[] bufferRead1 = (byte[]) cacheMessage1.getBody();
@@ -126,7 +126,7 @@ public class SCMPCacheTestCase {
 			String partWrite = stringWrite + i;		    
 		    byte[] buffer = partWrite.getBytes();
 		    SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);		
-		    scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, String.valueOf(1233+i));
+		    scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233+i));
 		    scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		    scmpCache.putMessage(scmpMessageWrite);
 		}
@@ -160,7 +160,7 @@ public class SCMPCacheTestCase {
 			String partWrite = stringWrite + i;		    
 		    byte[] buffer = partWrite.getBytes();
 		    SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);		
-		    scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, String.valueOf(1233+i));
+		    scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233+i));
 		    scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		    scmpCache.putMessage(scmpMessageWrite);
 		}

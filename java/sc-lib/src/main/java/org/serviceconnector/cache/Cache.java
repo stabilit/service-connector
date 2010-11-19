@@ -141,8 +141,8 @@ public class Cache {
 				throw new CacheException("no cache id");
 			}
 			SCMPCacheId scmpCacheId = new SCMPCacheId(cacheId);
-			String messageId = scmpReply.getMessageId();
-			if (messageId == null) {
+			String messageSequenceNr = scmpReply.getMessageSequenceNr();
+			if (messageSequenceNr == null) {
 				throw new CacheException("no message id");
 			}
 			CacheKey cacheKey = null;
@@ -173,7 +173,7 @@ public class Cache {
 			cacheRoot.setSize(newSize); // increment size
 			SCMPCacheId msgCacheId = new SCMPCacheId(scmpCacheId.getCacheId(), String.valueOf(newSize));
 			CacheKey msgCacheKey = new CacheKey(msgCacheId.getFullCacheId());
-			CacheMessage scmpCacheMessage = new CacheMessage(scmpReply.getBody());
+			CacheMessage scmpCacheMessage = new CacheMessage(messageSequenceNr, scmpReply.getBody());
 			this.cacheImpl.put(msgCacheKey, scmpCacheMessage);
 			return msgCacheId;
 		} catch (CacheException e) {
