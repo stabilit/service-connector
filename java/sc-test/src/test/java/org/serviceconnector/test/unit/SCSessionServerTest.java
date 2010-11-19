@@ -1,29 +1,25 @@
 package org.serviceconnector.test.unit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
+import org.serviceconnetor.TestConstants;
 
 
 public class SCSessionServerTest {
-
-	private static String hostname = "localhost";
-	private static int port = 9000;
-	private static int listenerPort = 9001;
-	
-	private static String serviceName = "local-session-service";
 	
 	private SCServer server;
 	
 	@Before
 	public void setUp() throws Exception {
 		server = null;
-		server = new SCServer(hostname, port, listenerPort); 
+		server = new SCServer(TestConstants.LOCALHOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER); 
 		server.setKeepAliveIntervalInSeconds(10); // can be set before register
 		server.setImmediateConnect(true); // can be set before register
 		//server.startListener();
@@ -31,7 +27,7 @@ public class SCSessionServerTest {
 
 	@After
 	public void tearDown() throws Exception {
-		//server.stopListener();
+		//server.stopListener(); 
 		server = null;
 	}
 
@@ -57,7 +53,7 @@ public class SCSessionServerTest {
 	public void temp01_newSessionServer(){
 		try {
 			server.startListener(); // regular
-			sessionServer = server.newSessionServer(serviceName);
+			SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
 			assertNotNull("No SessionServer", sessionServer);
 			server.stopListener();
 		}
@@ -73,13 +69,13 @@ public class SCSessionServerTest {
 	 */
 	@Test
 	public void t01_newSessionServer() {
-		SCSessionServer sessionServer = server.newSessionServer(serviceName);
+		SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
 		assertNotNull("No SessionServer", sessionServer);
 	}
 
 	@Test
 	public void t02_newSessionServer() {
-		sessionServer = server.newSessionServer(serviceName);
+		SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
 		assertNotNull("No SessionServer", sessionServer);
 		try {
 			sessionServer.destroy();
@@ -92,9 +88,11 @@ public class SCSessionServerTest {
 	@Test
 	public void t10_HostPort() {
 		try {
-			sessionServer = server.newSessionServer(serviceName);
-			assertEquals("SessionServer Host", "localhost", sessionServer.getHost());
-			assertEquals("SessionServer Port", 9000, sessionServer.getPort());
+			SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
+			// TODO delete function getHost on SCSessionServer.java
+			//assertEquals("SessionServer Host", TestConstants.LOCALHOST, sessionServer.getHost());
+			// TODO delete function getPort on SCSessionServer.java
+			//assertEquals("SessionServer Port", TestConstants.PORT_TCP, sessionServer.getPort());
 		}
 		catch (Exception ex){
 			assertFalse("Exception on: " + convertStackTraceToString(ex), true);
@@ -104,9 +102,9 @@ public class SCSessionServerTest {
 	@Test
 	public void t11_HostPort() {
 		try {
-			sessionServer = server.newSessionServer(serviceName);
-			assertEquals("SC Host", "localhost", sessionServer.getSCHost());
-			assertEquals("SC Port", 9000, sessionServer.getSCPort());
+			SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
+			assertEquals("SC Host", TestConstants.LOCALHOST, sessionServer.getSCHost());
+			assertEquals("SC Port", TestConstants.PORT_TCP, sessionServer.getSCPort());
 		}
 		catch (Exception ex){
 			assertFalse("Exception on: " + convertStackTraceToString(ex), true);
@@ -119,9 +117,9 @@ public class SCSessionServerTest {
 	 */
 	@Test
 	public void t20_ConnectionType() {
-		sessionServer = server.newSessionServer(serviceName);
+		SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
 		sessionServer.setConnectionType(" ");
-		assertEquals("ConnectionType not equal,", " ", server.getConnectionType());
+		assertEquals("ConnectionType not equal,", " ", sessionServer.getConnectionType());
 	}
 
 	/**
@@ -130,9 +128,9 @@ public class SCSessionServerTest {
 	 */
 	@Test
 	public void t21_ConnectionType() {
-		sessionServer = server.newSessionServer(serviceName);
+		SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
 		sessionServer.setConnectionType("a");
-		assertEquals("ConnectionType not equal,", "a", server.getConnectionType());
+		assertEquals("ConnectionType not equal,", "a", sessionServer.getConnectionType());
 	}
 
 	/**
@@ -141,9 +139,9 @@ public class SCSessionServerTest {
 	 */
 	@Test
 	public void t22_ConnectionType() {
-		sessionServer = server.newSessionServer(serviceName);
+		SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
 		sessionServer.setConnectionType("aaa");
-		assertEquals("ConnectionType not equal,", "aaa", server.getConnectionType());
+		assertEquals("ConnectionType not equal,", "aaa", sessionServer.getConnectionType());
 	}
 
 	/**
@@ -152,13 +150,13 @@ public class SCSessionServerTest {
 	 */
 	@Test
 	public void t23_ConnectionType() {
-		sessionServer = server.newSessionServer(serviceName);
+		SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Short.MAX_VALUE; i++) {
 			sb.append('a');
 		}
 		sessionServer.setConnectionType(sb.toString());
-		assertEquals("ConnectionType not equal,", sb.toString(), server.getConnectionType());
+		assertEquals("ConnectionType not equal,", sb.toString(), sessionServer.getConnectionType());
 	}
 
 	/**
@@ -167,7 +165,7 @@ public class SCSessionServerTest {
 	 */
 	@Test
 	public void t30_ImmediateConnec() {
-		sessionServer = server.newSessionServer(serviceName);
+		SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
 		sessionServer.setImmediateConnect(true);
 		assertEquals("ImmediateConnect", true, sessionServer.isImmediateConnect());
 	}
@@ -178,7 +176,7 @@ public class SCSessionServerTest {
 	 */
 	@Test
 	public void t31_ImmediateConnect() {
-		sessionServer = server.newSessionServer(serviceName);
+		SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
 		sessionServer.setImmediateConnect(false);
 		assertEquals("ImmediateConnect", false, sessionServer.isImmediateConnect());
 	}
