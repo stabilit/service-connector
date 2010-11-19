@@ -8,7 +8,6 @@ import javax.activity.InvalidActivityException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;

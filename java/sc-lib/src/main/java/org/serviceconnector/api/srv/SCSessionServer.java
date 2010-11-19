@@ -67,6 +67,11 @@ public class SCSessionServer {
 	protected String serviceName;
 	private SCServerContext scServerContext;
 
+	static {
+		// Initialize server command factory one time
+		AppContext.initContext(new ServerCommandFactory());
+	}
+
 	/**
 	 * Instantiates a new SCSessionServer.
 	 */
@@ -80,8 +85,6 @@ public class SCSessionServer {
 		this.registered = false;
 		this.localServerPort = -1;
 		this.msgId = new SCMPMessageId();
-		// Initialize server command factory
-		AppContext.initContext(new ServerCommandFactory());
 	}
 
 	/**
