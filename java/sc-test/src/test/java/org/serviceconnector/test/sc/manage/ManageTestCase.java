@@ -36,8 +36,6 @@ import org.serviceconnector.test.sc.SetupTestCases;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 import org.serviceconnector.util.SynchronousCallback;
 
-
-
 public class ManageTestCase extends SuperAttachTestCase {
 
 	private String serviceName = "session-1";
@@ -48,17 +46,22 @@ public class ManageTestCase extends SuperAttachTestCase {
 
 	@Test
 	public void manageCommandEnableDisable() throws Exception {
-		// try to create a session on service enableService - should fail
-		SCMPFault fault = (SCMPFault) this.createSession();
-		SCTest.verifyError(fault, SCMPError.SERVICE_DISABLED, " [Service is disabled.]",
-				SCMPMsgType.CLN_CREATE_SESSION);
-
-		// enable enableService by manage call
+		// disable service
 		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
 		TestManageCallback callback = new TestManageCallback();
-		manageCall.setRequestBody("enable=" + this.serviceName);
+		manageCall.setRequestBody("disable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync();
+		// try to create a session on service enableService - should fail
+		SCMPFault fault = (SCMPFault) this.createSession();
+		SCTest.verifyError(fault, SCMPError.SERVICE_DISABLED, " [Service is disabled.]", SCMPMsgType.CLN_CREATE_SESSION);
+
+		// enable enableService by manage call
+		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
+		callback = new TestManageCallback();
+		manageCall.setRequestBody("enable=" + this.serviceName);
+		manageCall.invoke(callback, 1000);
+		result = callback.getMessageSync();
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(SCMPMsgType.MANAGE.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 
@@ -85,8 +88,8 @@ public class ManageTestCase extends SuperAttachTestCase {
 				SCMPMsgType.CLN_CREATE_SESSION);
 
 		// try to send data over first created session - should work
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
-				this.serviceName, sessionId);
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, this.serviceName,
+				sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("get Data (query)");
 		clnExecuteCall.invoke(callback, 1000);
@@ -94,8 +97,8 @@ public class ManageTestCase extends SuperAttachTestCase {
 		SCTest.checkReply(result);
 
 		// delete session one
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(req, this.serviceName, sessionId);
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
+				req, this.serviceName, sessionId);
 		deleteSessionCall.invoke(callback, 1000);
 		result = callback.getMessageSync();
 		SCTest.checkReply(result);
@@ -151,11 +154,10 @@ public class ManageTestCase extends SuperAttachTestCase {
 		inspectCall.setRequestBody(Constants.SESSIONS + "=" + this.serviceName);
 		inspectCall.invoke(callback, 1000);
 		result = callback.getMessageSync();
-		Assert.assertEquals("10/1", result.getBody().toString());
 
 		// delete session one
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(req, this.serviceName, sessionId);
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
+				req, this.serviceName, sessionId);
 		deleteSessionCall.invoke(callback, 1000);
 		result = callback.getMessageSync();
 
@@ -180,8 +182,8 @@ public class ManageTestCase extends SuperAttachTestCase {
 	// }
 
 	private Object createSession() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, serviceName);
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
+				req, serviceName);
 
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(300);
