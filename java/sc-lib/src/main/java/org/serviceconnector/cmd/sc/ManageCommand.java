@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -33,7 +32,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.ServiceState;
-import org.serviceconnector.util.FileUtility;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -81,8 +79,7 @@ public class ManageCommand extends CommandAdapter {
 
 		if ((ipAddress.equals(localHost.getHostAddress())) && (bodyString.equalsIgnoreCase(Constants.KILL))) {
 			// kill request is allowed from localhost only!
-			logger.warn("Kill request received, SC exiting ...");
-			AppContext.getBasicConfiguration().deletePIDfile();
+			logger.info("SC stopped by kill console command");
 			System.exit(0);
 		}
 

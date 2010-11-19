@@ -62,7 +62,7 @@ public class ProcessesController {
 		String pidFileNameFull = getLogDirPath(log4jFileNameFull) + Constants.PID_FILE_NAME;
 		SCMgmtClient client = new SCMgmtClient(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		try {
-			client.attach();
+			client.attach(5);
 			client.killSC();
 			FileUtility.notExists(pidFileNameFull, 10);
 			testLogger.info("SC stopped");

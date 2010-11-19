@@ -70,9 +70,10 @@ public final class SC {
 		// check arguments
 		if (args == null || args.length <= 0) {
 			showError("no argumments");
-			AppContext.getBasicConfiguration().deletePIDfile();
 			System.exit(1);
 		}
+		logger.log(Level.OFF, ">>>");
+		logger.log(Level.OFF, "Service Connector " + SCVersion.CURRENT.toString() + " is starting ...");
 		String configFileName = CommandLineUtil.getArg(args, Constants.CLI_CONFIG_ARG);
 		try {
 			SC.addShutdownHook();
@@ -80,7 +81,6 @@ public final class SC {
 		} catch (Exception ex) {
 			logger.fatal(ex.getMessage(), ex);
 			showError(ex.toString());
-			AppContext.getBasicConfiguration().deletePIDfile();
 			System.exit(1);
 		}
 	}
@@ -169,8 +169,6 @@ public final class SC {
 	 *             the exception
 	 */
 	private static void writeSystemInfoToLog() throws Exception {
-		logger.log(Level.OFF, " ");
-		logger.log(Level.OFF, "Service Connector " + SCVersion.CURRENT.toString() + " starting ...");
 		logger.log(Level.OFF, "SC configuration: " + SystemInfo.getConfigFileName());
 		logger.log(Level.OFF, "Java version: " + SystemInfo.getJavaVersion());
 		logger.log(Level.OFF, "VM version: " + SystemInfo.getVmVersion());
@@ -214,7 +212,9 @@ public final class SC {
 		 */
 		@Override
 		public void run() {
-			logger.log(Level.INFO, "sc shutdown");
+			AppContext.getBasicConfiguration().deletePIDfile();
+			logger.log(Level.OFF, "Service Connector exits");
+			logger.log(Level.OFF, "<<<");
 			AppContext.getCacheManager().destroy();
 		}
 	}

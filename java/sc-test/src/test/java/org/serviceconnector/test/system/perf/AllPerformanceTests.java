@@ -36,25 +36,13 @@ public class AllPerformanceTests {
 
 	@Before
 	public void setUp() throws Exception {
-		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		} catch (Exception e1) {
-			ctrl.stopSC(scProcess,TestConstants.log4jSCProperties);
-			e1.printStackTrace();
-			return;
-		}
+		scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		/*
-		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
-				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession });
-		*/
-		
-		try {
-			client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-			client.attach();
-		} catch (Exception e) {
-			e.printStackTrace();
-			ctrl.stopSC(scProcess,TestConstants.log4jSCProperties);
-		}
+		 * srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
+		 * TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession });
+		 */
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach(5);
 	}
 
 	@After
@@ -63,8 +51,8 @@ public class AllPerformanceTests {
 			client.detach();
 		} catch (Exception e) {
 		}
-		//ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-		ctrl.stopSC(scProcess,TestConstants.log4jSCProperties);
+		// ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
+		ctrl.stopSC(scProcess, TestConstants.log4jSCProperties);
 		client = null;
 		srvProcess = null;
 		scProcess = null;
@@ -81,12 +69,10 @@ public class AllPerformanceTests {
 	 */
 	@Test
 	public void benchmark_1() throws Exception {
-
 		SCMessage message = new SCMessage(new byte[128]);
-
 		SCSessionService service = client.newSessionService(TestConstants.sessionServiceName);
 		message.setSessionInfo("sessionInfo");
-		service.createSession(60, message);
+		service.createSession(10, message);
 
 		int nr = 1;
 		long start = System.currentTimeMillis();
@@ -98,7 +84,7 @@ public class AllPerformanceTests {
 		long stop = System.currentTimeMillis();
 
 		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr+"msg à 128 byte performance : " + perf + " msg/sec.");
+		testLogger.info(nr + "msg à 128 byte performance : " + perf + " msg/sec.");
 		assertEquals(true, perf > 600);
 	}
 
@@ -145,8 +131,8 @@ public class AllPerformanceTests {
 							TestConstants.publishServiceName });
 		}
 
-		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using " + --messages
-				+ " messages of " + dataLength / messages + "B data each.");
+		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
+				+ --messages + " messages of " + dataLength / messages + "B data each.");
 		assertEquals(true, previousResult < 25000);
 	}
 
@@ -171,8 +157,8 @@ public class AllPerformanceTests {
 							TestConstants.publishServiceName });
 		}
 
-		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using " + ++messages
-				+ " messages of " + dataLength / messages + "B data each.");
+		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
+				+ ++messages + " messages of " + dataLength / messages + "B data each.");
 		assertEquals(true, previousResult < 25000);
 	}
 

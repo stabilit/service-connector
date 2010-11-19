@@ -107,7 +107,7 @@ public class SCConsole {
 
 		try {
 			SCMgmtClient client = new SCMgmtClient(host, Integer.parseInt(port), ConnectionType.NETTY_TCP);
-			client.attach();
+			client.attach(5);
 			
 			if (kill.equalsIgnoreCase(Constants.KILL)) {
 				client.killSC();

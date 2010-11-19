@@ -54,7 +54,6 @@ import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
-import org.serviceconnector.util.FileUtility;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
@@ -699,8 +698,7 @@ public class DefaultXMLLoaderFactory {
 				logger.info("run gc");
 			}
 			if ("stop".equals(action)) {
-				logger.info("SC has been stopped by user interface");
-				AppContext.getBasicConfiguration().deletePIDfile();
+				logger.info("SC stopped by user interface");
 				System.exit(1);
 			}
 		}
