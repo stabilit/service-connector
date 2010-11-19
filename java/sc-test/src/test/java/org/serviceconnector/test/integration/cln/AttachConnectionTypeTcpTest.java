@@ -199,6 +199,16 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	/**
+	 * Description: Attach client with default host and port is set to minimum.<br>
+	 * Expectation:	Client is not attached and throws SCServiceException.
+	 */
+	@Test
+	public void t051_attach() throws Exception {
+		this.testConstructor(TestConstants.HOST, TestConstants.PORT_MAX);
+		this.testAttach("SCServiceException");
+	}
+	
+	/**
 	 * Description: Attach client with default host and port is set to maximum allowed.<br>
 	 * Expectation:	Client is not attached and throws SCServiceException.
 	 */
