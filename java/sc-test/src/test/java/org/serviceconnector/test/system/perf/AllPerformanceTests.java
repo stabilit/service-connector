@@ -36,13 +36,25 @@ public class AllPerformanceTests {
 
 	@Before
 	public void setUp() throws Exception {
-		scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		try {
+			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		} catch (Exception e1) {
+			ctrl.stopSC(scProcess,TestConstants.log4jSCProperties);
+			e1.printStackTrace();
+			return;
+		}
 		/*
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
 				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession });
 		*/
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		client.attach();
+		
+		try {
+			client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+			client.attach();
+		} catch (Exception e) {
+			e.printStackTrace();
+			ctrl.stopSC(scProcess,TestConstants.log4jSCProperties);
+		}
 	}
 
 	@After
