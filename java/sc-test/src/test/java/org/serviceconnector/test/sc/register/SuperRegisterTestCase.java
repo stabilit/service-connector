@@ -24,6 +24,7 @@ import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.conf.RequesterConfiguration;
 import org.serviceconnector.conf.ResponderConfiguration;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -58,11 +59,10 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	@Before
 	public void setup() throws Exception {
 		super.setup();
-		this.registerConfig = new RequesterConfiguration();
-		this.responderConfig = new ResponderConfiguration();
-		this.registerConfig.load(registerFileName);
-		this.responderConfig.load(registerFileName);
-		this.registerContext = new RegisterServerContext(registerConfig.getFirstRequesterConfig(), this.msgId);
+		AppContext.initConfiguration(registerFileName);
+		this.registerConfig = AppContext.getRequesterConfiguration();
+		this.responderConfig = AppContext.getResponderConfiguration();
+		this.registerContext = new RegisterServerContext(responderConfig.getResponderConfigList().get(0), this.msgId);
 		this.registerRequester = new SCRequester(registerContext);
 		registerServerBefore();
 	}
