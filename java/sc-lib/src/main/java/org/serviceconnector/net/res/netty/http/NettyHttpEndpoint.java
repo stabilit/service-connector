@@ -111,7 +111,11 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 		}
 		this.answer.add(Boolean.TRUE);
 		synchronized (this) {
-			wait();
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				logger.info("NettyHttpEndpoint got stopped : " + host + ":" + port);
+			}
 		}
 	}
 

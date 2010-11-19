@@ -59,6 +59,14 @@ public final class AppContext {
 	// scmp cache
 	private static final CacheManager cacheManager = new CacheManager();
 
+	// initialize configurations in every case
+	static {
+		AppContext.basicConfiguration = new BasicConfiguration();
+		AppContext.cacheConfiguration = new CacheConfiguration();
+		AppContext.responderConfiguration = new ResponderConfiguration();
+		AppContext.requesterConfiguration = new RequesterConfiguration();
+	}
+
 	/**
 	 * Instantiates a new AppContext. Singelton.
 	 */
@@ -132,13 +140,9 @@ public final class AppContext {
 		} catch (Exception e) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.toString());
 		}
-		AppContext.basicConfiguration = new BasicConfiguration();
 		AppContext.basicConfiguration.init(AppContext.apacheCompositeConfig);
-		AppContext.cacheConfiguration = new CacheConfiguration();
 		AppContext.cacheConfiguration.init(AppContext.apacheCompositeConfig);
-		AppContext.responderConfiguration = new ResponderConfiguration();
 		AppContext.responderConfiguration.init(AppContext.apacheCompositeConfig);
-		AppContext.requesterConfiguration = new RequesterConfiguration();
 		AppContext.requesterConfiguration.init(AppContext.apacheCompositeConfig);
 	}
 

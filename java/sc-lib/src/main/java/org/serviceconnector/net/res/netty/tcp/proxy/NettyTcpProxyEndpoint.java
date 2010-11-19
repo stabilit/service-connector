@@ -158,7 +158,11 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 		}
 		this.answer.add(Boolean.TRUE);
 		synchronized (this) {
-			wait();
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				logger.info("NettyTcpProxyEndpoint got stopped : " + host + ":" + port);
+			}
 		}
 	}
 
