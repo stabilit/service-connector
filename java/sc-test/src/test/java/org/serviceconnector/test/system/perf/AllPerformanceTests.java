@@ -26,9 +26,7 @@ public class AllPerformanceTests {
 
 	private Process scProcess;
 	private Process srvProcess;
-
 	private SCClient client;
-
 	private static ProcessesController ctrl;
 
 	@BeforeClass
@@ -39,8 +37,10 @@ public class AllPerformanceTests {
 	@Before
 	public void setUp() throws Exception {
 		scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		/*
 		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
 				TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession });
+		*/
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
@@ -51,8 +51,8 @@ public class AllPerformanceTests {
 			client.detach();
 		} catch (Exception e) {
 		}
-		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
+		//ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
+		ctrl.stopSC(scProcess,TestConstants.log4jSCProperties);
 		client = null;
 		srvProcess = null;
 		scProcess = null;
@@ -64,28 +64,29 @@ public class AllPerformanceTests {
 	}
 
 	/**
-	 * Description: Send 1000 message 128 bytes each to the server. Receive echoed messages. Measure performance Expectation:
-	 * Performance better than 600 msg/sec.
+	 * Description: Send 1000 message à 128 bytes to the server. Receive echoed messages. Measure performance <br>
+	 * Expectation: Performance better than 600 msg/sec.
 	 */
 	@Test
 	public void benchmark_1() throws Exception {
 
 		SCMessage message = new SCMessage(new byte[128]);
 
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
+		SCSessionService service = client.newSessionService(TestConstants.sessionServiceName);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(60, message);
+		service.createSession(60, message);
 
+		int nr = 1;
 		long start = System.currentTimeMillis();
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < nr; i++) {
 			if ((i % 1000) == 0)
 				testLogger.info("Executing message nr. " + i + "...");
-			sessionService.execute(message);
+			service.execute(message);
 		}
 		long stop = System.currentTimeMillis();
 
-		long perf = 10000 * 1000 / (stop - start);
-		testLogger.info("10000 msg à 128 byte performance : " + perf + " msg/sec.");
+		long perf = nr * 1000 / (stop - start);
+		testLogger.info(nr+"msg à 128 byte performance : " + perf + " msg/sec.");
 		assertEquals(true, perf > 600);
 	}
 
@@ -95,7 +96,7 @@ public class AllPerformanceTests {
 
 		SCMessage message = new SCMessage(new byte[128]);
 
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
 		message.setSessionInfo("sessionInfo");
 		sessionService.createSession(60, message);
 
@@ -128,8 +129,8 @@ public class AllPerformanceTests {
 
 			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
-							TestConstants.serviceNamePublish });
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.sessionServiceName,
+							TestConstants.publishServiceName });
 		}
 
 		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using " + --messages
@@ -154,8 +155,8 @@ public class AllPerformanceTests {
 
 			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
-							TestConstants.serviceNamePublish });
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.sessionServiceName,
+							TestConstants.publishServiceName });
 		}
 
 		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using " + ++messages
@@ -213,8 +214,8 @@ public class AllPerformanceTests {
 
 			scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			srvProcess = ctrl.restartServer(srvProcess, TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
-							TestConstants.serviceNamePublish });
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.sessionServiceName,
+							TestConstants.publishServiceName });
 		}
 
 		testLogger.info("Best performance to execute roughly 100000 messages was " + previousResult + "ms using " + --clientsCount

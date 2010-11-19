@@ -78,6 +78,7 @@ public class SCSessionService extends SCService {
 		this.scServiceContext = new SCServiceContext(this);
 		this.timerRun = null;
 		this.echoTimeoutInSeconds = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
+		this.echoIntervalInSeconds = Constants.DEFAULT_ECHO_INTERVAL_SECONDS;
 	}
 
 	/**

@@ -37,7 +37,6 @@ import org.serviceconnector.server.ServerLoader;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
-import org.serviceconnector.util.PIDFile;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.cmd.sc.ServiceConnectorWebCommandFactory;
@@ -71,7 +70,7 @@ public final class SC {
 		// check arguments
 		if (args == null || args.length <= 0) {
 			showError("no argumments");
-			PIDFile.delete();
+			AppContext.getBasicConfiguration().deletePIDfile();
 			System.exit(1);
 		}
 		String configFileName = CommandLineUtil.getArg(args, Constants.CLI_CONFIG_ARG);
@@ -81,7 +80,7 @@ public final class SC {
 		} catch (Exception ex) {
 			logger.fatal(ex.getMessage(), ex);
 			showError(ex.toString());
-			PIDFile.delete();
+			AppContext.getBasicConfiguration().deletePIDfile();
 			System.exit(1);
 		}
 	}
@@ -134,7 +133,7 @@ public final class SC {
 			responder.startListenAsync();
 		}
 		if (AppContext.getBasicConfiguration().isWritePID()) {
-			PIDFile.create();
+			AppContext.getBasicConfiguration().createPIDfile();
 		}
 		logger.log(Level.OFF, "Service Connector is running ...");
 	}

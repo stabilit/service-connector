@@ -13,10 +13,10 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnetor.TestConstants;
 
-public class StartSessionServer {
+public class TestSessionServer {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(StartSessionServer.class);
+	protected final static Logger logger = Logger.getLogger(TestSessionServer.class);
 
 	private SCSessionServer scSrv = null;
 	private String startFile = null;
@@ -27,7 +27,7 @@ public class StartSessionServer {
 	private ThreadSafeCounter ctr;
 
 	public static void main(String[] args) throws Exception {
-		StartSessionServer sessionServer = new StartSessionServer();
+		TestSessionServer sessionServer = new TestSessionServer();
 		sessionServer.runSessionServer(args);
 	}
 

@@ -40,7 +40,7 @@ public class AttachConnectionTypeHttpTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
+		ctrl.stopSC(scProcess, TestConstants.log4jSCProperties);
 		ctrl = null;
 		scProcess = null;
 	}

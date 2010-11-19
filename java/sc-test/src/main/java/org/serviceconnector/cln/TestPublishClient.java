@@ -11,23 +11,23 @@ import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnetor.TestConstants;
 
-public class StartPublishClient extends Thread {
+public class TestPublishClient extends Thread {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(StartPublishClient.class);
+	protected final static Logger logger = Logger.getLogger(TestPublishClient.class);
 
 	private String methodName;
 
 	public static void main(String[] args) {
 		try {
-			StartPublishClient client = new StartPublishClient(args[0]);
+			TestPublishClient client = new TestPublishClient(args[0]);
 			client.start();
 		} catch (Exception e) {
 			logger.error("incorrect parameters", e);
 		}
 	}
 
-	public StartPublishClient(String methodName) {
+	public TestPublishClient(String methodName) {
 		this.methodName = methodName;
 	}
 
@@ -43,31 +43,31 @@ public class StartPublishClient extends Thread {
 			subscibeMessage.setSessionInfo("sessionInfo");
 
 			if (getMethodName() == "subscribe_serviceNameValidMaskSameAsInServer_isSubscribedSessionIdExists") {
-				SCPublishService service = sc.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = sc.newPublishService(TestConstants.publishServiceName);
 				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 				service.unsubscribe();
 
 			} else if (getMethodName() == "subscribe_timeoutMaxAllowed_isSubscribedSessionIdExists") {
-				SCPublishService service = sc.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = sc.newPublishService(TestConstants.publishServiceName);
 				service.subscribe(3600, subscibeMessage, new DemoPublishClientCallback(service));
 				service.unsubscribe();
 
 			} else if (getMethodName() == "changeSubscription_toMaskWhiteSpace_passes") {
-				SCPublishService service = sc.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = sc.newPublishService(TestConstants.publishServiceName);
 				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 				subscibeMessage.setMask(" ");
 				service.changeSubscription(subscibeMessage);
 				service.unsubscribe();
 
 			} else if (getMethodName() == "subscribeUnsubscribe_twice_isSubscribedThenNot") {
-				SCPublishService service = sc.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = sc.newPublishService(TestConstants.publishServiceName);
 				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 				service.unsubscribe();
 				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 				service.unsubscribe();
 
 			} else if (getMethodName() == "changeSubscription_twice_passes") {
-				SCPublishService service = sc.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = sc.newPublishService(TestConstants.publishServiceName);
 				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 
 				service.changeSubscription(subscibeMessage);
@@ -76,11 +76,11 @@ public class StartPublishClient extends Thread {
 				service.unsubscribe();
 
 			} else if (getMethodName() == "unsubscribe_serviceNameValid_notSubscribedEmptySessionId") {
-				SCPublishService service = sc.newPublishService(TestConstants.serviceNamePublish);
+				SCPublishService service = sc.newPublishService(TestConstants.publishServiceName);
 				service.unsubscribe();
 
 			} else if (getMethodName() == "createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes") {
-				SCSessionService sessionService = sc.newSessionService(TestConstants.serviceNameSession);
+				SCSessionService sessionService = sc.newSessionService(TestConstants.sessionServiceName);
 
 				try {
 					SCMessage scMessage = new SCMessage("reject");
@@ -96,7 +96,7 @@ public class StartPublishClient extends Thread {
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "execute_messageData1MBArray_returnsTheSameMessageData") {
-				SCSessionService sessionService = sc.newSessionService(TestConstants.serviceNameSession);
+				SCSessionService sessionService = sc.newSessionService(TestConstants.sessionServiceName);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
 				sessionService.createSession(10, scMessage);

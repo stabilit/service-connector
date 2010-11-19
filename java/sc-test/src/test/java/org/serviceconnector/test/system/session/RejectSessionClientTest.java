@@ -35,8 +35,8 @@ public class RejectSessionClientTest {
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession,
-							TestConstants.serviceNamePublish });
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.sessionServiceName,
+							TestConstants.publishServiceName });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
@@ -46,12 +46,12 @@ public class RejectSessionClientTest {
 	public void setUp() throws Exception {
 		client = new SCMgmtClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.serviceNameSession));
+		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.sessionServiceName));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.serviceNameSession));
+		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.sessionServiceName));
 		client.detach();
 		client = null;
 		ex = null;
@@ -69,7 +69,7 @@ public class RejectSessionClientTest {
 	@Test
 	public void createSession_rejectTheSession_sessionIdIsNotSetThrowsExceptionWithAppErrorCodeAndText()
 			throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
 
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 
@@ -91,7 +91,7 @@ public class RejectSessionClientTest {
 
 	@Test
 	public void createSession_rejectTheSessionAndTryToDeleteSession_sessionIdIsNotSetPasses() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
 
 		try {
 			SCMessage scMessage = new SCMessage("reject");
@@ -107,7 +107,7 @@ public class RejectSessionClientTest {
 	@Test(expected = SCServiceException.class)
 	public void createSession_rejectTheSessionAndTryToExecuteAMessage_sessionIdIsNotSetExecuteThrowsException()
 			throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
 
 		try {
 			SCMessage scMessage = new SCMessage("reject");
@@ -122,7 +122,7 @@ public class RejectSessionClientTest {
 
 	@Test
 	public void createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
 
 		try {
 			SCMessage scMessage = new SCMessage("reject");
@@ -147,7 +147,7 @@ public class RejectSessionClientTest {
 		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
 
 		try {
 			// message "reject" translates on the server to reject the session
@@ -168,7 +168,7 @@ public class RejectSessionClientTest {
 		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
 
 		try {
 			SCMessage scMessage = new SCMessage("reject");
@@ -185,7 +185,7 @@ public class RejectSessionClientTest {
 		client.detach();
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
 
 		try {
 			SCMessage scMessage = new SCMessage("reject");
@@ -204,7 +204,7 @@ public class RejectSessionClientTest {
 		((SCClient) client).setConnectionType("netty.tcp");
 		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
 
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceNameSession);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
 
 		try {
 			SCMessage scMessage = new SCMessage("reject");

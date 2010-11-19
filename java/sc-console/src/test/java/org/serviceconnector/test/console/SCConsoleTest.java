@@ -361,7 +361,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 7000 state=something" parameters<br>
-	 * (HTTP port)<br> 
+	 * (HTTP port)<br>
 	 * Expectation: throws exception with exitCode = 5 "Communication error" <br>
 	 * Pre-condition: SC must be running!
 	 */
@@ -377,7 +377,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 81 state=something" parameters<br>
-	 * (management port)<br> 
+	 * (management port)<br>
 	 * Expectation: throws exception with exitCode = 5 "Communication error" <br>
 	 * Pre-condition: SC must be running!
 	 */
@@ -392,16 +392,15 @@ public class SCConsoleTest {
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 state=something" parameters<br>
-	 * (unknown service name)<br> 
+	 * Description: start console with "-h localhost -p 9000 state=gaga" parameters<br>
+	 * (unknown service name)<br>
 	 * Expectation: throws exception with exitCode = 4 "Unknown service" <br>
 	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t25_state() throws Exception {
 		try {
-			SCConsole
-					.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, Constants.STATE + "=something" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, Constants.STATE + "=gaga" });
 		} catch (ExitException e) {
 			assertEquals(4, e.status);
 		}
@@ -481,7 +480,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 sessions=notExistingService<br>
-	 * (unknown service name)<br> 
+	 * (unknown service name)<br>
 	 * Expectation: throws exception with exitCode = 4 "Unknown service"<br>
 	 * Pre-condition: SC must be running!
 	 */
@@ -497,7 +496,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 gaga=notExistingService<br>
-	 * (unknown command)<br> 
+	 * (unknown command)<br>
 	 * Expectation: throws exception with exitCode = 3 "invalid command"<br>
 	 * Pre-condition: SC must be running!
 	 */
@@ -512,7 +511,7 @@ public class SCConsoleTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 gaga=session-1<br>
-	 * (unknown command)<br> 
+	 * (unknown command)<br>
 	 * Expectation: throws exception with exitCode = 3 "invalid command" <br>
 	 * Pre-condition: SC must be running!
 	 */

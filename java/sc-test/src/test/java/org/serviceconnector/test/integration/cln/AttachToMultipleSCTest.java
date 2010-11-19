@@ -41,8 +41,8 @@ public class AttachToMultipleSCTest {
 
 	@AfterClass
 	public static void oneTimeTearDown() throws Exception {
-		ctrl.stopProcess(scProcess0, TestConstants.log4jSCProperties);
-		ctrl.stopProcess(scProcess1, TestConstants.log4jSCcascadedProperties);
+		ctrl.stopSC(scProcess0, TestConstants.log4jSCProperties);
+		ctrl.stopSC(scProcess1, TestConstants.log4jSCcascadedProperties);
 		ctrl = null;
 		scProcess0 = null;
 		scProcess1 = null;

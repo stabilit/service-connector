@@ -15,7 +15,15 @@
  */
 package org.serviceconnector.conf;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Enumeration;
+
 import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.log4j.Appender;
+import org.apache.log4j.Category;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 
@@ -28,7 +36,8 @@ public class BasicConfiguration {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(BasicConfiguration.class);
 	/** The write pid. */
-	private boolean writePID = true;
+	private boolean writePID = false;
+	
 	/**
 	 * Multiplier to calculate the operation timeout.<br>
 	 * SC must adapt (shorten) the timeout passed from client to get the right timeout.
@@ -189,5 +198,66 @@ public class BasicConfiguration {
 			logger.info(e.toString());
 		}
 		logger.info("basic configuration: srvAbortTimeout is " + this.srvAbortTimeout);
+	}
+	
+	/**
+	 * Create file containing the PID of the SC process. Is used for testing purpose to verify that SC is running properly.
+	 */
+	public void createPIDfile() throws Exception {
+		String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+		long pid = Long.parseLong(processName.split("@")[0]);
+		FileWriter fw = null;
+		try {
+			String path = getPath();
+			String pidFileName = path + Constants.PID_FILE_NAME;
+			File pidFile = new File(pidFileName);
+			fw = new FileWriter(pidFile);
+			fw.write("pid: " + pid);
+			fw.flush();
+			logger.info("Create PID-file: " + pidFileName+" PID:"+pid);
+		} finally {
+			if (fw != null) {
+				fw.close();
+			}
+		}
+	}
+
+	/**
+	 * Delete file containing the PID of the SC process. Is used for testing purpose to verify that SC is running properly.
+	 */
+	public void deletePIDfile() {
+		try {
+			String path = getPath();
+			String pidFileName = path + Constants.PID_FILE_NAME;
+			File pidFile = new File(pidFileName);
+			if (pidFile.exists()) {
+				pidFile.delete();
+				logger.info("Delete PID-file: " + pidFileName);
+			}
+		} catch (Exception e) {
+			// ignore any error
+		}
+	}
+	
+	/**
+	 * Checks if the file containing the PID exists. Is used for testing purpose to verify that SC is running properly.
+	 */
+	private String getPath() {
+		String fs = System.getProperty("file.separator");
+		String userDir = System.getProperty("user.dir");
+
+		Category rootLogger = logger.getParent();
+		Enumeration<?> appenders = rootLogger.getAllAppenders();
+		FileAppender fileAppender = null;
+		while (appenders.hasMoreElements()) {
+			Appender appender = (Appender) appenders.nextElement();
+			if (appender instanceof FileAppender) {
+				fileAppender = (FileAppender) appender;
+				break;
+			}
+		}
+		String fileName = fileAppender.getFile();
+		String path = userDir + fs + fileName.substring(0, fileName.lastIndexOf("/"));
+		return path;
 	}
 }

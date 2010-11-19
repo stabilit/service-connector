@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
-import org.serviceconnector.cln.StartPublishClient;
+import org.serviceconnector.cln.TestPublishClient;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnetor.TestConstants;
 
@@ -49,14 +49,14 @@ public class SubscriptionServerTest {
 		server = new SCPublishServer();
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		srvCallback = new SrvCallback();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNamePublish, 10, 10,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.publishServiceName, 10, 10,
 				srvCallback);
 
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		server.deregisterServer(TestConstants.serviceNamePublish);
+		server.deregisterServer(TestConstants.publishServiceName);
 		server.destroy();
 		server = null;
 		srvCallback = null;
@@ -64,7 +64,7 @@ public class SubscriptionServerTest {
 
 	@Test
 	public void subscribe_serviceNameValidMaskSameAsInServer_2MessagesArrive() throws Exception {
-		StartPublishClient client = new StartPublishClient(
+		TestPublishClient client = new TestPublishClient(
 				"subscribe_serviceNameValidMaskSameAsInServer_isSubscribedSessionIdExists");
 		client.start();
 		client.join();
@@ -93,7 +93,7 @@ public class SubscriptionServerTest {
 
 	@Test
 	public void subscribe_withTimeOutSet_2MessagesArrive() throws Exception {
-		StartPublishClient client = new StartPublishClient("subscribe_timeoutMaxAllowed_isSubscribedSessionIdExists");
+		TestPublishClient client = new TestPublishClient("subscribe_timeoutMaxAllowed_isSubscribedSessionIdExists");
 		client.start();
 		client.join();
 
@@ -122,7 +122,7 @@ public class SubscriptionServerTest {
 
 	@Test
 	public void changeSubscription_toMaskWhiteSpace_3MessagesArrive() throws Exception {
-		StartPublishClient client = new StartPublishClient("changeSubscription_toMaskWhiteSpace_passes");
+		TestPublishClient client = new TestPublishClient("changeSubscription_toMaskWhiteSpace_passes");
 		client.start();
 		client.join();
 
@@ -177,7 +177,7 @@ public class SubscriptionServerTest {
 
 	@Test
 	public void unsubscribe_serviceNameValid_0MesagesArrives() throws Exception {
-		StartPublishClient client = new StartPublishClient("unsubscribe_serviceNameValid_notSubscribedEmptySessionId");
+		TestPublishClient client = new TestPublishClient("unsubscribe_serviceNameValid_notSubscribedEmptySessionId");
 		client.start();
 		client.join();
 		assertEquals(0, srvCallback.messagesExchanged);

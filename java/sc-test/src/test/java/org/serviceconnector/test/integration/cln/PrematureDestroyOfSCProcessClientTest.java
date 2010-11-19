@@ -40,7 +40,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@After
 	public void tearDown() throws Exception {
-		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
+		ctrl.stopSC(scProcess, TestConstants.log4jSCProperties);
 		client = null;
 		scProcess = null;
 	}
@@ -82,7 +82,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
 		scProcess.waitFor();
-		client.enableService(TestConstants.serviceNameSession);
+		client.enableService(TestConstants.sessionServiceName);
 	}
 
 	@Test(expected = SCServiceException.class)
@@ -90,7 +90,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
 		scProcess.waitFor();
-		client.enableService(TestConstants.serviceNameSession);
+		client.enableService(TestConstants.sessionServiceName);
 	}
 
 	@Test(expected = SCServiceException.class)
@@ -98,7 +98,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		scProcess.destroy();
 		scProcess.waitFor();
-		client.getWorkload(TestConstants.serviceNameSession);
+		client.getWorkload(TestConstants.sessionServiceName);
 	}
 
 	@Test

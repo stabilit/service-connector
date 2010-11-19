@@ -47,8 +47,8 @@ public class PrematureDestroyOfSCProcessServerTest {
 	@After
 	public void tearDown() throws Exception {
 		try {
-			server.deregisterServer(TestConstants.serviceNamePublish);
-			server.deregisterServer(TestConstants.serviceNameSession);
+			server.deregisterServer(TestConstants.publishServiceName);
+			server.deregisterServer(TestConstants.sessionServiceName);
 		} catch (Exception e) {
 			// might happen nothing to do
 		}
@@ -66,71 +66,71 @@ public class PrematureDestroyOfSCProcessServerTest {
 	@Test(expected = SCServiceException.class)
 	public void registerServer_afterSCDestroyValidValues_throwsException() throws Exception {
 		scProcess.destroy();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceName, 10, 10,
 				new CallBack());
 	}
 
 	@Test(expected = SCMPValidatorException.class)
 	public void registerServer_afterSCDestroyInvalidMaxSessions_throwsException() throws Exception {
 		scProcess.destroy();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, -1, 10,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceName, -1, 10,
 				new CallBack());
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void registerServer_afterSCDestroyInvalidHost_throwsException() throws Exception {
 		scProcess.destroy();
-		server.registerServer("something", TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10, new CallBack());
+		server.registerServer("something", TestConstants.PORT_TCP, TestConstants.sessionServiceName, 10, 10, new CallBack());
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void registerServer_withImmediateConnectFalseAfterSCDestroyInvalidHost_throwsException() throws Exception {
 		server.setImmediateConnect(false);
 		scProcess.destroy();
-		server.registerServer("something", TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10, new CallBack());
+		server.registerServer("something", TestConstants.PORT_TCP, TestConstants.sessionServiceName, 10, 10, new CallBack());
 	}
 
 	@Test
 	public void deregisterServer_afterSCDestroyWithoutPreviousRegister_passes() throws Exception {
 		scProcess.destroy();
-		server.deregisterServer(TestConstants.serviceNameSession);
+		server.deregisterServer(TestConstants.sessionServiceName);
 	}
 
 	@Test
 	public void deregisterServer_afterRegisterAndSCDestroy_notRegistered() throws Exception {
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceName, 10, 10,
 				new CallBack());
 		scProcess.destroy();
 		scProcess.waitFor();
 		try {
-			server.deregisterServer(TestConstants.serviceNameSession);
+			server.deregisterServer(TestConstants.sessionServiceName);
 		} catch (SCServiceException ex) {
 		}
-		assertEquals(false, server.isRegistered(TestConstants.serviceNameSession));
+		assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void registerServer_afterRegisterAfterSCDestroy_throwsException() throws Exception {
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceName, 10, 10,
 				new CallBack());
 		scProcess.destroy();
 		scProcess.waitFor();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNamePublish, 10, 10,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.publishServiceName, 10, 10,
 				new CallBack());
 	}
 
 	@Test
 	public void isRegistered_afterRegisterAfterSCDestroy_thinksThatItIsRegistered() throws Exception {
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceName, 10, 10,
 				new CallBack());
 		scProcess.destroy();
 		scProcess.waitFor();
-		assertEquals(true, server.isRegistered(TestConstants.serviceNameSession));
+		assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 	}
 
 	@Test
 	public void setImmediateConnect_afterRegisterAfterSCDestroy_passes() throws Exception {
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceName, 10, 10,
 				new CallBack());
 		scProcess.destroy();
 		scProcess.waitFor();

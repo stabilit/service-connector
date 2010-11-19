@@ -32,10 +32,10 @@ import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnetor.TestConstants;
 
-public class StartPublishServer {
+public class TestPublishServer {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(StartPublishServer.class);
+	protected final static Logger logger = Logger.getLogger(TestPublishServer.class);
 
 	private SCPublishServer publishSrv = null;
 	private String startFile = null;
@@ -46,7 +46,7 @@ public class StartPublishServer {
 	private static boolean killPublishServer = false;
 
 	public static void main(String[] args) throws Exception {
-		StartPublishServer publishServer = new StartPublishServer();
+		TestPublishServer publishServer = new TestPublishServer();
 		publishServer.runPublishServer(args);
 	}
 
@@ -118,7 +118,7 @@ public class StartPublishServer {
 		@Override
 		public void run() {
 			int index = 0;
-			while (!StartPublishServer.killPublishServer) {
+			while (!TestPublishServer.killPublishServer) {
 				try {
 					if (index % 3 == 0) {
 						Thread.sleep(1000);
@@ -140,7 +140,7 @@ public class StartPublishServer {
 	}
 
 	private void shutdown() {
-		StartPublishServer.killPublishServer = true;
+		TestPublishServer.killPublishServer = true;
 		try {
 			for (int i = 0; i < serviceNames.length; i++) {
 				this.publishSrv.deregisterServer(serviceNames[i]);

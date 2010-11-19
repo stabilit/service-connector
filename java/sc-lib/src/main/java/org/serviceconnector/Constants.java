@@ -38,6 +38,9 @@ public final class Constants {
 	/** Default value used if no ECHO_TIMEOUT_MULTIPLIER is configured */
 	public static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
 
+	/** Default value used if no interval is passed in the API */
+	public static final int DEFAULT_ECHO_INTERVAL_SECONDS = 60;
+	
 	/** Default value if no OPERATION_TIMEOUT_MULTIPLIER is configured. */
 	public static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
 

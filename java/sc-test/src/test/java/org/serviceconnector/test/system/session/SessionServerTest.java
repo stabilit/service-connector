@@ -12,7 +12,7 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
-import org.serviceconnector.cln.StartSessionClient;
+import org.serviceconnector.cln.TestSessionClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnetor.TestConstants;
@@ -51,14 +51,14 @@ public class SessionServerTest {
 		server = new SCSessionServer();
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		srvCallback = new SrvCallback();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.serviceNameSession, 10, 10,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceName, 10, 10,
 				srvCallback);
 
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		server.deregisterServer(TestConstants.serviceNameSession);
+		server.deregisterServer(TestConstants.sessionServiceName);
 		server.destroy();
 		server = null;
 		srvCallback = null;
@@ -66,7 +66,7 @@ public class SessionServerTest {
 
 	@Test
 	public void createSession_whiteSpaceSessionInfo_createSessionMessageArrived() throws Exception {
-		StartSessionClient client = new StartSessionClient("createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty");
+		TestSessionClient client = new TestSessionClient("createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty");
 		client.start();
 		client.join();
 
@@ -81,7 +81,7 @@ public class SessionServerTest {
 
 	@Test
 	public void createSession_arbitrarySpaceSessionInfo_createSessionMessageArrived() throws Exception {
-		StartSessionClient client = new StartSessionClient("createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty");
+		TestSessionClient client = new TestSessionClient("createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty");
 		client.start();
 		client.join();
 
@@ -97,7 +97,7 @@ public class SessionServerTest {
 
 	@Test
 	public void createSession_arbitrarySpaceSessionInfoDataOneChar_createSessionMessageArrived() throws Exception {
-		StartSessionClient client = new StartSessionClient(
+		TestSessionClient client = new TestSessionClient(
 				"createSession_arbitrarySpaceSessionInfoDataOneChar_sessionIdIsNotEmpty");
 		client.start();
 		client.join();
@@ -114,7 +114,7 @@ public class SessionServerTest {
 
 	@Test
 	public void createSession_256LongSessionInfoData60kBByteArray_createSessionMessageArrived() throws Exception {
-		StartSessionClient client = new StartSessionClient(
+		TestSessionClient client = new TestSessionClient(
 				"createSession_256LongSessionInfoData60kBByteArray_sessionIdIsNotEmpty");
 		client.start();
 		client.join();
@@ -132,7 +132,7 @@ public class SessionServerTest {
 
 	@Test
 	public void deleteSession_beforeCreateSession_noDeleteSessionArrives() throws Exception {
-		StartSessionClient client = new StartSessionClient("deleteSession_beforeCreateSession_noSessionId");
+		TestSessionClient client = new TestSessionClient("deleteSession_beforeCreateSession_noSessionId");
 		client.start();
 		client.join();
 
@@ -142,7 +142,7 @@ public class SessionServerTest {
 
 	@Test
 	public void deleteSession_afterValidNewSessionService_deleteSessionMessageArrives() throws Exception {
-		StartSessionClient client = new StartSessionClient("deleteSession_afterValidNewSessionService_noSessionId");
+		TestSessionClient client = new TestSessionClient("deleteSession_afterValidNewSessionService_noSessionId");
 		client.start();
 		client.join();
 
@@ -159,7 +159,7 @@ public class SessionServerTest {
 	@Test
 	public void createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_4messagesArrive()
 			throws Exception {
-		StartSessionClient client = new StartSessionClient(
+		TestSessionClient client = new TestSessionClient(
 				"createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes");
 		client.start();
 		client.join();
@@ -189,7 +189,7 @@ public class SessionServerTest {
 
 	@Test
 	public void execute_messageData1MBArray_3messagesArrive() throws Exception {
-		StartSessionClient client = new StartSessionClient("execute_messageData1MBArray_returnsTheSameMessageData");
+		TestSessionClient client = new TestSessionClient("execute_messageData1MBArray_returnsTheSameMessageData");
 		client.start();
 		client.join();
 
@@ -204,7 +204,7 @@ public class SessionServerTest {
 
 	@Test
 	public void createSessionExecuteDeleteSession_twice_6MessagesArrive() throws Exception {
-		StartSessionClient client = new StartSessionClient("createSessionExecuteDeleteSession_twice_6MessagesArrive");
+		TestSessionClient client = new TestSessionClient("createSessionExecuteDeleteSession_twice_6MessagesArrive");
 		client.start();
 		client.join();
 
