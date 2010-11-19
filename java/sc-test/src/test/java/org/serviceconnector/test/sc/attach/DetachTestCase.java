@@ -52,6 +52,7 @@ public class DetachTestCase extends SuperAttachTestCase {
 
 		/*********************************** Verify detach response msg **********************************/
 		Assert.assertNull(result.getBody());
+		Assert.assertNull(result.getMessageSequenceNr());
 		Assert.assertEquals(SCMPMsgType.DETACH.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		super.clnAttachBefore();
 	}

@@ -68,10 +68,6 @@ public class SCRequester implements IRequester {
 		ConnectionContext connectionContext = connection.getContext();
 
 		SCMPMessageSequenceNr msgSequenceNr = this.reqContext.getSCMPMsgSequenceNr();
-		// handling msgSequenceNr
-		if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
-			msgSequenceNr.incrementMsgSequenceNr();
-		}
 		try {
 			ISCMPCallback requesterCallback = null;
 			// differ if message is large or not, sending procedure is different
@@ -88,7 +84,11 @@ public class SCRequester implements IRequester {
 				timer.schedule(task, (long) timeoutInMillis);
 				// extract first part message & send
 				SCMPMessage part = largeResponse.getFirst();
-				part.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
+				// handling msgSequenceNr
+				if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
+					msgSequenceNr.incrementMsgSequenceNr();
+					part.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
+				}
 				// send
 				connection.send(part, requesterCallback);
 			} else {
@@ -99,7 +99,11 @@ public class SCRequester implements IRequester {
 				reqCallback.setOperationTimeoutTask(task);
 				reqCallback.setTimeoutMillis(timeoutInMillis);
 				timer.schedule(task, (long) timeoutInMillis);
-				message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
+				// handling msgSequenceNr
+				if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
+					msgSequenceNr.incrementMsgSequenceNr();
+					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
+				}
 				// process send
 				connection.send(message, requesterCallback);
 			}

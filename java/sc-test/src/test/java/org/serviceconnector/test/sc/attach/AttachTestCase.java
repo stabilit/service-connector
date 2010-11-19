@@ -54,6 +54,7 @@ public class AttachTestCase extends SuperTestCase {
 		SCTest.checkReply(result);
 		/*********************************** Verify attach response msg **********************************/
 		Assert.assertNull(result.getBody());
+		Assert.assertNull(result.getMessageSequenceNr());
 		Assert.assertEquals(SCMPMsgType.ATTACH.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		Assert.assertNotNull(ValidatorUtility.validateLocalDateTime(result
 				.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME)));
