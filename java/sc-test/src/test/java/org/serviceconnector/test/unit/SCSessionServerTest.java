@@ -22,12 +22,12 @@ public class SCSessionServerTest {
 		server = new SCServer(TestConstants.LOCALHOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER); 
 		server.setKeepAliveIntervalInSeconds(10); // can be set before register
 		server.setImmediateConnect(true); // can be set before register
-		//server.startListener();
+		server.startListener();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		//server.stopListener(); 
+		server.stopListener(); 
 		server = null;
 	}
 
@@ -44,24 +44,6 @@ public class SCSessionServerTest {
 		return result;
 	}	
 	
-	
-	/**
-	 * Description:	Invoke setConnectionType with empty string<br>
-	 * Expectation:	connectionType was set to empty string
-	 */
-	@Test
-	public void temp01_newSessionServer(){
-		try {
-			server.startListener(); // regular
-			SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
-			assertNotNull("No SessionServer", sessionServer);
-			server.stopListener();
-		}
-		catch (Exception ex){
-			assertFalse("Exception on: " + convertStackTraceToString(ex), true);
-		}
-			
-	}
 
 	/**
 	 * Description:	Invoke setConnectionType with empty string<br>
@@ -73,6 +55,10 @@ public class SCSessionServerTest {
 		assertNotNull("No SessionServer", sessionServer);
 	}
 
+	/**
+	 * Description:	Invoke sessionServer.destroy()<br>
+	 * Expectation:	The SessionServer is destroyed.
+	 */
 	@Test
 	public void t02_newSessionServer() {
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
