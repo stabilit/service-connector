@@ -64,33 +64,95 @@ public class ResponderConfiguration {
 			CommunicatorConfig commConfig = new CommunicatorConfig(responderName);
 
 			// get interfaces for responder
-			commConfig.setInterfaces(apacheCompositeConfig.getList(responderName + Constants.PROPERTY_QUALIFIER_INTERFACES));
-
+			try {
+				commConfig.setInterfaces(apacheCompositeConfig.getList(responderName + Constants.PROPERTY_QUALIFIER_INTERFACES));
+			} catch (Exception e) {
+				logger.info(e.toString());
+			}
 			// get port & connection type
-			commConfig.setPort(apacheCompositeConfig.getInt(responderName + Constants.PROPERTY_QUALIFIER_PORT));
-			commConfig.setConnectionType((String) apacheCompositeConfig.getString(responderName
-					+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
+			try {
+				commConfig.setPort(apacheCompositeConfig.getInt(responderName + Constants.PROPERTY_QUALIFIER_PORT));
+			} catch (Exception e) {
+				logger.info(e.toString());
+			}
+			try {
+				commConfig.setConnectionType((String) apacheCompositeConfig.getString(responderName
+						+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
+			} catch (Exception e) {
+				logger.info(e.toString());
+			}
+
 			// get user & password
-			commConfig.setUsername((String) apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_USERNAME));
-			commConfig.setPassword((String) apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_PASSWORD));
+			try {
+				commConfig.setUsername((String) apacheCompositeConfig.getString(responderName
+						+ Constants.PROPERTY_QUALIFIER_USERNAME));
+			} catch (Exception e) {
+				logger.info(e.toString());
+			}
+			try {
+				commConfig.setPassword((String) apacheCompositeConfig.getString(responderName
+						+ Constants.PROPERTY_QUALIFIER_PASSWORD));
+			} catch (Exception e) {
+				logger.info(e.toString());
+			}
 			// get remote host for responder
-			String remoteHost = (String) apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
+			String remoteHost = null;
+			try {
+				remoteHost = (String) apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
+			} catch (Exception e) {
+				logger.info(e.toString());
+			}
+
 			if (remoteHost != null) {
 				// create configuration for remote host
 				CommunicatorConfig remoteHostConfig = new CommunicatorConfig(remoteHost);
 				// get host for remoteHost
-				List<String> hosts = new ArrayList<String>();
-				hosts.add(apacheCompositeConfig.getString(remoteHost + Constants.PROPERTY_QUALIFIER_HOST));
-				remoteHostConfig.setInterfaces(hosts);
+				try {
+					List<String> hosts = new ArrayList<String>();
+					hosts.add(apacheCompositeConfig.getString(remoteHost + Constants.PROPERTY_QUALIFIER_HOST));
+					remoteHostConfig.setInterfaces(hosts);
+				} catch (Exception e) {
+					logger.info(e.toString());
+				}
 				// get port & connection type
-				remoteHostConfig.setPort(apacheCompositeConfig.getInt(remoteHost + Constants.PROPERTY_QUALIFIER_PORT));
-				remoteHostConfig.setConnectionType((String) apacheCompositeConfig.getString(remoteHost
-						+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
+				try {
+					remoteHostConfig.setPort(apacheCompositeConfig.getInt(remoteHost + Constants.PROPERTY_QUALIFIER_PORT));
+				} catch (Exception e) {
+					logger.info(e.toString());
+				}
+				try {
+					remoteHostConfig.setConnectionType((String) apacheCompositeConfig.getString(remoteHost
+							+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
+				} catch (Exception e) {
+					logger.info(e.toString());
+				}
 				// get user & password
-				remoteHostConfig.setUsername((String) apacheCompositeConfig.getString(remoteHost
-						+ Constants.PROPERTY_QUALIFIER_USERNAME));
-				remoteHostConfig.setPassword((String) apacheCompositeConfig.getString(remoteHost
-						+ Constants.PROPERTY_QUALIFIER_PASSWORD));
+				try {
+					remoteHostConfig.setUsername((String) apacheCompositeConfig.getString(remoteHost
+							+ Constants.PROPERTY_QUALIFIER_USERNAME));
+				} catch (Exception e) {
+					logger.info(e.toString());
+				}
+				try {
+					remoteHostConfig.setPassword((String) apacheCompositeConfig.getString(remoteHost
+							+ Constants.PROPERTY_QUALIFIER_PASSWORD));
+				} catch (Exception e) {
+					logger.info(e.toString());
+				}
+				// get keep alive interval
+				try {
+					remoteHostConfig.setKeepAliveInterval(apacheCompositeConfig.getInt(remoteHost
+							+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL));
+				} catch (Exception e) {
+					logger.info(e.toString());
+				}
+				// get max connection pool size
+				try {
+					remoteHostConfig.setMaxPoolSize(apacheCompositeConfig.getInt(remoteHost
+							+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE));
+				} catch (Exception e) {
+					logger.info(e.toString());
+				}
 				// set remote host configuration responder configuration
 				commConfig.setRemoteHostConfiguration(remoteHostConfig);
 			}

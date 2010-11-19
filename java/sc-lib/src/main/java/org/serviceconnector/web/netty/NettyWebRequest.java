@@ -67,7 +67,10 @@ public class NettyWebRequest extends AbstractWebRequest {
 			}
 			try {
 				CookieDecoder cd = new CookieDecoder();
-				this.cookies = cd.decode(this.request.getHeader("Cookie"));
+				String cookie = this.request.getHeader("Cookie");
+				if (cookie != null) {
+				    this.cookies = cd.decode(cookie);
+				}
 			} catch (Exception e) {
 				this.cookies = null;
 			}

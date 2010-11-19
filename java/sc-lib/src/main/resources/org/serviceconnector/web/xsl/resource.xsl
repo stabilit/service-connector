@@ -3,7 +3,7 @@
     <xsl:import href="template.xsl"/>
     <xsl:template name="sc_script">
     function loadResource() {
-       resourceCall('<xsl:value-of select="$head/query/param/@name"/>');
+       resourceCall('<xsl:value-of select="$body/resource/@path"/>');
     }
     </xsl:template>
     <xsl:template name="sc_content">

@@ -14,14 +14,13 @@
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">
-            <th class="sc_table">Host</th>
+            <th class="sc_table">Interfaces</th>
             <th class="sc_table">Port</th>
-            <th class="sc_table">Communicator</th>
+            <th class="sc_table">Name</th>
             <th class="sc_table">Connection Type</th>
             <th class="sc_table">maxPoolSize</th>
             <th class="sc_table">keepAliveInterval</th>
-            <th class="sc_table">operationTimeoutMultiplier</th>
-          </tr>          
+         </tr>          
           <xsl:if test="not($body/responders/responder)">
             <tr class="sc_table_even"><td colspan="7" class="sc_table">no responders</td></tr>
           </xsl:if>          
@@ -59,13 +58,16 @@
 	</xsl:template>
 	<xsl:template name="responder_row">
 	    <xsl:param name="class"/>
-	    <td class="{$class}"><xsl:value-of select="responderConfig/host"/></td>
+	    <td class="{$class}">
+	      <xsl:for-each select="responderConfig/interfaces">
+	         <xsl:value-of select="string"/><br/>
+	      </xsl:for-each>
+	    </td>
 	    <td class="{$class}"><xsl:value-of select="responderConfig/port"/></td>
-	    <td class="{$class}"><xsl:value-of select="responderConfig/communicatorName"/></td>
+	    <td class="{$class}"><xsl:value-of select="responderConfig/name"/></td>
 	    <td class="{$class}"><xsl:value-of select="responderConfig/connectionType"/></td>
 	    <td class="{$class}"><xsl:value-of select="responderConfig/maxPoolSize"/></td>
 	    <td class="{$class}"><xsl:value-of select="responderConfig/keepAliveInterval"/></td>
-	    <td class="{$class}"><xsl:value-of select="responderConfig/operationTimeoutMultiplier"/></td>
 	</xsl:template>
 	<xsl:template name="responder_details">
 	  <td colspan="7">

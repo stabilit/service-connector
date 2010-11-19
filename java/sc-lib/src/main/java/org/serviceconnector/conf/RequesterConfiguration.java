@@ -70,31 +70,41 @@ public class RequesterConfiguration {
 		for (String requesterName : requesterList) {
 			requesterName = requesterName.trim(); // remove blanks in name
 			CommunicatorConfig commConfig = new CommunicatorConfig(requesterName);
-			
-			// get port & connection type
-			commConfig.setPort(apacheCompositeConfig.getInt(requesterName + Constants.PROPERTY_QUALIFIER_PORT));
-			commConfig.setConnectionType((String) apacheCompositeConfig.getString(requesterName
-					+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
-			// get host for requester
-			List<String> hosts = new ArrayList<String>();
-			hosts.add(apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_HOST));
-			commConfig.setInterfaces(hosts);
 
+			// get port & connection type
+			try {
+				commConfig.setPort(apacheCompositeConfig.getInt(requesterName + Constants.PROPERTY_QUALIFIER_PORT));
+			} catch (Exception e) {
+				logger.info(e.toString());
+			}
+			try {
+				commConfig.setConnectionType((String) apacheCompositeConfig.getString(requesterName
+						+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
+			} catch (Exception e) {
+				logger.info(e.toString());
+			}
+			// get host for requester
+			try {
+				List<String> hosts = new ArrayList<String>();
+				hosts.add(apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_INTERFACES));
+				commConfig.setInterfaces(hosts);
+			} catch (Exception e) {
+				logger.info(e.toString());
+			}
 			// get max connection pool size
-			String maxPoolSizeValue = (String) apacheCompositeConfig.getString(requesterName
-					+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE);
-			if (maxPoolSizeValue != null) {
-				int maxPoolSize = Integer.parseInt(maxPoolSizeValue);
-				commConfig.setMaxPoolSize(maxPoolSize);
+			try {
+				commConfig.setMaxPoolSize(apacheCompositeConfig.getInt(requesterName
+						+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE));
+			} catch (Exception e) {
+				logger.info(e.toString());
 			}
 			// get keep alive interval
-			String keepAliveIntervalValue = (String) apacheCompositeConfig.getString(requesterName
-					+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL);
-			int keepAliveInterval = 0;
-			if (keepAliveIntervalValue != null) {
-				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
+			try {
+				commConfig.setKeepAliveInterval(apacheCompositeConfig.getInt(requesterName
+						+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL));
+			} catch (Exception e) {
+				logger.info(e.toString());
 			}
-			commConfig.setKeepAliveInterval(keepAliveInterval);
 			// adding requester to list
 			this.requesterConfigList.add(commConfig);
 		}

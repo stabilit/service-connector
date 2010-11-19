@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -34,6 +34,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.SCVersion;
+import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.connection.IConnection;
@@ -326,7 +327,11 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						List<?> list = (List<?>) value;
 						for (Object listObj : list) {
 							writer.writeStartElement(listObj.getClass().getSimpleName().toLowerCase());
-							this.writeBean(writer, listObj);
+							if (listObj instanceof String) {
+							    writer.writeCData(listObj.toString());
+							} else {
+							    this.writeBean(writer, listObj);								
+							}
 							writer.writeEndElement();
 						}
 						writer.writeEndElement();
@@ -374,6 +379,13 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						IConnection connection = (IConnection) value;
 						writer.writeStartElement("connection");
 						this.writeBean(writer, connection);
+						writer.writeEndElement();
+						continue;
+					}
+					if (value instanceof CommunicatorConfig) {
+						CommunicatorConfig communicatorConfig = (CommunicatorConfig) value;
+						writer.writeStartElement(name);
+						this.writeBean(writer, communicatorConfig);
 						writer.writeEndElement();
 						continue;
 					}

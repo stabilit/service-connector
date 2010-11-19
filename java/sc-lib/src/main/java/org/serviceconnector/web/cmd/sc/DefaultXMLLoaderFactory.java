@@ -555,7 +555,8 @@ public class DefaultXMLLoaderFactory {
 		@Override
 		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			String name = request.getParameter("name");
-			InputStream is = WebUtil.loadResource(name);
+			String path = name.replace(File.separatorChar, '/');
+			InputStream is = WebUtil.loadResource(path);
 			if (is == null) {
 				this.addMeta("exception", "resource for name = " + name + " not found");
 				return;
@@ -563,6 +564,7 @@ public class DefaultXMLLoaderFactory {
 			try {
 				writer.writeStartElement("resource");
 				writer.writeAttribute("name", name);
+				writer.writeAttribute("path", path);
 				writer.writeEndElement();
 			} catch (Exception e) {
 				this.addMeta("exception", e.toString());

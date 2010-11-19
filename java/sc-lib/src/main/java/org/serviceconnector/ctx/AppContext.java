@@ -32,13 +32,13 @@ public final class AppContext {
 	/** The composite configuration. */
 	private static CompositeConfiguration apacheCompositeConfig;
 	/** The basic configuration. */
-	private static BasicConfiguration basicConfiguration;
+	private static BasicConfiguration basicConfiguration = new BasicConfiguration();
 	/** The cache configuration. */
-	private static CacheConfiguration cacheConfiguration;
+	private static CacheConfiguration cacheConfiguration = new CacheConfiguration();
 	/** The responder configuration. */
-	private static ResponderConfiguration responderConfiguration;
+	private static ResponderConfiguration responderConfiguration = new ResponderConfiguration();
 	/** The requester configuration. */
-	private static RequesterConfiguration requesterConfiguration;
+	private static RequesterConfiguration requesterConfiguration = new RequesterConfiguration();
 
 	// Factories
 	private static FlyweightCommandFactory commandFactory;

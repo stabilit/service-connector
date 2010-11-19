@@ -209,5 +209,14 @@
 	    <td class="sc_table_even">Cached Files</td>	  
 	    <td class="sc_table_even"><xsl:value-of select="cachedFiles"/></td>	  
 	  </tr>
-	</xsl:template> 
+	</xsl:template>
+	<xsl:template name="fieldValue">
+	  <xsl:param name="value"/>
+	  <xsl:choose>
+	    <xsl:when test="string-length($value) &gt; 0">
+	      <xsl:value-of select="$value"/>
+	    </xsl:when>
+	    <xsl:otherwise>-</xsl:otherwise>
+	  </xsl:choose>	  
+	</xsl:template>  
 </xsl:stylesheet>

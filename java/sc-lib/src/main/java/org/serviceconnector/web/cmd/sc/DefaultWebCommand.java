@@ -513,6 +513,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 */
 		public void transform(InputStream xmlInputStream, OutputStream resultOutputStream) throws Exception {
 			String xslPath = this.getXSLPath(null);
+			System.out.println(xslPath);
 			// load xsl input stream for given request
 			xslInputStream = WebUtil.loadResource(xslPath);
 			if (xslInputStream == null) {

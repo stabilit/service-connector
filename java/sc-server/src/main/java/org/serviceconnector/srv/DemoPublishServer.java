@@ -73,12 +73,12 @@ public class DemoPublishServer {
 			logger.error("runPublishServer", e);
 		} finally {
 			try {
-				publishSrv.deregisterServer();
+	//			publishSrv.deregisterServer();
 				// publishSrv.deregisterServer(10, serviceName);
 			} catch (Exception e1) {
 				logger.error("run", e1);
 			}
-			sc.stopListener();
+//			sc.stopListener();
 		}
 	}
 

@@ -19,6 +19,7 @@ package org.serviceconnector.conf;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 
 /**
  * The Class CommunicatorConfig.
@@ -68,6 +69,12 @@ public class CommunicatorConfig {
 	 */
 	public CommunicatorConfig(String name) {
 		this.name = name;
+		this.port = 0;
+		this.interfaces = null;
+		this.connectionType = null;
+		this.maxPoolSize = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
+		this.keepAliveInterval = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
+		this.remoteHostConfiguration = null;
 	}
 
 	/**

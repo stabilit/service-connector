@@ -62,11 +62,11 @@ public class DemoSessionServer {
 				server.deregisterServer();
 				// server.deregisterServer(10);
 			}
-			server.destroy();
+			//server.destroy();
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
 		} finally {
-			sc.stopListener();
+			//sc.stopListener();
 		}
 	}
 

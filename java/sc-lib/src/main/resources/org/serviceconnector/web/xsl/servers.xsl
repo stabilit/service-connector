@@ -53,7 +53,7 @@
 	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
-      <xsl:if test="$paramHost and $paramPort">
+      <xsl:if test="$paramHost = host and $paramPort = portNr">
         <tr>
           <xsl:call-template name="server_details"/>
         </tr>
@@ -64,8 +64,8 @@
 	    <td class="{$class}"><xsl:value-of select="host"/></td>
 	    <td class="{$class}"><xsl:value-of select="portNr"/></td>
 	    <td class="{$class}"><xsl:value-of select="serverKey"/></td>
-	    <td class="{$class}"><xsl:value-of select="serviceName"/></td>
-	    <td class="{$class}"><xsl:value-of select="maxSessions"/></td>
+	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" value="serviceName"/></xsl:call-template></td>
+	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" value="maxSessions"/></xsl:call-template></td>
 	    <td class="{$class}"><xsl:value-of select="maxConnections"/></td>
 	    <td class="{$class}"><a class="sc_table" href="servers?host={host}&amp;port={portNr}"><xsl:value-of select="requester/context/connectionPool/busyConnections"/></a></td>	    
 	</xsl:template>
@@ -82,6 +82,7 @@
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">
             <th class="sc_table">keepAliveInterval</th>
+            <th class="sc_table">minConnections</th>
             <th class="sc_table">maxConnections</th>
             <th class="sc_table">busyConnections</th>            
             <th class="sc_table">usedConnections</th>            
@@ -95,12 +96,16 @@
 	</xsl:template>
 	<xsl:template name="connectionPool_row">
 	    <td class="sc_table"><xsl:value-of select="keepAliveInterval"/></td>
+	    <td class="sc_table"><xsl:value-of select="minConnections"/></td>
 	    <td class="sc_table"><xsl:value-of select="maxConnections"/></td>
 	    <td class="sc_table"><xsl:value-of select="busyConnections"/></td>
 	    <td class="sc_table"><xsl:call-template name="usedConnections"/></td>
 	    <td class="sc_table"><xsl:call-template name="freeConnections"/></td>
 	</xsl:template>
-	<xsl:template name="usedConnections">
+	<xsl:template name="usedConnections">	
+	  <xsl:choose>
+	  <xsl:when test="count(usedConnections/*) = 0">-</xsl:when>
+	  <xsl:otherwise>
 	  <table class="sc_table">
 	  <xsl:for-each select="usedConnections/*">
 	    <xsl:if test="position() mod 2 = 0">
@@ -117,8 +122,11 @@
 	    </xsl:if>
 	  </xsl:for-each>
 	  </table>
+	  </xsl:otherwise>
+	  </xsl:choose>
 	</xsl:template>
 	<xsl:template name="freeConnections">
+	  <xsl:if test="count(freeConnections/*) = 0">-</xsl:if>
 	  <table class="sc_table">
 	  <xsl:for-each select="freeConnections/*">
 	    <xsl:if test="position() mod 2 = 0">

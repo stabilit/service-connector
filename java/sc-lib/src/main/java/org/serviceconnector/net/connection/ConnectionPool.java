@@ -347,6 +347,15 @@ public class ConnectionPool {
 	}
 
 	/**
+	 * Gets the min connections.
+	 *
+	 * @return the min connections
+	 */
+	public int getMinConnections() {
+		return minConnections;
+	}
+	
+	/**
 	 * Gets the number of busy connections at this time.
 	 * 
 	 * @return the busy connections
