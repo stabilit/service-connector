@@ -75,8 +75,8 @@ public enum SCMPError {
 	HV_WRONG_SERVICE_NAME("420", "Invalid service name field."),
 	/** The HV_WRONG_MESSAGE_INFO. */
 	HV_WRONG_MESSAGE_INFO("420", "Invalid message info field."),
-	/** The HV_WRONG_MESSAGE_ID. */
-	HV_WRONG_MESSAGE_ID("420", "Invalid message id field."),
+	/** The HV_WRONG_MESSAGE_SEQUENCE_NR. */
+	HV_WRONG_MESSAGE_SEQUENCE_NR("420", "Invalid message sequence number field."),
 	/** The HV_WRONG_REMOTE_FILE_NAME. */
 	HV_WRONG_REMOTE_FILE_NAME("420", "Invalid remote file name field."),
 	/** The HV_WRONG_MESSAGE_ID. */

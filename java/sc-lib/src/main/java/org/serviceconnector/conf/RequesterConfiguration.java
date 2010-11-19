@@ -86,7 +86,7 @@ public class RequesterConfiguration {
 			// get host for requester
 			try {
 				List<String> hosts = new ArrayList<String>();
-				hosts.add(apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_INTERFACES));
+				hosts.add(apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_HOST));
 				commConfig.setInterfaces(hosts);
 			} catch (Exception e) {
 				logger.info(e.toString());

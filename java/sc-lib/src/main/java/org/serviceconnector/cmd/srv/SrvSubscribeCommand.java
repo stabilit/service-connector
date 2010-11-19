@@ -27,7 +27,7 @@ import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -68,12 +68,12 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 
 		// create session in SCMPSessionCompositeRegistry
 		SrvCommandAdapter.sessionCompositeRegistry.addSession(sessionId);
-		// handling messageId
-		SCMPMessageId messageId = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMessageId(sessionId);
+		// handling msgSequenceNr
+		SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
 
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 		reply.setServiceName(serviceName);
 		reply.setSessionId(sessionId);
 		reply.setMessageType(this.getKey());
@@ -93,10 +93,10 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 		SCMPMessage message = request.getMessage();
 
 		try {
-			// messageId
-			String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-			if (messageId == null || messageId.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
+			// msgSequenceNr
+			String msgSequenceNr = message.getMessageSequenceNr();
+			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
 			// serviceName
 			String serviceName = message.getServiceName();
@@ -109,13 +109,13 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 			}
 			// mask
-			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
+			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 			// ipAddressList
-			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 			// sessionInfo
-			String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
+			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 			ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point

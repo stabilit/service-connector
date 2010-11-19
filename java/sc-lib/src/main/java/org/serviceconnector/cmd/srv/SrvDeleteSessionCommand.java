@@ -26,12 +26,12 @@ import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
- * The Class SrvDeleteSessionCommand. Responsible for validation and execution of server delete session command. Allows
- * deleting session on backend server.
+ * The Class SrvDeleteSessionCommand. Responsible for validation and execution of server delete session command. Allows deleting
+ * session on backend server.
  * 
  * @author JTraber
  */
@@ -71,15 +71,15 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 		// inform callback with scMessages
 		srvService.getCallback().deleteSession(scMessage,
 				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
-		// handling messageId
-		SCMPMessageId messageId = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMessageId(sessionId);
-		messageId.incrementMsgSequenceNr();
+		// handling msgSequenceNr
+		SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
+		msgSequenceNr.incrementMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(this.getKey());
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 		response.setSCMP(reply);
 		// delete session in SCMPSessionCompositeRegistry
 		SrvCommandAdapter.sessionCompositeRegistry.removeSession(sessionId);
@@ -91,13 +91,13 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 		SCMPMessage message = request.getMessage();
 
 		try {
-			// messageId
-			String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID.getValue());
-			if (messageId == null || messageId.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
+			// msgSequenceNr
+			String msgSequenceNr = message.getMessageSequenceNr();
+			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
 			// serviceName
-			String serviceName = (String) message.getServiceName();
+			String serviceName = message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}

@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.registry.Registry;
 import org.serviceconnector.scmp.SCMPLargeRequest;
 import org.serviceconnector.scmp.SCMPLargeResponse;
-import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 
 /**
  * The Class SCMPSessionCompositeRegistry. Stores composite components (large response/requests) of a communication to resume at the
@@ -150,11 +150,11 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 	 *            the key
 	 * @return the SCMP message id
 	 */
-	public SCMPMessageId getSCMPMessageId(String key) {
+	public SCMPMessageSequenceNr getSCMPMsgSequenceNr(String key) {
 		SCMPSessionCompositeItem item = super.get(key);
 		if (item == null) {
 			return null;
 		}
-		return item.getMessageId();
+		return item.getMsgSequenceNr();
 	}
 }

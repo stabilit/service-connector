@@ -26,12 +26,11 @@ import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMessageId;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
- * The Class SrvAbortSessionCommand. Responsible for validation and execution of abort session command. Aborts an active
- * session on server.
+ * The Class SrvAbortSessionCommand. Responsible for validation and execution of abort session command. Aborts an active session on
+ * server.
  * 
  * @author JTraber
  */
@@ -72,14 +71,10 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		srvService.getCallback().abortSession(scMessage,
 				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 
-		// handling messageId
-		SCMPMessageId messageId = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMessageId(sessionId);
-		messageId.incrementMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, messageId.getCurrentMessageID());
 		reply.setMessageType(this.getKey());
 		response.setSCMP(reply);
 		// delete session in SCMPSessionCompositeRegistry

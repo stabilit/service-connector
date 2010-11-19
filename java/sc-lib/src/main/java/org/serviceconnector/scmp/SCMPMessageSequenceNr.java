@@ -19,112 +19,57 @@ package org.serviceconnector.scmp;
 import org.apache.log4j.Logger;
 
 /**
- * The Class SCMPMessageId. Responsible to provide correct message id for a specific request/response. Message id is
- * unique for every message. Format: messageSequenceNr / partSequenceNr.
+ * The Class SCMPMessageSequenceNr. Provides correct message sequence number (msn) for a specific request/response. Message sequence
+ * number and session id are unique. Will be steadily increased.
  * 
  * @author JTraber
  */
-public class SCMPMessageId {
+public class SCMPMessageSequenceNr {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPMessageId.class);
-	
+	protected static final Logger logger = Logger.getLogger(SCMPMessageSequenceNr.class);
+
 	/** The message sequence number. */
 	private int msgSequenceNr;
-	/** The part sequence number. */
-	private int partSequenceNr;
-	/** The string builder. */
-	private StringBuilder sb;
 
-	/**
-	 * Instantiates a new scmp message id.
-	 */
-	public SCMPMessageId() {
-		this(1,0);
+	public SCMPMessageSequenceNr() {
+		this(1);
 	}
 
-	/**
-	 * Instantiates a new sCMP message id.
-	 *
-	 * @param msgSequenceNr the msg sequence nr
-	 */
-	public SCMPMessageId(int msgSequenceNr) {
-		this(msgSequenceNr, 0);
-	}
-	/**
-	 * Instantiates a new sCMP message id.
-	 *
-	 * @param msgSequenceNr the msg sequence nr
-	 * @param partSequenceNr the part sequence nr
-	 */
-	public SCMPMessageId(int msgSequenceNr, int partSequenceNr) {
+	public SCMPMessageSequenceNr(int msgSequenceNr) {
 		this.msgSequenceNr = msgSequenceNr;
-		this.partSequenceNr = partSequenceNr;
-		this.sb = null;
 	}
 
 	/**
-	 * Gets the current message id.
+	 * Gets the current number.
 	 * 
-	 * @return the current message id
+	 * @return the current number
 	 */
-	public String getCurrentMessageID() {
-		if (partSequenceNr == 0) {
-			// no part SCMP has been sent, partSequenceNr irrelevant
-			return String.valueOf(msgSequenceNr);
-		}
-		sb = new StringBuilder();
-		sb.append(msgSequenceNr);
-		sb.append("/");
-		sb.append(partSequenceNr);
-		return sb.toString();
-	}
-
-	/**
-	 * Increment part sequence number.
-	 */
-	public void incrementPartSequenceNr() {
-		partSequenceNr++;
+	public String getCurrentNr() {
+		return String.valueOf(this.msgSequenceNr);
 	}
 
 	/**
 	 * Increment message sequence number.
 	 */
 	public void incrementMsgSequenceNr() {
-		// partSequenceNr reset when msgSequenceNr gets incremented
-		partSequenceNr = 0;
-		msgSequenceNr++;
+		try {
+			this.msgSequenceNr++;
+		} catch (Exception e) {
+			// in case an exception number gets reseted
+			this.reset();
+		}
 	}
 
 	/**
-	 * Gets the message sequence number.
-	 * 
-	 * @return the message sequence number
-	 */
-	public Integer getMessageSequenceNr() {
-		return msgSequenceNr;
-	}
-
-	/**
-	 * Gets the part sequence number.
-	 * 
-	 * @return the part sequence number
-	 */
-	public Integer getPartSequenceNr() {
-		return partSequenceNr;
-	}
-
-	/**
-	 * Reset messageId.
+	 * Reset msgSequenceNr.
 	 */
 	public void reset() {
 		this.msgSequenceNr = 1;
-		this.partSequenceNr = 0;
-		this.sb = null;
 	}
 
 	/**
-	 * Necessary to write. Evaluates if messageId needs to be written for specific messageType.
+	 * Necessary to write. Evaluates if msgSequenceNr needs to be written for specific messageType.
 	 * 
 	 * @param messageTypeValue
 	 *            the message type value

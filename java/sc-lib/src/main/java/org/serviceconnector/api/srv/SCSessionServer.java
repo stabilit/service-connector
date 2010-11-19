@@ -36,7 +36,7 @@ import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.ValidatorUtility;
@@ -53,8 +53,8 @@ public class SCSessionServer {
 
 	/** Identifies low level component to use for communication default for severs is {netty.tcp}. */
 	private String conType;
-	/** The message id. */
-	private SCMPMessageId msgId;
+	/** The message sequence number. */
+	private SCMPMessageSequenceNr msgSequenceNr;
 
 	// fields for register server
 	/** The immediate connect. */
@@ -84,7 +84,7 @@ public class SCSessionServer {
 		this.localServerHost = null;
 		this.registered = false;
 		this.localServerPort = -1;
-		this.msgId = new SCMPMessageId();
+		this.msgSequenceNr = new SCMPMessageSequenceNr();
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class SCSessionServer {
 		ConnectionPool connectionPool = new ConnectionPool(scHost, scPort, connectionType.getValue(), keepAliveIntervalSeconds);
 		// register server only needs one connection
 		connectionPool.setMaxConnections(1);
-		IRequester requester = new SCRequester(new RequesterContext(connectionPool, this.msgId));
+		IRequester requester = new SCRequester(new RequesterContext(connectionPool, this.msgSequenceNr));
 
 		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
 				requester, this.serviceName);

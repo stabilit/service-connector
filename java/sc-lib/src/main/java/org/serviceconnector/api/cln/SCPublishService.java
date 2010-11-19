@@ -60,7 +60,7 @@ public class SCPublishService extends SCService {
 	 */
 	public SCPublishService(String serviceName, SCContext context) {
 		super(serviceName, context);
-		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgId));
+		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgSequenceNr));
 		this.scServiceContext = new SCServiceContext(this);
 		this.noDataInterval = 0;
 		this.scMessageCallback = null;
@@ -96,7 +96,7 @@ public class SCPublishService extends SCService {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "scSubscribeMessage can not be null");
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		this.msgId.incrementMsgSequenceNr();
+		this.msgSequenceNr.incrementMsgSequenceNr();
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		changeSubscriptionCall.setMask(scSubscribeMessage.getMask());
@@ -145,7 +145,7 @@ public class SCPublishService extends SCService {
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.noDataInterval = scSubscribeMessage.getNoDataIntervalInSeconds();
-		this.msgId.reset();
+		this.msgSequenceNr.reset();
 		this.scMessageCallback = scMessageCallback;
 		SCServiceCallback callback = new SCServiceCallback(true);
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
@@ -192,7 +192,7 @@ public class SCPublishService extends SCService {
 		}
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
-		this.msgId.incrementMsgSequenceNr();
+		this.msgSequenceNr.incrementMsgSequenceNr();
 		PublishServiceCallback callback = new PublishServiceCallback(this.scMessageCallback);
 		receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR
 				* (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataInterval));
@@ -236,7 +236,7 @@ public class SCPublishService extends SCService {
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		try {
-			this.msgId.incrementMsgSequenceNr();
+			this.msgSequenceNr.incrementMsgSequenceNr();
 			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
 					this.requester, this.serviceName, this.sessionId);
 			SCServiceCallback callback = new SCServiceCallback(true);

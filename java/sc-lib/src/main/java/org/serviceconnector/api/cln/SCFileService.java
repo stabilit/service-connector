@@ -22,7 +22,7 @@ public class SCFileService extends SCService {
 
 	public SCFileService(String serviceName, SCContext scContext) {
 		super(serviceName, scContext);
-		this.requester = new SCRequester(new RequesterContext(scContext.getConnectionPool(), this.msgId));
+		this.requester = new SCRequester(new RequesterContext(scContext.getConnectionPool(), this.msgSequenceNr));
 		this.scServiceContext = new SCServiceContext(this);
 	}
 

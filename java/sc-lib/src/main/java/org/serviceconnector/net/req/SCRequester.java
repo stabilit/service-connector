@@ -25,13 +25,13 @@ import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
-import org.serviceconnector.scmp.SCMPLargeRequest;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPLargeRequest;
 import org.serviceconnector.scmp.SCMPLargeResponse;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.TimerTaskWrapper;
 
@@ -66,14 +66,20 @@ public class SCRequester implements IRequester {
 		// return an already connected live instance
 		IConnection connection = this.reqContext.getConnectionPool().getConnection();
 		ConnectionContext connectionContext = connection.getContext();
-		SCMPMessageId msgId = this.reqContext.getSCMPMessageId();
+
+		SCMPMessageSequenceNr msgSequenceNr = this.reqContext.getSCMPMsgSequenceNr();
+		// handling msgSequenceNr
+		if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
+			msgSequenceNr.incrementMsgSequenceNr();
+		}
 		try {
 			ISCMPCallback requesterCallback = null;
 			// differ if message is large or not, sending procedure is different
 			if (message.isLargeMessage()) {
 				// SCMPLargeRequest handles splitting, works like an iterator
 				SCMPLargeRequest largeResponse = new SCMPLargeRequest(message);
-				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, largeResponse, msgId);
+				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, largeResponse,
+						msgSequenceNr);
 				// setting up operation timeout after successful send
 				TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
 				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
@@ -82,29 +88,18 @@ public class SCRequester implements IRequester {
 				timer.schedule(task, (long) timeoutInMillis);
 				// extract first part message & send
 				SCMPMessage part = largeResponse.getFirst();
-				// handling messageId
-				if (SCMPMessageId.necessaryToWrite(part.getMessageType())) {
-					msgId.incrementPartSequenceNr();
-					part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgId.getCurrentMessageID());
-				}
+				part.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 				// send
 				connection.send(part, requesterCallback);
 			} else {
-				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, msgId);
+				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, msgSequenceNr);
 				// setting up operation timeout after successful send
 				TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
 				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
 				reqCallback.setOperationTimeoutTask(task);
 				reqCallback.setTimeoutMillis(timeoutInMillis);
 				timer.schedule(task, (long) timeoutInMillis);
-				if (message.isGroup()) {
-					// increment messageId in case of group call
-					msgId.incrementPartSequenceNr();
-				}
-				// handling messageId
-				if (SCMPMessageId.necessaryToWrite(message.getMessageType())) {
-					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgId.getCurrentMessageID());
-				}
+				message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 				// process send
 				connection.send(message, requesterCallback);
 			}
@@ -142,24 +137,25 @@ public class SCRequester implements IRequester {
 		private SCMPLargeResponse largeResponse;
 		/** The large request. */
 		private SCMPLargeRequest largeRequest;
-		/** The message id. */
-		private SCMPMessageId msgId;
+		/** The msgSequenceNr. */
+		private SCMPMessageSequenceNr msgSequenceNr;
 		/** The operation timeout task. */
 		private TimerTask operationTimeoutTask;
 		/** The timeout in milliseconds. */
 		private int timeoutInMillis;
 
-		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, ConnectionContext conCtx, SCMPMessageId msgId) {
-			this(reqMsg, scmpCallback, conCtx, null, msgId);
+		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, ConnectionContext conCtx,
+				SCMPMessageSequenceNr msgSequenceNr) {
+			this(reqMsg, scmpCallback, conCtx, null, msgSequenceNr);
 		}
 
 		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPCallback scmpCallback, ConnectionContext conCtx,
-				SCMPLargeRequest largeRequest, SCMPMessageId msgId) {
+				SCMPLargeRequest largeRequest, SCMPMessageSequenceNr msgSequenceNr) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = conCtx;
 			this.requestMsg = reqMsg;
 			this.largeRequest = largeRequest;
-			this.msgId = msgId;
+			this.msgSequenceNr = msgSequenceNr;
 			this.timeoutInMillis = 0;
 			this.operationTimeoutTask = null;
 		}
@@ -179,9 +175,7 @@ public class SCRequester implements IRequester {
 
 				this.largeRequest = null;
 				if (scmpReply.isPart() && this.requestMsg.isGroup() == false) {
-					// response is a part - response is large, continue pulling
-					// delete compositeSender - large request done!
-					this.msgId.incrementMsgSequenceNr();
+					// response is a part - response is large, continue polling
 					this.handlingLargeResponse(scmpReply);
 					return;
 				}
@@ -209,7 +203,7 @@ public class SCRequester implements IRequester {
 					return;
 				}
 				SCMPMessage message = largeResponse.getPart();
-				// pull & exit
+				// poll & exit
 				this.connectionCtx.getConnection().send(message, this);
 				return;
 			}
@@ -225,8 +219,7 @@ public class SCRequester implements IRequester {
 			}
 
 			if (scmpReply.isPart()) {
-				// handling large response & messageId
-				this.msgId.incrementMsgSequenceNr();
+				// handling large response
 				this.handlingLargeResponse(scmpReply);
 				return;
 			}
@@ -250,13 +243,13 @@ public class SCRequester implements IRequester {
 			// SCMPLargeResponse handles parts of large requests, putting all together
 			this.largeResponse = new SCMPLargeResponse(requestMsg, scmpReply);
 			SCMPMessage message = largeResponse.getPart();
-			// handling messageId
-			if (SCMPMessageId.necessaryToWrite(message.getMessageType())) {
-				// increment part number in case of large response
-				this.msgId.incrementPartSequenceNr();
-				message.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgId.getCurrentMessageID());
+			// handling msgSequenceNr
+			if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
+				// increment msgSequenceNr
+				this.msgSequenceNr.incrementMsgSequenceNr();
+				message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			}
-			// pull & exit
+			// poll & exit
 			this.connectionCtx.getConnection().send(message, this);
 		}
 
@@ -288,21 +281,15 @@ public class SCRequester implements IRequester {
 					 */
 					return true;
 				}
-				//TODO @JAN .. what warning should be here
+				// TODO @JAN .. what warning should be here
 				logger.warn("compositeSender.hasNext() == false but part request not done");
 				return true;
 			}
 			part = largeRequest.getNext();
-			// handling messageId
-			if (SCMPMessageId.necessaryToWrite(part.getMessageType())) {
-				if (largeRequest.hasNext() == false) {
-					// last part to send - will be a REQ message, increment message number
-					this.msgId.incrementMsgSequenceNr();
-				} else {
-					// there are more parts to complete request - just increment part number
-					this.msgId.incrementPartSequenceNr();
-				}
-				part.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgId.getCurrentMessageID());
+			// handling msgSequenceNr
+			if (SCMPMessageSequenceNr.necessaryToWrite(part.getMessageType())) {
+				this.msgSequenceNr.incrementMsgSequenceNr();
+				part.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			}
 			this.connectionCtx.getConnection().send(part, this);
 			return false;

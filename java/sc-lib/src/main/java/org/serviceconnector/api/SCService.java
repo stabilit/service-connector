@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.api.cln.SCContext;
 import org.serviceconnector.api.cln.SCServiceContext;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 
 /**
  * The Class Service. Provides basic stuff for every kind of remote service interfaces.
@@ -38,8 +38,8 @@ public abstract class SCService {
 	protected IRequester requester;
 	/** The pending request, marks if a reply is outstanding or if service is ready for next. */
 	protected volatile boolean pendingRequest;
-	/** The message id. */
-	protected SCMPMessageId msgId;
+	/** The message sequence number. */
+	protected SCMPMessageSequenceNr msgSequenceNr;
 	/** The service connector context. */
 	private SCContext scContext;
 	/** The sc service context. */
@@ -60,7 +60,7 @@ public abstract class SCService {
 		this.sessionActive = false;
 		this.sessionId = null;
 		this.pendingRequest = false;
-		this.msgId = new SCMPMessageId();
+		this.msgSequenceNr = new SCMPMessageSequenceNr();
 		this.scContext = scContext;
 	}
 

@@ -21,7 +21,7 @@ import org.serviceconnector.cache.impl.ICacheImpl;
 import org.serviceconnector.cache.impl.CacheImplFactory;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.util.DateTimeUtility;
 
 // TODO: Auto-generated Javadoc
@@ -68,11 +68,11 @@ public class Cache {
 		if (cacheId == null) {
 			throw new CacheException("no cache id");
 		}
-		String messageId = msg.getMessageId();
-		if (messageId == null) {
+		String seqNr = msg.getMessageSequenceNr();
+		if (seqNr == null) {
 			throw new CacheException("no message id");
 		}
-		SCMPMessageId msgId = SCMPMessage.parseMessageId(messageId);
+		SCMPMessageSequenceNr msgSequenceNr = SCMPMessage.parseMsgSequenceNr(seqNr);
 		CacheKey cacheKey = null;
 		CacheComposite cacheRoot = null;
 		// check if this message is part of cache
@@ -84,7 +84,9 @@ public class Cache {
 		if (value != null && value instanceof CacheComposite) {
 			cacheRoot = (CacheComposite) value;
 		}
-		int partSequenceNr = msgId.getPartSequenceNr();
+		//TODO DANI gibt nimmer!
+		int partSequenceNr = 0;
+//		int partSequenceNr = msgSequenceNr.getPartSequenceNr();
 		PartCacheKey cachePartKey = new PartCacheKey(cacheId,
 				partSequenceNr);
 		CacheMessage scmpCacheMessage = (CacheMessage) this.cacheImpl
@@ -107,11 +109,11 @@ public class Cache {
 			if (cacheId == null) {
 				throw new CacheException("no cache id");
 			}
-			String messageId = scmpReply.getMessageId();
-			if (messageId == null) {
+			String seqNr = scmpReply.getMessageSequenceNr();
+			if (seqNr == null) {
 				throw new CacheException("no message id");
 			}
-			SCMPMessageId msgId = SCMPMessage.parseMessageId(messageId);
+			SCMPMessageSequenceNr msgSequenceNr = SCMPMessage.parseMsgSequenceNr(seqNr);
 			CacheKey cacheKey = null;
 			CacheComposite cacheRoot = null;
 			// check if this message is part of cache
@@ -127,7 +129,9 @@ public class Cache {
 				expirationDateTime = DateTimeUtility
 						.parseDateString(cacheExpirationDateTime);
 			}
-			int partSequenceNr = msgId.getPartSequenceNr();
+			//TODO DANI gibt nimmer!
+			int partSequenceNr = 0;
+//			int partSequenceNr = msgSequenceNr.getPartSequenceNr();
 			if (partSequenceNr > 0) {
 				// this is a multi part message (large message)
 				// cache root must exist

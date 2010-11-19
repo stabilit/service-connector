@@ -70,26 +70,18 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * Parses the message id.
+	 * Parses the msg sequence nr.
 	 * 
-	 * @param messageId
-	 *            the message id
-	 * @return the sCMP message id
+	 * @param msgSequenceNr
+	 *            the msg sequence nr
+	 * @return the sCMP message sequence nr
 	 */
-	public static SCMPMessageId parseMessageId(String messageId) {
-		if (messageId == null) {
+	public static SCMPMessageSequenceNr parseMsgSequenceNr(String msgSequenceNr) {
+		if (msgSequenceNr == null) {
 			return null;
 		}
-		String[] splitted = messageId.split("/");
-		if (splitted.length <= 0 || splitted.length > 2) {
-			return null;
-		}
-		int sequenceNr = Integer.parseInt(splitted[0]);
-		if (splitted.length == 1) {
-			return new SCMPMessageId(sequenceNr, 0);
-		}
-		int partSequenceNr = Integer.parseInt(splitted[1]);
-		return new SCMPMessageId(sequenceNr, partSequenceNr);
+		int sequenceNr = Integer.parseInt(msgSequenceNr);
+		return new SCMPMessageSequenceNr(sequenceNr);
 	}
 
 	/**
@@ -122,12 +114,12 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * Gets the message id.
+	 * Gets the message sequence nr.
 	 * 
-	 * @return the message id
+	 * @return the message sequence nr
 	 */
-	public String getMessageId() {
-		return this.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
+	public String getMessageSequenceNr() {
+		return this.getHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR);
 	}
 
 	/**

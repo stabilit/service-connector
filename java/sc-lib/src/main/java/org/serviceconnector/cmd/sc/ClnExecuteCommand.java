@@ -148,10 +148,10 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 	public void validate(IRequest request) throws Exception {
 		try {
 			SCMPMessage message = request.getMessage();
-			// messageId
-			String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-			if (messageId == null || messageId.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
+			// msgSequenceNr
+			String msgSequenceNr = message.getMessageSequenceNr();
+			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
 			// serviceName
 			String serviceName = message.getServiceName();

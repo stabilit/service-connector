@@ -31,8 +31,7 @@ import org.serviceconnector.service.PublishService;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class PublishCommand. Responsible for validation and execution of publish command. Allows publishing messages to
- * clients.
+ * The Class PublishCommand. Responsible for validation and execution of publish command. Allows publishing messages to clients.
  * 
  * @author JTraber
  */
@@ -63,20 +62,20 @@ public class PublishCommand extends CommandAdapter {
 		SubscriptionQueue<SCMPMessage> queue = service.getSubscriptionQueue();
 		// throws an exception if failed
 		queue.insert(message);
-		
+
 		// reply to server
 		SCMPMessage reply = null;
 		if (message.isPart()) {
 			// incoming message is of type part - outgoing must be part too, poll request
 			reply = new SCMPPart(true);
-			
+
 		} else {
 			reply = new SCMPMessage();
 		}
 		reply.setMessageType(this.getKey());
 		reply.setIsReply(true);
 		reply.setServiceName(message.getServiceName());
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
 		response.setSCMP(reply);
 	}
 
@@ -85,10 +84,10 @@ public class PublishCommand extends CommandAdapter {
 	public void validate(IRequest request) throws Exception {
 		SCMPMessage message = request.getMessage();
 		try {
-			// messageId
-			String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-			if (messageId == null || messageId.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
+			// msgSequenceNr
+			String msgSequenceNr = message.getMessageSequenceNr();
+			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
 			// serviceName
 			String serviceName = message.getServiceName();

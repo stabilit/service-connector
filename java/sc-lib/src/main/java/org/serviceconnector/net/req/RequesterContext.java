@@ -23,7 +23,7 @@ package org.serviceconnector.net.req;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.connection.ConnectionPool;
-import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 
 /**
  * The Class RequesterContext.
@@ -36,11 +36,11 @@ public class RequesterContext {
 	protected final static Logger logger = Logger.getLogger(RequesterContext.class);
 
 	protected ConnectionPool connectionPool;
-	protected SCMPMessageId msgId;
+	protected SCMPMessageSequenceNr msgSequenceNr;
 
-	public RequesterContext(ConnectionPool connectionPool, SCMPMessageId msgId) {
+	public RequesterContext(ConnectionPool connectionPool, SCMPMessageSequenceNr msgSequenceNr) {
 		this.connectionPool = connectionPool;
-		this.msgId = msgId;
+		this.msgSequenceNr = msgSequenceNr;
 	}
 
 	/**
@@ -53,11 +53,11 @@ public class RequesterContext {
 	}
 
 	/**
-	 * Gets the sCMP message id.
+	 * Gets the sCMP msg sequence nr.
 	 * 
-	 * @return the sCMP message id
+	 * @return the sCMP msg sequence nr
 	 */
-	public SCMPMessageId getSCMPMessageId() {
-		return this.msgId;
+	public SCMPMessageSequenceNr getSCMPMsgSequenceNr() {
+		return this.msgSequenceNr;
 	}
 }

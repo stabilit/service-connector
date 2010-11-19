@@ -166,10 +166,10 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		SCMPMessage message = request.getMessage();
 
 		try {
-			// messageId
-			String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-			if (messageId == null || messageId.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
+			// msgSequenceNr
+			String msgSequenceNr = message.getMessageSequenceNr();
+			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
 			// serviceName
 			String serviceName = message.getServiceName();
@@ -309,7 +309,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 
 				// message polling successful
 				reply.setBody(message.getBody());
-				reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+				reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
 				String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 				if (messageInfo != null) {
 					reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);

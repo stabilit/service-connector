@@ -19,7 +19,7 @@ package org.serviceconnector.net.res;
 import org.apache.log4j.Logger;
 import org.serviceconnector.scmp.SCMPLargeRequest;
 import org.serviceconnector.scmp.SCMPLargeResponse;
-import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 
 /**
  * The Class SCMPSessionCompositeItem. Item represents a value in SCMPSessionCompositeRegistry. Gives access to composite
@@ -36,8 +36,8 @@ public class SCMPSessionCompositeItem {
 	private SCMPLargeResponse largeResponse;
 	/** The sender. */
 	private SCMPLargeRequest largeRequest;
-	/** The message id. */
-	private SCMPMessageId messageId;
+	/** The msgSequenceNr. */
+	private SCMPMessageSequenceNr msgSequenceNr;
 
 	/**
 	 * Instantiates a new SCMP session composite item.
@@ -57,7 +57,7 @@ public class SCMPSessionCompositeItem {
 	public SCMPSessionCompositeItem(SCMPLargeResponse largeResponse, SCMPLargeRequest largeRequest) {
 		this.largeResponse = largeResponse;
 		this.largeRequest = largeRequest;
-		this.messageId = new SCMPMessageId();
+		this.msgSequenceNr = new SCMPMessageSequenceNr();
 	}
 
 	/**
@@ -79,12 +79,12 @@ public class SCMPSessionCompositeItem {
 	}
 
 	/**
-	 * Gets the message id.
+	 * Gets the msg sequence nr.
 	 * 
-	 * @return the message id
+	 * @return the msg sequence nr
 	 */
-	public SCMPMessageId getMessageId() {
-		return messageId;
+	public SCMPMessageSequenceNr getMsgSequenceNr() {
+		return msgSequenceNr;
 	}
 
 	/**

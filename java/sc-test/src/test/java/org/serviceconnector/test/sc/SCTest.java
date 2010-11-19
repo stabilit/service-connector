@@ -34,7 +34,6 @@ import org.serviceconnector.test.sc.attach.DetachTestCase;
 import org.serviceconnector.test.sc.connectionPool.ConnectionPoolTestCase;
 import org.serviceconnector.test.sc.group.GroupCallTestCase;
 import org.serviceconnector.test.sc.manage.ManageTestCase;
-import org.serviceconnector.test.sc.messageId.MessageIdTestCase;
 import org.serviceconnector.test.sc.net.DefaultEncoderDecoderTestCase;
 import org.serviceconnector.test.sc.net.DefaultFrameDecoderTestCase;
 import org.serviceconnector.test.sc.net.HttpFrameDecoderTestCase;
@@ -65,8 +64,6 @@ import org.serviceconnector.test.sc.util.LinkedQueueTestCase;
 import org.serviceconnector.test.sc.util.SCVersionTestCase;
 import org.serviceconnector.test.sc.util.ValidatorUtilityTestCase;
 
-
-
 /**
  * @author JTraber
  */
@@ -88,8 +85,7 @@ import org.serviceconnector.test.sc.util.ValidatorUtilityTestCase;
 		ClnChangeSubscriptionTestCase.class, //
 		PublishLargeMessagesTestCase.class, //
 		ManageTestCase.class, //
-		ConnectionPoolTestCase.class, // 
-		MessageIdTestCase.class,// 
+		ConnectionPoolTestCase.class, //  
 		SCVersionToSCTestCase.class, // 
 		DecodeSCMPVersionTestCase.class, // 
 		SessionTimeoutTestCase.class, //

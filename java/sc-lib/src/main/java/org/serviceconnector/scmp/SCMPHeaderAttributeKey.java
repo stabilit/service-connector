@@ -60,7 +60,7 @@ public enum SCMPHeaderAttributeKey {
 	/** The LOCAL_DATE_TIME. */
 	LOCAL_DATE_TIME("ldt"),
 	/** The MESSAGE_ID. */
-	MESSAGE_ID("mid"),
+	MESSAGE_SEQUENCE_NR("msn"),
 	/** The MSG_INFO. */
 	MSG_INFO("min"),
 	/** The MSG_TYPE. */

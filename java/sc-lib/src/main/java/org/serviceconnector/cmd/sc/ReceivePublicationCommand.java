@@ -31,8 +31,8 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
 
 /**
- * The Class ReceivePublicationCommand. Tries polling messages from subscription queue. If no message is available a
- * listen is set up. Receive publication command runs asynchronously and passes through any parts messages.
+ * The Class ReceivePublicationCommand. Tries polling messages from subscription queue. If no message is available a listen is set
+ * up. Receive publication command runs asynchronously and passes through any parts messages.
  * 
  * @author JTraber
  */
@@ -83,14 +83,13 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 			reply.setMessageType(reqMessage.getMessageType());
 			reply.setIsReply(true);
 			reply.setBody(message.getBody());
-			reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID));
+			reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
 			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 			if (messageInfo != null) {
 				reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 			}
 			reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
-			reply.setHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID, message
-					.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID));
+			reply.setHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID, message.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID));
 			response.setSCMP(reply);
 			// message already gotten from queue no asynchronous process necessary call callback right away
 			communicatorCallback.responseCallback(request, response);
@@ -107,10 +106,10 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 	public void validate(IRequest request) throws Exception {
 		SCMPMessage message = request.getMessage();
 		try {
-			// messageId
-			String messageId = (String) message.getHeader(SCMPHeaderAttributeKey.MESSAGE_ID);
-			if (messageId == null || messageId.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_ID, "messageId must be set");
+			// msgSequenceNr
+			String msgSequenceNr = message.getMessageSequenceNr();
+			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
 			// serviceName
 			String serviceName = message.getServiceName();
