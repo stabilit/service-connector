@@ -74,7 +74,7 @@ public class LargeMessageEncoderDecoderTestCase {
 
 		encodeScmp = new SCMPMessage();
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getValue());
-		encodeScmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID);
+		encodeScmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgID);
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType.getValue());
 		encodeScmp.setBody(body.getBytes());
 	}

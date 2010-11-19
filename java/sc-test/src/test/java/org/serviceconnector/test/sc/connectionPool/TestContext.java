@@ -24,15 +24,15 @@ package org.serviceconnector.test.sc.connectionPool;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.RequesterContext;
-import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 
 /**
  * @author JTraber
  */
 public class TestContext extends RequesterContext {
 
-	public TestContext(CommunicatorConfig config, SCMPMessageId msgId) {
-		super(new ConnectionPool(config.getInterfaces().get(0), config.getPort(), config.getConnectionType()), msgId);
+	public TestContext(CommunicatorConfig config, SCMPMessageSequenceNr msgSequenceNr) {
+		super(new ConnectionPool(config.getInterfaces().get(0), config.getPort(), config.getConnectionType()), msgSequenceNr);
 		this.connectionPool.setMinConnections(1);
 	}
 
@@ -47,7 +47,7 @@ public class TestContext extends RequesterContext {
 	}
 
 	@Override
-	public SCMPMessageId getSCMPMessageId() {
-		return this.msgId;
+	public SCMPMessageSequenceNr getSCMPMsgSequenceNr() {
+		return this.msgSequenceNr;
 	}
 }

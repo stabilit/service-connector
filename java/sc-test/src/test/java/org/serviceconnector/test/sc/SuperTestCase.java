@@ -29,7 +29,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.test.sc.connectionPool.TestContext;
 
 /**
@@ -42,11 +42,11 @@ public abstract class SuperTestCase {
 	protected RequesterConfiguration config = null;
 	protected IRequester req = null;
 	protected RequesterContext testContext;
-	protected SCMPMessageId msgId;
+	protected SCMPMessageSequenceNr msgSequenceNr;
 
 	public SuperTestCase(final String fileName) {
 		this.fileName = fileName;
-		this.msgId = new SCMPMessageId();
+		this.msgSequenceNr = new SCMPMessageSequenceNr();
 	}
 
 	@Parameters
@@ -64,7 +64,7 @@ public abstract class SuperTestCase {
 		try {
 			AppContext.initConfiguration(fileName);
 			this.config = AppContext.getRequesterConfiguration();
-			this.testContext = new TestContext(this.config.getRequesterConfigList().get(0), this.msgId);
+			this.testContext = new TestContext(this.config.getRequesterConfigList().get(0), this.msgSequenceNr);
 			req = new SCRequester(this.testContext);
 		} catch (Throwable e) {
 			e.printStackTrace();

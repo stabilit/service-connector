@@ -28,7 +28,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.scmp.SCMPMessageId;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 import org.serviceconnector.test.sc.connectionPool.TestContext;
@@ -62,7 +62,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		AppContext.initConfiguration(registerFileName);
 		this.registerConfig = AppContext.getRequesterConfiguration();
 		this.responderConfig = AppContext.getResponderConfiguration();
-		this.registerContext = new RegisterServerContext(responderConfig.getResponderConfigList().get(0), this.msgId);
+		this.registerContext = new RegisterServerContext(responderConfig.getResponderConfigList().get(0), this.msgSequenceNr);
 		this.registerRequester = new SCRequester(registerContext);
 		registerServerBefore();
 	}
@@ -98,8 +98,8 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 
 	private class RegisterServerContext extends TestContext {
 
-		public RegisterServerContext(CommunicatorConfig config, SCMPMessageId msgId) {
-			super(config, msgId);
+		public RegisterServerContext(CommunicatorConfig config, SCMPMessageSequenceNr msgSequenceNr) {
+			super(config, msgSequenceNr);
 			// for register only 1 connection is allowed
 			this.connectionPool.setMaxConnections(1);
 		}

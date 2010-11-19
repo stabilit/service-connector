@@ -51,7 +51,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 		try {
 			AppContext.initConfiguration(fileName);
 			this.config = AppContext.getRequesterConfiguration();
-			this.testContext = new TestContext(this.config.getRequesterConfigList().get(0), this.msgId);
+			this.testContext = new TestContext(this.config.getRequesterConfigList().get(0), this.msgSequenceNr);
 			req = new SCRequester(this.testContext);
 		} catch (Exception e) {
 			e.printStackTrace();

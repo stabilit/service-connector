@@ -131,7 +131,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		hosts.add(TestConstants.HOST);
 		CommunicatorConfig config = new CommunicatorConfig("RegisterServerCallTester", hosts, TestConstants.PORT_TCP, "netty.tcp",
 				1000, 60, 10);
-		RequesterContext context = new TestContext(config, this.msgId);
+		RequesterContext context = new TestContext(config, this.msgSequenceNr);
 		IRequester req = new SCRequester(context);
 
 		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(req,

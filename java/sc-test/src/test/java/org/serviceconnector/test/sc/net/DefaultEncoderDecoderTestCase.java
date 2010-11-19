@@ -73,7 +73,7 @@ public class DefaultEncoderDecoderTestCase {
 		encodeScmp = new SCMPMessage();
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType.getValue());
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getValue());
-		encodeScmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID);
+		encodeScmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgID);
 		encodeScmp.setBody(body.getBytes());
 	}
 
@@ -337,7 +337,7 @@ public class DefaultEncoderDecoderTestCase {
 		SCMPMessage scmp = new SCMPMessage();
 		scmp.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, msgType.getValue());
 		scmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getValue());
-		scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_ID, msgID);
+		scmp.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgID);
 		scmp.setBody(body.getBytes());
 
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(scmp);
