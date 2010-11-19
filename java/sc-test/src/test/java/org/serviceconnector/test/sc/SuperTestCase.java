@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.serviceconnector.conf.RequesterConfiguration;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -61,9 +62,9 @@ public abstract class SuperTestCase {
 	public void setup() throws Exception {
 		SetupTestCases.setupAll();
 		try {
-			this.config = new RequesterConfiguration();
-			this.config.load(fileName);
-			this.testContext = new TestContext(this.config.getFirstRequesterConfig(), this.msgId);
+			AppContext.initConfiguration(fileName);
+			this.config = AppContext.getRequesterConfiguration();
+			this.testContext = new TestContext(this.config.getRequesterConfigList().get(0), this.msgId);
 			req = new SCRequester(this.testContext);
 		} catch (Throwable e) {
 			e.printStackTrace();

@@ -30,7 +30,7 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.conf.ResponderConfiguration;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnetor.TestConstants;
 
 /**
@@ -57,8 +57,7 @@ public class SetupTestCases {
 	}
 
 	public static void init() throws Exception {
-		ResponderConfiguration config = new ResponderConfiguration();
-		config.load("sc.properties");
+		AppContext.initConfiguration("sc.properties");
 		deleteLog();
 		scSimEnableSrv = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, 7001);
 		scSimEnableSrv.setKeepAliveIntervalInSeconds(0);

@@ -77,7 +77,7 @@ public class RequesterConfiguration {
 					+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
 			// get host for requester
 			List<String> hosts = new ArrayList<String>();
-			hosts.add(apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_INTERFACES));
+			hosts.add(apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_HOST));
 			commConfig.setInterfaces(hosts);
 
 			// get max connection pool size

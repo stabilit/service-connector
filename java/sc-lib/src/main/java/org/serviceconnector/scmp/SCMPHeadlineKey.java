@@ -46,7 +46,7 @@ public enum SCMPHeadlineKey {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPHeadlineKey.class);
-	
+
 	/**
 	 * Gets the msg header key by string.
 	 * 
@@ -81,12 +81,18 @@ public enum SCMPHeadlineKey {
 			}
 			return UNDEF;
 		}
-		if (b[0] == 'P' && b[1] == 'R') {
-			if (b[2] == 'Q') {
-				return PRQ;
+		if (b[0] == 'P') {
+			if (b[1] == 'R') {
+
+				if (b[2] == 'Q') {
+					return PRQ;
+				}
+				if (b[2] == 'S') {
+					return PRS;
+				}
 			}
-			if (b[2] == 'S') {
-				return PRS;
+			if (b[1] == 'A' && b[2] == 'C') {
+				return PAC;
 			}
 			return UNDEF;
 		}

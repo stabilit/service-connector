@@ -33,8 +33,6 @@ import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 import org.serviceconnetor.TestConstants;
 
-
-
 /**
  * The Class ClnCreateSessionTestCase.
  */
@@ -48,6 +46,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	 */
 	public ClnCreateSessionTestCase(String fileName) {
 		super(fileName);
+
 	}
 
 	/**
@@ -58,8 +57,8 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	 */
 	@Test
 	public void failClnCreateSessionWrongHeader() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "session-1");
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
+				req, "session-1");
 
 		// echoInterval not valid
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -91,8 +90,8 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	@Test
 	public void clnCreateSession() throws Exception {
 		// sets up a create session call
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "session-1");
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
+				req, "session-1");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(3000);
 		createSessionCall.invoke(this.attachCallback, 30000);
@@ -108,12 +107,23 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		/*********************************** Verify registry entries in SC ********************************/
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
-		String expectedScEntry = sessId + ":" + sessId + ":session-1_localhost/:" + TestConstants.PORT_LISTENER + " : 10|";
-		String scEntry = inspectMap.get("sessionRegistry");
-		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
+		String scEntry = inspectMap.get("sessionRegistry");
+		String expectedScEntry;
+		if (scEntry.contains(":" + TestConstants.PORT_LISTENER)) {
+			expectedScEntry = sessId + ":" + sessId + ":session-1_localhost/:" + TestConstants.PORT_LISTENER + " : 10|";
+		} else {
+			expectedScEntry = sessId + ":" + sessId + ":session-1_localhost/:" + 41000 + " : 10|";
+		}
+		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
+		try {
+		} catch (Exception e) {
+			expectedScEntry = sessId + ":" + sessId + ":session-1_localhost/:" + 41000 + " : 10|";
+			SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
+		}
+
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
+				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
 		deleteSessionCall.invoke(this.attachCallback, 1000);
 		this.attachCallback.getMessageSync();
 
@@ -130,8 +140,8 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 	@Test
 	public void rejectedSession() throws Exception {
 		// sets up a create session call
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "session-1");
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
+				req, "session-1");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(300);
 		createSessionCall.setRequestBody("reject");
