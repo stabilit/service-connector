@@ -32,6 +32,11 @@ public class SCSessionServerTest {
 	}
 
 	
+	/**
+	 * Return the first TraceElement from the Exception, without ".test" into the package name.
+	 * @param ex
+	 * @return String
+	 */
 	private String convertStackTraceToString(Exception ex) {
 		String result = "";
 		if (ex == null) return result;
@@ -71,25 +76,35 @@ public class SCSessionServerTest {
 		}
 	}
 
+	/**
+	 * Description:	Check the Host and Port<br>
+	 * Expectation:	The Host and Port have a value.
+	 */	
 	@Test
 	public void t10_HostPort() {
 		try {
 			SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
-			// TODO delete function getHost on SCSessionServer.java
-			//assertEquals("SessionServer Host", TestConstants.LOCALHOST, sessionServer.getHost());
-			// TODO delete function getPort on SCSessionServer.java
-			//assertEquals("SessionServer Port", TestConstants.PORT_TCP, sessionServer.getPort());
+			// TODO check function getHost on SCSessionServer.java
+			assertEquals("SessionServer Host", TestConstants.LOCALHOST, sessionServer.getHost());
+			// TODO check function getPort on SCSessionServer.java
+			assertEquals("SessionServer Port", TestConstants.PORT_TCP, sessionServer.getPort());
 		}
 		catch (Exception ex){
 			assertFalse("Exception on: " + convertStackTraceToString(ex), true);
 		}
 	}	
 
+	/**
+	 * Description:	Check the SCHost and SCPort<br>
+	 * Expectation:	The SCHost and SCPort have a value.
+	 */	
 	@Test
 	public void t11_HostPort() {
 		try {
 			SCSessionServer sessionServer = server.newSessionServer(TestConstants.serviceNameSession);
+			// TODO check getSCHost getHost on SCSessionServer.java
 			assertEquals("SC Host", TestConstants.LOCALHOST, sessionServer.getSCHost());
+			// TODO check getSCPort getHost on SCSessionServer.java
 			assertEquals("SC Port", TestConstants.PORT_TCP, sessionServer.getSCPort());
 		}
 		catch (Exception ex){
