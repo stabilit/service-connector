@@ -43,7 +43,7 @@ public class DemoPublishClient extends Thread {
 			sc.setMaxConnections(20); // can be set before attach
 			sc.setKeepAliveIntervalInSeconds(10); // can be set before attach
 			sc.attach(); // regular
-			sc.attach(10); // alternative with operation timeout
+//			sc.attach(10); // alternative with operation timeout
 
 			String serviceName = "publish-1";
 			service = sc.newPublishService(serviceName); // no other params possible
@@ -56,24 +56,24 @@ public class DemoPublishClient extends Thread {
 			msg.setData("certificate or what so ever"); // optional
 			msg.setMask(mask); // mandatory
 			service.subscribe(msg, cbk); // regular
-			service.subscribe(10, msg, cbk); // alternative with operation timeout
+//			service.subscribe(10, msg, cbk); // alternative with operation timeout
 
 			String sid = service.getSessionId();
 
-			while (true) {
+//			while (true) {
 				// service.receive(cbk); // wait for response
 				// cbk.receive(); // wait for response ?
 				// responseMsg = cbk.getMessage(); // response message
-			}
+//			}
 		} catch (Exception e) {
 			logger.error("run", e);
 		} finally {
 			try {
 				service.unsubscribe(); // regular
-				service.unsubscribe(10); // alternative with operation timeout
+//				service.unsubscribe(10); // alternative with operation timeout
 				SCMessage msg = new SCMessage();
 				msg.setSessionInfo("subscription-info");
-				service.unsubscribe(10, msg); // alternative with operation timeout and session info
+//				service.unsubscribe(10, msg); // alternative with operation timeout and session info
 				sc.detach();
 			} catch (Exception e) {
 				logger.info("cleanup " + e.toString());
