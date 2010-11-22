@@ -61,7 +61,7 @@ public class NettyHttpConnection implements IConnection {
 	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 	/** The base conf. */
 	protected final BasicConfiguration baseConf = AppContext.getBasicConfiguration();
-	
+
 	/** The url. */
 	private URL url;
 	/** The bootstrap. */
@@ -82,8 +82,6 @@ public class NettyHttpConnection implements IConnection {
 	private ChannelPipelineFactory pipelineFactory;
 	/** The connection context. */
 	private ConnectionContext connectionContext;
-	/** state of connection. */
-	private boolean connected;
 	/** The idle timeout. */
 	protected int idleTimeout;
 	/** The number of idles, counts idle states. */
@@ -108,7 +106,6 @@ public class NettyHttpConnection implements IConnection {
 		this.operationListener = null;
 		this.encoderDecoder = null;
 		this.localSocketAddress = null;
-		this.connected = false;
 		this.idleTimeout = 0; // default 0 -> inactive
 		this.pipelineFactory = null;
 		this.connectionContext = null;
@@ -161,7 +158,6 @@ public class NettyHttpConnection implements IConnection {
 			connectionLogger.logConnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
 					this.localSocketAddress.getPort());
 		}
-		this.connected = true;
 	}
 
 	/** {@inheritDoc} */
@@ -252,7 +248,10 @@ public class NettyHttpConnection implements IConnection {
 	/** {@inheritDoc} */
 	@Override
 	public boolean isConnected() {
-		return this.connected;
+		if (this.channel == null) {
+			return false;
+		}
+		return this.channel.isConnected();
 	}
 
 	/** {@inheritDoc} */

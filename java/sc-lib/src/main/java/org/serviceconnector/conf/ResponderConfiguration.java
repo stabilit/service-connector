@@ -16,7 +16,11 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.conf;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -64,11 +68,25 @@ public class ResponderConfiguration {
 			CommunicatorConfig commConfig = new CommunicatorConfig(responderName);
 
 			// get interfaces for responder
-			try {
-				commConfig.setInterfaces(apacheCompositeConfig.getList(responderName + Constants.PROPERTY_QUALIFIER_INTERFACES));
-			} catch (Exception e) {
-				logger.info(e.toString());
+			List<String> interfaces = apacheCompositeConfig.getList(responderName + Constants.PROPERTY_QUALIFIER_INTERFACES, null);
+			if (interfaces == null) {
+				// interfaces not set in configuration file - listen to all NIC's
+				interfaces = new ArrayList<String>();
+				try {
+					Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+					for (NetworkInterface netint : Collections.list(nets)) {
+						Enumeration<InetAddress> inetAdresses = netint.getInetAddresses();
+						for (InetAddress inetAddress : Collections.list(inetAdresses)) {
+							interfaces.add(inetAddress.getHostAddress());
+							logger.info("Responder " + responderName + "listens on " + inetAddress.getHostAddress());
+						}
+					}
+				} catch (Exception e) {
+					logger.info("unable to reveal network interfaces");
+				}
 			}
+			commConfig.setInterfaces(interfaces);
+
 			// get port & connection type
 			try {
 				commConfig.setPort(apacheCompositeConfig.getInt(responderName + Constants.PROPERTY_QUALIFIER_PORT));

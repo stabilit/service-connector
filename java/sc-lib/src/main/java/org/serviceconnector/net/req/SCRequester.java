@@ -86,7 +86,6 @@ public class SCRequester implements IRequester {
 				SCMPMessage part = largeResponse.getFirst();
 				// handling msgSequenceNr
 				if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
-					msgSequenceNr.incrementMsgSequenceNr();
 					part.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 				}
 				// send
@@ -101,7 +100,6 @@ public class SCRequester implements IRequester {
 				timer.schedule(task, (long) timeoutInMillis);
 				// handling msgSequenceNr
 				if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
-					msgSequenceNr.incrementMsgSequenceNr();
 					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 				}
 				// process send
@@ -173,7 +171,7 @@ public class SCRequester implements IRequester {
 				boolean largeRequestDone = this.handlingLargeRequest(scmpReply);
 
 				if (largeRequestDone == false) {
-					// large request is not done yet - wait for other PRS messages
+					// large request is not done yet - wait for other PAC messages
 					return;
 				}
 
@@ -207,6 +205,11 @@ public class SCRequester implements IRequester {
 					return;
 				}
 				SCMPMessage message = largeResponse.getPart();
+				if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
+					// increment msgSequenceNr
+					this.msgSequenceNr.incrementMsgSequenceNr();
+					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
+				}
 				// poll & exit
 				this.connectionCtx.getConnection().send(message, this);
 				return;

@@ -149,8 +149,17 @@ public class ConnectionPool {
 		IConnection connection = null;
 
 		if (freeConnections.size() > 0) {
-			connection = freeConnections.remove(0);
+			int freeConNumber = freeConnections.size();
+			for (int index = 0; index < freeConNumber; index++) {
+				// loop through free connections
+				connection = freeConnections.remove(0);
+				if (connection.isConnected()) {
+					// found an active connection quit loop
+					break;
+				}
+			}
 		}
+
 		if (connection == null) {
 			// no free connection available - try to create a new one
 			connection = this.createNewConnection();
@@ -348,13 +357,13 @@ public class ConnectionPool {
 
 	/**
 	 * Gets the min connections.
-	 *
+	 * 
 	 * @return the min connections
 	 */
 	public int getMinConnections() {
 		return minConnections;
 	}
-	
+
 	/**
 	 * Gets the number of busy connections at this time.
 	 * 

@@ -150,6 +150,7 @@ public class SCSessionServer {
 		if (this.registered) {
 			throw new InvalidActivityException("Server already registered for a service.");
 		}
+		this.msgSequenceNr.reset();
 		int keepAliveIntervalSeconds = this.scServerContext.getKeepAliveIntervalSeconds();
 		boolean immediateConnect = this.scServerContext.isImmediateConnect();
 		ConnectionType connectionType = this.scServerContext.getConnectionType();
@@ -214,7 +215,7 @@ public class SCSessionServer {
 			SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 					.newInstance(req, this.serviceName);
 			SCServerCallback callback = new SCServerCallback(true);
-
+			this.msgSequenceNr.incrementMsgSequenceNr();
 			try {
 				deRegisterServerCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {

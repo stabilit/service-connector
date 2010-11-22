@@ -40,12 +40,12 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class SCPublishServer extends SCSessionServer {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCPublishServer.class);
+
 	public SCPublishServer(SCServerContext scServerContext, String serviceName) {
 		super(scServerContext, serviceName);
 	}
-
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCPublishServer.class);
 
 	public void publish(SCPublishMessage publishMessage) throws Exception {
 		this.publish(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, publishMessage);

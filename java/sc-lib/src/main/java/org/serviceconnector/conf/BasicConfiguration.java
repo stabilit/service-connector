@@ -23,7 +23,6 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Category;
 import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 
@@ -37,7 +36,7 @@ public class BasicConfiguration {
 	protected final static Logger logger = Logger.getLogger(BasicConfiguration.class);
 	/** The write pid. */
 	private boolean writePID = false;
-	
+
 	/**
 	 * Multiplier to calculate the operation timeout.<br>
 	 * SC must adapt (shorten) the timeout passed from client to get the right timeout.
@@ -150,56 +149,62 @@ public class BasicConfiguration {
 	 *            the composite configuration
 	 */
 	public void init(CompositeConfiguration compositeConfiguration) {
-		try {
-			this.writePID = compositeConfiguration.getBoolean(Constants.ROOT_WRITEPID);
-		} catch (Exception e) {
-			logger.info(e.toString());
+		// writePID
+		Boolean localWritePID = compositeConfiguration.getBoolean(Constants.ROOT_WRITEPID, null);
+		if (localWritePID != null && this.writePID != localWritePID) {
+			this.writePID = localWritePID;
+			logger.info("writePID set to " + localWritePID);
 		}
-		logger.info("basic configuration: writePID is " + this.writePID);
-		try {
-			this.operationTimeoutMultiplier = compositeConfiguration.getDouble(Constants.ROOT_OPERATION_TIMEOUT_MULTIPLIER);
-		} catch (Exception e) {
-			logger.info(e.toString());
+
+		// operationTimeoutMultiplier
+		Double localOTIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_OPERATION_TIMEOUT_MULTIPLIER, null);
+		if (localOTIMultiplier != null && this.operationTimeoutMultiplier != localOTIMultiplier) {
+			this.operationTimeoutMultiplier = localOTIMultiplier;
+			logger.info("operationTimeoutMultiplier set to " + localOTIMultiplier);
 		}
-		logger.info("basic configuration: operationTimeoutMultiplier is " + this.operationTimeoutMultiplier);
-		try {
-			this.echoIntervalMultiplier = compositeConfiguration.getDouble(Constants.ROOT_ECHO_INTERVAL_MULTIPLIER);
-		} catch (Exception e) {
-			logger.info(e.toString());
+
+		// echoIntervalMultiplier
+		Double localECIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_ECHO_INTERVAL_MULTIPLIER, null);
+		if (localECIMultiplier != null && this.echoIntervalMultiplier != localECIMultiplier) {
+			this.echoIntervalMultiplier = localECIMultiplier;
+			logger.info("echoIntervalMultiplier set to " + localECIMultiplier);
 		}
-		logger.info("basic configuration: echoIntervalMultiplier is " + this.echoIntervalMultiplier);
-		try {
-			this.connectionTimeoutMillis = compositeConfiguration.getInt(Constants.ROOT_CONNECTION_TIMEOUT);
-		} catch (Exception e) {
-			logger.info(e.toString());
+
+		// connectionTimeoutMillis
+		Integer localConnectionTimeoutMultiplier = compositeConfiguration.getInteger(Constants.ROOT_CONNECTION_TIMEOUT, null);
+		if (localConnectionTimeoutMultiplier != null && this.connectionTimeoutMillis != localConnectionTimeoutMultiplier) {
+			this.connectionTimeoutMillis = localConnectionTimeoutMultiplier;
+			logger.info("connectionTimeoutMillis set to " + localConnectionTimeoutMultiplier);
 		}
-		logger.info("basic configuration: connectionTimeoutMillis is " + this.connectionTimeoutMillis);
-		try {
-			this.subscriptionTimeout = compositeConfiguration.getInt(Constants.ROOT_SUBSCRIPTION_TIMEOUT);
-		} catch (Exception e) {
-			logger.info(e.toString());
+
+		// subscriptionTimeout
+		Integer localSubscriptionTimeout = compositeConfiguration.getInteger(Constants.ROOT_SUBSCRIPTION_TIMEOUT, null);
+		if (localSubscriptionTimeout != null && this.subscriptionTimeout != localSubscriptionTimeout) {
+			this.subscriptionTimeout = localSubscriptionTimeout;
+			logger.info("subscriptionTimeout set to " + localSubscriptionTimeout);
 		}
-		logger.info("basic configuration: subscriptionTimeout is " + this.subscriptionTimeout);
-		try {
-			this.commandValidation = compositeConfiguration.getBoolean(Constants.ROOT_COMMAND_VALIDATION_ENABLED);
-		} catch (Exception e) {
-			logger.info(e.toString());
+
+		// commandValidation
+		Boolean localCMDValidation = compositeConfiguration.getBoolean(Constants.ROOT_COMMAND_VALIDATION_ENABLED, null);
+		if (localCMDValidation != null && this.commandValidation != localCMDValidation) {
+			this.commandValidation = localCMDValidation;
+			logger.info("commandValidation set to " + localCMDValidation);
 		}
-		logger.info("basic configuration: commandValidation is " + this.commandValidation);
-		try {
-			this.keepAliveTimeout = compositeConfiguration.getInt(Constants.ROOT_KEEP_ALIVE_TIMEOUT);
-		} catch (Exception e) {
-			logger.info(e.toString());
+		// keepAliveTimeout
+		Integer localKeepAliveTimeout = compositeConfiguration.getInteger(Constants.ROOT_KEEP_ALIVE_TIMEOUT, null);
+		if (localKeepAliveTimeout != null && this.keepAliveTimeout != localKeepAliveTimeout) {
+			this.keepAliveTimeout = localKeepAliveTimeout;
+			logger.info("keepAliveTimeout set to " + localKeepAliveTimeout);
 		}
-		logger.info("basic configuration: keepAliveTimeout is " + this.keepAliveTimeout);
-		try {
-			this.srvAbortTimeout = compositeConfiguration.getInt(Constants.ROOT_COMMAND_VALIDATION_ENABLED);
-		} catch (Exception e) {
-			logger.info(e.toString());
+
+		// serverAbortTimeout
+		Integer localSrvAbortTimeout = compositeConfiguration.getInteger(Constants.ROOT_COMMAND_VALIDATION_ENABLED, null);
+		if (localSrvAbortTimeout != null && this.srvAbortTimeout != localSrvAbortTimeout) {
+			this.srvAbortTimeout = localSrvAbortTimeout;
+			logger.info("srvAbortTimeout set to " + localSrvAbortTimeout);
 		}
-		logger.info("basic configuration: srvAbortTimeout is " + this.srvAbortTimeout);
 	}
-	
+
 	/**
 	 * Create file containing the PID of the SC process. Is used for testing purpose to verify that SC is running properly.
 	 */
@@ -214,7 +219,7 @@ public class BasicConfiguration {
 			fw = new FileWriter(pidFile);
 			fw.write("pid: " + pid);
 			fw.flush();
-			logger.info("Create PID-file: " + pidFileName+" PID:"+pid);
+			logger.info("Create PID-file: " + pidFileName + " PID:" + pid);
 		} finally {
 			if (fw != null) {
 				fw.close();
@@ -238,7 +243,7 @@ public class BasicConfiguration {
 			// ignore any error
 		}
 	}
-	
+
 	/**
 	 * Checks if the file containing the PID exists. Is used for testing purpose to verify that SC is running properly.
 	 */

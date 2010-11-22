@@ -72,8 +72,6 @@ public class NettyTcpConnection implements IConnection {
 	private ChannelPipelineFactory pipelineFactory;
 	/** The connection context. */
 	private ConnectionContext connectionContext;
-	/** state of connection. */
-	private boolean isConnected;
 	/** The idle timeout. */
 	protected int idleTimeout;
 	/** The number of idles, counts idle states. */
@@ -97,7 +95,6 @@ public class NettyTcpConnection implements IConnection {
 		this.operationListener = null;
 		this.encoderDecoder = null;
 		this.localSocketAddress = null;
-		this.isConnected = false;
 		this.pipelineFactory = null;
 		this.connectionContext = null;
 	}
@@ -148,7 +145,6 @@ public class NettyTcpConnection implements IConnection {
 			connectionLogger.logConnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
 					this.localSocketAddress.getPort());
 		}
-		this.isConnected = true;
 	}
 
 	/** {@inheritDoc} */
@@ -222,7 +218,10 @@ public class NettyTcpConnection implements IConnection {
 	/** {@inheritDoc} */
 	@Override
 	public boolean isConnected() {
-		return this.isConnected;
+		if(this.channel == null) {
+			return false;
+		}
+		return this.channel.isConnected();
 	}
 
 	@Override
