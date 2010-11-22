@@ -102,9 +102,6 @@ public class ManageTestCase extends SuperAttachTestCase {
 		deleteSessionCall.invoke(callback, 1000);
 		result = callback.getMessageSync();
 		SCTest.checkReply(result);
-
-		// deregister a server for enableService
-		SetupTestCases.deregisterSessionServiceEnable();
 	}
 
 	@Test
@@ -162,14 +159,14 @@ public class ManageTestCase extends SuperAttachTestCase {
 		result = callback.getMessageSync();
 
 		// deregister a server for enableService
-		SetupTestCases.deregisterSessionServiceEnable();
+//		SetupTestCases.deregisterSessionServiceEnable();
 
 		// disable enableService by manage call
-		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
-		callback = new TestManageCallback();
-		manageCall.setRequestBody("disable=" + this.serviceName);
-		manageCall.invoke(callback, 1000);
-		result = callback.getMessageSync();
+//		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
+//		callback = new TestManageCallback();
+//		manageCall.setRequestBody("disable=" + this.serviceName);
+//		manageCall.invoke(callback, 1000);
+//		result = callback.getMessageSync();
 	}
 
 	// @Test

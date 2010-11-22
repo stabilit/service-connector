@@ -293,7 +293,7 @@ public class DefaultEncoderDecoderTestCase {
 	public void encodeBodyTypesTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(encodeScmp);
 
-		String header = "msn" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
+		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
 				+ "\n";
 
 		String expectedString = SCImplTest.getSCMPString(headKey, header, body);
