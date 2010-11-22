@@ -34,8 +34,8 @@ public class DemoSessionServer {
 
 	public void runSessionServer() {
 
-		SCServer sc = new SCServer("localhost", 9000, 9001); // regular, defaults documented in javadoc
-		sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY_TCP); // alternative with connection type
+		SCServer sc = new SCServer("localhost", 9000, 9002); // regular, defaults documented in javadoc
+		sc = new SCServer("localhost", 9000, 9002, ConnectionType.NETTY_TCP); // alternative with connection type
 
 		try {
 			sc.setKeepAliveIntervalInSeconds(10); // can be set before register
