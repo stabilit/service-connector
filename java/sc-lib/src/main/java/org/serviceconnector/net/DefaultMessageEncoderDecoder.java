@@ -18,12 +18,14 @@ package org.serviceconnector.net;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.zip.Deflater;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPInternalStatus;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -78,17 +80,23 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		Object body = scmpMsg.getBody();
 		try {
 			if (body != null) {
-				if (body instanceof byte[]) {
+				if (byte[].class == body.getClass()) {
 					byte[] ba = (byte[]) body;
-					int messageLength = sb.length() + ba.length;
-					this.writeHeadLine(bw, headerKey, messageLength, headerSize);
+					byte[] output = null;
+					int bodyLength = ba.length;
+					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
+						// message compression required
+						output = new byte[ba.length];
+						Deflater compresser = new Deflater();
+						compresser.setInput(ba);
+						compresser.finish();
+						bodyLength = compresser.deflate(output);
+						ba = output;
+					}
+					this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
 					bw.write(sb.toString());
 					bw.flush();
-					/*
-					 * // compresss body Deflater compresser = new Deflater(); compresser.setInput(ba); compresser.finish(); byte[]
-					 * zipBa = new byte[ba.length]; compresser.deflate(zipBa);
-					 */
-					os.write(ba);
+					os.write(ba, 0, bodyLength);
 					os.flush();
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					if (messageLogger.isEnabled()) {
@@ -98,30 +106,28 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				}
 				if (String.class == body.getClass()) {
 					String t = (String) body;
-					int messageLength = sb.length() + t.length();
-					this.writeHeadLine(bw, headerKey, messageLength, headerSize);
+					byte[] output = null;
+					int bodyLength = t.length();
+					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
+						// message compression required
+						byte[] ba = t.getBytes();
+						output = new byte[ba.length];
+						Deflater compresser = new Deflater();
+						compresser.setInput(ba);
+						compresser.finish();
+						bodyLength = compresser.deflate(output);
+					}
+					this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
 					bw.write(sb.toString()); // write header
 					bw.flush();
-					bw.write(t); // write body
-					bw.flush();
-					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (messageLogger.isEnabled()) {
-						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
+						// message compression required
+						os.write(output, 0, bodyLength);
+						os.flush();
+					} else {
+						bw.write(t); // write body
+						bw.flush();
 					}
-					return;
-				}
-				if (body instanceof InputStream) {
-					InputStream inStream = (InputStream) body;
-					byte[] buffer = new byte[inStream.available()];
-					int bodySize = inStream.available();
-					inStream.read(buffer, 0, bodySize);
-					int messageLength = sb.length() + bodySize;
-					writeHeadLine(bw, headerKey, messageLength, headerSize);
-					bw.write(sb.toString());
-					bw.flush();
-					os.write(buffer);
-					os.flush();
-					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					if (messageLogger.isEnabled()) {
 						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);

@@ -91,7 +91,7 @@ public class ServerLoader {
 				// server = new FileService(serviceName);
 				continue;
 			case WEB_SERVER:
-				// TODO JOT .. WEB_SERVER handling
+				// nothing to do in case of a web server is registered in specific endpoint
 				continue;
 			default:
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong serverType, serverName/serverType: "

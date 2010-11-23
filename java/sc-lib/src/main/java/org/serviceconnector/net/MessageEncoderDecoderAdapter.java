@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.zip.Inflater;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -148,16 +149,24 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		SCMPBodyType scmpBodyType = SCMPBodyType.getBodyType(scmpBodyTypeString);
 		try {
 			byte[] body = new byte[scmpBodySize];
-			is.read(body);
-
+			int bodySize = is.read(body);
+			if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
+				// message compression required
+				byte[] result = new byte[Constants.MAX_MESSAGE_SIZE];
+				Inflater decompresser = new Inflater();
+				decompresser.setInput(body, 0, bodySize);
+				bodySize = decompresser.inflate(result);
+				decompresser.end();
+				body = result;
+			}
 			switch (scmpBodyType) {
 			case BINARY:
 			case INPUT_STREAM:
 			case UNDEFINED:
-				scmpMsg.setBody(body);
+				scmpMsg.setBody(body, 0, bodySize);
 				return scmpMsg;
 			case TEXT:
-				scmpMsg.setBody(new String(body));
+				scmpMsg.setBody(new String(body, 0, bodySize));
 				return scmpMsg;
 			}
 		} catch (Exception ex) {

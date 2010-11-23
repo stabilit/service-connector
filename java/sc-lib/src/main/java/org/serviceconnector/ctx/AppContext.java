@@ -43,6 +43,9 @@ import org.serviceconnector.scmp.SCMPError;
  */
 public final class AppContext {
 
+	// indicates that AppContext is running in a SC environment
+	private static boolean scEnvironment = false;
+	
 	// configurations
 	/** The composite configuration. */
 	private static CompositeConfiguration apacheCompositeConfig;
@@ -179,5 +182,13 @@ public final class AppContext {
 
 	public static RequesterConfiguration getRequesterConfiguration() {
 		return requesterConfiguration;
+	}
+	
+	public static void setSCEnvironment(boolean scEnvironment) {
+		AppContext.scEnvironment = scEnvironment;
+	}
+	
+	public static boolean isScEnvironment() {
+		return AppContext.scEnvironment;
 	}
 }

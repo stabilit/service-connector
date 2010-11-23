@@ -81,7 +81,6 @@ public class ServiceLoader {
 							+ " references an non existents file server named " + remoteHost);
 				}
 				((FileService) service).setServer((FileServer) server);
-				// TODO fehlerhandling
 				break;
 			case UNDEFINED:
 			default:

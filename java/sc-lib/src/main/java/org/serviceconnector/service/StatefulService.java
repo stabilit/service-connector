@@ -65,18 +65,11 @@ public abstract class StatefulService extends Service {
 		return Collections.unmodifiableList(this.listOfServers);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.serverIndex);
-		for (Server server : this.listOfServers) {
-			sb.append(" - ");
-			sb.append(server);
-		}
-		return sb.toString();
-	}
-
+	/**
+	 * Gets the count servers.
+	 * 
+	 * @return the count servers
+	 */
 	public int getCountServers() {
 		return listOfServers.size();
 	}
@@ -107,5 +100,17 @@ public abstract class StatefulService extends Service {
 			availableSessions += server.getMaxSessions();
 		}
 		return availableSessions;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.serverIndex);
+		for (Server server : this.listOfServers) {
+			sb.append(" - ");
+			sb.append(server);
+		}
+		return sb.toString();
 	}
 }

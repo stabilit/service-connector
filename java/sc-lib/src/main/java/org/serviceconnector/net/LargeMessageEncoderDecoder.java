@@ -21,10 +21,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.zip.Deflater;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPInternalStatus;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -95,13 +98,23 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 			if (body != null) {
 				if (byte[].class == body.getClass()) {
 					byte[] ba = (byte[]) body;
-					int bodySize = scmpMsg.getBodyLength();
-					int messageLength = sb.length() + bodySize;
-					writeHeadLine(bw, headerKey, messageLength, headerSize);
+
+					byte[] output = null;
+					int bodyLength = scmpMsg.getBodyLength();
+					int bodyOffset = scmpMsg.getBodyOffset();
+					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
+						// message compression required
+						output = new byte[ba.length];
+						Deflater compresser = new Deflater();
+						compresser.setInput(ba, bodyOffset, ba.length);
+						compresser.finish();
+						bodyLength = compresser.deflate(output);
+						ba = output;
+					}
+					this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
 					bw.write(sb.toString());
 					bw.flush();
-					int bodyOffset = scmpMsg.getBodyOffset();
-					os.write((byte[]) ba, bodyOffset, bodySize);
+					os.write(ba, bodyOffset, bodyLength);
 					os.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
@@ -112,15 +125,31 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				}
 				if (String.class == body.getClass()) {
 					String t = (String) body;
+
+					byte[] output = null;
 					int bodyLength = scmpMsg.getBodyLength();
-					int messageSize = sb.length() + bodyLength;
-					writeHeadLine(bw, headerKey, messageSize, headerSize);
-					bw.write(sb.toString());
-					bw.flush();
 					// gets the offset of body - body of part message is written
 					int bodyOffset = scmpMsg.getBodyOffset();
-					bw.write(t, bodyOffset, bodyLength);
+					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
+						// message compression required
+						byte[] ba = t.getBytes();
+						output = new byte[ba.length];
+						Deflater compresser = new Deflater();
+						compresser.setInput(ba, bodyOffset, bodyLength);
+						compresser.finish();
+						bodyLength = compresser.deflate(output);
+					}
+					this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
+					bw.write(sb.toString()); // write header
 					bw.flush();
+					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
+						// message compression required
+						os.write(output, bodyOffset, bodyLength);
+						os.flush();
+					} else {
+						bw.write(t, bodyOffset, bodyLength);
+						bw.flush();
+					}
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					if (messageLogger.isEnabled()) {
@@ -130,18 +159,21 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				}
 				if (body instanceof InputStream) {
 					InputStream inStream = (InputStream) body;
-					int bodySize = inStream.available();
-					if (bodySize > Constants.MAX_MESSAGE_SIZE) {
-						// there are more bytes available then LARGE_MESSAGE_LIMIT allows
-						bodySize = Constants.MAX_MESSAGE_SIZE;
+					byte[] buffer = new byte[Constants.MAX_MESSAGE_SIZE];
+					int bodyLength = inStream.read(buffer);
+					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
+						// message compression required
+						byte[] output = new byte[bodyLength];
+						Deflater compresser = new Deflater();
+						compresser.setInput(buffer, 0, bodyLength);
+						compresser.finish();
+						bodyLength = compresser.deflate(output);
+						buffer = output;
 					}
-					byte[] buffer = new byte[bodySize];
-					inStream.read(buffer, 0, bodySize);
-					int messageLength = sb.length() + bodySize;
-					writeHeadLine(bw, headerKey, messageLength, headerSize);
+					this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
 					bw.write(sb.toString());
 					bw.flush();
-					os.write(buffer);
+					os.write(buffer, 0, bodyLength);
 					os.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
