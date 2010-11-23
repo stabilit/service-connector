@@ -138,9 +138,9 @@ public class SetupTestCases {
 				setupTestCases = new SetupTestCases();
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties" });
 				SetupTestCases.startSessionServer10Connections();
-				SetupTestCases.startSessionServer1Connection();
-				SetupTestCases.startSessionServer1Session();
-				SetupTestCases.startPublishServer();
+//				SetupTestCases.startSessionServer1Connection();
+//				SetupTestCases.startSessionServer1Session();
+//				SetupTestCases.startPublishServer();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -282,6 +282,12 @@ public class SetupTestCases {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				}
+			}
+			if (data instanceof byte[]) {
+				if(new String((byte[])data).startsWith("reflect")) {
+					message.setData(data);
+					return message;
 				}
 			}
 			message.setData("message data test case");

@@ -143,7 +143,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
 
-		registerServerCall.invoke(this.registerCallback, 1000);
+		registerServerCall.invoke(this.registerCallback, 2000);
 		SCTest.checkReply(this.registerCallback.getMessageSync());
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
