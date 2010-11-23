@@ -97,6 +97,10 @@ public final class SC {
 		if (configFileName == null) {
 			throw new SCServiceException("Configuration file is missing");
 		}
+		
+		// indicates that AppContext is running in a SC environment
+		AppContext.setSCEnvironment(true);
+		
 		// write system information to log
 		SystemInfo.setConfigFileName(configFileName);
 		SC.writeSystemInfoToLog();
@@ -160,8 +164,6 @@ public final class SC {
 		mbs.registerMBean(loggingManager, mxbeanNameLoggingManager);
 	}
 
-
-	
 	/**
 	 * Write system info to log.
 	 * 
