@@ -18,6 +18,7 @@ package org.serviceconnector.cache;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.cache.impl.CacheImplFactory;
 import org.serviceconnector.cache.impl.ICacheImpl;
 import org.serviceconnector.scmp.SCMPCacheId;
@@ -30,6 +31,9 @@ import org.serviceconnector.util.DateTimeUtility;
  * The Class Cache.
  */
 public class Cache {
+
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(Cache.class);
 
 	/** The manager. */
 	private CacheManager manager;
@@ -52,6 +56,20 @@ public class Cache {
 		this.manager = manager;
 		this.serviceName = serviceName;
 		this.cacheImpl = CacheImplFactory.getDefaultCacheImpl(manager.getScmpCacheConfiguration(), serviceName);
+	}
+
+	/**
+	 * Gets the composite keys.
+	 * 
+	 * @return the composite keys
+	 */
+	public synchronized Object[] getCompositeKeys() {
+		CacheCompositeRegistry compositeRegistry = (CacheCompositeRegistry) this.cacheImpl.get(CacheCompositeRegistry.ID);
+		if (compositeRegistry == null) {
+			return null;
+		}
+		Object[] keys = compositeRegistry.keySet().toArray();
+		return keys;
 	}
 
 	/**
@@ -83,10 +101,12 @@ public class Cache {
 
 	/**
 	 * Gets the message.
-	 *
-	 * @param msg the msg
+	 * 
+	 * @param msg
+	 *            the msg
 	 * @return the message
-	 * @throws CacheException the cache exception
+	 * @throws CacheException
+	 *             the cache exception
 	 */
 	public synchronized CacheMessage getMessage(SCMPMessage msg) throws CacheException {
 		String cacheId = msg.getCacheId();
@@ -99,10 +119,12 @@ public class Cache {
 
 	/**
 	 * Gets the message.
-	 *
-	 * @param scmpCacheId the scmp cache id
+	 * 
+	 * @param scmpCacheId
+	 *            the scmp cache id
 	 * @return the message
-	 * @throws CacheException the cache exception
+	 * @throws CacheException
+	 *             the cache exception
 	 */
 	public synchronized CacheMessage getMessage(SCMPCacheId scmpCacheId) throws CacheException {
 		CacheKey rootCacheKey = null;
@@ -115,6 +137,10 @@ public class Cache {
 		}
 		if (value != null && value instanceof CacheComposite) {
 			cacheRoot = (CacheComposite) value;
+		}
+		// check if cache is expired or not
+		if (cacheRoot.isExpired()) {
+			return null;
 		}
 		CacheKey msgCacheKey = new CacheKey(scmpCacheId.getFullCacheId());
 		Object obj = this.cacheImpl.get(msgCacheKey);
@@ -129,10 +155,12 @@ public class Cache {
 
 	/**
 	 * Put scmp.
-	 *
-	 * @param scmpReply the scmp reply
+	 * 
+	 * @param scmpReply
+	 *            the scmp reply
 	 * @return the sCMP cache id
-	 * @throws CacheException the sCMP cache exception
+	 * @throws CacheException
+	 *             the sCMP cache exception
 	 */
 	public synchronized SCMPCacheId putMessage(SCMPMessage scmpReply) throws CacheException {
 		try {
@@ -163,6 +191,7 @@ public class Cache {
 				// insert cache root
 				cacheRoot.setSize(0);
 				cacheRoot.setExpiration(expirationDateTime);
+				this.putRegistry(cacheKey);
 				this.cacheImpl.put(cacheKey, cacheRoot);
 			}
 			value = this.cacheImpl.get(cacheKey);
@@ -202,6 +231,7 @@ public class Cache {
 		String cacheId = cacheKey.getCacheId();
 		int size = cacheRoot.getSize();
 		CacheKey localCacheKey = new CacheKey(cacheId);
+		this.removeRegistry(cacheKey);
 		boolean ret = this.cacheImpl.remove(cacheKey);
 		if (ret == false) {
 			return;
@@ -216,6 +246,59 @@ public class Cache {
 			}
 		}
 		return;
+	}
+
+	/**
+	 * Removes the root if expired.
+	 * 
+	 * @param cacheKey
+	 *            the cache key
+	 */
+	public synchronized void removeExpiredComposite(CacheKey cacheKey) {
+		// remove all parts
+		CacheComposite cacheRoot = null;
+		Object value = this.cacheImpl.get(cacheKey);
+		if (value != null && value instanceof CacheComposite) {
+			cacheRoot = (CacheComposite) value;
+		}
+		if (cacheRoot == null) {
+			return;
+		}
+		if (cacheRoot.isExpired() == false) {
+			return;
+		}
+		String cacheId = cacheKey.getCacheId();
+		int size = cacheRoot.getSize();
+		CacheKey localCacheKey = new CacheKey(cacheId);
+		this.removeRegistry(cacheKey);
+		boolean ret = this.cacheImpl.remove(cacheKey);
+		if (ret == false) {
+			return;
+		}
+		SCMPCacheId scmpCacheId = new SCMPCacheId(cacheId);
+		for (int i = 1; i < size; i++) {
+			scmpCacheId.setSequenceNr(String.valueOf(i));
+			localCacheKey.setCacheId(scmpCacheId.getFullCacheId());
+			ret = this.cacheImpl.remove(localCacheKey);
+			if (ret == false) {
+				return;
+			}
+		}
+		return;
+	}
+
+	/**
+	 * Removes the expired.
+	 */
+	public synchronized void removeExpired() {
+		Object[] keys = this.getCompositeKeys();
+		if (keys == null) {
+			return;
+		}
+		for (Object key : keys) {
+			CacheKey cacheKey = (CacheKey) key;
+			this.removeExpiredComposite(cacheKey);
+		}
 	}
 
 	/**
@@ -238,7 +321,7 @@ public class Cache {
 
 	/**
 	 * Gets the cache name.
-	 *
+	 * 
 	 * @return the cache name
 	 */
 	public String getCacheName() {
@@ -247,7 +330,7 @@ public class Cache {
 
 	/**
 	 * Gets the element size.
-	 *
+	 * 
 	 * @return the element size
 	 */
 	public int getElementSize() {
@@ -256,7 +339,7 @@ public class Cache {
 
 	/**
 	 * Gets the memory store size.
-	 *
+	 * 
 	 * @return the memory store size
 	 */
 	public long getMemoryStoreSize() {
@@ -265,7 +348,7 @@ public class Cache {
 
 	/**
 	 * Gets the disk store size.
-	 *
+	 * 
 	 * @return the disk store size
 	 */
 	public int getDiskStoreSize() {
@@ -274,8 +357,9 @@ public class Cache {
 
 	/**
 	 * Gets the iterator.
-	 *
-	 * @param string the string
+	 * 
+	 * @param string
+	 *            the string
 	 * @return the iterator
 	 */
 	public Iterator iterator(String cacheId) {
@@ -289,17 +373,18 @@ public class Cache {
 
 		/** The scmp cache id. */
 		private SCMPCacheId scmpCacheId;
-		
+
 		/** The index. */
 		private int index;
-		
+
 		/** The cache composite. */
 		private CacheComposite cacheComposite;
 
 		/**
 		 * Instantiates a new cache iterator.
-		 *
-		 * @param cacheId the cache id
+		 * 
+		 * @param cacheId
+		 *            the cache id
 		 */
 		public CacheIterator(String cacheId) {
 			this.index = 1;
@@ -311,7 +396,9 @@ public class Cache {
 			}
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.Iterator#hasNext()
 		 */
 		@Override
@@ -325,7 +412,9 @@ public class Cache {
 			return true;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.Iterator#next()
 		 */
 		@Override
@@ -340,7 +429,9 @@ public class Cache {
 			throw new IllegalStateException("invalid iterator");
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.Iterator#remove()
 		 */
 		@Override
@@ -348,5 +439,37 @@ public class Cache {
 			throw new UnsupportedOperationException("not supported");
 		}
 
+	}
+
+	/**
+	 * Put registry.
+	 * 
+	 * @param cacheKey
+	 *            the cache key
+	 */
+	private void putRegistry(CacheKey cacheKey) {
+		CacheCompositeRegistry compositeRegistry = (CacheCompositeRegistry) this.cacheImpl.get(CacheCompositeRegistry.ID);
+		if (compositeRegistry == null) {
+			compositeRegistry = new CacheCompositeRegistry();
+			this.cacheImpl.put(CacheCompositeRegistry.ID, compositeRegistry);
+		}
+		compositeRegistry = (CacheCompositeRegistry) this.cacheImpl.get(CacheCompositeRegistry.ID);
+		compositeRegistry.put(cacheKey, cacheKey);
+		this.cacheImpl.put(CacheCompositeRegistry.ID, compositeRegistry);
+	}
+
+	/**
+	 * Removes the registry.
+	 * 
+	 * @param cacheKey
+	 *            the cache key
+	 */
+	private void removeRegistry(CacheKey cacheKey) {
+		CacheCompositeRegistry compositeRegistry = (CacheCompositeRegistry) this.cacheImpl.get(CacheCompositeRegistry.ID);
+		if (compositeRegistry == null) {
+			return;
+		}
+		compositeRegistry.remove(cacheKey);
+		this.cacheImpl.put(CacheCompositeRegistry.ID, compositeRegistry);
 	}
 }

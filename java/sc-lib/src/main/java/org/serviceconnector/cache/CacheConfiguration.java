@@ -45,6 +45,10 @@ public class CacheConfiguration implements ICacheConfiguration {
 
 	/** The max elements on disk. */
 	private int maxElementsOnDisk;
+	
+	/** The expiration thread timeout in seconds. */
+	private int expirationThreadTimeoutSeconds;
+	
 
 	/**
 	 * Instantiates a new sCMP cache configuration.
@@ -56,6 +60,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 		this.diskPersistent = Constants.DEFAULT_CACHE_DISK_PERSISTENT;
 		this.maxElementsInMemory = Constants.DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY;
 		this.maxElementsOnDisk = Constants.DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK;
+		this.expirationThreadTimeoutSeconds = Constants.DEFAULT_CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS;
 	}
 
 	/**
@@ -119,6 +124,15 @@ public class CacheConfiguration implements ICacheConfiguration {
 		} catch (Exception e) {
 			logger.error("CACHE_MAX_ELEMENTS_ON_DISK = " + e.toString());
 		}
+		try {
+			int expirationThreadTimeoutSeconds = compositeConfiguration.getInt(Constants.CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS);
+			if (expirationThreadTimeoutSeconds >= 0) {
+				this.expirationThreadTimeoutSeconds = expirationThreadTimeoutSeconds;
+			}
+			logger.info("cache configuration: expirationThreadTimeoutSeconds = " + this.expirationThreadTimeoutSeconds);
+		} catch (Exception e) {
+			logger.error("CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS = " + e.toString());
+		}
 	}
 
 	/* (non-Javadoc)
@@ -167,5 +181,23 @@ public class CacheConfiguration implements ICacheConfiguration {
 	@Override
 	public int getMaxElementsOnDisk() {
 		return maxElementsOnDisk;
+	}
+	
+	/**
+	 * Gets the expiration thread timeout seconds.
+	 *
+	 * @return the expiration thread timeout seconds
+	 */
+	public int getExpirationThreadTimeoutSeconds() {
+		return expirationThreadTimeoutSeconds;
+	}
+	
+	/**
+	 * Sets the expiration thread timeout seconds.
+	 *
+	 * @param expirationThreadTimeoutSeconds the new expiration thread timeout seconds
+	 */
+	public void setExpirationThreadTimeoutSeconds(int expirationThreadTimeoutSeconds) {
+		this.expirationThreadTimeoutSeconds = expirationThreadTimeoutSeconds;
 	}
 }

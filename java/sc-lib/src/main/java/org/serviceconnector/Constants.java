@@ -167,6 +167,7 @@ public final class Constants {
 	public static final String DEFAULT_CACHE_DISK_PATH = "cache";
 	public static final int DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY = 10000;
 	public static final int DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK = 100000;
+	public static final int DEFAULT_CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS = 60;
 
 	public static final String CACHE_ENABLED = "cache.enabled";
 	public static final String CACHE_NAME = "cache.name";
@@ -174,6 +175,7 @@ public final class Constants {
 	public static final String CACHE_DISK_PATH = "cache.diskPath";
 	public static final String CACHE_MAX_ELEMENTS_IN_MEMORY = "cache.maxElementsInMemory";
 	public static final String CACHE_MAX_ELEMENTS_ON_DISK = "cache.maxElementsOnDisk";
+	public static final String CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS = "cache.expirationThreadTimeoutSeconds";
 
 	/*
 	 * SCMP protocol constants ***********************

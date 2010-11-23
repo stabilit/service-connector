@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * The Class CacheKey.
  */
-class CacheKey implements Serializable {
+public class CacheKey implements Serializable {
 
 	/** The cache id. */
 	private String cacheId;

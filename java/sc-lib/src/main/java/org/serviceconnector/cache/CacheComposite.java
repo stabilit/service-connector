@@ -18,6 +18,8 @@ package org.serviceconnector.cache;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.serviceconnector.util.DateTimeUtility;
+
 /**
  * The Class SCMPCacheRoot.
  */
@@ -94,6 +96,15 @@ public class CacheComposite implements Serializable {
 		builder.append(expiration);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	public boolean isExpired() {
+		if (this.expiration == null) {
+			return false;
+		}
+		long currentMillis = System.currentTimeMillis();
+		long expirationMillis = this.expiration.getTime();
+		return currentMillis > expirationMillis;
 	}
 	
 }

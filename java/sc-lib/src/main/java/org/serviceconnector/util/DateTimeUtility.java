@@ -57,11 +57,41 @@ public final class DateTimeUtility {
 	}
 
 	/**
+	 * Gets the time as string.
+	 * 
+	 * @param date
+	 *            the date
+	 * @return the time as string
+	 */
+	public static String getTimeAsString(Date date) {
+		synchronized (SDF) { // SDF is not thread safe
+			return SDF.format(date);
+		}
+	}
+
+	/**
+	 * Gets the increment time in millis.
+	 * 
+	 * @param date
+	 *            the date
+	 * @param inc
+	 *            the inc
+	 * @return the increment time in millis
+	 */
+	public static Date getIncrementTimeInMillis(Date date, long inc) {
+		long time = date.getTime();
+		time += inc;
+		return new Date(time);
+	}
+
+	/**
 	 * Parses the date string.
-	 *
-	 * @param dateString the date string
+	 * 
+	 * @param dateString
+	 *            the date string
 	 * @return the date
-	 * @throws ParseException the parse exception
+	 * @throws ParseException
+	 *             the parse exception
 	 */
 	public static Date parseDateString(String dateString) throws ParseException {
 		synchronized (SDF) {
