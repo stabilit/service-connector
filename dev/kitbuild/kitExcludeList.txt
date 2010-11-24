@@ -1,5 +1,5 @@
 log\*.*
-scripts\kit*.*
-scripts\mvn*.*
+kitbuild\kit*.*
+kitbuild\mvn*.*
 doc\*.bak
-cfg\*.bak
+config\*.bak

@@ -8,5 +8,5 @@ call mvn-all.bat > build.log
 cd C:\stabilit\projects\EUREX\SC\dev
 rem Create Installation Kit
 echo -
-"C:\Program Files\WinZip\wzzip" -yp -ex -rP ..\sc.zip @scripts\kitList.txt -x@scripts\kitExcludeList.txt
-cd C:\stabilit\projects\EUREX\SC\dev\scripts
+"C:\Program Files\WinZip\wzzip" -yp -ex -rP ..\sc.zip @kitbuild\kitList.txt -x@kitbuild\kitExcludeList.txt
+cd C:\stabilit\projects\EUREX\SC\dev\kitbuild
