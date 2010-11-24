@@ -21,17 +21,21 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 
-public class DemoSessionServer {
+public class DemoSessionServer extends Thread {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(DemoSessionServer.class);
 	private static String serviceName = "session-1";
 
+	/**
+	 * Main method if you like to start in debug mode.
+	 */
 	public static void main(String[] args) throws Exception {
 		DemoSessionServer sessionServer = new DemoSessionServer();
-		sessionServer.runSessionServer();
+		sessionServer.run();
 	}
 
-	public void runSessionServer() {
+	@Override
+	public void run() {
 
 		SCServer sc = new SCServer("localhost", 9000, 9002); // regular, defaults documented in javadoc
 		//sc = new SCServer("localhost", 9000, 9002, ConnectionType.NETTY_TCP); // alternative with connection type
@@ -52,11 +56,11 @@ public class DemoSessionServer {
 				server.deregisterServer();
 				// server.deregisterServer(10);
 			}
-			//server.destroy();
+			// server.destroy();
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
 		} finally {
-			//sc.stopListener();
+			// sc.stopListener();
 		}
 	}
 

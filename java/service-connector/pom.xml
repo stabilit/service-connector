@@ -45,10 +45,14 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2-beta-5</version>
 				<configuration>
+					<descriptors>
+						<descriptor>src/main/resources/descriptor.xml</descriptor>
+					</descriptors>
 					<finalName>sc</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
@@ -81,7 +85,7 @@
 		<dependency>
 			<groupId>org.serviceconnector</groupId>
 			<artifactId>sc-lib</artifactId>
-			<version>Final</version>
+			<version>final</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

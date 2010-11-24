@@ -4,7 +4,7 @@
 	<groupId>org.serviceconnector</groupId>
 	<artifactId>sc-lib</artifactId>
 	<name>sc-lib</name>
-	<version>Final</version>
+	<version>final</version>
 	<description>sc-lib</description>
 	<url>http://www.stabilit.ch</url>
 	<properties>
@@ -33,6 +33,11 @@
 					</descriptors>
 					<finalName>sc-lib-Final</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
 				</configuration>
 			</plugin>
 			<plugin>

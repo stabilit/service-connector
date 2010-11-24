@@ -10,7 +10,7 @@
   		<dependencySet>
   			<useProjectArtifact>false</useProjectArtifact>
   			<outputDirectory></outputDirectory>
-  			<unpack>false</unpack>
+  			<unpack>true</unpack>
   			<scope>runtime</scope>
   		</dependencySet>
   	</dependencySets>

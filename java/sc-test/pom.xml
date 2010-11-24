@@ -66,7 +66,7 @@
 		<dependency>
 			<groupId>org.serviceconnector</groupId>
 			<artifactId>sc-lib</artifactId>
-			<version>Final</version>
+			<version>final</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

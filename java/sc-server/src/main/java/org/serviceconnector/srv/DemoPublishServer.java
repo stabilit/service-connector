@@ -23,7 +23,7 @@ import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.net.ConnectionType;
 
-public class DemoPublishServer {
+public class DemoPublishServer extends Thread {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DemoPublishServer.class);
@@ -31,12 +31,16 @@ public class DemoPublishServer {
 	private SCPublishServer publishSrv = null;
 	private static String serviceName = "publish-1";
 
+	/**
+	 * Main method if you like to start in debug mode.
+	 */
 	public static void main(String[] args) throws Exception {
 		DemoPublishServer publishServer = new DemoPublishServer();
-		publishServer.runPublishServer();
+		publishServer.run();
 	}
 
-	public void runPublishServer() {
+	@Override
+	public void run() {
 
 		SCServer sc = new SCServer("localhost", 9000, 9001); // regular, defaults documented in javadoc
 		sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY_TCP); // alternative with connection type
@@ -67,12 +71,12 @@ public class DemoPublishServer {
 			logger.error("runPublishServer", e);
 		} finally {
 			try {
-	//			publishSrv.deregisterServer();
+				// publishSrv.deregisterServer();
 				// publishSrv.deregisterServer(10, serviceName);
 			} catch (Exception e1) {
 				logger.error("run", e1);
 			}
-//			sc.stopListener();
+			// sc.stopListener();
 		}
 	}
 
