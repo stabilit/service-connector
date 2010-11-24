@@ -82,6 +82,10 @@ public class StatefulServer extends Server {
 	 *            the session
 	 */
 	public void removeSession(AbstractSession session) {
+		if (this.sessions == null) {
+			// might be the case if server got already destroyed
+			return;
+		}
 		this.sessions.remove(session);
 	}
 

@@ -265,6 +265,15 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			} else {
 				fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
 			}
+			// set sid & serviceName for EXC
+			SCMPMessage message;
+			try {
+				message = request.getMessage();
+				fault.setServiceName(message.getServiceName());
+			} catch (Exception e) {
+				logger.info("not possible to set service name in EXC of execute command.");
+			}
+			fault.setSessionId(sessionId);
 			this.callback(fault);
 			// schedule session timeout
 			Session session = this.sessionRegistry.getSession(this.sessionId);
