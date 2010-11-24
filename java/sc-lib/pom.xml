@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.serviceconnector</groupId>
 	<artifactId>sc-lib</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>sc-lib</name>
+	<version>Final</version>
 	<description>sc-lib</description>
 	<url>http://www.stabilit.ch</url>
 	<properties>
@@ -25,10 +25,14 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2-beta-5</version>
 				<configuration>
-					<finalName>sc-lib-${project.version}</finalName>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<finalName>sc-lib-Final</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
 			</plugin>
 			<plugin>
