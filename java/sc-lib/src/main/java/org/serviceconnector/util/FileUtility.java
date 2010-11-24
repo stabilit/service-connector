@@ -20,36 +20,70 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 
+/**
+ * The Class FileUtility.
+ */
 public class FileUtility {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(FileUtility.class);
 
+
 	/**
-	 * Checks if the file containing the PID exists. Is used for testing purpose to verify that SC is running properly.
+	 *
+	 * @param filename
+	 * @return true if the given file exists
 	 */
-	public static boolean exists(String filename, int nrSeconds) throws Exception {
+	public static boolean exists(String filename) {
 		File file = new File(filename);
-		for (int i = 0; i < nrSeconds; i++) {
-			if (file.exists()) {
-				return true;
-			}
-			Thread.sleep(1000);
+		if (file.exists()) {
+			return true;
 		}
-		throw new TimeoutException("File:" + filename + " does not exist within " + nrSeconds + " seconds.");
+		else {
+			return false;
+		}
 	}
 
 	/**
-	 * Checks if the file containing the PID does not exist. Is used for testing purpose to verify that SC is running properly.
+	 *
+	 * @param filename
+	 * @return true if the given file does not exist
 	 */
-	public static boolean notExists(String filename, int nrSeconds) throws Exception {
-		File file = new File(filename);
+	public static boolean notExists(String filename){
+		return !exists(filename);
+	}
+	
+
+	/**
+	 * 
+	 * @param filename to look for
+	 * @param nrSeconds to wait (check is done in 1 second interval)
+	 * @throws Exception if the file does not exist after the given time
+	 */
+	public static void waitExists(String filename, int nrSeconds) throws Exception {
 		for (int i = 0; i < nrSeconds; i++) {
-			if (!file.exists()) {
-				return true;
+			if (exists(filename)) {
+				return;
 			}
 			Thread.sleep(1000);
 		}
-		throw new TimeoutException("File:" + filename + " does still exist within " + nrSeconds + " seconds.");
+		throw new TimeoutException("File:" + filename + " does not exist after " + nrSeconds + " seconds timeout.");
+	}
+
+
+	/**
+	 * 
+	 * @param filename to look for
+	 * @param nrSeconds to wait (check is done in 1 second interval)
+	 * @throws Exception if the file still exists after the given time
+	 */
+	public static void waitNotExists(String filename, int nrSeconds) throws Exception {
+		for (int i = 0; i < nrSeconds; i++) {
+			if (notExists(filename)) {
+				return;
+			}
+			Thread.sleep(1000);
+		}
+		throw new TimeoutException("File:" + filename + " does still exist after " + nrSeconds + " seconds timeout.");
 	}
 }

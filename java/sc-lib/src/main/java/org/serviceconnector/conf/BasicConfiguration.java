@@ -245,7 +245,7 @@ public class BasicConfiguration {
 	}
 
 	/**
-	 * Checks if the file containing the PID exists. Is used for testing purpose to verify that SC is running properly.
+	 * @return path of the current log4j configuration file
 	 */
 	private String getPath() {
 		String fs = System.getProperty("file.separator");

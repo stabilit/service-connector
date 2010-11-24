@@ -119,7 +119,7 @@ public final class Constants {
 	public static final String COMMA_OR_SEMICOLON = ",|;"; // TODO not used
 
 	/** File containing the Sc process PID. Created at startup and deleted on exit or error. Used to check is sc is running.*/
-	public static final String PID_FILE_NAME = "/pid.log";
+	public static final String PID_FILE_NAME = "/sc.pid";
 	
 	/*
 	 * console command constants *************************

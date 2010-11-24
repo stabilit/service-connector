@@ -24,11 +24,13 @@ package org.serviceconnector.srv;
 import java.io.File;
 import java.io.FileWriter;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
+import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnetor.TestConstants;
 
@@ -45,12 +47,33 @@ public class TestPublishServer {
 	private int maxCons = 10;
 	private static boolean killPublishServer = false;
 
+	/** start server process (wrapper for the case this will be started directly from CLI)
+	 * @param args see runSessionServer
+	 */
 	public static void main(String[] args) throws Exception {
 		TestPublishServer publishServer = new TestPublishServer();
 		publishServer.runPublishServer(args);
 	}
 
+	/** start server process
+	 * @param args
+	 *  [0] listenerPort<br>	
+	 *  [1] SC port<br>			
+	 *  [2] maxSessions<br>			
+	 *  [3] maxConnections<br>
+	 *  [4...] serviceNames<br>		
+	 */
 	public void runPublishServer(String[] args) {
+		
+		logger.log(Level.OFF, "TestPublishServer is running ...");
+		
+		this.listenerPort = Integer.parseInt(args[0]);
+		this.port = Integer.parseInt(args[1]);
+		this.maxCons = Integer.parseInt(args[2]);
+		this.startFile = args[3];
+		this.serviceNames = new String[args.length - 4];
+
+			
 		try {
 			this.publishSrv = new SCPublishServer();
 

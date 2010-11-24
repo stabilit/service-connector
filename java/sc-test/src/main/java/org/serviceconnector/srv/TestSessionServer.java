@@ -18,14 +18,18 @@ package org.serviceconnector.srv;
 import java.io.File;
 import java.io.FileWriter;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
+import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
+import org.serviceconnector.srv.DemoSessionServer.KillThread;
+import org.serviceconnector.srv.DemoSessionServer.SrvCallback;
 import org.serviceconnetor.TestConstants;
 
 public class TestSessionServer {
@@ -33,34 +37,65 @@ public class TestSessionServer {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(TestSessionServer.class);
 
-	private SCSessionServer scSrv = null;
-	private String startFile = null;
 	private String[] serviceNames;
-	private int port = TestConstants.PORT_TCP;
-	private int listenerPort = TestConstants.PORT_LISTENER;
-	private int maxCons = 10;
+	private int port;
+	private int listenerPort;
+	private int maxSessions ;
+	private int maxConnections;
 	private ThreadSafeCounter ctr;
 
+
+	/** start server process (wrapper for the case this will be started directly from CLI)
+	 * @param args see runSessionServer
+	 */
 	public static void main(String[] args) throws Exception {
 		TestSessionServer sessionServer = new TestSessionServer();
 		sessionServer.runSessionServer(args);
 	}
 
+	/** start server process
+	 * @param args
+	 *  [0] listenerPort<br>	
+	 *  [1] SC port<br>			
+	 *  [2] maxSessions<br>			
+	 *  [3] maxConnections<br>			
+	 *  [4...] serviceNames<br>		
+	 */
 	public void runSessionServer(String[] args) {
+		logger.log(Level.OFF, "TestSessionServer is running ...");
+		this.listenerPort = Integer.parseInt(args[0]);
+		this.port = Integer.parseInt(args[1]);
+		this.maxSessions = Integer.parseInt(args[2]);
+		this.maxConnections = Integer.parseInt(args[3]);
+		this.serviceNames = new String[args.length - 4];
+		ctr = new ThreadSafeCounter();
+		
+		SCServer sc = new SCServer("localhost", this.port, this.listenerPort);
+		
 		try {
+			sc.startListener();
+	
+			SCSessionServer server = sc.newSessionServer(serviceName); // no other params possible
+
+			int maxSess = 10;
+			int maxConn = 5;
+			SCSessionServerCallback cbk = new SrvCallback(server);
+			try {
+				server.registerServer(10, this.maxSessions, this.maxConnections, cbk); // regular
+			} catch (Exception e) {
+				logger.error("runSessionServer", e);
+				server.deregisterServer(10);
+			}
+
+			
 			this.scSrv = new SCSessionServer();
 			try {
-				this.listenerPort = Integer.parseInt(args[0]);
-				this.port = Integer.parseInt(args[1]);
-				this.maxCons = Integer.parseInt(args[2]);
-				this.startFile = args[3];
-				this.serviceNames = new String[args.length - 4];
 				System.arraycopy(args, 4, serviceNames, 0, args.length - 4);
 			} catch (Exception e) {
 				logger.error("incorrect parameters", e);
 				shutdown();
 			}
-			ctr = new ThreadSafeCounter();
+			
 
 			// connect to SC as server
 			this.scSrv.setImmediateConnect(true);
@@ -69,26 +104,9 @@ public class TestSessionServer {
 			SrvCallback srvCallback = new SrvCallback(new SessionServerContext());
 
 			for (int i = 0; i < serviceNames.length; i++) {
-				this.scSrv.registerServer(TestConstants.HOST, port, serviceNames[i], 1000, maxCons, srvCallback);
+				this.scSrv.registerServer(TestConstants.HOST, port, serviceNames[i], 1000, maxConnections, srvCallback);
 			}
 
-			// for testing whether the server already started
-			new ProcessesController().createFile(startFile);
-
-			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-			long pid = Long.parseLong(processName.split("@")[0]);
-			FileWriter fw = null;
-			try {
-				File pidFile = new File(startFile);
-				fw = new FileWriter(pidFile);
-				fw.write("pid: " + pid);
-				fw.flush();
-				fw.close();
-			} finally {
-				if (fw != null) {
-					fw.close();
-				}
-			}
 
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
@@ -106,6 +124,51 @@ public class TestSessionServer {
 		}
 	}
 
+	
+	class SrvCallback extends SCSessionServerCallback {
+
+		private SCSessionServer scSessionServer;
+
+		public SrvCallback(SCSessionServer server) {
+			this.scSessionServer = server;
+		}
+
+		@Override
+		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
+			logger.info("Session created");
+			return request;
+		}
+
+		@Override
+		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
+			logger.info("Session deleted");
+		}
+
+		@Override
+		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
+			logger.info("Session aborted");
+		}
+
+		@Override
+		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
+			Object data = request.getData();
+
+			// watch out for kill server message
+			if (data.getClass() == String.class) {
+				String dataString = (String) data;
+				if (dataString.equals("kill server")) {
+					KillThread kill = new KillThread(this.scSessionServer);
+					kill.start();
+				} else {
+					logger.info("Message received: " + data);
+				}
+			}
+			return request;
+		}
+	}
+
+	
+	
 	class SrvCallback extends SCSessionServerCallback {
 
 		private SessionServerContext outerContext;
@@ -187,7 +250,7 @@ public class TestSessionServer {
 						if (!alreadyPresentService) {
 							if (!scSrv.isRegistered(serviceName)) {
 								try {
-									scSrv.registerServer(TestConstants.HOST, port, serviceName, 1000, maxCons,
+									scSrv.registerServer(TestConstants.HOST, port, serviceName, 1000, maxConnections,
 											new SrvCallback(new SessionServerContext()));
 									String[] services = new String[serviceNames.length + 1];
 									System.arraycopy(serviceNames, 0, services, 0, serviceNames.length);

@@ -20,7 +20,6 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
-import org.serviceconnector.net.ConnectionType;
 
 public class DemoSessionServer {
 	/** The Constant logger. */
@@ -35,16 +34,13 @@ public class DemoSessionServer {
 	public void runSessionServer() {
 
 		SCServer sc = new SCServer("localhost", 9000, 9002); // regular, defaults documented in javadoc
-		sc = new SCServer("localhost", 9000, 9002, ConnectionType.NETTY_TCP); // alternative with connection type
+		//sc = new SCServer("localhost", 9000, 9002, ConnectionType.NETTY_TCP); // alternative with connection type
 
 		try {
 			sc.setKeepAliveIntervalInSeconds(10); // can be set before register
 			sc.setImmediateConnect(true); // can be set before register
-
 			sc.startListener(); // regular
-
 			SCSessionServer server = sc.newSessionServer(serviceName); // no other params possible
-
 			int maxSess = 10;
 			int maxConn = 5;
 			SCSessionServerCallback cbk = new SrvCallback(server);

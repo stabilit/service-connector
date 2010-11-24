@@ -76,7 +76,7 @@ public final class SC {
 		logger.log(Level.OFF, "Service Connector " + SCVersion.CURRENT.toString() + " is starting ...");
 		String configFileName = CommandLineUtil.getArg(args, Constants.CLI_CONFIG_ARG);
 		try {
-			SC.addShutdownHook();
+			SC.addExitHandler();
 			SC.run(configFileName);
 		} catch (Exception ex) {
 			logger.fatal(ex.getMessage(), ex);
@@ -199,14 +199,14 @@ public final class SC {
 	/**
 	 * Adds the shutdown hook.
 	 */
-	private static void addShutdownHook() {
-		Runtime.getRuntime().addShutdownHook(new SCShutdownHook());
+	private static void addExitHandler() {
+		Runtime.getRuntime().addShutdownHook(new SCExitHandler());
 	}
 
 	/**
-	 * The Class SCShutdownHook.
+	 * The Class SCExitHandler.
 	 */
-	private static class SCShutdownHook extends Thread {
+	private static class SCExitHandler extends Thread {
 
 		/*
 		 * (non-Javadoc)
@@ -215,7 +215,7 @@ public final class SC {
 		@Override
 		public void run() {
 			AppContext.getBasicConfiguration().deletePIDfile();
-			logger.log(Level.OFF, "Service Connector exits");
+			logger.log(Level.OFF, "Service Connector exiting");
 			logger.log(Level.OFF, "<<<");
 			AppContext.getCacheManager().destroy();
 		}
