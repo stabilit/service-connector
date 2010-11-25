@@ -21,6 +21,7 @@ import java.io.File;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SC;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.SCPublishMessage;
@@ -31,7 +32,6 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnetor.TestConstants;
 
 /**
  * @author JTraber

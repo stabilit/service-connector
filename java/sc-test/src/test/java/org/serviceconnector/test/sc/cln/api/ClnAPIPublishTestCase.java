@@ -20,6 +20,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
@@ -27,7 +28,6 @@ import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.test.sc.SetupTestCases;
-import org.serviceconnetor.TestConstants;
 
 public class ClnAPIPublishTestCase {
 

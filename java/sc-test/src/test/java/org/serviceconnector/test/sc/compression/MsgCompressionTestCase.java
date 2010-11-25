@@ -22,6 +22,7 @@ import java.util.Arrays;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.scmp.SCMPBodyType;
@@ -29,7 +30,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.test.sc.session.SuperSessionTestCase;
 import org.serviceconnector.util.SynchronousCallback;
-import org.serviceconnetor.TestConstants;
 
 /**
  * @author JTraber

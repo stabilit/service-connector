@@ -21,6 +21,7 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
@@ -31,7 +32,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
-import org.serviceconnetor.TestConstants;
 
 /**
  * The Class ClnCreateSessionTestCase.

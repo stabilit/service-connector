@@ -25,12 +25,12 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnetor.TestConstants;
 
 public class NewServicesTest {
 	/** The Constant logger. */

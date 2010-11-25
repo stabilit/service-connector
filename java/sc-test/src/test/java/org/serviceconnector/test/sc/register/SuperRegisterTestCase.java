@@ -18,6 +18,7 @@ package org.serviceconnector.test.sc.register;
 
 import org.junit.After;
 import org.junit.Before;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
@@ -32,7 +33,6 @@ import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 import org.serviceconnector.test.sc.connectionPool.TestContext;
-import org.serviceconnetor.TestConstants;
 
 /**
  * @author JTraber

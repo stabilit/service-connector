@@ -23,6 +23,7 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPInspectCall;
@@ -39,7 +40,6 @@ import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.SuperTestCase;
 import org.serviceconnector.test.sc.connectionPool.TestContext;
 import org.serviceconnector.util.SynchronousCallback;
-import org.serviceconnetor.TestConstants;
 
 public class RegisterServerTestCase extends SuperTestCase {
 

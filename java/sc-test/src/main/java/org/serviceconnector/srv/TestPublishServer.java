@@ -26,13 +26,13 @@ import java.io.FileWriter;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnetor.TestConstants;
 
 public class TestPublishServer {
 

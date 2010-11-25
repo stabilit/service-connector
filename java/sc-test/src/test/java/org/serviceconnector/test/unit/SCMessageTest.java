@@ -21,8 +21,8 @@ import java.security.InvalidParameterException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnetor.TestConstants;
 
 
 /**

@@ -27,11 +27,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.Constants;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnetor.TestConstants;
 
 public class AttachConnectionTypeTcpTest {
 

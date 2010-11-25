@@ -23,6 +23,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
@@ -30,7 +31,6 @@ import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnetor.TestConstants;
 
 public class PublishConnectionTypeHttpTest {
 	/** The Constant logger. */

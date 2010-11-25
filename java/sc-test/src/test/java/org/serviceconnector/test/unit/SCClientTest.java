@@ -23,10 +23,10 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnetor.TestConstants;
 
 /**
  * @author FJurnecka

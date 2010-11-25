@@ -16,7 +16,6 @@
 			<artifactId>sc-lib</artifactId>
 			<version>final</version>
 			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>

@@ -20,7 +20,7 @@ import java.io.FileWriter;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.serviceconnetor.TestConstants;
+import org.serviceconnector.TestConstants;
 
 public class TestServer {
 

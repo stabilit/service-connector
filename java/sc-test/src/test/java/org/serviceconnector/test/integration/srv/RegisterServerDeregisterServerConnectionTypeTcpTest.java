@@ -23,12 +23,12 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
-import org.serviceconnetor.TestConstants;
 
 public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 

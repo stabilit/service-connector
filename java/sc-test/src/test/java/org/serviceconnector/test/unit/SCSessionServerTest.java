@@ -22,9 +22,9 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
-import org.serviceconnetor.TestConstants;
 
 
 public class SCSessionServerTest {

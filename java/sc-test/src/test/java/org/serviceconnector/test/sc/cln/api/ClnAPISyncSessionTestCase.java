@@ -18,11 +18,11 @@ package org.serviceconnector.test.sc.cln.api;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.test.sc.SetupTestCases;
-import org.serviceconnetor.TestConstants;
 
 public class ClnAPISyncSessionTestCase {
 

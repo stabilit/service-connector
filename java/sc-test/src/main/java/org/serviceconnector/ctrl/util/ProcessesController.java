@@ -21,11 +21,11 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.util.FileUtility;
-import org.serviceconnetor.TestConstants;
 
 public class ProcessesController {
 
