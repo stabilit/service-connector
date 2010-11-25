@@ -165,7 +165,7 @@ public final class Constants {
 	public static final String DEFAULT_CACHE_NAME = "scCache";
 	public static final boolean DEFAULT_CACHE_DISK_PERSISTENT = true;
 	public static final String DEFAULT_CACHE_DISK_PATH = "cache";
-	public static final int DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY = 10000;
+	public static final int DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY = 0;
 	public static final int DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK = 100000;
 	public static final int DEFAULT_CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS = 60;
 

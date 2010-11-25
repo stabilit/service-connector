@@ -329,7 +329,9 @@ public class Cache {
 	}
 
 	/**
-	 * Gets the element size.
+	 * Gets the element size. 
+	 * Each stored instance in the cache belong to a key and represents 
+	 * an element. This is not the size in bytes.
 	 * 
 	 * @return the element size
 	 */
@@ -337,6 +339,15 @@ public class Cache {
 		return this.cacheImpl.getElementSize();
 	}
 
+	/**
+	 * Gets the size in bytes.
+	 *
+	 * @return the size in bytes
+	 */
+	public long getSizeInBytes() {
+		return this.cacheImpl.getSizeInBytes();	
+	}
+	
 	/**
 	 * Gets the memory store size.
 	 * 
@@ -351,15 +362,14 @@ public class Cache {
 	 * 
 	 * @return the disk store size
 	 */
-	public int getDiskStoreSize() {
+	public long getDiskStoreSize() {
 		return this.cacheImpl.getDiskStoreSize();
 	}
 
 	/**
 	 * Gets the iterator.
-	 * 
-	 * @param string
-	 *            the string
+	 *
+	 * @param cacheId the cache id
 	 * @return the iterator
 	 */
 	public Iterator iterator(String cacheId) {

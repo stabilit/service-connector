@@ -47,64 +47,50 @@ public class EHCacheImpl implements ICacheImpl {
 	private Cache cache;
 
 	/**
-	 * Instantiates a new eH cache scmp cache impl.
+	 * Instantiates a new eH cache scmp cache impl. <cache name="scCache" maxElementsInMemory="10000" eternal="false"
+	 * timeToIdleSeconds="120" timeToLiveSeconds="120" overflowToDisk="true" maxElementsOnDisk="10000000" diskPersistent="true"
+	 * diskExpiryThreadIntervalSeconds="120" memoryStoreEvictionPolicy="LRU"/>
 	 * 
-	 * @param acheConfiguration
+	 * @param cacheConfiguration
 	 *            the scmp cache configuration
 	 * @param serviceName
 	 *            the service name
 	 */
-	public EHCacheImpl(ICacheConfiguration acheConfiguration,
-			String serviceName) {
+	public EHCacheImpl(ICacheConfiguration cacheConfiguration, String serviceName) {
 		synchronized (syncObj) {
 			if (manager == null) {
 				Configuration configuration = new Configuration();
 				DiskStoreConfiguration diskStoreConfiguration = new DiskStoreConfiguration();
-				diskStoreConfiguration.setPath(acheConfiguration
-						.getDiskPath());
+				diskStoreConfiguration.setPath(cacheConfiguration.getDiskPath());
 				configuration.addDiskStore(diskStoreConfiguration);
-				configuration.setName(acheConfiguration.getCacheName());
-				CacheConfiguration defaultCacheConfiguration = new CacheConfiguration(
-						acheConfiguration.getCacheName(),
-						acheConfiguration.getMaxElementsInMemory());
-				defaultCacheConfiguration.setEternal(true); // ignore any
+				configuration.setName(cacheConfiguration.getCacheName());
+				CacheConfiguration defaultCacheConfiguration = new CacheConfiguration(cacheConfiguration.getCacheName(),
+						cacheConfiguration.getMaxElementsInMemory());
+				defaultCacheConfiguration.setEternal(false); // ignore any
 															// timeouts
-				// defaultCacheConfiguration.setTimeToIdleSeconds(60);
-				// defaultCacheConfiguration.setTimeToLiveSeconds(120);
-				defaultCacheConfiguration
-						.setMaxElementsInMemory(acheConfiguration
-								.getMaxElementsInMemory());
-				defaultCacheConfiguration
-						.setMaxElementsOnDisk(acheConfiguration
-								.getMaxElementsOnDisk());
-				defaultCacheConfiguration
-						.setDiskPersistent(acheConfiguration
-								.isDiskPersistent());
-				defaultCacheConfiguration.setName(acheConfiguration
-						.getCacheName());
-				configuration
-						.setDefaultCacheConfiguration(defaultCacheConfiguration);
+				defaultCacheConfiguration.setTimeToIdleSeconds(60);
+				defaultCacheConfiguration.setTimeToLiveSeconds(120);
+				defaultCacheConfiguration.setOverflowToDisk(true);				
+				defaultCacheConfiguration.setMaxElementsInMemory(cacheConfiguration.getMaxElementsInMemory());
+				defaultCacheConfiguration.setMaxElementsOnDisk(cacheConfiguration.getMaxElementsOnDisk());
+				defaultCacheConfiguration.setDiskPersistent(cacheConfiguration.isDiskPersistent());
+				defaultCacheConfiguration.setName(cacheConfiguration.getCacheName());
+				configuration.setDefaultCacheConfiguration(defaultCacheConfiguration);
 				configuration.setUpdateCheck(false); // disable update checker
 				manager = new CacheManager(configuration);
 			}
 		}
-		this.config = new CacheConfiguration(serviceName,
-				acheConfiguration.getMaxElementsInMemory());
+		this.config = new CacheConfiguration(serviceName, cacheConfiguration.getMaxElementsInMemory());
 		// TODO from configuration file
 		this.config.setEternal(true);
 		// this.config.setTimeToIdleSeconds(60);
 		// this.config.setTimeToLiveSeconds(120);
-		this.config.setMaxElementsInMemory(acheConfiguration
-				.getMaxElementsInMemory());
-		this.config.setMaxElementsOnDisk(acheConfiguration
-				.getMaxElementsOnDisk());
-		this.config
-				.setDiskPersistent(acheConfiguration.isDiskPersistent());
-		this.config.setName(acheConfiguration.getCacheName() + "."
-				+ serviceName);
+		this.config.setMaxElementsInMemory(cacheConfiguration.getMaxElementsInMemory());
+		this.config.setMaxElementsOnDisk(cacheConfiguration.getMaxElementsOnDisk());
+		this.config.setDiskPersistent(cacheConfiguration.isDiskPersistent());
+		this.config.setName(cacheConfiguration.getCacheName() + "." + serviceName);
 		this.cache = new Cache(this.config);
-		this.cache.setName(acheConfiguration.getCacheName() + "."
-				+ serviceName);
+		this.cache.setName(cacheConfiguration.getCacheName() + "." + serviceName);
 		this.cache.setDiskStorePath(serviceName);
 		manager.addCache(this.cache);
 	}
@@ -125,8 +111,7 @@ public class EHCacheImpl implements ICacheImpl {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.serviceconnector.scmp.cache.ISCMPCacheImpl#put(java.lang.Object,
-	 * java.lang.Object)
+	 * @see org.serviceconnector.scmp.cache.ISCMPCacheImpl#put(java.lang.Object, java.lang.Object)
 	 */
 	public void put(Object key, Object value) {
 		Element element = new Element(key, value);
@@ -136,8 +121,7 @@ public class EHCacheImpl implements ICacheImpl {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.serviceconnector.scmp.cache.ISCMPCacheImpl#remove(java.lang.Object)
+	 * @see org.serviceconnector.scmp.cache.ISCMPCacheImpl#remove(java.lang.Object)
 	 */
 	public boolean remove(Object key) {
 		boolean ret = this.cache.remove(key);
@@ -163,26 +147,25 @@ public class EHCacheImpl implements ICacheImpl {
 				String diskStorePath = manager.getDiskStorePath();
 				File diskStorePathFile = new File(diskStorePath);
 				if (diskStorePathFile.exists()) {
-					File[] files = diskStorePathFile
-							.listFiles(new FileFilter() {
-								String cacheName = manager.getName();
+					File[] files = diskStorePathFile.listFiles(new FileFilter() {
+						String cacheName = manager.getName();
 
-								@Override
-								public boolean accept(File pathname) {
-									String fileName = pathname.getName();
-									if (fileName.startsWith(cacheName + ".") == false) {
-										return false;
-									}
-									if (fileName.endsWith(".data")) {
-										return true;
-									}
-									if (fileName.endsWith(".index")) {
-										return true;
-									}
-									return false;
-								}
+						@Override
+						public boolean accept(File pathname) {
+							String fileName = pathname.getName();
+							if (fileName.startsWith(cacheName + ".") == false) {
+								return false;
+							}
+							if (fileName.endsWith(".data")) {
+								return true;
+							}
+							if (fileName.endsWith(".index")) {
+								return true;
+							}
+							return false;
+						}
 
-							});
+					});
 
 					for (int i = 0; i < files.length; i++) {
 						if (files[i].isFile()) {
@@ -198,20 +181,25 @@ public class EHCacheImpl implements ICacheImpl {
 	public int getElementSize() {
 		return this.cache.getSize();
 	}
-	
+
+	@Override
+	public long getSizeInBytes() {
+		return this.cache.calculateInMemorySize();
+	}
+
 	@Override
 	public String getCacheName() {
 		return this.cache.getName();
 	}
-	
+
 	@Override
 	public long getMemoryStoreSize() {
 		return this.cache.getMemoryStoreSize();
 	}
-	
+
 	@Override
-	public int getDiskStoreSize() {
+	public long getDiskStoreSize() {
 		return this.cache.getDiskStoreSize();
 	}
-	
+
 }

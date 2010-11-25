@@ -138,9 +138,9 @@
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
-			<version>2.0.1</version>
-			<scope>compile</scope>
+			<version>2.1.1</version>
 			<type>pom</type>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 	<repositories>
@@ -150,6 +150,11 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
+		</repository>
+		<repository>
+			<id>sourceforge-releases</id>
+			<name>Sourceforge Release Repository</name>
+			<url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 	</repositories>
 </project>

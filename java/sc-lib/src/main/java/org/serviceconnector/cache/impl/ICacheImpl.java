@@ -71,5 +71,12 @@ public interface ICacheImpl {
 	 *
 	 * @return the disk store size
 	 */
-	public abstract int getDiskStoreSize();
+	public abstract long getDiskStoreSize();
+
+	/**
+	 * Gets the size in bytes.
+	 *
+	 * @return the size in bytes
+	 */
+	public abstract long getSizeInBytes();
 }
