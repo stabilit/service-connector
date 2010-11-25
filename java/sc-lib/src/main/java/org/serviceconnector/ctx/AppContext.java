@@ -45,7 +45,7 @@ public final class AppContext {
 
 	// indicates that AppContext is running in a SC environment
 	private static boolean scEnvironment = false;
-	
+
 	// configurations
 	/** The composite configuration. */
 	private static CompositeConfiguration apacheCompositeConfig;
@@ -67,11 +67,11 @@ public final class AppContext {
 	private static final FlyweightEncoderDecoderFactory encoderDecoderFactory = new FlyweightEncoderDecoderFactory();
 
 	// Registries
-	private static final SrvServiceRegistry srvServiceRegistry = new SrvServiceRegistry();
-	private static final ServerRegistry serverRegistry = new ServerRegistry();
-	private static final ServiceRegistry serviceRegistry = new ServiceRegistry();
-	private static final SessionRegistry sessionRegistry = new SessionRegistry();
-	private static final SubscriptionRegistry subscriptionRegistry = new SubscriptionRegistry();
+	private static ServerRegistry serverRegistry = null;
+	private static ServiceRegistry serviceRegistry = null;
+	private static SessionRegistry sessionRegistry = null;
+	private static SubscriptionRegistry subscriptionRegistry = null;
+	private static SrvServiceRegistry srvServiceRegistry = new SrvServiceRegistry();
 	private static final SCMPSessionCompositeRegistry scmpSessionCompositeRegistry = new SCMPSessionCompositeRegistry();
 
 	// scmp cache
@@ -183,11 +183,17 @@ public final class AppContext {
 	public static RequesterConfiguration getRequesterConfiguration() {
 		return requesterConfiguration;
 	}
-	
+
 	public static void setSCEnvironment(boolean scEnvironment) {
 		AppContext.scEnvironment = scEnvironment;
+		if (AppContext.scEnvironment) {
+			AppContext.serverRegistry = new ServerRegistry();
+			AppContext.serviceRegistry = new ServiceRegistry();
+			AppContext.sessionRegistry = new SessionRegistry();
+			AppContext.subscriptionRegistry = new SubscriptionRegistry();
+		}
 	}
-	
+
 	public static boolean isScEnvironment() {
 		return AppContext.scEnvironment;
 	}
