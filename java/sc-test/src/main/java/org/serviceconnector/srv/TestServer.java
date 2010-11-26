@@ -37,7 +37,7 @@ public class TestServer {
 	 *            [3] SC port<br>
 	 *            [4] maxSessions<br>
 	 *            [5] maxConnections<br>
-	 *            [6...] serviceNames<br>
+	 *            [6] serviceNames (comma delimited list)<br>
 	 */
 	public static void main(String[] args) {
 		logger.log(Level.OFF, "TestServer starting ...");
@@ -50,26 +50,24 @@ public class TestServer {
 		}
 		testServer.addExitHandler(pidFileNameFull);
 
-		// copy arguments, remove the first two arguments
-		String[] arguments = new String[args.length - 1];
-		System.arraycopy(args, 2, arguments, 0, args.length - 2);
-
-		/* start server process
-		 * Args:
-		 *  [0] listenerPort
-		 *  [1] SC port	
-		 *  [2] maxSessions	
-		 *  [3] maxConnections			
-		 *  [4...] serviceNames
-		 */
 		if (args[0].equals(TestConstants.sessionSrv)) {
-			TestSessionServer sessionServer = new TestSessionServer();
-			sessionServer.runSessionServer(arguments);
+			TestSessionServer server = new TestSessionServer();
+			server.setListenerPort(Integer.parseInt(args[0]));
+			server.setPort(Integer.parseInt(args[1]));
+			server.setMaxSessions(Integer.parseInt(args[2]));
+			server.setMaxConnections(Integer.parseInt(args[3]));
+			server.setServiceNames(args[4]);
+			server.start();
 
 		} else if (args[0].equals(TestConstants.publishSrv)) {
-			TestPublishServer publishServer = new TestPublishServer();
-			publishServer.runPublishServer(arguments);
-		}
+			TestPublishServer server = new TestPublishServer();
+			server.setListenerPort(Integer.parseInt(args[0]));
+			server.setPort(Integer.parseInt(args[1]));
+			server.setMaxSessions(Integer.parseInt(args[2]));
+			server.setMaxConnections(Integer.parseInt(args[3]));
+			server.setServiceNames(args[4]);
+			server.start();
+		}	
 	}
 
 	/**

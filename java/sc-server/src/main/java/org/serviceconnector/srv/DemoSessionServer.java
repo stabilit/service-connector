@@ -24,8 +24,7 @@ import org.serviceconnector.api.srv.SCSessionServerCallback;
 public class DemoSessionServer extends Thread {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(DemoSessionServer.class);
-	private static String serviceName = "session-1";
-
+	
 	/**
 	 * Main method if you like to start in debug mode.
 	 */
@@ -44,6 +43,8 @@ public class DemoSessionServer extends Thread {
 			sc.setKeepAliveIntervalInSeconds(10); // can be set before register
 			sc.setImmediateConnect(true); // can be set before register
 			sc.startListener(); // regular
+			
+			String serviceName = "session-1";
 			SCSessionServer server = sc.newSessionServer(serviceName); // no other params possible
 			int maxSess = 10;
 			int maxConn = 5;
@@ -65,9 +66,8 @@ public class DemoSessionServer extends Thread {
 	}
 
 	class SrvCallback extends SCSessionServerCallback {
-
 		private SCSessionServer scSessionServer;
-
+		
 		public SrvCallback(SCSessionServer server) {
 			this.scSessionServer = server;
 		}
@@ -107,9 +107,7 @@ public class DemoSessionServer extends Thread {
 	}
 
 	private class KillThread extends Thread {
-
 		private SCSessionServer server;
-
 		public KillThread(SCSessionServer server) {
 			this.server = server;
 		}

@@ -53,8 +53,7 @@ public class AsynchronousExecuteClientTest {
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties,
-					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.sessionServiceName,
-							TestConstants.publishServiceName });
+					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.sessionServiceName });
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}

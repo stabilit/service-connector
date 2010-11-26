@@ -52,10 +52,8 @@ public class AllPerformanceTests {
 	@Before
 	public void setUp() throws Exception {
 		scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		/*
-		 * srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
-		 * TestConstants.PORT_TCP, 100, new String[] { TestConstants.serviceNameSession });
-		 */
+		srvProcess = ctrl.startServer(TestConstants.sessionSrv, TestConstants.log4jSrvProperties, TestConstants.PORT_LISTENER,
+		TestConstants.PORT_TCP, 100, new String[] { TestConstants.sessionServiceName });
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach(5);
 	}

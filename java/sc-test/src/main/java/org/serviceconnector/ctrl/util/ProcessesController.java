@@ -17,7 +17,6 @@ package org.serviceconnector.ctrl.util;
 
 import java.io.FileInputStream;
 import java.util.Properties;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -129,13 +128,13 @@ public class ProcessesController {
 	 * @param SCport
 	 * @param maxSessions
 	 * @param maxConnections
-	 * @param serviceNames
+	 * @param serviceNames (comma delimited list)
 	 *            (list of strings)
 	 * @return Process with JVM in which the server is started
 	 * @throws Exception
 	 */
 	public Process startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
-			int maxSessions, int maxConnections, String[] serviceNames) throws Exception {
+			int maxSessions, int maxConnections, String serviceNames) throws Exception {
 
 		String srvRunableFull = userDir + fs + ".." + fs + "target" + fs + TestConstants.serverRunable;
 		if (FileUtility.notExists(srvRunableFull)) {
@@ -149,10 +148,6 @@ public class ProcessesController {
 
 		String pidFileNameFull = getLogDirPath(log4jSrvProperties) + fs + serverName + ".pid";
 
-		String services = "";
-		for (String service : serviceNames) {
-			services += " " + service;
-		}
 		/*
 		 * start server process Args: 
 		 * [0] -Dlog4j.configuration=file 
@@ -165,11 +160,11 @@ public class ProcessesController {
 		 * [7] SC port 
 		 * [8] maxSessions 
 		 * [9] maxConnections 
-		 * [10...] serviceNames
+		 * [10] serviceNames (comma delimited list)
 		 */
 		String command = "java -Dlog4j.configuration=file:" + log4jFileNameFull + " -jar " + srvRunableFull + " " + serverType
 				+ pidFileNameFull + " " + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " " 
-				+ services;
+				+ serviceNames;
 		Process srvProcess = Runtime.getRuntime().exec(command);
 		int timeout = 10;
 		try {
@@ -201,8 +196,8 @@ public class ProcessesController {
 	}
 
 	public Process restartServer(Process srvProcess, String serverType, String serverName, String log4jSrvProperties, int listenerPort, int port,
-			int maxSessions, int maxConnections, String[] serviceNames) throws Exception {
-		stopServer(srvProcess, log4jSrvProperties, serviceNames[0]);
+			int maxSessions, int maxConnections, String serviceNames) throws Exception {
+		stopServer(srvProcess, log4jSrvProperties, serviceNames);
 		srvProcess = null;
 		srvProcess = startServer(serverType, log4jSrvProperties, serverName, listenerPort, port, maxSessions, maxConnections, serviceNames);
 		return srvProcess;

@@ -21,15 +21,11 @@ import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
-import org.serviceconnector.net.ConnectionType;
 
 public class DemoPublishServer extends Thread {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DemoPublishServer.class);
-
-	private SCPublishServer publishSrv = null;
-	private static String serviceName = "publish-1";
 
 	/**
 	 * Main method if you like to start in debug mode.
@@ -43,13 +39,15 @@ public class DemoPublishServer extends Thread {
 	public void run() {
 
 		SCServer sc = new SCServer("localhost", 9000, 9001); // regular, defaults documented in javadoc
-		sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY_TCP); // alternative with connection type
+		//SCServer sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY_TCP); // alternative with connection type
 
 		sc.setKeepAliveIntervalInSeconds(10); // can be set before register
 		sc.setImmediateConnect(true); // can be set before register
 		try {
 			sc.startListener(); // regular
-			publishSrv = sc.newPublishServer(serviceName); // no other params possible
+			
+			String serviceName = "publish-1";
+			SCPublishServer publishSrv = sc.newPublishServer(serviceName); // no other params possible
 
 			int maxSessions = 10;
 			int maxConnections = 5;
@@ -62,9 +60,8 @@ public class DemoPublishServer extends Thread {
 			for (int i = 0; i < 10; i++) {
 				pubMessage.setData("publish message nr : " + i);
 				pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-				publishSrv.publish(pubMessage); // regular
+				//publishSrv.publish(pubMessage); // regular
 				publishSrv.publish(10, pubMessage); // alternative with operation timeout
-
 				Thread.sleep(1000);
 			}
 		} catch (Exception e) {
@@ -124,6 +121,5 @@ public class DemoPublishServer extends Thread {
 				}
 			}
 		}
-
 	}
 }
