@@ -106,6 +106,21 @@ public class CacheId implements Serializable {
 	}
 
 	/**
+	 * Gets the sequence nr int.
+	 *
+	 * @return the sequence nr int
+	 */
+	public int getSequenceNrInt() {
+		int nr;
+		try {
+			nr = Integer.parseInt(this.sequenceNr);
+		} catch (NumberFormatException e) {
+			return 0;
+		}
+		return nr;
+	}
+
+	/**
 	 * Sets the sequence nr.
 	 *
 	 * @param sequenceNr the new sequence nr
@@ -119,6 +134,20 @@ public class CacheId implements Serializable {
 		this.fullCacheId.append(this.cacheId);
 		this.fullCacheId.append("/");
 		this.fullCacheId.append(this.sequenceNr);
+	}
+
+	/**
+	 * Next sequence.
+	 *
+	 * @return the cache id
+	 */
+	public CacheId nextSequence() {
+		if (this.sequenceNr == null) {
+			this.setSequenceNr(String.valueOf(1));
+			return this;
+		}
+		this.setSequenceNr(String.valueOf(this.getSequenceNrInt()+1));
+		return this;
 	}
 
 	/**
@@ -161,5 +190,4 @@ public class CacheId implements Serializable {
 		return builder.toString();
 	}
 
-	
 }

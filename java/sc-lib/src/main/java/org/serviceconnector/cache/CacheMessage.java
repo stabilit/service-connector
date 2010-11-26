@@ -32,7 +32,7 @@ public class CacheMessage implements Serializable {
 	private Map<String, String> header;
 
 	private CacheId cacheId;
-	
+		
 	/** The body. */
 	private Object body;
 
@@ -79,6 +79,24 @@ public class CacheMessage implements Serializable {
 		this.setHeader(SCMPHeaderAttributeKey.MSG_TYPE, messageTypeValue);
 	}
 
+	/**
+	 * Sets the compressed.
+	 *
+	 * @param compressed the new compressed
+	 */
+	public void setCompressed(boolean compressed) {
+		this.setHeader(SCMPHeaderAttributeKey.COMPRESSION, String.valueOf(compressed));
+	}
+	
+	/**
+	 * Checks if is compressed.
+	 *
+	 * @return true, if is compressed
+	 */
+	public boolean isCompressed() {
+		String compressed = this.getHeader(SCMPHeaderAttributeKey.COMPRESSION);
+		return "true".equals(compressed);
+	}
 	/**
 	 * Returns the value of the header attribute.
 	 * 

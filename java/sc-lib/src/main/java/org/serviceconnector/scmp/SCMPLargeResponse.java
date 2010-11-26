@@ -71,6 +71,8 @@ public class SCMPLargeResponse extends SCMPMessage {
 		currentPart = new SCMPPart(true);
 		currentPart.setMessageType(request.getMessageType());
 		currentPart.setSessionId(request.getSessionId());
+		currentPart.setCacheId(request.getCacheId());
+		logger.info("cache id = " + request.getCacheId());
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.OPERATION_TIMEOUT); // tries to set operation timeout
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
 		currentPart.setHeader(messagePart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
@@ -117,6 +119,15 @@ public class SCMPLargeResponse extends SCMPMessage {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Gets the fault.
+	 *
+	 * @return the fault
+	 */
+	public SCMPFault getFault() {
+		return this.scmpFault;
 	}
 
 	/** {@inheritDoc} */

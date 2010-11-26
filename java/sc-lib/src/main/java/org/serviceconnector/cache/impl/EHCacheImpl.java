@@ -131,6 +131,24 @@ public class EHCacheImpl implements ICacheImpl {
 	/**
 	 * Destroy.
 	 */
+	public static void clearAll() {
+		synchronized (syncObj) {
+			if (manager != null) {
+				String[] cacheNames = manager.getCacheNames();
+				for (String cacheName : cacheNames) {
+					Ehcache ehCache = manager.getEhcache(cacheName);
+					if (ehCache instanceof Cache) {
+						Cache cache = (Cache) ehCache;
+						cache.removeAll();
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Destroy.
+	 */
 	public static void destroy() {
 		synchronized (syncObj) {
 			if (manager != null) {

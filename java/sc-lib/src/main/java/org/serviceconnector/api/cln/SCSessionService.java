@@ -37,6 +37,7 @@ import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPLargeResponse;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ITimerRun;
@@ -305,8 +306,15 @@ public class SCSessionService extends SCService {
 		// wait for message in callback
 		SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		this.pendingRequest = false;
-		if (reply.isFault()) {
-			SCMPFault fault = (SCMPFault) reply;
+		if (reply.isFault()) {			
+			SCMPFault fault = null;
+			if (reply instanceof SCMPFault) {
+				fault = (SCMPFault) reply;
+			} else {
+				if (reply instanceof SCMPLargeResponse) {
+					fault = ((SCMPLargeResponse)reply).getFault();
+				}
+			}
 			String errorCode = fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
 			if (errorCode != null && errorCode.equals(SCMPError.PROXY_TIMEOUT.getErrorCode())) {
 				// OTI run out on SC - mark session as dead!

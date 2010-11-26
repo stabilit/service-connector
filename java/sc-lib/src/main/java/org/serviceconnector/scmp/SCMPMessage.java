@@ -140,7 +140,7 @@ public class SCMPMessage {
 		if (cacheId == null) {
 			return;
 		}
-		this.header.put(SCMPHeaderAttributeKey.CACHE_ID.getValue(), cacheId);
+		this.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId);
 	}
 
 
@@ -260,6 +260,13 @@ public class SCMPMessage {
 		return bodyLength > Constants.MAX_MESSAGE_SIZE;
 	}
 
+	public boolean isCompressed() {
+	    if (this.header.keySet().contains(SCMPHeaderAttributeKey.COMPRESSION.getValue())) {
+	    	return true;
+	    }
+	    return false;
+	}
+	
 	/**
 	 * Removes the attribute with the specified name from the header.
 	 * 

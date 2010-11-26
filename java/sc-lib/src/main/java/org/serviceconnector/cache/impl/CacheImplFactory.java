@@ -27,4 +27,8 @@ public class CacheImplFactory {
 		EHCacheImpl.destroy();
 	}
 
+	public static void clearAll() {
+		EHCacheImpl.clearAll();
+	}
+
 }

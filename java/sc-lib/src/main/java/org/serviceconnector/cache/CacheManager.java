@@ -87,7 +87,13 @@ public class CacheManager {
 		}		
 	}
 	
-
+	public void clearAll() {
+		CacheImplFactory.clearAll();	
+	}
+	
+	/**
+	 * Destroy.
+	 */
 	public void destroy() {
 		logger.info("destroy, set expiration thread killed");
 		this.expirationTimeoutRun.setKilled(true);

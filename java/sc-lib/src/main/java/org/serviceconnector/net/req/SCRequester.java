@@ -178,6 +178,7 @@ public class SCRequester implements IRequester {
 				this.largeRequest = null;
 				if (scmpReply.isPart() && this.requestMsg.isGroup() == false) {
 					// response is a part - response is large, continue polling
+					logger.info("sc requester callback scmpReply cache id = " + scmpReply.getCacheId());
 					this.handlingLargeResponse(scmpReply);
 					return;
 				}
@@ -191,6 +192,7 @@ public class SCRequester implements IRequester {
 
 			// ------------------- handling large response -------------------
 			if (this.largeResponse != null) {
+				logger.info("sc requester callback large response cache id = " + scmpReply.getCacheId());
 				// large response message is processing - continue procedure
 				this.largeResponse.add(scmpReply);
 				if (scmpReply.isPart() == false) {
@@ -210,6 +212,8 @@ public class SCRequester implements IRequester {
 					this.msgSequenceNr.incrementMsgSequenceNr();
 					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 				}
+				message.setCacheId(scmpReply.getCacheId());
+				logger.info("handling large response using cache id = " + message.getCacheId());
 				// poll & exit
 				this.connectionCtx.getConnection().send(message, this);
 				return;
@@ -246,6 +250,7 @@ public class SCRequester implements IRequester {
 		 *             the exception
 		 */
 		private void handlingLargeResponse(SCMPMessage scmpReply) throws Exception {
+			System.out.println("SCSessionService.execute() scmp reply cacheId = " + scmpReply.getCacheId());
 			// response is a part - response is large, continue polling
 			// SCMPLargeResponse handles parts of large requests, putting all together
 			this.largeResponse = new SCMPLargeResponse(requestMsg, scmpReply);
@@ -256,8 +261,11 @@ public class SCRequester implements IRequester {
 				this.msgSequenceNr.incrementMsgSequenceNr();
 				message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			}
+			message.setCacheId(scmpReply.getCacheId());
+			logger.info("handling large response using cache id = " + message.getCacheId());
 			// poll & exit
 			this.connectionCtx.getConnection().send(message, this);
+			logger.info("handling large response after send using cache id = " + message.getCacheId());
 		}
 
 		/**

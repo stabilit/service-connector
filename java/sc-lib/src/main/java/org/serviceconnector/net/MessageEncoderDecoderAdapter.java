@@ -155,7 +155,9 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 				byte[] result = new byte[Constants.MAX_MESSAGE_SIZE];
 				Inflater decompresser = new Inflater();
 				decompresser.setInput(body, 0, bodySize);
+				System.out.println("decompress bodySize = " + bodySize);
 				bodySize = decompresser.inflate(result);
+				System.out.println("decompress done bodySize = " + bodySize);
 				decompresser.end();
 				body = result;
 			}

@@ -748,6 +748,11 @@ public class DefaultXMLLoaderFactory {
 				logger.info("SC terminated by user interface");
 				System.exit(1);
 			}
+			if ("resetCache".equals(action)) {
+				logger.info("reset cache by user interface");
+				CacheManager cacheManager = AppContext.getCacheManager();
+				cacheManager.clearAll();
+			}
 		}
 	}
 

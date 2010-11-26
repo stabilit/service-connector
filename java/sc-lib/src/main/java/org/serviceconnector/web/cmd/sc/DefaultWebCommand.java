@@ -76,7 +76,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		// check if session is available
 		String url = request.getURL();
 		if (url != null) {
-			logger.info(url);
+			logger.debug(url);
 		} else {
 			logger.info("url is null");
 		}

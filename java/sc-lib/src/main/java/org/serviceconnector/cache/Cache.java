@@ -94,14 +94,21 @@ public class Cache {
 	 * @throws CacheException
 	 *             the cache exception
 	 */
-	public synchronized CacheComposite getComposite(String cacheId) throws CacheException {
+	public CacheComposite getComposite(String cacheId) throws CacheException {
+		if (cacheId == null) {
+			throw new CacheException("no cache id");		
+		}
+		return getComposite(new CacheId(cacheId));
+	}
+
+	public synchronized CacheComposite getComposite(CacheId cacheId) throws CacheException {
 		if (cacheId == null) {
 			throw new CacheException("no cache id");
 		}
 		CacheKey compositeCacheKey = null;
 		CacheComposite cacheComposite = null;
 		// check if this message is part of cache
-		compositeCacheKey = new CacheKey(cacheId);
+		compositeCacheKey = new CacheKey(cacheId.getCacheId());
 		Object value = this.cacheImpl.get(compositeCacheKey);
 		if (value == null) {
 			return null;
@@ -182,20 +189,20 @@ public class Cache {
 	/**
 	 * Put scmp.
 	 * 
-	 * @param scmpReply
+	 * @param message
 	 *            the scmp reply
 	 * @return the sCMP cache id
 	 * @throws CacheException
 	 *             the sCMP cache exception
 	 */
-	public synchronized CacheId putMessage(SCMPMessage scmpReply) throws CacheException {
+	public synchronized CacheId putMessage(SCMPMessage message) throws CacheException {
 		try {
-			String cacheId = scmpReply.getCacheId();
+			String cacheId = message.getCacheId();
 			if (cacheId == null) {
 				throw new CacheException("no cache id");
 			}
 			CacheId scmpCacheId = new CacheId(cacheId);
-			String messageSequenceNr = scmpReply.getMessageSequenceNr();
+			String messageSequenceNr = message.getMessageSequenceNr();
 			if (messageSequenceNr == null) {
 				throw new CacheException("no message id");
 			}
@@ -221,7 +228,7 @@ public class Cache {
 			}
 			int newSize = cacheComposite.getSize() + 1;
 			cacheComposite.setSize(newSize); // increment size
-			String cacheExpirationDateTime = scmpReply.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
+			String cacheExpirationDateTime = message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
 			Date expirationDateTime = null;
 			if (cacheExpirationDateTime != null) {
 				expirationDateTime = DateTimeUtility.parseDateString(cacheExpirationDateTime);
@@ -229,12 +236,15 @@ public class Cache {
 			}
 			CacheId msgCacheId = new CacheId(scmpCacheId.getCacheId(), String.valueOf(newSize));
 			CacheKey msgCacheKey = new CacheKey(msgCacheId.getFullCacheId());
-			CacheMessage scmpCacheMessage = new CacheMessage(messageSequenceNr, scmpReply.getBody());
+			CacheMessage scmpCacheMessage = new CacheMessage(messageSequenceNr, message.getBody());
+			if (message.isCompressed()) {
+				scmpCacheMessage.setCompressed(true);
+			}
 			scmpCacheMessage.setCacheId(msgCacheKey.getCacheId());
 			this.cacheImpl.put(msgCacheKey, scmpCacheMessage);
 			// update last modification time
 			cacheComposite.setLastModified();
-			if (scmpReply.isPart() == false) {
+			if (message.isPart() == false) {
 				logger.info("cache has been loaded, cacheId = " + cacheId);
 				cacheComposite.setCacheState(CACHE_STATE.LOADED);
 			}

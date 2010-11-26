@@ -76,6 +76,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		String sessionId = message.getSessionId();
 		// check for cache id
 		if (message.getCacheId() != null) {
+			logger.info("client execute command with cache id = " + message.getCacheId());
 			// try to load response from cache
 			try {
 				CacheManager scmpCacheManager = AppContext.getCacheManager();
@@ -87,20 +88,28 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
-				CacheComposite cacheComposite = scmpCache.getComposite(message.getCacheId());
+				CacheId cacheId = new CacheId(message.getCacheId());
+				CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 				if (cacheComposite != null) {
 					synchronized (scmpCacheManager) {
+						// check if cache is loading
 						if (cacheComposite.isLoading()) {
-							// check if cache is loading
-							SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
-									"cache is loading, retry it later, service name = " + message.getServiceName());
-							scmpCommandException.setMessageType(this.getKey());
-							throw scmpCommandException;
+							// check if it is a part request and sequence nr in cache equals cache composite size
+							int size = cacheComposite.getSize();
+							int sequenceNr = cacheId.getSequenceNrInt();
+							if (!(message.isPart() && (sequenceNr == size))) {
+								SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
+										"cache is loading, retry it later, service name = " + message.getServiceName());
+								scmpCommandException.setMessageType(this.getKey());
+								throw scmpCommandException;
+							}
 						}
 					}
 					if (cacheComposite.isLoaded()) {
 						// cache has been loaded, try to get cache message, get the first one if cache id belongs to composite id
-						CacheMessage cacheMessage = scmpCache.getMessage(message.getCacheId());
+						// increment cache id sequence nr
+						cacheId = cacheId.nextSequence();
+						CacheMessage cacheMessage = scmpCache.getMessage(cacheId);
 						if (cacheMessage == null) {
 							// check if cache is loading
 							SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
@@ -114,8 +123,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 						} else {
 							scmpReply = new SCMPPart();
 						}
-						scmpReply.setMessageType(getKey());
-						CacheId cacheId = cacheMessage.getCacheId();
+						scmpReply.setMessageType(getKey());						
+						cacheId = cacheMessage.getCacheId();
 						if (cacheId == null) {
 							// check if cache is loading
 							SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
@@ -124,6 +133,9 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 							throw scmpCommandException;
 						}
 						scmpReply.setCacheId(cacheId.getFullCacheId());
+						if (cacheMessage.isCompressed()) {
+							scmpReply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+						}
 						scmpReply.setBody(cacheMessage.getBody());
 
 						response.setSCMP(scmpReply);
@@ -276,7 +288,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					if (scmpCache == null) {
 						CommandCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
 					} else {
-						scmpCache.putMessage(scmpReply);
+						CacheId messageCacheId = scmpCache.putMessage(scmpReply);
+						scmpReply.setCacheId(messageCacheId.getFullCacheId());
 					}
 				} catch (Exception e) {
 					CommandCallback.logger.error(e.toString());

@@ -67,8 +67,16 @@ function terminateSC() {
 	ajaxSystem.ajaxCall('ajax/system?action=terminate');	
 }
 
+function resetCache() {
+	var check = window.confirm("Reset Cache! Are you sure?");
+	if (check == false) {
+		return;
+    }
+	var resetCacheDiv = document.getElementById("sc_cache_reset");
+	ajaxSystem.ajaxCall('ajax/system?action=resetCache');	
+}
+
 function systemCallback() {
-	alert(this.req.responseText);
    	setStatusSuccess();
 }
 
