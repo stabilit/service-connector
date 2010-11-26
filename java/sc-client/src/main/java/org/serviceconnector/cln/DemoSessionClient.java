@@ -37,8 +37,8 @@ public class DemoSessionClient extends Thread {
 	@Override
 	public void run() {
 
-		SCClient sc = new SCClient("localhost", 7000); // regular, defaults documented in javadoc
-		sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP); // alternative with connection type
+		//SCClient sc = new SCClient("localhost", 7000); // regular, defaults documented in javadoc
+		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP); // alternative with connection type
 		SCSessionService service = null;
 		try {
 			sc.setMaxConnections(20); // can be set before attach
@@ -121,56 +121,4 @@ public class DemoSessionClient extends Thread {
 		public void receive(Exception e) {
 		}
 	}
-
-	// @Override
-	// public void run() {
-	// SCClient sc = new SCClient("localhost", 7000);
-	// SCSessionService sessionService = null;
-	//
-	// try {
-	// sc.attach();
-	// sessionService = sc.newSessionService("session-1");
-	// SCMessage scMessage = new SCMessage();
-	// scMessage.setSessionInfo("sessionInfo");
-	// sessionService.createSession(300, 60, scMessage);
-	//
-	// int index = 0;
-	// while (true) {
-	// SCMessage requestMsg = new SCMessage();
-	// requestMsg.setData("body nr : " + index++);
-	// logger.info("Message sent: " + requestMsg.getData());
-	// SCMessageCallback callback = new DemoSessionClientCallback(sessionService);
-	// DemoSessionClient.pendingRequest = true;
-	// sessionService.execute(requestMsg, callback);
-	// while (DemoSessionClient.pendingRequest) {
-	// Thread.sleep(500);
-	// }
-	// }
-	// } catch (Exception e) {
-	// logger.error("run", e);
-	// } finally {
-	// try {
-	// sessionService.deleteSession();
-	// sc.detach();
-	// } catch (Exception e) {
-	// logger.error("cleanup", e);
-	// }
-	// }
-	// }
-
-	// private class DemoSessionClientCallback extends SCMessageCallback {
-	// public DemoSessionClientCallback(SCSessionService service) {
-	// super(service);
-	// }
-	//
-	// @Override
-	// public void receive(SCMessage reply) {
-	// logger.info("Message received: " + reply.getData());
-	// DemoSessionClient.pendingRequest = false;
-	// }
-	//
-	// @Override
-	// public void receive(Exception e) {
-	// }
-	// }
 }

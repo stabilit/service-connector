@@ -80,74 +80,14 @@ public class DemoPublishServer extends Thread {
 		}
 	}
 
-	// public void runPublishServer() {
-	// try {
-	// this.publishSrv = new SCPublishServer();
-	// // connect to SC as server
-	// this.publishSrv.setImmediateConnect(true);
-	// this.publishSrv.startListener("localhost", 9002, 0);
-	// SrvCallback srvCallback = new SrvCallback(new PublishServerContext());
-	// this.publishSrv.registerServer("localhost", 9000, serviceName, 10, 10, srvCallback);
-	// Runnable runnable = new PublishRun(publishSrv, serviceName);
-	// Thread thread = new Thread(runnable);
-	// thread.start();
-	// } catch (Exception ex) {
-	// logger.error("runPublishServer", ex);
-	// this.shutdown();
-	// }
-	// }
-	//
-	// private static class PublishRun implements Runnable {
-	// SCPublishServer server;
-	// String serviceName;
-	//
-	// public PublishRun(SCPublishServer server, String serviceName) {
-	// this.server = server;
-	// this.serviceName = serviceName;
-	// }
-	//
-	// @Override
-	// public void run() {
-	// int index = 0;
-	// while (!DemoPublishServer.killPublishServer) {
-	// try {
-	// if (index % 3 == 0) {
-	// Thread.sleep(1000);
-	// } else {
-	// Thread.sleep(5000);
-	// }
-	// Object data = "publish message nr " + ++index;
-	// SCPublishMessage publishMessage = new SCPublishMessage();
-	// publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-	// publishMessage.setData(data);
-	// server.publish(serviceName, publishMessage);
-	// logger.info("Message published: " + data);
-	// } catch (Exception ex) {
-	// logger.error("run", ex);
-	// return;
-	// }
-	// }
-	// }
-	// }
-	//
-	// private void shutdown() {
-	// DemoPublishServer.killPublishServer = true;
-	// try {
-	// this.publishSrv.deregisterServer(serviceName);
-	// } catch (Exception ex) {
-	// logger.error("shutdown", ex);
-	// this.publishSrv = null;
-	// }
-	// }
-
 	private class SrvCallback extends SCPublishServerCallback {
 
 		/** The Constant logger. */
 		protected final Logger logger = Logger.getLogger(SrvCallback.class);
-		private SCPublishServer publishSrv;
+		private SCPublishServer server;
 
 		public SrvCallback(SCPublishServer publishSrv) {
-			this.publishSrv = publishSrv;
+			this.server = publishSrv;
 		}
 
 		@Override
@@ -176,7 +116,8 @@ public class DemoPublishServer extends Thread {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {
-						this.publishSrv.deregisterServer();
+						this.server.deregisterServer();
+						//SCServer sc = server.getSCServer().stopListener();
 					} catch (Exception ex) {
 						logger.error("unsubscribe", ex);
 					}

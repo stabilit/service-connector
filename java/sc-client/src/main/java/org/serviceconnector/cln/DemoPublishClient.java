@@ -36,8 +36,8 @@ public class DemoPublishClient extends Thread {
 	@Override
 	public void run() {
 
-		SCClient sc = new SCClient("localhost", 7000); // regular, defaults documented in javadoc
-		sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP); // alternative with connection type
+		//SCClient sc = new SCClient("localhost", 7000); // regular, defaults documented in javadoc
+		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP); // alternative with connection type
 		SCPublishService service = null;
 		try {
 			sc.setMaxConnections(20); // can be set before attach
@@ -103,51 +103,4 @@ public class DemoPublishClient extends Thread {
 		public void receive(Exception e) {
 		}
 	}
-
-	// @Override
-	// public void run() {
-	// SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP);
-	// SCPublishService publishService = null;
-	// try {
-	// sc.attach();
-	// publishService = sc.newPublishService("publish-1");
-	// SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-	// subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
-	// subscibeMessage.setSessionInfo("sessionInfo");
-	// publishService.subscribe(subscibeMessage, new DemoPublishClientCallback(publishService));
-	//
-	// while (true) {
-	// Thread.sleep(10000);
-	// }
-	// } catch (Exception e) {
-	// logger.error("run", e);
-	// } finally {
-	// try {
-	// publishService.unsubscribe();
-	// sc.detach();
-	// } catch (Exception e) {
-	// logger.info("cleanup " + e.toString());
-	// }
-	// }
-	// }
-	//
-	// private class DemoPublishClientCallback extends SCMessageCallback {
-	// public DemoPublishClientCallback(SCPublishService service) {
-	// super(service);
-	// }
-	//
-	// @Override
-	// public void receive(SCMessage reply) {
-	// System.out.println("Publish client received: " + reply.getData());
-	// try {
-	// Thread.sleep(1000);
-	// } catch (InterruptedException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// @Override
-	// public void receive(Exception e) {
-	// }
-	// }
 }

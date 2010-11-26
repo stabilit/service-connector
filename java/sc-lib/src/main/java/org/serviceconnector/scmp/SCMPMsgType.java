@@ -108,22 +108,22 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	/**
 	 * Gets the msg type by string.
 	 * 
-	 * @param messageId
-	 *            the message id
-	 * @return the msg type
+	 * @param messageTypeString
+	 *            the messageType as string
+	 * @return the msg type as object
 	 */
-	public static SCMPMsgType getMsgType(String messageId) {
-		SCMPMsgType msgType = reverseMap.get(messageId);
+	public static SCMPMsgType getMsgType(String messageTypeString ) {
+		SCMPMsgType msgType = reverseMap.get(messageTypeString);
 		if (msgType == null) {
-			// messageId doesn't match to a valid SCMPMsgType
+			// messageTypeString doesn't match to a valid SCMPMsgType
 			return SCMPMsgType.UNDEFINED;
 		}
 		return msgType;
 	}
 
 	@Override
-	public SCMPMsgType reverse(String messageId) {
-		return SCMPMsgType.getMsgType(messageId);
+	public SCMPMsgType reverse(String messageTypeString) {
+		return SCMPMsgType.getMsgType(messageTypeString);
 	}
 
 	@Override

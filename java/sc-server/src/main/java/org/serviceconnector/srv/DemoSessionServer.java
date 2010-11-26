@@ -106,89 +106,6 @@ public class DemoSessionServer extends Thread {
 		}
 	}
 
-	// public void runSessionServer() {
-	// try {
-	// this.scSrv = new SCSessionServer();
-	//
-	// // connect to SC as server
-	// this.scSrv.setImmediateConnect(true);
-	// this.scSrv.startListener("localhost", 9001, 0);
-	// SrvCallback srvCallback = new SrvCallback(new SrvContext());
-	// this.scSrv.registerServer("localhost", 9000, serviceName, 10, 10, srvCallback);
-	// } catch (Exception e) {
-	// logger.error("runSessionServer", e);
-	// this.shutdown();
-	// }
-	// }
-	//
-	// private void shutdown() {
-	// try {
-	// this.scSrv.deregisterServer(serviceName);
-	// } catch (Exception e) {
-	// logger.error("shutdown", e);
-	// this.scSrv = null;
-	// }
-	// }
-	//
-	// class SrvCallback extends SCSessionServerCallback {
-	//
-	// private SrvContext outerContext;
-	//
-	// public SrvCallback(SrvContext context) {
-	// this.outerContext = context;
-	// }
-	//
-	// @Override
-	// public SCMessage createSession(SCMessage message, int operationTimeoutInMillis) {
-	// logger.info("SessionServer.SrvCallback.createSession()");
-	// return message;
-	// }
-	//
-	// @Override
-	// public void deleteSession(SCMessage message, int operationTimeoutInMillis) {
-	// logger.info("SessionServer.SrvCallback.deleteSession()");
-	// }
-	//
-	// @Override
-	// public void abortSession(SCMessage message, int operationTimeoutInMillis) {
-	// logger.info("SessionServer.SrvCallback.abortSession()");
-	// }
-	//
-	// @Override
-	// public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
-	// Object data = request.getData();
-	// logger.info("Message received: " + data);
-	// // TODO JOT
-	// // int executionTimeout = request.getOperationTimeout();
-	// // watch out for kill server message
-	// if (data.getClass() == String.class) {
-	// String dataString = (String) data;
-	// if (dataString.equals("kill server")) {
-	// try {
-	// KillThread kill = new KillThread(this.outerContext.getServer());
-	// kill.start();
-	// } catch (Exception e) {
-	// logger.error("execute", e);
-	// }
-	// } else {
-	// try {
-	// Thread.sleep(3000);
-	// } catch (InterruptedException e) {
-	// logger.error("execute", e);
-	// }
-	// }
-	// }
-	// return request;
-	// }
-	// }
-
-	//
-	// private class SrvContext {
-	// public SCSessionServer getServer() {
-	// return scSrv;
-	// }
-	// }
-	//
 	private class KillThread extends Thread {
 
 		private SCSessionServer server;
@@ -203,6 +120,7 @@ public class DemoSessionServer extends Thread {
 			try {
 				Thread.sleep(2000);
 				this.server.deregisterServer();
+				//SCServer sc = server.getSCServer().stopListener();
 			} catch (Exception e) {
 				logger.error("run", e);
 			}

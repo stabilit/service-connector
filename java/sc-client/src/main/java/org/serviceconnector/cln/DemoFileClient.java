@@ -38,8 +38,8 @@ public class DemoFileClient extends Thread {
 	@Override
 	public void run() {
 
-		SCClient sc = new SCClient("localhost", 7000); // regular defaults must be documented in javadoc
-		sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP); // alternative with connection type
+		//SCClient sc = new SCClient("localhost", 7000); // regular defaults must be documented in javadoc
+		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP); // alternative with connection type
 
 		try {
 			sc.setMaxConnections(20); // can be set before attach
