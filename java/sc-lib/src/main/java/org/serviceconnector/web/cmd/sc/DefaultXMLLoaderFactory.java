@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.print.attribute.DateTimeSyntax;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -37,6 +38,9 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cache.Cache;
+import org.serviceconnector.cache.CacheComposite;
+import org.serviceconnector.cache.CacheException;
+import org.serviceconnector.cache.CacheKey;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.ICacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
@@ -54,6 +58,7 @@ import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
+import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
@@ -474,7 +479,7 @@ public class DefaultXMLLoaderFactory {
 			writer.writeEndElement(); // close cache tag
 			writer.writeStartElement("caches");
 			Object[] caches = cacheManager.getAllCaches();
-			this.writeCaches(writer, caches);
+			this.writeCaches(writer, caches, request);
 			writer.writeEndElement(); // close caches tag
 		}
 
@@ -502,7 +507,8 @@ public class DefaultXMLLoaderFactory {
 			writer.writeEndElement(); // close config tag
 		}
 
-		private void writeCaches(XMLStreamWriter writer, Object[] caches) throws XMLStreamException {
+		private void writeCaches(XMLStreamWriter writer, Object[] caches, IWebRequest request) throws XMLStreamException {
+			String cacheParam = request.getParameter("cache");
 			for (Object obj : caches) {
 				if (obj instanceof Cache == false) {
 					continue;
@@ -515,6 +521,9 @@ public class DefaultXMLLoaderFactory {
 				writer.writeStartElement("cacheName");
 				writer.writeCharacters(cache.getCacheName());
 				writer.writeEndElement(); // close cacheName tag
+				writer.writeStartElement("compositeSize");
+				writer.writeCharacters(String.valueOf(cache.getCompositeSize()));
+				writer.writeEndElement(); // close compositeSize tag
 				writer.writeStartElement("elementSize");
 				writer.writeCharacters(String.valueOf(cache.getElementSize()));
 				writer.writeEndElement(); // close elementSize tag
@@ -524,8 +533,46 @@ public class DefaultXMLLoaderFactory {
 				writer.writeStartElement("diskStoreSize");
 				writer.writeCharacters(String.valueOf(cache.getDiskStoreSize()));
 				writer.writeEndElement(); // close diskStoreSize tag
+				if (cache.getCacheName().equals(cacheParam)) {
+					writeCacheDetails(writer, cache);
+				}
 				writer.writeEndElement(); // close cache tag
 			}
+		}
+
+		private void writeCacheDetails(XMLStreamWriter writer, Cache cache) throws XMLStreamException {
+			writer.writeStartElement("details");
+			Object[] compositeKeys = cache.getCompositeKeys();
+			for (Object obj : compositeKeys) {
+				CacheKey cacheKey = (CacheKey) obj;
+				try {
+					CacheComposite cacheComposite = cache.getComposite(cacheKey.getCacheId());
+					if (cacheComposite != null) {
+						writeCacheComposite(writer, cacheComposite);
+					}
+				} catch (CacheException e) {
+				}
+			}
+			writer.writeEndElement(); // end of details
+		}
+
+		private void writeCacheComposite(XMLStreamWriter writer, CacheComposite cacheComposite) throws XMLStreamException {
+			writer.writeStartElement("composite");
+			writer.writeStartElement("size");
+			writer.writeCharacters(String.valueOf(cacheComposite.getSize()));
+			writer.writeEndElement();  // end of size
+			writer.writeStartElement("expiration");	
+			if (cacheComposite.getExpiration() != null) {
+			    writer.writeCharacters(DateTimeUtility.getTimeAsString(cacheComposite.getExpiration()));
+			}
+			writer.writeEndElement();  // end of expiration
+			writer.writeStartElement("creation");
+			writer.writeCharacters(DateTimeUtility.getTimeAsString(cacheComposite.getCreationTime()));
+			writer.writeEndElement();  // end of creation
+			writer.writeStartElement("lastModified");
+			writer.writeCharacters(DateTimeUtility.getTimeAsString(cacheComposite.getLastModifiedTime()));
+			writer.writeEndElement();  // end of lastModified
+			writer.writeEndElement(); // end of composite
 		}
 
 		@Override
@@ -697,8 +744,8 @@ public class DefaultXMLLoaderFactory {
 				System.gc();
 				logger.info("run gc");
 			}
-			if ("stop".equals(action)) {
-				logger.info("SC stopped by user interface");
+			if ("terminate".equals(action)) {
+				logger.info("SC terminated by user interface");
 				System.exit(1);
 			}
 		}

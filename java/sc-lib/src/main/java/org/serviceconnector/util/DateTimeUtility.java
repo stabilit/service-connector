@@ -57,6 +57,26 @@ public final class DateTimeUtility {
 	}
 
 	/**
+	 * Gets the current time.
+	 *
+	 * @return the current time
+	 */
+	public static Date getCurrentTime() {
+		Calendar cal = Calendar.getInstance();
+		java.util.Date date = cal.getTime();
+		return date;
+	}
+
+	/**
+	 * Gets the current time (ms).
+	 *
+	 * @return the current time (ms)
+	 */
+	public static long getCurrentTimeMillis() {
+		return System.currentTimeMillis();
+	}
+
+	/**
 	 * Gets the time as string.
 	 * 
 	 * @param date

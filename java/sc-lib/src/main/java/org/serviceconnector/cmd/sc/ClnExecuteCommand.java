@@ -21,6 +21,8 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.Cache;
+import org.serviceconnector.cache.CacheComposite;
+import org.serviceconnector.cache.CacheId;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.cmd.IAsyncCommand;
@@ -39,6 +41,7 @@ import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
@@ -84,21 +87,57 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
-				CacheMessage scmpCacheMessage = scmpCache.getMessage(message);
-				if (scmpCacheMessage == null) {
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
-							"cache is loading, retry it later, service name = " + message.getServiceName());
-					scmpCommandException.setMessageType(this.getKey());
-					throw scmpCommandException;
+				CacheComposite cacheComposite = scmpCache.getComposite(message.getCacheId());
+				if (cacheComposite != null) {
+					synchronized (scmpCacheManager) {
+						if (cacheComposite.isLoading()) {
+							// check if cache is loading
+							SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
+									"cache is loading, retry it later, service name = " + message.getServiceName());
+							scmpCommandException.setMessageType(this.getKey());
+							throw scmpCommandException;
+						}
+					}
+					if (cacheComposite.isLoaded()) {
+						// cache has been loaded, try to get cache message, get the first one if cache id belongs to composite id
+						CacheMessage cacheMessage = scmpCache.getMessage(message.getCacheId());
+						if (cacheMessage == null) {
+							// check if cache is loading
+							SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
+									"cache has illegal state, loaded but no message, cacheId = " + message.getCacheId());
+							scmpCommandException.setMessageType(this.getKey());
+							throw scmpCommandException;
+						}
+						SCMPMessage scmpReply = null;
+						if (cacheComposite.isLastMessage(cacheMessage)) {
+							scmpReply = new SCMPMessage();
+						} else {
+							scmpReply = new SCMPPart();
+						}
+						scmpReply.setMessageType(getKey());
+						CacheId cacheId = cacheMessage.getCacheId();
+						if (cacheId == null) {
+							// check if cache is loading
+							SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
+									"cache message has illegal state, no cacheId (null)");
+							scmpCommandException.setMessageType(this.getKey());
+							throw scmpCommandException;
+						}
+						scmpReply.setCacheId(cacheId.getFullCacheId());
+						scmpReply.setBody(cacheMessage.getBody());
+
+						response.setSCMP(scmpReply);
+						responderCallback.responseCallback(request, response);
+						// schedule session timeout
+						Session session = this.sessionRegistry.getSession(sessionId);
+						this.sessionRegistry.scheduleSessionTimeout(session);
+						return;
+					}
 				}
-				SCMPMessage scmpReply = new SCMPMessage();
-				scmpReply.setMessageType(getKey());
-				scmpReply.setBody(scmpCacheMessage.getBody());
-				response.setSCMP(scmpReply);
-				responderCallback.responseCallback(request, response);
-				// schedule session timeout
-				Session session = this.sessionRegistry.getSession(sessionId);
-				this.sessionRegistry.scheduleSessionTimeout(session);
+				if (cacheComposite == null) {
+					// cache does not exist, this is the first request for it
+					scmpCache.startLoading(message.getCacheId());
+				}
 			} catch (Exception e) {
 				Session session = this.sessionRegistry.getSession(sessionId);
 				this.sessionRegistry.scheduleSessionTimeout(session);

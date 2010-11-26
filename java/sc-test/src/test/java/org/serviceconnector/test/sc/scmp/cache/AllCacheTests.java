@@ -13,14 +13,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.unit;
+package org.serviceconnector.test.sc.scmp.cache;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.sc.scmp.cache.AllCacheTests;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { SCClientTest.class, SCServerTest.class, SCMessageTest.class,
-		SCSessionServerTest.class, AllCacheTests.class })
-public class AllUnitTests {
+@Suite.SuiteClasses( { CacheExpirationTestCase.class, CacheExpirationThreadRunTestCase.class, CacheStatisticsTestCase.class,
+		CacheTestCase.class, CacheThreadRunTestCase.class })
+public class AllCacheTests {
 }

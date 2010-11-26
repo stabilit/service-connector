@@ -5,7 +5,7 @@
     <xsl:variable name="head" select="/sc-web/head"/>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('cache', '')", 10000);      
+      setInterval("contentCall('cache', 'cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;composite=<xsl:value-of select="$head/query/param/@composite"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
         <div class="sc_table max_width">
@@ -20,6 +20,7 @@
           <tr class="sc_table_header">
             <th class="sc_table">Service Name</th>
             <th class="sc_table">Cache Name</th>
+            <th class="sc_table">Composite Size</th>
             <th class="sc_table">Element Size</th>
             <th class="sc_table">Memory Store Size</th>
             <th class="sc_table">Disk Store Size</th>
@@ -53,7 +54,7 @@
 	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
-      <xsl:if test="false">
+      <xsl:if test="details">
         <tr>
           <xsl:call-template name="cache_details"/>
         </tr>
@@ -63,13 +64,60 @@
 	    <xsl:param name="class"/>
 	    <td class="{$class}"><xsl:value-of select="serviceName"/></td>
 	    <td class="{$class}"><xsl:value-of select="cacheName"/></td>
+	    <td class="{$class}">
+	      <xsl:choose>
+	        <xsl:when test="compositeSize &gt; 0">
+	         <a class="sc_table" href="cache?cache={cacheName}"><xsl:value-of select="compositeSize"/></a>
+            </xsl:when>
+            <xsl:otherwise>	       
+	         <xsl:value-of select="compositeSize"/>
+	        </xsl:otherwise>
+          </xsl:choose>       	    
+	    </td>
 	    <td class="{$class}"><xsl:value-of select="elementSize"/></td>
 	    <td class="{$class}"><xsl:value-of select="memoryStoreSize"/></td>
 	    <td class="{$class}"><xsl:value-of select="diskStoreSize"/></td>
 	</xsl:template>
 	<xsl:template name="cache_details">
 	  <td colspan="7">
+	    <div class="sc_table_details">
+	        <div class="sc_table_title">
+	           List of cache composites
+	        </div>             
+	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
+	          <tr class="sc_table_header">
+	            <th class="sc_table">Size</th>
+	            <th class="sc_table">Expiration</th>
+	            <th class="sc_table">Creation</th>            
+	            <th class="sc_table">Last Modified</th>            
+	          </tr>          
+	          <xsl:apply-templates select="details/composite"/>
+	        </table>
+        </div>
 	  </td>
+	</xsl:template>
+	<xsl:template match="composite">
+	  <xsl:if test="position() mod 2 = 0">
+	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
+	        <xsl:call-template name="composite_row">
+	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
+	        </xsl:call-template>
+	     </tr>	    
+	  </xsl:if>
+	  <xsl:if test="position() mod 2 != 0">
+	     <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
+	        <xsl:call-template name="composite_row">
+	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
+	        </xsl:call-template>
+	     </tr>	    
+	  </xsl:if>	  
+	</xsl:template>	
+    <xsl:template name="composite_row">
+	    <xsl:param name="class"/>
+	    <td class="{$class}"><xsl:value-of select="size"/></td>
+	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="expiration"/></xsl:call-template></td>
+	    <td class="{$class}"><xsl:value-of select="creation"/></td>
+	    <td class="{$class}"><xsl:value-of select="lastModified"/></td>
 	</xsl:template>
 	<xsl:template name="cache_config">
 	  <xsl:variable name="config" select="$body/cache/config"/>

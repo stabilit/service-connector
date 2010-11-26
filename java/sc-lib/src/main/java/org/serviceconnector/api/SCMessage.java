@@ -42,7 +42,9 @@ public class SCMessage {
 	/** The data. */
 	private Object data;
 	/** The session id - identifies session context of communication. */
-	private String sessionId;
+	private String sessionId;	
+	/** The cache id. */
+	private String cacheId;
 
 	/**
 	 * Instantiates a new SCMessage.
@@ -54,6 +56,7 @@ public class SCMessage {
 		this.data = null;
 		this.sessionId = null;
 		this.sessionInfo = null;
+		this.cacheId = null;
 	}
 
 	public SCMessage(byte[] data) {
@@ -179,6 +182,24 @@ public class SCMessage {
 		this.sessionId = sessionId;
 	}
 
+	
+	/**
+	 * Gets the cache id.
+	 *
+	 * @return the cache id
+	 */
+	public String getCacheId() {
+		return cacheId;
+	}
+	
+	/**
+	 * Sets the cache id.
+	 *
+	 * @param cacheId the new cache id
+	 */
+	public void setCacheId(String cacheId) {
+		this.cacheId = cacheId;
+	}
 	/**
 	 * Checks if is fault.
 	 * 

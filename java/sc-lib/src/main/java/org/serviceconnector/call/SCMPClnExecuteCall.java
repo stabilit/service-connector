@@ -22,6 +22,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class SCMPClnExecuteCall. Call sends data to backend server over SC.
  * 
@@ -41,23 +42,35 @@ public class SCMPClnExecuteCall extends SCMPSessionCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPClnExecuteCall.
-	 * 
-	 * @param req
-	 *            the requester to use when invoking call
-	 * @param scSession
-	 *            the sc session
+	 *
+	 * @param req the requester to use when invoking call
+	 * @param serviceName the service name
+	 * @param sessionId the session id
 	 */
 	public SCMPClnExecuteCall(IRequester req, String serviceName, String sessionId) {
 		super(req, serviceName, sessionId);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * New instance.
+	 *
+	 * @param client the client
+	 * @param serviceName the service name
+	 * @param sessionId the session id
+	 * @return the iSCMP call
+	 * {@inheritDoc}
+	 */
 	@Override
 	public ISCMPCall newInstance(IRequester client, String serviceName, String sessionId) {
 		return new SCMPClnExecuteCall(client, serviceName, sessionId);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the message type.
+	 *
+	 * @return the message type
+	 * {@inheritDoc}
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_EXECUTE;
@@ -74,6 +87,15 @@ public class SCMPClnExecuteCall extends SCMPSessionCallAdapter {
 	}
 
 	/**
+	 * Sets the cache id.
+	 *
+	 * @param cacheId the new cache id
+	 */
+	public void setCacheId(String cacheId) {
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId);
+	}
+
+	/**
 	 * Sets the compression.
 	 * 
 	 * @param compressed
@@ -85,7 +107,12 @@ public class SCMPClnExecuteCall extends SCMPSessionCallAdapter {
 		}
 	}
 	
-	/** {@inhertiDoc} **/
+	/**
+	 * Sets the request body.
+	 *
+	 * @param obj the new request body
+	 * {@inhertiDoc} *
+	 */
 	@Override
 	public void setRequestBody(Object obj) {
 		this.requestMessage.setBody(obj);

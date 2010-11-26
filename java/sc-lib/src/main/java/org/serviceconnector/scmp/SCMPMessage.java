@@ -130,6 +130,19 @@ public class SCMPMessage {
 	public String getCacheId() {
 		return this.getHeader(SCMPHeaderAttributeKey.CACHE_ID);
 	}
+	
+	/**
+	 * Sets the cache id.
+	 *
+	 * @param cacheId the new cache id
+	 */
+	public void setCacheId(String cacheId) {
+		if (cacheId == null) {
+			return;
+		}
+		this.header.put(SCMPHeaderAttributeKey.CACHE_ID.getValue(), cacheId);
+	}
+
 
 	/**
 	 * Checks if the message is a fault.

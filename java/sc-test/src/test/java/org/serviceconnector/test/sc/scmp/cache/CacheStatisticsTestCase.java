@@ -16,21 +16,17 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.sc.scmp.cache;
 
-import java.util.Iterator;
-
 import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.cache.Cache;
-import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheException;
+import org.serviceconnector.cache.CacheId;
 import org.serviceconnector.cache.CacheManager;
-import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
-import org.serviceconnector.scmp.SCMPCacheId;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Service;
@@ -41,7 +37,7 @@ import org.serviceconnector.service.SessionService;
  * 
  * @author ds
  */
-public class SCMPCacheStatisticsTestCase {
+public class CacheStatisticsTestCase {
 
 	private CacheManager cacheManager;
 
@@ -56,6 +52,7 @@ public class SCMPCacheStatisticsTestCase {
 
 	@Before
 	public void beforeTest() throws Exception {
+		AppContext.setSCEnvironment(true);
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		Service service = new SessionService("dummy");
 		serviceRegistry.addService("dummy", service);
@@ -74,25 +71,21 @@ public class SCMPCacheStatisticsTestCase {
 		int elementSize = scmpCache.getElementSize();
 		Assert.assertEquals(0, elementSize);
 		long diskStoreSize = scmpCache.getDiskStoreSize();
-		System.out.println(diskStoreSize);
 		long memoryStoreSize = scmpCache.getMemoryStoreSize();
-		System.out.println(memoryStoreSize);
 		String stringWrite = "this is the buffer";
 		byte[] buffer = stringWrite.getBytes();
 		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
 
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
-		SCMPCacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
+		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, msgCacheId.getFullCacheId());
 		elementSize = scmpCache.getElementSize();
 		Assert.assertEquals(3, elementSize);
 		diskStoreSize = scmpCache.getDiskStoreSize();
-		System.out.println(diskStoreSize);
 		memoryStoreSize = scmpCache.getMemoryStoreSize();
-		System.out.println(memoryStoreSize);
 	}
 
 	@Test
@@ -112,7 +105,7 @@ public class SCMPCacheStatisticsTestCase {
 		elementSize = scmpCache.getElementSize();
 		Assert.assertEquals(12, elementSize);
 	}
-	
+
 	@Test
 	public void testLargePartElementSize() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");

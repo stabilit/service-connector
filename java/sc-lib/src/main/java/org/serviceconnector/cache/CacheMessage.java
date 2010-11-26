@@ -15,7 +15,6 @@
  */
 package org.serviceconnector.cache;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +31,8 @@ public class CacheMessage implements Serializable {
 	/** The header. */
 	private Map<String, String> header;
 
+	private CacheId cacheId;
+	
 	/** The body. */
 	private Object body;
 
@@ -53,6 +54,7 @@ public class CacheMessage implements Serializable {
 	 */
 	public CacheMessage(String messageSequenceNr, Object body) {
 		this.body = body;
+		this.cacheId = null;
 		this.header = new HashMap<String, String>();
 		this.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, messageSequenceNr);
 	}
@@ -101,6 +103,33 @@ public class CacheMessage implements Serializable {
 	}
 
 	/**
+	 * Sets the cache id.
+	 *
+	 * @param cacheId the new cache id
+	 */
+	public void setCacheId(CacheId cacheId) {
+		this.cacheId = cacheId;
+	}
+
+	/**
+	 * Sets the cache id.
+	 *
+	 * @param cacheId the new cache id
+	 */
+	public void setCacheId(String cacheId) {
+		this.cacheId = new CacheId(cacheId);
+	}
+
+	/**
+	 * Gets the cache id.
+	 *
+	 * @return the cache id
+	 */
+	public CacheId getCacheId() {
+		return cacheId;
+	}
+	
+	/**
 	 * Gets the body.
 	 * 
 	 * @return the body
@@ -118,4 +147,5 @@ public class CacheMessage implements Serializable {
 	public void setBody(Object body) {
 		this.body = body;
 	}
+
 }

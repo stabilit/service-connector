@@ -8,7 +8,7 @@
         </div>
         <div class="sc_separator">&#160;</div>
         <div>
-           <div id="sc_stop"><input class="sc_form_button" style="margin:10px;" name="Stop SC" type="button" value="Stop SC" onclick="javascript:stopSC()"></input></div> 
+           <div id="sc_terminate"><input class="sc_form_button" style="margin:10px;" name="Terminate SC" type="button" value="Terminate SC" onclick="javascript:terminateSC()"></input></div> 
         </div>
       </div>
     </xsl:template>

@@ -38,7 +38,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	/** The client to used to invoke the call. */
 	protected IRequester requester;
 	/** The session id to use for the call. */
-	protected String sessionId;
+	protected String sessionId;	
 	/** The service name. */
 	protected String serviceName;
 	/** The request message. */

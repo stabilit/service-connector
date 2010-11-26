@@ -30,9 +30,9 @@ function setStatusError() {
    	if (obj != null) {
 		obj.style.visibility = "hidden";
    	}
-   	obj = document.getElementById("sc_stop");
+   	obj = document.getElementById("sc_terminate");
    	if (obj != null) {
-        obj.innerHTML = "Service Connector is stopped";   		
+        obj.innerHTML = "Service Connector is terminated";   		
    	}
 }
 
@@ -55,16 +55,16 @@ function runGC() {
 	ajaxSystem.ajaxCall('ajax/system?action=gc');	
 }
 
-function stopSC() {
-	var check = window.confirm("Stop SC! Are you sure?");
+function terminateSC() {
+	var check = window.confirm("Terminate SC! Are you sure?");
 	if (check == false) {
 		return;
     }
-	var stopDiv = document.getElementById("sc_stop");
-	if (stopDiv != null) {
-		stopDiv.innerHTML = "service connector is stopping ...";
+	var terminateDiv = document.getElementById("sc_terminate");
+	if (terminateDiv != null) {
+		terminateDiv.innerHTML = "service connector is terminating ...";
 	}
-	ajaxSystem.ajaxCall('ajax/system?action=stop');	
+	ajaxSystem.ajaxCall('ajax/system?action=terminate');	
 }
 
 function systemCallback() {

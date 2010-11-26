@@ -288,6 +288,10 @@ public class SCSessionService extends SCService {
 			// message info optional
 			clnExecuteCall.setMessagInfo(msgInfo);
 		}
+		String cacheId = requestMsg.getCacheId();
+		if (cacheId != null) {
+			clnExecuteCall.setCacheId(cacheId);
+		}
 		clnExecuteCall.setCompressed(requestMsg.isCompressed());
 		clnExecuteCall.setRequestBody(requestMsg.getData());
 		// invoke asynchronous

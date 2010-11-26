@@ -17,6 +17,7 @@
 package org.serviceconnector.test.sc.scmp.cache;
 
 import java.util.Date;
+import java.util.Iterator;
 
 import junit.framework.Assert;
 
@@ -25,14 +26,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
-import org.serviceconnector.cache.CacheConfiguration;
 import org.serviceconnector.cache.CacheException;
-import org.serviceconnector.cache.CacheKey;
+import org.serviceconnector.cache.CacheId;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
-import org.serviceconnector.scmp.SCMPCacheId;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Service;
@@ -46,7 +45,7 @@ import org.serviceconnector.util.TimeMillis;
  * 
  * @author ds
  */
-public class SCMPCacheExpirationThreadRunTestCase {
+public class CacheExpirationTestCase {
 
 	private CacheManager cacheManager;
 	/**
@@ -58,14 +57,17 @@ public class SCMPCacheExpirationThreadRunTestCase {
 	 */
 
 	@Before
-	public void beforeTest() throws Exception {		
+	public void beforeTest() throws Exception {
+	   AppContext.setSCEnvironment(true);
        ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 	   Service service = new SessionService("dummy");
        serviceRegistry.addService("dummy", service);
+	   service = new SessionService("dummy1");
+       serviceRegistry.addService("dummy1", service);
+	   service = new SessionService("dummy2");
+       serviceRegistry.addService("dummy2", service);
 	   cacheManager = new CacheManager();
-	   CacheConfiguration cacheConfiguration = new CacheConfiguration();
-	   cacheConfiguration.setExpirationThreadTimeoutSeconds(1);
-	   cacheManager.initialize(cacheConfiguration);
+	   cacheManager.initialize();
 	}
 
 	@After
@@ -84,21 +86,11 @@ public class SCMPCacheExpirationThreadRunTestCase {
 		Date now = new Date();
 		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, TimeMillis.HOUR.getMillis());	
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility.getTimeAsString(expirationDate));
-		SCMPCacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-		}
-		// get cache composite keys registry
-		Object[] compositeKeys = scmpCache.getCompositeKeys();
-		Assert.assertEquals(1, compositeKeys.length);
-		CacheKey cacheKey = (CacheKey) compositeKeys[0];
-		Assert.assertEquals("dummy.cache.id", cacheKey.getCacheId());
-		
+		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, msgCacheId.getFullCacheId());
-		CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead);
+		CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead.getCacheId());
 		byte[] bufferRead = (byte[]) cacheMessage.getBody();
 		String stringRead = new String(bufferRead);
 		Assert.assertEquals(stringWrite, stringRead);
@@ -106,7 +98,7 @@ public class SCMPCacheExpirationThreadRunTestCase {
 		CacheComposite cacheComposite = scmpCache.getComposite(msgCacheId.getCacheId());
 		int size = cacheComposite.getSize();
 		Assert.assertEquals(1, size);
-		Assert.assertEquals(false, cacheComposite.isExpired());		
+		Assert.assertEquals(false, cacheComposite.isExpired());
 	}
 
 	@Test
@@ -120,24 +112,18 @@ public class SCMPCacheExpirationThreadRunTestCase {
 		Date now = new Date();
 		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, -TimeMillis.HOUR.getMillis());	
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility.getTimeAsString(expirationDate));
-		SCMPCacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-		}	
-		// get cache composite keys registry
-		Object[] compositeKeys = scmpCache.getCompositeKeys();
-		Assert.assertEquals(0, compositeKeys.length);
-		
+		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, msgCacheId.getFullCacheId());
-		CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead);
+		CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead.getCacheId());
 		if (cacheMessage != null) {
 		    Assert.fail("cache should be expired but is not");
 		}
 		CacheComposite cacheComposite = scmpCache.getComposite(msgCacheId.getCacheId());
-		Assert.assertNull(cacheComposite);
+		int size = cacheComposite.getSize();
+		Assert.assertEquals(1, size);
+		Assert.assertEquals(true, cacheComposite.isExpired());
 	}
 
 }

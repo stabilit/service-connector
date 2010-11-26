@@ -168,6 +168,8 @@ public final class Constants {
 	public static final int DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY = 0;
 	public static final int DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK = 100000;
 	public static final int DEFAULT_CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS = 60;
+	// for internal use in class Cache
+	public static final int DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS = 60000;
 
 	public static final String CACHE_ENABLED = "cache.enabled";
 	public static final String CACHE_NAME = "cache.name";

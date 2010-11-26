@@ -34,7 +34,7 @@ import org.serviceconnector.service.SessionService;
  * 
  * @author ds
  */
-public class SCMPCacheThreadRunTestCase {
+public class CacheThreadRunTestCase {
 
 	private CacheManager cacheManager;
 
@@ -57,6 +57,7 @@ public class SCMPCacheThreadRunTestCase {
 
 	@Test
 	public void testInitDestroy() throws CacheException {
+		AppContext.setSCEnvironment(true);
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		Service service = new SessionService("dummy");
 		serviceRegistry.addService("dummy", service);
