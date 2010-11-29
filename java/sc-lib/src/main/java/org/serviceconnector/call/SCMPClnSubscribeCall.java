@@ -125,16 +125,6 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 	}
 
 	/**
-	 * Sets the authentication id.
-	 * 
-	 * @param authId
-	 *            the new authentication id
-	 */
-	public void setAuthenticationId(String authId) {
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.AUTH_SESSION_ID, authId);
-	}
-
-	/**
 	 * Sets the compression.
 	 * 
 	 * @param compressed

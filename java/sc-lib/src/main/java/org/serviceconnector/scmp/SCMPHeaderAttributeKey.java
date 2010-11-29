@@ -97,8 +97,6 @@ public enum SCMPHeaderAttributeKey {
 	SERVICE_NAME("nam"),
 	/** The SESSION_ID. */
 	SESSION_ID("sid"),
-	/** The SESSION_ID. */
-	AUTH_SESSION_ID("asi"),
 	/** The SESSION_INFO. */
 	SESSION_INFO("sin");
 
