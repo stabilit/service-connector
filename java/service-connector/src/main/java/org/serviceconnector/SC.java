@@ -106,7 +106,7 @@ public final class SC {
 		SC.writeSystemInfoToLog();
 
 		// Initialize service connector command factory
-		AppContext.initContext(new ServiceConnectorCommandFactory());
+		AppContext.initCommands(new ServiceConnectorCommandFactory());
 		AppContext.initConfiguration(configFileName);
 
 		WebContext.initContext(new ServiceConnectorWebCommandFactory());

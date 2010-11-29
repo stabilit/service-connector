@@ -45,10 +45,8 @@ public class ConnectionFactory {
 	/** The Constant timer, responsible component to observe timeouts in a connection. */
 	private static Timer timer;
 
-	{
-		ConnectionFactory.channelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors
-				.newCachedThreadPool());
-		ConnectionFactory.timer = new HashedWheelTimer();
+	static {
+		ConnectionFactory.init();
 	}
 
 	/**
@@ -69,16 +67,27 @@ public class ConnectionFactory {
 		}
 	}
 
-	// TODO FJU this shutdown is never called
-	// http://docs.jboss.org/netty/3.2/api/org/jboss/netty/channel/socket/nio/NioClientSocketChannelFactory.html
 	/**
 	 * Shutdown connection factory.<br>
 	 * This method shuts down every resource needed by connections. Should only be used if whole application shuts down. Be very
 	 * careful if you use this method - every connection in relation to this channelFactory must be closed otherwise you end up in
 	 * indefinitely loop. In most cases closing the connections is good enough NETTY will release other resources.
+	 * http://docs.jboss.org/netty/3.2/api/org/jboss/netty/channel/socket/nio/NioClientSocketChannelFactory.html
 	 */
 	public static void shutdownConnectionFactory() {
 		ConnectionFactory.timer.stop();
+		ConnectionFactory.timer = null;
 		ConnectionFactory.channelFactory.releaseExternalResources();
+		ConnectionFactory.channelFactory = null;
+	}
+
+	public static void init() {
+		if (ConnectionFactory.channelFactory == null) {
+			ConnectionFactory.channelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors
+					.newCachedThreadPool());
+		}
+		if (ConnectionFactory.timer == null) {
+			ConnectionFactory.timer = new HashedWheelTimer();
+		}
 	}
 }

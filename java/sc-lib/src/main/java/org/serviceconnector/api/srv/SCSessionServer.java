@@ -69,7 +69,7 @@ public class SCSessionServer {
 
 	static {
 		// Initialize server command factory one time
-		AppContext.initContext(new ServerCommandFactory());
+		AppContext.initCommands(new ServerCommandFactory());
 	}
 
 	/**
@@ -150,51 +150,55 @@ public class SCSessionServer {
 		if (this.registered) {
 			throw new InvalidActivityException("Server already registered for a service.");
 		}
-		this.msgSequenceNr.reset();
-		int keepAliveIntervalSeconds = this.scServerContext.getKeepAliveIntervalSeconds();
-		boolean immediateConnect = this.scServerContext.isImmediateConnect();
-		ConnectionType connectionType = this.scServerContext.getConnectionType();
-		int scPort = this.scServerContext.getSCPort();
-		String scHost = this.scServerContext.getSCHost();
-		int listenerPort = this.scServerContext.getListenerPort();
+		AppContext.init();
+		synchronized (AppContext.communicatorsLock) {
+			this.msgSequenceNr.reset();
+			int keepAliveIntervalSeconds = this.scServerContext.getKeepAliveIntervalSeconds();
+			boolean immediateConnect = this.scServerContext.isImmediateConnect();
+			ConnectionType connectionType = this.scServerContext.getConnectionType();
+			int scPort = this.scServerContext.getSCPort();
+			String scHost = this.scServerContext.getSCHost();
+			int listenerPort = this.scServerContext.getListenerPort();
 
-		if (scHost == null) {
-			throw new InvalidParameterException("host must be set.");
+			if (scHost == null) {
+				throw new InvalidParameterException("host must be set.");
+			}
+			ValidatorUtility.validateInt(0, scPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateInt(1, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
+			ValidatorUtility.validateInt(1, maxConnections, 1024, SCMPError.HV_WRONG_MAX_SESSIONS);
+			ValidatorUtility.validateInt(1, maxConnections, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
+
+			// initialize connection pool & requester
+			ConnectionPool connectionPool = new ConnectionPool(scHost, scPort, connectionType.getValue(), keepAliveIntervalSeconds);
+			// register server only needs one connection
+			connectionPool.setMaxConnections(1);
+			IRequester requester = new SCRequester(new RequesterContext(connectionPool, this.msgSequenceNr));
+
+			SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
+					requester, this.serviceName);
+
+			registerServerCall.setMaxSessions(maxSessions);
+			registerServerCall.setMaxConnections(maxConnections);
+			registerServerCall.setPortNumber(listenerPort);
+			registerServerCall.setImmediateConnect(immediateConnect);
+			registerServerCall.setKeepAliveInterval(keepAliveIntervalSeconds);
+			SCServerCallback callback = new SCServerCallback(true);
+			try {
+				registerServerCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			} catch (Exception e) {
+				connectionPool.destroy();
+				throw new SCServiceException("register server failed", e);
+			}
+			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			if (reply.isFault()) {
+				connectionPool.destroy();
+				throw new SCServiceException("register server failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			}
+			AppContext.attachedCommunicators.incrementAndGet();
+			return requester;
 		}
-		ValidatorUtility.validateInt(0, scPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
-		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
-		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
-		ValidatorUtility.validateInt(1, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
-		ValidatorUtility.validateInt(1, maxConnections, 1024, SCMPError.HV_WRONG_MAX_SESSIONS);
-		ValidatorUtility.validateInt(1, maxConnections, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
-
-		// initialize connection pool & requester
-		ConnectionPool connectionPool = new ConnectionPool(scHost, scPort, connectionType.getValue(), keepAliveIntervalSeconds);
-		// register server only needs one connection
-		connectionPool.setMaxConnections(1);
-		IRequester requester = new SCRequester(new RequesterContext(connectionPool, this.msgSequenceNr));
-
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
-				requester, this.serviceName);
-
-		registerServerCall.setMaxSessions(maxSessions);
-		registerServerCall.setMaxConnections(maxConnections);
-		registerServerCall.setPortNumber(listenerPort);
-		registerServerCall.setImmediateConnect(immediateConnect);
-		registerServerCall.setKeepAliveInterval(keepAliveIntervalSeconds);
-		SCServerCallback callback = new SCServerCallback(true);
-		try {
-			registerServerCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		} catch (Exception e) {
-			connectionPool.destroy();
-			throw new SCServiceException("register server failed", e);
-		}
-		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		if (reply.isFault()) {
-			connectionPool.destroy();
-			throw new SCServiceException("register server failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-		}
-		return requester;
 	}
 
 	public synchronized void deregisterServer() throws Exception {
@@ -229,6 +233,8 @@ public class SCSessionServer {
 			// destroy connection pool
 			req.getContext().getConnectionPool().destroy();
 			this.registered = false;
+			AppContext.attachedCommunicators.decrementAndGet();
+			AppContext.destroy();
 		}
 	}
 

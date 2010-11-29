@@ -138,9 +138,9 @@ public class SetupTestCases {
 				setupTestCases = new SetupTestCases();
 				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties" });
 				SetupTestCases.startSessionServer10Connections();
-//				SetupTestCases.startSessionServer1Connection();
-//				SetupTestCases.startSessionServer1Session();
-//				SetupTestCases.startPublishServer();
+				SetupTestCases.startSessionServer1Connection();
+				SetupTestCases.startSessionServer1Session();
+				SetupTestCases.startPublishServer();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

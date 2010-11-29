@@ -17,7 +17,6 @@
 package org.serviceconnector.api.cln;
 
 import java.security.InvalidParameterException;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
@@ -31,6 +30,7 @@ import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.call.SCMPEchoCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
@@ -54,8 +54,6 @@ public class SCSessionService extends SCService {
 
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(SCSessionService.class);
-	/** The timer, which observes the session timeout of service. */
-	private final static Timer timer = new Timer("SessionServiceTimeout");
 	/** The timer run, runs when session need to be refreshed on SC. */
 	private ITimerRun timerRun;
 	/** The timer task. */
@@ -152,7 +150,7 @@ public class SCSessionService extends SCService {
 		// trigger session timeout
 		this.timerRun = new SessionTimeouter((int) echoIntervalInSeconds);
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		SCSessionService.timer.schedule(timerTask, (int) (echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR));
+		AppContext.eciTimer.schedule(timerTask, (int) (echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR));
 	}
 
 	/**
@@ -306,13 +304,13 @@ public class SCSessionService extends SCService {
 		// wait for message in callback
 		SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		this.pendingRequest = false;
-		if (reply.isFault()) {			
+		if (reply.isFault()) {
 			SCMPFault fault = null;
 			if (reply instanceof SCMPFault) {
 				fault = (SCMPFault) reply;
 			} else {
 				if (reply instanceof SCMPLargeResponse) {
-					fault = ((SCMPLargeResponse)reply).getFault();
+					fault = ((SCMPLargeResponse) reply).getFault();
 				}
 			}
 			String errorCode = fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
@@ -329,7 +327,7 @@ public class SCSessionService extends SCService {
 		}
 		// trigger session timeout
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		SCSessionService.timer.schedule(this.timerTask, (long) this.timerRun.getTimeoutMillis());
+		AppContext.eciTimer.schedule(this.timerTask, (long) this.timerRun.getTimeoutMillis());
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
@@ -405,7 +403,7 @@ public class SCSessionService extends SCService {
 		super.setRequestComplete();
 		// trigger session timeout
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		SCSessionService.timer.schedule(this.timerTask, (long) this.timerRun.getTimeoutMillis());
+		AppContext.eciTimer.schedule(this.timerTask, (long) this.timerRun.getTimeoutMillis());
 	}
 
 	public void setEchoTimeoutInSeconds(int echoTimeoutInSeconds) {
@@ -479,7 +477,7 @@ public class SCSessionService extends SCService {
 				SCSessionService.this.echo();
 				// trigger session timeout
 				SCSessionService.this.timerTask = new TimerTaskWrapper(SCSessionService.this.timerRun);
-				SCSessionService.timer.schedule(SCSessionService.this.timerTask, (long) this.getTimeoutMillis());
+				AppContext.eciTimer.schedule(SCSessionService.this.timerTask, (long) this.getTimeoutMillis());
 			} catch (Exception e) {
 				// echo failed - mark session as dead
 				SCSessionService.this.sessionActive = false;

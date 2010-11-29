@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.req;
 
-import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
@@ -40,8 +40,6 @@ public class Requester implements IRequester {
 
 	/** The context. */
 	private RequesterContext reqContext;
-	/** The Constant timer, triggers all operation timeout for sending. */
-	protected final static Timer timer = new Timer("OperationTimerRequester");
 
 	public Requester(RequesterContext context) {
 		this.reqContext = context;
@@ -60,7 +58,7 @@ public class Requester implements IRequester {
 			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
 			reqCallback.setOperationTimeoutTask(task);
 			reqCallback.setTimeoutMillis(timeoutInMillis);
-			timer.schedule(task, (long) timeoutInMillis);
+			AppContext.otiTimer.schedule(task, (long) timeoutInMillis);
 			connection.send(message, requesterCallback);
 		} catch (Exception ex) {
 			this.reqContext.getConnectionPool().freeConnection(connection);
@@ -81,8 +79,8 @@ public class Requester implements IRequester {
 	}
 
 	/**
-	 * The Class SCRequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a
-	 * reply is received. Handles freeing up earlier requested connections.
+	 * The Class SCRequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a reply is
+	 * received. Handles freeing up earlier requested connections.
 	 */
 	private class RequesterSCMPCallback implements ISCMPCallback, ITimerRun {
 
@@ -140,8 +138,8 @@ public class Requester implements IRequester {
 		}
 
 		/**
-		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if connection
-		 * has a curious state.
+		 * Disconnect connection. Orders connectionPool to disconnect this connection. Might be the case if connection has a curious
+		 * state.
 		 */
 		private void disconnectConnection() {
 			try {
@@ -184,8 +182,7 @@ public class Requester implements IRequester {
 		public void timeout() {
 			this.disconnectConnection();
 			try {
-				this.scmpCallback
-						.callback(new IdleTimeoutException("idle timeout. operation - could not be completed."));
+				this.scmpCallback.callback(new IdleTimeoutException("idle timeout. operation - could not be completed."));
 			} catch (Exception e) {
 				this.scmpCallback.callback(e);
 			}

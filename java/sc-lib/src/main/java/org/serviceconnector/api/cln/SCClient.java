@@ -24,6 +24,7 @@ import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
@@ -121,30 +122,34 @@ public class SCClient {
 		if (host == null) {
 			throw new InvalidParameterException("host must be set.");
 		}
-		ValidatorUtility.validateInt(0, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
-		ValidatorUtility.validateInt(0, this.keepAliveIntervalInSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
-		this.connectionPool = new ConnectionPool(this.host, this.port, this.connectionType, keepAliveIntervalInSeconds);
-		this.connectionPool.setMaxConnections(this.maxConnections);
-		// keep always one connection active from client to SC
-		this.connectionPool.setMinConnections(1);
-		this.scContext.setConnectionPool(this.connectionPool);
-		this.requester = new SCRequester(new RequesterContext(this.connectionPool, null));
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
-		SCServiceCallback callback = new SCServiceCallback(true);
-		try {
-			attachCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
-		} catch (Exception e) {
-			this.connectionPool.destroy();
-			throw new SCServiceException("attach to " + host + ":" + port + " failed", e);
-		}
-		SCMPMessage reply = callback.getMessageSync();
-		if (reply.isFault()) {
-			this.connectionPool.destroy();
-			throw new SCServiceException("attach to " + host + ":" + port + " failed : "
-					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+		AppContext.init();
+		synchronized (AppContext.communicatorsLock) {
+			ValidatorUtility.validateInt(0, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+			ValidatorUtility.validateInt(0, this.keepAliveIntervalInSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
+			this.connectionPool = new ConnectionPool(this.host, this.port, this.connectionType, keepAliveIntervalInSeconds);
+			this.connectionPool.setMaxConnections(this.maxConnections);
+			// keep always one connection active from client to SC
+			this.connectionPool.setMinConnections(1);
+			this.scContext.setConnectionPool(this.connectionPool);
+			this.requester = new SCRequester(new RequesterContext(this.connectionPool, null));
+			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
+			SCServiceCallback callback = new SCServiceCallback(true);
+			try {
+				attachCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+			} catch (Exception e) {
+				this.connectionPool.destroy();
+				throw new SCServiceException("attach to " + host + ":" + port + " failed", e);
+			}
+			SCMPMessage reply = callback.getMessageSync();
+			if (reply.isFault()) {
+				this.connectionPool.destroy();
+				throw new SCServiceException("attach to " + host + ":" + port + " failed : "
+						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 
+			}
+			this.attached = true;
+			AppContext.attachedCommunicators.incrementAndGet();
 		}
-		this.attached = true;
 	}
 
 	/**
@@ -181,8 +186,11 @@ public class SCClient {
 			}
 		} finally {
 			this.attached = false;
+			AppContext.attachedCommunicators.decrementAndGet();
 			// destroy connection pool
 			this.connectionPool.destroy();
+			// release resources
+			AppContext.destroy();
 		}
 	}
 

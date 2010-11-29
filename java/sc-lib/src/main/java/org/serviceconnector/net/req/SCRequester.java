@@ -17,10 +17,10 @@
 package org.serviceconnector.net.req;
 
 import java.nio.channels.ClosedChannelException;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
@@ -45,8 +45,6 @@ public class SCRequester implements IRequester {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCRequester.class);
-	/** The Constant timer, triggers all operation timeout for sending. */
-	protected final static Timer timer = new Timer("OperationTimerSCRequester");
 	/** The context. */
 	protected RequesterContext reqContext;
 
@@ -81,7 +79,7 @@ public class SCRequester implements IRequester {
 				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
 				reqCallback.setOperationTimeoutTask(task);
 				reqCallback.setTimeoutMillis(timeoutInMillis);
-				timer.schedule(task, (long) timeoutInMillis);
+				AppContext.otiTimer.schedule(task, (long) timeoutInMillis);
 				// extract first part message & send
 				SCMPMessage part = largeResponse.getFirst();
 				// handling msgSequenceNr
@@ -97,7 +95,7 @@ public class SCRequester implements IRequester {
 				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
 				reqCallback.setOperationTimeoutTask(task);
 				reqCallback.setTimeoutMillis(timeoutInMillis);
-				timer.schedule(task, (long) timeoutInMillis);
+				AppContext.otiTimer.schedule(task, (long) timeoutInMillis);
 				// handling msgSequenceNr
 				if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
 					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());

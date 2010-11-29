@@ -59,7 +59,7 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 
 		String scEntry = (String) inspectMap.get("serviceRegistry"); // TODO TRN this will not work if config is changed!
-		String expectedEntry = "sc2-session-2:0|sc1-session-1:0|session-1:1 - session-1_localhost/:30000 : 10 - session-1_localhost/:41000 : 10 - session-1_localhost/:42000 : 1|sc1-publish-1:0|publish-2:0|sc2-publish-2:0|file-1:file-1:ENABLED:file|session-2:0|publish-1:0 - publish-1_localhost/:51000 : 1|";
+		String expectedEntry = "sc2-session-2:0|sc1-session-1:0|session-1:0 - session-1_localhost/:30000 : 10 - session-1_localhost/:41000 : 10 - session-1_localhost/:42000 : 1|sc1-publish-1:0|publish-2:0|sc2-publish-2:0|file-1:file-1:ENABLED:file|session-2:0|publish-1:0 - publish-1_localhost/:51000 : 1|";
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedEntry, scEntry);
 		super.registerServerBefore();
 	}
