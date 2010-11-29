@@ -39,11 +39,13 @@ public class DemoSessionClient extends Thread {
 
 		//SCClient sc = new SCClient("localhost", 7000); // regular, defaults documented in javadoc
 		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP); // alternative with connection type
+		SCClient sc2 = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP); // alternative with connection type
 		SCSessionService service = null;
 		try {
 			sc.setMaxConnections(20); // can be set before attach
 			sc.setKeepAliveIntervalInSeconds(0); // can be set before attach
 			sc.attach(); // regular
+			sc2.attach();
 //			sc.attach(10); // alternative with operation timeout
 
 			String serviceName = "session-1";
@@ -53,12 +55,17 @@ public class DemoSessionClient extends Thread {
 
 			service.createSession(); // regular
 //			service.createSession(10); // alternative with operation timeout
+
+// new API Proposal - creates session with return value			
 //			SCMessage msg = new SCMessage();
 //			msg.setSessionInfo("session-info"); // optional
 //			msg.setData("certificate or what so ever"); // optional
-//			service.createSession(10, msg); // alternative with operation timeout and message
-//			service.createSession(msg); // alternative with message
-
+//			SCMessage reply = service.createSession(10, msg); // alternative with operation timeout and message
+//			reply = service.createSession(msg); // alternative with message
+//			Object body = reply.getData();
+//			byte[] byteBody = (byte[])reply.getData();
+			
+			
 			String sid = service.getSessionId();
 
 			SCMessage requestMsg = new SCMessage();
@@ -94,6 +101,10 @@ public class DemoSessionClient extends Thread {
 //				msg.setSessionInfo("session-info"); // optional
 //				service.deleteSession(10, msg); // alternative with operation timeout and message
 //				service.deleteSession(msg); // alternative with message
+				sc.detach();
+				sc2.detach();
+				
+				sc.attach();
 				sc.detach();
 			} catch (Exception e) {
 				logger.error("cleanup", e);
