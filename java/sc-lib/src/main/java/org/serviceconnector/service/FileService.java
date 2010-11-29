@@ -17,11 +17,13 @@
 package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.FileServer;
 
 /**
- * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
- * communication functions.
+ * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
+ * functions.
  */
 public class FileService extends Service {
 
@@ -43,15 +45,23 @@ public class FileService extends Service {
 		this.path = path;
 	}
 
-	public FileServer getServer() {
-		return server;
-	}
-
 	public void setServer(FileServer server) {
 		this.server = server;
 	}
-	
+
 	public String getPath() {
 		return path;
+	}
+
+	public synchronized FileServer allocateFileSession(FileSession session) throws Exception {
+		if (this.server.hasFreeSession()) {
+			this.server.addSession(session);
+			return this.server;
+		}
+		// no free session available
+		NoFreeSessionException noFreeSessionExc = new NoFreeSessionException(SCMPError.NO_FREE_SESSION, "for service "
+				+ this.getServiceName());
+		noFreeSessionExc.setMessageType(SCMPMsgType.CLN_CREATE_SESSION);
+		throw noFreeSessionExc;
 	}
 }

@@ -17,6 +17,8 @@
 package org.serviceconnector.net;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -115,7 +117,18 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						Deflater compresser = new Deflater();
 						compresser.setInput(ba);
 						compresser.finish();
-						bodyLength = compresser.deflate(output);
+						ByteArrayOutputStream baos = new ByteArrayOutputStream(output.length);
+						bodyLength = 0;
+						while (!compresser.finished()) {
+							int numCompressedBytes = compresser.deflate(output, 0, output.length);
+							bodyLength += numCompressedBytes;
+							if (numCompressedBytes > 0) {
+								baos.write(output, 0, numCompressedBytes);
+								baos.flush();
+							}
+						}
+						baos.close();
+						output = baos.toByteArray();
 					}
 					this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
 					bw.write(sb.toString()); // write header

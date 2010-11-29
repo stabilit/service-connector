@@ -104,7 +104,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 		}
 	}
-	
+
 	/** {@inhertiDoc} **/
 	@Override
 	public void setRequestBody(Object obj) {

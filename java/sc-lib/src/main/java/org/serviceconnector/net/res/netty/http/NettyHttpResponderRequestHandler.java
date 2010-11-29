@@ -162,6 +162,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			} catch (HasFaultResponseException ex) {
 				// exception carries response inside
 				logger.info("messageReceived " + ex.toString());
+				ex.setSessionIdAndServiceName(request);
 				ex.setFaultResponse(response);
 			}
 			if (response.isLarge()) {
@@ -192,7 +193,9 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
 		super.channelClosed(ctx, e);
 		InetSocketAddress socketAddress = (InetSocketAddress) e.getChannel().getRemoteAddress();
-		this.cleanUpDeadServer(socketAddress.getHostName(), socketAddress.getPort());
+		if (AppContext.isScEnvironment()) {
+			this.cleanUpDeadServer(socketAddress.getHostName(), socketAddress.getPort());
+		}
 	}
 
 	/** {@inheritDoc} */

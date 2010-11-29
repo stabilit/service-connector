@@ -123,7 +123,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 						} else {
 							scmpReply = new SCMPPart();
 						}
-						scmpReply.setMessageType(getKey());						
+						scmpReply.setMessageType(getKey());
 						cacheId = cacheMessage.getCacheId();
 						if (cacheId == null) {
 							// check if cache is loading
@@ -318,12 +318,12 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
 			}
 			// set sid & serviceName for EXC
-			SCMPMessage message;
 			try {
+				SCMPMessage message;
 				message = request.getMessage();
 				fault.setServiceName(message.getServiceName());
 			} catch (Exception e) {
-				logger.info("not possible to set service name in EXC of execute command.");
+				logger.warn("not possible to set service name in EXC of execute command.");
 			}
 			fault.setSessionId(sessionId);
 			this.callback(fault);

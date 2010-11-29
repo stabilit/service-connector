@@ -40,7 +40,7 @@ public final class Constants {
 
 	/** Default value used if no interval is passed in the API */
 	public static final int DEFAULT_ECHO_INTERVAL_SECONDS = 60;
-	
+
 	/** Default value if no OPERATION_TIMEOUT_MULTIPLIER is configured. */
 	public static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
 
@@ -73,6 +73,9 @@ public final class Constants {
 
 	/** The default maximal connection pool size */
 	public static final int DEFAULT_MAX_CONNECTION_POOL_SIZE = 100;
+
+	/** The default maximal file sessions */
+	public static final int DEFAULT_MAX_FILE_SESSIONS = 10;
 
 	/** The default upload script name */
 	public static final String DEFAULT_UPLOAD_SCRIPT_NAME = "scupload.php";
@@ -118,9 +121,9 @@ public final class Constants {
 	/** Comma or semicolon REGEX. */
 	public static final String COMMA_OR_SEMICOLON = ",|;"; // TODO not used
 
-	/** File containing the Sc process PID. Created at startup and deleted on exit or error. Used to check is sc is running.*/
+	/** File containing the Sc process PID. Created at startup and deleted on exit or error. Used to check is sc is running. */
 	public static final String PID_FILE_NAME = "/sc.pid";
-	
+
 	/*
 	 * console command constants *************************
 	 */
@@ -158,6 +161,7 @@ public final class Constants {
 	public static final String PROPERTY_QUALIFIER_TYPE = ".type";
 	public static final String PROPERTY_QUALIFIER_ENABLED = ".enabled";
 	public static final String PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE = ".maxConnectionPoolSize";
+	public static final String PROPERTY_QALIFIER_MAX_SESSIONS = ".maxSessions";
 	public static final String PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL = ".keepAliveInterval";
 	public static final String PROPERTY_QUALIFIER_PATH = ".path";
 

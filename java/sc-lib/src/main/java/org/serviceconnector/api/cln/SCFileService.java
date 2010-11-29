@@ -127,7 +127,7 @@ public class SCFileService extends SCService {
 		}
 		SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
-			SCServiceException ex = new SCServiceException("create file session failed"
+			SCServiceException ex = new SCServiceException("create file session failed "
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw ex;
 		}

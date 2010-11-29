@@ -84,11 +84,17 @@ public class ServerLoader {
 			Server server = null;
 			switch (serverType) {
 			case FILE_SERVER:
-				server = new FileServer(serverName, socketAddress, null, portNr, maxConnections, connectionType, keepAliveInterval);
+				String maxSessionValue = (String) config.getString(serverName + Constants.PROPERTY_QALIFIER_MAX_SESSIONS);
+				int maxSessions = Constants.DEFAULT_MAX_FILE_SESSIONS;
+				if (maxSessionValue != null) {
+					maxSessions = Integer.parseInt(maxSessionValue);
+				}
+				server = new FileServer(serverName, socketAddress, portNr, maxSessions, maxConnections, connectionType,
+						keepAliveInterval);
 				break;
 			case CASCADED_SC:
 				// TODO JOT .. cascaded handling
-				// server = new FileService(serviceName);
+				// server = new CascadedSC(serviceName);
 				continue;
 			case WEB_SERVER:
 				// nothing to do in case of a web server is registered in specific endpoint

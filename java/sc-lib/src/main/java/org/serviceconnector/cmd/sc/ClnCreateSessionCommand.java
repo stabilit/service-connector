@@ -80,7 +80,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		case FILE_SERVICE:
 			// create file session
 			FileSession fileSession = new FileSession(sessionInfo, ipAddressList, ((FileService) abstractService).getPath());
-			FileServer fileServer = ((FileService) abstractService).getServer();
+			FileServer fileServer = ((FileService) abstractService).allocateFileSession(fileSession);
 			// add server to session
 			fileSession.setServer(fileServer);
 			fileSession.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());

@@ -22,6 +22,7 @@
 package org.serviceconnector.net;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -150,17 +151,29 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		try {
 			byte[] body = new byte[scmpBodySize];
 			int bodySize = is.read(body);
-			if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
-				// message compression required
-				byte[] result = new byte[Constants.MAX_MESSAGE_SIZE];
-				Inflater decompresser = new Inflater();
-				decompresser.setInput(body, 0, bodySize);
-				System.out.println("decompress bodySize = " + bodySize);
-				bodySize = decompresser.inflate(result);
-				System.out.println("decompress done bodySize = " + bodySize);
-				decompresser.end();
-				body = result;
+			if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION)) {
+				if (AppContext.isScEnvironment() == false) {
+					// message compression required
+					Inflater decompresser = new Inflater();
+					decompresser.setInput(body, 0, bodySize);
+					ByteArrayOutputStream bos = new ByteArrayOutputStream(Constants.MAX_MESSAGE_SIZE);
+					byte[] buf = new byte[Constants.MAX_MESSAGE_SIZE];
+					bodySize = 0;
+					while (!decompresser.finished()) {
+						int count = decompresser.inflate(buf);
+						bodySize += count;
+						bos.write(buf, 0, count);
+					}
+					bos.close();
+					decompresser.end();
+					body = bos.toByteArray();
+				} else {
+					// is an SC environment - body is compressed - below switch is irrelevant
+					scmpMsg.setBody(body, 0, bodySize);
+					return scmpMsg;
+				}
 			}
+
 			switch (scmpBodyType) {
 			case BINARY:
 			case INPUT_STREAM:

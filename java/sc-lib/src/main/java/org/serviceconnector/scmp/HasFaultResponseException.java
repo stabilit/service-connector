@@ -16,15 +16,18 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.scmp;
 
+import org.apache.log4j.Logger;
+
 /**
- * The Class HasFaultResponseException. To inherit for exception classes which save specific information for the
- * response. Used to save data about occurred errors and writing the response on a different level of software
- * architecture.
+ * The Class HasFaultResponseException. To inherit for exception classes which save specific information for the response. Used to
+ * save data about occurred errors and writing the response on a different level of software architecture.
  * 
  * @author JTraber
  */
 public abstract class HasFaultResponseException extends Exception {
 
+	/** The Constant logger. */
+	private final static Logger logger = Logger.getLogger(HasFaultResponseException.class);
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3781800906847958120L;
 	/** The fault message. */
@@ -94,5 +97,23 @@ public abstract class HasFaultResponseException extends Exception {
 	 */
 	public void setMessageType(String messageTypeValue) {
 		this.fault.setMessageType(messageTypeValue);
+	}
+
+	/**
+	 * Tries setting the session id and service name in fault message.
+	 * 
+	 * @param request
+	 *            the new session id and service name
+	 */
+	public void setSessionIdAndServiceName(IRequest request) {
+		// set sid & serviceName for EXC
+		try {
+			SCMPMessage message;
+			message = request.getMessage();
+			fault.setHeader(message, SCMPHeaderAttributeKey.SERVICE_NAME);
+			fault.setHeader(message, SCMPHeaderAttributeKey.SESSION_ID);
+		} catch (Exception e) {
+			logger.warn("not possible to set service name in EXC of execute command.");
+		}
 	}
 }

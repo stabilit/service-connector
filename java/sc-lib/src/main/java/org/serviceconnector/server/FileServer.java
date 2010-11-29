@@ -20,6 +20,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.Constants;
@@ -29,12 +32,20 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.FileSession;
+import org.serviceconnector.service.Session;
 
 public class FileServer extends Server {
 
-	public FileServer(String serverKey, InetSocketAddress socketAddress, String serviceName, int portNr, int maxConnections,
+	/** The sessions, list of sessions allocated to the server. */
+	private List<FileSession> sessions;
+	/** The max sessions. */
+	private int maxSessions;
+
+	public FileServer(String serverKey, InetSocketAddress socketAddress, int portNr, int maxSessions, int maxConnections,
 			String connectionType, int keepAliveInterval) {
-		super(ServerType.FILE_SERVER, socketAddress, serviceName, portNr, maxConnections, connectionType, keepAliveInterval);
+		super(ServerType.FILE_SERVER, socketAddress, null, portNr, maxConnections, connectionType, keepAliveInterval);
+		this.sessions = Collections.synchronizedList(new ArrayList<FileSession>());
+		this.maxSessions = maxSessions;
 		this.serverKey = serverKey;
 	}
 
@@ -153,5 +164,22 @@ public class FileServer extends Server {
 		if (httpURLConnection != null) {
 			httpURLConnection.disconnect();
 		}
+		this.sessions.remove(session);
+	}
+
+	public boolean hasFreeSession() {
+		return this.sessions.size() < this.maxSessions;
+	}
+
+	public void addSession(FileSession session) {
+		this.sessions.add(session);
+	}
+
+	public void removeSession(Session session) {
+		if (this.sessions == null) {
+			// might be the case if server got already destroyed
+			return;
+		}
+		this.sessions.remove(session);
 	}
 }
