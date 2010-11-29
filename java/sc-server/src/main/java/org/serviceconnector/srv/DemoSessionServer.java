@@ -51,8 +51,8 @@ public class DemoSessionServer extends Thread {
 			
 			String serviceName = "session-1";
 			SCSessionServer server = sc.newSessionServer(serviceName); // no other params possible
-			int maxSess = 10;
-			int maxConn = 5;
+			int maxSess = 100;
+			int maxConn = 1;
 			SCSessionServerCallback cbk = newSrvCallback(server);
 			try {
 				server.registerServer(maxSess, maxConn, cbk); // regular
@@ -62,11 +62,11 @@ public class DemoSessionServer extends Thread {
 				server.deregisterServer();
 				// server.deregisterServer(10);
 			}
-			// server.destroy();
+			server.deregisterServer();
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
 		} finally {
-			// sc.stopListener();
+			sc.stopListener();
 		}
 	}
 
