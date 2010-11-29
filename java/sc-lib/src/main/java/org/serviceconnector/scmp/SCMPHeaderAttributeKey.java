@@ -69,6 +69,8 @@ public enum SCMPHeaderAttributeKey {
 	MASK("msk"),
 	/** The CASCADED_MASK. */
 	CASCADED_MASK("cam"),
+	/** The CASCADED_SUBSCRIPTION_ID. */
+	CASCADED_SUBSCRIPTION_ID("csi"),
 	/** The MAX_SESSIONS. */
 	MAX_SESSIONS("mxs"),
 	/** The MAX_CONNECTIONS. */
@@ -78,7 +80,7 @@ public enum SCMPHeaderAttributeKey {
 	/** The NO_DATA_INTERVAL. */
 	NO_DATA_INTERVAL("noi"),
 	/** The ORIGINAL_MSG_ID. */
-	ORIGINAL_MSG_ID("omi"),
+	ORIGINAL_MSG_SEQUENCE_NR("oms"),
 	/** The PORT_NR. */
 	PORT_NR("pnr"),
 	/** The REJECT_SESSION. */

@@ -315,7 +315,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 					reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 				}
 				reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
-				reply.setHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID, message.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_ID));
+				reply.setHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_SEQUENCE_NR, message.getHeader(SCMPHeaderAttributeKey.ORIGINAL_MSG_SEQUENCE_NR));
 				reply.setBody(message.getBody());
 				this.response.setSCMP(reply);
 			}
