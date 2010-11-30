@@ -1,0 +1,5 @@
+log\*.*
+kitbuild\kit*.*
+kitbuild\mvn*.*
+doc\*.bak
+config\*.bak
