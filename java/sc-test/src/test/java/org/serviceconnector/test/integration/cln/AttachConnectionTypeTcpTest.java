@@ -79,14 +79,6 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	
-	/**
-	 * Initialize the client with host, port and default connection type.
-	 * @param host
-	 * @param port
-	 */
-	private void testConstructor(String host, int port) {
-		this.testConstructor(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE);
-	}
 
 	/**
 	 * Initialize the client.
@@ -165,12 +157,25 @@ public class AttachConnectionTypeTcpTest {
 	}
 
 	/**
-	 * Description: Attach client with default host and tcp-port.<br>
+	 * Description: Attach client with: <br> 
+	 * 		host: localhost<br>
+	 * 		port: tcp<br>
+	 * 		type: tcp<br>
 	 * Expectation:	Client is attached.
 	 */
 	@Test
 	public void t01_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_TCP);
+		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		this.testAttach();
+	}
+
+	/**
+	 * Description: Attach client with default host and tcp-port.<br>
+	 * Expectation:	Client is attached.
+	 */
+	@Test
+	public void t011_attach() throws Exception {
+		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_HTTP);
 		this.testAttach();
 	}
 
@@ -178,8 +183,9 @@ public class AttachConnectionTypeTcpTest {
 	 * Description: Attach client with default host and http-port.<br>
 	 * Expectation:	Client is not attached and throws Exception.
 	 */
+	@Test
 	public void t02_attach() throws Exception {
-		this.testConstructor(TestConstants.HOST, TestConstants.PORT_HTTP);
+		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_TCP);
 		this.testAttach("Exception");
 	}
 
@@ -189,7 +195,7 @@ public class AttachConnectionTypeTcpTest {
 	 */
 	@Test
 	public void t03_attach() throws Exception {
-		this.testConstructor(TestConstants.HOST, 0);
+		this.testConstructor(TestConstants.LOCALHOST, 0, ConnectionType.NETTY_TCP);
 		this.testAttach("SCServiceException");
 	}
 
@@ -199,7 +205,7 @@ public class AttachConnectionTypeTcpTest {
 	 */
 	@Test
 	public void t04_attach() throws Exception {
-		this.testConstructor(TestConstants.HOST, -1);
+		this.testConstructor(TestConstants.LOCALHOST, -1, ConnectionType.NETTY_TCP);
 		this.testAttach("InvalidParameterException");
 	}
 
@@ -209,7 +215,7 @@ public class AttachConnectionTypeTcpTest {
 	 */
 	@Test
 	public void t05_attach() throws Exception {
-		this.testConstructor(TestConstants.HOST, TestConstants.PORT_MIN);
+		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_MIN, ConnectionType.NETTY_TCP);
 		this.testAttach("SCServiceException");
 	}
 
@@ -218,8 +224,8 @@ public class AttachConnectionTypeTcpTest {
 	 * Expectation:	Client is not attached and throws SCServiceException.
 	 */
 	@Test
-	public void t051_attach() throws Exception {
-		this.testConstructor(TestConstants.HOST, TestConstants.PORT_MAX);
+	public void t06_attach() throws Exception {
+		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_MAX, ConnectionType.NETTY_TCP);
 		this.testAttach("SCServiceException");
 	}
 	
@@ -228,8 +234,8 @@ public class AttachConnectionTypeTcpTest {
 	 * Expectation:	Client is not attached and throws SCServiceException.
 	 */
 	@Test
-	public void t06_attach() throws Exception {
-		this.testConstructor(TestConstants.HOST, 0xFFFF);
+	public void t07_attach() throws Exception {
+		this.testConstructor(TestConstants.LOCALHOST, 0xFFFF, ConnectionType.NETTY_TCP);
 		this.testAttach("SCServiceException");
 	}
 
@@ -238,8 +244,8 @@ public class AttachConnectionTypeTcpTest {
 	 * Expectation:	Client is not attached and throws SCMPValidatorException.
 	 */
 	@Test
-	public void t07_attach() throws Exception {
-		this.testConstructor(TestConstants.HOST, 0xFFFF + 1);
+	public void t08_attach() throws Exception {
+		this.testConstructor(TestConstants.LOCALHOST, 0xFFFF + 1, ConnectionType.NETTY_TCP);
 		this.testAttach("InvalidParameterException");
 	}
 
@@ -248,8 +254,8 @@ public class AttachConnectionTypeTcpTest {
 	 * Expectation:	Client is attached.
 	 */
 	@Test
-	public void t08_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_TCP);
+	public void t09_attach() throws Exception {
+		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		this.testAttach(10);
 	}
 	
@@ -260,7 +266,7 @@ public class AttachConnectionTypeTcpTest {
 	 */
 	@Test
 	public void t20_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_TCP);
+		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		this.testAttach();
 		this.testAttach("SCServiceException");  // second attach throws SCServiceException	
 		assertEquals("Client is not attached", true, client.isAttached());

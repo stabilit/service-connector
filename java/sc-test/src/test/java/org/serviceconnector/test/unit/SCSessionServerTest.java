@@ -99,6 +99,7 @@ public class SCSessionServerTest {
 	public void t10_HostPort() {
 		try {
 			SCSessionServer sessionServer = server.newSessionServer(TestConstants.sessionServiceName);
+			assertNotNull("Can not create a new SessionServer!", sessionServer);
 			// TODO check function getHost on SCSessionServer.java
 			assertEquals("SessionServer Host", TestConstants.LOCALHOST, sessionServer.getHost());
 			// TODO check function getPort on SCSessionServer.java
@@ -117,6 +118,8 @@ public class SCSessionServerTest {
 	public void t11_HostPort() {
 		try {
 			SCSessionServer sessionServer = server.newSessionServer(TestConstants.sessionServiceName);
+			assertNotNull("Can not create a new SessionServer!", sessionServer);
+
 			// TODO check getSCHost getHost on SCSessionServer.java
 			assertEquals("SC Host", TestConstants.LOCALHOST, sessionServer.getSCHost());
 			// TODO check getSCPort getHost on SCSessionServer.java

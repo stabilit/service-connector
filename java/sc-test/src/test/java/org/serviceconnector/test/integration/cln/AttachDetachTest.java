@@ -29,6 +29,7 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
 public class AttachDetachTest {
@@ -65,8 +66,7 @@ public class AttachDetachTest {
 	@Before
 	public void setUp() {
 		// threadCount = Thread.activeCount();
-		client = new SCClient();
-		((SCClient) client).setConnectionType("netty.http");
+		this.client = null;
 	}
 
 	@After
@@ -79,8 +79,10 @@ public class AttachDetachTest {
 	private void testAttachDetachCycle(String host, int port, int cicle, int sleep) throws Exception  {
 		int i = 0;
 		try {
+			client = new SCClient(host, port, ConnectionType.NETTY_HTTP);
+			
 			for (i = 0; i < cicle; i++) {
-				client.attach(host, port);
+				client.attach();
 				assertEquals(true, client.isAttached());
 				if (sleep > 0) 
 					Thread.sleep(sleep);
@@ -100,9 +102,8 @@ public class AttachDetachTest {
 		try {
 			for (; i < clientsCount; i++) {
 				if (((i+1) % 100) == 0) testLogger.info("Attaching client nr. " + (i+1) + "...");
-				clients[i] = new SCClient();
-				((SCClient) clients[i]).setConnectionType("netty.http");
-				clients[i].attach(host, port);
+				clients[i] = new SCClient(host, port, ConnectionType.NETTY_HTTP);
+				clients[i].attach();
 			}
 		} catch (InvalidParameterException ex) {
 			assertFalse("Attach, clientsCount:"+i+"  InvalidParameterException, error msg:"+ex.getMessage(), true);
@@ -127,8 +128,10 @@ public class AttachDetachTest {
 	 */
 	@Test
 	public void attachDetach_1() throws Exception {
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		
 		assertEquals(false, client.isAttached());
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client.attach();
 		assertEquals(true, client.isAttached());
 		client.detach();
 		assertEquals(false, client.isAttached());
@@ -142,9 +145,11 @@ public class AttachDetachTest {
 	@Test
 	public void attachDetach_2() throws Exception {
 		Exception ex = null;
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+
+		client.attach();
 		try {
-			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+			client.attach();
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -154,48 +159,6 @@ public class AttachDetachTest {
 		assertEquals(false, client.isAttached());
 	}
 
-	/**
-	 * Description: Attach two time the same client and detach one time with twice different parameters.<br>
-	 * Expectation:	Throws exception on the second attach and detached.
-	 */
-	@Test
-	public void attachDetach_3() throws Exception {
-		Exception ex = null;
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		try {
-			((SCClient) client).setConnectionType("netty.tcp");
-			client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, client.isAttached());
-		client.detach();
-		assertEquals(false, client.isAttached());
-	}
-
-	/**
-	 * Description: Attach two time the same client and detach one time with twice different parameters.<br>
-	 * Expectation:	Throws exception on the second attach and detached.
-	 */
-	@Test
-	public void attachDetach_4() throws Exception {
-		Exception ex = null;
-		assertEquals(false, client.isAttached());
-
-		((SCClient) client).setConnectionType("netty.tcp");
-		client.attach(TestConstants.HOST, TestConstants.PORT_TCP);
-		try {
-			((SCClient) client).setConnectionType("netty.http");
-			client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, client.isAttached());
-		client.detach();
-		assertEquals(false, client.isAttached());
-	}
 
 	/**
 	 * Description: Detach the client without to attach.<br>
@@ -203,6 +166,8 @@ public class AttachDetachTest {
 	 */
 	@Test
 	public void detach_1() throws Exception {
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+
 		assertEquals(false, client.isAttached());
 		client.detach();
 		assertEquals(false, client.isAttached());

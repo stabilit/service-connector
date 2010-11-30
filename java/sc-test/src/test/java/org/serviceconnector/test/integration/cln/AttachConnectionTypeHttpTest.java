@@ -16,6 +16,7 @@
 package org.serviceconnector.test.integration.cln;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.security.InvalidParameterException;
 
@@ -25,10 +26,12 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
 
@@ -62,9 +65,8 @@ public class AttachConnectionTypeHttpTest {
 
 	@Before
 	public void setUp() throws Exception {
-//		threadCount = Thread.activeCount();
-		client = new SCClient();
-		((SCClient) client).setConnectionType("netty.http");
+		// threadCount = Thread.activeCount();
+		client = null;
 	}
 	
 	@After
@@ -73,11 +75,30 @@ public class AttachConnectionTypeHttpTest {
 			client.detach();
 		} catch (Exception e) {} 
 		client = null;
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
+		// assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
+
 	/**
-	 * Run the method "client.atach" and check the exeptions.
+	 * Initialize the client.
+	 * @param host
+	 * @param port
+	 * @param connectionType
+	 */
+	private void testConstructor(String host, int port, ConnectionType connectionType) {
+		client = new SCClient(host, port, connectionType);
+
+		assertEquals("Host ", host, client.getHost());
+		assertEquals("port ", port, client.getPort());
+		assertEquals("Keep Alive Interval ", Constants.DEFAULT_KEEP_ALIVE_INTERVAL, client.getKeepAliveIntervalInSeconds());
+		assertEquals("Attached ", false, client.isAttached());
+		assertEquals("max Connections ", Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE, client.getMaxConnections());
+		assertEquals("Connection Type ", connectionType.getValue(), client.getConnectionType());
+		assertNotNull("Client not created:", client);
+	}
+	
+	/**
+	 * Run the method "client.atach" and check the exception.
 	 * @param host
 	 * @param port
 	 * @param keepAlive = integer value or can be null
@@ -86,10 +107,10 @@ public class AttachConnectionTypeHttpTest {
 	 */private void testAttach(String host, int port, Integer keepAlive, boolean isClientAttached, String expectedException) {
 		try {
 			if (keepAlive == null) {
-				client.attach(host, port);
+				client.attach();
 			}
 			else {
-				client.attach(host, port, keepAlive.intValue() );
+				client.attach(keepAlive.intValue());
 			}
 		} catch (SCServiceException ex) {
 			assertEquals("Host:"+host+"  port:"+port, expectedException, "SCServiceException");
@@ -127,7 +148,6 @@ public class AttachConnectionTypeHttpTest {
 	 */
 	@Test
 	public void attach_3() throws Exception {
-		((SCClient) client).setConnectionType("netty.tcp");
 		this.testAttach(TestConstants.HOST, TestConstants.PORT_TCP, null, true, null);
 	}
 
