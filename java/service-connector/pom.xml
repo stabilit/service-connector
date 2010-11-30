@@ -37,10 +37,6 @@
 				<configuration>
 					<!-- switch on dependency-driven aggregation -->
 					<includeDependencySources>true</includeDependencySources>
-
-					<dependencySourceIncludes>
-						<dependency-source>org.serviceconnector.*</dependency-source>
-					</dependencySourceIncludes>
 				</configuration>
 			</plugin>
 			<plugin>
