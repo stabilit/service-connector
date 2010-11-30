@@ -79,8 +79,6 @@ public enum SCMPHeaderAttributeKey {
 	NO_DATA("nod"),
 	/** The NO_DATA_INTERVAL. */
 	NO_DATA_INTERVAL("noi"),
-	/** The ORIGINAL_MSG_ID. */
-	ORIGINAL_MSG_SEQUENCE_NR("oms"),
 	/** The PORT_NR. */
 	PORT_NR("pnr"),
 	/** The REJECT_SESSION. */
