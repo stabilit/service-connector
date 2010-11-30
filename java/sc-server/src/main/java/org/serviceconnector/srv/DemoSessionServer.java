@@ -55,14 +55,14 @@ public class DemoSessionServer extends Thread {
 			int maxConn = 1;
 			SCSessionServerCallback cbk = newSrvCallback(server);
 			try {
-				server.registerServer(maxSess, maxConn, cbk); // regular
+				server.register(maxSess, maxConn, cbk); // regular
 				// server.registerServer(10, maxSess, maxConn, cbk); // alternative with operation timeout
 			} catch (Exception e) {
 				logger.error("runSessionServer", e);
-				server.deregisterServer();
+				server.deregister();
 				// server.deregisterServer(10);
 			}
-			server.deregisterServer();
+			server.deregister();
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
 		} finally {
@@ -122,7 +122,7 @@ public class DemoSessionServer extends Thread {
 			// sleep for 2 seconds before killing the server
 			try {
 				Thread.sleep(2000);
-				this.server.deregisterServer();
+				this.server.deregister();
 				//SCServer sc = server.getSCServer().stopListener();
 			} catch (Exception e) {
 				logger.error("run", e);

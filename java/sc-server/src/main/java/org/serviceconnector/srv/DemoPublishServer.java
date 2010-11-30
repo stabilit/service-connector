@@ -53,7 +53,7 @@ public class DemoPublishServer extends Thread {
 			int maxConnections = 5;
 			SCPublishServerCallback cbk = new SrvCallback(publishSrv);
 
-			publishSrv.registerServer(maxSessions, maxConnections, cbk); // regular
+			publishSrv.register(maxSessions, maxConnections, cbk); // regular
 			// publishSrv.registerServer(10, maxSessions, maxConnections, cbk); // alternative with operation timeout
 
 			SCPublishMessage pubMessage = new SCPublishMessage();
@@ -113,7 +113,7 @@ public class DemoPublishServer extends Thread {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {
-						this.server.deregisterServer();
+						this.server.deregister();
 						//SCServer sc = server.getSCServer().stopListener();
 					} catch (Exception ex) {
 						logger.error("unsubscribe", ex);
