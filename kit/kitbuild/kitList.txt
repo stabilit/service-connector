@@ -1,0 +1,5 @@
+bin\
+kitbuild\
+doc\
+config\
+tst\
