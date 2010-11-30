@@ -1,3 +1,5 @@
+date /T
+time /T
 @echo off
 rem build all
 rem
