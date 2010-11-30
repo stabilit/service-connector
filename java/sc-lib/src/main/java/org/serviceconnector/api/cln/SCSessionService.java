@@ -71,10 +71,9 @@ public class SCSessionService extends SCService {
 	 * @param context
 	 *            the context
 	 */
-	public SCSessionService(String serviceName, SCContext context) {
+	public SCSessionService(String serviceName, SCClientContext context) {
 		super(serviceName, context);
 		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgSequenceNr));
-		this.scServiceContext = new SCServiceContext(this);
 		this.timerRun = null;
 		this.echoTimeoutInSeconds = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
 		this.echoIntervalInSeconds = Constants.DEFAULT_ECHO_INTERVAL_SECONDS;

@@ -65,7 +65,7 @@ public class SCSessionServer {
 	private int localServerPort;
 	private boolean registered;
 	protected String serviceName;
-	private SCServerContext scServerContext;
+	protected SCServerContext scServerContext;
 
 	static {
 		// Initialize server command factory one time
@@ -98,16 +98,15 @@ public class SCSessionServer {
 
 	public int getMaxSessions() {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-		return srvServiceRegistry.getSrvService(serviceName).getMaxSessions();
+		return srvServiceRegistry.getSrvService(this.serviceName + "_" + this.scServerContext.getListenerPort()).getMaxSessions();
 	}
 
 	public int getMaxConnections() {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-		return srvServiceRegistry.getSrvService(this.serviceName).getMaxConnections();
+		return srvServiceRegistry.getSrvService(this.serviceName + "_" + this.scServerContext.getListenerPort()).getMaxConnections();
 	}
 
-	public synchronized void register(int maxSessions, int maxConnections, SCSessionServerCallback scCallback)
-			throws Exception {
+	public synchronized void register(int maxSessions, int maxConnections, SCSessionServerCallback scCallback) throws Exception {
 		this.register(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
 	}
 
@@ -120,12 +119,11 @@ public class SCSessionServer {
 		IRequester requester = this.doRegister(operationTimeoutSeconds, maxSessions, maxConnections);
 		// creating srvService & adding to registry
 		SrvService srvService = new SrvSessionService(this.serviceName, maxSessions, maxConnections, requester, scCallback);
-		srvServiceRegistry.addSrvService(this.serviceName, srvService);
+		srvServiceRegistry.addSrvService(this.serviceName + "_" + this.scServerContext.getListenerPort(), srvService);
 		this.registered = true;
 	}
 
-	public synchronized void register(int maxSessions, int maxConnections, SCPublishServerCallback scCallback)
-			throws Exception {
+	public synchronized void register(int maxSessions, int maxConnections, SCPublishServerCallback scCallback) throws Exception {
 		this.register(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
 	}
 
@@ -138,12 +136,11 @@ public class SCSessionServer {
 		// creating srvService & adding to registry
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		SrvService srvService = new SrvPublishService(this.serviceName, maxSessions, maxConnections, requester, scCallback);
-		srvServiceRegistry.addSrvService(this.serviceName, srvService);
+		srvServiceRegistry.addSrvService(this.serviceName + "_" + this.scServerContext.getListenerPort(), srvService);
 		this.registered = true;
 	}
 
-	private synchronized IRequester doRegister(int operationTimeoutSeconds, int maxSessions, int maxConnections)
-			throws Exception {
+	private synchronized IRequester doRegister(int operationTimeoutSeconds, int maxSessions, int maxConnections) throws Exception {
 		if (this.scServerContext.isListening() == false) {
 			throw new InvalidActivityException("listener should first be started before register service is allowed.");
 		}
@@ -214,7 +211,8 @@ public class SCSessionServer {
 		IRequester req = null;
 		try {
 			// remove srvService from registry
-			SrvService srvService = srvServiceRegistry.removeSrvService(this.serviceName);
+			SrvService srvService = srvServiceRegistry.removeSrvService(this.serviceName + "_"
+					+ this.scServerContext.getListenerPort());
 			req = srvService.getRequester();
 			SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 					.newInstance(req, this.serviceName);
@@ -283,7 +281,8 @@ public class SCSessionServer {
 	 */
 	public String getSCHost() {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-		return srvServiceRegistry.getSrvService(this.serviceName).getRequester().getContext().getConnectionPool().getHost();
+		return srvServiceRegistry.getSrvService(this.serviceName + "_" + this.scServerContext.getListenerPort()).getRequester()
+				.getContext().getConnectionPool().getHost();
 	}
 
 	/**
@@ -293,7 +292,8 @@ public class SCSessionServer {
 	 */
 	public int getSCPort() {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-		return srvServiceRegistry.getSrvService(this.serviceName).getRequester().getContext().getConnectionPool().getPort();
+		return srvServiceRegistry.getSrvService(this.serviceName + "_" + this.scServerContext.getListenerPort()).getRequester()
+				.getContext().getConnectionPool().getPort();
 	}
 
 	/**
@@ -338,7 +338,7 @@ public class SCSessionServer {
 	 * 
 	 * @return the sC server context
 	 */
-	public SCServerContext getSCServerContext() {
+	public SCServerContext getContext() {
 		return this.scServerContext;
 	}
 
@@ -360,7 +360,8 @@ public class SCSessionServer {
 	}
 
 	public void destroy() {
-		SrvService srvService = AppContext.getSrvServiceRegistry().getSrvService(this.serviceName);
+		SrvService srvService = AppContext.getSrvServiceRegistry().getSrvService(
+				this.serviceName + "_" + this.scServerContext.getListenerPort());
 		srvService.getRequester().getContext().getConnectionPool().destroy();
 	}
 }

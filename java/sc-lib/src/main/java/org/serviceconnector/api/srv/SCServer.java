@@ -42,7 +42,7 @@ public class SCServer {
 	}
 
 	public SCServer(String scHost, int scPort, int listenerPort, ConnectionType connectionType) {
-		this.scServerContext = new SCServerContext(scHost, scPort, listenerPort, connectionType);
+		this.scServerContext = new SCServerContext(this, scHost, scPort, listenerPort, connectionType);
 		this.responder = null;
 	}
 

@@ -153,6 +153,10 @@ public class RegisterServerCommand extends CommandAdapter {
 			// maxConnections - validate with lower limit 1
 			String maxConnections = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_CONNECTIONS);
 			ValidatorUtility.validateInt(1, maxConnections, SCMPError.HV_WRONG_MAX_CONNECTIONS);
+			
+			// validate maxS
+			
+			
 			// immmediateConnect
 			message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 			// portNr - portNr >= 0 && portNr <= 0xFFFF

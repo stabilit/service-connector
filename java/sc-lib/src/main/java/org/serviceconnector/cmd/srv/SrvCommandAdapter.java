@@ -17,6 +17,7 @@
 package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
+import org.omg.PortableServer.POA;
 import org.serviceconnector.api.srv.SrvPublishService;
 import org.serviceconnector.api.srv.SrvService;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
@@ -25,6 +26,7 @@ import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -79,7 +81,9 @@ public abstract class SrvCommandAdapter implements ICommand {
 	 */
 	protected SrvSessionService getSrvSessionServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
+		IResponder responder = AppContext.getResponderRegistry().getCurrentResponder();
+		int listenerPort = responder.getResponderConfig().getPort();
+		SrvService srvService = srvServiceRegistry.getSrvService(serviceName + "_" + listenerPort);
 
 		if (srvService == null || (srvService instanceof SrvSessionService == false)) {
 			// incoming srvService not found
@@ -103,7 +107,9 @@ public abstract class SrvCommandAdapter implements ICommand {
 	 */
 	protected SrvPublishService getSrvPublishServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-		SrvService srvService = srvServiceRegistry.getSrvService(serviceName);
+		IResponder responder = AppContext.getResponderRegistry().getCurrentResponder();
+		int listenerPort = responder.getResponderConfig().getPort();
+		SrvService srvService = srvServiceRegistry.getSrvService(serviceName + "_" + listenerPort);
 
 		if (srvService == null || (srvService instanceof SrvPublishService == false)) {
 			// incoming srvService not found

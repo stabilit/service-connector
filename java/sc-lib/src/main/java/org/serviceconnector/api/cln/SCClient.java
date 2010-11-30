@@ -61,7 +61,7 @@ public class SCClient {
 	/** The requester. */
 	protected IRequester requester;
 	/** The context. */
-	protected SCContext scContext;
+	protected SCClientContext scContext;
 
 	protected boolean attached;
 
@@ -80,7 +80,7 @@ public class SCClient {
 		this.port = port;
 		this.connectionType = connectionType.getValue();
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
-		this.scContext = new SCContext(this);
+		this.scContext = new SCClientContext(this);
 		this.attached = false;
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 		this.connectionPool = null;
@@ -91,7 +91,7 @@ public class SCClient {
 	 * 
 	 * @return the context
 	 */
-	public SCContext getSCContext() {
+	public SCClientContext getSCContext() {
 		return this.scContext;
 	}
 

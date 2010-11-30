@@ -17,8 +17,7 @@
 package org.serviceconnector.api;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.cln.SCContext;
-import org.serviceconnector.api.cln.SCServiceContext;
+import org.serviceconnector.api.cln.SCClientContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 
@@ -41,9 +40,7 @@ public abstract class SCService {
 	/** The message sequence number. */
 	protected SCMPMessageSequenceNr msgSequenceNr;
 	/** The service connector context. */
-	private SCContext scContext;
-	/** The sc service context. */
-	protected SCServiceContext scServiceContext;
+	private SCClientContext scContext;
 	/** The session active, marks state of a session. */
 	protected volatile boolean sessionActive = false;
 
@@ -55,7 +52,7 @@ public abstract class SCService {
 	 * @param scContext
 	 *            the context
 	 */
-	public SCService(String serviceName, SCContext scContext) {
+	public SCService(String serviceName, SCClientContext scContext) {
 		this.serviceName = serviceName;
 		this.sessionActive = false;
 		this.sessionId = null;
@@ -71,21 +68,7 @@ public abstract class SCService {
 		this.pendingRequest = false;
 	}
 
-	/**
-	 * Gets the scServiceContext.
-	 * 
-	 * @return the scServiceContext
-	 */
-	public SCServiceContext getSCServiceContext() {
-		return this.scServiceContext;
-	}
-
-	/**
-	 * Gets the scContext.
-	 * 
-	 * @return the scContext
-	 */
-	public SCContext getSCContext() {
+	public SCClientContext getContext() {
 		return scContext;
 	}
 

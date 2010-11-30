@@ -31,9 +31,12 @@ public class SCServerContext {
 	private boolean immediateConnect;
 	private int keepAliveIntervalSeconds;
 
-	public SCServerContext(String scHost, int scPort, int listenerPort, ConnectionType connectionType) {
+	private SCServer scServer;
+
+	public SCServerContext(SCServer scServer, String scHost, int scPort, int listenerPort, ConnectionType connectionType) {
 		this.scHost = scHost;
 		this.scPort = scPort;
+		this.scServer = scServer;
 		this.listenerPort = listenerPort;
 		this.listening = false;
 		this.immediateConnect = true;
@@ -79,5 +82,13 @@ public class SCServerContext {
 
 	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) {
 		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
+	}
+
+	public SCServer getSCServer() {
+		return scServer;
+	}
+
+	public void setSCServer(SCServer scServer) {
+		this.scServer = scServer;
 	}
 }

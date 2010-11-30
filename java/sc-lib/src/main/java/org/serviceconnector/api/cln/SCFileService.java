@@ -35,10 +35,9 @@ import org.serviceconnector.service.SCServiceException;
 
 public class SCFileService extends SCService {
 
-	public SCFileService(String serviceName, SCContext scContext) {
+	public SCFileService(String serviceName, SCClientContext scContext) {
 		super(serviceName, scContext);
 		this.requester = new SCRequester(new RequesterContext(scContext.getConnectionPool(), this.msgSequenceNr));
-		this.scServiceContext = new SCServiceContext(this);
 	}
 
 	public synchronized void uploadFile(String remoteFileName, InputStream inStream) throws Exception {

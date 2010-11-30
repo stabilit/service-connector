@@ -17,10 +17,8 @@ package org.serviceconnector.api.cln;
 
 import org.serviceconnector.net.connection.ConnectionPool;
 
-/**
- * The Class SCContext.
- */
-public class SCContext {
+
+public class SCClientContext {
 
 	/** The connection pool. */
 	private ConnectionPool connectionPool;
@@ -35,7 +33,7 @@ public class SCContext {
 	 * @param scClient
 	 *            the sc client
 	 */
-	public SCContext(SCClient scClient) {
+	public SCClientContext(SCClient scClient) {
 		this.scClient = scClient;
 	}
 
