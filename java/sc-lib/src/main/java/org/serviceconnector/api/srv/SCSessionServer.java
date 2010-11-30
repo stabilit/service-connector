@@ -106,35 +106,35 @@ public class SCSessionServer {
 		return srvServiceRegistry.getSrvService(this.serviceName).getMaxConnections();
 	}
 
-	public synchronized void registerServer(int maxSessions, int maxConnections, SCSessionServerCallback scCallback)
+	public synchronized void register(int maxSessions, int maxConnections, SCSessionServerCallback scCallback)
 			throws Exception {
-		this.registerServer(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
+		this.register(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
 	}
 
-	public synchronized void registerServer(int operationTimeoutSeconds, int maxSessions, int maxConnections,
+	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
 			SCSessionServerCallback scCallback) throws Exception {
 		if (scCallback == null) {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "callback must be set");
 		}
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-		IRequester requester = this.doRegisterServer(operationTimeoutSeconds, maxSessions, maxConnections);
+		IRequester requester = this.doRegister(operationTimeoutSeconds, maxSessions, maxConnections);
 		// creating srvService & adding to registry
 		SrvService srvService = new SrvSessionService(this.serviceName, maxSessions, maxConnections, requester, scCallback);
 		srvServiceRegistry.addSrvService(this.serviceName, srvService);
 		this.registered = true;
 	}
 
-	public synchronized void registerServer(int maxSessions, int maxConnections, SCPublishServerCallback scCallback)
+	public synchronized void register(int maxSessions, int maxConnections, SCPublishServerCallback scCallback)
 			throws Exception {
-		this.registerServer(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
+		this.register(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
 	}
 
-	public synchronized void registerServer(int operationTimeoutSeconds, int maxSessions, int maxConnections,
+	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
 			SCPublishServerCallback scCallback) throws Exception {
 		if (scCallback == null) {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "callback must be set");
 		}
-		IRequester requester = this.doRegisterServer(operationTimeoutSeconds, maxSessions, maxConnections);
+		IRequester requester = this.doRegister(operationTimeoutSeconds, maxSessions, maxConnections);
 		// creating srvService & adding to registry
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		SrvService srvService = new SrvPublishService(this.serviceName, maxSessions, maxConnections, requester, scCallback);
@@ -142,7 +142,7 @@ public class SCSessionServer {
 		this.registered = true;
 	}
 
-	private synchronized IRequester doRegisterServer(int operationTimeoutSeconds, int maxSessions, int maxConnections)
+	private synchronized IRequester doRegister(int operationTimeoutSeconds, int maxSessions, int maxConnections)
 			throws Exception {
 		if (this.scServerContext.isListening() == false) {
 			throw new InvalidActivityException("listener should first be started before register service is allowed.");
@@ -201,11 +201,11 @@ public class SCSessionServer {
 		}
 	}
 
-	public synchronized void deregisterServer() throws Exception {
-		this.deregisterServer(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	public synchronized void deregister() throws Exception {
+		this.deregister(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
-	public synchronized void deregisterServer(int operationTimeoutSeconds) throws Exception {
+	public synchronized void deregister(int operationTimeoutSeconds) throws Exception {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		if (this.registered == false) {
 			// sc server not registered - deregister not necessary

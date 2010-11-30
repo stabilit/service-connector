@@ -23,20 +23,14 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.Timer;
 import org.serviceconnector.Constants;
-import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.CommunicationException;
-import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.SCMPCommunicationException;
-import org.serviceconnector.net.connection.ConnectionContext;
-import org.serviceconnector.net.connection.IConnection;
+import org.serviceconnector.net.req.netty.NettyConnectionAdpater;
 import org.serviceconnector.net.req.netty.NettyOperationListener;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
@@ -45,79 +39,17 @@ import org.serviceconnector.scmp.SCMPMessage;
 /**
  * The Class NettyTcpConnection. Concrete connection implementation with JBoss Netty for Tcp.
  */
-public class NettyTcpConnection implements IConnection {
+public class NettyTcpConnection extends NettyConnectionAdpater {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyTcpConnection.class);
-	/** The Constant connectionLogger. */
-	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-	/** The base conf. */
-	protected final BasicConfiguration baseConf = AppContext.getBasicConfiguration();
-
-	/** The bootstrap. */
-	private ClientBootstrap bootstrap;
-	/** The channel. */
-	private Channel channel;
-	/** The port. */
-	private int port;
-	/** The host. */
-	private String host;
-	/** The operation listener. */
-	private NettyOperationListener operationListener;
-	/** The encoder decoder. */
-	private IEncoderDecoder encoderDecoder;
-	/** The local socket address. */
-	private InetSocketAddress localSocketAddress;
-	/** The channel pipeline factory. */
-	private ChannelPipelineFactory pipelineFactory;
-	/** The connection context. */
-	private ConnectionContext connectionContext;
-	/** The idle timeout. */
-	protected int idleTimeout;
-	/** The number of idles, counts idle states. */
-	private int nrOfIdles;
-	/** The timer to observe timeouts, static because should be shared. */
-	private static Timer timer;
-	/*
-	 * The channel factory. Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming
-	 * connections on a socket. A worker thread performs non-blocking read and write on a channel.
-	 */
-	private static NioClientSocketChannelFactory channelFactory;
-
-	/**
-	 * Instantiates a new NettyTcpConnection.
-	 */
-	public NettyTcpConnection() {
-		this.bootstrap = null;
-		this.channel = null;
-		this.port = 0;
-		this.host = null;
-		this.operationListener = null;
-		this.encoderDecoder = null;
-		this.localSocketAddress = null;
-		this.pipelineFactory = null;
-		this.connectionContext = null;
-	}
 
 	/**
 	 * Instantiates a new NettyTcpConnection.
 	 */
 	public NettyTcpConnection(NioClientSocketChannelFactory channelFactory, Timer timer) {
-		this();
-		NettyTcpConnection.channelFactory = channelFactory;
-		NettyTcpConnection.timer = timer;
-	}
+		super(channelFactory, timer);
 
-	/** {@inheritDoc} */
-	@Override
-	public ConnectionContext getContext() {
-		return this.connectionContext;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setContext(ConnectionContext connectionContext) {
-		this.connectionContext = connectionContext;
 	}
 
 	/** {@inheritDoc} */
@@ -149,36 +81,6 @@ public class NettyTcpConnection implements IConnection {
 
 	/** {@inheritDoc} */
 	@Override
-	public void disconnect() throws Exception {
-		ChannelFuture future = this.channel.disconnect();
-		future.addListener(operationListener);
-		try {
-			operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis());
-		} catch (CommunicationException ex) {
-			logger.error("disconnect", ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
-					+ this.localSocketAddress.toString());
-		}
-		if (connectionLogger.isEnabled()) {
-			connectionLogger.logDisconnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
-					this.localSocketAddress.getPort());
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void destroy() {
-		ChannelFuture future = this.channel.close();
-		future.addListener(operationListener);
-		try {
-			operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
-		} catch (Exception ex) {
-			logger.error("destroy", ex);
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scmp);
@@ -201,46 +103,5 @@ public class NettyTcpConnection implements IConnection {
 			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
 					this.localSocketAddress.getPort(), chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean isConnected() {
-		if(this.channel == null) {
-			return false;
-		}
-		return this.channel.isConnected();
-	}
-
-	@Override
-	public void setIdleTimeout(int idleTimeout) {
-		this.idleTimeout = idleTimeout;
-	}
-
-	@Override
-	public int getNrOfIdlesInSequence() {
-		return nrOfIdles;
-	}
-
-	@Override
-	public void incrementNrOfIdles() {
-		this.nrOfIdles++;
-	}
-
-	@Override
-	public void resetNrOfIdles() {
-		this.nrOfIdles = 0;
 	}
 }

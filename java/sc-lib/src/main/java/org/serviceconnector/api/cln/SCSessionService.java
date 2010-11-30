@@ -80,30 +80,8 @@ public class SCSessionService extends SCService {
 		this.echoIntervalInSeconds = Constants.DEFAULT_ECHO_INTERVAL_SECONDS;
 	}
 
-	/**
-	 * Creates the session.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public synchronized void createSession() throws Exception {
-		this.createSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, null);
-	}
-
-	/**
-	 * Creates the session.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            the operation timeout seconds
-	 * @throws Exception
-	 *             the exception
-	 */
-	public synchronized void createSession(int operationTimeoutSeconds) throws Exception {
-		this.createSession(operationTimeoutSeconds, null);
-	}
-
-	public synchronized void createSession(SCMessage scMessage) throws Exception {
-		this.createSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scMessage);
+	public synchronized SCMessage createSession(SCMessage scMessage) throws Exception {
+		return this.createSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scMessage);
 	}
 
 	/**
@@ -113,10 +91,11 @@ public class SCSessionService extends SCService {
 	 *            the operation timeout seconds
 	 * @param scMessage
 	 *            the sc message
+	 * @return the sC message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void createSession(int operationTimeoutSeconds, SCMessage scMessage) throws Exception {
+	public synchronized SCMessage createSession(int operationTimeoutSeconds, SCMessage scMessage) throws Exception {
 		if (this.sessionActive) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
@@ -151,6 +130,11 @@ public class SCSessionService extends SCService {
 		this.timerRun = new SessionTimeouter((int) echoIntervalInSeconds);
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
 		AppContext.eciTimer.schedule(timerTask, (int) (echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR));
+		SCMessage replyToClient = new SCMessage();
+		replyToClient.setData(reply.getBody());
+		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		replyToClient.setSessionId(this.sessionId);
+		return replyToClient;
 	}
 
 	/**
@@ -240,31 +224,11 @@ public class SCSessionService extends SCService {
 		}
 	}
 
-	/**
-	 * Execute.
-	 * 
-	 * @param requestMsg
-	 *            the request message
-	 * @return the ISCMessage
-	 * @throws Exception
-	 *             the exception
-	 */
 	public synchronized SCMessage execute(SCMessage requestMsg) throws Exception {
-		return this.execute(requestMsg, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+		return this.execute(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
 	}
 
-	/**
-	 * Execute.
-	 * 
-	 * @param requestMsg
-	 *            the request message
-	 * @param timeoutInSeconds
-	 *            the timeout in seconds
-	 * @return the SCMessage
-	 * @throws Exception
-	 *             the exception
-	 */
-	public synchronized SCMessage execute(SCMessage requestMsg, int timeoutInSeconds) throws Exception {
+	public synchronized SCMessage execute(int timeoutInSeconds, SCMessage requestMsg) throws Exception {
 		if (this.sessionActive == false) {
 			throw new SCServiceException("execute not possible, no active session.");
 		}
@@ -336,33 +300,11 @@ public class SCSessionService extends SCService {
 		return replyToClient;
 	}
 
-	/**
-	 * Execute.
-	 * 
-	 * @param requestMsg
-	 *            the request SCMessage
-	 * @param callback
-	 *            the callback
-	 * @throws Exception
-	 *             the exception
-	 */
-	public synchronized void execute(SCMessage requestMsg, SCMessageCallback callback) throws Exception {
-		this.execute(requestMsg, callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	public synchronized void send(SCMessage requestMsg, SCMessageCallback callback) throws Exception {
+		this.send(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg, callback);
 	}
 
-	/**
-	 * Execute.
-	 * 
-	 * @param requestMsg
-	 *            the request SCMessage
-	 * @param callback
-	 *            the callback
-	 * @param timeoutInSeconds
-	 *            the timeout in seconds
-	 * @throws Exception
-	 *             the exception
-	 */
-	public synchronized void execute(SCMessage requestMsg, SCMessageCallback callback, int timeoutInSeconds) throws Exception {
+	public synchronized void send(int timeoutInSeconds, SCMessage requestMsg, SCMessageCallback callback) throws Exception {
 		if (this.sessionActive == false) {
 			throw new SCServiceException("execute not possible, no active session.");
 		}

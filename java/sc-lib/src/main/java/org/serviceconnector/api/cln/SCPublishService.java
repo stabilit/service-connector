@@ -71,24 +71,27 @@ public class SCPublishService extends SCService {
 	 * 
 	 * @param scSubscribeMessage
 	 *            the sc subscribe message
+	 * @return the sC subscribe message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void changeSubscription(SCSubscribeMessage scSubscribeMessage) throws Exception {
-		this.changeSubscription(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage);
+	public synchronized SCSubscribeMessage changeSubscription(SCSubscribeMessage scSubscribeMessage) throws Exception {
+		return this.changeSubscription(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage);
 	}
 
 	/**
 	 * Change subscription.
+	 * 
 	 * @param operationTimeoutSeconds
 	 *            the timeout in seconds
 	 * @param scSubscribeMessage
 	 *            the sc subscribe message
-	 * 
+	 * @return the sC subscribe message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void changeSubscription(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage) throws Exception {
+	public synchronized SCSubscribeMessage changeSubscription(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage)
+			throws Exception {
 		if (this.sessionActive == false) {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
 		}
@@ -102,37 +105,56 @@ public class SCPublishService extends SCService {
 		changeSubscriptionCall.setMask(scSubscribeMessage.getMask());
 		changeSubscriptionCall.setCompressed(scSubscribeMessage.isCompressed());
 		SCServiceCallback callback = new SCServiceCallback(true);
-		changeSubscriptionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+
+		try {
+			changeSubscriptionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		} catch (Exception e) {
+			this.sessionActive = false;
+			throw new SCServiceException("change subscription failed", e);
+		}
+		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		if (reply.isFault()) {
+			this.sessionActive = false;
+			SCMPFault fault = (SCMPFault) reply;
+			throw new SCServiceException("change subscription failed", fault.getCause());
+		}
+		SCSubscribeMessage replyToClient = new SCSubscribeMessage();
+		replyToClient.setData(reply.getBody());
+		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		replyToClient.setSessionId(this.sessionId);
+		return replyToClient;
 	}
 
 	/**
 	 * Subscribe.
 	 * 
 	 * @param scSubscribeMessage
-	 *            the sc subscribe message
+	 *            the SC subscribe message
 	 * @param callback
 	 *            the callback
+	 * @return the SC subscribe message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void subscribe(SCSubscribeMessage scSubscribeMessage, SCMessageCallback callback) throws Exception {
-		this.subscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage, callback);
+	public synchronized SCSubscribeMessage subscribe(SCSubscribeMessage scSubscribeMessage, SCMessageCallback callback)
+			throws Exception {
+		return this.subscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage, callback);
 	}
 
 	/**
 	 * Subscribe.
 	 * 
+	 * @param operationTimeoutSeconds
+	 *            the timeout in seconds
 	 * @param scSubscribeMessage
 	 *            the sc subscribe message
 	 * @param scMessageCallback
 	 *            the sc message callback
-	 * @param operationTimeoutSeconds
-	 *            the timeout in seconds
+	 * @return the sC subscribe message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void subscribe(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage,
+	public SCSubscribeMessage subscribe(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage,
 			SCMessageCallback scMessageCallback) throws Exception {
 		if (this.sessionActive) {
 			throw new SCServiceException("already subscribed");
@@ -169,6 +191,11 @@ public class SCPublishService extends SCService {
 		this.sessionId = reply.getSessionId();
 		this.sessionActive = true;
 		this.receivePublication();
+		SCSubscribeMessage replyToClient = new SCSubscribeMessage();
+		replyToClient.setData(reply.getBody());
+		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		replyToClient.setSessionId(this.sessionId);
+		return replyToClient;
 	}
 
 	/**
