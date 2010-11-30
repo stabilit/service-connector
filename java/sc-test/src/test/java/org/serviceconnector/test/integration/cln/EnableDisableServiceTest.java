@@ -27,6 +27,7 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
 
@@ -64,8 +65,8 @@ public class EnableDisableServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		client = new SCMgmtClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client.attach();
 	}
 	
 	@After
@@ -183,8 +184,8 @@ public class EnableDisableServiceTest {
 	
 	@Test
 	public void enableDisableService_twoClients_seeChangesOfTheOther() throws Exception {
-		SCMgmtClient client2 = new SCMgmtClient();
-		client2.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		SCMgmtClient client2 = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client2.attach();
 		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceName));
 		assertEquals(true, client2.isServiceEnabled(TestConstants.sessionServiceName));
 		client.disableService(TestConstants.sessionServiceName);
@@ -198,9 +199,8 @@ public class EnableDisableServiceTest {
 	
 	@Test
 	public void enableDisableService_twoClientsDifferentConnectionTypes_seeChangesOfTheOther() throws Exception {
-		SCMgmtClient client2 = new SCMgmtClient();
-		((SCMgmtClient) client2).setConnectionType("netty.tcp");
-		client2.attach(TestConstants.HOST, TestConstants.PORT_TCP);
+		SCMgmtClient client2 = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client2.attach();
 		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceName));
 		assertEquals(true, client2.isServiceEnabled(TestConstants.sessionServiceName));
 		client.disableService(TestConstants.sessionServiceName);

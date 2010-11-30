@@ -35,7 +35,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 		} catch (Exception e) {
 			logger.error("oneTimeSetUp", e);
 		}
-		client = new SCMgmtClient();
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP);
 	}
 
 	@After
@@ -54,7 +54,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	public void attach_afterSCDestroy_throwsException() throws Exception {
 		scProcess.destroy();
 		scProcess.waitFor();
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client.attach();
 	}
 
 	@Test
@@ -66,7 +66,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test
 	public void detach_afterSCDestroy_passes() throws Exception {
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client.attach();
 		scProcess.destroy();
 		scProcess.waitFor();
 		// TODO very with jan
@@ -79,7 +79,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test(expected = SCServiceException.class)
 	public void enableService_afterSCDestroy_throwsException() throws Exception {
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client.attach();
 		scProcess.destroy();
 		scProcess.waitFor();
 		client.enableService(TestConstants.sessionServiceName);
@@ -87,7 +87,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test(expected = SCServiceException.class)
 	public void disableService_afterSCDestroy_throwsException() throws Exception {
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client.attach();
 		scProcess.destroy();
 		scProcess.waitFor();
 		client.enableService(TestConstants.sessionServiceName);
@@ -95,7 +95,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test(expected = SCServiceException.class)
 	public void workload_afterSCDestroy_throwsException() throws Exception {
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client.attach();
 		scProcess.destroy();
 		scProcess.waitFor();
 		client.getWorkload(TestConstants.sessionServiceName);
@@ -103,7 +103,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test
 	public void setMaxConnection_afterAttachAfterSCDestroy_passes() throws Exception {
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client.attach();
 		scProcess.destroy();
 		scProcess.waitFor();
 		client.setMaxConnections(10);
