@@ -1,0 +1,231 @@
+/*
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ */
+package org.serviceconnector.test.system.publish;
+
+import static org.junit.Assert.assertEquals;
+
+import org.apache.log4j.Logger;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.serviceconnector.TestConstants;
+import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.srv.SCPublishServer;
+import org.serviceconnector.api.srv.SCPublishServerCallback;
+import org.serviceconnector.cln.TestPublishClient;
+import org.serviceconnector.ctrl.util.ProcessesController;
+
+public class SubscriptionServerTest {
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SubscriptionServerTest.class);
+
+	private SrvCallback srvCallback;
+	private SCPublishServer server;
+
+	private static Process scProcess;
+
+	private static ProcessesController ctrl;
+
+	@BeforeClass
+	public static void oneTimeSetUp() throws Exception {
+		ctrl = new ProcessesController();
+		try {
+			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		} catch (Exception e) {
+			logger.error("oneTimeSetUp", e);
+			throw e;
+		}
+	}
+
+	@AfterClass
+	public static void oneTimeTearDown() throws Exception {
+		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
+		ctrl = null;
+		scProcess = null;
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		server = new SCPublishServer();
+		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
+		srvCallback = new SrvCallback();
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.publishServiceName, 10, 10,
+				srvCallback);
+
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		server.deregister(TestConstants.publishServiceName);
+		server.destroy();
+		server = null;
+		srvCallback = null;
+	}
+
+	@Test
+	public void subscribe_serviceNameValidMaskSameAsInServer_2MessagesArrive() throws Exception {
+		TestPublishClient client = new TestPublishClient(
+				"subscribe_serviceNameValidMaskSameAsInServer_isSubscribedSessionIdExists");
+		client.start();
+		client.join();
+
+		assertEquals(2, srvCallback.messagesExchanged);
+		assertEquals(true, srvCallback.subscribeMsg instanceof SCMessage);
+		assertEquals(false, srvCallback.subscribeMsg.getSessionId() == null
+				|| srvCallback.subscribeMsg.getSessionId().isEmpty());
+		assertEquals(false, srvCallback.subscribeMsg.isFault());
+		assertEquals(null, srvCallback.subscribeMsg.getData());
+		assertEquals(true, srvCallback.subscribeMsg.isCompressed());
+		assertEquals("sessionInfo", srvCallback.subscribeMsg.getSessionInfo());
+		// TODO JOT
+		// assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.subscribeMsg.getOperationTimeout());
+
+		assertEquals(true, srvCallback.unsubscribeMsg instanceof SCMessage);
+		assertEquals(false, srvCallback.unsubscribeMsg.getSessionId() == null
+				|| srvCallback.unsubscribeMsg.getSessionId().isEmpty());
+		assertEquals(false, srvCallback.unsubscribeMsg.isFault());
+		assertEquals(null, srvCallback.unsubscribeMsg.getData());
+		assertEquals(true, srvCallback.unsubscribeMsg.isCompressed());
+		assertEquals(null, srvCallback.unsubscribeMsg.getMessageInfo());
+		// TODO JOT
+		// assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.unsubscribeMsg.getOperationTimeout());
+	}
+
+	@Test
+	public void subscribe_withTimeOutSet_2MessagesArrive() throws Exception {
+		TestPublishClient client = new TestPublishClient("subscribe_timeoutMaxAllowed_isSubscribedSessionIdExists");
+		client.start();
+		client.join();
+
+		assertEquals(2, srvCallback.messagesExchanged);
+
+		assertEquals(true, srvCallback.subscribeMsg instanceof SCMessage);
+		assertEquals(false, srvCallback.subscribeMsg.getSessionId() == null
+				|| srvCallback.subscribeMsg.getSessionId().isEmpty());
+		assertEquals(false, srvCallback.subscribeMsg.isFault());
+		assertEquals(null, srvCallback.subscribeMsg.getData());
+		assertEquals(true, srvCallback.subscribeMsg.isCompressed());
+		assertEquals("sessionInfo", srvCallback.subscribeMsg.getSessionInfo());
+		// TODO JOT
+		// assertEquals("operation timeout", true, 0.8 * 3600000 <= srvCallback.subscribeMsg.getOperationTimeout());
+
+		assertEquals(true, srvCallback.unsubscribeMsg instanceof SCMessage);
+		assertEquals(false, srvCallback.unsubscribeMsg.getSessionId() == null
+				|| srvCallback.unsubscribeMsg.getSessionId().isEmpty());
+		assertEquals(false, srvCallback.unsubscribeMsg.isFault());
+		assertEquals(null, srvCallback.unsubscribeMsg.getData());
+		assertEquals(true, srvCallback.unsubscribeMsg.isCompressed());
+		assertEquals(null, srvCallback.unsubscribeMsg.getMessageInfo());
+		// TODO JOT
+		// assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.unsubscribeMsg.getOperationTimeout());
+	}
+
+	@Test
+	public void changeSubscription_toMaskWhiteSpace_3MessagesArrive() throws Exception {
+		TestPublishClient client = new TestPublishClient("changeSubscription_toMaskWhiteSpace_passes");
+		client.start();
+		client.join();
+
+		assertEquals(3, srvCallback.messagesExchanged);
+
+		assertEquals(true, srvCallback.subscribeMsg instanceof SCMessage);
+		assertEquals(false, srvCallback.subscribeMsg.getSessionId() == null
+				|| srvCallback.subscribeMsg.getSessionId().isEmpty());
+		assertEquals(false, srvCallback.subscribeMsg.isFault());
+		assertEquals(null, srvCallback.subscribeMsg.getData());
+		assertEquals(true, srvCallback.subscribeMsg.isCompressed());
+		assertEquals("sessionInfo", srvCallback.subscribeMsg.getSessionInfo());
+		// TODO JOT
+		// assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.subscribeMsg.getOperationTimeout());
+
+		assertEquals(true, srvCallback.changeSubMsg instanceof SCMessage);
+		assertEquals(false, srvCallback.changeSubMsg.getSessionId() == null
+				|| srvCallback.changeSubMsg.getSessionId().isEmpty());
+		assertEquals(false, srvCallback.changeSubMsg.isFault());
+		assertEquals(null, srvCallback.changeSubMsg.getData());
+		assertEquals(true, srvCallback.changeSubMsg.isCompressed());
+		assertEquals(null, srvCallback.changeSubMsg.getMessageInfo());
+		// TODO JOT
+		// assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.changeSubMsg.getOperationTimeout());
+
+		assertEquals(true, srvCallback.unsubscribeMsg instanceof SCMessage);
+		assertEquals(false, srvCallback.unsubscribeMsg.getSessionId() == null
+				|| srvCallback.unsubscribeMsg.getSessionId().isEmpty());
+		assertEquals(false, srvCallback.unsubscribeMsg.isFault());
+		assertEquals(null, srvCallback.unsubscribeMsg.getData());
+		assertEquals(true, srvCallback.unsubscribeMsg.isCompressed());
+		assertEquals(null, srvCallback.unsubscribeMsg.getMessageInfo());
+		// TODO JOT
+		// assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.unsubscribeMsg.getOperationTimeout());
+	}
+
+	// @Test
+	// public void subscribeUnsubscribe_twice_4MessagesArrive() throws Exception {
+	// StartPublishClient client = new StartPublishClient("subscribeUnsubscribe_twice_isSubscribedThenNot");
+	// client.start();
+	// client.join();
+	// assertEquals(4, srvCallback.messagesExchanged);
+	// }
+
+	// @Test
+	// public void changeSubscription_twice_4MessagesArrive() throws Exception {
+	// StartPublishClient client = new StartPublishClient("changeSubscription_twice_passes");
+	// client.start();
+	// client.join();
+	// assertEquals(4, srvCallback.messagesExchanged);
+	// }
+
+	@Test
+	public void unsubscribe_serviceNameValid_0MesagesArrives() throws Exception {
+		TestPublishClient client = new TestPublishClient("unsubscribe_serviceNameValid_notSubscribedEmptySessionId");
+		client.start();
+		client.join();
+		assertEquals(0, srvCallback.messagesExchanged);
+	}
+
+	private class SrvCallback extends SCPublishServerCallback {
+
+		private int messagesExchanged = 0;
+		private SCMessage subscribeMsg = null;
+		private SCMessage changeSubMsg = null;
+		private SCMessage unsubscribeMsg = null;
+
+		public SrvCallback() {
+		}
+
+		@Override
+		public SCMessage changeSubscription(SCMessage message, int operationTimeoutInMillis) {
+			messagesExchanged++;
+			changeSubMsg = message;
+			return message;
+		}
+
+		@Override
+		public SCMessage subscribe(SCMessage message, int operationTimeoutInMillis) {
+			messagesExchanged++;
+			subscribeMsg = message;
+			return message;
+		}
+
+		@Override
+		public void unsubscribe(SCMessage message, int operationTimeoutInMillis) {
+			messagesExchanged++;
+			unsubscribeMsg = message;
+		}
+	}
+}
