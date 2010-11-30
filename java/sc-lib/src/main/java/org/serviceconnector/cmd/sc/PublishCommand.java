@@ -75,7 +75,6 @@ public class PublishCommand extends CommandAdapter {
 		reply.setMessageType(this.getKey());
 		reply.setIsReply(true);
 		reply.setServiceName(message.getServiceName());
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
 		response.setSCMP(reply);
 	}
 
