@@ -84,10 +84,10 @@ public class RegisterServerToMultipleSCTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_MAX, TestConstants.publishServiceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 		assertEquals(true, server.isRegistered(TestConstants.publishServiceName));
-		server.deregisterServer(TestConstants.sessionServiceName);
+		server.deregister(TestConstants.sessionServiceName);
 		assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 		assertEquals(true, server.isRegistered(TestConstants.publishServiceName));
-		server.deregisterServer(TestConstants.publishServiceName);
+		server.deregister(TestConstants.publishServiceName);
 		assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 		assertEquals(false, server.isRegistered(TestConstants.publishServiceName));
 	}
@@ -104,8 +104,8 @@ public class RegisterServerToMultipleSCTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_MAX, TestConstants.publishServiceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 		assertEquals(true, server.isRegistered(TestConstants.publishServiceName));
-		server.deregisterServer(TestConstants.sessionServiceName);
-		server.deregisterServer(TestConstants.publishServiceName);
+		server.deregister(TestConstants.sessionServiceName);
+		server.deregister(TestConstants.publishServiceName);
 		assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 		assertEquals(false, server.isRegistered(TestConstants.publishServiceName));
 	}
@@ -121,8 +121,8 @@ public class RegisterServerToMultipleSCTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_MIN, TestConstants.publishServiceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 		assertEquals(true, server.isRegistered(TestConstants.publishServiceName));
-		server.deregisterServer(TestConstants.sessionServiceName);
-		server.deregisterServer(TestConstants.publishServiceName);
+		server.deregister(TestConstants.sessionServiceName);
+		server.deregister(TestConstants.publishServiceName);
 		assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 		assertEquals(false, server.isRegistered(TestConstants.publishServiceName));
 	}
@@ -137,8 +137,8 @@ public class RegisterServerToMultipleSCTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_MIN, TestConstants.publishServiceName, 1, 1, new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 		assertEquals(true, server.isRegistered(TestConstants.publishServiceName));
-		server.deregisterServer(TestConstants.sessionServiceName);
-		server.deregisterServer(TestConstants.publishServiceName);
+		server.deregister(TestConstants.sessionServiceName);
+		server.deregister(TestConstants.publishServiceName);
 		assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 		assertEquals(false, server.isRegistered(TestConstants.publishServiceName));
 	}
@@ -152,8 +152,8 @@ public class RegisterServerToMultipleSCTest {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_MIN, TestConstants.publishServiceName, 1, 1, new CallBack());
 			assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(true, server.isRegistered(TestConstants.publishServiceName));
-			server.deregisterServer(TestConstants.sessionServiceName);
-			server.deregisterServer(TestConstants.publishServiceName);
+			server.deregister(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.publishServiceName);
 			assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(false, server.isRegistered(TestConstants.publishServiceName));
 		}
@@ -167,8 +167,8 @@ public class RegisterServerToMultipleSCTest {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_MAX, TestConstants.publishServiceName, 1, 1, new CallBack());
 			assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(true, server.isRegistered(TestConstants.publishServiceName));
-			server.deregisterServer(TestConstants.sessionServiceName);
-			server.deregisterServer(TestConstants.publishServiceName);
+			server.deregister(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.publishServiceName);
 			assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(false, server.isRegistered(TestConstants.publishServiceName));
 		}
@@ -185,8 +185,8 @@ public class RegisterServerToMultipleSCTest {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_MIN, TestConstants.sessionServiceName, 1, 1, new CallBack());
 			assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
-			server.deregisterServer(TestConstants.sessionServiceName);
-			server.deregisterServer(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.sessionServiceName);
 			assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 			System.out.println(i);
@@ -202,8 +202,8 @@ public class RegisterServerToMultipleSCTest {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_MIN, TestConstants.publishServiceName, 1, 1, new CallBack());
 			assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(true, server.isRegistered(TestConstants.publishServiceName));
-			server.deregisterServer(TestConstants.sessionServiceName);
-			server.deregisterServer(TestConstants.publishServiceName);
+			server.deregister(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.publishServiceName);
 			assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(false, server.isRegistered(TestConstants.publishServiceName));
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.sessionServiceName, 1, 1, new CallBack());
@@ -211,8 +211,8 @@ public class RegisterServerToMultipleSCTest {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_MAX, TestConstants.publishServiceName, 1, 1, new CallBack());
 			assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(true, server.isRegistered(TestConstants.publishServiceName));
-			server.deregisterServer(TestConstants.sessionServiceName);
-			server.deregisterServer(TestConstants.publishServiceName);
+			server.deregister(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.publishServiceName);
 			assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(false, server.isRegistered(TestConstants.publishServiceName));
 			((SCSessionServer) server).setConnectionType("netty.tcp");
@@ -227,16 +227,16 @@ public class RegisterServerToMultipleSCTest {
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_MAX, TestConstants.publishServiceName, 1, 1, new CallBack());
 			assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(true, server.isRegistered(TestConstants.publishServiceName));
-			server.deregisterServer(TestConstants.sessionServiceName);
-			server.deregisterServer(TestConstants.publishServiceName);
+			server.deregister(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.publishServiceName);
 			assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(false, server.isRegistered(TestConstants.publishServiceName));
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_MAX, TestConstants.sessionServiceName, 1, 1, new CallBack());
 			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.publishServiceName, 1, 1, new CallBack());
 			assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(true, server.isRegistered(TestConstants.publishServiceName));
-			server.deregisterServer(TestConstants.sessionServiceName);
-			server.deregisterServer(TestConstants.publishServiceName);
+			server.deregister(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.publishServiceName);
 			assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
 			assertEquals(false, server.isRegistered(TestConstants.publishServiceName));
 		}

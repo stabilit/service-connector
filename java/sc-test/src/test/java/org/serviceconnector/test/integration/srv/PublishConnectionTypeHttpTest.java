@@ -70,7 +70,7 @@ public class PublishConnectionTypeHttpTest {
 
 	@After
 	public void tearDown() throws Exception {
-		server.deregisterServer(TestConstants.publishServiceName);
+		server.deregister(TestConstants.publishServiceName);
 		server.destroy();
 		server = null;
 		ex = null;
@@ -168,7 +168,7 @@ public class PublishConnectionTypeHttpTest {
 		} catch (Exception e) {
 			ex = e;
 		} finally {
-			server.deregisterServer(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.sessionServiceName);
 		}
 		if (ex != null) {
 			throw ex;

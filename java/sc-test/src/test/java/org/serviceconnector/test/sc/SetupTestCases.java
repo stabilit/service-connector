@@ -167,7 +167,7 @@ public class SetupTestCases {
 		scSim1Sess.startListener();
 		scSessionSim1Sess = scSim1Sess.newSessionServer("session-1");
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSessionSim1Sess.registerServer(1, 1, srvCallback);
+		scSessionSim1Sess.register(1, 1, srvCallback);
 	}
 
 	private static void startSessionServer1Connection() throws Exception {
@@ -178,7 +178,7 @@ public class SetupTestCases {
 		scSessionSim1ConSrv = scSim1ConSrv.newSessionServer("session-1");
 		scSim1ConSrv.startListener();
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSessionSim1ConSrv.registerServer(10, 1, srvCallback);
+		scSessionSim1ConSrv.register(10, 1, srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {
@@ -189,17 +189,17 @@ public class SetupTestCases {
 		scSim10ConSrv.startListener();
 		scSessionSim10ConSrv = scSim10ConSrv.newSessionServer("session-1");
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSessionSim10ConSrv.registerServer(10, 10, srvCallback);
+		scSessionSim10ConSrv.register(10, 10, srvCallback);
 	}
 
 	public static void registerSessionServiceEnable() throws Exception {
 		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSessionSimEnableSrv = scSimEnableSrv.newSessionServer("session-1");
-		scSessionSimEnableSrv.registerServer(10, 10, srvCallback);
+		scSessionSimEnableSrv.register(10, 10, srvCallback);
 	}
 
 	public static void deregisterSessionServiceEnable() throws Exception {
-		scSessionSimEnableSrv.deregisterServer();
+		scSessionSimEnableSrv.deregister();
 	}
 
 	private static class SessionServerCallback extends SCSessionServerCallback {
@@ -311,7 +311,7 @@ public class SetupTestCases {
 		publishSrv.setImmediateConnect(true);
 		scPubServer.startListener();
 		PublishServerCallback publishCallback = new PublishServerCallback();
-		publishSrv.registerServer(1, 1, publishCallback);
+		publishSrv.register(1, 1, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
 		Thread thread = new Thread(run);
 		thread.start();

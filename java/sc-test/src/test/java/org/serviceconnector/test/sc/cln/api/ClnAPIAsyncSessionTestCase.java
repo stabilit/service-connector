@@ -58,7 +58,7 @@ public class ClnAPIAsyncSessionTestCase {
 			requestMsg.setCompressed(false);
 			requestMsg.setMessageInfo("test");
 			SCMessageCallback callback = new TestCallback(sessionServiceA);
-			sessionServiceA.execute(requestMsg, callback);
+			sessionServiceA.send(requestMsg, callback);
 			Thread.sleep(100000);
 			// deletes the session
 			sessionServiceA.deleteSession();

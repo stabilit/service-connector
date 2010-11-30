@@ -459,7 +459,7 @@ public class ExecuteClientToSCTest {
 		message.setSessionInfo("sessionInfo");
 		sessionService.createSession(300, 10, message);
 
-		SCMessage response = sessionService.execute(message, 1);
+		SCMessage response = sessionService.execute(1, message);
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
@@ -479,7 +479,7 @@ public class ExecuteClientToSCTest {
 		message.setSessionInfo("sessionInfo");
 		sessionService.createSession(300, 10, message);
 
-		SCMessage response = sessionService.execute(message, 2);
+		SCMessage response = sessionService.execute(2, message);
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
@@ -501,7 +501,7 @@ public class ExecuteClientToSCTest {
 
 		SCMessage response = null;
 		try {
-			response = sessionService.execute(message, 0);
+			response = sessionService.execute(0, message);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -522,7 +522,7 @@ public class ExecuteClientToSCTest {
 
 		SCMessage response = null;
 		try {
-			response = sessionService.execute(message, -1);
+			response = sessionService.execute(-1, message);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -543,7 +543,7 @@ public class ExecuteClientToSCTest {
 
 		SCMessage response = null;
 		try {
-			response = sessionService.execute(message, Integer.MIN_VALUE);
+			response = sessionService.execute(Integer.MIN_VALUE, message);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -564,7 +564,7 @@ public class ExecuteClientToSCTest {
 
 		SCMessage response = null;
 		try {
-			response = sessionService.execute(message, Integer.MAX_VALUE);
+			response = sessionService.execute(Integer.MAX_VALUE, message);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -583,7 +583,7 @@ public class ExecuteClientToSCTest {
 		message.setSessionInfo("sessionInfo");
 		sessionService.createSession(300, 10, message);
 
-		SCMessage response = sessionService.execute(message, 3600);
+		SCMessage response = sessionService.execute(3600, message);
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
@@ -603,7 +603,7 @@ public class ExecuteClientToSCTest {
 
 		SCMessage response = null;
 		try {
-			response = sessionService.execute(message, 3601);
+			response = sessionService.execute(3601, message);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -622,7 +622,7 @@ public class ExecuteClientToSCTest {
 		message.setSessionInfo("sessionInfo");
 		sessionService.createSession(300, 10, message);
 
-		SCMessage response = sessionService.execute(message, 1);
+		SCMessage response = sessionService.execute(1, message);
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
@@ -640,7 +640,7 @@ public class ExecuteClientToSCTest {
 		message.setSessionInfo("sessionInfo");
 		sessionService.createSession(300, 10, message);
 
-		SCMessage response = sessionService.execute(message, 2);
+		SCMessage response = sessionService.execute(2, message);
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
@@ -658,7 +658,7 @@ public class ExecuteClientToSCTest {
 		message.setSessionInfo("sessionInfo");
 		sessionService.createSession(300, 10, message);
 
-		SCMessage response = sessionService.execute(message, 3600);
+		SCMessage response = sessionService.execute(3600, message);
 
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
@@ -677,7 +677,7 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession(300, 10, message);
 
 		try {
-			sessionService.execute(message, 3601);
+			sessionService.execute(3601, message);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -696,7 +696,7 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession(300, 10, message);
 
 		try {
-			sessionService.execute(message, Integer.MAX_VALUE);
+			sessionService.execute(Integer.MAX_VALUE, message);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -715,7 +715,7 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession(300, 10, message);
 
 		try {
-			sessionService.execute(message, Integer.MIN_VALUE);
+			sessionService.execute(Integer.MIN_VALUE, message);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -734,7 +734,7 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession(300, 10, message);
 
 		try {
-			sessionService.execute(message, 0);
+			sessionService.execute(0, message);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -753,7 +753,7 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession(300, 10, message);
 
 		try {
-			sessionService.execute(message, -1);
+			sessionService.execute(-1, message);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -770,7 +770,7 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession(300, 10, message);
 
 		try {
-			sessionService.execute(new SCMessage("timeout 4000"), 2);
+			sessionService.execute(2, new SCMessage("timeout 4000"));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -786,7 +786,7 @@ public class ExecuteClientToSCTest {
 		sessionService.createSession(300, 10, message);
 
 		try {
-			sessionService.execute(new SCMessage("timeout 2000"), 2);
+			sessionService.execute(2, new SCMessage("timeout 2000"));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -802,7 +802,7 @@ public class ExecuteClientToSCTest {
 		message.setSessionInfo("sessionInfo");
 		sessionService.createSession(300, 10, message);
 
-		SCMessage response = sessionService.execute(message, 2);
+		SCMessage response = sessionService.execute(2, message);
 		assertEquals(message.getData().toString(), response.getData().toString());
 		assertEquals(message.getMessageInfo(), response.getMessageInfo());
 		assertEquals(message.isCompressed(), response.isCompressed());

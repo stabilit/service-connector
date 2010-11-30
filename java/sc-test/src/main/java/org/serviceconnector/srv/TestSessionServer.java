@@ -71,10 +71,10 @@ public class TestSessionServer extends Thread {
 			SCSessionServer server = sc.newSessionServer(serviceName);
 			SCSessionServerCallback cbk = new SrvCallback(server);
 			try {
-				server.registerServer(10, this.maxSessions, this.maxConnections, cbk);
+				server.register(10, this.maxSessions, this.maxConnections, cbk);
 			} catch (Exception e) {
 				logger.error("runSessionServer", e);
-				server.deregisterServer();
+				server.deregister();
 			}
 			// server.destroy();
 		} catch (Exception e) {
@@ -156,7 +156,7 @@ public class TestSessionServer extends Thread {
 			// sleep for 2 seconds before killing the server
 			try {
 				Thread.sleep(2000);
-				this.server.deregisterServer();
+				this.server.deregister();
 				//SCServer sc = server.getSCServer().stopListener();
 			} catch (Exception e) {
 				logger.error("run", e);

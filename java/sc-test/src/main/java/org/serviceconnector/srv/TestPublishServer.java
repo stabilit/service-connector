@@ -80,10 +80,10 @@ public class TestPublishServer extends Thread {
 			SCPublishServer server = sc.newPublishServer(serviceName); // no other params possible
 			SCPublishServerCallback cbk = new SrvCallback(server);
 			try {
-				server.registerServer(10, this.maxSessions, this.maxConnections, cbk);
+				server.register(10, this.maxSessions, this.maxConnections, cbk);
 			} catch (Exception e) {
 				logger.error("runPublishServer", e);
-				server.deregisterServer();
+				server.deregister();
 			}
 
 			SCPublishMessage pubMessage = new SCPublishMessage();
@@ -164,7 +164,7 @@ public class TestPublishServer extends Thread {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {
-						this.server.deregisterServer();
+						this.server.deregister();
 						//SCServer sc = server.getSCServer().stopListener();
 					} catch (Exception ex) {
 						logger.error("unsubscribe", ex);

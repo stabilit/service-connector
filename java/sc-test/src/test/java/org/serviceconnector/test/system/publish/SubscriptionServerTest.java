@@ -71,7 +71,7 @@ public class SubscriptionServerTest {
 
 	@After
 	public void tearDown() throws Exception {
-		server.deregisterServer(TestConstants.publishServiceName);
+		server.deregister(TestConstants.publishServiceName);
 		server.destroy();
 		server = null;
 		srvCallback = null;

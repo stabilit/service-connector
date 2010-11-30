@@ -62,8 +62,8 @@ public class PrematureDestroyOfSCProcessServerTest {
 	@After
 	public void tearDown() throws Exception {
 		try {
-			server.deregisterServer(TestConstants.publishServiceName);
-			server.deregisterServer(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.publishServiceName);
+			server.deregister(TestConstants.sessionServiceName);
 		} catch (Exception e) {
 			// might happen nothing to do
 		}
@@ -108,7 +108,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 	@Test
 	public void deregisterServer_afterSCDestroyWithoutPreviousRegister_passes() throws Exception {
 		scProcess.destroy();
-		server.deregisterServer(TestConstants.sessionServiceName);
+		server.deregister(TestConstants.sessionServiceName);
 	}
 
 	@Test
@@ -118,7 +118,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 		scProcess.destroy();
 		scProcess.waitFor();
 		try {
-			server.deregisterServer(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.sessionServiceName);
 		} catch (SCServiceException ex) {
 		}
 		assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));

@@ -59,7 +59,7 @@ public class RestartSCProcessTest {
 	@After
 	public void tearDown() throws Exception {
 		try {
-			server.deregisterServer(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.sessionServiceName);
 		} catch (Exception e) {
 			// might fail - but doesn't matter
 		}
@@ -80,7 +80,7 @@ public class RestartSCProcessTest {
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceName, 10, 10,
 				new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
-		server.deregisterServer(TestConstants.sessionServiceName);
+		server.deregister(TestConstants.sessionServiceName);
 	}
 
 	@Test(expected = SCMPValidatorException.class)
@@ -106,7 +106,7 @@ public class RestartSCProcessTest {
 	@Test
 	public void deregisterServer_afterSCRestart_passes() throws Exception {
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		server.deregisterServer(TestConstants.sessionServiceName);
+		server.deregister(TestConstants.sessionServiceName);
 	}
 
 	@Test
@@ -116,7 +116,7 @@ public class RestartSCProcessTest {
 		assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		try {
-			server.deregisterServer(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.sessionServiceName);
 		} catch (SCServiceException e) {
 		}
 		assertEquals(false, server.isRegistered(TestConstants.sessionServiceName));
@@ -138,13 +138,13 @@ public class RestartSCProcessTest {
 		assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		try {
-			server.deregisterServer(TestConstants.sessionServiceName);
+			server.deregister(TestConstants.sessionServiceName);
 		} catch (Exception e) { // ignore failing, just registering is important!
 		}
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceName, 10, 10,
 				new CallBack());
 		assertEquals(true, server.isRegistered(TestConstants.sessionServiceName));
-		server.deregisterServer(TestConstants.sessionServiceName);
+		server.deregister(TestConstants.sessionServiceName);
 	}
 
 	private class CallBack extends SCSessionServerCallback {
