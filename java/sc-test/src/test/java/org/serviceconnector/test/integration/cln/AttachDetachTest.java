@@ -127,7 +127,7 @@ public class AttachDetachTest {
 	 * Expectation:	Client is detached.
 	 */
 	@Test
-	public void attachDetach_1() throws Exception {
+	public void t01_attachDetach() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		
 		assertEquals(false, client.isAttached());
@@ -143,7 +143,7 @@ public class AttachDetachTest {
 	 * Expectation:	Throws exception on the second attach and detached.
 	 */
 	@Test
-	public void attachDetach_2() throws Exception {
+	public void t02_attachDetach() throws Exception {
 		Exception ex = null;
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 
@@ -159,26 +159,12 @@ public class AttachDetachTest {
 		assertEquals(false, client.isAttached());
 	}
 
-
-	/**
-	 * Description: Detach the client without to attach.<br>
-	 * Expectation:	Client is detached.
-	 */
-	@Test
-	public void detach_1() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
-
-		assertEquals(false, client.isAttached());
-		client.detach();
-		assertEquals(false, client.isAttached());
-	}
-
 	/**
 	 * Description: Attach and detach 10 times with sleep time 1sec between attach and detach.<br>
 	 * Expectation:	Client is detached.
 	 */
 	@Test
-	public void attachDetach_5() throws Exception {
+	public void t03_attachDetach() throws Exception {
 		this.testAttachDetachCycle(TestConstants.HOST, TestConstants.PORT_HTTP, 10, 1000);
 	}
 
@@ -187,7 +173,7 @@ public class AttachDetachTest {
 	 * Expectation:	Client is detached.
 	 */
 	@Test
-	public void attachDetach_6() throws Exception {
+	public void t04_attachDetach() throws Exception {
 		this.testAttachDetachCycle(TestConstants.HOST, TestConstants.PORT_HTTP, 100, 0);
 	}
 
@@ -196,7 +182,7 @@ public class AttachDetachTest {
 	 * Expectation:	Client is detached.
 	 */
 	@Test
-	public void attachDetach_7() throws Exception  {
+	public void t05_attachDetach() throws Exception  {
 		this.testAttachDetachCycle(TestConstants.HOST, TestConstants.PORT_HTTP, 5000, 0);
 	}
 
@@ -205,7 +191,7 @@ public class AttachDetachTest {
 	 * Expectation:	Client is detached.
 	 */
 	@Test
-	public void attachDetach_8() throws Exception {
+	public void t06_attachDetach() throws Exception {
 		this.testAttachAllDetachALL(TestConstants.HOST, TestConstants.PORT_HTTP, 10);
 	}
 	
@@ -214,7 +200,7 @@ public class AttachDetachTest {
 	 * Expectation:	Client is detached.
 	 */
 	@Test
-	public void attachDetach_9() throws Exception {
+	public void t07_attachDetach() throws Exception {
 		this.testAttachAllDetachALL(TestConstants.HOST, TestConstants.PORT_HTTP, 500);
 	}
 
@@ -223,8 +209,22 @@ public class AttachDetachTest {
 	 * Expectation:	Client is detached.
 	 */
 	@Test
-	public void attachDetach_10() throws Exception {
+	public void t08_attachDetach() throws Exception {
 		this.testAttachAllDetachALL(TestConstants.HOST, TestConstants.PORT_HTTP, 1000);
+	}
+
+
+	/**
+	 * Description: Detach the client without to attach.<br>
+	 * Expectation:	Client is detached.
+	 */
+	@Test
+	public void t10_detach() throws Exception {
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+
+		assertEquals(false, client.isAttached());
+		client.detach();
+		assertEquals(false, client.isAttached());
 	}
 
 	

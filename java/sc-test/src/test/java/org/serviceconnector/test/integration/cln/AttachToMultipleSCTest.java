@@ -156,7 +156,7 @@ public class AttachToMultipleSCTest {
 	 * Expectation:	Both clients are detached.
 	 */
 	@Test
-	public void attachDetach_1() throws Exception {
+	public void t01_attachDetach() throws Exception {
 		this.testAttachDetach(1, ConnectionType.NETTY_HTTP, TestConstants.LOCALHOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_MIN);
 	}
 
@@ -172,7 +172,7 @@ public class AttachToMultipleSCTest {
 	 * Expectation:	Both clients are detached.
 	 */
 	@Test
-	public void attachDetach_2() throws Exception {
+	public void t02_attachDetach() throws Exception {
 		this.testAttachDetach(1, ConnectionType.NETTY_HTTP, TestConstants.LOCALHOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_MAX);
 	}
 
@@ -188,7 +188,7 @@ public class AttachToMultipleSCTest {
 	 * Expectation:	Both clients are detached.
 	 */
 	@Test
-	public void attachDetach_3() throws Exception {
+	public void t03_attachDetach() throws Exception {
 		this.testAttachDetach(1, ConnectionType.NETTY_TCP, TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP, TestConstants.HOST, TestConstants.PORT_MAX);
 	}
 
@@ -204,7 +204,7 @@ public class AttachToMultipleSCTest {
 	 * Expectation:	Both clients are detached.
 	 */
 	@Test
-	public void attachDetach_4() throws Exception {
+	public void t04_attachDetach() throws Exception {
 		this.testAttachDetach(1, ConnectionType.NETTY_TCP, TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP, TestConstants.HOST, TestConstants.PORT_MIN);
 	}
 
@@ -220,7 +220,7 @@ public class AttachToMultipleSCTest {
 	 * Expectation:	Both clients are detached.
 	 */	
 	@Test
-	public void attachDetach_5() throws Exception {
+	public void t05_attachDetach() throws Exception {
 		this.testAttachDetach(100, ConnectionType.NETTY_HTTP, TestConstants.LOCALHOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_MIN);
 	}
 
@@ -236,7 +236,7 @@ public class AttachToMultipleSCTest {
 	 * Expectation:	Both clients are detached.
 	 */	
 	@Test
-	public void attachDetach_6() throws Exception {
+	public void t06_attachDetach() throws Exception {
 		this.testAttachDetach(100, ConnectionType.NETTY_TCP, TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP, TestConstants.HOST, TestConstants.PORT_MAX);
 	}
 	
@@ -252,7 +252,7 @@ public class AttachToMultipleSCTest {
 	 * Expectation:	Both clients are detached.
 	 */	
 	@Test
-	public void attachDetach_7() throws Exception {
+	public void t07_attachDetach() throws Exception {
 		this.testAttachDetach(100, ConnectionType.NETTY_HTTP, TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_MIN);
 	}
 

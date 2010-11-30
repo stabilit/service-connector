@@ -33,7 +33,7 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
-public class AttachConnectionTypeTcpTest {
+public class AttachTest {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachConnectionTypeTcpTest.class);
