@@ -55,8 +55,8 @@ public class DemoPublishClient extends Thread {
 			msg.setSessionInfo("subscription-info"); // optional
 			msg.setData("certificate or what so ever"); // optional
 			msg.setMask(mask); // mandatory
-			service.subscribe(msg, cbk); // regular
-//			service.subscribe(10, msg, cbk); // alternative with operation timeout
+			SCSubscribeMessage reply = service.subscribe(msg, cbk); // regular
+			reply = service.subscribe(10, msg, cbk); // alternative with operation timeout
 
 			String sid = service.getSessionId();
 

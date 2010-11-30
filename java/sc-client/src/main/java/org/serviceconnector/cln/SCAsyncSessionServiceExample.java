@@ -64,7 +64,7 @@ public class SCAsyncSessionServiceExample {
 			requestMsg.setData("Hello World");
 			requestMsg.setCompressed(false);
 			SCMessageCallback callback = new ExampleCallback(sessionServiceA);
-			sessionServiceA.execute(requestMsg, callback);
+			sessionServiceA.send(requestMsg, callback);
 
 			// wait until message received
 			while (SCAsyncSessionServiceExample.messageReceived == false)
