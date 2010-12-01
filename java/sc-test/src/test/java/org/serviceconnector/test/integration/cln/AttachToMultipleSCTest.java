@@ -44,7 +44,7 @@ public class AttachToMultipleSCTest {
 	private static ProcessesController ctrl;
 
 	@BeforeClass
-	public static void oneTimeSetUp() throws Exception {
+	public static void beforeAllTests() throws Exception {
 		// TODO new SCSessionServer(); Notwendig?
 		//new SCSessionServer();
 		ctrl = new ProcessesController();
@@ -52,12 +52,12 @@ public class AttachToMultipleSCTest {
 			scProcess0 = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			scProcess1 = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
 		} catch (Exception e) {
-			logger.error("oneTimeSetUp", e);
+			logger.error("beforeAllTests", e);
 		}
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() throws Exception {
+	public static void afterAllTests() throws Exception {
 		ctrl.stopSC(scProcess0, TestConstants.log4jSCProperties);
 		ctrl.stopSC(scProcess1, TestConstants.log4jSCcascadedProperties);
 		ctrl = null;
@@ -66,14 +66,14 @@ public class AttachToMultipleSCTest {
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 //		threadCount = Thread.activeCount();
 		client1 = null;
 		client2 = null;		
 	}
 	
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		client1 = null;
 		client2 = null;
 //		assertEquals("number of threads", threadCount, Thread.activeCount());

@@ -51,7 +51,7 @@ public class SubscribeClientTest {
 	private static ProcessesController ctrl;
 
 	@BeforeClass
-	public static void oneTimeSetUp() throws Exception {
+	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
@@ -59,24 +59,24 @@ public class SubscribeClientTest {
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
 					new String[] { TestConstants.publishServiceNames });
 		} catch (Exception e) {
-			logger.error("oneTimeSetUp", e);
+			logger.error("beforeAllTests", e);
 		}
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 		client = new SCClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		client.detach();
 		client = null;
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() throws Exception {
+	public static void afterAllTests() throws Exception {
 		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
 		ctrl = null;

@@ -53,9 +53,9 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		clnDetachAfter();
-		super.tearDown();
+		super.afterOneTest();
 	}
 
 	public void clnAttachBefore() throws Exception {

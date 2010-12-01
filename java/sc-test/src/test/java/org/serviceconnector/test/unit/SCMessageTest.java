@@ -38,7 +38,7 @@ public class SCMessageTest {
 	 * @throws java.lang.Exception
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 		message = new SCMessage();
 	}
 

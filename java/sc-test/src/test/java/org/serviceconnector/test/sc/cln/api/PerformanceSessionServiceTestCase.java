@@ -33,7 +33,7 @@ public class PerformanceSessionServiceTestCase {
 	 */
 
 	@Before
-	public void setUp() {
+	public void beforeOneTest() {
 		SetupTestCases.setupSCSessionServer10ConnectionsOverFile(TestConstants.SCProperties);
 	}
 

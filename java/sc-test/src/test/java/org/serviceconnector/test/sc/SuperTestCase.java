@@ -72,7 +72,7 @@ public abstract class SuperTestCase {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		this.testContext.getConnectionPool().destroy();
 	}
 }

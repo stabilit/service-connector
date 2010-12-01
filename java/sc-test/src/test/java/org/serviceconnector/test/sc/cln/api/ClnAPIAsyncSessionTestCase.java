@@ -35,7 +35,7 @@ public class ClnAPIAsyncSessionTestCase {
 	protected final static Logger logger = Logger.getLogger(ClnAPIAsyncSessionTestCase.class);
 
 	@Before
-	public void setUp() {
+	public void beforeOneTest() {
 		SetupTestCases.setupSCSessionServer10Connections();
 	}
 
@@ -92,6 +92,6 @@ public class ClnAPIAsyncSessionTestCase {
 	}
 
 	@After
-	public void tearDown() {
+	public void afterOneTest() {
 	}
 }

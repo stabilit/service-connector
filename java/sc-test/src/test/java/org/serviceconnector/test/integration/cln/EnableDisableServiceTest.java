@@ -47,30 +47,30 @@ public class EnableDisableServiceTest {
 	private static ProcessesController ctrl;
 
 	@BeforeClass
-	public static void oneTimeSetUp() throws Exception {
+	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		} catch (Exception e) {
-			logger.error("oneTimeSetUp", e);
+			logger.error("beforeAllTests", e);
 		}
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() throws Exception {
+	public static void afterAllTests() throws Exception {
 		ctrl.stopSC(scProcess, TestConstants.log4jSCProperties);
 		ctrl = null;
 		scProcess = null;
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP);
 		client.attach();
 	}
 	
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		client.detach();
 		client = null;
 		ex = null;

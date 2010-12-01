@@ -45,26 +45,26 @@ public class RejectSessionClientTest {
 	private static ProcessesController ctrl;
 
 	@BeforeClass
-	public static void oneTimeSetUp() throws Exception {
+	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			srvProcess = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.sessionServiceNames });
 		} catch (Exception e) {
-			logger.error("oneTimeSetUp", e);
+			logger.error("beforeAllTests", e);
 		}
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 		client = new SCMgmtClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
 		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.sessionServiceNames));
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.sessionServiceNames));
 		client.detach();
 		client = null;
@@ -72,7 +72,7 @@ public class RejectSessionClientTest {
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() throws Exception {
+	public static void afterAllTests() throws Exception {
 		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
 		ctrl = null;

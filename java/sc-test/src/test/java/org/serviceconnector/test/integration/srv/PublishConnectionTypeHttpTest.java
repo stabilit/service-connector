@@ -43,24 +43,24 @@ public class PublishConnectionTypeHttpTest {
 	private static ProcessesController ctrl;
 
 	@BeforeClass
-	public static void oneTimeSetUp() throws Exception {
+	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		} catch (Exception e) {
-			logger.error("oneTimeSetUp", e);
+			logger.error("beforeAllTests", e);
 		}
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() throws Exception {
+	public static void afterAllTests() throws Exception {
 		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
 		ctrl = null;
 		scProcess = null;
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 		server = new SCPublishServer();
 		((SCPublishServer) server).setConnectionType("netty.http");
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
@@ -69,7 +69,7 @@ public class PublishConnectionTypeHttpTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		server.deregister(TestConstants.publishServiceNames);
 		server.destroy();
 		server = null;

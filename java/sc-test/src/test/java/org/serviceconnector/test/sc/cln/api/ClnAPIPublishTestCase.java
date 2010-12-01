@@ -34,7 +34,7 @@ public class ClnAPIPublishTestCase {
 	private int publishedMessageCounter = 0;
 
 	@Before
-	public void setUp() {
+	public void beforeOneTest() {
 		SetupTestCases.setupAll();
 	}
 

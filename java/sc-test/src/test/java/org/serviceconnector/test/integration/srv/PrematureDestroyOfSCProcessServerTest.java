@@ -42,17 +42,17 @@ public class PrematureDestroyOfSCProcessServerTest {
 	private static ProcessesController ctrl;
 
 	@BeforeClass
-	public static void oneTimeSetUp() throws Exception {
+	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		} catch (Exception e) {
-			logger.error("oneTimeSetUp", e);
+			logger.error("beforeAllTests", e);
 		}
 
 		server = new SCSessionServer();
@@ -60,7 +60,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		try {
 			server.deregister(TestConstants.publishServiceNames);
 			server.deregister(TestConstants.sessionServiceNames);
@@ -74,7 +74,7 @@ public class PrematureDestroyOfSCProcessServerTest {
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() throws Exception {
+	public static void afterAllTests() throws Exception {
 		ctrl = null;
 	}
 

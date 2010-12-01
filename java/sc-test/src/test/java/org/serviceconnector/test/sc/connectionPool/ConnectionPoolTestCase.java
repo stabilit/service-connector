@@ -37,7 +37,7 @@ import org.serviceconnector.test.sc.SetupTestCases;
 public class ConnectionPoolTestCase {
 
 	@Before
-	public void setUp() {
+	public void beforeOneTest() {
 		SetupTestCases.setupSC();
 	}
 

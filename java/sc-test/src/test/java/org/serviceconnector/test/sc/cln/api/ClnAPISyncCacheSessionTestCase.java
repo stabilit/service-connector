@@ -37,7 +37,7 @@ public class ClnAPISyncCacheSessionTestCase {
 	protected final static Logger logger = Logger.getLogger(ClnAPISyncCacheSessionTestCase.class);
 
 	@Before
-	public void setUp() {
+	public void beforeOneTest() {
 		SetupTestCases.setupSCSessionServer10Connections();
 	}
 
@@ -79,6 +79,6 @@ public class ClnAPISyncCacheSessionTestCase {
 	}
 
 	@After
-	public void tearDown() {
+	public void afterOneTest() {
 	}
 }

@@ -47,7 +47,7 @@ public class ExecuteClientToSCTest {
 	private static ProcessesController ctrl;
 
 	@BeforeClass
-	public static void oneTimeSetUp() throws Exception {
+	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		try {
 			sc0Process = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
@@ -56,12 +56,12 @@ public class ExecuteClientToSCTest {
 					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.sessionServiceNames,
 							TestConstants.publishServiceNames });
 		} catch (Exception e) {
-			logger.error("oneTimeSetUp", e);
+			logger.error("beforeAllTests", e);
 		}
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 		threadCount = Thread.activeCount();
 		client = new SCMgmtClient();
 		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
@@ -69,7 +69,7 @@ public class ExecuteClientToSCTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.sessionServiceNames));
 		client.detach();
 		client = null;
@@ -78,7 +78,7 @@ public class ExecuteClientToSCTest {
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() throws Exception {
+	public static void afterAllTests() throws Exception {
 		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
 		ctrl.stopProcess(sc0Process, TestConstants.log4jSCProperties);
 		ctrl.stopProcess(scCascadedProcess, TestConstants.log4jSCcascadedProperties);

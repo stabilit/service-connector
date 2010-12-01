@@ -43,18 +43,18 @@ public class RegisterServerToMultipleSCTest {
 	private static Process r;
 
 	@BeforeClass
-	public static void oneTimeSetUp() throws Exception {
+	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			r = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
 		} catch (Exception e) {
-			logger.error("oneTimeSetUp", e);
+			logger.error("beforeAllTests", e);
 		}
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() throws Exception {
+	public static void afterAllTests() throws Exception {
 		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
 		ctrl.stopProcess(r, TestConstants.log4jSCcascadedProperties);
 		ctrl = null;
@@ -63,13 +63,13 @@ public class RegisterServerToMultipleSCTest {
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 //		threadCount = Thread.activeCount();
 		server = new SCSessionServer();
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		server.destroy();
 		server = null;
 //		assertEquals("number of threads", threadCount, Thread.activeCount());

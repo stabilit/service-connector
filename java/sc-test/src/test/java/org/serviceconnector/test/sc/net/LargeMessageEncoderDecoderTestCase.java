@@ -64,7 +64,7 @@ public class LargeMessageEncoderDecoderTestCase {
 	 * Sets the up.
 	 */
 	@Before
-	public void setUp() {
+	public void beforeOneTest() {
 		this.headKey = SCMPHeadlineKey.REQ;
 		this.msgType = SCMPMsgType.ATTACH;
 		this.bodyType = SCMPBodyType.BINARY;

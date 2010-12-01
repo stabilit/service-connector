@@ -27,9 +27,8 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
-import org.serviceconnector.ctrl.util.ClientThreadController;
-import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctrl.util.ProcessCtx;
+import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 
@@ -40,46 +39,46 @@ public class AllPerformanceTests {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AllPerformanceTests.class);
 
-	private ProcessCtx scProcess;
-	private ProcessCtx srvProcess;
+	private ProcessCtx scCtx;
+	private ProcessCtx srvCtx;
 	private SCClient client;
 	private static ProcessesController ctrl;
 
 	@BeforeClass
-	public static void oneTimeSetUp() throws Exception {
+	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 	}
 
 	@Before
-	public void setUp() throws Exception {
-		scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		srvProcess = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sessionServerName,
+	public void beforeOneTest() throws Exception {
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sessionServerName,
 				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10, TestConstants.sessionServiceNames);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach(5);
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		try {
 			client.detach();
 		} catch (Exception e) {
 		}
 		try {
-			ctrl.stopServer(srvProcess);
+			ctrl.stopServer(srvCtx);
 		} catch (Exception e) {
 		}
 		try {
-			ctrl.stopSC(scProcess);
+			ctrl.stopSC(scCtx);
 		} catch (Exception e) {
 		}
 		client = null;
-		srvProcess = null;
-		scProcess = null;
+		srvCtx = null;
+		scCtx = null;
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() throws Exception {
+	public static void afterAllTests() throws Exception {
 		ctrl = null;
 	}
 

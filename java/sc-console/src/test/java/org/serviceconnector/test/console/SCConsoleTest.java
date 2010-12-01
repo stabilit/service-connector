@@ -57,12 +57,12 @@ public class SCConsoleTest {
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 		System.setSecurityManager(new NoExitSecurityManager());
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		System.setSecurityManager(null);
 	}
 

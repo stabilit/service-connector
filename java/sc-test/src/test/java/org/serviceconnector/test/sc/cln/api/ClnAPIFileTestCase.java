@@ -29,7 +29,7 @@ import org.serviceconnector.test.sc.SetupTestCases;
 public class ClnAPIFileTestCase {
 
 	@Before
-	public void setUp() {
+	public void beforeOneTest() {
 		SetupTestCases.setupSC();
 	}
 

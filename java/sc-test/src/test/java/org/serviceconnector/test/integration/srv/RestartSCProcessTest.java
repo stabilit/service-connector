@@ -41,23 +41,23 @@ public class RestartSCProcessTest {
 	private static ProcessesController ctrl;
 
 	@BeforeClass
-	public static void oneTimeSetUp() throws Exception {
+	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		} catch (Exception e) {
-			logger.error("oneTimeSetUp", e);
+			logger.error("beforeAllTests", e);
 		}
 		server = new SCSessionServer();
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 60);
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		try {
 			server.deregister(TestConstants.sessionServiceNames);
 		} catch (Exception e) {
@@ -70,7 +70,7 @@ public class RestartSCProcessTest {
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() throws Exception {
+	public static void afterAllTests() throws Exception {
 		ctrl = null;
 	}
 

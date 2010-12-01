@@ -53,9 +53,9 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		clnDeleteSessionAfter();
-		super.tearDown();
+		super.afterOneTest();
 	}
 
 	public void clnCreateSessionBefore() throws Exception {

@@ -68,9 +68,9 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		deRegisterServerAfter();
-		super.tearDown();
+		super.afterOneTest();
 	}
 
 	public void registerServerBefore() throws Exception {

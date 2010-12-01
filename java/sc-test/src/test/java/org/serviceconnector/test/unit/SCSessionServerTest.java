@@ -32,7 +32,7 @@ public class SCSessionServerTest {
 	private SCServer server;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 		server = null;
 		server = new SCServer(TestConstants.LOCALHOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER); 
 		server.setKeepAliveIntervalInSeconds(10); // can be set before register
@@ -41,7 +41,7 @@ public class SCSessionServerTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		server.stopListener(); 
 		server = null;
 	}

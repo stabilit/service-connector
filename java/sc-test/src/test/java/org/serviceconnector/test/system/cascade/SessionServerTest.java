@@ -46,19 +46,19 @@ public class SessionServerTest {
 	private static ProcessesController ctrl;
 
 	@BeforeClass
-	public static void oneTimeSetUp() throws Exception {
+	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		try {
 			sc0Process = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			sc0Process = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
 		} catch (Exception e) {
-			logger.error("oneTimeSetUp", e);
+			logger.error("beforeAllTests", e);
 			throw e;
 		}
 	}
 
 	@AfterClass
-	public static void oneTimeTearDown() throws Exception {
+	public static void afterAllTests() throws Exception {
 		ctrl.stopProcess(sc0Process, TestConstants.log4jSCProperties);
 		ctrl.stopProcess(scProcessCascaded, TestConstants.log4jSCcascadedProperties);
 		ctrl = null;
@@ -67,7 +67,7 @@ public class SessionServerTest {
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void beforeOneTest() throws Exception {
 		threadCount = Thread.activeCount();
 		server = new SCSessionServer();
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
@@ -78,7 +78,7 @@ public class SessionServerTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void afterOneTest() throws Exception {
 		server.deregister(TestConstants.sessionServiceNames);
 		server.destroy();
 		server = null;

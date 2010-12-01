@@ -39,7 +39,7 @@ public class LinkedQueueTestCase {
 	public boolean killThreads = false;
 
 	@Before
-	public void setUp() {
+	public void beforeOneTest() {
 		this.queue = new LinkedQueue<SCMPMessage>();
 	}
 
