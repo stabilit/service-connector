@@ -94,6 +94,7 @@ public class SessionBenchmarks {
 		SCSessionService service = client.newSessionService(TestConstants.sessionServiceNames);
 		request.setSessionInfo("sessionInfo");
 		response = service.createSession(10, request);
+		request.setCompressed(false);
 
 		int nr = 10000;
 		long start = System.currentTimeMillis();
