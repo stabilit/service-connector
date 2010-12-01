@@ -161,9 +161,12 @@ public class SessionBenchmarks {
 	}
 
 
-
+//	/**
+//	 * Description: execute_10MBDataUsingDifferentBodyLength_outputsBestTimeAndBodyLength()
+//	 * @throws Exception
+//	 */
 //	@Test
-//	public void execute_10MBDataUsingDifferentBodyLength_outputsBestTimeAndBodyLength() throws Exception {
+//	public void t04_benchmark() throws Exception {
 //		long previousResult = Long.MAX_VALUE;
 //		long result = Long.MAX_VALUE - 1;
 //		int dataLength = 10 * TestConstants.dataLength1MB;
@@ -173,7 +176,7 @@ public class SessionBenchmarks {
 //			previousResult = result;
 //			messages++;
 //
-//			ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength / messages);
+//			ClientThreadController clientCtrl = new ClientThreadController( false, true, 1, 1, messages, dataLength / messages);
 //
 //			result = clientCtrl.perform();
 //
