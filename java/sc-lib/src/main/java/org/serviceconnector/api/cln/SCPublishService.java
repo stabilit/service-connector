@@ -114,8 +114,9 @@ public class SCPublishService extends SCService {
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
 			this.sessionActive = false;
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException("change subscription failed", fault.getCause());
+			SCServiceException ex = new SCServiceException("change subscription failed");
+			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			throw ex;
 		}
 		SCSubscribeMessage replyToClient = new SCSubscribeMessage();
 		replyToClient.setData(reply.getBody());
@@ -184,8 +185,9 @@ public class SCPublishService extends SCService {
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
 			this.sessionActive = false;
-			SCMPFault fault = (SCMPFault) reply;
-			throw new SCServiceException("subscribe failed", fault.getCause());
+			SCServiceException ex = new SCServiceException("subscribe failed");
+			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			throw ex;
 		}
 		this.sessionId = reply.getSessionId();
 		this.sessionActive = true;
@@ -276,8 +278,9 @@ public class SCPublishService extends SCService {
 			}
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				SCMPFault fault = (SCMPFault) reply;
-				throw new SCServiceException("unsubscribe failed", fault.getCause());
+				SCServiceException ex = new SCServiceException("unsubscribe failed");
+				ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				throw ex;
 			}
 		} finally {
 			this.sessionActive = false;

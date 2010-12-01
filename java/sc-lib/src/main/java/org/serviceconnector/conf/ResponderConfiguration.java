@@ -87,90 +87,49 @@ public class ResponderConfiguration {
 				}
 			}
 			commConfig.setInterfaces(interfaces);
-
-			// get port & connection type
 			try {
+				// get port & connection type
 				commConfig.setPort(apacheCompositeConfig.getInt(responderName + Constants.PROPERTY_QUALIFIER_PORT));
-			} catch (Exception e) {
-				logger.info(e.toString());
-			}
-			try {
 				commConfig.setConnectionType((String) apacheCompositeConfig.getString(responderName
 						+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
-			} catch (Exception e) {
-				logger.info(e.toString());
-			}
-
-			// get user & password
-			try {
+				// get user & password
 				commConfig.setUsername((String) apacheCompositeConfig.getString(responderName
 						+ Constants.PROPERTY_QUALIFIER_USERNAME));
-			} catch (Exception e) {
-				logger.info(e.toString());
-			}
-			try {
 				commConfig.setPassword((String) apacheCompositeConfig.getString(responderName
 						+ Constants.PROPERTY_QUALIFIER_PASSWORD));
 			} catch (Exception e) {
-				logger.info(e.toString());
+				logger.error(e.toString());
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.getMessage());
 			}
 			// get remote host for responder
-			String remoteHost = null;
-			try {
-				remoteHost = (String) apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
-			} catch (Exception e) {
-				logger.info(e.toString());
-			}
-
+			String remoteHost = apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
+			// remote host is optional
 			if (remoteHost != null) {
 				// create configuration for remote host
 				CommunicatorConfig remoteHostConfig = new CommunicatorConfig(remoteHost);
 				// get host for remoteHost
 				try {
-					List<String> hosts = new ArrayList<String>();
-					hosts.add(apacheCompositeConfig.getString(remoteHost + Constants.PROPERTY_QUALIFIER_HOST));
-					remoteHostConfig.setInterfaces(hosts);
-				} catch (Exception e) {
-					logger.info(e.toString());
-				}
-				// get port & connection type
-				try {
+					List<String> host = new ArrayList<String>();
+					host.add(apacheCompositeConfig.getString(remoteHost + Constants.PROPERTY_QUALIFIER_HOST));
+					remoteHostConfig.setInterfaces(host);
+					// get port & connection type
 					remoteHostConfig.setPort(apacheCompositeConfig.getInt(remoteHost + Constants.PROPERTY_QUALIFIER_PORT));
-				} catch (Exception e) {
-					logger.info(e.toString());
-				}
-				try {
 					remoteHostConfig.setConnectionType((String) apacheCompositeConfig.getString(remoteHost
 							+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
-				} catch (Exception e) {
-					logger.info(e.toString());
-				}
-				// get user & password
-				try {
+					// get user & password
 					remoteHostConfig.setUsername((String) apacheCompositeConfig.getString(remoteHost
 							+ Constants.PROPERTY_QUALIFIER_USERNAME));
-				} catch (Exception e) {
-					logger.info(e.toString());
-				}
-				try {
 					remoteHostConfig.setPassword((String) apacheCompositeConfig.getString(remoteHost
 							+ Constants.PROPERTY_QUALIFIER_PASSWORD));
-				} catch (Exception e) {
-					logger.info(e.toString());
-				}
-				// get keep alive interval
-				try {
+					// get keep alive interval
 					remoteHostConfig.setKeepAliveInterval(apacheCompositeConfig.getInt(remoteHost
 							+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL));
-				} catch (Exception e) {
-					logger.info(e.toString());
-				}
-				// get max connection pool size
-				try {
+					// get max connection pool size
 					remoteHostConfig.setMaxPoolSize(apacheCompositeConfig.getInt(remoteHost
 							+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE));
 				} catch (Exception e) {
-					logger.info(e.toString());
+					logger.error(e.toString());
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.getMessage());
 				}
 				// set remote host configuration responder configuration
 				commConfig.setRemoteHostConfiguration(remoteHostConfig);

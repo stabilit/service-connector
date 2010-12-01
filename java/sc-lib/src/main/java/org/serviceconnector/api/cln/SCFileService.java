@@ -28,8 +28,8 @@ import org.serviceconnector.call.SCMPFileListCall;
 import org.serviceconnector.call.SCMPFileUploadCall;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.scmp.SCMPLargeResponse;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPLargeResponse;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
 
@@ -62,7 +62,9 @@ public class SCFileService extends SCService {
 			}
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				throw new SCServiceException("upload file failed " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				SCServiceException ex = new SCServiceException("upload file failed");
+				ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				throw ex;
 			}
 		} finally {
 			// always delete file session
@@ -89,7 +91,9 @@ public class SCFileService extends SCService {
 
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				throw new SCServiceException("download file failed " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				SCServiceException ex = new SCServiceException("download file failed");
+				ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				throw ex;
 			}
 			if (reply.isComposite()) {
 				((SCMPLargeResponse) reply).getBodyAsStream(outStream);
@@ -109,7 +113,9 @@ public class SCFileService extends SCService {
 		fileListCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
-			throw new SCServiceException("upload File failed " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			SCServiceException ex = new SCServiceException("upload File failed");
+			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			throw ex;
 		}
 	}
 
@@ -125,9 +131,9 @@ public class SCFileService extends SCService {
 			throw new SCServiceException("create file session failed ", e);
 		}
 		SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
-			SCServiceException ex = new SCServiceException("create file session failed "
-					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+		if (reply.isFault()) {
+			SCServiceException ex = new SCServiceException("create file session failed");
+			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			throw ex;
 		}
 		this.sessionId = reply.getSessionId();
@@ -146,7 +152,9 @@ public class SCFileService extends SCService {
 			}
 			SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				throw new SCServiceException("delete file session failed " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				SCServiceException ex = new SCServiceException("delete file session failed");
+				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				throw ex;
 			}
 		} finally {
 			this.sessionId = null;

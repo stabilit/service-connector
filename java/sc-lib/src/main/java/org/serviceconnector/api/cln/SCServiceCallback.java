@@ -97,6 +97,7 @@ public class SCServiceCallback extends SynchronousCallback {
 				this.service.inActivateSession();
 			}
 			SCServiceException e = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			e.setSCMPError(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			this.service.setRequestComplete();
 			this.messageCallback.receive(e);
 			return;

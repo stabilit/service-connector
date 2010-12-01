@@ -294,8 +294,7 @@ public class SCRequester implements IRequester {
 					 */
 					return true;
 				}
-				// TODO @JAN .. what warning should be here
-				logger.warn("compositeSender.hasNext() == false but part request not done");
+				logger.warn("largeRequest.hasNext() == false but part request not done");
 				return true;
 			}
 			part = largeRequest.getNext();

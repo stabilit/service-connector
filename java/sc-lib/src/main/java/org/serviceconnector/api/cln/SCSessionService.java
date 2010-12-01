@@ -116,7 +116,12 @@ public class SCSessionService extends SCService {
 			throw new SCServiceException("create session failed ", e);
 		}
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
+		if (reply.isFault()) {
+			SCServiceException ex = new SCServiceException("create session failed");
+			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			throw ex;
+		}
+		if (reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
 			SCServiceException ex = new SCServiceException("create session failed"
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE));
@@ -214,7 +219,9 @@ public class SCSessionService extends SCService {
 					// ignore errors in state of dead session
 					return;
 				}
-				throw new SCServiceException("delete session failed " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				SCServiceException ex = new SCServiceException("delete session failed");
+				ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				throw ex;
 			}
 		} finally {
 			this.pendingRequest = false;
@@ -286,7 +293,9 @@ public class SCSessionService extends SCService {
 				// OTI run out on client - mark session as dead!
 				this.sessionActive = false;
 			}
-			throw new SCServiceException("execute failed " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			SCServiceException scEx = new SCServiceException("execute failed");
+			scEx.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			throw scEx;
 		}
 		// trigger session timeout
 		this.timerTask = new TimerTaskWrapper(this.timerRun);
@@ -382,7 +391,9 @@ public class SCSessionService extends SCService {
 		SCMPMessage reply = callback.getMessageSync();
 		this.pendingRequest = false;
 		if (reply.isFault()) {
-			throw new SCServiceException("echo failed" + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			SCServiceException ex = new SCServiceException("echo failed");
+			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			throw ex;
 		}
 	}
 

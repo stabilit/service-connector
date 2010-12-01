@@ -58,7 +58,7 @@ public class SCMgmtClient extends SCClient {
 		}
 		String body = this.manageCall(Constants.DISABLE + Constants.EQUAL_SIGN + serviceName);
 		if (body != null) {
-			throw new SCServiceException(body.toString());
+			throw new SCServiceException(body);
 		}
 	}
 
@@ -75,7 +75,7 @@ public class SCMgmtClient extends SCClient {
 		}
 		String body = this.manageCall(Constants.ENABLE + Constants.EQUAL_SIGN + serviceName);
 		if (body != null) {
-			throw new SCServiceException(body.toString());
+			throw new SCServiceException(body);
 		}
 	}
 
@@ -154,7 +154,9 @@ public class SCMgmtClient extends SCClient {
 		}
 		SCMPMessage reply = callback.getMessageSync();
 		if (reply.isFault()) {
-			throw new SCServiceException("inspect failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			SCServiceException ex = new SCServiceException("inspect failed");
+			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			throw ex;
 		}
 		return (String) reply.getBody();
 	}
@@ -183,7 +185,9 @@ public class SCMgmtClient extends SCClient {
 		}
 		SCMPMessage reply = callback.getMessageSync();
 		if (reply.isFault()) {
-			throw new SCServiceException("manage failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			SCServiceException ex = new SCServiceException("manage failed");
+			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			throw ex;
 		}
 		return (String) reply.getBody();
 	}

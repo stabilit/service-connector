@@ -191,7 +191,9 @@ public class SCSessionServer {
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				connectionPool.destroy();
-				throw new SCServiceException("register server failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				SCServiceException ex = new SCServiceException("register server failed");
+				ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				throw ex;
 			}
 			AppContext.attachedCommunicators.incrementAndGet();
 			return requester;
@@ -225,7 +227,9 @@ public class SCSessionServer {
 			}
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				throw new SCServiceException("deregister server failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				SCServiceException ex = new SCServiceException("deregister server failed");
+				ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				throw ex;
 			}
 		} finally {
 			// destroy connection pool

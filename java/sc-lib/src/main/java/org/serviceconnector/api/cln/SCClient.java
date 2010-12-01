@@ -143,9 +143,9 @@ public class SCClient {
 			SCMPMessage reply = callback.getMessageSync();
 			if (reply.isFault()) {
 				this.connectionPool.destroy();
-				throw new SCServiceException("attach to " + host + ":" + port + " failed : "
-						+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-
+				SCServiceException ex = new SCServiceException("attach to " + host + ":" + port + " failed");
+				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				throw ex;
 			}
 			this.attached = true;
 			AppContext.attachedCommunicators.incrementAndGet();
@@ -182,7 +182,9 @@ public class SCClient {
 			}
 			SCMPMessage reply = callback.getMessageSync();
 			if (reply.isFault()) {
-				throw new SCServiceException("detach client failed : " + reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				SCServiceException ex = new SCServiceException("detach client failed");
+				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				throw ex;
 			}
 		} finally {
 			this.attached = false;

@@ -21,6 +21,8 @@
  */
 package org.serviceconnector.service;
 
+import org.serviceconnector.scmp.SCMPError;
+
 /**
  * The Class SCServiceException. Used to notify errors on SC service level.
  * 
@@ -35,6 +37,8 @@ public class SCServiceException extends Exception {
 	private String appErrorCode;
 	/** The application error text. */
 	private String appErrorText;
+	/** The scmp error. */
+	private SCMPError scmpError;
 
 	/**
 	 * Instantiates a new SC service exception.
@@ -94,5 +98,24 @@ public class SCServiceException extends Exception {
 	 */
 	public void setAppErrorText(String appErrorText) {
 		this.appErrorText = appErrorText;
+	}
+
+	/**
+	 * Gets the SCMP error.
+	 * 
+	 * @return the SCMP error
+	 */
+	public SCMPError getSCMPError() {
+		return this.scmpError;
+	}
+
+	/**
+	 * Sets the SCMP error.
+	 * 
+	 * @param errorCode
+	 *            the new SCMP error
+	 */
+	public void setSCMPError(String errorCode) {
+		this.scmpError = SCMPError.getSCMPErrorByCode(errorCode);
 	}
 }

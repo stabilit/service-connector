@@ -71,39 +71,24 @@ public class RequesterConfiguration {
 			requesterName = requesterName.trim(); // remove blanks in name
 			CommunicatorConfig commConfig = new CommunicatorConfig(requesterName);
 
-			// get port & connection type
 			try {
+				// get port & connection type
 				commConfig.setPort(apacheCompositeConfig.getInt(requesterName + Constants.PROPERTY_QUALIFIER_PORT));
-			} catch (Exception e) {
-				logger.info(e.toString());
-			}
-			try {
 				commConfig.setConnectionType((String) apacheCompositeConfig.getString(requesterName
 						+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
-			} catch (Exception e) {
-				logger.info(e.toString());
-			}
-			// get host for requester
-			try {
+				// get host for requester
 				List<String> hosts = new ArrayList<String>();
 				hosts.add(apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_HOST));
 				commConfig.setInterfaces(hosts);
-			} catch (Exception e) {
-				logger.info(e.toString());
-			}
-			// get max connection pool size
-			try {
+				// get max connection pool size
 				commConfig.setMaxPoolSize(apacheCompositeConfig.getInt(requesterName
 						+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE));
-			} catch (Exception e) {
-				logger.info(e.toString());
-			}
-			// get keep alive interval
-			try {
+				// get keep alive interval
 				commConfig.setKeepAliveInterval(apacheCompositeConfig.getInt(requesterName
 						+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL));
 			} catch (Exception e) {
-				logger.info(e.toString());
+				logger.error(e.toString());
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.getMessage());
 			}
 			// adding requester to list
 			this.requesterConfigList.add(commConfig);

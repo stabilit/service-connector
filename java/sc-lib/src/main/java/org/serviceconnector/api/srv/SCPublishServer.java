@@ -29,7 +29,6 @@ import org.serviceconnector.call.SCMPPublishCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
@@ -70,8 +69,9 @@ public class SCPublishServer extends SCSessionServer {
 		publishCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		SCMPMessage message = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (message.isFault()) {
-			SCMPFault fault = (SCMPFault) message;
-			throw new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			SCServiceException ex = new SCServiceException("publish failed");
+			ex.setAppErrorCode(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			throw ex;
 		}
 	}
 }
