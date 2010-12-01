@@ -17,10 +17,10 @@ package org.serviceconnector.ctrl.util;
 
 import org.apache.log4j.Logger;
 
-public class SCProcess {
+public class ProcessCtx {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCProcess.class);
+	protected final static Logger logger = Logger.getLogger(ProcessCtx.class);
 	
 	private Process process = null;
 	private String runableFull = null;
@@ -29,8 +29,9 @@ public class SCProcess {
 	private String log4jFileName = null;
 	private String log4jFileNameFull = null;
 	private String pidFileNameFull = null;
+	private boolean running = false;
 	
-	public SCProcess() {
+	public ProcessCtx() {
 	}
 
 	public Process getProcess() {
@@ -38,6 +39,9 @@ public class SCProcess {
 	}
 
 	public void setProcess(Process process) {
+		if(process != null) {
+			this.running = true;
+		}
 		this.process = process;
 	}
 
@@ -87,5 +91,9 @@ public class SCProcess {
 
 	public void setPidFileNameFull(String pidFileNameFull) {
 		this.pidFileNameFull = pidFileNameFull;
+	}
+	
+	public boolean isRunning() {
+		return running;
 	}
 }

@@ -178,7 +178,7 @@ public class SetupTestCases {
 		scSessionSim1ConSrv = scSim1ConSrv.newSessionServer("session-1");
 		scSim1ConSrv.startListener();
 		SessionServerCallback srvCallback = new SessionServerCallback();
-		scSessionSim1ConSrv.register(10, 1, srvCallback);
+		scSessionSim1ConSrv.register(1, 1, srvCallback);
 	}
 
 	private static void startSessionServer10Connections() throws Exception {

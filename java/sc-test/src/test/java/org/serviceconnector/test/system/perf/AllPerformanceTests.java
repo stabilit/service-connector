@@ -29,7 +29,7 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ClientThreadController;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.ctrl.util.SCProcess;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 
@@ -40,8 +40,8 @@ public class AllPerformanceTests {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AllPerformanceTests.class);
 
-	private SCProcess scProcess;
-	private SCProcess srvProcess;
+	private ProcessCtx scProcess;
+	private ProcessCtx srvProcess;
 	private SCClient client;
 	private static ProcessesController ctrl;
 
