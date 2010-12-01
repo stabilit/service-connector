@@ -208,4 +208,26 @@ public class SCMessage {
 	public boolean isFault() {
 		return false;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SCMessage [messageInfo=");
+		builder.append(messageInfo);
+		builder.append(", sessionInfo=");
+		builder.append(sessionInfo);
+		builder.append(", compressed=");
+		builder.append(compressed);
+		builder.append(", sessionId=");
+		builder.append(sessionId);
+		builder.append(", cacheId=");
+		builder.append(cacheId);
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	
 }

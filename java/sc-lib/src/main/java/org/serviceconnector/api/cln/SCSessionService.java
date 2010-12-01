@@ -295,6 +295,7 @@ public class SCSessionService extends SCService {
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
+		replyToClient.setCacheId(reply.getCacheId());
 		replyToClient.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		return replyToClient;
 	}
