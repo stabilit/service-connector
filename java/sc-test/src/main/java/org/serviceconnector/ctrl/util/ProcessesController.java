@@ -15,6 +15,7 @@
  */
 package org.serviceconnector.ctrl.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
@@ -50,23 +51,32 @@ public class ProcessesController {
 		return userDir + fs + properties.getProperty(TestConstants.logDirectoryToken);
 	}
 
-	public Process startSC(String log4jSCProperties, String scProperties) throws Exception {
-		String scRunableFull = userDir + fs + ".." + fs + "service-connector" + fs + "target" + fs + TestConstants.scRunable;
+	public SCProcess startSC(String log4jSCProperties, String scProperties) throws Exception {
+
+		SCProcess proc = new SCProcess();
+
+		String scRunableFull = userDir + fs + "target" + fs + TestConstants.scRunable;
 		if (FileUtility.notExists(scRunableFull)) {
 			throw new Exception("File:" + scRunableFull + " does not exist!");
 		}
+		proc.setRunableFull(scRunableFull);
 
 		String scPropertiesFull = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + scProperties;
 		if (FileUtility.notExists(scPropertiesFull)) {
 			throw new Exception("File:" + scPropertiesFull + " does not exist!");
 		}
+		proc.setPropertyFileName(scProperties);
+		proc.setPropertyFileNameFull(scPropertiesFull);
 
 		String log4jFileNameFull = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSCProperties;
 		if (FileUtility.notExists(log4jFileNameFull)) {
 			throw new Exception("File:" + log4jFileNameFull + " does not exist!");
 		}
+		proc.setLog4jFileName(log4jSCProperties);
+		proc.setLog4jFileNameFull(log4jFileNameFull);
 
 		String pidFileNameFull = getLogDirPath(log4jFileNameFull) + Constants.PID_FILE_NAME;
+		proc.setPidFileNameFull(pidFileNameFull);
 
 		/*
 		 * start SC process Args: 
@@ -79,42 +89,36 @@ public class ProcessesController {
 		String command = "java -Dlog4j.configuration=file:" + log4jFileNameFull + " -jar " + scRunableFull + " -sc.configuration "
 				+ scPropertiesFull;
 		Process scProcess = Runtime.getRuntime().exec(command);
+		proc.setProcess(scProcess);
 		int timeout = 10; // seconds
 		try {
 			FileUtility.waitExists(pidFileNameFull, timeout);
 			testLogger.info("SC started");
 		} catch (Exception e) {
+			testLogger.info(e.getMessage());
 			testLogger.info("SC not started within " + timeout + " seconds! Timeout exceeded.");
 			throw e;
 		}
-		return scProcess;
+		return proc;
 	}
 
-	
-	public void stopSC(Process scProcess, String log4jSCProperties) throws Exception {
-		String log4jFileNameFull = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSCProperties;
-
-		String pidFileNameFull = getLogDirPath(log4jFileNameFull) + Constants.PID_FILE_NAME;
+	public void stopSC(SCProcess scProcess) throws Exception {
 		int timeout = 10; // seconds
 		try {
-			if (FileUtility.exists(pidFileNameFull)) {
+			if (FileUtility.exists(scProcess.getPidFileNameFull())) {
 				SCMgmtClient client = new SCMgmtClient(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 				client.attach(timeout);
 				client.killSC();
-				FileUtility.waitNotExists(pidFileNameFull, timeout);
+				FileUtility.waitNotExists(scProcess.getPidFileNameFull(), timeout);
 			}
 			testLogger.info("SC stopped");
 		} catch (Exception e) {
+			testLogger.info(e.getMessage());
 			testLogger.info("Cannot stop SC! Timeout exceeded.");
 		} finally {
-			scProcess.destroy();
-			scProcess.waitFor();
+			scProcess.getProcess().destroy();
+			scProcess.getProcess().waitFor();
 		}
-	}
-
-	public Process restartSC(Process scProcess, String log4jSCProperties, String scProperties) throws Exception {
-		stopSC(scProcess, log4jSCProperties);
-		return startSC(log4jSCProperties, scProperties);
 	}
 
 	/**
@@ -128,25 +132,31 @@ public class ProcessesController {
 	 * @param SCport
 	 * @param maxSessions
 	 * @param maxConnections
-	 * @param serviceNames (comma delimited list)
-	 *            (list of strings)
+	 * @param serviceNames
+	 *            (comma delimited list)
 	 * @return Process with JVM in which the server is started
 	 * @throws Exception
 	 */
-	public Process startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
+	public SCProcess startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
 			int maxSessions, int maxConnections, String serviceNames) throws Exception {
 
-		String srvRunableFull = userDir + fs + ".." + fs + "target" + fs + TestConstants.serverRunable;
+		SCProcess proc = new SCProcess();
+
+		String srvRunableFull = userDir + fs + "target" + fs + TestConstants.serverRunable;
 		if (FileUtility.notExists(srvRunableFull)) {
 			throw new Exception("File:" + srvRunableFull + " does not exist!");
 		}
+		proc.setRunableFull(srvRunableFull);
 
-		String log4jFileNameFull = getLogDirPath(log4jSrvProperties) + fs + log4jSrvProperties;
+		String log4jFileNameFull = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSrvProperties;
 		if (FileUtility.notExists(log4jFileNameFull)) {
 			throw new Exception("File:" + log4jFileNameFull + " does not exist!");
 		}
+		proc.setLog4jFileName(log4jSrvProperties);
+		proc.setLog4jFileNameFull(log4jFileNameFull);
 
-		String pidFileNameFull = getLogDirPath(log4jSrvProperties) + fs + serverName + ".pid";
+		String pidFileNameFull = getLogDirPath(log4jFileNameFull) + fs + serverName + ".pid";
+		proc.setPidFileNameFull(pidFileNameFull);
 
 		/*
 		 * start server process Args: 
@@ -163,43 +173,40 @@ public class ProcessesController {
 		 * [10] serviceNames (comma delimited list)
 		 */
 		String command = "java -Dlog4j.configuration=file:" + log4jFileNameFull + " -jar " + srvRunableFull + " " + serverType
-				+ pidFileNameFull + " " + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " " 
+				+ " " + pidFileNameFull + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " "
 				+ serviceNames;
 		Process srvProcess = Runtime.getRuntime().exec(command);
+		proc.setProcess(srvProcess);
 		int timeout = 10;
 		try {
 			FileUtility.waitExists(pidFileNameFull, timeout);
 			testLogger.info("Server started");
 		} catch (Exception e) {
+			testLogger.info(e.getMessage());
 			testLogger.info("Server not started within " + timeout + " seconds! Timeout exceeded.");
 			throw e;
 		}
-		return srvProcess;
+		return proc;
 	}
 
-	public void stopServer(Process srvProcess, String log4jSrvProperties, String serverName) throws Exception {
-		String pidFileNameFull = getLogDirPath(log4jSrvProperties) + fs + serverName + ".pid";
+	public void stopServer(SCProcess srvProcess) throws Exception {
 		int timeout = 10; // seconds
 		try {
-			if (FileUtility.exists(pidFileNameFull)) {
-				srvProcess.destroy();
-				srvProcess.waitFor();
-				FileUtility.waitNotExists(pidFileNameFull, timeout);
+			if (FileUtility.exists(srvProcess.getPidFileNameFull())) {
+				srvProcess.getProcess().destroy();
+				srvProcess.getProcess().waitFor();
+				
+				File pidFile = new File(srvProcess.getPidFileNameFull());
+				pidFile.delete();
+				FileUtility.waitNotExists(srvProcess.getPidFileNameFull(), timeout);
 			}
 			testLogger.info("Server stopped");
 		} catch (Exception e) {
-			testLogger.info("Cannot stop server:" + serverName + "! Timeout exceeded.");
+			testLogger.info(e.getMessage());
+			testLogger.info("Cannot stop server! Timeout exceeded.");
 		} finally {
-			srvProcess.destroy();	// just to be sure
-			srvProcess.waitFor();	// just to be sure
+			srvProcess.getProcess().destroy(); // just to be sure
+			srvProcess.getProcess().waitFor(); // just to be sure
 		}
-	}
-
-	public Process restartServer(Process srvProcess, String serverType, String serverName, String log4jSrvProperties, int listenerPort, int port,
-			int maxSessions, int maxConnections, String serviceNames) throws Exception {
-		stopServer(srvProcess, log4jSrvProperties, serviceNames);
-		srvProcess = null;
-		srvProcess = startServer(serverType, log4jSrvProperties, serverName, listenerPort, port, maxSessions, maxConnections, serviceNames);
-		return srvProcess;
 	}
 }

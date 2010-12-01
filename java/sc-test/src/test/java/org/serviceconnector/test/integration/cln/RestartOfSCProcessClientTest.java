@@ -86,21 +86,21 @@ public class RestartOfSCProcessClientTest {
 	public void enableService_afterSCRestart_throwsException() throws Exception {
 		client.attach();
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.enableService(TestConstants.sessionServiceName);
+		client.enableService(TestConstants.sessionServiceNames);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void disableService_afterSCRestart_throwsException() throws Exception {
 		client.attach();
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.enableService(TestConstants.sessionServiceName);
+		client.enableService(TestConstants.sessionServiceNames);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void workload_afterSCRestart_throwsException() throws Exception {
 		client.attach();
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.getWorkload(TestConstants.sessionServiceName);
+		client.getWorkload(TestConstants.sessionServiceNames);
 	}
 
 	@Test
@@ -136,15 +136,15 @@ public class RestartOfSCProcessClientTest {
 	@Test
 	public void isServiceDisabled_afterDisablingItBeforeSCRestart_enabled() throws Exception {
 		client.attach();
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceName));
-		client.disableService(TestConstants.sessionServiceName);
-		assertEquals(false, client.isServiceEnabled(TestConstants.sessionServiceName));
+		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
+		client.disableService(TestConstants.sessionServiceNames);
+		assertEquals(false, client.isServiceEnabled(TestConstants.sessionServiceNames));
 		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		try {
 			client.detach();
 		} catch (SCServiceException e) {
 		}
 		client.attach();
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceName));
+		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
 	}
 }

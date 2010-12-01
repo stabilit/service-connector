@@ -50,46 +50,46 @@ public class TestSessionClient extends Thread {
 			client.attach();
 
 			if (getMethodName() == "createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo(" ");
 				sessionService.createSession(60, scMessage);
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSession_arbitrarySpaceSessionInfo_sessionIdIsNotEmpty") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
 				sessionService.createSession(60, scMessage);
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSession_arbitrarySpaceSessionInfoDataOneChar_sessionIdIsNotEmpty") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 				SCMessage scMessage = new SCMessage("a");
 				scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
 				sessionService.createSession(10, scMessage);
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSession_256LongSessionInfoData60kBByteArray_sessionIdIsNotEmpty") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 				SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 				scMessage.setSessionInfo(TestConstants.stringLength256);
 				sessionService.createSession(60, scMessage);
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "deleteSession_beforeCreateSession_noSessionId") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "deleteSession_afterValidNewSessionService_noSessionId") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
 				sessionService.createSession(60, scMessage);
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 
 				try {
 					SCMessage scMessage = new SCMessage("reject");
@@ -105,7 +105,7 @@ public class TestSessionClient extends Thread {
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "execute_messageData1MBArray_returnsTheSameMessageData") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
 				sessionService.createSession(60, scMessage);
@@ -117,7 +117,7 @@ public class TestSessionClient extends Thread {
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSessionExecuteDeleteSession_twice_6MessagesArrive") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
@@ -132,7 +132,7 @@ public class TestSessionClient extends Thread {
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "echo_waitFor3EchoMessages_5MessagesArrive") {
-				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceName);
+				SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
 				sessionService.createSession(1, scMessage);

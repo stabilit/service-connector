@@ -72,14 +72,14 @@ public class SessionServerTest {
 		server = new SCSessionServer();
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		srvCallback = new SrvCallback();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceName, 10, 10,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceNames, 10, 10,
 				srvCallback);
 
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		server.deregister(TestConstants.sessionServiceName);
+		server.deregister(TestConstants.sessionServiceNames);
 		server.destroy();
 		server = null;
 		srvCallback = null;

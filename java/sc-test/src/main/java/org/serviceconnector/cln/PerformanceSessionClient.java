@@ -75,7 +75,7 @@ public class PerformanceSessionClient implements Runnable {
 			afterAttachSignal.await();
 
 			for (int i = 0; i < sessionCycles; i++) {
-				SCSessionService service = sc.newSessionService(TestConstants.sessionServiceName);
+				SCSessionService service = sc.newSessionService(TestConstants.sessionServiceNames);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
 				service.createSession(300, scMessage);

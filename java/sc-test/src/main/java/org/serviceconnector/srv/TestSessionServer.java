@@ -17,6 +17,7 @@ package org.serviceconnector.srv;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
@@ -103,7 +104,14 @@ public class TestSessionServer extends Thread {
 	public void setServiceNames(String serviceNames) {
 		this.serviceNames = serviceNames;
 	}
+
 	
+	/**
+	 * Callback handling all server events
+	 * 
+	 * @author JTrnka
+	 *
+	 */
 	class SrvCallback extends SCSessionServerCallback {
 		private SCSessionServer scSessionServer;
 		
@@ -134,7 +142,7 @@ public class TestSessionServer extends Thread {
 			// watch out for kill server message
 			if (data.getClass() == String.class) {
 				String dataString = (String) data;
-				if (dataString.equals("kill server")) {
+				if (dataString.equals(TestConstants.killServerCmd)) {
 					KillThread kill = new KillThread(this.scSessionServer);
 					kill.start();
 				} else {

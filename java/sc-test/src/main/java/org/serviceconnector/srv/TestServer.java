@@ -41,31 +41,35 @@ public class TestServer {
 	 */
 	public static void main(String[] args) {
 		logger.log(Level.OFF, "TestServer starting ...");
+		
+		for (int i = 0; i < 7; i++) {
+			logger.log(Level.OFF, "args["+i+"]:"+args[i]);
+		}		
 		TestServer testServer = new TestServer();
 		String pidFileNameFull = args[1];
 		try {
-			testServer.createPIDfile(pidFileNameFull);
+			testServer.createPIDfile(pidFileNameFull); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		testServer.addExitHandler(pidFileNameFull);
 
-		if (args[0].equals(TestConstants.sessionSrv)) {
+		if (args[0].equals(TestConstants.SERVER_TYPE_SESSION)) {
 			TestSessionServer server = new TestSessionServer();
-			server.setListenerPort(Integer.parseInt(args[0]));
-			server.setPort(Integer.parseInt(args[1]));
-			server.setMaxSessions(Integer.parseInt(args[2]));
-			server.setMaxConnections(Integer.parseInt(args[3]));
-			server.setServiceNames(args[4]);
+			server.setListenerPort(Integer.parseInt(args[2]));
+			server.setPort(Integer.parseInt(args[3]));
+			server.setMaxSessions(Integer.parseInt(args[4]));
+			server.setMaxConnections(Integer.parseInt(args[5]));
+			server.setServiceNames(args[6]);
 			server.start();
 
-		} else if (args[0].equals(TestConstants.publishSrv)) {
+		} else if (args[0].equals(TestConstants.SERVER_TYPE_PUBLISH)) {
 			TestPublishServer server = new TestPublishServer();
-			server.setListenerPort(Integer.parseInt(args[0]));
-			server.setPort(Integer.parseInt(args[1]));
-			server.setMaxSessions(Integer.parseInt(args[2]));
-			server.setMaxConnections(Integer.parseInt(args[3]));
-			server.setServiceNames(args[4]);
+			server.setListenerPort(Integer.parseInt(args[2]));
+			server.setPort(Integer.parseInt(args[3]));
+			server.setMaxSessions(Integer.parseInt(args[4]));
+			server.setMaxConnections(Integer.parseInt(args[5]));
+			server.setServiceNames(args[6]);
 			server.start();
 		}	
 	}
@@ -84,7 +88,7 @@ public class TestServer {
 			fw = new FileWriter(pidFile);
 			fw.write("pid: " + pid);
 			fw.flush();
-			logger.info("Create PID-file: " + fileNameFull + " PID:" + pid);
+			logger.log(Level.OFF, "Create PID-file: " + fileNameFull + " PID:" + pid);
 		} finally {
 			if (fw != null) {
 				fw.close();

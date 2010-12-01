@@ -24,6 +24,9 @@ public class TestConstants {
 	public static final int PORT_MAX = 65535;
 	public static final int PORT_LISTENER = 30000; 
 
+	public static final String SERVER_TYPE_SESSION = "session";
+	public static final String SERVER_TYPE_PUBLISH = "publish";
+	
 	public static final String log4jSrvProperties = "log4j-srv.properties";
 
 	public static final String log4jSCProperties = "log4j-sc.properties";
@@ -31,8 +34,12 @@ public class TestConstants {
 	public static final String SCProperties = "sc.properties";
 	public static final String SCcascadedProperties = "sc-cascaded.properties";
 	
-	public static final String sessionServiceName = "session-1";
-	public static final String publishServiceName = "publish-1";
+	public static final String sessionServiceNames = "session-1";
+	public static final String sessionServerName = "session-1";
+	public static final String publishServiceNames = "publish-1";
+	public static final String publishServerName = "publish-1";
+	
+	public static final String killServerCmd = "kill";
 	
 	public static final String pangram = "The quick brown fox jumps over a lazy dog.";
 	public static final String stringLength32 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -42,11 +49,6 @@ public class TestConstants {
 	
 	public static final int dataLength60kB = 61440;
 	public static final int dataLength1MB = 1048576;
-	
-	public static final String pidLogFile = "pid.log";
-	
-	public static final String sessionSrv = "session";
-	public static final String publishSrv = "publish";
 	
 	public static final String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
 
