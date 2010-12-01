@@ -17,14 +17,17 @@
 package org.serviceconnector.scmp;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.util.IReversibleEnum;
+import org.serviceconnector.util.ReverseEnumMap;
 
 /**
  * The Enum SCMPError. Defines possible errors in SCM.
  * 
  * @author JTraber
  */
-public enum SCMPError {
+public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 
+	UNDEFINED("000", "Undefined error."),
 	/** 4xx errors caused by client */
 	/** The bad request. */
 	BAD_REQUEST("400", "Bad request. The request could not be understood by the server due to malformed syntax."),
@@ -130,6 +133,9 @@ public enum SCMPError {
 	/** The error text. */
 	private String errorText;
 
+	/** The reverseMap, to get access to the enum constants by string value. */
+	private static final ReverseEnumMap<String, SCMPError> reverseMap = new ReverseEnumMap<String, SCMPError>(SCMPError.class);
+
 	/**
 	 * Instantiates a new sCMP error code.
 	 * 
@@ -159,5 +165,26 @@ public enum SCMPError {
 	 */
 	public String getErrorText() {
 		return errorText;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getValue() {
+		return this.errorCode;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SCMPError reverse(String code) {
+		return SCMPError.getSCMPErrorByCode(code);
+	}
+
+	public static SCMPError getSCMPErrorByCode(String errorCode) {
+		SCMPError scmpError = reverseMap.get(errorCode);
+		if (scmpError == null) {
+			// errorCode doesn't match to a valid SCMPError
+			return SCMPError.UNDEFINED;
+		}
+		return scmpError;
 	}
 }

@@ -19,7 +19,6 @@ package org.serviceconnector.cmd.sc;
 import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.CommunicatorConfig;
@@ -148,15 +147,17 @@ public class RegisterServerCommand extends CommandAdapter {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
 			// maxSessions - validate with lower limit 1
-			String maxSessions = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
-			ValidatorUtility.validateInt(1, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
+			String maxSessionsValue = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
+			int maxSessions = ValidatorUtility.validateInt(1, maxSessionsValue, SCMPError.HV_WRONG_MAX_SESSIONS);
 			// maxConnections - validate with lower limit 1
-			String maxConnections = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_CONNECTIONS);
-			ValidatorUtility.validateInt(1, maxConnections, SCMPError.HV_WRONG_MAX_CONNECTIONS);
-			
-			// validate maxS
-			
-			
+			String maxConnectionsValue = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_CONNECTIONS);
+			int maxConnections = ValidatorUtility.validateInt(1, maxConnectionsValue, maxSessions,
+					SCMPError.HV_WRONG_MAX_CONNECTIONS);
+
+			if (maxConnections == 1 && maxSessions != 1) {
+				// invalid configuration
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_MAX_SESSIONS, "maxSessions must be 1 if maxConnections is 1");
+			}
 			// immmediateConnect
 			message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
 			// portNr - portNr >= 0 && portNr <= 0xFFFF

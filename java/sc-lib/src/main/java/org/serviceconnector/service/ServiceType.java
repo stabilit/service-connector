@@ -57,7 +57,6 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 		return type;
 	}
 
-	@Override
 	public String getValue() {
 		return this.value;
 	}

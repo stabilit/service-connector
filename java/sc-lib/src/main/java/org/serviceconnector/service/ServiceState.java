@@ -51,7 +51,6 @@ public enum ServiceState implements IReversibleEnum<String, ServiceState> {
 		return state;
 	}
 
-	@Override
 	public String getValue() {
 		return this.value;
 	}

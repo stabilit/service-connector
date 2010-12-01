@@ -19,6 +19,8 @@ import java.util.Timer;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.ConfigurationConverter;
+import org.apache.commons.configuration.EnvironmentConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cache.CacheConfiguration;
@@ -166,7 +168,11 @@ public final class AppContext {
 
 	public static void initConfiguration(String configFile) throws Exception {
 		AppContext.apacheCompositeConfig = new CompositeConfiguration();
+		// system properties override every setting
+
 		try {
+			// add environment variables to configuration
+			AppContext.apacheCompositeConfig.addConfiguration(new EnvironmentConfiguration());
 			AppContext.apacheCompositeConfig.addConfiguration(new PropertiesConfiguration(configFile));
 		} catch (Exception e) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.toString());
