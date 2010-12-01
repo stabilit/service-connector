@@ -29,14 +29,14 @@ import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.sc.SetupTestCases;
 
-public class ClnAPISyncCacheSessionTestCase {
+public class ClnAPISyncLargeCacheSessionTestCase {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ClnAPISyncCacheSessionTestCase.class);
+	protected final static Logger logger = Logger.getLogger(ClnAPISyncLargeCacheSessionTestCase.class);
 
 	@Before
-	public void beforeOneTest() {
-		SetupTestCases.setupSCSessionServer10Connections();
+	public void setUp() {
+		SetupTestCases.setupSCLargeSessionServer10Connections();
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class ClnAPISyncCacheSessionTestCase {
 			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
 			System.out.println(responseMsg);
 			String cacheId = responseMsg.getCacheId();
-			Assert.assertEquals("dummy.cache.id/1", cacheId);
+			Assert.assertEquals("dummy.cache.id/5", cacheId);
 			// deletes the session
 			sessionServiceA.deleteSession();
 		} catch (Exception e) {
@@ -77,6 +77,6 @@ public class ClnAPISyncCacheSessionTestCase {
 	}
 
 	@After
-	public void afterOneTest() {
+	public void tearDown() {
 	}
 }

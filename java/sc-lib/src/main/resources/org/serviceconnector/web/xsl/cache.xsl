@@ -86,7 +86,8 @@
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
-	            <th class="sc_table">Size</th>
+	            <th class="sc_table">ID</th>
+	            <th class="sc_table">Messages</th>
 	            <th class="sc_table">Expiration</th>
 	            <th class="sc_table">Creation</th>            
 	            <th class="sc_table">Last Modified</th>            
@@ -110,11 +111,28 @@
 	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
 	        </xsl:call-template>
 	     </tr>	    
+         <xsl:if test="message">
+           <tr>
+             <xsl:call-template name="cache_message_details">
+               <xsl:with-param name="cacheName" select="key"/>
+             </xsl:call-template>
+           </tr>
+        </xsl:if>
 	  </xsl:if>	  
 	</xsl:template>	
     <xsl:template name="composite_row">
 	    <xsl:param name="class"/>
-	    <td class="{$class}"><xsl:value-of select="size"/></td>
+	    <td class="{$class}"><xsl:value-of select="key"/></td>
+	    <td class="{$class}">
+	      <xsl:choose>
+	        <xsl:when test="size &gt; 0">
+	         <a class="sc_table" href="cache?cache={$head/query/param/@cache}&amp;composite={key}"><xsl:value-of select="size"/></a>
+            </xsl:when>
+            <xsl:otherwise>	       
+	         <xsl:value-of select="size"/>
+	        </xsl:otherwise>
+          </xsl:choose>       	    
+	    </td>
 	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="expiration"/></xsl:call-template></td>
 	    <td class="{$class}"><xsl:value-of select="creation"/></td>
 	    <td class="{$class}"><xsl:value-of select="lastModified"/></td>
@@ -147,5 +165,49 @@
       </table>	
 	  <div class="sc_separator"/>
 	  <div class="sc_separator"/>
+	</xsl:template>
+	<xsl:template name="cache_message_details">
+	  <xsl:param name="cacheName"/>
+	  <td colspan="7">
+	    <div class="sc_table_details">
+	        <div class="sc_table_title">
+	           List of cache messages [<xsl:value-of select="$cacheName"/>]
+	        </div>             
+	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
+	          <tr class="sc_table_header">
+	            <th class="sc_table">ID</th>
+	            <th class="sc_table">Sequence Nr</th>
+	            <th class="sc_table">Message Type</th>
+	            <th class="sc_table">Compression</th>
+	            <th class="sc_table">Length (Bytes)</th>            
+	          </tr>          
+	          <xsl:apply-templates select="message"/>
+	        </table>
+        </div>
+	  </td>
+	</xsl:template>
+	<xsl:template match="message">
+	  <xsl:if test="position() mod 2 = 0">
+	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
+	        <xsl:call-template name="message_row">
+	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
+	        </xsl:call-template>
+	     </tr>	    
+	  </xsl:if>
+	  <xsl:if test="position() mod 2 != 0">
+	     <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
+	        <xsl:call-template name="message_row">
+	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
+	        </xsl:call-template>
+	     </tr>	    
+	  </xsl:if>
+	</xsl:template>
+	<xsl:template name="message_row">
+	  <xsl:param name="class"/>
+      <td class="{$class}"><xsl:value-of select="id"/></td>
+      <td class="{$class}"><xsl:value-of select="sequenceNr"/></td>
+      <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="messageType"/></xsl:call-template></td>
+      <td class="{$class}"><xsl:value-of select="compressed"/></td>
+      <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="bodyLength"/></xsl:call-template></td>
 	</xsl:template>
 </xsl:stylesheet>

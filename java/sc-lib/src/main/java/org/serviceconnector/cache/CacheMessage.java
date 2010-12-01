@@ -80,6 +80,15 @@ public class CacheMessage implements Serializable {
 	}
 
 	/**
+	 * Gets the message type.
+	 *
+	 * @return the message type
+	 */
+	public String getMessageType() {
+		return this.getHeader(SCMPHeaderAttributeKey.MSG_TYPE);
+	}
+	
+	/**
 	 * Sets the compressed.
 	 *
 	 * @param compressed the new compressed

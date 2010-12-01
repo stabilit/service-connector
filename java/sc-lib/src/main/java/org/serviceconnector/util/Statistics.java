@@ -43,10 +43,10 @@ public class Statistics {
 	private Timestamp startupDateTime = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 	
 	/** The cached messages. */
-	private double cachedMessages = 0;
+	private int cachedMessages = 0;
 	
 	/** The cached bytes. */
-	private double cachedBytes = 0;
+	private long cachedBytes = 0;
 	
 	/** The cached files. */
 	private int cachedFiles = 0;
@@ -69,7 +69,7 @@ public class Statistics {
 	/**
 	 * Increment total messages.
 	 */
-	public synchronized void incrementTotalMessages(double msgLength) {
+	public synchronized void incrementTotalMessages(long msgLength) {
 		totalMessages++;
 		totalBytes = totalBytes + msgLength;
 	}
@@ -77,7 +77,7 @@ public class Statistics {
 	/**
 	 * Increment cached messages.
 	 */
-	public synchronized void incrementCachedMessages(double msgLength) {
+	public synchronized void incrementCachedMessages(long msgLength) {
 		cachedMessages++;
 		cachedBytes = cachedBytes + msgLength;
 	}
@@ -86,11 +86,26 @@ public class Statistics {
 	/**
 	 * Increment cached messages.
 	 */
-	public synchronized void decrementCachedMessages(double msgLength) {
+	public synchronized void decrementCachedMessages(long msgLength) {
 		cachedMessages--;
 		cachedBytes = cachedBytes - msgLength;
 	}
+
+	/**
+	 * Increment cached messages.
+	 */
+	public synchronized void incrementCachedMessagesSize(long msgLength) {
+		cachedBytes = cachedBytes + msgLength;
+	}
+
 	
+	/**
+	 * Increment cached messages.
+	 */
+	public synchronized void decrementCachedMessagesSize(long msgLength) {
+		cachedBytes = cachedBytes + msgLength;
+	}
+
 	/**
 	 * Increment cached files.
 	 *
@@ -161,7 +176,7 @@ public class Statistics {
 	 *
 	 * @return the cached messages
 	 */
-	public double getCachedMessages() {
+	public int getCachedMessages() {
 		return cachedMessages;
 	}
 
@@ -170,7 +185,7 @@ public class Statistics {
 	 *
 	 * @return the cached bytes
 	 */
-	public double getCachedBytes() {
+	public long getCachedBytes() {
 		return cachedBytes;
 	}
 

@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.print.attribute.DateTimeSyntax;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -40,8 +39,10 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheException;
+import org.serviceconnector.cache.CacheId;
 import org.serviceconnector.cache.CacheKey;
 import org.serviceconnector.cache.CacheManager;
+import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.cache.ICacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
@@ -534,21 +535,25 @@ public class DefaultXMLLoaderFactory {
 				writer.writeCharacters(String.valueOf(cache.getDiskStoreSize()));
 				writer.writeEndElement(); // close diskStoreSize tag
 				if (cache.getCacheName().equals(cacheParam)) {
-					writeCacheDetails(writer, cache);
+					writeCacheDetails(writer, cache, request);
 				}
 				writer.writeEndElement(); // close cache tag
 			}
 		}
 
-		private void writeCacheDetails(XMLStreamWriter writer, Cache cache) throws XMLStreamException {
+		private void writeCacheDetails(XMLStreamWriter writer, Cache cache, IWebRequest request) throws XMLStreamException {
 			writer.writeStartElement("details");
 			Object[] compositeKeys = cache.getCompositeKeys();
+			if (compositeKeys == null) {
+				writer.writeEndElement();
+				return;
+			}
 			for (Object obj : compositeKeys) {
 				CacheKey cacheKey = (CacheKey) obj;
 				try {
 					CacheComposite cacheComposite = cache.getComposite(cacheKey.getCacheId());
 					if (cacheComposite != null) {
-						writeCacheComposite(writer, cacheComposite);
+						writeCacheComposite(writer, cache, cacheKey, cacheComposite, request);
 					}
 				} catch (CacheException e) {
 				}
@@ -556,8 +561,12 @@ public class DefaultXMLLoaderFactory {
 			writer.writeEndElement(); // end of details
 		}
 
-		private void writeCacheComposite(XMLStreamWriter writer, CacheComposite cacheComposite) throws XMLStreamException {
+		private void writeCacheComposite(XMLStreamWriter writer, Cache cache, CacheKey cacheKey, CacheComposite cacheComposite, IWebRequest request) throws XMLStreamException {
+			String compositeParam = request.getParameter("composite");		
 			writer.writeStartElement("composite");
+			writer.writeStartElement("key");
+			writer.writeCharacters(cacheKey.getCacheId());
+			writer.writeEndElement();
 			writer.writeStartElement("size");
 			writer.writeCharacters(String.valueOf(cacheComposite.getSize()));
 			writer.writeEndElement();  // end of size
@@ -572,7 +581,58 @@ public class DefaultXMLLoaderFactory {
 			writer.writeStartElement("lastModified");
 			writer.writeCharacters(DateTimeUtility.getTimeAsString(cacheComposite.getLastModifiedTime()));
 			writer.writeEndElement();  // end of lastModified
+			if (compositeParam != null && compositeParam.equals(cacheKey.getCacheId())) {
+				// get all messages
+				CacheId cacheId = new CacheId(cacheKey.getCacheId());
+				for (int i = 0; i < cacheComposite.getSize(); i++) {
+					cacheId.setSequenceNr(String.valueOf(i+1));
+					writer.writeStartElement("message");
+					try {
+						CacheMessage cacheMessage = cache.getMessage(cacheId.getFullCacheId());
+						writeCacheMessage(writer, cacheMessage);
+					} catch (CacheException e) {
+					}
+					writer.writeEndElement();
+					
+				}
+			}
 			writer.writeEndElement(); // end of composite
+		}
+		
+		
+		/**
+		 * Write cache message.
+		 *
+		 * @param cacheMessage the cache message
+		 * @throws XMLStreamException 
+		 */
+		private void writeCacheMessage(XMLStreamWriter writer, CacheMessage cacheMessage) throws XMLStreamException {
+			if (cacheMessage == null) {
+				return;
+			}
+			writer.writeStartElement("id");
+			writer.writeCharacters(cacheMessage.getCacheId().getFullCacheId());
+			writer.writeEndElement();
+			writer.writeStartElement("sequenceNr");
+			writer.writeCharacters(cacheMessage.getCacheId().getSequenceNr());
+			writer.writeEndElement();
+			writer.writeStartElement("messageType");
+			writer.writeCharacters(cacheMessage.getMessageType());
+			writer.writeEndElement();
+			writer.writeStartElement("compressed");
+			writer.writeCharacters(String.valueOf(cacheMessage.isCompressed()));			
+			writer.writeEndElement();
+			Object body = cacheMessage.getBody();
+			if (body != null && body instanceof byte[]) {
+				writer.writeStartElement("bodyLength");
+				writer.writeCharacters(String.valueOf(((byte[])body).length));			
+				writer.writeEndElement();			
+			}
+			if (body != null && body instanceof String) {
+				writer.writeStartElement("bodyLength");
+				writer.writeCharacters(String.valueOf(((String)body).length()));			
+				writer.writeEndElement();			
+			}
 		}
 
 		@Override

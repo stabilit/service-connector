@@ -24,6 +24,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceType;
+import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.TimeMillis;
 import org.serviceconnector.web.cmd.sc.DefaultWebCommand;
 
@@ -73,7 +74,9 @@ public class CacheManager {
 			String serviceName = service.getServiceName();
 			ServiceType serviceType = service.getType();
 			if (serviceType == ServiceType.SESSION_SERVICE) {
-				this.cacheMap.put(serviceName, new Cache(this, serviceName));
+				Cache cache = new Cache(this, serviceName);
+				Statistics.getInstance().incrementCachedFiles(1);
+				this.cacheMap.put(serviceName, cache);
 			}
 		}
 		if (this.expirationThread != null) {

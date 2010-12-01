@@ -80,7 +80,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 			this.cacheEnabled = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED);
 			logger.info("cache configuration: cache enabled is " + this.cacheEnabled);
 		} catch (Exception e) {
-			logger.error("CACHE_ENABLED = " + e.toString());
+			logger.warn("default CACHE_ENABLED = " + e.toString());
 		}
 		try {
 			String sCacheName = compositeConfiguration.getString(Constants.CACHE_NAME);
@@ -89,13 +89,13 @@ public class CacheConfiguration implements ICacheConfiguration {
 			}
 			logger.info("cache configuration: cache name = " + this.cacheName);
 		} catch (Exception e) {
-			logger.error("CACHE_NAME = " + e.toString());
+			logger.warn("default CACHE_NAME = " + e.toString());
 		}
 		try {
 			this.diskPersistent = compositeConfiguration.getBoolean(Constants.CACHE_DISK_PERSISTENT);
 			logger.info("cache configuration: cache disk persistent is " + this.diskPersistent);
 		} catch (Exception e) {
-			logger.error("CACHE_DISK_PERSISTENT = " + e.toString());
+			logger.warn("default CACHE_DISK_PERSISTENT = " + e.toString());
 		}
 		try {
 			String sDiskPath = compositeConfiguration.getString(Constants.CACHE_DISK_PATH);
@@ -104,7 +104,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 			}
 			logger.info("cache configuration: disk path = " + this.diskPath);
 		} catch (Exception e) {
-			logger.error("CACHE_DISK_PATH = " + e.toString());
+			logger.warn("default CACHE_DISK_PATH = " + e.toString());
 		}
 		try {
 			int maxElementsInMemory = compositeConfiguration.getInt(Constants.CACHE_MAX_ELEMENTS_IN_MEMORY);
@@ -113,7 +113,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 			}
 			logger.info("cache configuration: max elements in memory = " + this.maxElementsInMemory);
 		} catch (Exception e) {
-			logger.error("CACHE_MAX_ELEMENTS_IN_MEMORY = " + e.toString());
+			logger.warn("default CACHE_MAX_ELEMENTS_IN_MEMORY = " + e.toString());
 		}
 		try {
 			int maxElementsOnDisk = compositeConfiguration.getInt(Constants.CACHE_MAX_ELEMENTS_ON_DISK);
@@ -122,7 +122,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 			}
 			logger.info("cache configuration: max elements on disk = " + this.maxElementsOnDisk);
 		} catch (Exception e) {
-			logger.error("CACHE_MAX_ELEMENTS_ON_DISK = " + e.toString());
+			logger.warn("default CACHE_MAX_ELEMENTS_ON_DISK = " + e.toString());
 		}
 		try {
 			int expirationThreadTimeoutSeconds = compositeConfiguration.getInt(Constants.CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS);
@@ -131,7 +131,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 			}
 			logger.info("cache configuration: expirationThreadTimeoutSeconds = " + this.expirationThreadTimeoutSeconds);
 		} catch (Exception e) {
-			logger.error("CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS = " + e.toString());
+			logger.warn("default CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS = " + e.toString());
 		}
 	}
 

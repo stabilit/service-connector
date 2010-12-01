@@ -93,6 +93,19 @@ public class SetupTestCases {
 		}
 	}
 
+	public static void setupSCLargeSessionServer10Connections() {
+		if (setupTestCases == null) {
+			try {
+				init();
+				setupTestCases = new SetupTestCases();
+				SC.main(new String[] { Constants.CLI_CONFIG_ARG, "sc.properties" });
+				SetupTestCases.startLargeSessionServer10Connections();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public static void setupSCSessionServer10ConnectionsOverFile(String propertyFileName) {
 		if (setupTestCases == null) {
 			try {
@@ -189,6 +202,17 @@ public class SetupTestCases {
 		scSim10ConSrv.startListener();
 		scSessionSim10ConSrv = scSim10ConSrv.newSessionServer("session-1");
 		SessionServerCallback srvCallback = new SessionServerCallback();
+		scSessionSim10ConSrv.register(10, 10, srvCallback);
+	}
+	
+	private static void startLargeSessionServer10Connections() throws Exception {
+		scSim10ConSrv = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
+		// connect to SC as server
+		scSim10ConSrv.setImmediateConnect(true);
+		scSim10ConSrv.setKeepAliveIntervalInSeconds(0);
+		scSim10ConSrv.startListener();
+		scSessionSim10ConSrv = scSim10ConSrv.newSessionServer("session-1");
+		SessionServerCallback srvCallback = new SrvLargeCallback();
 		scSessionSim10ConSrv.register(10, 10, srvCallback);
 	}
 
@@ -300,6 +324,41 @@ public class SetupTestCases {
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
+		}
+	}
+
+	private static class SrvLargeCallback extends SessionServerCallback {
+		
+		public SrvLargeCallback() {
+		}
+
+		@Override
+		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
+			logger.info("Session created");
+			return request;
+		}
+
+		@Override
+		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
+			logger.info("Session deleted");
+		}
+
+		@Override
+		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
+			logger.info("Session aborted");
+		}
+
+		@Override
+		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
+			//  we return a large message
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < 10000; i++) {
+				sb.append("this is a large message\r\n");
+			}
+			Object data = sb.toString();
+			request.setCompressed(false);
+			request.setData(data);
+			return request;
 		}
 	}
 

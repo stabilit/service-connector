@@ -134,6 +134,15 @@ public class CacheComposite implements Serializable {
 	public void setCacheState(CACHE_STATE cacheState) {
 		this.cacheState = cacheState;
 	}
+	
+	/**
+	 * Gets the cache state.
+	 *
+	 * @return the cache state
+	 */
+	public CACHE_STATE getCacheState() {
+		return cacheState;
+	}
 
 	/**
 	 * Checks if is loading.

@@ -201,10 +201,12 @@
 	    <td class="sc_table_even">Cached Messages</td>	  
 	    <td class="sc_table_even"><xsl:value-of select="cachedMessages"/></td>	  
 	  </tr>
+	  <!-- 
 	  <tr class="sc_table_odd">
 	    <td class="sc_table_odd">Cached Bytes</td>	  
 	    <td class="sc_table_odd"><xsl:value-of select="cachedBytes"/></td>	  
 	  </tr>
+	   -->
 	  <tr class="sc_table_even">
 	    <td class="sc_table_even">Cached Files</td>	  
 	    <td class="sc_table_even"><xsl:value-of select="cachedFiles"/></td>	  

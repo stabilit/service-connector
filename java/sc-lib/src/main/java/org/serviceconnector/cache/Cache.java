@@ -25,6 +25,7 @@ import org.serviceconnector.cache.impl.ICacheImpl;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.DateTimeUtility;
+import org.serviceconnector.util.Statistics;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -219,6 +220,7 @@ public class Cache {
 				// insert cache composite
 				cacheComposite.setSize(0);
 				this.putRegistry(cacheKey);
+				Statistics.getInstance().incrementCachedMessages(0);
 				this.cacheImpl.put(cacheKey, cacheComposite);
 				value = this.cacheImpl.get(cacheKey);
 				if (value == null) {
@@ -277,6 +279,7 @@ public class Cache {
 		int size = cacheComposite.getSize();
 		CacheKey localCacheKey = new CacheKey(cacheId);
 		this.removeRegistry(cacheKey);
+		Statistics.getInstance().decrementCachedMessages(0);
 		boolean ret = this.cacheImpl.remove(cacheKey);
 		if (ret == false) {
 			return;
@@ -598,6 +601,7 @@ public class Cache {
 			cacheComposite.setSize(0);
 			cacheComposite.setCacheState(CACHE_STATE.LOADING);
 			this.putRegistry(cacheKey);
+			Statistics.getInstance().incrementCachedMessages(0);
 			this.cacheImpl.put(cacheKey, cacheComposite);
 			logger.info("start loading cache, cacheId = " + cacheId);
 		} catch (CacheException e) {
