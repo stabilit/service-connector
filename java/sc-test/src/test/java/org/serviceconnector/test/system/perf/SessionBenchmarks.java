@@ -103,9 +103,7 @@ public class SessionBenchmarks {
 			response = service.execute(10, request);
 		}
 		service.deleteSession(10);
-		
 		long stop = System.currentTimeMillis();
-
 		long perf = nr * 1000 / (stop - start);
 		testLogger.info(nr + "msg à 128 byte performance : " + perf + " msg/sec.");
 		assertEquals(true, perf > 600);
@@ -131,7 +129,6 @@ public class SessionBenchmarks {
 			response = service.execute(request);
 		}
 		service.deleteSession(10);
-		
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
 		testLogger.info(nr + "msg à 128 byte performance : " + perf + " msg/sec.");

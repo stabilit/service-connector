@@ -18,8 +18,6 @@ package org.serviceconnector.test.integration.cln;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.security.InvalidParameterException;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -29,57 +27,61 @@ import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
 public class AttachTest {
 
+	/** The Constant testLogger. */
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachTest.class);
 
 	private static ProcessesController ctrl;
-	private ProcessCtx scCtx;
+	private static ProcessCtx scCtx;
 	private SCClient client;
 	
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		ctrl = null;
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}
-
+	
 	@After
 	public void afterOneTest() throws Exception {
 		try {
 			client.detach();
 		} catch (Exception e) {}
-		try {
-			ctrl.stopSC(scCtx);
-		} catch (Exception e) {}
 		client = null;
-		scCtx = null;
 	}
 	
+	@AfterClass
+	public static void afterAllTests() throws Exception {
+		try {
+			ctrl.stopSC(scCtx);
+			scCtx = null;
+		} catch (Exception e) {}
+		ctrl = null;
+	}
+
 
 	/**
-	 * Initialize the client.
+	 * helper for creation of a new client.
 	 * @param host
 	 * @param port
 	 * @param connectionType
 	 */
-	private void testConstructor(String host, int port, ConnectionType connectionType) {
+	private void newSCClient(String host, int port, ConnectionType connectionType) {
 		client = new SCClient(host, port, connectionType);
-
 		assertEquals("Host ", host, client.getHost());
 		assertEquals("port ", port, client.getPort());
 		assertEquals("Keep Alive Interval ", Constants.DEFAULT_KEEP_ALIVE_INTERVAL, client.getKeepAliveIntervalInSeconds());
@@ -89,63 +91,6 @@ public class AttachTest {
 		assertNotNull("Client not created:", client);
 	}
 	
-	/**
-	 * Attach with default operationTimeout.
-	 */
-	private void testAttach() {
-		this.testAttach(0, false, null);
-	}
-
-	/**
-	 * Attach with default operationTimeout and expect the exception. 
-	 * @param expectedException 
-	 */
-	private void testAttach( String expectedException) {
-		this.testAttach(0, false, expectedException);
-	}
-
-	/**
-	 * Attach with operationTimeout and expect no exception.
-	 * @param operationTimeout in seconds
-	 */
-	private void testAttach(int operationTimeout) {
-		this.testAttach(operationTimeout, true, null);
-	}
-	
-	/**
-	 * Attach with operationTimeout and expect one exception.
-	 * 
-	 * @param operationTimeout in seconds
-	 * @param expectedException
-	 */
-	private void testAttach(int operationTimeout, String expectedException) {
-		this.testAttach(operationTimeout, true, expectedException);
-	}
-
-	/**
-	 * 
-	 * @param operationTimeout
-	 * @param useOperationTimeout
-	 * @param expectedException
-	 */
-	private void testAttach(int operationTimeout, boolean useOperationTimeout, String expectedException) {
-		try {
-			if (useOperationTimeout) {
-				client.attach(operationTimeout);
-			}
-			else {
-				client.attach();
-			}
-			assertEquals("Client Not Attached ", true, client.isAttached());
-			assertEquals("Expected exception did not arise, ", expectedException, null);
-		} catch (InvalidParameterException ex) {
-			assertEquals("InvalidParameterException: ", expectedException, "InvalidParameterException");
-		} catch (SCServiceException ex) {
-			assertEquals("SCServiceException: ", expectedException, "SCServiceException");
-		} catch (Exception ex) {
-			assertEquals("Exception: ", expectedException, "InvalidParameterException");
-		} 
-	}
 
 	/**
 	 * Description: Attach client with: <br> 
@@ -156,98 +101,100 @@ public class AttachTest {
 	 */
 	@Test
 	public void t01_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		this.testAttach();
+		this.newSCClient(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
 	}
 
 	/**
 	 * Description: Attach client with default host and tcp-port.<br>
 	 * Expectation:	Client is attached.
 	 */
-	@Test
+	@Test (expected = SCServiceException.class)
 	public void t011_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_HTTP);
-		this.testAttach("SCServiceException");
+		this.newSCClient(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_HTTP);
+		client.attach();
 	}
 
 	/**
 	 * Description: Attach client with default host and http-port.<br>
 	 * Expectation:	Client is not attached and throws Exception.
 	 */
-	@Test
+	@Test (expected = SCServiceException.class)
 	public void t02_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_TCP);
-		this.testAttach("SCServiceException");
+		this.newSCClient(TestConstants.LOCALHOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_TCP);
+		client.attach();
 	}
 
 	/**
 	 * Description: Attach client with default host and port zero.<br>
 	 * Expectation:	Client is not attached and throws SCServiceException.
 	 */
-	@Test
+	@Test (expected = SCServiceException.class)
 	public void t03_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, 0, ConnectionType.NETTY_TCP);
-		this.testAttach("SCServiceException");
+		this.newSCClient(TestConstants.LOCALHOST, 0, ConnectionType.NETTY_TCP);
+		client.attach();
 	}
 
 	/**
 	 * Description: Attach client with default host and port -1.<br>
 	 * Expectation:	Client is not attached and throws SCMPValidatorException.
 	 */
-	@Test
+	@Test (expected = SCMPValidatorException.class)
 	public void t04_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, -1, ConnectionType.NETTY_TCP);
-		this.testAttach("InvalidParameterException");
+		this.newSCClient(TestConstants.LOCALHOST, -1, ConnectionType.NETTY_TCP);
+		client.attach();
 	}
 
 	/**
 	 * Description: Attach client with default host and port is set to minimum.<br>
 	 * Expectation:	Client is not attached and throws SCServiceException.
 	 */
-	@Test
+	@Test (expected = SCServiceException.class)
 	public void t05_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_MIN, ConnectionType.NETTY_TCP);
-		this.testAttach("SCServiceException");
+		this.newSCClient(TestConstants.LOCALHOST, TestConstants.PORT_MIN, ConnectionType.NETTY_TCP);
+		client.attach();
 	}
 
 	/**
 	 * Description: Attach client with default host and port is set to minimum.<br>
 	 * Expectation:	Client is not attached and throws SCServiceException.
 	 */
-	@Test
+	@Test (expected = SCServiceException.class)
 	public void t06_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_MAX, ConnectionType.NETTY_TCP);
-		this.testAttach("SCServiceException");
+		this.newSCClient(TestConstants.LOCALHOST, TestConstants.PORT_MAX, ConnectionType.NETTY_TCP);
+		client.attach();
 	}
 	
 	/**
 	 * Description: Attach client with default host and port is set to maximum allowed.<br>
 	 * Expectation:	Client is not attached and throws SCServiceException.
 	 */
-	@Test
+	@Test (expected = SCServiceException.class)
 	public void t07_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, 0xFFFF, ConnectionType.NETTY_TCP);
-		this.testAttach("SCServiceException");
+		this.newSCClient(TestConstants.LOCALHOST, 0xFFFF, ConnectionType.NETTY_TCP);
+		client.attach();
 	}
 
 	/**
 	 * Description: Attach client with default host and the port is set to maximum + 1.<br>
 	 * Expectation:	Client is not attached and throws SCMPValidatorException.
 	 */
-	@Test
+	@Test (expected = SCMPValidatorException.class)
 	public void t08_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, 0xFFFF + 1, ConnectionType.NETTY_TCP);
-		this.testAttach("InvalidParameterException");
+		this.newSCClient(TestConstants.LOCALHOST, 0xFFFF + 1, ConnectionType.NETTY_TCP);
+		client.attach();
 	}
 
 	/**
-	 * Description: Attach client with default host and tcp-port.<br>
+	 * Description: Attach client with default host and tcp-port and timeout of 10 seconds<br>
 	 * Expectation:	Client is attached.
 	 */
 	@Test
 	public void t09_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		this.testAttach(10);
+		this.newSCClient(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach(10);
+		assertEquals("Client is attached", true, client.isAttached());
 	}
 	
 	
@@ -255,14 +202,11 @@ public class AttachTest {
 	 * Description: Attach one client two times with default host and tcp-port.<br>
 	 * Expectation:	Client is attached but second attach throws SCServiceException
 	 */
-	@Test
+	@Test (expected = SCServiceException.class)
 	public void t20_attach() throws Exception {
-		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		this.testAttach();
-		this.testAttach("SCServiceException");  // second attach throws SCServiceException	
-		assertEquals("Client is not attached", true, client.isAttached());
+		this.newSCClient(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
+		client.attach();	// second attach throws SCServiceException			
 	}
-	
-	
-	
 }
