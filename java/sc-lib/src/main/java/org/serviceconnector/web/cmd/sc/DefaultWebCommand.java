@@ -78,7 +78,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		if (url != null) {
 			logger.debug(url);
 		} else {
-			logger.info("url is null");
+			logger.warn("url is null");
 		}
 		OutputStream responseOutputStream = response.getOutputStream();
 		if (isResource(url)) {

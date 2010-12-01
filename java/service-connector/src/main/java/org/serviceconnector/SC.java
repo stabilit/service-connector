@@ -213,8 +213,8 @@ public final class SC {
 		 */
 		@Override
 		public void run() {
-			AppContext.getBasicConfiguration().deletePIDfile();
 			AppContext.getCacheManager().destroy();
+			AppContext.getBasicConfiguration().deletePIDfile();
 			logger.log(Level.OFF, "Service Connector exiting");
 			logger.log(Level.OFF, "<<<");
 			

@@ -88,7 +88,7 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
-		logger.info(th.toString());
+		logger.warn(th.toString());
 	}
 
 	private static class OutboundHandler extends SimpleChannelUpstreamHandler {

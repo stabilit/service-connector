@@ -20,17 +20,16 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 
-
 /**
  * The Class DefaultFrameDecoder.
  * 
  * @author JTraber
  */
 public class DefaultFrameDecoder implements IFrameDecoder {
-	
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DefaultFrameDecoder.class);
-	
+
 	/**
 	 * Instantiates a new default frame decoder.
 	 */
@@ -47,18 +46,18 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 		// check headerKey
 		SCMPHeadlineKey headerKey = SCMPHeadlineKey.getKeyByHeadline(buffer);
 		if (headerKey == SCMPHeadlineKey.UNDEF) {
-			throw new FrameDecoderException("invalid scmp header line");
+			throw new FrameDecoderException("invalid scmp header line:" + new String(buffer, 0, Constants.SCMP_HEADLINE_SIZE));
 		}
 		// parse frame size
 		int scmpLength = this.parseMessageSize(buffer);
 		return Constants.SCMP_HEADLINE_SIZE + scmpLength;
 	}
-	
+
 	@Override
 	public int parseMessageSize(byte[] buffer) throws FrameDecoderException {
 		return this.readInt(buffer, Constants.SCMP_MSG_SIZE_START, Constants.SCMP_MSG_SIZE_END);
 	}
-	
+
 	@Override
 	public int parseHeaderSize(byte[] buffer) throws Exception {
 		return this.readInt(buffer, Constants.SCMP_HEADER_SIZE_START, Constants.SCMP_HEADER_SIZE_END);

@@ -82,6 +82,7 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 	/** {@inheritDoc} */
 	@Override
 	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception {
+		//logger.info("send cache id = " + scmp.getCacheId());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scmp);
 		encoderDecoder.encode(baos, scmp);

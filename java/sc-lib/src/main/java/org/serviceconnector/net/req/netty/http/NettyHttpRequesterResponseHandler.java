@@ -98,7 +98,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 				return;
 			}
 		}
-		logger.info(th.toString());
+		logger.warn(th.toString());
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
 			ret = (SCMPMessage) encoderDecoder.decode(bais);
 		} catch (Exception ex) {
-			logger.info("receive" + ex.toString());
+			logger.warn("receive" + ex.toString());
 			this.scmpCallback.callback(ex);
 			return;
 		}

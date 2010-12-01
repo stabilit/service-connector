@@ -72,7 +72,7 @@ public class SCMPLargeResponse extends SCMPMessage {
 		currentPart.setMessageType(request.getMessageType());
 		currentPart.setSessionId(request.getSessionId());
 		currentPart.setCacheId(request.getCacheId());
-		logger.info("cache id = " + request.getCacheId());
+		//logger.info("cache id = " + request.getCacheId());
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.OPERATION_TIMEOUT); // tries to set operation timeout
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
 		currentPart.setHeader(messagePart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
@@ -196,7 +196,7 @@ public class SCMPLargeResponse extends SCMPMessage {
 					}
 				}
 			} catch (Exception ex) {
-				logger.info("getBody " + ex.toString());
+				logger.error("getBody " + ex.toString());
 				return null;
 			}
 			return this.outputStream.toByteArray();
@@ -213,7 +213,7 @@ public class SCMPLargeResponse extends SCMPMessage {
 				}
 				this.writer.flush();
 			} catch (Exception ex) {
-				logger.info("getBody " + ex.toString());
+				logger.error("getBody " + ex.toString());
 				return null;
 			}
 			return this.writer.toString();
@@ -243,7 +243,7 @@ public class SCMPLargeResponse extends SCMPMessage {
 					}
 				}
 			} catch (Exception ex) {
-				logger.info("getBodyAsStream " + ex.toString());
+				logger.error("getBodyAsStream " + ex.toString());
 			}
 		}
 	}

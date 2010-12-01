@@ -82,7 +82,8 @@ public class ResponderConfiguration {
 						}
 					}
 				} catch (Exception e) {
-					logger.info("unable to reveal network interfaces");
+					logger.fatal("unable to detect network interface", e);
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong interface");
 				}
 			}
 			commConfig.setInterfaces(interfaces);

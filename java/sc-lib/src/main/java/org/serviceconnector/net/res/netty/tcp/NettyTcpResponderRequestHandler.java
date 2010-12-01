@@ -199,7 +199,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
-		logger.info(th.toString());
+		logger.warn(th.toString());
 		NettyTcpResponse response = new NettyTcpResponse(e);
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
