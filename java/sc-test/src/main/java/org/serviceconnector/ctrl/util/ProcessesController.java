@@ -197,9 +197,10 @@ public class ProcessesController {
 		int timeout = 10; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileNameFull())) {
-				srvProcess.getProcess().destroy();
-				srvProcess.getProcess().waitFor();
-
+				if (srvProcess.isRunning()) {
+					srvProcess.getProcess().destroy();
+					srvProcess.getProcess().waitFor();
+				}
 				File pidFile = new File(srvProcess.getPidFileNameFull());
 				pidFile.delete();
 				FileUtility.waitNotExists(srvProcess.getPidFileNameFull(), timeout);
@@ -208,9 +209,6 @@ public class ProcessesController {
 		} catch (Exception e) {
 			testLogger.info(e.getMessage());
 			testLogger.info("Cannot stop server! Timeout exceeded.");
-		} finally {
-			srvProcess.getProcess().destroy(); // just to be sure
-			srvProcess.getProcess().waitFor(); // just to be sure
 		}
 	}
 }

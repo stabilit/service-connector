@@ -23,10 +23,13 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
+import org.serviceconnector.log.SessionLogger;
 
 public class TestSessionServer extends Thread {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(TestSessionServer.class);
+	/** The Constant sessionLogger. */
+	private final static SessionLogger sessionLogger = SessionLogger.getInstance();
 
 	private ThreadSafeCounter ctr;
 	
@@ -121,18 +124,18 @@ public class TestSessionServer extends Thread {
 
 		@Override
 		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
-			logger.info("Session created");
+			sessionLogger.logCreateSession(this.getClass().getName(), request.getSessionId());
 			return request;
 		}
 
 		@Override
 		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
-			logger.info("Session deleted");
+			sessionLogger.logDeleteSession(this.getClass().getName(), request.getSessionId());
 		}
 
 		@Override
 		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
-			logger.info("Session aborted");
+			sessionLogger.logAbortSession(this.getClass().getName(), request.getSessionId());
 		}
 
 		@Override
