@@ -113,14 +113,9 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		if (scEntry.contains(":" + TestConstants.PORT_LISTENER)) {
 			expectedScEntry = sessId + ":" + sessId + ":session-1_localhost/:" + TestConstants.PORT_LISTENER + " : 10|";
 		} else {
-			expectedScEntry = sessId + ":" + sessId + ":session-1_localhost/:" + 41000 + " : 10|";
+			expectedScEntry = sessId + ":" + sessId + ":session-1_localhost/:" + 41000 + " : 1|";
 		}
 		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
-		try {
-		} catch (Exception e) {
-			expectedScEntry = sessId + ":" + sessId + ":session-1_localhost/:" + 41000 + " : 10|";
-			SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
-		}
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());

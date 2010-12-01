@@ -70,11 +70,6 @@ public class EchoCommand extends CommandAdapter {
 	public void validate(IRequest request) throws Exception {
 		SCMPMessage message = request.getMessage();
 		try {
-			// msgSequenceNr
-			String msgSequenceNr = message.getMessageSequenceNr();
-			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
-			}
 			// serviceName
 			String serviceName = message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {

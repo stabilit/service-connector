@@ -37,24 +37,24 @@ public class SrvExecuteOTITestCase extends SuperSessionTestCase {
 
 	@Test
 	public void executeOTIRunsOutSessionCleanedUp() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req,
-				"session-1", this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1",
+				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("wait:3000");
 		TestWaitMechanismCallback callback = new TestWaitMechanismCallback(true);
 
-		clnExecuteCall.invoke(callback, 1000);
-		SCMPMessage responseMessage = callback.getMessageSync();
-		SCTest.verifyError(responseMessage, SCMPError.PROXY_TIMEOUT, "executing command timed out",
-				SCMPMsgType.CLN_EXECUTE);
+		clnExecuteCall.invoke(callback, 2000);
+		SCMPMessage responseMessage = callback.getMessageSync(2000);
+		SCTest.verifyError(responseMessage, SCMPError.PROXY_TIMEOUT, "executing command timed out", SCMPMsgType.CLN_EXECUTE);
 
-		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1",
-				this.sessionId);
+		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
-		clnExecuteCall.invoke(callback1, 1000);
-		SCMPMessage responseMessage1 = callback1.getMessageSync();
+		clnExecuteCall.invoke(callback1, 2000);
+		SCMPMessage responseMessage1 = callback1.getMessageSync(2000);
 		SCTest.checkReply(responseMessage1);
+		// Wait until first execute is over
+		Thread.sleep(3000);
 	}
 
 	protected class TestWaitMechanismCallback extends SynchronousCallback {

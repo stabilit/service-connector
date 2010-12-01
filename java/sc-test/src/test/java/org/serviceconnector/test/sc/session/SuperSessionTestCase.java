@@ -22,10 +22,9 @@ import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 import org.serviceconnector.util.SynchronousCallback;
-
-
 
 /**
  * @author JTraber
@@ -60,21 +59,23 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 
 	public void clnCreateSessionBefore() throws Exception {
 		// sets up a create session call
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(req, "session-1");
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
+				req, "session-1");
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(3600);
 		// create session and keep sessionId
 		createSessionCall.invoke(this.sessionCallback, 1000);
 		SCMPMessage resp = this.sessionCallback.getMessageSync();
+		SCTest.checkReply(resp);
 		this.sessionId = resp.getSessionId();
 	}
 
 	public void clnDeleteSessionAfter() throws Exception {
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(this.req, "session-1", this.sessionId);
-		deleteSessionCall.invoke(this.sessionCallback, 1000);
-		this.sessionCallback.getMessageSync();
+		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
+				this.req, "session-1", this.sessionId);
+		deleteSessionCall.invoke(this.sessionCallback, 2000);
+		SCMPMessage reply = this.sessionCallback.getMessageSync();
+		SCTest.checkReply(reply);
 	}
 
 	protected class TestSuperSessionCallback extends SynchronousCallback {
