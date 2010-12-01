@@ -97,7 +97,6 @@ public final class SC {
 		if (configFileName == null) {
 			throw new SCServiceException("Configuration file is missing");
 		}
-		
 		// indicates that AppContext is running in a SC environment
 		AppContext.setSCEnvironment(true);
 		
