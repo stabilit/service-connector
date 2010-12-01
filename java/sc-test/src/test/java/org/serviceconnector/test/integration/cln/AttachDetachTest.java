@@ -27,6 +27,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
@@ -39,49 +40,44 @@ public class AttachDetachTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachDetachTest.class);
 
-	private int threadCount = 0;
-
-	private SCClient client;
-
 	private static ProcessesController ctrl;
-	private static Process scProcess;
+	private ProcessCtx scCtx;
+	private SCClient client;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		} catch (Exception e) {
-			logger.error("beforeAllTests", e);
-		}
 	}
 
 	@AfterClass
 	public static void afterAllTests() throws Exception {
-		ctrl.stopSC(scProcess, TestConstants.log4jSCProperties);
 		ctrl = null;
-		scProcess = null;
 	}
 
 	@Before
-	public void beforeOneTest() {
-		// threadCount = Thread.activeCount();
-		this.client = null;
+	public void beforeOneTest() throws Exception {
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}
 
 	@After
-	public void afterOneTest() {
+	public void afterOneTest() throws Exception {
+		try {
+			client.detach();
+		} catch (Exception e) {}
+		try {
+			ctrl.stopSC(scCtx);
+		} catch (Exception e) {}
 		client = null;
-		// assertEquals("number of threads", threadCount, Thread.activeCount());
+		scCtx = null;
 	}
 
 
-	private void testAttachDetachCycle(String host, int port, int cicle, int sleep) throws Exception  {
+	private void testAttachDetachCycle(String host, int port, int cycle, int sleep) throws Exception  {
 		int i = 0;
 		try {
 			client = new SCClient(host, port, ConnectionType.NETTY_HTTP);
 			
-			for (i = 0; i < cicle; i++) {
+			for (i = 0; i < cycle; i++) {
 				client.attach();
 				assertEquals(true, client.isAttached());
 				if (sleep > 0) 
@@ -89,9 +85,10 @@ public class AttachDetachTest {
 				client.detach();
 				assertEquals(false, client.isAttached());
 				if (((i+1) % 100) == 0)
-					testLogger.info("Executing cycle nr. " + (i+1) + "...");
+					testLogger.info("Executing cycle nr. " + (i+1));
 			}
 		} catch (Exception ex){
+			testLogger.info("Error on cycle nr. " + (i+1) + "...");
 			assertFalse("Clients Count:"+i+"  Exception, error msg:"+ex.getMessage(), true);
 		}
 	}
@@ -101,13 +98,15 @@ public class AttachDetachTest {
 		int i = 0;
 		try {
 			for (; i < clientsCount; i++) {
-				if (((i+1) % 100) == 0) testLogger.info("Attaching client nr. " + (i+1) + "...");
+				if (((i+1) % 100) == 0) testLogger.info("Attaching client nr. " + (i+1) );
 				clients[i] = new SCClient(host, port, ConnectionType.NETTY_HTTP);
 				clients[i].attach();
 			}
 		} catch (InvalidParameterException ex) {
+			testLogger.info("Error on attach client nr. " + (i+1) + "...");
 			assertFalse("Attach, clientsCount:"+i+"  InvalidParameterException, error msg:"+ex.getMessage(), true);
 		} catch (Exception ex){
+			testLogger.info("Error on attach client nr. " + (i+1) + "...");
 			assertFalse("Attach, clientsCount:"+i+"  Exception, error msg:"+ex.getMessage(), true);
 		}
 		try {
@@ -118,6 +117,7 @@ public class AttachDetachTest {
 				assertEquals(false, clients[i].isAttached());
 			}
 		} catch (Exception ex){
+			testLogger.info("Error on detach client nr. " + (i+1) + "...");
 			assertFalse("Detach, clientsCount:"+i+"  Exception, error msg:"+ex.getMessage(), true);
 		}
 	}
@@ -183,7 +183,7 @@ public class AttachDetachTest {
 	 */
 	@Test
 	public void t05_attachDetach() throws Exception  {
-		this.testAttachDetachCycle(TestConstants.HOST, TestConstants.PORT_HTTP, 5000, 0);
+		this.testAttachDetachCycle(TestConstants.HOST, TestConstants.PORT_HTTP, 500, 2);
 	}
 
 	/**

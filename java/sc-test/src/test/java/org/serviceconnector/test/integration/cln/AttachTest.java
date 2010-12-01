@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
@@ -36,48 +37,38 @@ import org.serviceconnector.service.SCServiceException;
 public class AttachTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AttachConnectionTypeTcpTest.class);
-
-	private SCClient client;
+	protected final static Logger logger = Logger.getLogger(AttachTest.class);
 
 	private static ProcessesController ctrl;
-	private static Process scProcess;
-	// threadCount = Thread.activeCount();
-
+	private ProcessCtx scCtx;
+	private SCClient client;
+	
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		} catch (Exception e) {
-			logger.error("beforeAllTests", e);
-		}
 	}
 
 	@AfterClass
 	public static void afterAllTests() throws Exception {
-		ctrl.stopSC(scProcess, TestConstants.log4jSCProperties);
 		ctrl = null;
-		scProcess = null;
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		// threadCount = Thread.activeCount();
-		client = null;
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		if (client!=null) {
-			try {
-				client.detach();
-			} catch (Exception e) {	}
-			client = null;
-		}
-		// assertEquals("number of threads", threadCount, Thread.activeCount());
+		try {
+			client.detach();
+		} catch (Exception e) {}
+		try {
+			ctrl.stopSC(scCtx);
+		} catch (Exception e) {}
+		client = null;
+		scCtx = null;
 	}
-
 	
 
 	/**
@@ -176,7 +167,7 @@ public class AttachTest {
 	@Test
 	public void t011_attach() throws Exception {
 		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_HTTP);
-		this.testAttach();
+		this.testAttach("SCServiceException");
 	}
 
 	/**
@@ -186,7 +177,7 @@ public class AttachTest {
 	@Test
 	public void t02_attach() throws Exception {
 		this.testConstructor(TestConstants.LOCALHOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_TCP);
-		this.testAttach("Exception");
+		this.testAttach("SCServiceException");
 	}
 
 	/**
