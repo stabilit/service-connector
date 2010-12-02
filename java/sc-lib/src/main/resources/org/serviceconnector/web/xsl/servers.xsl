@@ -64,8 +64,8 @@
 	    <td class="{$class}"><xsl:value-of select="host"/></td>
 	    <td class="{$class}"><xsl:value-of select="portNr"/></td>
 	    <td class="{$class}"><xsl:value-of select="serverKey"/></td>
-	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" value="serviceName"/></xsl:call-template></td>
-	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" value="maxSessions"/></xsl:call-template></td>
+	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="serviceName"/></xsl:call-template></td>
+	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="maxSessions"/></xsl:call-template></td>
 	    <td class="{$class}"><xsl:value-of select="maxConnections"/></td>
 	    <td class="{$class}"><a class="sc_table" href="servers?host={host}&amp;port={portNr}"><xsl:value-of select="requester/context/connectionPool/busyConnections"/></a></td>	    
 	</xsl:template>
