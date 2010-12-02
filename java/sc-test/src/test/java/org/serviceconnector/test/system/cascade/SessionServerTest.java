@@ -26,66 +26,145 @@ import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
-import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
+import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cln.TestSessionClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.log.Loggers;
+
 
 public class SessionServerTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SessionServerTest.class);
-
-	private int threadCount = 0;
-	private SrvCallback srvCallback;
-	private SCSessionServer server;
-
-	private static Process sc0Process;
-	private static Process scProcessCascaded;
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	private static ProcessesController ctrl;
+	private static ProcessCtx scCtx;
+	private static ProcessCtx srvCtx;
+	private static ProcessCtx scCasCtx;  // Cascaded
+	private int threadCount = 0;
+
+	private SCSessionServerCallback srvCallback;
+	//private SCSessionServer server;
+
+	
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		try {
-			sc0Process = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-			sc0Process = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
+			scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+			scCasCtx = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
 		} catch (Exception e) {
-			logger.error("beforeAllTests", e);
+			testLogger.error("beforeAllTests", e);
 			throw e;
 		}
 	}
 
 	@AfterClass
 	public static void afterAllTests() throws Exception {
-		ctrl.stopProcess(sc0Process, TestConstants.log4jSCProperties);
-		ctrl.stopProcess(scProcessCascaded, TestConstants.log4jSCcascadedProperties);
+		try {
+			ctrl.stopServer(scCtx);
+		} catch (Exception e) {}
+		try {
+			ctrl.stopSC(scCasCtx);
+		} catch (Exception e) {}
+
+		scCasCtx = null;
+		scCtx = null;
 		ctrl = null;
-		sc0Process = null;
-		scProcessCascaded = null;
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		threadCount = Thread.activeCount();
-		server = new SCSessionServer();
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		srvCallback = new SrvCallback();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceNames, 10, 10,
-				srvCallback);
-
+		//server = new SCSessionServer();
+		//server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
+		//srvCallback = new SrvCallback();
+		//server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceNames, 10, 10,srvCallback);
+		
+		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 10, 10,
+				TestConstants.sessionServiceNames);
+		
+		srvCallback = new SrvCallback(srvCtx); 
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		server.deregister(TestConstants.sessionServiceNames);
-		server.destroy();
-		server = null;
+		//server.deregister(TestConstants.sessionServiceNames);
+		//server.destroy();
+		try {
+			ctrl.stopSC(srvCtx);
+		} catch (Exception e) {}
+
+		srvCtx = null;
 		srvCallback = null;
 		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
+	
+	class SrvCallback extends SCSessionServerCallback {
+		private SCSessionServer scSessionServer;
+		
+		public SrvCallback(SCSessionServer server) {
+			this.scSessionServer = server;
+		}
+
+		@Override
+		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
+			testLogger.info("Session created");
+			return request;
+		}
+
+		@Override
+		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
+			testLogger.info("Session deleted");
+		}
+
+		@Override
+		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
+			testLogger.info("Session aborted");
+		}
+
+		@Override
+		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
+			Object data = request.getData();
+
+			// watch out for kill server message
+			if (data.getClass() == String.class) {
+				String dataString = (String) data;
+				if (dataString.equals("kill server")) {
+					KillThread kill = new KillThread(this.scSessionServer);
+					kill.start();
+				} else {
+					testLogger.info("Message received: " + data);
+				}
+			}
+			return request;
+		}
+	}
+
+	protected class KillThread extends Thread {
+		private SCSessionServer server;
+		public KillThread(SCSessionServer server) {
+			this.server = server;
+		}
+
+		@Override
+		public void run() {
+			// sleep for 2 seconds before killing the server
+			try {
+				Thread.sleep(2000);
+				this.server.deregister();
+				//SCServer sc = server.getSCServer().stopListener();
+			} catch (Exception e) {
+				testLogger.error("run", e);
+			}
+		}
+	}
+	
 	@Test
 	public void createSession_whiteSpaceSessionInfo_createSessionMessageArrived() throws Exception {
 		TestSessionClient client = new TestSessionClient("createSession_whiteSpaceSessionInfo_sessionIdIsNotEmpty");
@@ -271,9 +350,9 @@ public class SessionServerTest {
 						response.setAppErrorCode(0);
 						response.setAppErrorText("\"This is the app error text\"");
 					} catch (SCMPValidatorException e) {
-						logger.error("rejecting create session", e);
+						testLogger.error("rejecting create session", e);
 					}
-					logger.info("rejecting session");
+					testLogger.info("rejecting session");
 					return response;
 				}
 			}
@@ -302,10 +381,10 @@ public class SessionServerTest {
 				if (dataString.startsWith("timeout")) {
 					int millis = Integer.parseInt(dataString.split(" ")[1]);
 					try {
-						logger.info("Sleeping " + dataString.split(" ")[1] + "ms in order to timeout.");
+						testLogger.info("Sleeping " + dataString.split(" ")[1] + "ms in order to timeout.");
 						Thread.sleep(millis);
 					} catch (InterruptedException e) {
-						logger.error("sleep in execute", e);
+						testLogger.error("sleep in execute", e);
 					}
 				}
 			}

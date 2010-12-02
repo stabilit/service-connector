@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
@@ -41,12 +40,8 @@ public class CreateSessionHttpClientToSCTest {
 
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(CreateSessionHttpClientToSCTest.class);
-
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;
-	//private static ProcessCtx sc1Process;	// cascaded
 	private static ProcessCtx srvCtx;
 	private int threadCount = 0;
 	private SCClient client;
@@ -58,9 +53,6 @@ public class CreateSessionHttpClientToSCTest {
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		// sc1Process = ctrl.startSC(TestConstants.log4jSCcascadedProperties,
-		// TestConstants.SCcascadedProperties);
-
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
 				TestConstants.sessionServiceNames);
@@ -69,15 +61,12 @@ public class CreateSessionHttpClientToSCTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		threadCount = Thread.activeCount();
-		//client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP,ConnectionType.NETTY_TCP);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		//assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.sessionServiceNames));
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		//assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.sessionServiceNames));
 		client.detach();
 		client = null;
 		ex = null;
@@ -89,16 +78,12 @@ public class CreateSessionHttpClientToSCTest {
 		try {
 			ctrl.stopServer(scCtx);
 		} catch (Exception e) {}
-//		try {
-//			ctrl.stopServer(sc1Process);
-//		} catch (Exception e) {}
 		try {
 			ctrl.stopSC(srvCtx);
 		} catch (Exception e) {}
 
 		srvCtx = null;
 		scCtx = null;
-		//sc1Process = null;
 		ctrl = null;
 	}
 
@@ -107,7 +92,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session is deleted
 	 */
 	@Test
-	public void deleteSession_1() throws Exception {
+	public void t01_deleteSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService("");
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -118,7 +103,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session is deleted
 	 */
 	@Test
-	public void deleteSession_2() throws Exception {
+	public void t02_deleteSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(" ");
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -129,7 +114,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session is deleted
 	 */
 	@Test
-	public void deleteSession_3() throws Exception {
+	public void t03_deleteSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService("a");
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -140,7 +125,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session is deleted
 	 */
 	@Test
-	public void deleteSession_4() throws Exception {
+	public void t04_deleteSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.pangram);
 		sessionService.deleteSession();
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -151,45 +136,18 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session is deleted
 	 */
 	@Test
-	public void deleteSession_5() throws Exception {
+	public void t05_deleteSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		assertEquals("Session is not deleted ", true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
-
-
-	
-	private void testCreateSession(String serviceName, String messageData, String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds) throws Exception {
-		SCSessionService sessionService = client.newSessionService(serviceName);
-		SCMessage scMessage = new SCMessage(messageData);
-		scMessage.setSessionInfo(sessionInfo);
-		sessionService.createSession( timeoutInSeconds, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-	}
-	
-	
-//	private void testCreateSessionWithException(String serviceName, String data, String sessionInfo, int echoIntervalInSeconds, int timeoutInSeconds) throws Exception {
-//		SCSessionService sessionService = client.newSessionService(serviceName);
-//		try {
-//			SCMessage scMessage = new SCMessage(data);
-//			scMessage.setSessionInfo(sessionInfo);
-//			sessionService.createSession( timeoutInSeconds, scMessage);
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-//		sessionService.deleteSession();
-//	}
-
 	
 	/**
 	 * Description: Create new session with empty session service name.<br>
 	 * Expectation:	throws service exception
 	 */
 	@Test
-	public void createSession_1() throws Exception {
+	public void t10_createSession() throws Exception {
 		
 		String serviceName = ""; 
 		String data = null; 
@@ -215,7 +173,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws service exception
 	 */
 	@Test
-	public void createSession_1_1() throws Exception {
+	public void t11_createSession() throws Exception {
 		String serviceName = ""; 
 		String data = " "; 
 		String sessionInfo = "sessionInfo"; 
@@ -239,7 +197,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws service exception
 	 */
 	@Test
-	public void createSession_1_2() throws Exception {
+	public void t12_createSession() throws Exception {
 
 		String serviceName = " "; 
 		String data = " "; 
@@ -264,7 +222,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws service exception
 	 */
 	@Test
-	public void createSession_1_3() throws Exception {
+	public void t13_createSession() throws Exception {
 
 		String serviceName = TestConstants.pangram; 
 		String data = " "; 
@@ -290,7 +248,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws service exception
 	 */
 	@Test
-	public void createSession_2() throws Exception {
+	public void t14_createSession() throws Exception {
 
 		String serviceName = " "; 
 		String data = null; 
@@ -316,7 +274,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws service exception
 	 */
 	@Test
-	public void createSession_3() throws Exception {
+	public void t15_createSession() throws Exception {
 		String serviceName = TestConstants.pangram; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
@@ -340,7 +298,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws service exception
 	 */
 	@Test
-	public void createSession_4() throws Exception {
+	public void t16_createSession() throws Exception {
 
 		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
@@ -355,7 +313,7 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
+		assertEquals("Expected SCServiceException", true, ex instanceof SCServiceException);
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
@@ -365,7 +323,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMPValidator exception
 	 */
 	@Test
-	public void createSessionInfo_1() throws Exception {
+	public void t20_createSessionInfo() throws Exception {
 		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = ""; 
@@ -391,16 +349,18 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session service isn't created.
 	 */
 	@Test
-	public void createSessionInfo_1_1() throws Exception {
-		this.testCreateSession(TestConstants.sessionServiceNames, null, " ", 300, 10);
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo(" ");
-		sessionService.createSession(300, 10, scMessage);
+	public void t21_createSessionInfo() throws Exception {
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = null;
+		String sessionInfo = " ";
+		int timeoutInSeconds = 10;
+		
+		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCMessage scMessage = new SCMessage(messageData);
+		scMessage.setSessionInfo(sessionInfo);
+		sessionService.createSession( timeoutInSeconds, scMessage);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
-		*/
 	}
 
 	/**
@@ -408,38 +368,42 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session service isn't created.
 	 */
 	@Test
-	public void createSessionInfo_1_3() throws Exception {
-		this.testCreateSession(TestConstants.sessionServiceNames, null, TestConstants.pangram, 300, 10);
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo(TestConstants.pangram);
-		sessionService.createSession(300, 10, scMessage);
+	public void t22_createSessionInfo() throws Exception {
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = null;
+		String sessionInfo = TestConstants.pangram;
+		int timeoutInSeconds = 10;
+		
+		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCMessage scMessage = new SCMessage(messageData);
+		scMessage.setSessionInfo(sessionInfo);
+		sessionService.createSession( timeoutInSeconds, scMessage);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
-		*/
 	}
 
 	/**
 	 * Description: Create new session service with valid name and new session with long (256 Bytes) session info.<br>
-	 * Expectation:	Session service isn't created.
+	 * Expectation:	Session service is created.
 	 */
 	@Test
-	public void createSessionInfo_1_4() throws Exception {
+	public void t23_createSessionInfo() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 256; i++) {
 			sb.append('a');
 		}
-				
-		this.testCreateSession(TestConstants.sessionServiceNames, null, sb.toString(), 300, 10);
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo(sb.toString());
-		sessionService.createSession(300, 10, scMessage);
+
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = null;
+		String sessionInfo = sb.toString();
+		int timeoutInSeconds = 10;
+		
+		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCMessage scMessage = new SCMessage(messageData);
+		scMessage.setSessionInfo(sessionInfo);
+		sessionService.createSession( timeoutInSeconds, scMessage);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
-		*/
 	}
 
 	/**
@@ -447,7 +411,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMPValidator exception
 	 */
 	@Test
-	public void createSessionInfo_1_5() throws Exception {
+	public void t24_createSessionInfo() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 257; i++) {
 			sb.append('a');
@@ -477,7 +441,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMPValidator exception
 	 */
 	@Test
-	public void createSessionInfo_2() throws Exception {
+	public void t25_createSessionInfo() throws Exception {
 		
 		String serviceName = TestConstants.sessionServiceNames; 
 		String data = " "; 
@@ -502,17 +466,19 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMPValidator exception
 	 */
 	@Test
-	public void createSessionInfo_2_1() throws Exception {
-		this.testCreateSession(TestConstants.sessionServiceNames, " ", " ", 300, 10);
+	public void t26_createSessionInfo() throws Exception {
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = " ";
+		String sessionInfo = " ";
+		int timeoutInSeconds = 10;
 		
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage(" ");
-		scMessage.setSessionInfo(" ");
-		sessionService.createSession(300, 10, scMessage);
+		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCMessage scMessage = new SCMessage(messageData);
+		scMessage.setSessionInfo(sessionInfo);
+		sessionService.createSession( timeoutInSeconds, scMessage);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
-		*/
+
 	}
 
 	/**
@@ -520,17 +486,19 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session service isn't created.
 	 */
 	@Test
-	public void createSessionInfo_2_2() throws Exception {
-		this.testCreateSession(TestConstants.sessionServiceNames, " ", TestConstants.pangram, 300, 10);
-
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage(" ");
-		scMessage.setSessionInfo(TestConstants.pangram);
-		sessionService.createSession(300, 10, scMessage);
+	public void t27_createSessionInfo() throws Exception {
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = " ";
+		String sessionInfo = TestConstants.pangram;
+		int timeoutInSeconds = 10;
+		
+		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCMessage scMessage = new SCMessage(messageData);
+		scMessage.setSessionInfo(sessionInfo);
+		sessionService.createSession( timeoutInSeconds, scMessage);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
-		*/
+
 	}
 
 	/**
@@ -538,55 +506,42 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session service isn't created.
 	 */
 	@Test
-	public void createSessionInfo_2_3() throws Exception {
+	public void t28_createSessionInfo() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 256; i++) {
 			sb.append('a');
 		}
-		this.testCreateSession(TestConstants.sessionServiceNames, " ", sb.toString(), 300, 10);
 
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage(" ");
-		scMessage.setSessionInfo(sb.toString());
-		sessionService.createSession(300, 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
-		*/
-	}
-	
-	/**
-	 * Test delete session service.
-	 *
-	 * @param serviceName the service name
-	 * @param messageData the message data
-	 * @param sessionInfo the session info
-	 * @throws Exception the exception
-	 */
-	private void testDeleteSessionService(String serviceName, String messageData, String sessionInfo) throws Exception {
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = " ";
+		String sessionInfo = sb.toString();
+		int timeoutInSeconds = 10;
+		
 		SCSessionService sessionService = client.newSessionService(serviceName);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		sessionService.createSession( 10, scMessage);
+		sessionService.createSession( timeoutInSeconds, scMessage);
+		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-	}
 
+	}
+	
 	/**
 	 * Description: Create new session service with SC-message and delete the session.<br>
 	 * Expectation:	Session is deleted
 	 */
 	@Test
-	public void deleteSessionService_1() throws Exception {
-		this.testDeleteSessionService(TestConstants.sessionServiceNames, null, "sessionInfo");
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 10, scMessage);
+	public void t30_deleteSessionService() throws Exception {
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = null;
+		String sessionInfo = "sessionInfo";
+		
+		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCMessage scMessage = new SCMessage(messageData);
+		scMessage.setSessionInfo(sessionInfo);
+		sessionService.createSession( 10, scMessage);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		*/
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());	
 	}
 
 	/**
@@ -594,16 +549,17 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session is deleted
 	 */
 	@Test
-	public void deleteSessionService_1_1() throws Exception {
-		this.testDeleteSessionService(TestConstants.sessionServiceNames, null, " ");
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo(" ");
-		sessionService.createSession(300, 10, scMessage);
+	public void t31_deleteSessionService() throws Exception {
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = null;
+		String sessionInfo = " ";
+		
+		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCMessage scMessage = new SCMessage(messageData);
+		scMessage.setSessionInfo(sessionInfo);
+		sessionService.createSession( 10, scMessage);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		*/
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());	
 	}
 
 	/**
@@ -611,16 +567,17 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session is deleted
 	 */
 @Test
-	public void deleteSessionService_2() throws Exception {
-		this.testDeleteSessionService(TestConstants.sessionServiceNames, " ", "sessionInfo");
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage(" ");
-		scMessage.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 10, scMessage);
+	public void t32_deleteSessionService() throws Exception {
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = " ";
+		String sessionInfo = "sessionInfo";
+		
+		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCMessage scMessage = new SCMessage(messageData);
+		scMessage.setSessionInfo(sessionInfo);
+		sessionService.createSession( 10, scMessage);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		*/
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());	
 	}
 
 	/**
@@ -628,16 +585,17 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session is deleted
 	 */
 	@Test
-	public void deleteSessionService_2_1() throws Exception {
-		this.testDeleteSessionService(TestConstants.sessionServiceNames, " ", " ");
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage(" ");
-		scMessage.setSessionInfo(" ");
-		sessionService.createSession(300, 10, scMessage);
+	public void t33_deleteSessionService() throws Exception {
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = " ";
+		String sessionInfo = " ";
+		
+		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCMessage scMessage = new SCMessage(messageData);
+		scMessage.setSessionInfo(sessionInfo);
+		sessionService.createSession( 10, scMessage);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		*/
+		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());	
 	}
 
 	/**
@@ -645,7 +603,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SC-Service exception
 	 */
 	@Test
-	public void createSession_10() throws Exception {
+	public void t400_createSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
@@ -665,7 +623,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SC-Service exception
 	 */
 	@Test
-	public void createSession_10_1() throws Exception {
+	public void t401_createSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		SCMessage scMessage0 = new SCMessage();
 		scMessage0.setSessionInfo("sessionInfo");
@@ -688,7 +646,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	two sessions are created
 	 */
 	@Test
-	public void createSession_11() throws Exception {
+	public void t402_createSession() throws Exception {
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.sessionServiceNames);
 		SCSessionService sessionService1 = client.newSessionService(TestConstants.publishServiceNames);
 
@@ -720,7 +678,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	two sessions are created
 	 */
 	@Test
-	public void createSession_11_1() throws Exception {
+	public void t403_createSession() throws Exception {
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.sessionServiceNames);
 		SCSessionService sessionService1 = client.newSessionService(TestConstants.publishServiceNames);
 
@@ -753,7 +711,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	all session service are created and deleted.
 	 */	
 	@Test
-	public void createSession_12() throws Exception {
+	public void t404_createSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		for (int i = 0; i < 1000; i++) {
 			if ((i % 100) == 0)
@@ -772,7 +730,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMP-Validator exception
 	 */	
 	@Test
-	public void echoInterval_1() throws Exception {
+	public void t50_echoInterval() throws Exception {
 		
 		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
@@ -798,7 +756,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMP-Validator exception
 	 */	
 	@Test
-	public void echoInterval_2() throws Exception {
+	public void t51_echoInterval() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", -1, 10);
 
 		String serviceName = TestConstants.sessionServiceNames; 
@@ -824,7 +782,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session service was created and delete.
 	 */	
 	@Test
-	public void echoInterval_3() throws Exception {
+	public void t52_echoInterval() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 1, 10);
 
 		String serviceName = TestConstants.sessionServiceNames; 
@@ -851,7 +809,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMP-Validator exception
 	 */	
 	@Test
-	public void echoInterval_4() throws Exception {
+	public void t53_echoInterval() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", Integer.MIN_VALUE, 10);
 
 		String serviceName = TestConstants.sessionServiceNames; 
@@ -878,7 +836,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMP-Validator exception
 	 */	
 	@Test
-	public void echoInterval_5() throws Exception {
+	public void t54_echoInterval() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", Integer.MAX_VALUE, 10);
 
 		String serviceName = TestConstants.sessionServiceNames; 
@@ -905,17 +863,19 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session service was created and delete.
 	 */	
 	@Test
-	public void echoInterval_6() throws Exception {
-		this.testCreateSession(TestConstants.sessionServiceNames, null, "sessionInfo", 3600, 10);
-
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo("sessionInfo");
-		sessionService.createSession(3600, 10, scMessage);
+	public void t55_echoInterval() throws Exception {
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = null;
+		String sessionInfo = "sessionInfo";
+		int timeoutInSeconds = 10;
+		
+		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCMessage scMessage = new SCMessage(messageData);
+		scMessage.setSessionInfo(sessionInfo);
+		sessionService.createSession( timeoutInSeconds, scMessage);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
-		*/
+
 	}
 
 	/**
@@ -923,7 +883,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMP-Validator exception
 	 */	
 	@Test
-	public void echoInterval_7() throws Exception {
+	public void t56_echoInterval() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 3601, 10);
 
 		String serviceName = TestConstants.sessionServiceNames; 
@@ -950,7 +910,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMP-Validator exception
 	 */	
 	@Test
-	public void timeout_1() throws Exception {
+	public void t60_timeout() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 3600, 0);
 
 		String serviceName = TestConstants.sessionServiceNames; 
@@ -977,7 +937,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMP-Validator exception
 	 */	
 	@Test
-	public void timeout_2() throws Exception {
+	public void t61_timeout() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 300, -1);
 		
 		String serviceName = TestConstants.sessionServiceNames; 
@@ -1004,17 +964,19 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	Session service was created and delete.
 	 */	
 	@Test
-	public void timeout_3() throws Exception {
-		this.testCreateSession(TestConstants.sessionServiceNames, null, "sessionInfo", 300, 1);
+	public void t62_timeout() throws Exception {
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = null;
+		String sessionInfo = "sessionInfo";
+		int timeoutInSeconds = 10;
 		
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 1, scMessage);
+		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCMessage scMessage = new SCMessage(messageData);
+		scMessage.setSessionInfo(sessionInfo);
+		sessionService.createSession( timeoutInSeconds, scMessage);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
-		*/
+
 	}
 
 	/**
@@ -1022,7 +984,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMP-Validator exception
 	 */	
 	@Test
-	public void timeout_4() throws Exception {
+	public void t63_timeout() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 300, Integer.MIN_VALUE);
 
 		String serviceName = TestConstants.sessionServiceNames; 
@@ -1050,7 +1012,7 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMP-Validator exception
 	 */	
 	@Test
-	public void timeout_5() throws Exception {
+	public void t64_timeout() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 300, Integer.MAX_VALUE);
 
 		String serviceName = TestConstants.sessionServiceNames; 
@@ -1075,27 +1037,29 @@ public class CreateSessionHttpClientToSCTest {
 	/**
 	 * Description: Create one session service with timeout 1 hour.<br>
 	 * Expectation:	Session service was created and delete.
-	 */		@Test
-	public void timeout_6() throws Exception {
-		this.testCreateSession(TestConstants.sessionServiceNames, null, "sessionInfo", 300, 3600);
-
-		/*
-		SCSessionService sessionService = client.newSessionService(TestConstants.serviceName);
-		SCMessage scMessage = new SCMessage();
-		scMessage.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 3600, scMessage);
+	 */		
+	@Test
+	public void t65_timeout() throws Exception {
+		String serviceName = TestConstants.sessionServiceNames;
+		String messageData = null;
+		String sessionInfo = "sessionInfo";
+		int timeoutInSeconds = 10;
+		
+		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCMessage scMessage = new SCMessage(messageData);
+		scMessage.setSessionInfo(sessionInfo);
+		sessionService.createSession( timeoutInSeconds, scMessage);
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
-		*/
 
 	}
 
 	/**
 	 * Description: Create one session service with timeout 1 hour and 1 second.<br>
-	 * Expectation:	throws SCMP-Validator exception
+	 * Expectation:	throws SCServiceException 
 	 */	
 	@Test
-	public void timeout_7() throws Exception {
+	public void t66_timeout() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 300, 3601);
 
 		String serviceName = TestConstants.sessionServiceNames; 
@@ -1118,43 +1082,40 @@ public class CreateSessionHttpClientToSCTest {
 
 	/**
 	 * Description: Create one session service with invalid parameters.<br>
-	 * Expectation:	throws SCMP-Validator exception
+	 * Expectation:	throws SCMPValidatorException
 	 */	
-	@Test
-	public void createSession_13() throws Exception {
+	@Test (expected = SCMPValidatorException.class)
+	public void t405_createSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
-		try {
-			sessionService.createSession( -1, null);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCMPValidatorException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		sessionService.createSession( -1, null);
 	}
 
 
 
-	@Test
-	public void createSession_twiceDataWhiteSpace_throwsException() throws Exception {
+	/**
+	 * Description: Create one session service with invalid parameters (WhiteSpace).<br>
+	 * Expectation:	throws Exception
+	 */	
+	@Test (expected = SCServiceException.class)
+	public void t406_createSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		SCMessage scMessage = new SCMessage(" ");
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 10, scMessage);
-		try {
-			SCMessage scMessage1 = new SCMessage();
-			scMessage1.setSessionInfo("sessionInfo");
-			sessionService.createSession( 10, scMessage1);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
+
+
+		SCMessage scMessage1 = new SCMessage();
+		scMessage1.setSessionInfo("sessionInfo");
+		sessionService.createSession( 10, scMessage1);
 	}
 
 
+	/**
+	 * Description: Create 1000 times session service with invalid parameters (WhiteSpace).<br>
+	 * Expectation:	All sessions was created and deleted
+	 */	
 	@Test
-	public void createSession_1000timesDataWhiteSpace_passes() throws Exception {
+	public void t407_createSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		for (int i = 0; i < 1000; i++) {
 			if ((i % 100) == 0)
@@ -1168,23 +1129,25 @@ public class CreateSessionHttpClientToSCTest {
 		}
 	}
 
-	@Test
-	public void createSession_emptySessionServiceNameDataOneChar_throwsException() throws Exception {
+	/**
+	 * Description: Create one session service with invalid parameters (empty ServiceName).<br>
+	 * Expectation:	throws SCServiceException
+	 */	
+	@Test (expected = SCServiceException.class)
+	public void t408_createSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService("");
-		try {
-			SCMessage scMessage = new SCMessage("a");
-			scMessage.setSessionInfo("sessionInfo");
-			sessionService.createSession( 10, scMessage);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		sessionService.deleteSession();
+
+		SCMessage scMessage = new SCMessage("a");
+		scMessage.setSessionInfo("sessionInfo");
+		sessionService.createSession( 10, scMessage);
 	}
 
+	/**
+	 * Description: Create one session service with invalid parameters (WhiteSpace).<br>
+	 * Expectation:	throws Exception
+	 */	
 	@Test
-	public void createSession_whiteSpaceSessionServiceNameDataOneChar_throwsException() throws Exception {
+	public void t409_createSession_whiteSpaceSessionServiceNameDataOneChar_throwsException() throws Exception {
 		SCSessionService sessionService = client.newSessionService(" ");
 		try {
 			SCMessage scMessage = new SCMessage("a");
@@ -1198,8 +1161,12 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Create one session service with invalid parameters (WhiteSpace).<br>
+	 * Expectation:	throws Exception
+	 */	
 	@Test
-	public void createSession_arbitrarySessionServiceNameNotInSCPropsDataOneChar_throwsException() throws Exception {
+	public void t410_createSession_arbitrarySessionServiceNameNotInSCPropsDataOneChar_throwsException() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.pangram);
 		try {
 			SCMessage scMessage = new SCMessage("a");
@@ -1213,8 +1180,12 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Create one session service with invalid parameters (WhiteSpace).<br>
+	 * Expectation:	throws Exception
+	 */	
 	@Test(expected = SCMPValidatorException.class)
-	public void createSession_emptySessionInfoDataOneChar_throwsException() throws Exception {
+	public void t411_createSession_emptySessionInfoDataOneChar_throwsException() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo("");
@@ -1223,8 +1194,12 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Create one session service with invalid parameters (WhiteSpace).<br>
+	 * Expectation:	throws Exception
+	 */	
 	@Test
-	public void createSession_whiteSpaceSessionInfoDataOneChar_sessionIdIsNotEmpty() throws Exception {
+	public void t412_createSession_whiteSpaceSessionInfoDataOneChar_sessionIdIsNotEmpty() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(" ");
@@ -1233,8 +1208,12 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Create one session service with invalid parameters (WhiteSpace).<br>
+	 * Expectation:	throws Exception
+	 */	
 	@Test
-	public void createSession_arbitrarySpaceSessionInfoDataOneChar_sessionIdIsNotEmpty() throws Exception {
+	public void t413_createSession_arbitrarySpaceSessionInfoDataOneChar_sessionIdIsNotEmpty() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(TestConstants.pangram);
@@ -1243,8 +1222,12 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Create one session service with invalid parameters (WhiteSpace).<br>
+	 * Expectation:	throws Exception
+	 */	
 	@Test
-	public void createSession_256LongSessionInfoDataOneChar_sessionIdIsNotEmpty() throws Exception {
+	public void t414_createSession_256LongSessionInfoDataOneChar_sessionIdIsNotEmpty() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 256; i++) {
 			sb.append('a');
@@ -1257,8 +1240,12 @@ public class CreateSessionHttpClientToSCTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: Create one session service with invalid parameters (WhiteSpace).<br>
+	 * Expectation:	throws Exception
+	 */	
 	@Test
-	public void createSession_257LongSessionInfoDataOneChar_throwsException() throws Exception {
+	public void t415_createSession_257LongSessionInfoDataOneChar_throwsException() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 257; i++) {
 			sb.append('a');
@@ -1275,6 +1262,10 @@ public class CreateSessionHttpClientToSCTest {
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
+	/**
+	 * Description: Create one session service with invalid parameters (WhiteSpace).<br>
+	 * Expectation:	throws Exception
+	 */	
 	@Test
 	public void deleteSession_afterValidCreateSessionDataOneChar_noSessionId() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
