@@ -16,7 +16,6 @@
 package org.serviceconnector;
 
 public class TestConstants {
-	public static final String LOCALHOST = "localhost";
 	public static final String HOST = "localhost";
 	public static final int PORT_HTTP = 7000;
 	public static final int PORT_TCP = 9000;

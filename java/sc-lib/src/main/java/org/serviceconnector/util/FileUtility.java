@@ -61,11 +61,11 @@ public class FileUtility {
 	 * @throws Exception if the file does not exist after the given time
 	 */
 	public static void waitExists(String filename, int nrSeconds) throws Exception {
-		for (int i = 0; i < nrSeconds; i++) {
+		for (int i = 0; i < (nrSeconds*10); i++) {
 			if (exists(filename)) {
 				return;
 			}
-			Thread.sleep(1000);
+			Thread.sleep(10);
 		}
 		throw new TimeoutException("File:" + filename + " does not exist after " + nrSeconds + " seconds timeout.");
 	}
@@ -78,11 +78,11 @@ public class FileUtility {
 	 * @throws Exception if the file still exists after the given time
 	 */
 	public static void waitNotExists(String filename, int nrSeconds) throws Exception {
-		for (int i = 0; i < nrSeconds; i++) {
+		for (int i = 0; i < (nrSeconds*10); i++) {
 			if (notExists(filename)) {
 				return;
 			}
-			Thread.sleep(1000);
+			Thread.sleep(10);
 		}
 		throw new TimeoutException("File:" + filename + " does still exist after " + nrSeconds + " seconds timeout.");
 	}

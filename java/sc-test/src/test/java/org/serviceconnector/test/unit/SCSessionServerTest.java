@@ -34,7 +34,7 @@ public class SCSessionServerTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		server = null;
-		server = new SCServer(TestConstants.LOCALHOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER); 
 		server.setKeepAliveIntervalInSeconds(10); // can be set before register
 		server.setImmediateConnect(true); // can be set before register
 		server.startListener();
@@ -101,7 +101,7 @@ public class SCSessionServerTest {
 			SCSessionServer sessionServer = server.newSessionServer(TestConstants.sessionServiceNames);
 			assertNotNull("Can not create a new SessionServer!", sessionServer);
 			// TODO check function getHost on SCSessionServer.java
-			assertEquals("SessionServer Host", TestConstants.LOCALHOST, sessionServer.getHost());
+			assertEquals("SessionServer Host", TestConstants.HOST, sessionServer.getHost());
 			// TODO check function getPort on SCSessionServer.java
 			assertEquals("SessionServer Port", TestConstants.PORT_TCP, sessionServer.getPort());
 		}
@@ -121,7 +121,7 @@ public class SCSessionServerTest {
 			assertNotNull("Can not create a new SessionServer!", sessionServer);
 
 			// TODO check getSCHost getHost on SCSessionServer.java
-			assertEquals("SC Host", TestConstants.LOCALHOST, sessionServer.getSCHost());
+			assertEquals("SC Host", TestConstants.HOST, sessionServer.getSCHost());
 			// TODO check getSCPort getHost on SCSessionServer.java
 			assertEquals("SC Port", TestConstants.PORT_TCP, sessionServer.getSCPort());
 		}

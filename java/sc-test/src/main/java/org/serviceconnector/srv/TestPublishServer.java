@@ -23,6 +23,7 @@ package org.serviceconnector.srv;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
@@ -68,7 +69,7 @@ public class TestPublishServer extends Thread {
 	public void run() {
 		logger.log(Level.OFF, "TestPublishServer is running ...");
 		ctr = new ThreadSafeCounter();		
-		SCServer sc = new SCServer("localhost", this.port, this.listenerPort);
+		SCServer sc = new SCServer(TestConstants.HOST, this.port, this.listenerPort);
 		try {
 			sc.setKeepAliveIntervalInSeconds(10);
 			sc.setImmediateConnect(true);

@@ -20,6 +20,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
+		// other benchmarks
+	AttachBenchmarks.class,
 		// session benchmarks
 	SessionBenchmarks.class, 
 		// publish benchmarks

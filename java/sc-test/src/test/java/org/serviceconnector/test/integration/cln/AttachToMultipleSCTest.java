@@ -157,7 +157,7 @@ public class AttachToMultipleSCTest {
 	 */
 	@Test
 	public void t01_attachDetach() throws Exception {
-		this.testAttachDetach(1, ConnectionType.NETTY_HTTP, TestConstants.LOCALHOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_MIN);
+		this.testAttachDetach(1, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_MIN);
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class AttachToMultipleSCTest {
 	 * <table>
 	 * <tr><td></td><td>Client 1</td><td>Client 2</td></tr>
 	 * <tr><td>connectionType</td><td>netty.http</td><td>netty.tcp</td></tr>
-	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
+	 * <tr><td>host</td><td>TestConstants.HOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_HTTP</td><td>TestConstants.PORT_MAX</td></tr>
 	 * </table>
 	 * </br>
@@ -173,7 +173,7 @@ public class AttachToMultipleSCTest {
 	 */
 	@Test
 	public void t02_attachDetach() throws Exception {
-		this.testAttachDetach(1, ConnectionType.NETTY_HTTP, TestConstants.LOCALHOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_MAX);
+		this.testAttachDetach(1, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_MAX);
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class AttachToMultipleSCTest {
 	 * <table>
 	 * <tr><td></td><td>Client 1</td><td>Client 2</td></tr>
 	 * <tr><td>connectionType</td><td>netty.tcp</td><td>netty.tcp</td></tr>
-	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
+	 * <tr><td>host</td><td>TestConstants.HOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_TCP</td><td>TestConstants.PORT_MAX</td></tr>
 	 * </table>
 	 * </br>
@@ -189,7 +189,7 @@ public class AttachToMultipleSCTest {
 	 */
 	@Test
 	public void t03_attachDetach() throws Exception {
-		this.testAttachDetach(1, ConnectionType.NETTY_TCP, TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP, TestConstants.HOST, TestConstants.PORT_MAX);
+		this.testAttachDetach(1, ConnectionType.NETTY_TCP, TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP, TestConstants.HOST, TestConstants.PORT_MAX);
 	}
 
 	/**
@@ -197,7 +197,7 @@ public class AttachToMultipleSCTest {
 	 * <table>
 	 * <tr><td></td><td>Client 1</td><td>Client 2</td></tr>
 	 * <tr><td>connectionType</td><td>netty.tcp</td><td>netty.tcp</td></tr>
-	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
+	 * <tr><td>host</td><td>TestConstants.HOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_TCP</td><td>TestConstants.PORT_MIN</td></tr>
 	 * </table>
 	 * </br>
@@ -205,7 +205,7 @@ public class AttachToMultipleSCTest {
 	 */
 	@Test
 	public void t04_attachDetach() throws Exception {
-		this.testAttachDetach(1, ConnectionType.NETTY_TCP, TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP, TestConstants.HOST, TestConstants.PORT_MIN);
+		this.testAttachDetach(1, ConnectionType.NETTY_TCP, TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP, TestConstants.HOST, TestConstants.PORT_MIN);
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class AttachToMultipleSCTest {
 	 * <table>
 	 * <tr><td></td><td>Client 1</td><td>Client 2</td></tr>
 	 * <tr><td>connectionType</td><td>netty.http</td><td>netty.http</td></tr>
-	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
+	 * <tr><td>host</td><td>TestConstants.HOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_HTTP</td><td>TestConstants.PORT_MIN</td></tr>
 	 * </table>
 	 * </br>
@@ -221,7 +221,7 @@ public class AttachToMultipleSCTest {
 	 */	
 	@Test
 	public void t05_attachDetach() throws Exception {
-		this.testAttachDetach(100, ConnectionType.NETTY_HTTP, TestConstants.LOCALHOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_MIN);
+		this.testAttachDetach(100, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_MIN);
 	}
 
 	/**
@@ -229,7 +229,7 @@ public class AttachToMultipleSCTest {
 	 * <table>
 	 * <tr><td></td><td>Client 1</td><td>Client 2</td></tr>
 	 * <tr><td>connectionType</td><td>netty.tcp</td><td>netty.tcp</td></tr>
-	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
+	 * <tr><td>host</td><td>TestConstants.HOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_TCP</td><td>TestConstants.PORT_MAX</td></tr>
 	 * </table>
 	 * </br>
@@ -237,7 +237,7 @@ public class AttachToMultipleSCTest {
 	 */	
 	@Test
 	public void t06_attachDetach() throws Exception {
-		this.testAttachDetach(100, ConnectionType.NETTY_TCP, TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP, TestConstants.HOST, TestConstants.PORT_MAX);
+		this.testAttachDetach(100, ConnectionType.NETTY_TCP, TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP, TestConstants.HOST, TestConstants.PORT_MAX);
 	}
 	
 	/**
@@ -245,7 +245,7 @@ public class AttachToMultipleSCTest {
 	 * <table>
 	 * <tr><td></td><td>Client 1</td><td>Client 2</td></tr>
 	 * <tr><td>connectionType</td><td>netty.tcp</td><td>netty.http</td></tr>
-	 * <tr><td>host</td><td>TestConstants.LOCALHOST</td><td>TestConstants.HOST</td></tr>
+	 * <tr><td>host</td><td>TestConstants.HOST</td><td>TestConstants.HOST</td></tr>
 	 * <tr><td>port</td><td>TestConstants.PORT_TCP</td><td>TestConstants.PORT_MIN</td></tr>
 	 * </table>
 	 * </br>
@@ -253,7 +253,7 @@ public class AttachToMultipleSCTest {
 	 */	
 	@Test
 	public void t07_attachDetach() throws Exception {
-		this.testAttachDetach(100, ConnectionType.NETTY_HTTP, TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_MIN);
+		this.testAttachDetach(100, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_HTTP, TestConstants.HOST, TestConstants.PORT_MIN);
 	}
 
 	}

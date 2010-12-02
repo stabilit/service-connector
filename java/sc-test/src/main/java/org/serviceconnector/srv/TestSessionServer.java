@@ -63,7 +63,7 @@ public class TestSessionServer extends Thread {
 	public void run() {
 		logger.log(Level.OFF, "TestSessionServer is running ...");
 		ctr = new ThreadSafeCounter();		
-		SCServer sc = new SCServer("localhost", this.port, this.listenerPort);
+		SCServer sc = new SCServer(TestConstants.HOST, this.port, this.listenerPort);
 		try {		
 			sc.setKeepAliveIntervalInSeconds(10);
 			sc.setImmediateConnect(true);

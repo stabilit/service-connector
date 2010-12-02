@@ -108,7 +108,7 @@ public class ProcessesController {
 		int timeout = 10; // seconds
 		try {
 			if (FileUtility.exists(scProcess.getPidFileNameFull())) {
-				SCMgmtClient client = new SCMgmtClient(TestConstants.LOCALHOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+				SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 				client.attach(timeout);
 				client.killSC();
 				FileUtility.waitNotExists(scProcess.getPidFileNameFull(), timeout);
