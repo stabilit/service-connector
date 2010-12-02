@@ -26,7 +26,6 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.api.cln.SCClientContext;
 import org.serviceconnector.api.cln.SCSessionService;
 
 /**
@@ -95,8 +94,7 @@ public class SCAsyncSessionServiceExample {
 
 		@Override
 		public void receive(SCMessage msg) {
-			SCClientContext clientContext = this.getService().getContext();
-			SCClient scClient = clientContext.getSCClient();
+			SCClient scClient = this.getService().getScClient();
 			System.out.println(msg);
 			SCAsyncSessionServiceExample.messageReceived = true;
 		}

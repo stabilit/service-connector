@@ -57,9 +57,9 @@ public class DemoSessionClient extends Thread {
 			msg.setSessionInfo("session-info"); // optional
 			msg.setData("certificate or what so ever"); // optional
 			SCMessage reply = service.createSession(10, msg); // alternative with operation timeout
-			reply = service.createSession(msg); // regular
+//			reply = service.createSession(msg); // regular
 			Object body = reply.getData();
-			byte[] byteBody = (byte[]) reply.getData();
+//			byte[] byteBody = (byte[]) reply.getData();
 
 			String sid = service.getSessionId();
 
