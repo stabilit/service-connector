@@ -19,29 +19,38 @@ import static org.junit.Assert.assertEquals;
 
 import java.security.InvalidParameterException;
 
+import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
-
+import org.serviceconnector.log.Loggers;
 
 /**
  * @author FJurnecka
  * 
  */
-
 public class SCMessageTest {
 
+	/** The Constant testLogger. */
+	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMessageTest.class);
+	
 	private SCMessage message;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
-	public void beforeOneTest() throws Exception {
+	public void beforeOneTest() {
 		message = new SCMessage();
 	}
-
+	
+	@After
+	public void afterOneTest(){
+		message = null;
+	}
+	
 	/**
 	 * Description:	Check empty message<br>
 	 * Expectation:	all values are empty

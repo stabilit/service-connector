@@ -99,12 +99,7 @@ public class SessionBenchmarks {
 		SCSessionService service = client.newSessionService(TestConstants.sessionServiceNames);
 		request.setCompressed(true);
 		request.setSessionInfo("sessionInfo");
-		try {
-			response = service.createSession(10, request);
-		} catch (SCServiceException e) {
-			e.printStackTrace();
-			throw e;
-		}
+		response = service.createSession(10, request);
 		int nr = 10000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {

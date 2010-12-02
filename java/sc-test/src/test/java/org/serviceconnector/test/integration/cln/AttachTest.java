@@ -223,4 +223,28 @@ public class AttachTest {
 		assertEquals("Client is attached", true, client.isAttached());
 		client.attach();	// second attach throws SCServiceException			
 	}
+
+	/**
+	 * Description: setKeepAliveIntervalInSeconds after attach.<br>
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t130_setKeepAliveIntervalInSeconds() throws Exception {
+		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
+		client.setKeepAliveIntervalInSeconds(10);	// too late => throws SCServiceException			
+	}
+	
+	/**
+	 * Description: setMaxConnections after attach<br>
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t140_setMaxConnections() throws Exception {
+		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
+		client.setMaxConnections(10);	// too late => throws SCServiceException			
+	}
 }

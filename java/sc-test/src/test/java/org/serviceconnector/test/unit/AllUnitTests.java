@@ -17,10 +17,16 @@ package org.serviceconnector.test.unit;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.sc.scmp.cache.AllCacheTests;
+import org.serviceconnector.test.cache.AllCacheTests;
+import org.serviceconnector.test.unit.cln.SCClientTest;
+import org.serviceconnector.test.unit.srv.SCServerTest;
+import org.serviceconnector.test.unit.srv.SCSessionServerTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { SCClientTest.class, SCServerTest.class, SCMessageTest.class,
-		SCSessionServerTest.class, AllCacheTests.class })
+@Suite.SuiteClasses( { 
+		SCMessageTest.class,	
+		SCClientTest.class, 
+		SCServerTest.class, 
+		SCSessionServerTest.class})
 public class AllUnitTests {
 }

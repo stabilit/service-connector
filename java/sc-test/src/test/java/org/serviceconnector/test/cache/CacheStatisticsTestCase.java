@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.test.sc.scmp.cache;
+package org.serviceconnector.test.cache;
 
 import junit.framework.Assert;
 

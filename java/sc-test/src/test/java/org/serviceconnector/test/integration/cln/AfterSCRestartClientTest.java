@@ -172,4 +172,99 @@ public class AfterSCRestartClientTest {
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		client.getWorkload(sessionServiceName);
 	}
+
+	/**
+	 * Description: attach after SC was restarted<br> 
+	 * Expectation:	will pass because this is the first time
+	 */
+	@Test
+	public void t201_attach() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
+	}
+
+	/**
+	 * Description: attach after detach and SC was restarted<br> 
+	 * Expectation:	will pass because the pool was cleaned up
+	 */
+	@Test
+	public void t202_attach() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
+		client.detach();
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
+	}
+
+	/**
+	 * Description: client remains attached after SC was restarted<br> 
+	 * Expectation:	will pass because the "attached" flag is set locally
+	 */
+	@Test
+	public void t203_attach() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		assertEquals("Client is attached", true, client.isAttached());
+	}
+
+	/**
+	 * Description: detach after SC was restarted<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t204_detach() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client.attach();
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		client.detach();
+	}
+	
+	/**
+	 * Description: enable service after SC was restarted<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t205_enableService() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client.attach();
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		client.enableService(sessionServiceName);
+	}
+
+	/**
+	 * Description: disable service after SC was restarted<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t206_disableService() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client.attach();
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		client.disableService(sessionServiceName);
+	}
+
+	/**
+	 * Description: getWorkload after SC was restarted<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t207_getWorkload() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client.attach();
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		client.getWorkload(sessionServiceName);
+	}
 }
