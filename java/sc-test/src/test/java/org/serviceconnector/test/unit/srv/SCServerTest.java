@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
@@ -53,10 +54,10 @@ public class SCServerTest {
 	 */
 	@Test
 	public void t01_construtor() {
-		server = new SCServer("localhost", 9000, 9001);
-		assertEquals("Host not equal", "localhost", server.getSCHost());
-		assertEquals("Port not equal", 9000, server.getSCPort());
-		assertEquals("Listener Port not equal", 9001, server.getListenerPort());
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
+		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
+		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_LISTENER, server.getListenerPort());
 		assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
 		assertNotNull(server);
 	}
@@ -67,10 +68,10 @@ public class SCServerTest {
 	 */
 	@Test
 	public void t02_construtor() {
-		server = new SCServer(null, 9000, 9001);
+		server = new SCServer(null, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
 		assertEquals("Host not equal", null, server.getSCHost());
-		assertEquals("Port not equal", 9000, server.getSCPort());
-		assertEquals("Listener Port not equal", 9001, server.getListenerPort());
+		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_LISTENER, server.getListenerPort());
 		assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
 		assertNotNull(server);
 	}
@@ -81,10 +82,10 @@ public class SCServerTest {
 	 */
 	@Test
 	public void t03_construtor() {
-		server = new SCServer("localhost", Integer.MIN_VALUE, 9001);
-		assertEquals("Host not equal", "localhost", server.getSCHost());
+		server = new SCServer(TestConstants.HOST, Integer.MIN_VALUE, TestConstants.PORT_LISTENER);
+		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
 		assertEquals("Port not equal", Integer.MIN_VALUE, server.getSCPort());
-		assertEquals("Listener Port not equal", 9001, server.getListenerPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_LISTENER, server.getListenerPort());
 		assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
 		assertNotNull(server);
 	}
@@ -95,9 +96,9 @@ public class SCServerTest {
 	 */
 	@Test
 	public void t04_construtor() {
-		server = new SCServer("localhost", 9000, Integer.MIN_VALUE);
-		assertEquals("Host not equal", "localhost", server.getSCHost());
-		assertEquals("Port not equal", 9000, server.getSCPort());
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, Integer.MIN_VALUE);
+		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
+		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
 		assertEquals("Listener Port not equal", Integer.MIN_VALUE, server.getListenerPort());
 		assertEquals("Default ConnectionType not set", ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, server.getConnectionType());
 		assertNotNull(server);
@@ -109,10 +110,10 @@ public class SCServerTest {
 	 */
 	@Test
 	public void t05_construtor() {
-		server = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY_TCP);
-		assertEquals("Host not equal", "localhost", server.getSCHost());
-		assertEquals("Port not equal", 9000, server.getSCPort());
-		assertEquals("Listener Port not equal", 9001, server.getListenerPort());
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP);
+		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
+		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_LISTENER, server.getListenerPort());
 		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, server.getConnectionType());
 		assertNotNull(server);
 	}
@@ -123,10 +124,10 @@ public class SCServerTest {
 	 */
 	@Test
 	public void t06_construtor() {
-		server = new SCServer("localhost", 9000, 9001, null);
-		assertEquals("Host not equal", "localhost", server.getSCHost());
-		assertEquals("Port not equal", 9000, server.getSCPort());
-		assertEquals("Listener Port not equal", 9001, server.getListenerPort());
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, null);
+		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
+		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_LISTENER, server.getListenerPort());
 		assertEquals("Connection Type not equal", null, server.getConnectionType());
 		assertNotNull(server);
 	}
@@ -137,7 +138,7 @@ public class SCServerTest {
 	 */
 	@Test
 	public void t10_KeepAliveInterval() throws Exception {
-		server = new SCServer("localhost", 9000, 9001);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
 		server.setKeepAliveIntervalSeconds(10);
 		assertEquals("KeepAliveInterval not equal", 10, server.getKeepAliveIntervalSeconds());
 		assertNotNull(server);
@@ -149,7 +150,7 @@ public class SCServerTest {
 	 */
 	@Test
 	public void t11_KeepAliveInterval() throws Exception {
-		server = new SCServer("localhost", 9000, 9001);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
 		server.setKeepAliveIntervalSeconds(-1);
 		assertEquals("KeepAliveInterval not equal", -1, server.getKeepAliveIntervalSeconds());
 		assertNotNull(server);
@@ -161,13 +162,12 @@ public class SCServerTest {
 	 */
 	@Test
 	public void t20_ImmediateConnect() {
-		server = new SCServer("localhost", 9000, 9001);
-		// TODO MRI method server.isImmediateConnect() is missing
-		//assertEquals("ImmediateConnect not equal", false, server.isImmediateConnect());
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
+		assertEquals("ImmediateConnect not equal", false, server.isImmediateConnect());
 		server.setImmediateConnect(true);
-		//assertEquals("ImmediateConnect not equal", true, server.isImmediateConnect());
+		assertEquals("ImmediateConnect not equal", true, server.isImmediateConnect());
 		server.setImmediateConnect(false);
-		//assertEquals("ImmediateConnect not equal", true, server.isImmediateConnect());
+		assertEquals("ImmediateConnect not equal", false, server.isImmediateConnect());
 		assertNotNull(server);
 	}
 
@@ -177,7 +177,7 @@ public class SCServerTest {
 	 */
 	@Test
 	public void t30_Listener() throws Exception {
-		server = new SCServer("localhost", 9000, 9001);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
 		assertNotNull(server);
 		server.startListener();
 		assertEquals("Listener is not running", true, server.isListening());
