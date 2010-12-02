@@ -39,7 +39,7 @@ public class SCPublishMessage extends SCMessage {
 	}
 
 	public void setMask(String mask) throws SCMPValidatorException {
-		ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+		ValidatorUtility.validateStringLength(1, mask.trim(), 256, SCMPError.HV_WRONG_MASK);
 		this.mask = mask;
 	}
 }

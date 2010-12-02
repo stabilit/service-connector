@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
@@ -106,7 +107,11 @@ public class SCServiceCallback extends SynchronousCallback {
 		messageReply.setData(scmpReply.getBody());
 		messageReply.setCompressed(scmpReply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		messageReply.setSessionId(scmpReply.getSessionId());
-		messageReply.setMessageInfo(scmpReply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		try {
+			messageReply.setMessageInfo(scmpReply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		} catch (SCMPValidatorException ex) {
+			logger.warn("Message info invalid when setting in scmessage");
+		}
 		// inform service request is completed
 		this.service.setRequestComplete();
 		this.messageCallback.receive(messageReply);

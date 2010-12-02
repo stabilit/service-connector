@@ -245,7 +245,7 @@ public class SCServer {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateStringLength(1, serviceName.trim(), 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCSessionServer(this, serviceName, requester);
 	}
@@ -257,7 +257,7 @@ public class SCServer {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateStringLength(1, serviceName.trim(), 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCPublishServer(this, serviceName, requester);
 	}

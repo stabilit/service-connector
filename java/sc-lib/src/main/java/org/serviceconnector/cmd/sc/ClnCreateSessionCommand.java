@@ -200,7 +200,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			// sessionInfo
 			String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO.getValue());
 			if (sessionInfo != null) {
-				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+				ValidatorUtility.validateStringLength(1, sessionInfo.trim(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 			}
 			// echoInterval
 			String echoIntervalValue = message.getHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL.getValue());

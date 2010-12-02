@@ -42,7 +42,7 @@ public class SCSubscribeMessage extends SCMessage {
 	}
 
 	public void setMask(String mask) throws SCMPValidatorException {
-		ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+		ValidatorUtility.validateStringLength(1, mask.trim(), 256, SCMPError.HV_WRONG_MASK);
 		if (mask.indexOf('%') != -1) {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "Percent sign not allowed in mask.");
 		}

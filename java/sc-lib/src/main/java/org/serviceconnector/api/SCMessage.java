@@ -42,7 +42,7 @@ public class SCMessage {
 	/** The data. */
 	private Object data;
 	/** The session id - identifies session context of communication. */
-	private String sessionId;	
+	private String sessionId;
 	/** The cache id. */
 	private String cacheId;
 
@@ -73,18 +73,17 @@ public class SCMessage {
 	 * Sets the message info.
 	 * 
 	 * @param messageInfo
-	 *            Optional information passed together with the message body that helps to identify the message content
-	 *            without investigating the body.<br>
+	 *            Optional information passed together with the message body that helps to identify the message content without
+	 *            investigating the body.<br>
 	 *            Any printable character, length > 0 and < 256 Byte<br>
 	 *            Example: SECURITY_MARKET_QUERY
+	 * @throws SCMPValidatorException
 	 */
-	public void setMessageInfo(String messageInfo) {
-		if (messageInfo != null) {
-			int messageInfoLength = messageInfo.getBytes().length;
-			if (messageInfoLength < 1 || messageInfoLength > 256) {
-				throw new InvalidParameterException("Message info not within 1 to 256 bytes.");
-			}
+	public void setMessageInfo(String messageInfo) throws SCMPValidatorException {
+		if (messageInfo == null) {
+			return;
 		}
+		ValidatorUtility.validateStringLength(1, messageInfo.trim(), 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 		this.messageInfo = messageInfo;
 	}
 
@@ -101,12 +100,14 @@ public class SCMessage {
 	 * Sets the session info.
 	 * 
 	 * @param sessionInfo
-	 *            Optional information passed together with the message body Any printable character, length > 0 and <
-	 *            256 Byte<br>
+	 *            Optional information passed together with the message body Any printable character, length > 0 and < 256 Byte<br>
 	 * @throws SCMPValidatorException
 	 */
 	public void setSessionInfo(String sessionInfo) throws SCMPValidatorException {
-		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+		if (sessionInfo == null) {
+			return;
+		}
+		ValidatorUtility.validateStringLength(1, sessionInfo.trim(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.sessionInfo = sessionInfo;
 	}
 
@@ -182,24 +183,25 @@ public class SCMessage {
 		this.sessionId = sessionId;
 	}
 
-	
 	/**
 	 * Gets the cache id.
-	 *
+	 * 
 	 * @return the cache id
 	 */
 	public String getCacheId() {
 		return cacheId;
 	}
-	
+
 	/**
 	 * Sets the cache id.
-	 *
-	 * @param cacheId the new cache id
+	 * 
+	 * @param cacheId
+	 *            the new cache id
 	 */
 	public void setCacheId(String cacheId) {
 		this.cacheId = cacheId;
 	}
+
 	/**
 	 * Checks if is fault.
 	 * 
@@ -228,6 +230,5 @@ public class SCMessage {
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
+
 }
