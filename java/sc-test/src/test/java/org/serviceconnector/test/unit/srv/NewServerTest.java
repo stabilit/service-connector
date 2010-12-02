@@ -48,7 +48,10 @@ public class NewServerTest {
 
 	@After
 	public void afterOneTest() {
-		server.stopListener();
+		try {
+			server.stopListener();
+		} catch (Exception e) {
+		}
 		server = null;
 	}
 		
