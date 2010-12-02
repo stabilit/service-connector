@@ -65,7 +65,7 @@ public class AfterSCAbortClientTest {
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t01_attach() throws Exception {
+	public void t101_attach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		ctrl.stopSC(scCtx);
 		client.attach();
@@ -75,8 +75,8 @@ public class AfterSCAbortClientTest {
 	 * Description: detach from aborted SC<br> 
 	 * Expectation:	throws SCServiceException
 	 */
-	@Test
-	public void t02_detach() throws Exception {
+	@Test (expected = SCServiceException.class)
+	public void t102_detach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		ctrl.stopSC(scCtx);
@@ -88,7 +88,7 @@ public class AfterSCAbortClientTest {
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t03_enableService() throws Exception {
+	public void t103_enableService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		ctrl.stopSC(scCtx);
@@ -100,7 +100,7 @@ public class AfterSCAbortClientTest {
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t04_disableService() throws Exception {
+	public void t104_disableService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		ctrl.stopSC(scCtx);
@@ -112,10 +112,70 @@ public class AfterSCAbortClientTest {
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t05_getWorkload() throws Exception {
+	public void t105_getWorkload() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		ctrl.stopSC(scCtx);
 		client.getWorkload(sessionServiceName);
 	}
+
+	/**
+	 * Description: attach to not running SC<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t201_attach() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		ctrl.stopSC(scCtx);
+		client.attach();
+	}
+
+	/**
+	 * Description: detach from aborted SC<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t202_detach() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client.attach();
+		ctrl.stopSC(scCtx);
+		client.detach();
+	}
+
+	/**
+	 * Description: enable service after SC was aborted<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t203_enableService() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client.attach();
+		ctrl.stopSC(scCtx);
+		client.enableService(sessionServiceName);
+	}
+
+	/**
+	 * Description: disable service after SC was aborted<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t204_disableService() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client.attach();
+		ctrl.stopSC(scCtx);
+		client.disableService(sessionServiceName);
+	}
+
+	/**
+	 * Description: getWorkload after SC was aborted<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t205_getWorkload() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client.attach();
+		ctrl.stopSC(scCtx);
+		client.getWorkload(sessionServiceName);
+	}
+
 }

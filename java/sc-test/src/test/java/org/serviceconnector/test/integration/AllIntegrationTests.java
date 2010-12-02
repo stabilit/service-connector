@@ -25,7 +25,7 @@ import org.serviceconnector.test.integration.cln.EnableDisableServiceTest;
 import org.serviceconnector.test.integration.cln.NewServiceTest;
 import org.serviceconnector.test.integration.cln.AfterSCAbortClientTest;
 import org.serviceconnector.test.integration.cln.AfterSCRestartClientTest;
-import org.serviceconnector.test.integration.srv.SCAbortServerTest;
+import org.serviceconnector.test.integration.srv.AfterSCAbortServerTest;
 import org.serviceconnector.test.integration.srv.PublishConnectionTypeHttpTest;
 import org.serviceconnector.test.integration.srv.PublishConnectionTypeTcpTest;
 import org.serviceconnector.test.integration.srv.RegisterServerConnectionTypeHttpTest;
@@ -33,26 +33,26 @@ import org.serviceconnector.test.integration.srv.RegisterServerConnectionTypeTcp
 import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeHttpTest;
 import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeTcpTest;
 import org.serviceconnector.test.integration.srv.RegisterServerToMultipleSCTest;
-import org.serviceconnector.test.integration.srv.SCRestartServerTest;
+import org.serviceconnector.test.integration.srv.AfterSCRestartServerTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { 
 	// client tests
 		AttachTest.class,
-		MultipleSCsClientTest.class,
 		AttachDetachTest.class, 
+		MultipleSCsClientTest.class,
 		EnableDisableServiceTest.class,
 		NewServiceTest.class, 
 		AfterSCAbortClientTest.class,
+		AfterSCRestartClientTest.class, 
 	// server tests
-		SCAbortServerTest.class,
+		AfterSCAbortServerTest.class,
 		RegisterServerDeregisterServerConnectionTypeHttpTest.class,
 		RegisterServerDeregisterServerConnectionTypeTcpTest.class,
 		RegisterServerToMultipleSCTest.class,
 		RegisterServerConnectionTypeHttpTest.class, 
 		RegisterServerConnectionTypeTcpTest.class,
-		AfterSCRestartClientTest.class, 
-		SCRestartServerTest.class,
+		AfterSCRestartServerTest.class,
 		PublishConnectionTypeHttpTest.class, 
 		PublishConnectionTypeTcpTest.class
 })

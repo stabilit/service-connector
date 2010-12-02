@@ -91,7 +91,7 @@ public class AttachTest {
 		assertEquals("Keep Alive Interval ", Constants.DEFAULT_KEEP_ALIVE_INTERVAL, client.getKeepAliveIntervalInSeconds());
 		assertEquals("Attached ", false, client.isAttached());
 		assertEquals("max Connections ", Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE, client.getMaxConnections());
-		assertEquals("Connection Type ", connectionType.getValue(), client.getConnectionType());
+		assertEquals("Connection Type ", connectionType, client.getConnectionType());
 		assertNotNull("Client not created:", client);
 		return client;
 	}
