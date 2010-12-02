@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
+import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cln.TestSessionClient;
@@ -41,14 +42,12 @@ public class SessionServerTest {
 
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;
-	private static ProcessCtx srvCtx;
-	private static ProcessCtx scCasCtx;  // Cascaded
+	private static ProcessCtx scCasCtx;		// Cascaded
 	private int threadCount = 0;
 
-	private SCSessionServerCallback srvCallback;
-	//private SCSessionServer server;
-
-	
+	private SCServer server;
+	private SCSessionServer sessionServer;
+	private SrvCallback srvCallback;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -70,7 +69,6 @@ public class SessionServerTest {
 		try {
 			ctrl.stopSC(scCasCtx);
 		} catch (Exception e) {}
-
 		scCasCtx = null;
 		scCtx = null;
 		ctrl = null;
@@ -79,91 +77,23 @@ public class SessionServerTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		threadCount = Thread.activeCount();
-		//server = new SCSessionServer();
-		//server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		//srvCallback = new SrvCallback();
-		//server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceNames, 10, 10,srvCallback);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
+		server.startListener();
+		srvCallback = new SrvCallback();
 		
-		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 10, 10,
-				TestConstants.sessionServiceNames);
-		
-		srvCallback = new SrvCallback(srvCtx); 
+		sessionServer = server.newSessionServer(TestConstants.sessionServerName);
+		sessionServer.register(10, 10, srvCallback);
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		//server.deregister(TestConstants.sessionServiceNames);
-		//server.destroy();
-		try {
-			ctrl.stopSC(srvCtx);
-		} catch (Exception e) {}
-
-		srvCtx = null;
+		server.stopListener();
+		sessionServer.deregister();
+		sessionServer.destroy();
 		srvCallback = null;
 		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
-	
-	class SrvCallback extends SCSessionServerCallback {
-		private SCSessionServer scSessionServer;
-		
-		public SrvCallback(SCSessionServer server) {
-			this.scSessionServer = server;
-		}
-
-		@Override
-		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
-			testLogger.info("Session created");
-			return request;
-		}
-
-		@Override
-		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
-			testLogger.info("Session deleted");
-		}
-
-		@Override
-		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
-			testLogger.info("Session aborted");
-		}
-
-		@Override
-		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
-			Object data = request.getData();
-
-			// watch out for kill server message
-			if (data.getClass() == String.class) {
-				String dataString = (String) data;
-				if (dataString.equals("kill server")) {
-					KillThread kill = new KillThread(this.scSessionServer);
-					kill.start();
-				} else {
-					testLogger.info("Message received: " + data);
-				}
-			}
-			return request;
-		}
-	}
-
-	protected class KillThread extends Thread {
-		private SCSessionServer server;
-		public KillThread(SCSessionServer server) {
-			this.server = server;
-		}
-
-		@Override
-		public void run() {
-			// sleep for 2 seconds before killing the server
-			try {
-				Thread.sleep(2000);
-				this.server.deregister();
-				//SCServer sc = server.getSCServer().stopListener();
-			} catch (Exception e) {
-				testLogger.error("run", e);
-			}
-		}
-	}
 	
 	@Test
 	public void createSession_whiteSpaceSessionInfo_createSessionMessageArrived() throws Exception {

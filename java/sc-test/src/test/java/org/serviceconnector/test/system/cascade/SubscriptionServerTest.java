@@ -25,30 +25,32 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCPublishServer;
+import org.serviceconnector.api.srv.SCPublishServerCallback;
+import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.cln.TestPublishClient;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 
 public class SubscriptionServerTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SubscriptionServerTest.class);
 
-	private int threadCount = 0;
-	private SrvCallback srvCallback;
-	private SCPublishServer server;
-
-	private static Process sc0Process;
-	private static Process scCascadedProcess;
-
 	private static ProcessesController ctrl;
+	private static ProcessCtx scCtx;
+	private static ProcessCtx scCasCtx; 	// Cascaded
+	private int threadCount = 0;
+
+	private SCServer server;
+	private SCPublishServer publishServer;
+	private SrvCallback srvCallback;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		try {
-			sc0Process = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-			scCascadedProcess = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
+			scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+			scCasCtx = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
 		} catch (Exception e) {
 			logger.error("beforeAllTests", e);
 			throw e;
@@ -57,29 +59,40 @@ public class SubscriptionServerTest {
 
 	@AfterClass
 	public static void afterAllTests() throws Exception {
-		ctrl.stopProcess(sc0Process, TestConstants.log4jSCProperties);
-		ctrl.stopProcess(scCascadedProcess, TestConstants.log4jSCcascadedProperties);
+		try {
+			ctrl.stopServer(scCtx);
+		} catch (Exception e) {}
+		try {
+			ctrl.stopSC(scCasCtx);
+		} catch (Exception e) {}
+		scCasCtx = null;
+		scCtx = null;
 		ctrl = null;
-		sc0Process = null;
-		scCascadedProcess = null;
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		threadCount = Thread.activeCount();
-		server = new SCPublishServer();
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
+//		publishServer = new SCPublishServer();
+//		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
+//		srvCallback = new SrvCallback();
+//		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.publishServiceNames, 10, 10,
+//				srvCallback);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
+		server.startListener();
 		srvCallback = new SrvCallback();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.publishServiceNames, 10, 10,
-				srvCallback);
+		
+		publishServer = server.newPublishServer(TestConstants.sessionServerName);
+		publishServer.register(10, 10, srvCallback);
 
+		
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		server.deregister(TestConstants.sessionServiceNames);
-		server.destroy();
-		server = null;
+		server.stopListener();
+		publishServer.deregister();
+		publishServer.destroy();
 		srvCallback = null;
 		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
