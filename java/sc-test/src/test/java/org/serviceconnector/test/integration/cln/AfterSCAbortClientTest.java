@@ -1,5 +1,7 @@
 package org.serviceconnector.test.integration.cln;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -45,11 +47,11 @@ public class AfterSCAbortClientTest {
 		try {
 			client.detach();
 		} catch (Exception e) {}
+		client = null;
 		try {
 			ctrl.stopSC(scCtx);
-			scCtx = null;
 		} catch (Exception e) {}
-		client = null;
+		scCtx = null;
 //		assertEquals("number of threads", threadCount, Thread.activeCount());
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
@@ -79,6 +81,7 @@ public class AfterSCAbortClientTest {
 	public void t102_detach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
 		client.detach();
 	}
@@ -91,6 +94,7 @@ public class AfterSCAbortClientTest {
 	public void t103_enableService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
 		client.enableService(sessionServiceName);
 	}
@@ -103,6 +107,7 @@ public class AfterSCAbortClientTest {
 	public void t104_disableService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
 		client.disableService(sessionServiceName);
 	}
@@ -115,6 +120,7 @@ public class AfterSCAbortClientTest {
 	public void t105_getWorkload() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
 		client.getWorkload(sessionServiceName);
 	}
@@ -138,6 +144,7 @@ public class AfterSCAbortClientTest {
 	public void t202_detach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
 		client.detach();
 	}
@@ -150,6 +157,7 @@ public class AfterSCAbortClientTest {
 	public void t203_enableService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
 		client.enableService(sessionServiceName);
 	}
@@ -162,6 +170,7 @@ public class AfterSCAbortClientTest {
 	public void t204_disableService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
 		client.disableService(sessionServiceName);
 	}
@@ -174,6 +183,7 @@ public class AfterSCAbortClientTest {
 	public void t205_getWorkload() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
 		client.getWorkload(sessionServiceName);
 	}

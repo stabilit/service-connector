@@ -25,20 +25,28 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.log.Loggers;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
 
 public class AfterSCRestartClientTest {
-	/** The Constant logger. */
-	protected final static Logger logger = Logger
-			.getLogger(AfterSCRestartClientTest.class);
 
-	private SCMgmtClient client;
-	private Process scProcess;
+	/** The Constant testLogger. */
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(AttachDetachTest.class);
 
 	private static ProcessesController ctrl;
+	private static ProcessCtx scCtx;
+	private SCMgmtClient client;
+	private int threadCount = 0;
+	private String sessionServiceName = TestConstants.sessionServiceNames;
 
+	
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
@@ -46,19 +54,22 @@ public class AfterSCRestartClientTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		} catch (Exception e) {
-			logger.error("beforeAllTests", e);
-		}
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP);
+		threadCount = Thread.activeCount();
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		ctrl.stopSC(scProcess, TestConstants.log4jSCProperties);
+		try {
+			client.detach();
+		} catch (Exception e) {}
 		client = null;
-		scProcess = null;
+		try {
+			ctrl.stopSC(scCtx);
+		} catch (Exception e) {}
+		scCtx = null;
+//		assertEquals("number of threads", threadCount, Thread.activeCount());
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass
@@ -66,85 +77,99 @@ public class AfterSCRestartClientTest {
 		ctrl = null;
 	}
 
-	@Test(expected = SCServiceException.class)
-	public void attach_againAfterSCRestart_throwsException() throws Exception {
-		client.attach();
 
-		// restart SC
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+	/**
+	 * Description: attach after SC was restarted<br> 
+	 * Expectation:	will pass because this is the first time
+	 */
+	@Test
+	public void t101_attach() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
 	}
 
-	@Test(expected = SCServiceException.class)
-	public void detach_afterSCRestart_throwsException() throws Exception {
+	/**
+	 * Description: attach after detach and SC was restarted<br> 
+	 * Expectation:	will pass because the pool was cleaned up
+	 */
+	@Test
+	public void t102_attach() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		assertEquals("Client is attached", true, client.isAttached());
+		client.detach();
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
+	}
+
+	/**
+	 * Description: client remains attached after SC was restarted<br> 
+	 * Expectation:	will pass because the "attached" flag is set locally
+	 */
+	@Test
+	public void t103_attach() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
+		assertEquals("Client is attached", true, client.isAttached());
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		assertEquals("Client is attached", true, client.isAttached());
+	}
+
+	/**
+	 * Description: detach after SC was restarted<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t104_detach() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		client.detach();
 	}
-
-	@Test(expected = SCServiceException.class)
-	public void enableService_afterSCRestart_throwsException() throws Exception {
-		client.attach();
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.enableService(TestConstants.sessionServiceNames);
-	}
-
-	@Test(expected = SCServiceException.class)
-	public void disableService_afterSCRestart_throwsException() throws Exception {
-		client.attach();
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.enableService(TestConstants.sessionServiceNames);
-	}
-
-	@Test(expected = SCServiceException.class)
-	public void workload_afterSCRestart_throwsException() throws Exception {
-		client.attach();
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.getWorkload(TestConstants.sessionServiceNames);
-	}
-
-	@Test
-	public void setMaxConnection_afterAttachAfterSCRestart_passes() throws Exception {
-		client.attach();
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.setMaxConnections(10);
-		assertEquals(10, client.getMaxConnections());
-	}
 	
-	@Test
-	public void isAttached_afterAttachAfterSCRestart_true() throws Exception {
+	/**
+	 * Description: enable service after SC was restarted<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t105_enableService() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals(true, client.isAttached());
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		assertEquals(true, client.isAttached());
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		client.enableService(sessionServiceName);
 	}
-	
-	@Test
-	public void attach_afterAttachAndSCRestartAndDetach_attached() throws Exception {
+
+	/**
+	 * Description: disable service after SC was restarted<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t106_disableService() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals(true, client.isAttached());
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		try {
-			client.detach();
-		} catch (SCServiceException e) {
-		}
-		assertEquals(false, client.isAttached());
-		client.attach();
-		assertEquals(true, client.isAttached());
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		client.disableService(sessionServiceName);
 	}
-	
-	@Test
-	public void isServiceDisabled_afterDisablingItBeforeSCRestart_enabled() throws Exception {
+
+	/**
+	 * Description: getWorkload after SC was restarted<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t107_getWorkload() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.disableService(TestConstants.sessionServiceNames);
-		assertEquals(false, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		scProcess = ctrl.restartSC(scProcess, TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		try {
-			client.detach();
-		} catch (SCServiceException e) {
-		}
-		client.attach();
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		client.getWorkload(sessionServiceName);
 	}
 }
