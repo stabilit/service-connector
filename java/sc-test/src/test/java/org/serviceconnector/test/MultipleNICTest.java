@@ -15,7 +15,6 @@ import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
@@ -40,14 +39,14 @@ public class MultipleNICTest {
 			Enumeration<InetAddress> inetAdresses = netint.getInetAddresses();
 			for (InetAddress inetAddress : Collections.list(inetAdresses)) {
 				try {
-					ConnectionPool cp = new ConnectionPool(inetAddress.getHostAddress(), 7000, ConnectionType.NETTY_HTTP.getValue());
-
-					IRequester req = new Requester(new RequesterContext(cp, null));
+					IRequester req = new Requester(new RequesterContext(inetAddress.getHostAddress(), 7000,
+							ConnectionType.NETTY_HTTP.getValue(), 0));
 					SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 
 					TestCallback callback = new TestCallback();
 					attachCall.invoke(callback, 1000);
-					SCMPMessage result = callback.getMessageSync();
+					SCMPMessage result = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+							* Constants.SEC_TO_MILLISEC_FACTOR);
 					SCTest.checkReply(result);
 					/*********************************** Verify attach response msg **********************************/
 					Assert.assertNull(result.getBody());
@@ -58,8 +57,9 @@ public class MultipleNICTest {
 
 					SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 					detachCall.invoke(callback, 1000);
-					SCTest.checkReply(callback.getMessageSync());
-					cp.destroy();
+					SCTest.checkReply(callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+							* Constants.SEC_TO_MILLISEC_FACTOR));
+					req.destroy();
 				} catch (Exception e) {
 					// connection failed
 					Assert.fail("Connection to NIC : " + inetAddress.getHostAddress() + " failed!");

@@ -32,6 +32,7 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.scmp.SCMPMessage;
 
 /**
  * @author JTraber
@@ -60,7 +61,7 @@ public class SetupTestCases {
 		AppContext.initConfiguration("sc.properties");
 		deleteLog();
 		scSimEnableSrv = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, 7001);
-		scSimEnableSrv.setKeepAliveIntervalInSeconds(0);
+		scSimEnableSrv.setKeepAliveIntervalSeconds(0);
 		// connect to SC as server
 		scSimEnableSrv.setImmediateConnect(true);
 		scSimEnableSrv.startListener();
@@ -176,10 +177,10 @@ public class SetupTestCases {
 		scSim1Sess = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, 42000);
 		// connect to SC as server
 		scSim1Sess.setImmediateConnect(true);
-		scSim1Sess.setKeepAliveIntervalInSeconds(0);
+		scSim1Sess.setKeepAliveIntervalSeconds(0);
 		scSim1Sess.startListener();
 		scSessionSim1Sess = scSim1Sess.newSessionServer("session-1");
-		SessionServerCallback srvCallback = new SessionServerCallback();
+		SessionServerCallback srvCallback = new SessionServerCallback(scSessionSim1Sess);
 		scSessionSim1Sess.register(1, 1, srvCallback);
 	}
 
@@ -187,10 +188,10 @@ public class SetupTestCases {
 		scSim1ConSrv = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, 41000);
 		// connect to SC as server
 		scSim1ConSrv.setImmediateConnect(true);
-		scSim1ConSrv.setKeepAliveIntervalInSeconds(0);
-		scSessionSim1ConSrv = scSim1ConSrv.newSessionServer("session-1");
+		scSim1ConSrv.setKeepAliveIntervalSeconds(0);
 		scSim1ConSrv.startListener();
-		SessionServerCallback srvCallback = new SessionServerCallback();
+		scSessionSim1ConSrv = scSim1ConSrv.newSessionServer("session-1");
+		SessionServerCallback srvCallback = new SessionServerCallback(scSessionSim1ConSrv);
 		scSessionSim1ConSrv.register(1, 1, srvCallback);
 	}
 
@@ -198,27 +199,27 @@ public class SetupTestCases {
 		scSim10ConSrv = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
 		// connect to SC as server
 		scSim10ConSrv.setImmediateConnect(true);
-		scSim10ConSrv.setKeepAliveIntervalInSeconds(0);
+		scSim10ConSrv.setKeepAliveIntervalSeconds(0);
 		scSim10ConSrv.startListener();
 		scSessionSim10ConSrv = scSim10ConSrv.newSessionServer("session-1");
-		SessionServerCallback srvCallback = new SessionServerCallback();
+		SessionServerCallback srvCallback = new SessionServerCallback(scSessionSim10ConSrv);
 		scSessionSim10ConSrv.register(10, 10, srvCallback);
 	}
-	
+
 	private static void startLargeSessionServer10Connections() throws Exception {
 		scSim10ConSrv = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
 		// connect to SC as server
 		scSim10ConSrv.setImmediateConnect(true);
-		scSim10ConSrv.setKeepAliveIntervalInSeconds(0);
+		scSim10ConSrv.setKeepAliveIntervalSeconds(0);
 		scSim10ConSrv.startListener();
 		scSessionSim10ConSrv = scSim10ConSrv.newSessionServer("session-1");
-		SessionServerCallback srvCallback = new SrvLargeCallback();
+		SessionServerCallback srvCallback = new SrvLargeCallback(scSessionSim10ConSrv);
 		scSessionSim10ConSrv.register(10, 10, srvCallback);
 	}
 
 	public static void registerSessionServiceEnable() throws Exception {
-		SessionServerCallback srvCallback = new SessionServerCallback();
 		scSessionSimEnableSrv = scSimEnableSrv.newSessionServer("session-1");
+		SessionServerCallback srvCallback = new SessionServerCallback(scSessionSimEnableSrv);
 		scSessionSimEnableSrv.register(10, 10, srvCallback);
 	}
 
@@ -227,6 +228,10 @@ public class SetupTestCases {
 	}
 
 	private static class SessionServerCallback extends SCSessionServerCallback {
+
+		public SessionServerCallback(SCSessionServer scSessionServer) {
+			super(scSessionServer);
+		}
 
 		private static int count = 100;
 
@@ -309,7 +314,7 @@ public class SetupTestCases {
 				}
 			}
 			if (data instanceof byte[]) {
-				if(new String((byte[])data).startsWith("reflect")) {
+				if (new String((byte[]) data).startsWith("reflect")) {
 					message.setData(data);
 					return message;
 				}
@@ -328,8 +333,9 @@ public class SetupTestCases {
 	}
 
 	private static class SrvLargeCallback extends SessionServerCallback {
-		
-		public SrvLargeCallback() {
+
+		public SrvLargeCallback(SCSessionServer scSessionServer) {
+			super(scSessionServer);
 		}
 
 		@Override
@@ -350,7 +356,7 @@ public class SetupTestCases {
 
 		@Override
 		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
-			//  we return a large message
+			// we return a large message
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < 10000; i++) {
 				sb.append("this is a large message\r\n");
@@ -365,11 +371,11 @@ public class SetupTestCases {
 	public static void startPublishServer() throws Exception {
 		String serviceName = "publish-1";
 		SCServer scPubServer = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, 51000);
+		scPubServer.setImmediateConnect(true);
+		scPubServer.startListener();
 		SCPublishServer publishSrv = scPubServer.newPublishServer(serviceName);
 		// connect to SC as server
-		publishSrv.setImmediateConnect(true);
-		scPubServer.startListener();
-		PublishServerCallback publishCallback = new PublishServerCallback();
+		PublishServerCallback publishCallback = new PublishServerCallback(publishSrv);
 		publishSrv.register(1, 1, publishCallback);
 		Runnable run = new PublishRun(publishSrv, serviceName);
 		Thread thread = new Thread(run);
@@ -377,6 +383,10 @@ public class SetupTestCases {
 	}
 
 	private static class PublishServerCallback extends SCPublishServerCallback {
+
+		public PublishServerCallback(SCPublishServer scPublishServer) {
+			super(scPublishServer);
+		}
 
 		@Override
 		public SCMessage changeSubscription(SCMessage message, int operationTimeoutInMillis) {

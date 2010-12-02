@@ -51,7 +51,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		subscribeCall.setMask("000012100012832102FADF-----------------------");
 		TestChangeSubscriptionCallback callback = new TestChangeSubscriptionCallback(true);
 		subscribeCall.invoke(callback, 3000);
-		SCMPMessage reply = callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync(3000);
 		SCTest.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
@@ -62,7 +62,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 					.newInstance(this.req, "publish-1", sessionId);
 			callback = new TestChangeSubscriptionCallback(true);
 			receivePublicationCall.invoke(callback, 3000);
-			reply = callback.getMessageSync();
+			reply = callback.getMessageSync(3000);
 			Assert.assertTrue(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 		}
 
@@ -71,14 +71,14 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		changeSubscriptionCall.setMask("000012100012832102FADF-----------X-----------");
 		callback = new TestChangeSubscriptionCallback(true);
 		changeSubscriptionCall.invoke(callback, 3000);
-		SCTest.checkReply(callback.getMessageSync());
+		SCTest.checkReply(callback.getMessageSync(3000));
 
 		// receive publication first message
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.req, "publish-1", sessionId);
 		callback = new TestChangeSubscriptionCallback(true);
 		receivePublicationCall.invoke(callback, 3000);
-		reply = callback.getMessageSync();
+		reply = callback.getMessageSync(3000);
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
 		for (int i = 1; i < 3; i++) {
@@ -87,14 +87,14 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 					this.req, "publish-1", sessionId);
 			callback = new TestChangeSubscriptionCallback(true);
 			receivePublicationCall.invoke(callback, 3000);
-			reply = callback.getMessageSync();
+			reply = callback.getMessageSync(3000);
 			Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 		}
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 				.newInstance(req, "publish-1", sessionId);
 		callback = new TestChangeSubscriptionCallback(true);
 		unSubscribeCall.invoke(callback, 3000);
-		reply = callback.getMessageSync();
+		reply = callback.getMessageSync(3000);
 		SCTest.checkReply(reply);
 	}
 
@@ -108,7 +108,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		subscribeCall.setMask("000012100012832102FADF-----------X-----------");
 		TestChangeSubscriptionCallback callback = new TestChangeSubscriptionCallback(true);
 		subscribeCall.invoke(callback, 3000);
-		SCMPMessage reply = callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync(3000);
 		SCTest.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
@@ -125,8 +125,8 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		TestChangeSubscriptionCallback callback1 = new TestChangeSubscriptionCallback(true);
 		changeSubscriptionCall.invoke(callback1, 1000);
 
-		reply = callback.getMessageSync();
-		SCMPMessage reply1 = callback1.getMessageSync();
+		reply = callback.getMessageSync(3000);
+		SCMPMessage reply1 = callback1.getMessageSync(3000);
 		SCTest.checkReply(reply);
 		Assert.assertFalse(reply.isFault());
 		Assert.assertTrue(reply1.isFault());
@@ -137,7 +137,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 				.newInstance(req, "publish-1", sessionId);
 		callback = new TestChangeSubscriptionCallback(true);
 		unSubscribeCall.invoke(callback, 3000);
-		reply = callback.getMessageSync();
+		reply = callback.getMessageSync(3000);
 		SCTest.checkReply(reply);
 	}
 

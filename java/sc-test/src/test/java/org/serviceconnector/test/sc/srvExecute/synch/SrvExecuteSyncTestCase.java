@@ -56,7 +56,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 			clnExecuteCall.setMessagInfo("message info");
 			clnExecuteCall.setRequestBody("get Data (query)");
 			clnExecuteCall.invoke(this.sessionCallback, 1000);
-			SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
+			SCMPMessage scmpReply = this.sessionCallback.getMessageSync(60000);
 
 			Assert.assertEquals("message data test case", scmpReply.getBody());
 			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
@@ -90,8 +90,8 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		clnExecuteCall.invoke(callback1, 1000);
 
-		SCMPMessage responseMessage = callback.getMessageSync();
-		SCMPMessage responseMessage1 = callback1.getMessageSync();
+		SCMPMessage responseMessage = callback.getMessageSync(60000);
+		SCMPMessage responseMessage1 = callback1.getMessageSync(60000);
 
 		SCTest.checkReply(responseMessage);
 		Assert.assertFalse(responseMessage.isFault());
@@ -120,8 +120,8 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		clnExecuteCall.invoke(callback1, 10000);
 
-		SCMPMessage responseMessage = callback.getMessageSync();
-		SCMPMessage responseMessage1 = callback1.getMessageSync();
+		SCMPMessage responseMessage = callback.getMessageSync(60000);
+		SCMPMessage responseMessage1 = callback1.getMessageSync(60000);
 
 		SCTest.checkReply(responseMessage);
 		SCTest.checkReply(responseMessage1);
@@ -135,7 +135,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("excOnServer");
 		clnExecuteCall.invoke(this.sessionCallback, 1000);
-		SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
+		SCMPMessage scmpReply = this.sessionCallback.getMessageSync(60000);
 		System.out.println(scmpReply.getBody());
 		Assert.assertTrue(scmpReply.isFault());
 		Assert.assertEquals(SCMPError.SERVER_ERROR.getErrorCode(), scmpReply
@@ -151,7 +151,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 		createSessionCall.setEchoIntervalSeconds(3600);
 		// create session and keep sessionId
 		createSessionCall.invoke(this.sessionCallback, 1000);
-		SCMPMessage resp = this.sessionCallback.getMessageSync();
+		SCMPMessage resp = this.sessionCallback.getMessageSync(60000);
 		this.sessionId = resp.getSessionId();
 	}
 
@@ -159,7 +159,7 @@ public class SrvExecuteSyncTestCase extends SuperSessionTestCase {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(this.req, "session-1", this.sessionId);
 		deleteSessionCall.invoke(this.sessionCallback, 1000);
-		this.sessionCallback.getMessageSync();
+		this.sessionCallback.getMessageSync(60000);
 	}
 
 	protected class TestWaitMechanismCallback extends SynchronousCallback {

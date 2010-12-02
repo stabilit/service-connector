@@ -41,7 +41,7 @@ public class TestPublishServer extends Thread {
 	private int maxSessions;
 	private int maxConnections;
 	private String serviceNames;
-	
+
 	private ThreadSafeCounter ctr;
 	private static boolean killPublishServer = false;
 
@@ -49,11 +49,11 @@ public class TestPublishServer extends Thread {
 	 * Main method if you like to start in debug mode.
 	 * 
 	 * @param args
-	 *  [0] listenerPort<br>	
-	 *  [1] SC port<br>			
-	 *  [2] maxSessions<br>			
-	 *  [3] maxConnections<br>			
-	 *  [4] serviceNames (comma delimited list)<br>		
+	 *            [0] listenerPort<br>
+	 *            [1] SC port<br>
+	 *            [2] maxSessions<br>
+	 *            [3] maxConnections<br>
+	 *            [4] serviceNames (comma delimited list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
 		TestPublishServer server = new TestPublishServer();
@@ -61,23 +61,23 @@ public class TestPublishServer extends Thread {
 		server.setPort(Integer.parseInt(args[1]));
 		server.setMaxSessions(Integer.parseInt(args[2]));
 		server.setMaxConnections(Integer.parseInt(args[3]));
-		server.setServiceNames(args[4]);	
+		server.setServiceNames(args[4]);
 		server.run();
 	}
-	
+
 	@Override
 	public void run() {
 		logger.log(Level.OFF, "TestPublishServer is running ...");
-		ctr = new ThreadSafeCounter();		
+		ctr = new ThreadSafeCounter();
 		SCServer sc = new SCServer(TestConstants.HOST, this.port, this.listenerPort);
 		try {
-			sc.setKeepAliveIntervalInSeconds(10);
+			sc.setKeepAliveIntervalSeconds(10);
 			sc.setImmediateConnect(true);
 			sc.startListener();
-			String serviceName = this.serviceNames;	//TODO TRN handle multiple services
-//			for (int i = 0; i < serviceNames.length; i++) {
-//			}
-			
+			String serviceName = this.serviceNames; // TODO TRN handle multiple services
+			// for (int i = 0; i < serviceNames.length; i++) {
+			// }
+
 			SCPublishServer server = sc.newPublishServer(serviceName); // no other params possible
 			SCPublishServerCallback cbk = new SrvCallback(server);
 			try {
@@ -107,7 +107,7 @@ public class TestPublishServer extends Thread {
 			// sc.stopListener();
 		}
 	}
-	
+
 	public void setListenerPort(int listenerPort) {
 		this.listenerPort = listenerPort;
 	}
@@ -128,23 +128,21 @@ public class TestPublishServer extends Thread {
 		this.serviceNames = serviceNames;
 	}
 
-
 	private class SrvCallback extends SCPublishServerCallback {
-	
+
 		/** The Constant logger. */
 		protected final Logger logger = Logger.getLogger(SrvCallback.class);
-		private SCPublishServer server;
-	
+
 		public SrvCallback(SCPublishServer publishSrv) {
-			this.server = publishSrv;
+			super(publishSrv);
 		}
-	
+
 		@Override
 		public SCMessage changeSubscription(SCMessage message, int operationTimeoutInMillis) {
 			logger.info("PublishServer.SrvCallback.changeSubscription()");
 			return message;
 		}
-	
+
 		@Override
 		public SCMessage subscribe(SCMessage message, int operationTimeoutInMillis) {
 			logger.info("PublishServer.SrvCallback.subscribe()");
@@ -155,7 +153,7 @@ public class TestPublishServer extends Thread {
 			}
 			return message;
 		}
-	
+
 		@Override
 		public void unsubscribe(SCMessage message, int operationTimeoutInMillis) {
 			logger.info("PublishServer.SrvCallback.unsubscribe()");
@@ -165,8 +163,8 @@ public class TestPublishServer extends Thread {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {
-						this.server.deregister();
-						//SCServer sc = server.getSCServer().stopListener();
+						this.scPublishServer.deregister();
+						// SCServer sc = server.getSCServer().stopListener();
 					} catch (Exception ex) {
 						logger.error("unsubscribe", ex);
 					}
@@ -176,59 +174,59 @@ public class TestPublishServer extends Thread {
 	}
 }
 
-//try {
-//// start publishing
-//for (int i = 0; i < serviceNames.length; i++) {
-//	Runnable run = new PublishRun(publishSrv, serviceNames[i]);
-//	Thread thread = new Thread(run);
-//	thread.start();
-//}
-//} catch (Exception ex) {
-//logger.error("runPublishServer", ex);
-//this.shutdown();
-//}
+// try {
+// // start publishing
+// for (int i = 0; i < serviceNames.length; i++) {
+// Runnable run = new PublishRun(publishSrv, serviceNames[i]);
+// Thread thread = new Thread(run);
+// thread.start();
+// }
+// } catch (Exception ex) {
+// logger.error("runPublishServer", ex);
+// this.shutdown();
+// }
 
-//private static class PublishRun implements Runnable {
-//SCPublishServer server;
-//String serviceName;
+// private static class PublishRun implements Runnable {
+// SCPublishServer server;
+// String serviceName;
 //
-//public PublishRun(SCPublishServer server, String serviceName) {
-//this.server = server;
-//this.serviceName = serviceName;
-//}
+// public PublishRun(SCPublishServer server, String serviceName) {
+// this.server = server;
+// this.serviceName = serviceName;
+// }
 //
-//@Override
-//public void run() {
-//int index = 0;
-//while (!TestPublishServer.killPublishServer) {
-//	try {
-//		if (index % 3 == 0) {
-//			Thread.sleep(1000);
-//		} else {
-//			Thread.sleep(2000);
-//		}
-//		Object data = "publish message nr " + ++index;
-//		SCPublishMessage publishMessage = new SCPublishMessage();
-//		publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-//		publishMessage.setData(data);
-//		server.publish(serviceName, publishMessage);
-//		logger.info("message nr " + index + " sent.");
-//	} catch (Exception ex) {
-//		logger.error("run", ex);
-//		return;
-//	}
-//}
-//}
-//}
+// @Override
+// public void run() {
+// int index = 0;
+// while (!TestPublishServer.killPublishServer) {
+// try {
+// if (index % 3 == 0) {
+// Thread.sleep(1000);
+// } else {
+// Thread.sleep(2000);
+// }
+// Object data = "publish message nr " + ++index;
+// SCPublishMessage publishMessage = new SCPublishMessage();
+// publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
+// publishMessage.setData(data);
+// server.publish(serviceName, publishMessage);
+// logger.info("message nr " + index + " sent.");
+// } catch (Exception ex) {
+// logger.error("run", ex);
+// return;
+// }
+// }
+// }
+// }
 //
-//private void shutdown() {
-//TestPublishServer.killPublishServer = true;
-//try {
-//for (int i = 0; i < serviceNames.length; i++) {
-//	this.publishSrv.deregisterServer(serviceNames[i]);
-//}
-//} catch (Exception ex) {
-//logger.error("shutdown", ex);
-//this.publishSrv = null;
-//}
-//}
+// private void shutdown() {
+// TestPublishServer.killPublishServer = true;
+// try {
+// for (int i = 0; i < serviceNames.length; i++) {
+// this.publishSrv.deregisterServer(serviceNames[i]);
+// }
+// } catch (Exception ex) {
+// logger.error("shutdown", ex);
+// this.publishSrv = null;
+// }
+// }

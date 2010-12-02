@@ -52,7 +52,7 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 		groupCall.setRequestBody(sb.toString());
 		TestGroupCallCallback callback = new TestGroupCallCallback(true);
 		groupCall.invoke(callback, 1000);
-		SCMPMessage message = callback.getMessageSync();
+		SCMPMessage message = callback.getMessageSync(100);
 		Assert.assertNotNull(message.getMessageSequenceNr());
 		int currentMsgSequenceNr = Integer.parseInt(message.getMessageSequenceNr());
 
@@ -61,12 +61,12 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 			groupCall.setRequestBody(String.valueOf(i));
 			callback = new TestGroupCallCallback(true);
 			groupCall.invoke(callback, 1000);
-			message = callback.getMessageSync();
+			message = callback.getMessageSync(100);
 			Assert.assertEquals(++currentMsgSequenceNr + "", message.getMessageSequenceNr());
 		}
 		callback = new TestGroupCallCallback(true);
 		groupCall.closeGroup(callback, 1000); // send REQ (no body content)
-		SCMPMessage res = callback.getMessageSync();
+		SCMPMessage res = callback.getMessageSync(100);
 
 		Assert.assertEquals(++currentMsgSequenceNr + "", res.getMessageSequenceNr());
 		Assert.assertEquals(sb.toString(), res.getBody());
@@ -93,7 +93,7 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 		groupCall.setRequestBody(sb.toString());
 		TestGroupCallCallback callback = new TestGroupCallCallback(true);
 		groupCall.invoke(callback, 1000);
-		SCMPMessage message = callback.getMessageSync();
+		SCMPMessage message = callback.getMessageSync(100);
 		Assert.assertNotNull(message.getMessageSequenceNr());
 		int currentMsgSequenceNr = Integer.parseInt(message.getMessageSequenceNr());
 
@@ -101,12 +101,12 @@ public class GroupCallTestCase extends SuperSessionTestCase {
 		groupCall.setRequestBody("end");
 		callback = new TestGroupCallCallback(true);
 		groupCall.invoke(callback, 1000);
-		message = callback.getMessageSync();
+		message = callback.getMessageSync(3000);
 		Assert.assertEquals(++currentMsgSequenceNr + "", message.getMessageSequenceNr());
 
 		callback = new TestGroupCallCallback(true);
 		groupCall.closeGroup(callback, 1000); // send REQ (no body content)
-		SCMPMessage res = callback.getMessageSync();
+		SCMPMessage res = callback.getMessageSync(3000);
 
 		// currentMsgSequenceNr+2 because there is a PAC sent - large response
 		Assert.assertEquals(currentMsgSequenceNr + 3 + "", res.getMessageSequenceNr());

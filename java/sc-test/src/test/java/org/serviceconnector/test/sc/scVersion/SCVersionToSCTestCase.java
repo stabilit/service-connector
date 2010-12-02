@@ -58,7 +58,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 
 		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
-		SCMPMessage result = callback.getMessageSync();
+		SCMPMessage result = callback.getMessageSync(3000);
 		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_VERSION_FORMAT, " []", SCMPMsgType.ATTACH);
 	}
 
@@ -80,7 +80,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 
 		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
-		SCMPMessage result = callback.getMessageSync();
+		SCMPMessage result = callback.getMessageSync(3000);
 		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_RELEASE_NR, " [2.0-000]", SCMPMsgType.ATTACH);
 	}
 
@@ -102,7 +102,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 
 		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
-		SCMPMessage result = callback.getMessageSync();
+		SCMPMessage result = callback.getMessageSync(3000);
 		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_VERSION_FORMAT, " [1.1-000]", SCMPMsgType.ATTACH);
 	}
 
@@ -124,7 +124,7 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 
 		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
-		SCMPMessage result = callback.getMessageSync();
+		SCMPMessage result = callback.getMessageSync(3000);
 		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_RELEASE_NR, " [0.9-000]", SCMPMsgType.ATTACH);
 	}
 
@@ -146,12 +146,12 @@ public class SCVersionToSCTestCase extends SuperTestCase {
 
 		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
-		SCMPMessage result = callback.getMessageSync();
+		SCMPMessage result = callback.getMessageSync(3000);
 		Assert.assertFalse(result.isFault());
 
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 		detachCall.invoke(callback, 1000);
-		result = callback.getMessageSync();
+		result = callback.getMessageSync(3000);
 		Assert.assertFalse(result.isFault());
 	}
 

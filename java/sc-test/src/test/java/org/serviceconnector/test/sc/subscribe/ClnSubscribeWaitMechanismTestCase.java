@@ -61,8 +61,8 @@ public class ClnSubscribeWaitMechanismTestCase extends SuperTestCase {
 		TestSubscribeCallback callback1 = new TestSubscribeCallback(true);
 		subscribeCall.invoke(callback1, 1000);
 
-		SCMPMessage reply = callback.getMessageSync();
-		SCMPMessage reply1 = callback1.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync(3000);
+		SCMPMessage reply1 = callback1.getMessageSync(3000);
 
 		SCTest.checkReply(reply);
 		Assert.assertFalse(reply.isFault());
@@ -73,7 +73,7 @@ public class ClnSubscribeWaitMechanismTestCase extends SuperTestCase {
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 				.newInstance(req, "publish-1", reply.getSessionId());
 		unSubscribeCall.invoke(callback, 3000);
-		reply = callback.getMessageSync();
+		reply = callback.getMessageSync(3000);
 		SCTest.checkReply(reply);
 	}
 

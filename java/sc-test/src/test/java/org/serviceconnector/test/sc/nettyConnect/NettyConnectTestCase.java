@@ -59,7 +59,7 @@ public class NettyConnectTestCase {
 			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 			TestConnectCallback callback = new TestConnectCallback();
 			connection.send(message, callback);
-			callback.getMessageSync();
+			callback.getMessageSync(3000);
 			connection.disconnect();
 			if (i % 1000 == 0) {
 				System.out.println("connection nr " + i + " is done!");
@@ -89,7 +89,7 @@ public class NettyConnectTestCase {
 			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 			TestConnectCallback callback = new TestConnectCallback();
 			connection.send(message, callback);
-			callback.getMessageSync();
+			callback.getMessageSync(3000);
 			if (i % 100 == 0) {
 				System.out.println("connection nr " + i + " is done!");
 			}

@@ -51,7 +51,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		TestManageCallback callback = new TestManageCallback();
 		manageCall.setRequestBody("disable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
-		SCMPMessage result = callback.getMessageSync();
+		SCMPMessage result = callback.getMessageSync(3000);
 		// try to create a session on service enableService - should fail
 		SCMPFault fault = (SCMPFault) this.createSession();
 		SCTest.verifyError(fault, SCMPError.SERVICE_DISABLED, " [Service is disabled.]", SCMPMsgType.CLN_CREATE_SESSION);
@@ -61,7 +61,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		callback = new TestManageCallback();
 		manageCall.setRequestBody("enable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
-		result = callback.getMessageSync();
+		result = callback.getMessageSync(3000);
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(SCMPMsgType.MANAGE.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 
@@ -78,7 +78,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		callback = new TestManageCallback();
 		manageCall.setRequestBody("disable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
-		result = callback.getMessageSync();
+		result = callback.getMessageSync(3000);
 		Assert.assertNull(result.getBody());
 		Assert.assertEquals(SCMPMsgType.MANAGE.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 
@@ -93,14 +93,14 @@ public class ManageTestCase extends SuperAttachTestCase {
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("get Data (query)");
 		clnExecuteCall.invoke(callback, 1000);
-		result = callback.getMessageSync();
+		result = callback.getMessageSync(3000);
 		SCTest.checkReply(result);
 
 		// delete session one
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				req, this.serviceName, sessionId);
 		deleteSessionCall.invoke(callback, 1000);
-		result = callback.getMessageSync();
+		result = callback.getMessageSync(3000);
 		SCTest.checkReply(result);
 	}
 
@@ -111,14 +111,14 @@ public class ManageTestCase extends SuperAttachTestCase {
 		TestManageCallback callback = new TestManageCallback();
 		manageCall.setRequestBody("enable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
-		SCMPMessage result = callback.getMessageSync();
+		SCMPMessage result = callback.getMessageSync(3000);
 
 		// state of enableService
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		callback = new TestManageCallback();
 		inspectCall.setRequestBody(Constants.STATE + "=" + this.serviceName);
 		inspectCall.invoke(callback, 1000);
-		result = callback.getMessageSync();
+		result = callback.getMessageSync(3000);
 		Assert.assertEquals("ENABLED", result.getBody().toString());
 
 		// disable enableService by manage call
@@ -126,7 +126,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		callback = new TestManageCallback();
 		manageCall.setRequestBody("disable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
-		result = callback.getMessageSync();
+		result = callback.getMessageSync(3000);
 	}
 
 	@Test
@@ -136,7 +136,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		TestManageCallback callback = new TestManageCallback();
 		manageCall.setRequestBody("enable=" + this.serviceName);
 		manageCall.invoke(callback, 1000);
-		SCMPMessage result = callback.getMessageSync();
+		SCMPMessage result = callback.getMessageSync(3000);
 
 		// register a server for enableService
 		SetupTestCases.registerSessionServiceEnable();
@@ -150,13 +150,13 @@ public class ManageTestCase extends SuperAttachTestCase {
 		callback = new TestManageCallback();
 		inspectCall.setRequestBody(Constants.SESSIONS + "=" + this.serviceName);
 		inspectCall.invoke(callback, 1000);
-		result = callback.getMessageSync();
+		result = callback.getMessageSync(3000);
 
 		// delete session one
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				req, this.serviceName, sessionId);
 		deleteSessionCall.invoke(callback, 1000);
-		result = callback.getMessageSync();
+		result = callback.getMessageSync(3000);
 
 		// deregister a server for enableService
 //		SetupTestCases.deregisterSessionServiceEnable();
@@ -166,7 +166,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 //		callback = new TestManageCallback();
 //		manageCall.setRequestBody("disable=" + this.serviceName);
 //		manageCall.invoke(callback, 1000);
-//		result = callback.getMessageSync();
+//		result = callback.getMessageSync(3000);
 	}
 
 	// @Test
@@ -185,7 +185,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(300);
 		createSessionCall.invoke(this.attachCallback, 1000);
-		return this.attachCallback.getMessageSync();
+		return this.attachCallback.getMessageSync(3000);
 	}
 
 	private class TestManageCallback extends SynchronousCallback {

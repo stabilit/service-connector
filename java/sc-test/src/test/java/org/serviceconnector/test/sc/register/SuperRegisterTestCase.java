@@ -22,14 +22,12 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
-import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.conf.RequesterConfiguration;
 import org.serviceconnector.conf.ResponderConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 import org.serviceconnector.test.sc.connectionPool.TestContext;
@@ -62,7 +60,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		AppContext.initConfiguration(registerFileName);
 		this.registerConfig = AppContext.getRequesterConfiguration();
 		this.responderConfig = AppContext.getResponderConfiguration();
-		this.registerContext = new RegisterServerContext(responderConfig.getResponderConfigList().get(0), this.msgSequenceNr);
+		this.registerContext = new TestContext(responderConfig.getResponderConfigList().get(0), 1);
 		this.registerRequester = new SCRequester(registerContext);
 		registerServerBefore();
 	}
@@ -82,7 +80,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
 		registerServerCall.invoke(this.attachCallback, 1000);
-		SCTest.checkReply(this.attachCallback.getMessageSync());
+		SCTest.checkReply(this.attachCallback.getMessageSync(3000));
 	}
 
 	public void deRegisterServerAfter() throws Exception {
@@ -93,15 +91,6 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 				.newInstance(registerRequester, serviceName);
 		deRegisterServerCall.invoke(this.attachCallback, 1000);
-		SCTest.checkReply(this.attachCallback.getMessageSync());
-	}
-
-	private class RegisterServerContext extends TestContext {
-
-		public RegisterServerContext(CommunicatorConfig config, SCMPMessageSequenceNr msgSequenceNr) {
-			super(config, msgSequenceNr);
-			// for register only 1 connection is allowed
-			this.connectionPool.setMaxConnections(1);
-		}
+		SCTest.checkReply(this.attachCallback.getMessageSync(3000));
 	}
 }

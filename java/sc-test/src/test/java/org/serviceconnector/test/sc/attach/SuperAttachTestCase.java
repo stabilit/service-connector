@@ -61,14 +61,14 @@ public abstract class SuperAttachTestCase extends SuperTestCase {
 	public void clnAttachBefore() throws Exception {
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 		attachCall.invoke(this.attachCallback, 1000);
-		this.attachCallback.getMessageSync();
+		this.attachCallback.getMessageSync(3000);
 		localDateTimeOfConnect = attachCall.getRequest().getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME);
 	}
 
 	public void clnDetachAfter() throws Exception {
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 		detachCall.invoke(this.attachCallback, 1000);
-		this.attachCallback.getMessageSync();
+		this.attachCallback.getMessageSync(3000);
 	}
 
 	protected class TestSuperAttachCallback extends SynchronousCallback {

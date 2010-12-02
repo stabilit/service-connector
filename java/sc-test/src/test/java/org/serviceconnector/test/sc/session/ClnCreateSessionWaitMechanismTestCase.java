@@ -63,8 +63,8 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		createSessionCall1.invoke(callback1, 1000);
 
-		SCMPMessage responseMessage = callback.getMessageSync();
-		SCMPMessage responseMessage1 = callback1.getMessageSync();
+		SCMPMessage responseMessage = callback.getMessageSync(3000);
+		SCMPMessage responseMessage1 = callback1.getMessageSync(3000);
 
 		SCTest.checkReply(responseMessage);
 		Assert.assertFalse(responseMessage.isFault());
@@ -75,7 +75,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
 		deleteSessionCall.invoke(this.attachCallback, 10000);
-		this.attachCallback.getMessageSync();
+		this.attachCallback.getMessageSync(3000);
 	}
 
 	@Test
@@ -99,8 +99,8 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		createSessionCall1.invoke(callback1, 10000);
 
-		SCMPMessage responseMessage = callback.getMessageSync();
-		SCMPMessage responseMessage1 = callback1.getMessageSync();
+		SCMPMessage responseMessage = callback.getMessageSync(3000);
+		SCMPMessage responseMessage1 = callback1.getMessageSync(3000);
 
 		SCTest.checkReply(responseMessage);
 		SCTest.checkReply(responseMessage1);
@@ -108,11 +108,11 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
 		deleteSessionCall.invoke(this.attachCallback, 10000);
-		this.attachCallback.getMessageSync();
+		this.attachCallback.getMessageSync(3000);
 		deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(this.req,
 				responseMessage1.getServiceName(), responseMessage1.getSessionId());
 		deleteSessionCall.invoke(this.attachCallback, 10000);
-		this.attachCallback.getMessageSync();
+		this.attachCallback.getMessageSync(3000);
 	}
 
 	// TODO .. not working anymore .. to match server for session-1 service
@@ -137,8 +137,8 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		createSessionCall1.invoke(callback1, 1000);
 
-		SCMPMessage responseMessage = callback.getMessageSync();
-		SCMPMessage responseMessage1 = callback1.getMessageSync();
+		SCMPMessage responseMessage = callback.getMessageSync(3000);
+		SCMPMessage responseMessage1 = callback1.getMessageSync(3000);
 
 		SCTest.checkReply(responseMessage);
 		Assert.assertFalse(responseMessage.isFault());
@@ -148,7 +148,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
 		deleteSessionCall.invoke(this.attachCallback, 10000);
-		this.attachCallback.getMessageSync();
+		this.attachCallback.getMessageSync(3000);
 	}
 
 	@Test
@@ -172,13 +172,13 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		createSessionCall1.invoke(callback1, 10000);
 
-		SCMPMessage responseMessage = callback.getMessageSync();
+		SCMPMessage responseMessage = callback.getMessageSync(3000);
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
 		deleteSessionCall.invoke(this.attachCallback, 10000);
-		this.attachCallback.getMessageSync();
+		this.attachCallback.getMessageSync(3000);
 
-		SCMPMessage responseMessage1 = callback1.getMessageSync();
+		SCMPMessage responseMessage1 = callback1.getMessageSync(3000);
 
 		SCTest.checkReply(responseMessage);
 		SCTest.checkReply(responseMessage1);
@@ -186,7 +186,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(this.req,
 				responseMessage1.getServiceName(), responseMessage1.getSessionId());
 		deleteSessionCall.invoke(this.attachCallback, 10000);
-		this.attachCallback.getMessageSync();
+		this.attachCallback.getMessageSync(3000);
 	}
 
 	protected class TestWaitMechanismCallback extends SynchronousCallback {

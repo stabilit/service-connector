@@ -65,7 +65,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.setEchoIntervalSeconds(0);
 		createSessionCall.getRequest().setServiceName("session-1");
 		createSessionCall.invoke(this.attachCallback, 1000);
-		SCMPMessage fault = this.attachCallback.getMessageSync();
+		SCMPMessage fault = this.attachCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_ECHO_INTERVAL, " [IntValue 0 not within limits]",
 				SCMPMsgType.CLN_CREATE_SESSION);
@@ -75,7 +75,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.getRequest().setServiceName(null);
 		createSessionCall.setEchoIntervalSeconds(300);
 		createSessionCall.invoke(this.attachCallback, 1000);
-		fault = this.attachCallback.getMessageSync();
+		fault = this.attachCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
 		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_SERVICE_NAME, " [serviceName must be set]",
 				SCMPMsgType.CLN_CREATE_SESSION);
@@ -95,7 +95,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(3000);
 		createSessionCall.invoke(this.attachCallback, 30000);
-		SCMPMessage responseMessage = this.attachCallback.getMessageSync();
+		SCMPMessage responseMessage = this.attachCallback.getMessageSync(3000);
 		String sessId = responseMessage.getSessionId();
 		/*************************** verify create session **********************************/
 		Assert.assertNotNull(sessId);
@@ -103,7 +103,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		inspectCall.invoke(this.attachCallback, 1000);
-		SCMPMessage inspect = this.attachCallback.getMessageSync();
+		SCMPMessage inspect = this.attachCallback.getMessageSync(3000);
 		/*********************************** Verify registry entries in SC ********************************/
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
@@ -120,12 +120,12 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
 		deleteSessionCall.invoke(this.attachCallback, 1000);
-		this.attachCallback.getMessageSync();
+		this.attachCallback.getMessageSync(3000);
 
 		/*********************************** Verify registry entries in SC ********************************/
 		inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		inspectCall.invoke(this.attachCallback, 1000);
-		inspect = this.attachCallback.getMessageSync();
+		inspect = this.attachCallback.getMessageSync(3000);
 		inspectMsg = (String) inspect.getBody();
 		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 		scEntry = (String) inspectMap.get("sessionRegistry");
@@ -141,14 +141,14 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.setEchoIntervalSeconds(300);
 		createSessionCall.setRequestBody("reject");
 		createSessionCall.invoke(this.attachCallback, 4000);
-		SCMPMessage responseMessage = this.attachCallback.getMessageSync();
+		SCMPMessage responseMessage = this.attachCallback.getMessageSync(3000);
 		String sessId = responseMessage.getSessionId();
 		Assert.assertNull(sessId);
 
 		/*********************************** Verify registry entries in SC ********************************/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		inspectCall.invoke(this.attachCallback, 4000);
-		SCMPMessage inspect = this.attachCallback.getMessageSync();
+		SCMPMessage inspect = this.attachCallback.getMessageSync(3000);
 		String inspectMsg = (String) inspect.getBody();
 		Map<String, String> inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 		String scEntry = (String) inspectMap.get("sessionRegistry");

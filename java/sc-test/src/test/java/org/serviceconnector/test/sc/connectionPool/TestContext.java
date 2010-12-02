@@ -22,32 +22,18 @@
 package org.serviceconnector.test.sc.connectionPool;
 
 import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.RequesterContext;
-import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 
 /**
  * @author JTraber
  */
 public class TestContext extends RequesterContext {
 
-	public TestContext(CommunicatorConfig config, SCMPMessageSequenceNr msgSequenceNr) {
-		super(new ConnectionPool(config.getInterfaces().get(0), config.getPort(), config.getConnectionType()), msgSequenceNr);
-		this.connectionPool.setMinConnections(1);
+	public TestContext(CommunicatorConfig config) {
+		super(config.getInterfaces().get(0), config.getPort(), config.getConnectionType(), 0);
 	}
 
-	public TestContext(String host, int port, String conType) {
-		super(new ConnectionPool(host, port, conType), null);
-
-	}
-
-	@Override
-	public ConnectionPool getConnectionPool() {
-		return this.connectionPool;
-	}
-
-	@Override
-	public SCMPMessageSequenceNr getSCMPMsgSequenceNr() {
-		return this.msgSequenceNr;
+	public TestContext(CommunicatorConfig config, int maxConnections) {
+		super(config.getInterfaces().get(0), config.getPort(), config.getConnectionType(), 0, maxConnections);
 	}
 }

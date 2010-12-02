@@ -134,7 +134,7 @@ public class MsgCompressionTestCase extends SuperSessionTestCase {
 		clnExecuteCall.setCompressed(false);
 		TestCompressionCallback callback = new TestCompressionCallback(true);
 		clnExecuteCall.invoke(callback, 1000);
-		SCMPMessage scmpReply = callback.getMessageSync();
+		SCMPMessage scmpReply = callback.getMessageSync(100);
 		Assert.assertEquals(new String(buffer), new String((byte[]) scmpReply.getBody()));
 	}
 

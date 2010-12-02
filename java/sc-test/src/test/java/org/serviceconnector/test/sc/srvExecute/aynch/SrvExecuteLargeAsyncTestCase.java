@@ -60,7 +60,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 		clnExecuteCall.setRequestBody(sb.toString());
 		SynchronousCallback callback = new TestSrvExecuteCaseCallback();
 		clnExecuteCall.invoke(callback, 1000);
-		SCMPMessage scmpReply = callback.getMessageSync();
+		SCMPMessage scmpReply = callback.getMessageSync(3000);
 
 		// create expected result
 		StringBuilder sbRes = new StringBuilder();
@@ -98,7 +98,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 		clnExecuteCall.setRequestBody(sb.toString());
 		TestSrvExecuteCaseCallback callback = new TestSrvExecuteCaseCallback();
 		clnExecuteCall.invoke(callback, 1000);
-		SCMPMessage scmpReply = callback.getMessageSync();
+		SCMPMessage scmpReply = callback.getMessageSync(3000);
 
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(scmpReply.getSessionId());
@@ -123,7 +123,7 @@ public class SrvExecuteLargeAsyncTestCase extends SuperSessionTestCase {
 		clnExecuteCall.setRequestBody(sb.toString());
 		TestSrvExecuteCaseCallback callback = new TestSrvExecuteCaseCallback();
 		clnExecuteCall.invoke(callback, 1000);
-		SCMPMessage scmpReply = callback.getMessageSync();
+		SCMPMessage scmpReply = callback.getMessageSync(3000);
 		
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(scmpReply.getSessionId());

@@ -65,7 +65,7 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.setEchoIntervalSeconds(3600);
 		// create session and keep sessionId
 		createSessionCall.invoke(this.sessionCallback, 1000);
-		SCMPMessage resp = this.sessionCallback.getMessageSync();
+		SCMPMessage resp = this.sessionCallback.getMessageSync(3000);
 		SCTest.checkReply(resp);
 		this.sessionId = resp.getSessionId();
 	}
@@ -74,7 +74,7 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, "session-1", this.sessionId);
 		deleteSessionCall.invoke(this.sessionCallback, 2000);
-		SCMPMessage reply = this.sessionCallback.getMessageSync();
+		SCMPMessage reply = this.sessionCallback.getMessageSync(3000);
 		SCTest.checkReply(reply);
 	}
 

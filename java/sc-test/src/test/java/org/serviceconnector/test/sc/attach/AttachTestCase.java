@@ -50,7 +50,7 @@ public class AttachTestCase extends SuperTestCase {
 
 		TestAttachCallback callback = new TestAttachCallback();
 		attachCall.invoke(callback, 1000);
-		SCMPMessage result = callback.getMessageSync();
+		SCMPMessage result = callback.getMessageSync(3000);
 		SCTest.checkReply(result);
 		/*********************************** Verify attach response msg **********************************/
 		Assert.assertNull(result.getBody());
@@ -61,7 +61,7 @@ public class AttachTestCase extends SuperTestCase {
 
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 		detachCall.invoke(callback, 1000);
-		SCTest.checkReply(callback.getMessageSync());
+		SCTest.checkReply(callback.getMessageSync(3000));
 	}
 
 	private class TestAttachCallback extends SynchronousCallback {

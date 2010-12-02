@@ -51,7 +51,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 		try {
 			AppContext.initConfiguration(fileName);
 			this.config = AppContext.getRequesterConfiguration();
-			this.testContext = new TestContext(this.config.getRequesterConfigList().get(0), this.msgSequenceNr);
+			this.testContext = new TestContext(this.config.getRequesterConfigList().get(0));
 			req = new SCRequester(this.testContext);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -68,7 +68,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 		subscribeCall.setMask("000012100012832102FADF-----------X-----------");
 		subscribeCall.setRequestBody("large");
 		subscribeCall.invoke(this.callback, 10000);
-		SCMPMessage reply = this.callback.getMessageSync();
+		SCMPMessage reply = this.callback.getMessageSync(3000);
 		SCTest.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
@@ -86,7 +86,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 			SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 					.newInstance(this.req, "publish-1", sessionId);
 			receivePublicationCall.invoke(this.callback, 10000);
-			reply = this.callback.getMessageSync();
+			reply = this.callback.getMessageSync(3000);
 			Assert.assertTrue(reply.isLargeMessage());
 			Assert.assertEquals(sb.toString(), reply.getBody());
 			Thread.sleep(2000);
@@ -94,7 +94,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 				.newInstance(req, "publish-1", sessionId);
 		unSubscribeCall.invoke(this.callback, 3000);
-		reply = callback.getMessageSync();
+		reply = callback.getMessageSync(3000);
 		SCTest.checkReply(reply);
 	}
 

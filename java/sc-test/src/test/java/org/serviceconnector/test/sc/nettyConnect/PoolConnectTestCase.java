@@ -50,7 +50,7 @@ public class PoolConnectTestCase {
 			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 			TestConnectCallback callback = new TestConnectCallback();
 			connection.send(message, callback);
-			callback.getMessageSync();
+			callback.getMessageSync(3000);
 			cp.freeConnection(connection);
 			if (i % 1000 == 0) {
 				System.out.println("connection nr " + i + " is done!");
@@ -72,7 +72,7 @@ public class PoolConnectTestCase {
 			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 			TestConnectCallback callback = new TestConnectCallback();
 			connection.send(message, callback);
-			callback.getMessageSync();
+			callback.getMessageSync(3000);
 			cp.freeConnection(connection);
 			cp.destroy();
 			if (i % 1000 == 0) {

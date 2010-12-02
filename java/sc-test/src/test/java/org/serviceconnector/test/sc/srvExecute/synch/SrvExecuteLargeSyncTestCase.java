@@ -52,7 +52,7 @@ public class SrvExecuteLargeSyncTestCase extends SuperSessionTestCase {
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("appError");
 		clnExecuteCall.invoke(this.sessionCallback, 2000);
-		SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
+		SCMPMessage scmpReply = this.sessionCallback.getMessageSync(3000);
 		Assert.assertEquals("500", scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 		Assert.assertEquals("appErrorText", scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 	}
@@ -70,7 +70,7 @@ public class SrvExecuteLargeSyncTestCase extends SuperSessionTestCase {
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody(sb.toString());
 		clnExecuteCall.invoke(this.sessionCallback, 1000);
-		SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
+		SCMPMessage scmpReply = this.sessionCallback.getMessageSync(3000);
 
 		// create expected result
 		StringBuilder sbRes = new StringBuilder();
@@ -105,7 +105,7 @@ public class SrvExecuteLargeSyncTestCase extends SuperSessionTestCase {
 		String expectedBody = "message data test case";
 		clnExecuteCall.setRequestBody(sb.toString());
 		clnExecuteCall.invoke(this.sessionCallback, 1000);
-		SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
+		SCMPMessage scmpReply = this.sessionCallback.getMessageSync(3000);
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(scmpReply.getSessionId());
 		Assert.assertEquals(expectedBody.length(), scmpReply.getBodyLength());
@@ -128,7 +128,7 @@ public class SrvExecuteLargeSyncTestCase extends SuperSessionTestCase {
 		}
 		clnExecuteCall.setRequestBody(sb.toString());
 		clnExecuteCall.invoke(this.sessionCallback, 1000);
-		SCMPMessage scmpReply = this.sessionCallback.getMessageSync();
+		SCMPMessage scmpReply = this.sessionCallback.getMessageSync(3000);
 		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 		Assert.assertNotNull(scmpReply.getSessionId());
 		Assert.assertEquals(sb.length() + "", scmpReply.getBodyLength() + "");
