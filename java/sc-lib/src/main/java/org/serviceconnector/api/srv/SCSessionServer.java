@@ -288,8 +288,8 @@ public class SCSessionServer {
 		return this.serviceName;
 	}
 	
-	public SCServer getScServer() {
-		return scServer;
+	public SCServer getSCServer() {
+		return this.scServer;
 	}
 
 	/**

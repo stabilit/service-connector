@@ -30,6 +30,7 @@ public class ProcessCtx {
 	private String log4jFileNameFull = null;
 	private String pidFileNameFull = null;
 	private boolean running = false;
+	private String serviceNames;
 	
 	public ProcessCtx() {
 	}
@@ -95,5 +96,13 @@ public class ProcessCtx {
 	
 	public boolean isRunning() {
 		return running;
+	}
+
+	public void setServiceNames(String serviceNames) {
+		this.serviceNames = serviceNames;
+	}
+	
+	public String getServiceNames() {
+		return serviceNames;
 	}
 }

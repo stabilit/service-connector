@@ -19,9 +19,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.SessionLogger;
 
@@ -114,7 +116,6 @@ public class TestSessionServer extends Thread {
 	 * @author JTrnka
 	 */
 	class SrvCallback extends SCSessionServerCallback {
-		private SCSessionServer scSessionServer;
 
 		public SrvCallback(SCSessionServer server) {
 			super(server);
@@ -122,8 +123,26 @@ public class TestSessionServer extends Thread {
 
 		@Override
 		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
+			Object data = request.getData();
+
+			SCMessage response = request;
+			// watch out for kill server message
+			if (data.getClass() == String.class) {
+				String dataString = (String) data;
+
+				if (dataString.equals(TestConstants.killServerCmd)) {
+					response = new SCMessageFault();
+					try {
+						((SCMessageFault) response).setAppErrorCode(1050);
+						((SCMessageFault) response).setAppErrorText("create session rejected - kill server requested!");
+					} catch (SCMPValidatorException e) {
+					}
+					KillThread kill = new KillThread(this.scSessionServer);
+					kill.start();
+				}
+			}
 			sessionLogger.logCreateSession(this.getClass().getName(), request.getSessionId());
-			return request;
+			return response;
 		}
 
 		@Override
@@ -138,18 +157,6 @@ public class TestSessionServer extends Thread {
 
 		@Override
 		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
-			Object data = request.getData();
-
-			// watch out for kill server message
-			if (data.getClass() == String.class) {
-				String dataString = (String) data;
-				if (dataString.equals(TestConstants.killServerCmd)) {
-					KillThread kill = new KillThread(this.scSessionServer);
-					kill.start();
-				} else {
-					logger.info("Message received: " + data);
-				}
-			}
 			return request;
 		}
 	}
@@ -167,7 +174,8 @@ public class TestSessionServer extends Thread {
 			try {
 				Thread.sleep(2000);
 				this.server.deregister();
-				// SCServer sc = server.getSCServer().stopListener();
+				this.server.getSCServer().stopListener();
+				System.exit(0);
 			} catch (Exception e) {
 				logger.error("run", e);
 			}

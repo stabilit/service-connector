@@ -164,7 +164,7 @@ public class TestPublishServer extends Thread {
 				if (dataString.equals("kill server")) {
 					try {
 						this.scPublishServer.deregister();
-						// SCServer sc = server.getSCServer().stopListener();
+						this.scPublishServer.getSCServer().stopListener();
 					} catch (Exception ex) {
 						logger.error("unsubscribe", ex);
 					}

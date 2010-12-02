@@ -15,17 +15,19 @@
  */
 package org.serviceconnector.ctrl.util;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.FileUtility;
 
 public class ProcessesController {
@@ -95,8 +97,7 @@ public class ProcessesController {
 
 		Process process = Runtime.getRuntime().exec(command);
 		proc.setProcess(process);
-
-		int timeout = 10; // seconds
+		int timeout = 30; // seconds
 		try {
 			FileUtility.waitExists(pidFileNameFull, timeout);
 			testLogger.info("SC started");
@@ -109,7 +110,7 @@ public class ProcessesController {
 	}
 
 	public void stopSC(ProcessCtx scProcess) throws Exception {
-		int timeout = 10; // seconds
+		int timeout = 30; // seconds
 		try {
 			if (FileUtility.exists(scProcess.getPidFileNameFull())) {
 				// TODO JOT Constant does not work for 2-nd SC! => Parse sc properties and get the port SC is listening on TCP
@@ -169,6 +170,8 @@ public class ProcessesController {
 		String pidFileNameFull = getLogDirPath(log4jFileNameFull) + fs + serverName + ".pid";
 		proc.setPidFileNameFull(pidFileNameFull);
 
+		proc.setServiceNames(serviceNames);
+
 		/*
 		 * start server process Args: 
 		 * [0] -Dlog4j.configuration=file 
@@ -188,7 +191,7 @@ public class ProcessesController {
 				+ serviceNames;
 		Process srvProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(srvProcess);
-		int timeout = 10;
+		int timeout = 30;
 		try {
 			FileUtility.waitExists(pidFileNameFull, timeout);
 			testLogger.info("Server started");
@@ -201,19 +204,25 @@ public class ProcessesController {
 	}
 
 	public void stopServer(ProcessCtx srvProcess) throws Exception {
-		int timeout = 10; // seconds
+		int timeout = 30; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileNameFull())) {
 				SCClient client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 				client.attach(timeout);
-				// TODO JOT send kill message (create Session) to server in order to terminate it.
-				
+				String serviceName = srvProcess.getServiceNames().split(",")[0];
+				SCSessionService scSessionService = client.newSessionService(serviceName);
+
+				SCMessage scMessage = new SCMessage();
+				scMessage.setData(TestConstants.killServerCmd);
+				try {
+					scSessionService.createSession(scMessage);
+				} catch (SCServiceException ex) {
+					client.detach();
+				}
 				if (srvProcess.isRunning()) {
 					srvProcess.getProcess().destroy();
 					srvProcess.getProcess().waitFor();
 				}
-				File pidFile = new File(srvProcess.getPidFileNameFull());	// to be deleted
-				pidFile.delete();											// to be deleted
 				FileUtility.waitNotExists(srvProcess.getPidFileNameFull(), timeout);
 			}
 			testLogger.info("Server stopped");
