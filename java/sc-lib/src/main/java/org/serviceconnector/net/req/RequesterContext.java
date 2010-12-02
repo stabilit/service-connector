@@ -22,7 +22,7 @@
 package org.serviceconnector.net.req;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.net.connection.ConnectionPool;
+import org.serviceconnector.Constants;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 
 /**
@@ -34,22 +34,25 @@ public class RequesterContext {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(RequesterContext.class);
-
-	protected ConnectionPool connectionPool;
 	protected SCMPMessageSequenceNr msgSequenceNr;
 
-	public RequesterContext(ConnectionPool connectionPool, SCMPMessageSequenceNr msgSequenceNr) {
-		this.connectionPool = connectionPool;
-		this.msgSequenceNr = msgSequenceNr;
+	private String host;
+	private int port;
+	private String connectionType;
+	private int keepAliveIntervalInSeconds;
+	private int maxConnections;
+
+	public RequesterContext(String host, int port, String connectionType, int keepAliveIntervalInSeconds) {
+		this(host, port, connectionType, keepAliveIntervalInSeconds, Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE);
 	}
 
-	/**
-	 * Gets the connection pool.
-	 * 
-	 * @return the connection pool
-	 */
-	public ConnectionPool getConnectionPool() {
-		return this.connectionPool;
+	public RequesterContext(String host, int port, String connectionType, int keepAliveIntervalInSeconds, int maxConnections) {
+		this.host = host;
+		this.port = port;
+		this.connectionType = connectionType;
+		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
+		this.maxConnections = maxConnections;
+		this.msgSequenceNr = new SCMPMessageSequenceNr();
 	}
 
 	/**
@@ -59,5 +62,25 @@ public class RequesterContext {
 	 */
 	public SCMPMessageSequenceNr getSCMPMsgSequenceNr() {
 		return this.msgSequenceNr;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public String getConnectionType() {
+		return connectionType;
+	}
+
+	public int getKeepAliveIntervalInSeconds() {
+		return keepAliveIntervalInSeconds;
+	}
+
+	public int getMaxConnections() {
+		return maxConnections;
 	}
 }

@@ -30,7 +30,6 @@ import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
@@ -50,17 +49,8 @@ public class SCPublishService extends SCService {
 	private int noDataInterval;
 	private SCMessageCallback scMessageCallback;
 
-	/**
-	 * Instantiates a new publish service.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @param context
-	 *            the context
-	 */
-	public SCPublishService(String serviceName, SCClientContext context) {
-		super(serviceName, context);
-		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgSequenceNr));
+	public SCPublishService(SCClient scClient, String serviceName, SCRequester requester) {
+		super(scClient, serviceName, requester);
 		this.noDataInterval = 0;
 		this.scMessageCallback = null;
 	}
@@ -98,7 +88,7 @@ public class SCPublishService extends SCService {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "scSubscribeMessage can not be null");
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		this.msgSequenceNr.incrementMsgSequenceNr();
+		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		changeSubscriptionCall.setMask(scSubscribeMessage.getMask());
@@ -170,7 +160,7 @@ public class SCPublishService extends SCService {
 		if (this.noDataInterval == 0) {
 			throw new InvalidParameterException("notDataInterval must be set.");
 		}
-		this.msgSequenceNr.reset();
+		this.requester.getContext().getSCMPMsgSequenceNr().reset();
 		this.scMessageCallback = scMessageCallback;
 		SCServiceCallback callback = new SCServiceCallback(true);
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
@@ -223,7 +213,7 @@ public class SCPublishService extends SCService {
 		}
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.requester, this.serviceName, this.sessionId);
-		this.msgSequenceNr.incrementMsgSequenceNr();
+		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		PublishServiceCallback callback = new PublishServiceCallback(this.scMessageCallback);
 		receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR
 				* (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataInterval));
@@ -267,7 +257,7 @@ public class SCPublishService extends SCService {
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		try {
-			this.msgSequenceNr.incrementMsgSequenceNr();
+			this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
 					this.requester, this.serviceName, this.sessionId);
 			SCServiceCallback callback = new SCServiceCallback(true);

@@ -28,6 +28,7 @@ import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPPublishCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -42,8 +43,8 @@ public class SCPublishServer extends SCSessionServer {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCPublishServer.class);
 
-	public SCPublishServer(SCServerContext scServerContext, String serviceName) {
-		super(scServerContext, serviceName);
+	public SCPublishServer(SCServer scServer, String serviceName, SCRequester requester) {
+		super(scServer, serviceName, requester);
 	}
 
 	public void publish(SCPublishMessage publishMessage) throws Exception {
@@ -55,10 +56,8 @@ public class SCPublishServer extends SCSessionServer {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "subscibeMessage can not be null");
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		ValidatorUtility.validateStringLength(1, this.serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
-		ValidatorUtility.validateAllowedCharacters(this.serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-		SrvService srvService = srvServiceRegistry.getSrvService(this.serviceName + "_" + this.scServerContext.getListenerPort());
+		SrvService srvService = srvServiceRegistry.getSrvService(this.serviceName + "_" + this.scServer.getListenerPort());
 		if (srvService == null) {
 			throw new SCServiceException("Service not found, service name: " + this.serviceName);
 		}

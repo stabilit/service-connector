@@ -31,7 +31,6 @@ import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.call.SCMPEchoCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.SCMPError;
@@ -71,9 +70,8 @@ public class SCSessionService extends SCService {
 	 * @param context
 	 *            the context
 	 */
-	public SCSessionService(String serviceName, SCClientContext context) {
-		super(serviceName, context);
-		this.requester = new SCRequester(new RequesterContext(context.getConnectionPool(), this.msgSequenceNr));
+	public SCSessionService(SCClient scClient, String serviceName, SCRequester requester) {
+		super(scClient, serviceName, requester);
 		this.timerRun = null;
 		this.echoTimeoutInSeconds = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
 		this.echoIntervalInSeconds = Constants.DEFAULT_ECHO_INTERVAL_SECONDS;
@@ -100,7 +98,7 @@ public class SCSessionService extends SCService {
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 
-		this.msgSequenceNr.reset();
+		this.requester.getContext().getSCMPMsgSequenceNr().reset();
 		SCServiceCallback callback = new SCServiceCallback(true);
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, this.serviceName);
@@ -198,7 +196,7 @@ public class SCSessionService extends SCService {
 		this.timerTask.cancel();
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
-			this.msgSequenceNr.incrementMsgSequenceNr();
+			this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
 			if (scMessage != null) {
@@ -249,7 +247,7 @@ public class SCSessionService extends SCService {
 		this.pendingRequest = true;
 		// cancel session timeout
 		this.timerTask.cancel();
-		this.msgSequenceNr.incrementMsgSequenceNr();
+		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
@@ -331,7 +329,7 @@ public class SCSessionService extends SCService {
 		this.pendingRequest = true;
 		// cancel session timeout
 		this.timerTask.cancel();
-		this.msgSequenceNr.incrementMsgSequenceNr();
+		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
@@ -389,7 +387,7 @@ public class SCSessionService extends SCService {
 			return;
 		}
 		this.pendingRequest = true;
-		this.msgSequenceNr.incrementMsgSequenceNr();
+		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		SCMPEchoCall clnEchoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(this.requester, this.serviceName,
 				this.sessionId);
 		SCServiceCallback callback = new SCServiceCallback(true);

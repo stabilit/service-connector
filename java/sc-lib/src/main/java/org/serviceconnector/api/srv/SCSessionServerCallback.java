@@ -22,6 +22,13 @@ import org.serviceconnector.api.SCMessage;
  */
 public abstract class SCSessionServerCallback {
 
+	/** The sc publish server. */
+	protected SCSessionServer scSessionServer = null;
+
+	public SCSessionServerCallback(SCSessionServer scSessionServer) {
+		this.scSessionServer = scSessionServer;
+	}
+
 	/**
 	 * Creates the session.
 	 * 
@@ -49,7 +56,8 @@ public abstract class SCSessionServerCallback {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param operationTimeoutInMillis TODO
+	 * @param operationTimeoutInMillis
+	 *            TODO
 	 */
 	public void abortSession(SCMessage message, int operationTimeoutInMillis) {
 	}

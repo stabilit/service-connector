@@ -21,6 +21,7 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
+import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
@@ -39,17 +40,28 @@ public class Requester implements IRequester {
 	protected final static Logger logger = Logger.getLogger(Requester.class);
 
 	/** The context. */
-	private RequesterContext reqContext;
+	protected RequesterContext reqContext;
 
-	public Requester(RequesterContext context) {
-		this.reqContext = context;
+	private ConnectionPool connectionPool = null;
+
+	/**
+	 * Instantiates a new requester.
+	 * 
+	 * @param context
+	 *            the context
+	 */
+	public Requester(RequesterContext reqContext) {
+		this.reqContext = reqContext;
+		this.connectionPool = new ConnectionPool(reqContext.getHost(), reqContext.getPort(), reqContext.getConnectionType(),
+				reqContext.getKeepAliveIntervalInSeconds());
+		this.connectionPool.setMaxConnections(reqContext.getMaxConnections());
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void send(SCMPMessage message, int timeoutInMillis, ISCMPCallback callback) throws Exception {
 		// return an already connected live instance
-		IConnection connection = this.reqContext.getConnectionPool().getConnection();
+		IConnection connection = this.connectionPool.getConnection();
 		ConnectionContext connectionContext = connection.getContext();
 		try {
 			ISCMPCallback requesterCallback = new RequesterSCMPCallback(callback, connectionContext);
@@ -61,7 +73,7 @@ public class Requester implements IRequester {
 			AppContext.otiTimer.schedule(task, (long) timeoutInMillis);
 			connection.send(message, requesterCallback);
 		} catch (Exception ex) {
-			this.reqContext.getConnectionPool().freeConnection(connection);
+			this.connectionPool.freeConnection(connection);
 			throw ex;
 		}
 	}
@@ -75,7 +87,13 @@ public class Requester implements IRequester {
 	/** {@inheritDoc} */
 	@Override
 	public RequesterContext getContext() {
-		return reqContext;
+		return this.reqContext;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void destroy() {
+		this.connectionPool.destroy();
 	}
 
 	/**
@@ -131,7 +149,7 @@ public class Requester implements IRequester {
 		 */
 		private void freeConnection() {
 			try {
-				Requester.this.reqContext.getConnectionPool().freeConnection(connectionCtx.getConnection());
+				Requester.this.connectionPool.freeConnection(connectionCtx.getConnection());
 			} catch (Exception ex) {
 				logger.error("freeConnection", ex);
 			}
@@ -143,7 +161,7 @@ public class Requester implements IRequester {
 		 */
 		private void disconnectConnection() {
 			try {
-				Requester.this.reqContext.getConnectionPool().forceClosingConnection(connectionCtx.getConnection());
+				Requester.this.connectionPool.forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception ex) {
 				logger.error("disconnect", ex);
 			}
@@ -187,5 +205,13 @@ public class Requester implements IRequester {
 				this.scmpCallback.callback(e);
 			}
 		}
+	}
+
+	public void immediateConnect() {
+		// set minimum connections to max for initial process
+		this.connectionPool.setMinConnections(this.connectionPool.getMaxConnections());
+		this.connectionPool.initMinConnections();
+		// initial done - set it back to 1
+		this.connectionPool.setMinConnections(1);
 	}
 }

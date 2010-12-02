@@ -49,9 +49,9 @@ public interface IRequester {
 	public String toHashCodeString();
 
 	/**
-	 * Gets the context.
-	 * 
-	 * @return the context
+	 * Destroy.
 	 */
-	public abstract RequesterContext getContext();
+	public void destroy();
+
+	RequesterContext getContext();
 }

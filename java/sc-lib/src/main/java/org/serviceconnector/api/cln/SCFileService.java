@@ -26,7 +26,6 @@ import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPFileDownloadCall;
 import org.serviceconnector.call.SCMPFileListCall;
 import org.serviceconnector.call.SCMPFileUploadCall;
-import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -37,9 +36,8 @@ import org.serviceconnector.util.ValidatorUtility;
 
 public class SCFileService extends SCService {
 
-	public SCFileService(String serviceName, SCClientContext scContext) {
-		super(serviceName, scContext);
-		this.requester = new SCRequester(new RequesterContext(scContext.getConnectionPool(), this.msgSequenceNr));
+	public SCFileService(SCClient scClient, String serviceName, SCRequester requester) {
+		super(scClient, serviceName, requester);
 	}
 
 	public synchronized void uploadFile(String remoteFileName, InputStream inStream) throws Exception {
@@ -57,7 +55,7 @@ public class SCFileService extends SCService {
 
 			uploadFileCall.setRequestBody(inStream);
 			uploadFileCall.setRemoteFileName(remoteFileName);
-			this.msgSequenceNr.incrementMsgSequenceNr();
+			this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 			try {
 				uploadFileCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
@@ -90,7 +88,7 @@ public class SCFileService extends SCService {
 			SCServiceCallback callback = new SCServiceCallback(true);
 
 			downloadFileCall.setRemoteFileName(remoteFileName);
-			this.msgSequenceNr.incrementMsgSequenceNr();
+			this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 			downloadFileCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
@@ -125,7 +123,7 @@ public class SCFileService extends SCService {
 	}
 
 	private void createFileSession(int operationTimeoutSeconds) throws SCServiceException {
-		this.msgSequenceNr.reset();
+		this.requester.getContext().getSCMPMsgSequenceNr().reset();
 		SCServiceCallback callback = new SCServiceCallback(true);
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, this.serviceName);
@@ -150,7 +148,7 @@ public class SCFileService extends SCService {
 			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
 			try {
-				this.msgSequenceNr.incrementMsgSequenceNr();
+				this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 				deleteSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("delete file session failed ", e);

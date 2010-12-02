@@ -22,138 +22,224 @@ import java.util.List;
 import javax.activity.InvalidActivityException;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
 
 public class SCServer {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCServer.class);
-
-	private SCServerContext scServerContext;
+	/** The sc host. */
+	private String scHost;
+	/** The sc port. */
+	private int scPort;
+	/** The listener port. */
+	private int listenerPort;
+	/** The connection type. */
+	private ConnectionType connectionType;
+	/** The server listening state. */
+	private volatile boolean listening;
+	/** The immediate connect. */
+	private boolean immediateConnect;
+	/** The keep alive interval seconds. */
+	private int keepAliveIntervalSeconds;
 	/** The responder. */
 	private IResponder responder;
+	private SCRequester requester;
 
 	public SCServer(String scHost, int scPort, int listenerPort) {
 		this(scHost, scPort, listenerPort, ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
 	}
 
 	public SCServer(String scHost, int scPort, int listenerPort, ConnectionType connectionType) {
-		this.scServerContext = new SCServerContext(this, scHost, scPort, listenerPort, connectionType);
 		this.responder = null;
-	}
-
-	public SCServerContext getSCServerContext() {
-		return scServerContext;
-	}
-
-	public ConnectionType getConnectionType() {
-		return this.scServerContext.getConnectionType();
-	}
-
-	public String getSCHost() {
-		return this.scServerContext.getSCHost();
-	}
-
-	public int getSCPort() {
-		return this.scServerContext.getSCPort();
-	}
-
-	public int getListenerPort() {
-		return this.scServerContext.getListenerPort();
-	}
-
-	public void setKeepAliveIntervalInSeconds(int keepAliveIntervalSeconds) {
-		this.scServerContext.setKeepAliveIntervalSeconds(keepAliveIntervalSeconds);
-	}
-
-	public void setImmediateConnect(boolean immediateConnect) {
-		this.scServerContext.setImmediateConnect(immediateConnect);
-	}
-
-	public boolean isImmediateConnect() {
-		return this.scServerContext.isImmediateConnect();
-	}
-	
-	public boolean isListening() {
-		return this.scServerContext.isListening();
-	}
-
-	public int getKeepAliveIntervalSeconds() {
-		return this.scServerContext.getKeepAliveIntervalSeconds();
+		this.requester = null;
+		this.scHost = scHost;
+		this.scPort = scPort;
+		this.listenerPort = listenerPort;
+		this.connectionType = connectionType;
+		this.keepAliveIntervalSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
+		this.listening = false;
 	}
 
 	/**
-	 * Start Listener.
+	 * Gets the connection type.
 	 * 
-	 * @param host
-	 *            the host to bind the listener
-	 * @param port
-	 *            the port to bin the listener
-	 * @param keepAliveIntervalInSeconds
-	 *            the keep alive interval in seconds
-	 * @throws Exception
-	 *             the exception
-	 * @throws InvalidParameterException
-	 *             port is not within limits 0 to 0xFFFF, host unset<br>
-	 *             keepAliveIntervalInSeconds not within limits 0 to 3600
+	 * @return the connection type
 	 */
+	public ConnectionType getConnectionType() {
+		return connectionType;
+	}
+
+	/**
+	 * Gets the sC host.
+	 * 
+	 * @return the sC host
+	 */
+	public String getSCHost() {
+		return scHost;
+	}
+
+	/**
+	 * Gets the sC port.
+	 * 
+	 * @return the sC port
+	 */
+	public int getSCPort() {
+		return scPort;
+	}
+
+	/**
+	 * Gets the listener port.
+	 * 
+	 * @return the listener port
+	 */
+	public int getListenerPort() {
+		return listenerPort;
+	}
+
+	/**
+	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes connection to
+	 * server at the time registerServer is received.
+	 * 
+	 * @param immediateConnect
+	 *            the new immediate connect
+	 */
+	public void setImmediateConnect(boolean immediateConnect) {
+		this.immediateConnect = immediateConnect;
+	}
+
+	/**
+	 * Checks if is immediate connect.
+	 * 
+	 * @return true, if is immediate connect
+	 */
+	public boolean isImmediateConnect() {
+		return immediateConnect;
+	}
+
+	/**
+	 * Checks if is listening.
+	 * 
+	 * @return true, if is listening
+	 */
+	public boolean isListening() {
+		return listening;
+	}
+
+	/**
+	 * Sets the listening.
+	 * 
+	 * @param listening
+	 *            the new listening
+	 */
+	public void setListening(boolean listening) {
+		this.listening = listening;
+	}
+
+	/**
+	 * Gets the keep alive interval seconds.
+	 * 
+	 * @return the keep alive interval seconds
+	 */
+	public int getKeepAliveIntervalSeconds() {
+		return keepAliveIntervalSeconds;
+	}
+
+	/**
+	 * Sets the keep alive interval seconds.
+	 * 
+	 * @param keepAliveIntervalSeconds
+	 *            the new keep alive interval seconds
+	 * @throws SCMPValidatorException
+	 */
+	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) throws SCMPValidatorException {
+		ValidatorUtility.validateInt(0, this.keepAliveIntervalSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
+		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
+	}
+
 	public synchronized void startListener() throws Exception {
-		if (this.scServerContext.isListening() == true) {
+		if (this.listening == true) {
 			throw new InvalidActivityException("listener is already started not allowed to start again.");
 		}
-		CommunicatorConfig respConfig = new CommunicatorConfig(SCSessionServer.class.getSimpleName());
-		respConfig.setConnectionType(this.scServerContext.getConnectionType().getValue());
+		if (this.scHost == null) {
+			throw new InvalidParameterException("host must be set.");
+		}
+		ValidatorUtility.validateInt(0, this.scPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(0, this.listenerPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 
-		int port = this.scServerContext.getListenerPort();
+		CommunicatorConfig respConfig = new CommunicatorConfig(SCSessionServer.class.getSimpleName());
+		respConfig.setConnectionType(this.connectionType.getValue());
+
+		// TODO MIT JAN !!! Liste oder was???
 		List<String> hosts = new ArrayList<String>();
 		hosts.add("localhost");
 
 		if (hosts.size() == 0) {
 			throw new InvalidParameterException("at least one host must be set.");
 		}
-		ValidatorUtility.validateInt(0, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
-		ValidatorUtility.validateInt(0, this.scServerContext.getKeepAliveIntervalSeconds(), 3600,
-				SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 
 		respConfig.setInterfaces(hosts);
-		respConfig.setPort(port);
+		respConfig.setPort(this.listenerPort);
 
 		responder = new Responder(respConfig);
 		try {
 			responder.create();
 			responder.startListenAsync();
 		} catch (Exception ex) {
-			this.scServerContext.setKeepAliveIntervalSeconds(0);
-			this.scServerContext.setListening(false);
+			this.listening = false;
 			logger.error("unable to start listener :" + respConfig.getName(), ex);
 			throw ex;
 		}
-		this.scServerContext.setListening(true);
+		this.listening = true;
+		// initialize requester, maxConnection = 1 only 1 connection allowed for register server
+		this.requester = new SCRequester(new RequesterContext(this.scHost, this.scPort, this.connectionType.getValue(),
+				this.keepAliveIntervalSeconds, 1));
 	}
 
 	/**
 	 * StopListener. Stop listening and clean up.
 	 */
 	public void stopListener() {
-		if (this.scServerContext.isListening() == false) {
+		if (this.listening == false) {
 			// server is not listening
 			return;
 
 		}
-		this.scServerContext.setListening(false);
+		this.listening = false;
 		this.responder.stopListening();
 		this.responder.destroy();
 	}
 
-	public SCSessionServer newSessionServer(String serviceName) {
-		return new SCSessionServer(this.scServerContext, serviceName);
+	public SCSessionServer newSessionServer(String serviceName) throws Exception {
+		if (this.listening == false) {
+			throw new SCServiceException("newSessionServer not possible - server not listening.");
+		}
+		if (serviceName == null) {
+			throw new InvalidParameterException("service name must be set");
+		}
+		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
+		return new SCSessionServer(this, serviceName, requester);
 	}
 
-	public SCPublishServer newPublishServer(String serviceName) {
-		return new SCPublishServer(this.scServerContext, serviceName);
+	public SCPublishServer newPublishServer(String serviceName) throws Exception {
+		if (this.listening == false) {
+			throw new SCServiceException("newPublishServer not possible - server not listening.");
+		}
+		if (serviceName == null) {
+			throw new InvalidParameterException("service name must be set");
+		}
+		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
+		return new SCPublishServer(this, serviceName, requester);
 	}
 }

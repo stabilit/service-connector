@@ -21,7 +21,6 @@ import java.net.SocketAddress;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
@@ -49,7 +48,7 @@ public abstract class Server {
 	/** The max connections. */
 	private int maxConnections;
 	/** The requester. */
-	protected IRequester requester;
+	protected Requester requester;
 	/** The type. */
 	private ServerType type;
 	/** The server key. */
@@ -83,9 +82,7 @@ public abstract class Server {
 		this.portNr = portNr;
 		this.maxConnections = maxConnections;
 		this.host = socketAddress.getHostName();
-		ConnectionPool connectionPool = new ConnectionPool(host, portNr, connectionType, keepAliveInterval);
-		connectionPool.setMaxConnections(maxConnections);
-		this.requester = new Requester(new RequesterContext(connectionPool, null));
+		this.requester = new Requester(new RequesterContext(host, portNr, connectionType, keepAliveInterval, maxConnections));
 		this.serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 	}
 
@@ -105,12 +102,7 @@ public abstract class Server {
 	 *             the exception
 	 */
 	public void immediateConnect() throws Exception {
-		ConnectionPool connectionPool = this.requester.getContext().getConnectionPool();
-		// set minimum connections to max for initial process
-		connectionPool.setMinConnections(connectionPool.getMaxConnections());
-		connectionPool.initMinConnections();
-		// initial done - set it back to 1
-		connectionPool.setMinConnections(1);
+		this.requester.immediateConnect();
 	}
 
 	/**
@@ -125,7 +117,7 @@ public abstract class Server {
 	 * Destroy server.
 	 */
 	public void destroy() {
-		this.requester.getContext().getConnectionPool().destroy();
+		this.requester.destroy();
 		AppContext.getServerRegistry().removeServer(this.getServerKey());
 		this.requester = null;
 	}

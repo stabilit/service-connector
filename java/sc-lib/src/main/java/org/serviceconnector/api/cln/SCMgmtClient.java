@@ -145,7 +145,7 @@ public class SCMgmtClient extends SCClient {
 			inspectCall.setRequestBody(instruction);
 			inspectCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			this.connectionPool.destroy();
+			this.requester.destroy();
 			throw new SCServiceException("inspect request failed", e);
 		}
 		if (instruction.equalsIgnoreCase(Constants.KILL)) {
@@ -176,7 +176,7 @@ public class SCMgmtClient extends SCClient {
 			manageCall.setRequestBody(instruction);
 			manageCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			this.connectionPool.destroy();
+			this.requester.destroy();
 			throw new SCServiceException("kill SC failed", e);
 		}
 		if (instruction.equalsIgnoreCase(Constants.KILL)) {

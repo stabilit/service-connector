@@ -22,7 +22,14 @@ import org.serviceconnector.api.SCMessage;
  * 
  * @author JTraber
  */
-public class SCPublishServerCallback {
+public abstract class SCPublishServerCallback {
+	
+	/** The sc publish server. */
+	protected SCPublishServer scPublishServer = null;
+
+	public SCPublishServerCallback(SCPublishServer scPublishServer) {
+		this.scPublishServer = scPublishServer;
+	}
 
 	/**
 	 * Subscribe.

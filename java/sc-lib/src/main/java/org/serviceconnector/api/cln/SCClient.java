@@ -26,8 +26,6 @@ import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.net.connection.ConnectionPool;
-import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
@@ -54,14 +52,10 @@ public class SCClient {
 	private int maxConnections;
 	/** The keep alive interval. */
 	private int keepAliveIntervalInSeconds;
-	/** The connection pool. */
-	protected ConnectionPool connectionPool;
 	/** The connection type. {netty.http} */
-	private String connectionType;
+	private ConnectionType connectionType;
 	/** The requester. */
-	protected IRequester requester;
-	/** The context. */
-	protected SCClientContext scContext;
+	protected SCRequester requester;
 
 	protected boolean attached;
 
@@ -78,21 +72,10 @@ public class SCClient {
 	public SCClient(String host, int port, ConnectionType connectionType) {
 		this.host = host;
 		this.port = port;
-		this.connectionType = connectionType.getValue();
+		this.connectionType = connectionType;
 		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
-		this.scContext = new SCClientContext(this);
 		this.attached = false;
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
-		this.connectionPool = null;
-	}
-
-	/**
-	 * Gets the context.
-	 * 
-	 * @return the context
-	 */
-	public SCClientContext getSCContext() {
-		return this.scContext;
 	}
 
 	/**
@@ -104,7 +87,7 @@ public class SCClient {
 	 *             port is not within limits 0 to 0xFFFF, host unset
 	 */
 	public synchronized void attach() throws Exception {
-		this.attach(Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
+		this.attach(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
 	/**
@@ -123,27 +106,22 @@ public class SCClient {
 			throw new InvalidParameterException("host must be set.");
 		}
 		ValidatorUtility.validateInt(1, operationTimeout, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility.validateInt(0, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		AppContext.init();
 		synchronized (AppContext.communicatorsLock) {
-			ValidatorUtility.validateInt(0, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
-			ValidatorUtility.validateInt(0, this.keepAliveIntervalInSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
-			this.connectionPool = new ConnectionPool(this.host, this.port, this.connectionType, keepAliveIntervalInSeconds);
-			this.connectionPool.setMaxConnections(this.maxConnections);
-			// keep always one connection active from client to SC
-			this.connectionPool.setMinConnections(1);
-			this.scContext.setConnectionPool(this.connectionPool);
-			this.requester = new SCRequester(new RequesterContext(this.connectionPool, null));
+			this.requester = new SCRequester(new RequesterContext(this.host, this.port, this.connectionType.getValue(),
+					keepAliveIntervalInSeconds, this.maxConnections));
 			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 			SCServiceCallback callback = new SCServiceCallback(true);
 			try {
 				attachCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				this.connectionPool.destroy();
+				this.requester.destroy();
 				throw new SCServiceException("attach to " + host + ":" + port + " failed", e);
 			}
 			SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				this.connectionPool.destroy();
+				this.requester.destroy();
 				SCServiceException ex = new SCServiceException("attach to " + host + ":" + port + " failed");
 				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				throw ex;
@@ -202,7 +180,7 @@ public class SCClient {
 			this.attached = false;
 			AppContext.attachedCommunicators.decrementAndGet();
 			// destroy connection pool
-			this.connectionPool.destroy();
+			this.requester.destroy();
 			// release resources
 			AppContext.destroy();
 		}
@@ -213,8 +191,8 @@ public class SCClient {
 	 * 
 	 * @return the connection type in use
 	 */
-	public String getConnectionType() {
-		return connectionType;
+	public ConnectionType getConnectionType() {
+		return this.connectionType;
 	}
 
 	/**
@@ -223,7 +201,7 @@ public class SCClient {
 	 * @return the host
 	 */
 	public String getHost() {
-		return host;
+		return this.host;
 	}
 
 	/**
@@ -232,7 +210,7 @@ public class SCClient {
 	 * @return the port
 	 */
 	public int getPort() {
-		return port;
+		return this.port;
 	}
 
 	/**
@@ -249,10 +227,12 @@ public class SCClient {
 	 * 
 	 * @param keepAliveIntervalInSeconds
 	 *            the new keep alive interval in seconds
+	 * @throws SCMPValidatorException
 	 * @throws InvalidParameterException
 	 *             keepAliveIntervalInSeconds not within limits 0 to 3600
 	 */
-	public void setKeepAliveIntervalInSeconds(int keepAliveIntervalInSeconds) {
+	public void setKeepAliveIntervalInSeconds(int keepAliveIntervalInSeconds) throws SCMPValidatorException {
+		ValidatorUtility.validateInt(0, this.keepAliveIntervalInSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
 	}
 
@@ -264,13 +244,15 @@ public class SCClient {
 	 * @return the file service
 	 */
 	public SCFileService newFileService(String serviceName) throws Exception {
-		if (serviceName == null) {
-			throw new InvalidParameterException("service name must be set");
-		}
 		if (this.attached == false) {
 			throw new SCServiceException("newFileService not possible - client not attached.");
 		}
-		return new SCFileService(serviceName, this.scContext);
+		if (serviceName == null) {
+			throw new InvalidParameterException("service name must be set");
+		}
+		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
+		return new SCFileService(this, serviceName, this.requester);
 	}
 
 	/**
@@ -281,13 +263,15 @@ public class SCClient {
 	 * @return the session service
 	 */
 	public SCSessionService newSessionService(String serviceName) throws Exception {
-		if (serviceName == null) {
-			throw new InvalidParameterException("service name must be set");
-		}
 		if (this.attached == false) {
 			throw new SCServiceException("newSessionService not possible - client not attached.");
 		}
-		return new SCSessionService(serviceName, this.scContext);
+		if (serviceName == null) {
+			throw new InvalidParameterException("service name must be set");
+		}
+		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
+		return new SCSessionService(this, serviceName, this.requester);
 	}
 
 	/**
@@ -298,13 +282,15 @@ public class SCClient {
 	 * @return the publish service
 	 */
 	public SCPublishService newPublishService(String serviceName) throws Exception {
-		if (serviceName == null) {
-			throw new InvalidParameterException("service name must be set");
-		}
 		if (this.attached == false) {
 			throw new SCServiceException("newPublishService not possible - client not attached.");
 		}
-		return new SCPublishService(serviceName, this.scContext);
+		if (serviceName == null) {
+			throw new InvalidParameterException("service name must be set");
+		}
+		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
+		return new SCPublishService(this, serviceName, this.requester);
 	}
 
 	/**
