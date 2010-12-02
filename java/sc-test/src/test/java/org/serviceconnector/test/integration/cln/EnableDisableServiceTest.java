@@ -25,190 +25,169 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
-import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
 
 public class EnableDisableServiceTest {
 	
+	/** The Constant testLogger. */
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	
+
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(EnableDisableServiceTest.class);
-
-	private static Process scProcess;
-
-	private SCMgmtClient client;
-
-	private Exception ex;
+	protected final static Logger logger = Logger.getLogger(AttachDetachTest.class);
 
 	private static ProcessesController ctrl;
-
+	private static ProcessCtx scCtx;
+	private SCMgmtClient client;
+	private int threadCount = 0;
+	private String serviceName = TestConstants.sessionServiceNames;
+	
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		} catch (Exception e) {
-			logger.error("beforeAllTests", e);
-		}
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		ctrl.stopSC(scProcess, TestConstants.log4jSCProperties);
-		ctrl = null;
-		scProcess = null;
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP);
-		client.attach();
+		threadCount = Thread.activeCount();
 	}
-	
+
 	@After
 	public void afterOneTest() throws Exception {
-		client.detach();
+		try {
+			client.detach();
+		} catch (Exception e) {}
 		client = null;
-		ex = null;
-	}
-	
-	@Test
-	public void isEnabled_enabledService_isEnabled() throws SCServiceException {
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-	}
-	
-	@Test
-	public void isEnabled_disabledService_isNotEnabled() throws SCServiceException {
-		assertEquals(false, client.isServiceEnabled(TestConstants.sessionServiceNames));
-	}
-	
-	@Test(expected = SCServiceException.class)
-	public void isEnabled_notExistingService_throwsException() throws SCServiceException {
-		client.isServiceEnabled("notExistingService");
+//		assertEquals("number of threads", threadCount, Thread.activeCount());
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
-	@Test
-	public void enableService_withoutAttach_throwsException() throws Exception {
-		client.detach();
+	@AfterClass
+	public static void afterAllTests() throws Exception {
 		try {
-			client.enableService(TestConstants.sessionServiceNames);
-		} catch (SCServiceException e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
+			ctrl.stopSC(scCtx);
+			scCtx = null;
+		} catch (Exception e) {}
+		ctrl = null;
+		ctrl = null;
 	}
 
-	@Test
-	public void disableService_withoutAttach_throwsException() throws Exception {
-		client.detach();
-		try {
-			client.disableService(TestConstants.sessionServiceNames);
-		} catch (SCServiceException e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCServiceException);
-	}
-
-	@Test
-	public void enableService_AlreadyEnabled_staysEnabled()
-			throws Exception {
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.enableService(TestConstants.sessionServiceNames);
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-	}
-	
-	@Test
-	public void enableService_disabledService_fromDisabledToEnabled()
-			throws Exception {
-		assertEquals(false, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.enableService(TestConstants.sessionServiceNames);
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.disableService(TestConstants.sessionServiceNames);
-	}
-	
-	@Test
-	public void disableService_disabledService_passes() throws Exception {
-		assertEquals(false, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.enableService(TestConstants.sessionServiceNames);
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.disableService(TestConstants.sessionServiceNames);
-	}
-	
-	@Test
-	public void disableService_AlreadyEnabled_disabled() throws Exception {
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.disableService(TestConstants.sessionServiceNames);
-		assertEquals(false, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.enableService(TestConstants.sessionServiceNames);
-	}
-	
+		
+	/**
+	 * Description: check non-existing service<br> 
+	 * Expectation:	throws SCServiceException
+	 */
 	@Test(expected = SCServiceException.class)
-	public void isServiceEnabled_notExistingService_throwsSCException() throws Exception {
-		client.isServiceEnabled("notExistingService");		
+	public void t01_disable_enable() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		client.attach(2);
+		assertEquals("Enabled ", true, client.isServiceEnabled("notExistingService"));
 	}
 
+	/**
+	 * Description: enable non-existing service<br> 
+	 * Expectation:	throws SCServiceException
+	 */
 	@Test(expected = SCServiceException.class)
-	public void enableService_notExistingService_throwsSCException() throws Exception {
+	public void t02_disable_enable() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		client.attach(2);
 		client.enableService("notExistingService");
 	}
-
+	
+	/**
+	 * Description: disable non-existing service<br> 
+	 * Expectation:	throws SCServiceException
+	 */
 	@Test(expected = SCServiceException.class)
-	public void disableService_notExistingService_throwsSCException() throws Exception {
+	public void t03_disable_enable() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		client.attach(2);
 		client.disableService("notExistingService");
 	}
-	
-	@Test
-	public void enableDisableService_anotherExistingService_switchesStates() throws Exception {
-		assertEquals(true, client.isServiceEnabled(TestConstants.publishServiceNames));
-		client.disableService(TestConstants.publishServiceNames);
-		assertEquals(false, client.isServiceEnabled(TestConstants.publishServiceNames));
-		client.enableService(TestConstants.publishServiceNames);
-		assertEquals(true, client.isServiceEnabled(TestConstants.publishServiceNames));
+
+	/**
+	 * Description: check service without attach<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t04_disable_enable() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
 	}
 	
+	/**
+	 * Description: check default service<br> 
+	 * Expectation:	service is enabled.
+	 */
 	@Test
-	public void enableDisableService_1000Times_switchesStates() throws Exception {
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		for (int i = 0; i < 1000; i++) {
-			if ((i % 500) == 0) testLogger.info("Enabling/disabling cycle nr. " + i + "...");
-			client.disableService(TestConstants.sessionServiceNames);
-			assertEquals(false, client.isServiceEnabled(TestConstants.sessionServiceNames));
-			client.enableService(TestConstants.sessionServiceNames);
-			assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
+	public void t05_default() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		client.attach(2);
+		assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
+	}
+	
+	/**
+	 * Description: disable service without attach<br> 
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t06_disable_enable() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		client.disableService(serviceName);
+	}
+
+	/**
+	 * Description: disable and enable service<br> 
+	 * Expectation:	service is enabled.
+	 */
+	@Test
+	public void t07_disable_enable() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		client.attach(2);
+		assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
+		client.disableService(serviceName);
+		assertEquals("Disabled ", false, client.isServiceEnabled(serviceName));
+		client.enableService(serviceName);
+		assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
+	}
+	
+	/**
+	 * Description: enable / disable service twice<br> 
+	 * Expectation:	stays enabled / disabled
+	 */
+	@Test
+	public void t08_disable_enable() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		client.attach(2);
+		assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
+		client.disableService(serviceName);
+		client.disableService(serviceName);
+		assertEquals("Disabled ", false, client.isServiceEnabled(serviceName));
+		client.enableService(serviceName);
+		client.enableService(serviceName);
+		assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
+	}
+
+	/**
+	 * Description: enable / disable service 1000 times<br> 
+	 * Expectation:	stays enabled / disabled
+	 */
+	@Test
+	public void t09_disable_enable() throws Exception {
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		client.attach(2);
+		int nr = 1000;
+		for (int i = 0; i < nr; i++) {
+			if (((i+1) % 100) == 0) testLogger.info("Enable/disable nr. " + (i+1) + "...");
+			client.disableService(serviceName);
+			assertEquals("Disabled ", false, client.isServiceEnabled(serviceName));
+			client.enableService(serviceName);
+			assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
 		}
-	}
-	
-	@Test
-	public void enableDisableService_twoClients_seeChangesOfTheOther() throws Exception {
-		SCMgmtClient client2 = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP);
-		client2.attach();
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		assertEquals(true, client2.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.disableService(TestConstants.sessionServiceNames);
-		assertEquals(false, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		assertEquals(false, client2.isServiceEnabled(TestConstants.sessionServiceNames));
-		client2.enableService(TestConstants.sessionServiceNames);
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		assertEquals(true, client2.isServiceEnabled(TestConstants.sessionServiceNames));
-		client2.detach();
-	}
-	
-	@Test
-	public void enableDisableService_twoClientsDifferentConnectionTypes_seeChangesOfTheOther() throws Exception {
-		SCMgmtClient client2 = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		client2.attach();
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		assertEquals(true, client2.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.disableService(TestConstants.sessionServiceNames);
-		assertEquals(false, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		assertEquals(false, client2.isServiceEnabled(TestConstants.sessionServiceNames));
-		client2.enableService(TestConstants.sessionServiceNames);
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		assertEquals(true, client2.isServiceEnabled(TestConstants.sessionServiceNames));
-		client2.detach();
 	}
 }
