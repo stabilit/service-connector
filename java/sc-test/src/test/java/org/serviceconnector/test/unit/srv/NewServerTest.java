@@ -48,7 +48,7 @@ public class NewServerTest {
 
 	@After
 	public void afterOneTest() {
-		server.stopListener(); 
+		server.stopListener();
 		server = null;
 	}
 		

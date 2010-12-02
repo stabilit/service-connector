@@ -72,7 +72,6 @@ public class AttachDetachTest {
 			scCtx = null;
 		} catch (Exception e) {}
 		ctrl = null;
-		ctrl = null;
 	}
 
 
