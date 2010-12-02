@@ -17,16 +17,15 @@ package org.serviceconnector.test.unit;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.cache.AllCacheTests;
 import org.serviceconnector.test.unit.cln.SCClientTest;
+import org.serviceconnector.test.unit.srv.NewServerTest;
 import org.serviceconnector.test.unit.srv.SCServerTest;
-import org.serviceconnector.test.unit.srv.SCSessionServerTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { 
 		SCMessageTest.class,	
 		SCClientTest.class, 
 		SCServerTest.class, 
-		SCSessionServerTest.class})
+		NewServerTest.class})
 public class AllUnitTests {
 }
