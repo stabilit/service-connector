@@ -30,17 +30,8 @@ public interface ISCMPSynchronousCallback extends ISCMPCallback {
 	public abstract void callback(Exception ex);
 
 	/**
-	 * Gets the message synchronous. Waits until message/fault received or operation timeout occurs. Longest time to
-	 * wait depends on Constants.SERVICE_LEVEL_OPERATION_TIMEOUT_MILLIS.
-	 * 
-	 * @return the message sync
-	 * @throws Exception
-	 */
-	public abstract SCMPMessage getMessageSync() throws Exception;
-
-	/**
-	 * Careful, be aware of timeout concept if you use this method. Should not be used in normal cases. Gets the message
-	 * synchronous. Waits until message/fault received or time you hand over runs out.<br>
+	 * Careful, be aware of timeout concept if you use this method. Gets the message synchronous. Waits until message/fault received
+	 * or time you hand over runs out.<br>
 	 * <br>
 	 * Hand over 0 value if you like to wait forever for some reason. Might be useful for test purposes.
 	 * 

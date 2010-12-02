@@ -53,7 +53,7 @@ public final class Constants {
 	/** Default timeout for file session creation. */
 	public static final int DEFAULT_FILE_SESSION_TIMEOUT_SECONDS = 15;
 
-	/** Default timeout for creation of an connection to peer. */
+	/** Default timeout for creation of a connection to peer. */
 	public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 5000;
 
 	/** Default timeout after a subscription is marked as dead. */

@@ -234,7 +234,7 @@ public class SCSessionService extends SCService {
 		return this.execute(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
 	}
 
-	public synchronized SCMessage execute(int timeoutInSeconds, SCMessage requestMsg) throws Exception {
+	public synchronized SCMessage execute(int operationTimeoutSeconds, SCMessage requestMsg) throws Exception {
 		if (this.sessionActive == false) {
 			throw new SCServiceException("execute not possible, no active session.");
 		}
@@ -245,7 +245,7 @@ public class SCSessionService extends SCService {
 			// pending Request - reply still outstanding
 			throw new SCServiceException("execute not possible, there is a pending request - two pending request are not allowed.");
 		}
-		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
 		// cancel session timeout
 		this.timerTask.cancel();
@@ -266,13 +266,13 @@ public class SCSessionService extends SCService {
 		// invoke asynchronous
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
-			clnExecuteCall.invoke(callback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			clnExecuteCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute reuest failed ", e);
 		}
 		// wait for message in callback
-		SCMPMessage reply = callback.getMessageSync(timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		this.pendingRequest = false;
 		if (reply.isFault()) {
 			SCMPFault fault = null;
@@ -313,7 +313,7 @@ public class SCSessionService extends SCService {
 		this.send(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg, callback);
 	}
 
-	public synchronized void send(int timeoutInSeconds, SCMessage requestMsg, SCMessageCallback callback) throws Exception {
+	public synchronized void send(int operationtTimeoutSeconds, SCMessage requestMsg, SCMessageCallback callback) throws Exception {
 		if (this.sessionActive == false) {
 			throw new SCServiceException("execute not possible, no active session.");
 		}
@@ -327,7 +327,7 @@ public class SCSessionService extends SCService {
 			// already executed before - reply still outstanding
 			throw new SCServiceException("execute not possible, there is a pending request - two pending request are not allowed.");
 		}
-		ValidatorUtility.validateInt(1, timeoutInSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility.validateInt(1, operationtTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
 		// cancel session timeout
 		this.timerTask.cancel();
@@ -343,7 +343,7 @@ public class SCSessionService extends SCService {
 		clnExecuteCall.setRequestBody(requestMsg.getData());
 		SCServiceCallback scmpCallback = new SCServiceCallback(this, callback);
 		try {
-			clnExecuteCall.invoke(scmpCallback, timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			clnExecuteCall.invoke(scmpCallback, operationtTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			throw new SCServiceException("execute request failed ", e);
@@ -357,10 +357,22 @@ public class SCSessionService extends SCService {
 		AppContext.eciTimer.schedule(this.timerTask, (long) this.timerRun.getTimeoutMillis());
 	}
 
+	/**
+	 * Sets the echo timeout in seconds. Time in seconds the an echo request waits to be confirmed. If no confirmation is received
+	 * session is marked as dead.
+	 * 
+	 * @param echoTimeoutInSeconds
+	 *            the new echo timeout in seconds
+	 */
 	public void setEchoTimeoutInSeconds(int echoTimeoutInSeconds) {
 		this.echoTimeoutInSeconds = echoTimeoutInSeconds;
 	}
 
+	/**
+	 * Gets the echo timeout in seconds. Time in seconds the an echo request waits to be confirmed.
+	 * 
+	 * @return the echo timeout in seconds
+	 */
 	public int getEchoTimeoutInSeconds() {
 		return this.echoTimeoutInSeconds;
 	}
@@ -388,7 +400,7 @@ public class SCSessionService extends SCService {
 			throw new SCServiceException("echo request failed", e);
 		}
 		// wait for message in callback
-		SCMPMessage reply = callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync(this.echoTimeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		this.pendingRequest = false;
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("echo failed");

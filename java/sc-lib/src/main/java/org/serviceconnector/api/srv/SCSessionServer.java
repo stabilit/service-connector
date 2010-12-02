@@ -147,6 +147,7 @@ public class SCSessionServer {
 		if (this.registered) {
 			throw new InvalidActivityException("Server already registered for a service.");
 		}
+		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		AppContext.init();
 		synchronized (AppContext.communicatorsLock) {
 			this.msgSequenceNr.reset();
@@ -210,6 +211,7 @@ public class SCSessionServer {
 			// sc server not registered - deregister not necessary
 			return;
 		}
+		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		IRequester req = null;
 		try {
 			// remove srvService from registry

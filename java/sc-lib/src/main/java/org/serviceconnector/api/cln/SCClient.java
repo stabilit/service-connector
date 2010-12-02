@@ -122,6 +122,7 @@ public class SCClient {
 		if (host == null) {
 			throw new InvalidParameterException("host must be set.");
 		}
+		ValidatorUtility.validateInt(1, operationTimeout, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		AppContext.init();
 		synchronized (AppContext.communicatorsLock) {
 			ValidatorUtility.validateInt(0, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
@@ -135,12 +136,12 @@ public class SCClient {
 			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 			SCServiceCallback callback = new SCServiceCallback(true);
 			try {
-				attachCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+				attachCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				this.connectionPool.destroy();
 				throw new SCServiceException("attach to " + host + ":" + port + " failed", e);
 			}
-			SCMPMessage reply = callback.getMessageSync();
+			SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				this.connectionPool.destroy();
 				SCServiceException ex = new SCServiceException("attach to " + host + ":" + port + " failed");
@@ -162,25 +163,36 @@ public class SCClient {
 	}
 
 	/**
-	 * Detach from SC.
+	 * Detach.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
 	public synchronized void detach() throws Exception {
+		this.detach(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	/**
+	 * Detach from SC.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public synchronized void detach(int operationTimeout) throws Exception {
 		if (this.attached == false) {
 			// client is not attached just ignore
 			return;
 		}
+		ValidatorUtility.validateInt(1, operationTimeout, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 			try {
-				detachCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+				detachCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("detach client failed", e);
 			}
-			SCMPMessage reply = callback.getMessageSync();
+			SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("detach client failed");
 				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));

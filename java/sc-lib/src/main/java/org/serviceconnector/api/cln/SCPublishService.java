@@ -167,6 +167,9 @@ public class SCPublishService extends SCService {
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.noDataInterval = scSubscribeMessage.getNoDataIntervalInSeconds();
+		if (this.noDataInterval == 0) {
+			throw new InvalidParameterException("notDataInterval must be set.");
+		}
 		this.msgSequenceNr.reset();
 		this.scMessageCallback = scMessageCallback;
 		SCServiceCallback callback = new SCServiceCallback(true);
@@ -334,8 +337,5 @@ public class SCPublishService extends SCService {
 				super.callback(reply);
 			}
 		}
-	}
-
-	public void setNoDataIntervalInSeconds(int noDataIntervalSeconds) {
 	}
 }

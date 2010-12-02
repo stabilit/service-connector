@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPSrvAbortSessionCall;
 import org.serviceconnector.call.SCMPSrvChangeSubscriptionCall;
@@ -299,7 +300,7 @@ public class StatefulServer extends Server {
 			this.abortSessionsAndDestroy();
 			return;
 		}
-		SCMPMessage reply = callback.getMessageSync();
+		SCMPMessage reply = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
 			// error in server abort session operation
 			this.abortSessionsAndDestroy();

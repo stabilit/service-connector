@@ -54,6 +54,7 @@ public class SCPublishServer extends SCSessionServer {
 		if (publishMessage == null) {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "subscibeMessage can not be null");
 		}
+		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		ValidatorUtility.validateStringLength(1, this.serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		ValidatorUtility.validateAllowedCharacters(this.serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();

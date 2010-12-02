@@ -21,19 +21,17 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPMessage;
 
-
 /**
- * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a call for the
- * callback. This class is designed to be extended by various callback's. It provides synchronous flag to to save state
- * if somebody is waiting for a message. Synchronous flag might be useful in subclasses. It only gets access to the
- * newest message - it only queues one item. Queuing an arrived message happens only if someone is expecting
- * (synchronous = true) a reply. This restriction prevents race conditions - late messages are ignored.
+ * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a call for the callback.
+ * This class is designed to be extended by various callback's. It provides synchronous flag to to save state if somebody is waiting
+ * for a message. Synchronous flag might be useful in subclasses. It only gets access to the newest message - it only queues one
+ * item. Queuing an arrived message happens only if someone is expecting (synchronous = true) a reply. This restriction prevents race
+ * conditions - late messages are ignored.
  * 
  * @author JTraber
  */
@@ -88,12 +86,6 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 		// object could not be added - clear queue and offer again
 		this.answer.clear();
 		this.answer.offer(fault);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SCMPMessage getMessageSync() {
-		return this.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 	}
 
 	/** {@inheritDoc} */

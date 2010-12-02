@@ -36,18 +36,17 @@ public class DemoPublishClient extends Thread {
 	@Override
 	public void run() {
 
-		//SCClient sc = new SCClient("localhost", 7000); // regular, defaults documented in javadoc
+		// SCClient sc = new SCClient("localhost", 7000); // regular, defaults documented in javadoc
 		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP); // alternative with connection type
 		SCPublishService service = null;
 		try {
 			sc.setMaxConnections(20); // can be set before attach
 			sc.setKeepAliveIntervalInSeconds(10); // can be set before attach
 			sc.attach(); // regular
-//			sc.attach(10); // alternative with operation timeout
+			// sc.attach(10); // alternative with operation timeout
 
 			String serviceName = "publish-1";
 			service = sc.newPublishService(serviceName); // no other params possible
-			service.setNoDataIntervalInSeconds(100); // can be set before subscribe
 
 			SCMessageCallback cbk = new DemoPublishClientCallback(service); // callback on service!!
 			String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
@@ -55,25 +54,26 @@ public class DemoPublishClient extends Thread {
 			msg.setSessionInfo("subscription-info"); // optional
 			msg.setData("certificate or what so ever"); // optional
 			msg.setMask(mask); // mandatory
+			msg.setNoDataIntervalInSeconds(100); // mandatory
 			SCSubscribeMessage reply = service.subscribe(msg, cbk); // regular
 			reply = service.subscribe(10, msg, cbk); // alternative with operation timeout
 
 			String sid = service.getSessionId();
 
-//			while (true) {
-				// service.receive(cbk); // wait for response
-				// cbk.receive(); // wait for response ?
-				// responseMsg = cbk.getMessage(); // response message
-//			}
+			// while (true) {
+			// service.receive(cbk); // wait for response
+			// cbk.receive(); // wait for response ?
+			// responseMsg = cbk.getMessage(); // response message
+			// }
 		} catch (Exception e) {
 			logger.error("run", e);
 		} finally {
 			try {
 				service.unsubscribe(); // regular
-//				service.unsubscribe(10); // alternative with operation timeout
+				// service.unsubscribe(10); // alternative with operation timeout
 				SCMessage msg = new SCMessage();
 				msg.setSessionInfo("subscription-info");
-//				service.unsubscribe(10, msg); // alternative with operation timeout and session info
+				// service.unsubscribe(10, msg); // alternative with operation timeout and session info
 				sc.detach();
 			} catch (Exception e) {
 				logger.info("cleanup " + e.toString());
