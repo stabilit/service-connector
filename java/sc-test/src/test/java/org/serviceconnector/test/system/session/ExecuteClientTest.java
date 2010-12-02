@@ -28,6 +28,7 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.service.SCServiceException;
 
@@ -36,8 +37,8 @@ public class ExecuteClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ExecuteClientTest.class);
 
-	private static Process scProcess;
-	private static Process srvProcess;
+	private static ProcessCtx scCtx;
+	private static ProcessCtx srvCtx;
 
 	private SCMgmtClient client;
 	private Exception ex;
@@ -47,20 +48,16 @@ public class ExecuteClientTest {
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-			srvProcess = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
-					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.sessionServiceNames,
-							TestConstants.publishServiceNames });
-		} catch (Exception e) {
-			logger.error("beforeAllTests", e);
-		}
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.publishServiceNames );
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		client = new SCMgmtClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client.attach();
 		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.sessionServiceNames));
 	}
 
@@ -74,11 +71,15 @@ public class ExecuteClientTest {
 
 	@AfterClass
 	public static void afterAllTests() throws Exception {
-		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
-		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
+		try {
+			ctrl.stopServer(srvCtx);
+		} catch (Exception e) {	}
+		try {
+			ctrl.stopSC(scCtx);
+		} catch (Exception e) {	}
+		srvCtx = null;
+		scCtx = null;
 		ctrl = null;
-		scProcess = null;
-		srvProcess = null;
 	}
 
 	@Test(expected = SCServiceException.class)
@@ -94,7 +95,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
@@ -112,7 +113,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
@@ -130,7 +131,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
@@ -148,7 +149,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
@@ -167,7 +168,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
@@ -186,7 +187,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
@@ -205,7 +206,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
@@ -225,7 +226,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
@@ -245,7 +246,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		sessionService.deleteSession();
@@ -265,7 +266,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		String sessionId = sessionService.getSessionId();
@@ -287,7 +288,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		String sessionId = sessionService.getSessionId();
@@ -309,7 +310,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		String sessionId = sessionService.getSessionId();
@@ -331,7 +332,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		String sessionId = sessionService.getSessionId();
@@ -353,7 +354,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(message);
 		String sessionId = sessionService.getSessionId();
@@ -375,7 +376,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		((SCMessage) message).setSessionId(sessionService.getSessionId());
 
@@ -400,11 +401,11 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService0.createSession(300, 60, message);
+		sessionService0.createSession( 60, message);
 
 		SCSessionService sessionService1 = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService1.createSession(300, 60, message);
+		sessionService1.createSession( 60, message);
 
 		((SCMessage) message).setSessionId(sessionService1.getSessionId());
 
@@ -430,11 +431,11 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService0.createSession(300, 60, message);
+		sessionService0.createSession( 60, message);
 
 		SCSessionService sessionService1 = client.newSessionService(TestConstants.publishServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService1.createSession(300, 60, message);
+		sessionService1.createSession( 60, message);
 
 		((SCMessage) message).setSessionId(sessionService1.getSessionId());
 
@@ -458,7 +459,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(1, message);
 
@@ -478,7 +479,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(2, message);
 
@@ -498,7 +499,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = null;
 		try {
@@ -519,7 +520,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = null;
 		try {
@@ -540,7 +541,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = null;
 		try {
@@ -561,7 +562,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = null;
 		try {
@@ -582,7 +583,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(3600, message);
 
@@ -600,7 +601,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = null;
 		try {
@@ -621,7 +622,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(1, message);
 
@@ -639,7 +640,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(2, message);
 
@@ -657,7 +658,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(3600, message);
 
@@ -675,7 +676,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		try {
 			sessionService.execute(3601, message);
@@ -694,7 +695,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		try {
 			sessionService.execute(Integer.MAX_VALUE, message);
@@ -713,7 +714,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		try {
 			sessionService.execute(Integer.MIN_VALUE, message);
@@ -732,7 +733,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		try {
 			sessionService.execute(0, message);
@@ -751,7 +752,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		try {
 			sessionService.execute(-1, message);
@@ -768,7 +769,7 @@ public class ExecuteClientTest {
 		SCMessage message = new SCMessage();
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		try {
 			sessionService.execute(2, new SCMessage("timeout 4000"));
@@ -784,7 +785,7 @@ public class ExecuteClientTest {
 		SCMessage message = new SCMessage();
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		try {
 			sessionService.execute(2, new SCMessage("timeout 2000"));
@@ -801,7 +802,7 @@ public class ExecuteClientTest {
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		message.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 60, message);
+		sessionService.createSession( 60, message);
 
 		SCMessage response = sessionService.execute(2, message);
 		assertEquals(message.getData().toString(), response.getData().toString());

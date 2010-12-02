@@ -26,10 +26,11 @@ import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
-import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.api.srv.SCSessionServer;
+import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cln.TestSessionClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 
 public class SessionServerTest {
@@ -39,31 +40,28 @@ public class SessionServerTest {
 	private SrvCallback srvCallback;
 	private SCSessionServer server;
 
-	private static Process scProcess;
+	private static ProcessCtx scCtx;
 
 	private static ProcessesController ctrl;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		} catch (Exception e) {
-			logger.error("beforeAllTests", e);
-			throw e;
-		}
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}
 
 	@AfterClass
 	public static void afterAllTests() throws Exception {
-		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
+		try {
+			ctrl.stopSC(scCtx);
+		} catch (Exception e) {	}
+		scCtx = null;
 		ctrl = null;
-		scProcess = null;
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		server = new SCSessionServer();
+		server = new SCSessionServer(TestConstants.HOST, TestConstants.PORT_LISTENER);
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		srvCallback = new SrvCallback();
 		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceNames, 10, 10,

@@ -27,6 +27,7 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.service.SCServiceException;
 
@@ -34,8 +35,8 @@ public class PrematureDestroyOfSCProcessClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfSCProcessClientTest.class);
 
-	private Process scProcess;
-	private Process srvProcess;
+	private ProcessCtx scCtx;
+	private ProcessCtx srvCtx;
 
 	private SCClient client;
 
@@ -51,28 +52,31 @@ public class PrematureDestroyOfSCProcessClientTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-			srvProcess = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
-					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, new String[] { TestConstants.sessionServiceNames });
+			scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+			srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
+					TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+					TestConstants.publishServiceNames );
 		} catch (Exception e) {
 			logger.error("setUp", e);
 		}
-		client = new SCClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client.attach();
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
 		try {
 			client.detach();
-		} catch (Exception e) {
-		} finally {
-			ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-			ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
-			client = null;
-			srvProcess = null;
-			scProcess = null;
-		}
+		} catch (Exception e) {	}
+		try {
+			ctrl.stopServer(srvCtx);
+		} catch (Exception e) {	}
+		try {
+			ctrl.stopSC(scCtx);
+		} catch (Exception e) {	}
+		client = null;
+		srvCtx = null;
+		scCtx = null;
 	}
 
 	@AfterClass
@@ -82,12 +86,12 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test
 	public void createSession_withoutSC_throwsException() throws Exception {
-		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
+		ctrl.stopServer(srvCtx);
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		try {
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
-			sessionService.createSession(300, 5, scMessage);
+			sessionService.createSession( 5, scMessage);
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -100,8 +104,8 @@ public class PrematureDestroyOfSCProcessClientTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 5, scMessage);
-		ctrl.stopProcess(scProcess, TestConstants.log4jSrvProperties);
+		sessionService.createSession( 5, scMessage);
+		ctrl.stopSC(scCtx);
 		try {
 			sessionService.deleteSession();
 		} catch (Exception e) {
@@ -115,8 +119,8 @@ public class PrematureDestroyOfSCProcessClientTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
-		sessionService.createSession(300, 5, scMessage);
-		ctrl.stopProcess(scProcess, TestConstants.log4jSrvProperties);
+		sessionService.createSession(5, scMessage);
+		ctrl.stopSC(scCtx);
 		try {
 			sessionService.execute(new SCMessage());
 		} catch (Exception e) {
@@ -130,19 +134,20 @@ public class PrematureDestroyOfSCProcessClientTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
-		sessionService.createSession(5, 5, scMessage);
-		ctrl.stopProcess(scProcess, TestConstants.log4jSrvProperties);
+		sessionService.createSession( 5, scMessage);
+		ctrl.stopSC(scCtx);
 		Thread.sleep(5000);
 		sessionService.deleteSession();
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void execute_withoutSC_timeoutTakes5SecondsThrowsException() throws Exception {
-		ctrl.stopProcess(scProcess, TestConstants.log4jSrvProperties);
+		ctrl.stopSC(scCtx);
+		
 		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
-		sessionService.createSession(5, 5, scMessage);
+		sessionService.createSession(5, scMessage);
 		Thread.sleep(5000);
 		try {
 			sessionService.execute(new SCMessage());

@@ -30,15 +30,17 @@ import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
 public class PrematureDestroyOfSCProcessClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfSCProcessClientTest.class);
 
-	private Process scProcess;
-	private Process srvProcess;
+	private ProcessCtx scCtx;
+	private ProcessCtx srvCtx;
 
 	private int threadCount = 0;
 	private SCClient client;
@@ -56,29 +58,33 @@ public class PrematureDestroyOfSCProcessClientTest {
 	public void beforeOneTest() throws Exception {
 		threadCount = Thread.activeCount();
 		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-			srvProcess = ctrl.startServer(TestConstants.SERVER_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
-					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
-					new String[] { TestConstants.publishServiceNames });
+			scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+			srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
+					TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+					TestConstants.publishServiceNames );
+			
 		} catch (Exception e) {
 			logger.error("setUp", e);
 		}
-		client = new SCClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach(5);
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
 		try {
 			client.detach();
-		} catch (Exception e) {
-		} finally {
-			ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
-			ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
-			client = null;
-			srvProcess = null;
-			scProcess = null;
-		}
+		} catch (Exception e) { }
+		try {
+			ctrl.stopServer(srvCtx);
+		} catch (Exception e) {	}
+		try {
+			ctrl.stopSC(scCtx);
+		} catch (Exception e) {	}
+		srvCtx = null;
+		scCtx = null;
+		client = null;
+
 		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
@@ -89,7 +95,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test
 	public void subscribe_withoutSC_throwsException() throws Exception {
-		ctrl.stopProcess(scProcess, TestConstants.log4jSrvProperties);
+		ctrl.stopSC(scCtx);
 		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
@@ -111,7 +117,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 		subscibeMessage.setSessionInfo("sessionInfo");
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 
-		ctrl.stopProcess(scProcess, TestConstants.log4jSrvProperties);
+		ctrl.stopSC(scCtx);
 
 		try {
 			service.unsubscribe();
@@ -130,7 +136,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 		subscibeMessage.setSessionInfo("sessionInfo");
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 
-		ctrl.stopProcess(scProcess, TestConstants.log4jSrvProperties);
+		ctrl.stopSC(scCtx);
 
 		try {
 			for (int i = 0; i < 30; i++) {
@@ -159,7 +165,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 				if (callback.lastMessage == null) {
 					Thread.sleep(100);
 				} else {
-					ctrl.stopProcess(scProcess, TestConstants.log4jSrvProperties);
+					ctrl.stopSC(scCtx);
 					i = 30;
 				}
 			}

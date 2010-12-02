@@ -33,7 +33,9 @@ import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
 public class SubscribeClientTest {
@@ -41,8 +43,8 @@ public class SubscribeClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SubscribeClientTest.class);
 
-	private static Process scProcess;
-	private static Process srvProcess;
+	private static ProcessCtx scCtx;
+	private static ProcessCtx srvCtx;
 
 	private SCClient client;
 
@@ -53,20 +55,16 @@ public class SubscribeClientTest {
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		try {
-			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-			srvProcess = ctrl.startServer(TestConstants.SERVER_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
-					TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100,
-					new String[] { TestConstants.publishServiceNames });
-		} catch (Exception e) {
-			logger.error("beforeAllTests", e);
-		}
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
+				TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.publishServiceNames );
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		client = new SCClient();
-		client.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_TCP);
+		client.attach(5);
 	}
 
 	@After
@@ -77,11 +75,15 @@ public class SubscribeClientTest {
 
 	@AfterClass
 	public static void afterAllTests() throws Exception {
-		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
-		ctrl.stopProcess(srvProcess, TestConstants.log4jSrvProperties);
+		try {
+			ctrl.stopServer(srvCtx);
+		} catch (Exception e) {	}
+		try {
+			ctrl.stopSC(scCtx);
+		} catch (Exception e) {	}
+		srvCtx = null;
+		scCtx = null;
 		ctrl = null;
-		scProcess = null;
-		srvProcess = null;
 	}
 
 	@Test
@@ -928,7 +930,7 @@ public class SubscribeClientTest {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
 			subscibeMessage.setSessionInfo("sessionInfo");
-			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), 0);
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -944,7 +946,7 @@ public class SubscribeClientTest {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
 			subscibeMessage.setSessionInfo("sessionInfo");
-			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), -1);
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -961,7 +963,7 @@ public class SubscribeClientTest {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
 			subscibeMessage.setSessionInfo("sessionInfo");
-			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), 1);
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			assertEquals(true, e.getMessage().toLowerCase().contains("timeout"));
 			assertEquals(false, service.isSubscribed());
@@ -979,7 +981,7 @@ public class SubscribeClientTest {
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
-		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), 3600);
+		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		assertEquals(true, service.isSubscribed());
 		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 		service.unsubscribe();
@@ -992,7 +994,7 @@ public class SubscribeClientTest {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
 			subscibeMessage.setSessionInfo("sessionInfo");
-			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), 3601);
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1008,7 +1010,7 @@ public class SubscribeClientTest {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
 			subscibeMessage.setSessionInfo("sessionInfo");
-			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), Integer.MAX_VALUE);
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
@@ -1024,7 +1026,7 @@ public class SubscribeClientTest {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
 			subscibeMessage.setSessionInfo("sessionInfo");
-			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service), Integer.MIN_VALUE);
+			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (Exception e) {
 			ex = e;
 		}
