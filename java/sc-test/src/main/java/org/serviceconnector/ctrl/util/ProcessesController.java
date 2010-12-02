@@ -15,6 +15,7 @@
  */
 package org.serviceconnector.ctrl.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
@@ -127,6 +128,12 @@ public class ProcessesController {
 			if (scProcess.isRunning()) {
 				scProcess.getProcess().destroy();
 				scProcess.getProcess().waitFor();
+				// make sure the pid file is deleted under any circumstances
+				try {
+					File pidFile = new File(scProcess.getPidFileNameFull());
+					pidFile.delete();
+				} catch (Exception e) {
+				}
 			}
 		}
 	}
@@ -229,6 +236,17 @@ public class ProcessesController {
 		} catch (Exception e) {
 			testLogger.info(e.getMessage());
 			testLogger.error("Cannot stop server! Timeout exceeded.");
+		} finally {
+			if (srvProcess.isRunning()) {
+				srvProcess.getProcess().destroy();
+				srvProcess.getProcess().waitFor();
+				// make sure the pid file is deleted under any circumstances
+				try {
+					File pidFile = new File(srvProcess.getPidFileNameFull());
+					pidFile.delete();
+				} catch (Exception e) {
+				}
+			}
 		}
 	}
 }
