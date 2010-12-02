@@ -39,13 +39,13 @@ public class DemoPublishServer extends Thread {
 	public void run() {
 
 		SCServer sc = new SCServer("localhost", 9000, 9001); // regular, defaults documented in javadoc
-		//SCServer sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY_TCP); // alternative with connection type
+		// SCServer sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY_TCP); // alternative with connection type
 
-		sc.setKeepAliveIntervalInSeconds(10); // can be set before register
-		sc.setImmediateConnect(true); // can be set before register
 		try {
+			sc.setKeepAliveIntervalSeconds(10); // can be set before register
+			sc.setImmediateConnect(true); // can be set before register
 			sc.startListener(); // regular
-			
+
 			String serviceName = "publish-1";
 			SCPublishServer publishSrv = sc.newPublishServer(serviceName); // no other params possible
 
@@ -60,7 +60,7 @@ public class DemoPublishServer extends Thread {
 			for (int i = 0; i < 10; i++) {
 				pubMessage.setData("publish message nr : " + i);
 				pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-				//publishSrv.publish(pubMessage); // regular
+				// publishSrv.publish(pubMessage); // regular
 				publishSrv.publish(10, pubMessage); // alternative with operation timeout
 				Thread.sleep(1000);
 			}
@@ -81,10 +81,9 @@ public class DemoPublishServer extends Thread {
 
 		/** The Constant logger. */
 		protected final Logger logger = Logger.getLogger(SrvCallback.class);
-		private SCPublishServer server;
 
 		public SrvCallback(SCPublishServer publishSrv) {
-			this.server = publishSrv;
+			super(publishSrv);
 		}
 
 		@Override
@@ -113,8 +112,8 @@ public class DemoPublishServer extends Thread {
 				String dataString = (String) data;
 				if (dataString.equals("kill server")) {
 					try {
-						this.server.deregister();
-						//SCServer sc = server.getSCServer().stopListener();
+						this.scPublishServer.deregister();
+						// SCServer sc = server.getSCServer().stopListener();
 					} catch (Exception ex) {
 						logger.error("unsubscribe", ex);
 					}

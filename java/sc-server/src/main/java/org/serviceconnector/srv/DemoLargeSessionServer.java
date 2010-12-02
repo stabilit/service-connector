@@ -38,10 +38,9 @@ public class DemoLargeSessionServer extends DemoSessionServer {
 	}
 
 	class SrvLargeCallback extends SCSessionServerCallback {
-		private SCSessionServer scSessionServer;
 		
 		public SrvLargeCallback(SCSessionServer server) {
-			this.scSessionServer = server;
+			super(server);
 		}
 
 		@Override

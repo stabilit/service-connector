@@ -24,7 +24,7 @@ import org.serviceconnector.api.srv.SCSessionServerCallback;
 public class DemoSessionServer extends Thread {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(DemoSessionServer.class);
-	
+
 	/**
 	 * Main method if you like to start in debug mode.
 	 */
@@ -42,17 +42,17 @@ public class DemoSessionServer extends Thread {
 	public void run() {
 
 		SCServer sc = new SCServer("localhost", 9000, 9002); // regular, defaults documented in javadoc
-		//sc = new SCServer("localhost", 9000, 9002, ConnectionType.NETTY_TCP); // alternative with connection type
+		// sc = new SCServer("localhost", 9000, 9002, ConnectionType.NETTY_TCP); // alternative with connection type
 
 		try {
-			sc.setKeepAliveIntervalInSeconds(10); // can be set before register
+			sc.setKeepAliveIntervalSeconds(10); // can be set before register
 			sc.setImmediateConnect(true); // can be set before register
 			sc.startListener(); // regular
-			
+
 			String serviceName = "session-1";
 			SCSessionServer server = sc.newSessionServer(serviceName); // no other params possible
 			int maxSess = 100;
-			int maxConn = 1;
+			int maxConn = 10;
 			SCSessionServerCallback cbk = newSrvCallback(server);
 			try {
 				server.register(maxSess, maxConn, cbk); // regular
@@ -71,10 +71,9 @@ public class DemoSessionServer extends Thread {
 	}
 
 	class SrvCallback extends SCSessionServerCallback {
-		private SCSessionServer scSessionServer;
-		
+
 		public SrvCallback(SCSessionServer server) {
-			this.scSessionServer = server;
+			super(server);
 		}
 
 		@Override
@@ -113,6 +112,7 @@ public class DemoSessionServer extends Thread {
 
 	protected class KillThread extends Thread {
 		private SCSessionServer server;
+
 		public KillThread(SCSessionServer server) {
 			this.server = server;
 		}
@@ -123,7 +123,7 @@ public class DemoSessionServer extends Thread {
 			try {
 				Thread.sleep(2000);
 				this.server.deregister();
-				//SCServer sc = server.getSCServer().stopListener();
+				// SCServer sc = server.getSCServer().stopListener();
 			} catch (Exception e) {
 				logger.error("run", e);
 			}
