@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.Loggers;
 
 /**
@@ -133,26 +134,26 @@ public class SCMessageTest {
 	 * Expectation:	MessageInfo is set to Null
 	 */
 	@Test
-	public void t30_MessageInfo() {
+	public void t30_MessageInfo() throws Exception {
 		message.setMessageInfo(null);
 		assertEquals(null, message.getMessageInfo());
 	}
 
 	/**
 	 * Description:	Set Empty-Value as MessageInfo<br>
-	 * Expectation:	InvalidParameter Exception
+	 * Expectation:	SCMPValidatorException
 	 */
-	@Test(expected = InvalidParameterException.class)
-	public void t31_MessageInfo() {
+	@Test(expected = SCMPValidatorException.class)
+	public void t31_MessageInfo() throws Exception {
 		message.setMessageInfo("");
 	}
 	
 	/**
 	 * Description:	Set empty Char as MessageInfo<br>
-	 * Expectation:	MessageInfo is set to empty Char
+	 * Expectation:	SCMPValidatorException
 	 */
-	@Test
-	public void t32_MessageInfo() {
+	@Test (expected = SCMPValidatorException.class)
+	public void t32_MessageInfo() throws Exception {
 		message.setMessageInfo(" ");
 		assertEquals(" ", message.getMessageInfo());
 	}
@@ -162,7 +163,7 @@ public class SCMessageTest {
 	 * Expectation:	MessageInfo is set to a single char Char
 	 */
 	@Test
-	public void t33_MessageInfo() {
+	public void t33_MessageInfo() throws Exception {
 		message.setMessageInfo("a");
 		assertEquals("a", message.getMessageInfo());
 		assertEquals(1, message.getMessageInfo().length());
@@ -173,7 +174,7 @@ public class SCMessageTest {
 	 * Expectation:	MessageInfo is set to a single 256 chars
 	 */
 	@Test
-	public void t34_MessageInfo() {
+	public void t34_MessageInfo() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 256; i++) {
 			sb.append('a');
@@ -185,10 +186,10 @@ public class SCMessageTest {
 
 	/**
 	 * Description:	Set 257 Chars as MessageInfo<br>
-	 * Expectation:	InvalidParameter Exception
+	 * Expectation:	SCMPValidatorException
 	 */
-	@Test(expected = InvalidParameterException.class)
-	public void t35_MessageInfo() {
+	@Test(expected = SCMPValidatorException.class)
+	public void t35_MessageInfo() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 257; i++) {
 			sb.append('a');
@@ -198,10 +199,10 @@ public class SCMessageTest {
 	
 	/**
 	 * Description:	Set 32767 Chars as MessageInfo<br>
-	 * Expectation:	InvalidParameter Exception
+	 * Expectation:	SCMPValidatorException
 	 */
-	@Test(expected = InvalidParameterException.class)
-	public void t36_setMessageInfo() {
+	@Test(expected = SCMPValidatorException.class)
+	public void t36_setMessageInfo() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Short.MAX_VALUE; i++) {
 			sb.append('a');
