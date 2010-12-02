@@ -31,6 +31,7 @@ import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.service.SCServiceException;
 
 public class SessionBenchmarks {
 
@@ -53,8 +54,9 @@ public class SessionBenchmarks {
 	@Before
 	public void beforeOneTest() throws Exception {
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sessionServerName,
-				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10, TestConstants.sessionServiceNames);
+		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.sessionServiceNames);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach(5);
 	}
@@ -94,7 +96,12 @@ public class SessionBenchmarks {
 		SCSessionService service = client.newSessionService(TestConstants.sessionServiceNames);
 		request.setCompressed(true);
 		request.setSessionInfo("sessionInfo");
-		response = service.createSession(10, request);
+		try {
+			response = service.createSession(10, request);
+		} catch (SCServiceException e) {
+			e.printStackTrace();
+			throw e;
+		}
 		int nr = 10000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
@@ -170,7 +177,7 @@ public class SessionBenchmarks {
 		SCMessage request = null;
 		SCMessage response = null;
 		SCSessionService service = client.newSessionService(TestConstants.sessionServiceNames);
-	
+
 		int nr = 10000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
@@ -185,113 +192,115 @@ public class SessionBenchmarks {
 		assertEquals(true, perf > 200);
 	}
 
-
-//	/**
-//	 * Description: execute_10MBDataUsingDifferentBodyLength_outputsBestTimeAndBodyLength()
-//	 * @throws Exception
-//	 */
-//	@Test
-//	public void t04_benchmark() throws Exception {
-//		long previousResult = Long.MAX_VALUE;
-//		long result = Long.MAX_VALUE - 1;
-//		int dataLength = 10 * TestConstants.dataLength1MB;
-//		int messages = 0;
-//
-//		while (result < previousResult) {
-//			previousResult = result;
-//			messages++;
-//
-//			ClientThreadController clientCtrl = new ClientThreadController( false, true, 1, 1, messages, dataLength / messages);
-//
-//			result = clientCtrl.perform();
-//
-//			scProcess = ctrl.restartSC(scProcess);
-//			srvProcess = ctrl.restartServer(srvProcess);
-//		}
-//
-//		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
-//				+ --messages + " messages of " + dataLength / messages + "B data each.");
-//		assertEquals(true, previousResult < 25000);
-//	}
-//	
-//	@Test
-//	public void execute_10MBDataUsingDifferentBodyLengthStartingFrom100000Messages_outputsBestTimeAndBodyLength() throws Exception {
-//		long previousResult = Long.MAX_VALUE;
-//		long result = Long.MAX_VALUE - 1;
-//		int dataLength = 10 * TestConstants.dataLength1MB;
-//		int messages = 100001;
-//
-//		while (result < previousResult && messages > 0) {
-//			previousResult = result;
-//			messages--;
-//
-//			ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength / messages);
-//
-//			result = clientCtrl.perform();
-//
-//			scProcess = ctrl.restartSC(scProcess);
-//			srvProcess = ctrl.restartServer(srvProcess);
-//		}
-//
-//		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
-//				+ ++messages + " messages of " + dataLength / messages + "B data each.");
-//		assertEquals(true, previousResult < 25000);
-//	}
-//
-//	@Test
-//	public void createSessionDeleteSession_10000Times_outputsTime() throws Exception {
-//
-//		ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 10000, 0, 0);
-//		long result = clientCtrl.perform();
-//		assertEquals(true, result < 25000);
-//	}
-//
-//	@Test
-//	public void createSessionExecuteDeleteSession_10000ExecuteMessagesDividedInto10ParallelClients_outputsTime() throws Exception {
-//		int threadCount = Thread.activeCount();
-//
-//		ClientThreadController clientCtrl = new ClientThreadController(false, true, 10, 10, 100, 128);
-//		long result = clientCtrl.perform();
-//
-//		testLogger.info("Threads before initializing clients:\t" + threadCount);
-//		testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
-//		assertEquals(true, result < 25000);
-//	}
-//
-//	@Test
-//	public void createSessionExecuteDeleteSession_10000ExecuteMessagesSentByOneClient_outputsTime() throws Exception {
-//		int threadCount = Thread.activeCount();
-//
-//		ClientThreadController clientCtrl = new ClientThreadController(false, false, 1, 100, 100, 128);
-//		long result = clientCtrl.perform();
-//
-//		testLogger.info("Threads before initializing clients:\t" + threadCount);
-//		testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
-//		assertEquals(true, result < 25000);
-//	}
-//
-//	@Test
-//	public void createSessionExecuteDeleteSession_roughly100000ExecuteMessagesByParallelClients_outputsBestTimeAndNumberOfClients()
-//			throws Exception {
-//		long previousResult = Long.MAX_VALUE;
-//		long result = Long.MAX_VALUE - 1;
-//		int clientsCount = 0;
-//
-//		while (result < previousResult) {
-//			previousResult = result;
-//			clientsCount++;
-//
-//			ClientThreadController clientCtrl = new ClientThreadController(false, true, clientsCount,
-//					100000 / (1000 * clientsCount), 1000, 128);
-//
-//			result = clientCtrl.perform();
-//
-//			scProcess = ctrl.restartSC(scProcess);
-//			srvProcess = ctrl.restartServer(srvProcess);
-//		}
-//
-//		testLogger.info("Best performance to execute roughly 100000 messages was " + previousResult + "ms using " + --clientsCount
-//				+ " parallel clients");
-//		assertEquals(true, previousResult < 25000);
-//	}
+	// /**
+	// * Description: execute_10MBDataUsingDifferentBodyLength_outputsBestTimeAndBodyLength()
+	// * @throws Exception
+	// */
+	// @Test
+	// public void t04_benchmark() throws Exception {
+	// long previousResult = Long.MAX_VALUE;
+	// long result = Long.MAX_VALUE - 1;
+	// int dataLength = 10 * TestConstants.dataLength1MB;
+	// int messages = 0;
+	//
+	// while (result < previousResult) {
+	// previousResult = result;
+	// messages++;
+	//
+	// ClientThreadController clientCtrl = new ClientThreadController( false, true, 1, 1, messages, dataLength / messages);
+	//
+	// result = clientCtrl.perform();
+	//
+	// scProcess = ctrl.restartSC(scProcess);
+	// srvProcess = ctrl.restartServer(srvProcess);
+	// }
+	//
+	// testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
+	// + --messages + " messages of " + dataLength / messages + "B data each.");
+	// assertEquals(true, previousResult < 25000);
+	// }
+	//	
+	// @Test
+	// public void execute_10MBDataUsingDifferentBodyLengthStartingFrom100000Messages_outputsBestTimeAndBodyLength() throws
+	// Exception {
+	// long previousResult = Long.MAX_VALUE;
+	// long result = Long.MAX_VALUE - 1;
+	// int dataLength = 10 * TestConstants.dataLength1MB;
+	// int messages = 100001;
+	//
+	// while (result < previousResult && messages > 0) {
+	// previousResult = result;
+	// messages--;
+	//
+	// ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 1, messages, dataLength / messages);
+	//
+	// result = clientCtrl.perform();
+	//
+	// scProcess = ctrl.restartSC(scProcess);
+	// srvProcess = ctrl.restartServer(srvProcess);
+	// }
+	//
+	// testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
+	// + ++messages + " messages of " + dataLength / messages + "B data each.");
+	// assertEquals(true, previousResult < 25000);
+	// }
+	//
+	// @Test
+	// public void createSessionDeleteSession_10000Times_outputsTime() throws Exception {
+	//
+	// ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 10000, 0, 0);
+	// long result = clientCtrl.perform();
+	// assertEquals(true, result < 25000);
+	// }
+	//
+	// @Test
+	// public void createSessionExecuteDeleteSession_10000ExecuteMessagesDividedInto10ParallelClients_outputsTime() throws Exception
+	// {
+	// int threadCount = Thread.activeCount();
+	//
+	// ClientThreadController clientCtrl = new ClientThreadController(false, true, 10, 10, 100, 128);
+	// long result = clientCtrl.perform();
+	//
+	// testLogger.info("Threads before initializing clients:\t" + threadCount);
+	// testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
+	// assertEquals(true, result < 25000);
+	// }
+	//
+	// @Test
+	// public void createSessionExecuteDeleteSession_10000ExecuteMessagesSentByOneClient_outputsTime() throws Exception {
+	// int threadCount = Thread.activeCount();
+	//
+	// ClientThreadController clientCtrl = new ClientThreadController(false, false, 1, 100, 100, 128);
+	// long result = clientCtrl.perform();
+	//
+	// testLogger.info("Threads before initializing clients:\t" + threadCount);
+	// testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
+	// assertEquals(true, result < 25000);
+	// }
+	//
+	// @Test
+	// public void
+	// createSessionExecuteDeleteSession_roughly100000ExecuteMessagesByParallelClients_outputsBestTimeAndNumberOfClients()
+	// throws Exception {
+	// long previousResult = Long.MAX_VALUE;
+	// long result = Long.MAX_VALUE - 1;
+	// int clientsCount = 0;
+	//
+	// while (result < previousResult) {
+	// previousResult = result;
+	// clientsCount++;
+	//
+	// ClientThreadController clientCtrl = new ClientThreadController(false, true, clientsCount,
+	// 100000 / (1000 * clientsCount), 1000, 128);
+	//
+	// result = clientCtrl.perform();
+	//
+	// scProcess = ctrl.restartSC(scProcess);
+	// srvProcess = ctrl.restartServer(srvProcess);
+	// }
+	//
+	// testLogger.info("Best performance to execute roughly 100000 messages was " + previousResult + "ms using " + --clientsCount
+	// + " parallel clients");
+	// assertEquals(true, previousResult < 25000);
+	// }
 }
