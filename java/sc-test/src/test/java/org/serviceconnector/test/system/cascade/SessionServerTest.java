@@ -79,9 +79,10 @@ public class SessionServerTest {
 		threadCount = Thread.activeCount();
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
 		server.startListener();
-		srvCallback = new SrvCallback();
+//		srvCallback = new SrvCallback();
 		
 		sessionServer = server.newSessionServer(TestConstants.sessionServerName);
+		srvCallback = new SrvCallback(sessionServer);
 		sessionServer.register(10, 10, srvCallback);
 	}
 
@@ -256,14 +257,19 @@ public class SessionServerTest {
 
 	private class SrvCallback extends SCSessionServerCallback {
 
+		public SrvCallback(SCSessionServer scSessionServer) {
+			super(scSessionServer);
+			// TODO Auto-generated constructor stub
+		}
+
 		private int messagesExchanged = 0;
 		private SCMessage createSessionMsg = null;
 		private SCMessage deleteSessionMsg = null;
 		private SCMessage abortSessionMsg = null;
 		private SCMessage executeMsg = null;
 
-		public SrvCallback() {
-		}
+//		public SrvCallback() {
+//		}
 
 		@Override
 		public SCMessage createSession(SCMessage message, int operationTimeoutInMillis) {

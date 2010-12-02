@@ -80,9 +80,9 @@ public class SubscriptionServerTest {
 //				srvCallback);
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
 		server.startListener();
-		srvCallback = new SrvCallback();
 		
 		publishServer = server.newPublishServer(TestConstants.sessionServerName);
+		srvCallback = new SrvCallback(publishServer);
 		publishServer.register(10, 10, srvCallback);
 
 		
@@ -224,13 +224,15 @@ public class SubscriptionServerTest {
 
 	private class SrvCallback extends SCPublishServerCallback {
 
+		public SrvCallback(SCPublishServer scPublishServer) {
+			super(scPublishServer);
+			// TODO Auto-generated constructor stub
+		}
+
 		private int messagesExchanged = 0;
 		private SCMessage subscribeMsg = null;
 		private SCMessage changeSubMsg = null;
 		private SCMessage unsubscribeMsg = null;
-
-		public SrvCallback() {
-		}
 
 		@Override
 		public SCMessage changeSubscription(SCMessage message, int operationTimeoutInMillis) {
