@@ -15,8 +15,12 @@
  */
 package org.serviceconnector.api.srv;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.activity.InvalidActivityException;
@@ -39,6 +43,7 @@ public class SCServer {
 	protected final static Logger logger = Logger.getLogger(SCServer.class);
 	/** The sc host. */
 	private String scHost;
+	private List<String> nics = null;
 	/** The sc port. */
 	private int scPort;
 	/** The listener port. */
@@ -56,10 +61,15 @@ public class SCServer {
 	private SCRequester requester;
 
 	public SCServer(String scHost, int scPort, int listenerPort) {
-		this(scHost, scPort, listenerPort, ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
+		this(scHost, scPort, null, listenerPort, ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
 	}
 
 	public SCServer(String scHost, int scPort, int listenerPort, ConnectionType connectionType) {
+		this(scHost, scPort, null, listenerPort, connectionType);
+	}
+
+	public SCServer(String scHost, int scPort, List<String> networkInterfaces, int listenerPort, ConnectionType connectionType) {
+		this.nics = networkInterfaces;
 		this.responder = null;
 		this.requester = null;
 		this.scHost = scHost;
@@ -176,18 +186,27 @@ public class SCServer {
 		ValidatorUtility.validateInt(0, this.scPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		ValidatorUtility.validateInt(0, this.listenerPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 
+		if (this.nics == null || this.nics.size() == 0) {
+			nics = new ArrayList<String>();
+			try {
+				Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+				for (NetworkInterface netint : Collections.list(nets)) {
+					Enumeration<InetAddress> inetAdresses = netint.getInetAddresses();
+					for (InetAddress inetAddress : Collections.list(inetAdresses)) {
+						nics.add(inetAddress.getHostAddress());
+						logger.debug("SCServer listens on " + inetAddress.getHostAddress());
+					}
+				}
+			} catch (Exception e) {
+				logger.fatal("unable to detect network interface", e);
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong interface");
+			}
+		}
+
 		CommunicatorConfig respConfig = new CommunicatorConfig(SCSessionServer.class.getSimpleName());
 		respConfig.setConnectionType(this.connectionType.getValue());
 
-		// TODO MIT JAN !!! Liste oder was???
-		List<String> hosts = new ArrayList<String>();
-		hosts.add("localhost");
-
-		if (hosts.size() == 0) {
-			throw new InvalidParameterException("at least one host must be set.");
-		}
-
-		respConfig.setInterfaces(hosts);
+		respConfig.setInterfaces(nics);
 		respConfig.setPort(this.listenerPort);
 
 		responder = new Responder(respConfig);
