@@ -45,6 +45,7 @@ public class AttachTest {
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;
 	private SCClient client;
+	private int threadCount = 0;
 	
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -54,6 +55,7 @@ public class AttachTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
+		threadCount = Thread.activeCount();
 	}
 	
 	@After
@@ -62,6 +64,7 @@ public class AttachTest {
 			client.detach();
 		} catch (Exception e) {}
 		client = null;
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 	
 	@AfterClass

@@ -42,6 +42,7 @@ public class AttachDetachTest {
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;
 	private SCClient client;
+	private int threadCount = 0;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -51,10 +52,13 @@ public class AttachDetachTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
+		threadCount = Thread.activeCount();
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
+//		assertEquals("number of threads", threadCount, Thread.activeCount());
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 		try {
 			client.detach();
 		} catch (Exception e) {}
@@ -111,32 +115,12 @@ public class AttachDetachTest {
 		assertEquals("Client is detached", false, client.isAttached());
 	}
 
-	
-	/**
-	 * Description: Attach and detach n times with sleep time 1sec between attach and detach.<br>
-	 * Expectation:	Client is detached.
-	 */
-	@Test
-	public void t04_attachDetach() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
-		int sleep = 1000;
-		int nr = 10;
-		for (int i = 0; i < nr; i++) {
-			if (((i+1) % 10) == 0) testLogger.info("Attach/Detach nr. " + (i+1) + "...");
-			client.attach();
-			assertEquals("Client is attached", true, client.isAttached());
-			Thread.sleep(sleep);
-			client.detach();
-			assertEquals("Client is detached", false, client.isAttached());
-		}
-	}
-
 	/**
 	 * Description: first attach, then detach 100 times.<br>
 	 * Expectation:	Client is detached.
 	 */
 	@Test
-	public void t05_attachDetach() throws Exception {
+	public void t04_attachDetach() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
 		assertEquals("Client is attached", true, client.isAttached());
@@ -152,7 +136,7 @@ public class AttachDetachTest {
 	 * Expectation:	Client is detached.
 	 */
 	@Test
-	public void t06_attachDetach() throws Exception  {
+	public void t05_attachDetach() throws Exception  {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		int nr = 5000;
 		int sleep = 0;
@@ -172,7 +156,7 @@ public class AttachDetachTest {
 	 * Expectation:	Client is detached.
 	 */
 	@Test
-	public void t07_attachDetach() throws Exception  {
+	public void t06_attachDetach() throws Exception  {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		int nr = 5000;
 		int sleep = 0;
@@ -193,7 +177,7 @@ public class AttachDetachTest {
 	 * Expectation:	All clients are detached.
 	 */
 	@Test
-	public void t08_attachDetach() throws Exception {
+	public void t07_attachDetach() throws Exception {
 		int clientsCount = 5000;
 		SCClient[] clients = new SCClient[clientsCount];
 		// create clients

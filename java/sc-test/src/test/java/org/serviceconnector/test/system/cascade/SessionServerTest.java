@@ -54,7 +54,7 @@ public class SessionServerTest {
 		ctrl = new ProcessesController();
 		try {
 			scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-			scCasCtx = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
+			scCasCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCcascadedProperties);
 		} catch (Exception e) {
 			testLogger.error("beforeAllTests", e);
 			throw e;

@@ -64,7 +64,6 @@ public class SessionRegistry extends Registry<String, Session> {
 		sessionLogger.logCreateSession(this.getClass().getName(), session.getId());
 		this.put(key, session);
 		if (session.getSessionTimeoutSeconds() != 0) {
-			// TODO TRN handle = session timeout necessary needs to be set up
 			this.scheduleSessionTimeout(session);
 		}
 	}

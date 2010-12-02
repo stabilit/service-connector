@@ -45,6 +45,7 @@ public class SessionBenchmarks {
 	private ProcessCtx srvCtx;
 	private SCClient client;
 	private static ProcessesController ctrl;
+	private int threadCount = 0;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -53,12 +54,13 @@ public class SessionBenchmarks {
 
 	@Before
 	public void beforeOneTest() throws Exception {
+		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
 				TestConstants.sessionServiceNames);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		client.attach(5);
+		client.attach();
 	}
 
 	@After
@@ -78,6 +80,7 @@ public class SessionBenchmarks {
 		client = null;
 		srvCtx = null;
 		scCtx = null;
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass
@@ -105,8 +108,8 @@ public class SessionBenchmarks {
 		int nr = 10000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
-			if ((i % 1000) == 0)
-				testLogger.info("Executing message nr. " + i + "...");
+			if (((i+1) % 1000) == 0)
+				testLogger.info("Executing message nr. " + (i+1) + "...");
 			response = service.execute(10, request);
 		}
 		service.deleteSession(10);
@@ -131,8 +134,8 @@ public class SessionBenchmarks {
 		int nr = 10000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
-			if ((i % 1000) == 0)
-				testLogger.info("Executing message nr. " + i + "...");
+			if (((i+1) % 1000) == 0)
+				testLogger.info("Executing message nr. " + (i+1) + "...");
 			response = service.execute(10, request);
 		}
 		service.deleteSession(10);
@@ -157,8 +160,8 @@ public class SessionBenchmarks {
 		int nr = 100000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
-			if ((i % 2000) == 0)
-				testLogger.info("Executing message nr. " + i + "...");
+			if (((i+1) % 2000) == 0)
+				testLogger.info("Executing message nr. " + (i+1) + "...");
 			response = service.execute(request);
 		}
 		service.deleteSession(10);
@@ -181,8 +184,8 @@ public class SessionBenchmarks {
 		int nr = 10000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
-			if ((i % 1000) == 0)
-				testLogger.info("Creating Session nr. " + i + "...");
+			if (((i+1) % 1000) == 0)
+				testLogger.info("Creating Session nr. " + (i+1) + "...");
 			response = service.createSession(10, request);
 			service.deleteSession(10);
 		}

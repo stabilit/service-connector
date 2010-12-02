@@ -47,7 +47,7 @@ public class RegisterServerToMultipleSCTest {
 		ctrl = new ProcessesController();
 		try {
 			scProcess = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-			r = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
+			r = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCcascadedProperties);
 		} catch (Exception e) {
 			logger.error("beforeAllTests", e);
 		}
@@ -56,7 +56,7 @@ public class RegisterServerToMultipleSCTest {
 	@AfterClass
 	public static void afterAllTests() throws Exception {
 		ctrl.stopProcess(scProcess, TestConstants.log4jSCProperties);
-		ctrl.stopProcess(r, TestConstants.log4jSCcascadedProperties);
+		ctrl.stopProcess(r, TestConstants.log4jSCProperties);
 		ctrl = null;
 		scProcess = null;
 		r = null;

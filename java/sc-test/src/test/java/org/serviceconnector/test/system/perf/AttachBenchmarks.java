@@ -16,7 +16,6 @@
 package org.serviceconnector.test.system.perf;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -24,11 +23,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
-import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
@@ -74,7 +70,6 @@ public class AttachBenchmarks {
 			scCtx = null;
 		} catch (Exception e) {
 		}
-		ctrl = null;
 		ctrl = null;
 	}
 

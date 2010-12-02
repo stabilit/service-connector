@@ -22,6 +22,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
@@ -57,12 +58,14 @@ public class ProcessesController {
 
 		String scRunableFull = userDir + fs + "target" + fs + TestConstants.scRunable;
 		if (FileUtility.notExists(scRunableFull)) {
+			testLogger.error("File:" + scRunableFull + " does not exist!");
 			throw new Exception("File:" + scRunableFull + " does not exist!");
 		}
 		proc.setRunableFull(scRunableFull);
 
 		String scPropertiesFull = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + scProperties;
 		if (FileUtility.notExists(scPropertiesFull)) {
+			testLogger.error("File:" + scPropertiesFull + " does not exist!");
 			throw new Exception("File:" + scPropertiesFull + " does not exist!");
 		}
 		proc.setPropertyFileName(scProperties);
@@ -70,6 +73,7 @@ public class ProcessesController {
 
 		String log4jFileNameFull = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSCProperties;
 		if (FileUtility.notExists(log4jFileNameFull)) {
+			testLogger.error("File:" + log4jFileNameFull + " does not exist!");
 			throw new Exception("File:" + log4jFileNameFull + " does not exist!");
 		}
 		proc.setLog4jFileName(log4jSCProperties);
@@ -98,7 +102,7 @@ public class ProcessesController {
 			testLogger.info("SC started");
 		} catch (Exception e) {
 			testLogger.info(e.getMessage());
-			testLogger.info("SC not started within " + timeout + " seconds! Timeout exceeded.");
+			testLogger.error("SC not started within " + timeout + " seconds! Timeout exceeded.");
 			throw e;
 		}
 		return proc;
@@ -108,6 +112,7 @@ public class ProcessesController {
 		int timeout = 10; // seconds
 		try {
 			if (FileUtility.exists(scProcess.getPidFileNameFull())) {
+				// TODO JOT Constant does not work for 2-nd SC! => Parse sc properties and get the port SC is listening on TCP
 				SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 				client.attach(timeout);
 				client.killSC();
@@ -116,7 +121,7 @@ public class ProcessesController {
 			testLogger.info("SC stopped");
 		} catch (Exception e) {
 			testLogger.info(e.getMessage());
-			testLogger.info("Cannot stop SC! Timeout exceeded.");
+			testLogger.error("Cannot stop SC! Timeout exceeded.");
 		} finally {
 			if (scProcess.isRunning()) {
 				scProcess.getProcess().destroy();
@@ -148,12 +153,14 @@ public class ProcessesController {
 
 		String srvRunableFull = userDir + fs + "target" + fs + TestConstants.serverRunable;
 		if (FileUtility.notExists(srvRunableFull)) {
+			testLogger.error("File:" + srvRunableFull + " does not exist!");
 			throw new Exception("File:" + srvRunableFull + " does not exist!");
 		}
 		proc.setRunableFull(srvRunableFull);
 
 		String log4jFileNameFull = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSrvProperties;
 		if (FileUtility.notExists(log4jFileNameFull)) {
+			testLogger.error("File:" + log4jFileNameFull + " does not exist!");
 			throw new Exception("File:" + log4jFileNameFull + " does not exist!");
 		}
 		proc.setLog4jFileName(log4jSrvProperties);
@@ -187,7 +194,7 @@ public class ProcessesController {
 			testLogger.info("Server started");
 		} catch (Exception e) {
 			testLogger.info(e.getMessage());
-			testLogger.info("Server not started within " + timeout + " seconds! Timeout exceeded.");
+			testLogger.error("Server not started within " + timeout + " seconds! Timeout exceeded.");
 			throw e;
 		}
 		return proc;
@@ -197,18 +204,22 @@ public class ProcessesController {
 		int timeout = 10; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileNameFull())) {
+				SCClient client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+				client.attach(timeout);
+				// TODO JOT send kill message (create Session) to server in order to terminate it.
+				
 				if (srvProcess.isRunning()) {
 					srvProcess.getProcess().destroy();
 					srvProcess.getProcess().waitFor();
 				}
-				File pidFile = new File(srvProcess.getPidFileNameFull());
-				pidFile.delete();
+				File pidFile = new File(srvProcess.getPidFileNameFull());	// to be deleted
+				pidFile.delete();											// to be deleted
 				FileUtility.waitNotExists(srvProcess.getPidFileNameFull(), timeout);
 			}
 			testLogger.info("Server stopped");
 		} catch (Exception e) {
 			testLogger.info(e.getMessage());
-			testLogger.info("Cannot stop server! Timeout exceeded.");
+			testLogger.error("Cannot stop server! Timeout exceeded.");
 		}
 	}
 }

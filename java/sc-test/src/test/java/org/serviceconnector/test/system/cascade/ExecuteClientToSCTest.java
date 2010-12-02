@@ -57,7 +57,7 @@ public class ExecuteClientToSCTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		scCasCtx = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
+		scCasCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCcascadedProperties);
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties, 
 				TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10, 
 				TestConstants.sessionServiceNames);
