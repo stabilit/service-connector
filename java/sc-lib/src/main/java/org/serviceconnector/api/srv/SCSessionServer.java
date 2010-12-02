@@ -287,6 +287,10 @@ public class SCSessionServer {
 	public String getServiceName() {
 		return this.serviceName;
 	}
+	
+	public SCServer getScServer() {
+		return scServer;
+	}
 
 	/**
 	 * The Class SCServerCallback.
