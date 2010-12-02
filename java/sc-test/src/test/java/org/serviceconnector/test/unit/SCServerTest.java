@@ -122,9 +122,9 @@ public class SCServerTest {
 	 * Expectation: KeepAliveInterval was set
 	 */
 	@Test
-	public void t10_KeepAliveInterval() {
+	public void t10_KeepAliveInterval() throws Exception {
 		server = new SCServer("localhost", 9000, 9001);
-		server.setKeepAliveIntervalInSeconds(10);
+		server.setKeepAliveIntervalSeconds(10);
 		assertEquals("KeepAliveInterval not equal", 10, server.getKeepAliveIntervalSeconds());
 		assertNotNull(server);
 	}
@@ -134,9 +134,9 @@ public class SCServerTest {
 	 * Expectation: KeepAliveInterval was set
 	 */
 	@Test
-	public void t11_KeepAliveInterval() {
+	public void t11_KeepAliveInterval() throws Exception {
 		server = new SCServer("localhost", 9000, 9001);
-		server.setKeepAliveIntervalInSeconds(-1);
+		server.setKeepAliveIntervalSeconds(-1);
 		assertEquals("KeepAliveInterval not equal", -1, server.getKeepAliveIntervalSeconds());
 		assertNotNull(server);
 	}

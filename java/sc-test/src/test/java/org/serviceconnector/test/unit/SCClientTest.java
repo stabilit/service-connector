@@ -65,7 +65,7 @@ public class SCClientTest {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP );
 		assertEquals("Host not equal", TestConstants.HOST, client.getHost());
 		assertEquals("Port not equal", TestConstants.PORT_TCP, client.getPort());
-		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP.getValue(), client.getConnectionType());
+		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP.getValue(), client.getConnectionType().getValue());
 		assertNotNull(client);
 	}
 
@@ -151,7 +151,7 @@ public class SCClientTest {
 	 * Expectation: value = 0 was properly set
 	 */
 	@Test
-	public void t20_keepAliveInterval() {
+	public void t20_keepAliveInterval() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
 		client.setKeepAliveIntervalInSeconds(0); // can be set before attach
 		assertEquals("MaxConnections not equal", 0, client.getKeepAliveIntervalInSeconds());
@@ -162,7 +162,7 @@ public class SCClientTest {
 	 * Expectation: value = Integer.MAX_VALUE was properly set
 	 */
 	@Test
-	public void t21_keepAliveInterval() {
+	public void t21_keepAliveInterval() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
 		client.setKeepAliveIntervalInSeconds(Integer.MAX_VALUE); // can be set before attach
 		assertEquals("MaxConnections not equal", Integer.MAX_VALUE, client.getKeepAliveIntervalInSeconds());
@@ -173,7 +173,7 @@ public class SCClientTest {
 	 * Expectation: value = Integer.MMIN_VALUE was properly set
 	 */
 	@Test
-	public void t22_keepAliveInterval() {
+	public void t22_keepAliveInterval() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
 		client.setKeepAliveIntervalInSeconds(Integer.MIN_VALUE); // can be set before attach
 		assertEquals("MaxConnections not equal", Integer.MIN_VALUE, client.getKeepAliveIntervalInSeconds());

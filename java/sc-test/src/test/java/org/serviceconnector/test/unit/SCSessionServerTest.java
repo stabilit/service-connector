@@ -35,7 +35,7 @@ public class SCSessionServerTest {
 	public void beforeOneTest() throws Exception {
 		server = null;
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER); 
-		server.setKeepAliveIntervalInSeconds(10); // can be set before register
+		server.setKeepAliveIntervalSeconds(10); // can be set before register
 		server.setImmediateConnect(true); // can be set before register
 		server.startListener();
 	}
@@ -70,7 +70,7 @@ public class SCSessionServerTest {
 	 * Expectation:	connectionType was set to empty string
 	 */
 	@Test
-	public void t01_newSessionServer() {
+	public void t01_newSessionServer() throws Exception{
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sessionServiceNames);
 		assertNotNull("No SessionServer", sessionServer);
 	}
@@ -80,7 +80,7 @@ public class SCSessionServerTest {
 	 * Expectation:	The SessionServer is destroyed.
 	 */
 	@Test
-	public void t02_newSessionServer() {
+	public void t02_newSessionServer() throws Exception{
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sessionServiceNames);
 		assertNotNull("No SessionServer", sessionServer);
 		try {
@@ -103,7 +103,7 @@ public class SCSessionServerTest {
 			// TODO check function getHost on SCSessionServer.java
 			assertEquals("SessionServer Host", TestConstants.HOST, sessionServer.getHost());
 			// TODO check function getPort on SCSessionServer.java
-			assertEquals("SessionServer Port", TestConstants.PORT_TCP, sessionServer.getPort());
+			assertEquals("SessionServer Port", TestConstants.PORT_LISTENER, sessionServer.getPort());
 		}
 		catch (Exception ex){
 			assertFalse("Exception on: " + convertStackTraceToString(ex), true);
@@ -130,62 +130,14 @@ public class SCSessionServerTest {
 		}
 	}	
 
-	/**
-	 * Description:	Invoke setConnectionType with blank string<br>
-	 * Expectation:	connectionType was set to blank
-	 */
-	@Test
-	public void t20_ConnectionType() {
-		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sessionServiceNames);
-		sessionServer.setConnectionType(" ");
-		assertEquals("ConnectionType not equal,", " ", sessionServer.getConnectionType());
-	}
-
-	/**
-	 * Description:	Invoke setConnectionType with "a" string<br>
-	 * Expectation:	connectionType was set to "a"
-	 */
-	@Test
-	public void t21_ConnectionType() {
-		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sessionServiceNames);
-		sessionServer.setConnectionType("a");
-		assertEquals("ConnectionType not equal,", "a", sessionServer.getConnectionType());
-	}
-
-	/**
-	 * Description:	Invoke setConnectionType with "aaa" string<br>
-	 * Expectation:	connectionType was set to "aaa"
-	 */
-	@Test
-	public void t22_ConnectionType() {
-		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sessionServiceNames);
-		sessionServer.setConnectionType("aaa");
-		assertEquals("ConnectionType not equal,", "aaa", sessionServer.getConnectionType());
-	}
-
-	/**
-	 * Description:	Invoke setConnectionType with characters "a" and lengths "Short.MAX_VALUE"<br>
-	 * Expectation:	connectionType was set
-	 */
-	@Test
-	public void t23_ConnectionType() {
-		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sessionServiceNames);
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < Short.MAX_VALUE; i++) {
-			sb.append('a');
-		}
-		sessionServer.setConnectionType(sb.toString());
-		assertEquals("ConnectionType not equal,", sb.toString(), sessionServer.getConnectionType());
-	}
 
 	/**
 	 * Description:	Invoke setImmediateConnect with "true"<br>
 	 * Expectation:	ImmediateConnect was set to "true"
 	 */
 	@Test
-	public void t30_ImmediateConnec() {
+	public void t30_ImmediateConnec() throws Exception{
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sessionServiceNames);
-		sessionServer.setImmediateConnect(true);
 		assertEquals("ImmediateConnect", true, sessionServer.isImmediateConnect());
 	}
 
@@ -194,10 +146,9 @@ public class SCSessionServerTest {
 	 * Expectation:	ImmediateConnect was set to "false"
 	 */
 	@Test
-	public void t31_ImmediateConnect() {
+	public void t31_ImmediateConnect() throws Exception{
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sessionServiceNames);
-		sessionServer.setImmediateConnect(false);
-		assertEquals("ImmediateConnect", false, sessionServer.isImmediateConnect());
+		assertEquals("ImmediateConnect", true, sessionServer.isImmediateConnect());
 	}
 
 	
