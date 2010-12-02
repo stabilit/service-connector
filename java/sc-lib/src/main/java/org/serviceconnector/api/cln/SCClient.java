@@ -103,7 +103,7 @@ public class SCClient {
 			throw new SCServiceException("already attached");
 		}
 		if (host == null) {
-			throw new InvalidParameterException("host must be set.");
+			throw new InvalidParameterException("host must be set");
 		}
 		ValidatorUtility.validateInt(1, operationTimeout, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		ValidatorUtility.validateInt(0, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
@@ -228,11 +228,15 @@ public class SCClient {
 	 * @param keepAliveIntervalInSeconds
 	 *            the new keep alive interval in seconds
 	 * @throws SCMPValidatorException
-	 * @throws InvalidParameterException
-	 *             keepAliveIntervalInSeconds not within limits 0 to 3600
+	 * @throws Exception
+	 *             SCMPValidatorException - keepAliveIntervalInSeconds not within limits 0 to 3600 <br>
+	 *             SCServiceException - if called after attach
 	 */
-	public void setKeepAliveIntervalInSeconds(int keepAliveIntervalInSeconds) throws SCMPValidatorException {
+	public void setKeepAliveIntervalInSeconds(int keepAliveIntervalInSeconds) throws Exception {
 		ValidatorUtility.validateInt(0, this.keepAliveIntervalInSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
+		if (this.attached) {
+			throw new SCServiceException("cannot set property, client is already attached");
+		}
 		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
 	}
 
@@ -299,11 +303,15 @@ public class SCClient {
 	 * 
 	 * @param maxConnections
 	 *            the new max connections used by connection pool.
-	 * @throws InvalidParameterException
-	 *             maxConnections smaller one
+	 * @throws Exception
+	 *             SCMPValidatorException - if maxConnections smaller one <br>
+	 *             SCServiceException - when called after attach()
 	 */
-	public void setMaxConnections(int maxConnections) throws SCMPValidatorException {
+	public void setMaxConnections(int maxConnections) throws Exception {
 		ValidatorUtility.validateInt(1, maxConnections, SCMPError.HV_WRONG_MAX_CONNECTIONS);
+		if (this.attached) {
+			throw new SCServiceException("cannot set property, client is already attached");
+		}
 		this.maxConnections = maxConnections;
 	}
 

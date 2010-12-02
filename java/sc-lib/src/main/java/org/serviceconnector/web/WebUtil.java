@@ -15,7 +15,6 @@
  */
 package org.serviceconnector.web;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.ParseException;

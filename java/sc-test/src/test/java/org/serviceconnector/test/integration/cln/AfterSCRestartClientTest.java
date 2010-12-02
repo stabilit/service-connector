@@ -29,10 +29,10 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.service.SCServiceException;
 
 
-public class RestartOfSCProcessClientTest {
+public class AfterSCRestartClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger
-			.getLogger(RestartOfSCProcessClientTest.class);
+			.getLogger(AfterSCRestartClientTest.class);
 
 	private SCMgmtClient client;
 	private Process scProcess;

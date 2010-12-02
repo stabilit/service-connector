@@ -31,9 +31,9 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.service.SCServiceException;
 
-public class RestartSCProcessTest {
+public class SCRestartServerTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(RestartSCProcessTest.class);
+	protected final static Logger logger = Logger.getLogger(SCRestartServerTest.class);
 
 	private SCSessionServer server;
 	private Process scProcess;

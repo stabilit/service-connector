@@ -19,7 +19,6 @@ import java.util.Timer;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.ConfigurationConverter;
 import org.apache.commons.configuration.EnvironmentConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.serviceconnector.api.srv.SrvServiceRegistry;

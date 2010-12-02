@@ -37,6 +37,7 @@ public class TestConstants {
 	public static final String sessionServerName = "session-1";
 	public static final String publishServiceNames = "publish-1";
 	public static final String publishServerName = "publish-1";
+	public static final String fileServiceNames = "file-1";
 	
 	public static final String killServerCmd = "kill";
 	

@@ -26,7 +26,6 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.TimeMillis;
-import org.serviceconnector.web.cmd.sc.DefaultWebCommand;
 
 public class CacheManager {
 	/** The Constant logger. */

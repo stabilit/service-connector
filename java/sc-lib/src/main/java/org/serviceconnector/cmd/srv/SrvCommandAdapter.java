@@ -17,7 +17,6 @@
 package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
-import org.omg.PortableServer.POA;
 import org.serviceconnector.api.srv.SrvPublishService;
 import org.serviceconnector.api.srv.SrvService;
 import org.serviceconnector.api.srv.SrvServiceRegistry;

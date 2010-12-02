@@ -32,7 +32,6 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.scmp.SCMPMessage;
 
 /**
  * @author JTraber

@@ -57,12 +57,12 @@ public class AttachDetachTest {
 
 	@After
 	public void afterOneTest() throws Exception {
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 		try {
 			client.detach();
 		} catch (Exception e) {}
 		client = null;
+//		assertEquals("number of threads", threadCount, Thread.activeCount());
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass

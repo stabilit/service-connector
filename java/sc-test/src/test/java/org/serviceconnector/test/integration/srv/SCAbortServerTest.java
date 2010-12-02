@@ -31,10 +31,10 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.service.SCServiceException;
 
-public class PrematureDestroyOfSCProcessServerTest {
+public class SCAbortServerTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PrematureDestroyOfSCProcessServerTest.class);
+	protected final static Logger logger = Logger.getLogger(SCAbortServerTest.class);
 
 	private SCSessionServer server;
 	private Process scProcess;

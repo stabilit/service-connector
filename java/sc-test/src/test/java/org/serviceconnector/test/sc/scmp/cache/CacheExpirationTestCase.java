@@ -17,7 +17,6 @@
 package org.serviceconnector.test.sc.scmp.cache;
 
 import java.util.Date;
-import java.util.Iterator;
 
 import junit.framework.Assert;
 

@@ -30,8 +30,8 @@ import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.ServiceState;
+import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**

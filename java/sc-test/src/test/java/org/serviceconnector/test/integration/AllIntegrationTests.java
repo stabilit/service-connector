@@ -20,12 +20,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.serviceconnector.test.integration.cln.AttachDetachTest;
 import org.serviceconnector.test.integration.cln.AttachTest;
-import org.serviceconnector.test.integration.cln.AttachToMultipleSCTest;
+import org.serviceconnector.test.integration.cln.MultipleSCsClientTest;
 import org.serviceconnector.test.integration.cln.EnableDisableServiceTest;
-import org.serviceconnector.test.integration.cln.NewServicesTest;
-import org.serviceconnector.test.integration.cln.PrematureDestroyOfSCProcessClientTest;
-import org.serviceconnector.test.integration.cln.RestartOfSCProcessClientTest;
-import org.serviceconnector.test.integration.srv.PrematureDestroyOfSCProcessServerTest;
+import org.serviceconnector.test.integration.cln.NewServiceTest;
+import org.serviceconnector.test.integration.cln.AfterSCAbortClientTest;
+import org.serviceconnector.test.integration.cln.AfterSCRestartClientTest;
+import org.serviceconnector.test.integration.srv.SCAbortServerTest;
 import org.serviceconnector.test.integration.srv.PublishConnectionTypeHttpTest;
 import org.serviceconnector.test.integration.srv.PublishConnectionTypeTcpTest;
 import org.serviceconnector.test.integration.srv.RegisterServerConnectionTypeHttpTest;
@@ -33,24 +33,26 @@ import org.serviceconnector.test.integration.srv.RegisterServerConnectionTypeTcp
 import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeHttpTest;
 import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeTcpTest;
 import org.serviceconnector.test.integration.srv.RegisterServerToMultipleSCTest;
-import org.serviceconnector.test.integration.srv.RestartSCProcessTest;
+import org.serviceconnector.test.integration.srv.SCRestartServerTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { 
+	// client tests
 		AttachTest.class,
-		AttachToMultipleSCTest.class,
+		MultipleSCsClientTest.class,
 		AttachDetachTest.class, 
 		EnableDisableServiceTest.class,
-		NewServicesTest.class, 
-		PrematureDestroyOfSCProcessClientTest.class,
-		PrematureDestroyOfSCProcessServerTest.class,
+		NewServiceTest.class, 
+		AfterSCAbortClientTest.class,
+	// server tests
+		SCAbortServerTest.class,
 		RegisterServerDeregisterServerConnectionTypeHttpTest.class,
 		RegisterServerDeregisterServerConnectionTypeTcpTest.class,
 		RegisterServerToMultipleSCTest.class,
 		RegisterServerConnectionTypeHttpTest.class, 
 		RegisterServerConnectionTypeTcpTest.class,
-		RestartOfSCProcessClientTest.class, 
-		RestartSCProcessTest.class,
+		AfterSCRestartClientTest.class, 
+		SCRestartServerTest.class,
 		PublishConnectionTypeHttpTest.class, 
 		PublishConnectionTypeTcpTest.class
 })

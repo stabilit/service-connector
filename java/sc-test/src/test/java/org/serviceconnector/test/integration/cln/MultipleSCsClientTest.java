@@ -16,7 +16,6 @@
 package org.serviceconnector.test.integration.cln;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -32,10 +31,10 @@ import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 
 
-public class AttachToMultipleSCTest {
+public class MultipleSCsClientTest {
 	
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AttachToMultipleSCTest.class);
+	protected final static Logger logger = Logger.getLogger(MultipleSCsClientTest.class);
 	
 	/** The Constant testLogger. */
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
