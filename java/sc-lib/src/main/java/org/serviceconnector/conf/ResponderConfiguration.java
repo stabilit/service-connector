@@ -87,20 +87,10 @@ public class ResponderConfiguration {
 				}
 			}
 			commConfig.setInterfaces(interfaces);
-			try {
-				// get port & connection type
-				commConfig.setPort(apacheCompositeConfig.getInt(responderName + Constants.PROPERTY_QUALIFIER_PORT));
-				commConfig.setConnectionType((String) apacheCompositeConfig.getString(responderName
-						+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
-				// get user & password
-				commConfig.setUsername((String) apacheCompositeConfig.getString(responderName
-						+ Constants.PROPERTY_QUALIFIER_USERNAME));
-				commConfig.setPassword((String) apacheCompositeConfig.getString(responderName
-						+ Constants.PROPERTY_QUALIFIER_PASSWORD));
-			} catch (Exception e) {
-				logger.error(e.toString());
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.getMessage());
-			}
+
+			// get port, connectionType, username & password
+			this.readPortConnectionTypeAndCredentials(apacheCompositeConfig, responderName, commConfig);
+
 			// get remote host for responder
 			String remoteHost = apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
 			// remote host is optional
@@ -108,19 +98,19 @@ public class ResponderConfiguration {
 				// create configuration for remote host
 				CommunicatorConfig remoteHostConfig = new CommunicatorConfig(remoteHost);
 				// get host for remoteHost
+
+				String host = apacheCompositeConfig.getString(remoteHost + Constants.PROPERTY_QUALIFIER_HOST);
+				if (host == null) {
+					logger.error(responderName + " host not set");
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, responderName + " host not set");
+				}
+				List<String> hosts = new ArrayList<String>();
+				hosts.add(host);
+				remoteHostConfig.setInterfaces(hosts);
+
+				// get port, connectionType, username & password
+				this.readPortConnectionTypeAndCredentials(apacheCompositeConfig, responderName, remoteHostConfig);
 				try {
-					List<String> host = new ArrayList<String>();
-					host.add(apacheCompositeConfig.getString(remoteHost + Constants.PROPERTY_QUALIFIER_HOST));
-					remoteHostConfig.setInterfaces(host);
-					// get port & connection type
-					remoteHostConfig.setPort(apacheCompositeConfig.getInt(remoteHost + Constants.PROPERTY_QUALIFIER_PORT));
-					remoteHostConfig.setConnectionType((String) apacheCompositeConfig.getString(remoteHost
-							+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
-					// get user & password
-					remoteHostConfig.setUsername((String) apacheCompositeConfig.getString(remoteHost
-							+ Constants.PROPERTY_QUALIFIER_USERNAME));
-					remoteHostConfig.setPassword((String) apacheCompositeConfig.getString(remoteHost
-							+ Constants.PROPERTY_QUALIFIER_PASSWORD));
 					// get keep alive interval
 					remoteHostConfig.setKeepAliveInterval(apacheCompositeConfig.getInt(remoteHost
 							+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL));
@@ -137,5 +127,27 @@ public class ResponderConfiguration {
 			// adding responder to list
 			this.responderConfigList.add(commConfig);
 		}
+	}
+
+	private void readPortConnectionTypeAndCredentials(CompositeConfiguration apacheCompositeConfig, String responderName,
+			CommunicatorConfig commConfig) throws SCMPValidatorException {
+		try {
+			// get port
+			commConfig.setPort(apacheCompositeConfig.getInt(responderName + Constants.PROPERTY_QUALIFIER_PORT));
+		} catch (Exception e) {
+			logger.error(e.toString());
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.getMessage());
+		}
+		// get connectionType
+		String connectionType = apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
+		if (connectionType == null) {
+			logger.error(responderName + " connectionType not set");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, responderName + " connectionType not set");
+		}
+		commConfig.setConnectionType(connectionType);
+
+		// get user & password
+		commConfig.setUsername(apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_USERNAME));
+		commConfig.setPassword(apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_PASSWORD));
 	}
 }

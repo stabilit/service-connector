@@ -72,14 +72,30 @@ public class RequesterConfiguration {
 			CommunicatorConfig commConfig = new CommunicatorConfig(requesterName);
 
 			try {
-				// get port & connection type
+				// get port
 				commConfig.setPort(apacheCompositeConfig.getInt(requesterName + Constants.PROPERTY_QUALIFIER_PORT));
-				commConfig.setConnectionType((String) apacheCompositeConfig.getString(requesterName
-						+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE));
-				// get host for requester
-				List<String> hosts = new ArrayList<String>();
-				hosts.add(apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_HOST));
-				commConfig.setInterfaces(hosts);
+			} catch (Exception e) {
+				logger.error(e.toString());
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.getMessage());
+			}
+			// get connectionType
+			String connectionType = apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
+			if (connectionType == null) {
+				logger.error(requesterName + " connectionType not set");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, requesterName + " connectionType not set");
+			}
+			commConfig.setConnectionType(connectionType);
+
+			// get host for requester
+			String host = apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_HOST);
+			if (host == null) {
+				logger.error(requesterName + " host not set");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, requesterName + " host not set");
+			}
+			List<String> hosts = new ArrayList<String>();
+			hosts.add(host);
+			commConfig.setInterfaces(hosts);
+			try {
 				// get max connection pool size
 				commConfig.setMaxPoolSize(apacheCompositeConfig.getInt(requesterName
 						+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE));
