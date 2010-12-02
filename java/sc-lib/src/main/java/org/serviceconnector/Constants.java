@@ -76,9 +76,10 @@ public final class Constants {
 
 	/** The default maximal file sessions */
 	public static final int DEFAULT_MAX_FILE_SESSIONS = 10;
-
 	/** The default upload script name */
-	public static final String DEFAULT_UPLOAD_SCRIPT_NAME = "scupload.php";
+	public static final String DEFAULT_SCUPLOADFILE_SCRIPT_NAME = "scupload.php";
+	/** The default list files script name */
+	public static final String DEFAULT_SCLISTFILES_SCRIPT_NAME = "sclist.php";
 	/*
 	 * Various Constants *********
 	 */
@@ -145,6 +146,8 @@ public final class Constants {
 	public static final String ROOT_SUBSCRIPTION_TIMEOUT = "root.subscriptionTimeout";
 	public static final String ROOT_KEEP_ALIVE_TIMEOUT = "root.keepAliveTimeout";
 	public static final String ROOT_SERVER_ABORT_TIMEOUT = "root.serverAbortTimeout";
+	public static final String ROOT_SCLISTFILES_SCRIPT_NAME = "root.scListfilesScriptName";
+	public static final String ROOT_SCUPLOADFILE_SCRIPT_NAME = "root.scUploadfileScriptName";
 
 	public static final String PROPERTY_LISTENERS = "listeners";
 	public static final String PROPERTY_SERVICE_NAMES = "serviceNames";

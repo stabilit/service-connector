@@ -26,6 +26,8 @@ import java.util.List;
 
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.Constants;
+import org.serviceconnector.conf.BasicConfiguration;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -36,6 +38,8 @@ import org.serviceconnector.service.Session;
 
 public class FileServer extends Server {
 
+	/** The bas configuration. */
+	BasicConfiguration basConf = AppContext.getBasicConfiguration();
 	/** The sessions, list of sessions allocated to the server. */
 	private List<FileSession> sessions;
 	/** The max sessions. */
@@ -61,7 +65,7 @@ public class FileServer extends Server {
 		} else {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
-			URL url = new URL("http://" + this.host + ":" + this.portNr + path + Constants.DEFAULT_UPLOAD_SCRIPT_NAME + "?name="
+			URL url = new URL("http://" + this.host + ":" + this.portNr + path + basConf.getSCUploadFileScriptName() + "?name="
 					+ remoteFileName);
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("PUT");
@@ -153,7 +157,7 @@ public class FileServer extends Server {
 	}
 
 	public void serverListFiles(int timeoutInSeconds) throws Exception {
-
+		// TODO JOT
 	}
 
 	/** {@inheritDoc} */
