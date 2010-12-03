@@ -69,6 +69,7 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setSessionId(sessionId);
+		scMessage.setSessionInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 
 		// inform callback with scMessages
 		SCMessage scReply = srvService.getCallback().createSession(scMessage,
