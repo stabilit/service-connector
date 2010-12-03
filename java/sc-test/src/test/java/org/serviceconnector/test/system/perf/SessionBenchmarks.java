@@ -88,11 +88,11 @@ public class SessionBenchmarks {
 	}
 
 	/**
-	 * Description: Send 1000 message à 128 bytes to the server. Receive echoed messages. Measure performance <br>
+	 * Description: Send x message à 128 bytes to the server. Receive echoed messages. Measure performance <br>
 	 * Expectation: Performance better than 600 msg/sec.
 	 */
 	@Test
-	public void benchmark_1000_msg_compressed() throws Exception {
+	public void benchmark_msg_compressed() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
@@ -120,11 +120,11 @@ public class SessionBenchmarks {
 	}
 
 	/**
-	 * Description: Send 1000 message à 128 bytes to the server. Receive echoed messages. Measure performance <br>
+	 * Description: Send x message à 128 bytes to the server. Receive echoed messages. Measure performance <br>
 	 * Expectation: Performance better than 600 msg/sec.
 	 */
 	@Test
-	public void benchmark_1000_msg_uncompressed() throws Exception {
+	public void benchmark_msg_uncompressed() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
@@ -146,37 +146,11 @@ public class SessionBenchmarks {
 	}
 
 	/**
-	 * Description: Send 100000 message à 128 bytes to the server. Receive echoed messages. Measure performance <br>
-	 * Expectation: Performance better than 600 msg/sec.
-	 */
-	@Test
-	public void benchmark_100000_msg() throws Exception {
-		SCMessage request = new SCMessage(new byte[128]);
-		SCMessage response = null;
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		request.setSessionInfo("sessionInfo");
-		response = service.createSession(10, request);
-
-		int nr = 100000;
-		long start = System.currentTimeMillis();
-		for (int i = 0; i < nr; i++) {
-			if (((i+1) % 2000) == 0)
-				testLogger.info("Executing message nr. " + (i+1) + "...");
-			response = service.execute(request);
-		}
-		service.deleteSession(10);
-		long stop = System.currentTimeMillis();
-		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr + "msg à 128 byte performance : " + perf + " msg/sec.");
-		assertEquals("Performence not fast, only"+ perf + " msg/sec.", true, perf > 600);
-	}
-
-	/**
-	 * Description: Create and delete session 10000 times. No message body is sent or received. Measure performance <br>
+	 * Description: Create and delete session x times. No message body is sent or received. Measure performance <br>
 	 * Expectation: Performance better than 200 sessions/sec.
 	 */
 	@Test
-	public void benchmark_10000_sessions() throws Exception {
+	public void benchmark_sessions() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
