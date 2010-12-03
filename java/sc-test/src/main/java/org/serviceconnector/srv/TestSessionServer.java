@@ -158,14 +158,14 @@ public class TestSessionServer extends TestStatefulServer {
 					logger.log(Level.OFF, "executed method " + method.getName() + " on server");
 					return response;
 				} catch (Exception e) {
-					logger.warn("method not found on server", e);
+					logger.warn("method " + methodName + " not found on server");
 				}
 			}
 			// return empty message
 			return new SCMessage();
 		}
 
-		public SCMessage reflect(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage echo(SCMessage request, int operationTimeoutInMillis) {
 			return request;
 		}
 	}

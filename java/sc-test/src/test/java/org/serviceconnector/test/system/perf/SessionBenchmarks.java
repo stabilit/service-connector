@@ -99,11 +99,11 @@ public class SessionBenchmarks {
 		request.setCompressed(true);
 		request.setSessionInfo("sessionInfo");
 		response = service.createSession(10, request);
-		int nr = 10000;
+		int nr = 10;
 		long start = System.currentTimeMillis();
 		long startPart = System.currentTimeMillis();
 		long stopPart = 0;
-		
+		request.setMessageInfo("echo-f");
 		for (int i = 0; i < nr; i++) {
 			if (((i+1) % 1000) == 0) {
 				stopPart = System.currentTimeMillis();
@@ -133,6 +133,7 @@ public class SessionBenchmarks {
 		response = service.createSession(10, request);
 		int nr = 10000;
 		long start = System.currentTimeMillis();
+		request.setMessageInfo("echo");
 		for (int i = 0; i < nr; i++) {
 			if (((i+1) % 1000) == 0)
 				testLogger.info("Executing message nr. " + (i+1) + "...");
@@ -154,7 +155,7 @@ public class SessionBenchmarks {
 		SCMessage request = null;
 		SCMessage response = null;
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-
+		
 		int nr = 10000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
