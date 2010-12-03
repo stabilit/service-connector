@@ -15,6 +15,8 @@
  */
 package org.serviceconnector.srv;
 
+import java.lang.reflect.Method;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
@@ -25,25 +27,13 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
-import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.util.FileUtility;
 
-public class TestSessionServer extends Thread {
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(TestSessionServer.class);
-	/** The Constant sessionLogger. */
-	private final static SessionLogger sessionLogger = SessionLogger.getInstance();
+public class TestSessionServer extends TestStatefulServer {
 
-	private ThreadSafeCounter ctr;
-
-	private int listenerPort;
-	private int port;
-	private int maxSessions;
-	private int maxConnections;
-	private String serviceNames;
-	private String serverName;
-
-	private static final String fs = System.getProperty("file.separator");
+	static {
+		TestStatefulServer.logger = Logger.getLogger(TestSessionServer.class);
+	}
 
 	/**
 	 * Main method if you like to start in debug mode.
@@ -54,7 +44,8 @@ public class TestSessionServer extends Thread {
 	 *            [2] SC port<br>
 	 *            [3] maxSessions<br>
 	 *            [4] maxConnections<br>
-	 *            [5] serviceNames (comma delimited list)<br>
+	 *            [5] connectionType<br>
+	 *            ("netty.tcp" or "netty.http") [6] serviceNames (comma delimited list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
 		logger.log(Level.OFF, "TestSessionServer is starting ...");
@@ -67,7 +58,8 @@ public class TestSessionServer extends Thread {
 		server.setPort(Integer.parseInt(args[2]));
 		server.setMaxSessions(Integer.parseInt(args[3]));
 		server.setMaxConnections(Integer.parseInt(args[4]));
-		server.setServiceNames(args[5]);
+		server.setConnectionType(args[5]);
+		server.setServiceNames(args[6]);
 		server.run();
 	}
 
@@ -77,7 +69,7 @@ public class TestSessionServer extends Thread {
 		this.addExitHandler(FileUtility.getPath() + fs + this.serverName + ".pid");
 
 		ctr = new ThreadSafeCounter();
-		SCServer sc = new SCServer(TestConstants.HOST, this.port, this.listenerPort);
+		SCServer sc = new SCServer(TestConstants.HOST, this.port, this.listenerPort, this.connectionType);
 		try {
 			sc.setKeepAliveIntervalSeconds(10);
 			sc.setImmediateConnect(true);
@@ -102,26 +94,6 @@ public class TestSessionServer extends Thread {
 		} finally {
 			// sc.stopListener();
 		}
-	}
-
-	public void setListenerPort(int listenerPort) {
-		this.listenerPort = listenerPort;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	public void setMaxSessions(int maxSessions) {
-		this.maxSessions = maxSessions;
-	}
-
-	public void setMaxConnections(int maxConnections) {
-		this.maxConnections = maxConnections;
-	}
-
-	public void setServiceNames(String serviceNames) {
-		this.serviceNames = serviceNames;
 	}
 
 	/**
@@ -153,7 +125,7 @@ public class TestSessionServer extends Thread {
 						((SCMessageFault) response).setAppErrorText("create session rejected - kill server requested!");
 					} catch (SCMPValidatorException e) {
 					}
-					KillThread kill = new KillThread(this.scSessionServer);
+					KillThread<SCSessionServer> kill = new KillThread<SCSessionServer>(this.scSessionServer);
 					kill.start();
 				}
 			}
@@ -173,64 +145,28 @@ public class TestSessionServer extends Thread {
 
 		@Override
 		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
-			return request;
-		}
-	}
-
-	private class KillThread extends Thread {
-		private SCSessionServer server;
-
-		public KillThread(SCSessionServer server) {
-			this.server = server;
-		}
-
-		@Override
-		public void run() {
-			try {
-				this.server.deregister();
-			} catch (Exception e) {
-				logger.error("run", e);
-			} finally {
+			// watch out for method to call
+			SCMessage response = request;
+			String methodName = request.getMessageInfo();
+			if (methodName != null) {
+				if (methodName == null) {
+					return response;
+				}
 				try {
-					this.server.getSCServer().stopListener();
-					// sleep for 1/2 seconds before killing the server
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-				} finally {
-					System.exit(0);
+					Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
+					response = (SCMessage) method.invoke(this, request, operationTimeoutInMillis);
+					logger.log(Level.OFF, "executed method " + method.getName() + " on server");
+					return response;
+				} catch (Exception e) {
+					logger.warn("method not found on server", e);
 				}
 			}
-		}
-	}
-
-	public void setServerName(String serverName) {
-		this.serverName = serverName;
-	}
-
-	/**
-	 * Adds the shutdown hook.
-	 */
-	private void addExitHandler(String pidFileNameFull) {
-		TestServerExitHandler exitHandler = new TestServerExitHandler(pidFileNameFull);
-		Runtime.getRuntime().addShutdownHook(exitHandler);
-	}
-
-	/**
-	 * The Class TestServerExitHandler.
-	 */
-	private static class TestServerExitHandler extends Thread {
-		private String pidFileNameFull = null;
-
-		public TestServerExitHandler(String pidFileNameFull) {
-			this.pidFileNameFull = pidFileNameFull;
+			// return empty message
+			return new SCMessage();
 		}
 
-		@Override
-		public void run() {
-			FileUtility.deletePIDfile(this.pidFileNameFull);
-			logger.log(Level.OFF, "Delete PID-file: " + this.pidFileNameFull);
-			logger.log(Level.OFF, "TestServer exiting");
-			logger.log(Level.OFF, "<<<");
+		public SCMessage reflect(SCMessage request, int operationTimeoutInMillis) {
+			return request;
 		}
 	}
 }

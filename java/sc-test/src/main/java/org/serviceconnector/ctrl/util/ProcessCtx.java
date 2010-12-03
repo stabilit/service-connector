@@ -16,12 +16,13 @@
 package org.serviceconnector.ctrl.util;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.net.ConnectionType;
 
 public class ProcessCtx {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ProcessCtx.class);
-	
+
 	private Process process = null;
 	private String runableFull = null;
 	private String propertyFileName = null;
@@ -32,7 +33,9 @@ public class ProcessCtx {
 	private boolean running = false;
 	private String serviceNames;
 	private String processName;
-	
+	private int scPort;
+	private ConnectionType connectionType;
+
 	public ProcessCtx() {
 	}
 
@@ -41,7 +44,7 @@ public class ProcessCtx {
 	}
 
 	public void setProcess(Process process) {
-		if(process != null) {
+		if (process != null) {
 			this.running = true;
 		}
 		this.process = process;
@@ -94,7 +97,7 @@ public class ProcessCtx {
 	public void setPidFileNameFull(String pidFileNameFull) {
 		this.pidFileNameFull = pidFileNameFull;
 	}
-	
+
 	public boolean isRunning() {
 		return running;
 	}
@@ -102,7 +105,7 @@ public class ProcessCtx {
 	public void setServiceNames(String serviceNames) {
 		this.serviceNames = serviceNames;
 	}
-	
+
 	public String getServiceNames() {
 		return serviceNames;
 	}
@@ -113,5 +116,17 @@ public class ProcessCtx {
 
 	public void setProcessName(String processName) {
 		this.processName = processName;
+	}
+
+	public void setConnectionType(ConnectionType connectionType) {
+		this.connectionType = connectionType;
+	}
+
+	public void setSCPort(int scPort) {
+		this.scPort = scPort;
+	}
+
+	public int getSCPort() {
+		return scPort;
 	}
 }

@@ -34,7 +34,8 @@ public class TestServer {
 	 *            [3] SC port<br>
 	 *            [4] maxSessions<br>
 	 *            [5] maxConnections<br>
-	 *            [6] serviceNames (comma delimited list)<br>
+	 *            [6] connectionType ("netty.tcp" or "netty.http")<br>
+	 *            [7] serviceNames (comma delimited list)<br>
 	 */
 	public static void main(String[] args) {
 		logger.log(Level.OFF, "TestServer starting ...");
@@ -43,25 +44,20 @@ public class TestServer {
 			logger.log(Level.OFF, "args[" + i + "]:" + args[i]);
 		}
 
-		if (args[0].equals(TestConstants.SERVER_TYPE_SESSION)) {
-			TestSessionServer server = new TestSessionServer();
-			server.setServerName(args[1]);
-			server.setListenerPort(Integer.parseInt(args[2]));
-			server.setPort(Integer.parseInt(args[3]));
-			server.setMaxSessions(Integer.parseInt(args[4]));
-			server.setMaxConnections(Integer.parseInt(args[5]));
-			server.setServiceNames(args[6]);
-			server.start();
+		TestStatefulServer server = null;
 
+		if (args[0].equals(TestConstants.SERVER_TYPE_SESSION)) {
+			server = new TestSessionServer();
 		} else if (args[0].equals(TestConstants.SERVER_TYPE_PUBLISH)) {
-			TestPublishServer server = new TestPublishServer();
-			server.setServerName(args[1]);
-			server.setListenerPort(Integer.parseInt(args[2]));
-			server.setPort(Integer.parseInt(args[3]));
-			server.setMaxSessions(Integer.parseInt(args[4]));
-			server.setMaxConnections(Integer.parseInt(args[5]));
-			server.setServiceNames(args[6]);
-			server.start();
+			server = new TestPublishServer();
 		}
+		server.setServerName(args[1]);
+		server.setListenerPort(Integer.parseInt(args[2]));
+		server.setPort(Integer.parseInt(args[3]));
+		server.setMaxSessions(Integer.parseInt(args[4]));
+		server.setMaxConnections(Integer.parseInt(args[5]));
+		server.setConnectionType(args[6]);
+		server.setServiceNames(args[7]);
+		server.start();
 	}
 }

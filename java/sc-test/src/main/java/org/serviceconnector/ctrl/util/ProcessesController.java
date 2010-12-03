@@ -54,6 +54,13 @@ public class ProcessesController {
 		return userDir + fs + properties.getProperty(TestConstants.logDirectoryToken);
 	}
 
+	private String getPortFromConfFile(String scPropertiesFullName) throws Exception {
+		// Read & parse properties file.
+		Properties properties = new Properties();
+		properties.load(new FileInputStream(scPropertiesFullName));
+		return properties.getProperty("sc-tcp" + Constants.PROPERTY_QUALIFIER_PORT);
+	}
+
 	public ProcessCtx startSC(String log4jSCProperties, String scProperties) throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
@@ -83,6 +90,8 @@ public class ProcessesController {
 
 		String pidFileNameFull = getLogDirPath(log4jFileNameFull) + Constants.PID_FILE_NAME;
 		proc.setPidFileNameFull(pidFileNameFull);
+		// set sc port to SC stop at the end
+		proc.setSCPort(Integer.parseInt(this.getPortFromConfFile(scPropertiesFull)));
 
 		/*
 		 * start SC process Args: 
@@ -97,7 +106,7 @@ public class ProcessesController {
 
 		Process process = Runtime.getRuntime().exec(command);
 		proc.setProcess(process);
-		int timeout = 30; // seconds
+		int timeout = 10; // seconds
 		try {
 			FileUtility.waitExists(pidFileNameFull, timeout);
 			testLogger.info("SC started");
@@ -110,11 +119,10 @@ public class ProcessesController {
 	}
 
 	public void stopSC(ProcessCtx scProcess) throws Exception {
-		int timeout = 30; // seconds
+		int timeout = 10; // seconds
 		try {
 			if (FileUtility.exists(scProcess.getPidFileNameFull())) {
-				// TODO JOT Constant does not work for 2-nd SC! => Parse sc properties and get the port SC is listening on TCP
-				SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+				SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, scProcess.getSCPort(), ConnectionType.NETTY_TCP);
 				client.attach(timeout);
 				client.killSC();
 				FileUtility.waitNotExists(scProcess.getPidFileNameFull(), timeout);
@@ -155,6 +163,30 @@ public class ProcessesController {
 	 */
 	public ProcessCtx startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
 			int maxSessions, int maxConnections, String serviceNames) throws Exception {
+		return this.startServer(serverType, log4jSrvProperties, serverName, listenerPort, scPort, maxSessions, maxConnections,
+				ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, serviceNames);
+	}
+
+	/**
+	 * Start a server in a new JVM. Parameters controls the server execution.
+	 * 
+	 * @param serverType
+	 *            ("session" or "publish")
+	 * @param log4jProperties
+	 *            (file name)
+	 * @param serverName
+	 * @param listenerPort
+	 * @param SCport
+	 * @param maxSessions
+	 * @param maxConnections
+	 * @param connectionType
+	 * @param serviceNames
+	 *            (comma delimited list)
+	 * @return Process with JVM in which the server is started
+	 * @throws Exception
+	 */
+	public ProcessCtx startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
+			int maxSessions, int maxConnections, ConnectionType connectionType, String serviceNames) throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
 
@@ -178,6 +210,7 @@ public class ProcessesController {
 
 		proc.setServiceNames(serviceNames);
 		proc.setProcessName(serverName);
+		proc.setConnectionType(connectionType);
 		/*
 		 * start server process Args: 
 		 * [0] -Dlog4j.configuration=file 
@@ -190,13 +223,15 @@ public class ProcessesController {
 		 * [7] SC port 
 		 * [8] maxSessions 
 		 * [9] maxConnections 
-		 * [10] serviceNames (comma delimited list)
+		 * [10] connectionType ("netty.tcp" or "netty.http")
+		 * [11] serviceNames (comma delimited list)
 		 */
 		String command = "java -Dlog4j.configuration=file:" + log4jFileNameFull + " -jar " + srvRunableFull + " " + serverType + " "
-				+ serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " " + serviceNames;
+				+ serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " " + " "
+				+ connectionType.getValue() + " " + serviceNames;
 		Process srvProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(srvProcess);
-		int timeout = 30;
+		int timeout = 10;
 		try {
 			FileUtility.waitExists(pidFileNameFull, timeout);
 			testLogger.info("Server started");
@@ -209,7 +244,7 @@ public class ProcessesController {
 	}
 
 	public void stopServer(ProcessCtx srvProcess) throws Exception {
-		int timeout = 30; // seconds
+		int timeout = 10; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileNameFull())) {
 				SCClient client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
