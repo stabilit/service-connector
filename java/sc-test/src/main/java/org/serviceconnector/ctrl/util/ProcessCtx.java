@@ -31,6 +31,7 @@ public class ProcessCtx {
 	private String pidFileNameFull = null;
 	private boolean running = false;
 	private String serviceNames;
+	private String processName;
 	
 	public ProcessCtx() {
 	}
@@ -104,5 +105,13 @@ public class ProcessCtx {
 	
 	public String getServiceNames() {
 		return serviceNames;
+	}
+
+	public String getProcessName() {
+		return processName;
+	}
+
+	public void setProcessName(String processName) {
+		this.processName = processName;
 	}
 }

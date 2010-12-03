@@ -15,9 +15,6 @@
  */
 package org.serviceconnector.srv;
 
-import java.io.File;
-import java.io.FileWriter;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
@@ -32,7 +29,7 @@ public class TestServer {
 	 * 
 	 * @param args
 	 *            [0] serverType ("session" or "publish")<br>
-	 *            [1] PID file<br>
+	 *            [1] serverName<br>
 	 *            [2] listenerPort<br>
 	 *            [3] SC port<br>
 	 *            [4] maxSessions<br>
@@ -41,30 +38,24 @@ public class TestServer {
 	 */
 	public static void main(String[] args) {
 		logger.log(Level.OFF, "TestServer starting ...");
-		
+
 		for (int i = 0; i < 7; i++) {
-			logger.log(Level.OFF, "args["+i+"]:"+args[i]);
-		}		
-		TestServer testServer = new TestServer();
-		String pidFileNameFull = args[1];
-		testServer.addExitHandler(pidFileNameFull);
+			logger.log(Level.OFF, "args[" + i + "]:" + args[i]);
+		}
 
 		if (args[0].equals(TestConstants.SERVER_TYPE_SESSION)) {
 			TestSessionServer server = new TestSessionServer();
+			server.setServerName(args[1]);
 			server.setListenerPort(Integer.parseInt(args[2]));
 			server.setPort(Integer.parseInt(args[3]));
 			server.setMaxSessions(Integer.parseInt(args[4]));
 			server.setMaxConnections(Integer.parseInt(args[5]));
 			server.setServiceNames(args[6]);
-			try {
-				testServer.createPIDfile(pidFileNameFull); 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 			server.start();
 
 		} else if (args[0].equals(TestConstants.SERVER_TYPE_PUBLISH)) {
 			TestPublishServer server = new TestPublishServer();
+			server.setServerName(args[1]);
 			server.setListenerPort(Integer.parseInt(args[2]));
 			server.setPort(Integer.parseInt(args[3]));
 			server.setMaxSessions(Integer.parseInt(args[4]));
@@ -73,35 +64,4 @@ public class TestServer {
 			server.start();
 		}
 	}
-
-	/**
-	 * Adds the shutdown hook.
-	 */
-	private void addExitHandler(String pidFileNameFull) {
-		TestServerExitHandler exitHandler = new TestServerExitHandler(pidFileNameFull);
-		Runtime.getRuntime().addShutdownHook(exitHandler);
-	}
-
-	/**
-	 * The Class TestServerExitHandler.
-	 */
-	private static class TestServerExitHandler extends Thread {
-		private String pidFileNameFull = null;
-
-		public TestServerExitHandler(String pidFileNameFull) {
-			this.pidFileNameFull = pidFileNameFull;
-		}
-
-		@Override
-		public void run() {
-			File pidFile = new File(this.pidFileNameFull);
-			if (pidFile.exists()) {
-				pidFile.delete();
-				logger.log(Level.OFF, "Delete PID-file: " + this.pidFileNameFull);
-			}
-			logger.log(Level.OFF, "TestServer exiting");
-			logger.log(Level.OFF, "<<<");
-		}
-	}
-
 }

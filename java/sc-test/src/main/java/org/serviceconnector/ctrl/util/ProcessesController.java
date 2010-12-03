@@ -15,7 +15,6 @@
  */
 package org.serviceconnector.ctrl.util;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
@@ -144,6 +143,7 @@ public class ProcessesController {
 	 *            ("session" or "publish")
 	 * @param log4jProperties
 	 *            (file name)
+	 * @param serverName
 	 * @param listenerPort
 	 * @param SCport
 	 * @param maxSessions
@@ -177,7 +177,7 @@ public class ProcessesController {
 		proc.setPidFileNameFull(pidFileNameFull);
 
 		proc.setServiceNames(serviceNames);
-
+		proc.setProcessName(serverName);
 		/*
 		 * start server process Args: 
 		 * [0] -Dlog4j.configuration=file 
@@ -185,7 +185,7 @@ public class ProcessesController {
 		 * [2] -jar 
 		 * [3] server runnable 
 		 * [4] serverType ("session" or "publish") 
-		 * [5] PID file 
+		 * [5] serverName 
 		 * [6] listenerPort 
 		 * [7] SC port 
 		 * [8] maxSessions 
@@ -193,8 +193,7 @@ public class ProcessesController {
 		 * [10] serviceNames (comma delimited list)
 		 */
 		String command = "java -Dlog4j.configuration=file:" + log4jFileNameFull + " -jar " + srvRunableFull + " " + serverType + " "
-				+ pidFileNameFull + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " "
-				+ serviceNames;
+				+ serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " " + serviceNames;
 		Process srvProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(srvProcess);
 		int timeout = 30;
@@ -225,10 +224,6 @@ public class ProcessesController {
 					scSessionService.createSession(scMessage);
 				} catch (SCServiceException ex) {
 					client.detach();
-				}
-				if (srvProcess.isRunning()) {
-					srvProcess.getProcess().destroy();
-					srvProcess.getProcess().waitFor();
 				}
 				FileUtility.waitNotExists(srvProcess.getPidFileNameFull(), timeout);
 			}

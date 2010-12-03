@@ -17,7 +17,6 @@ package org.serviceconnector.srv;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
@@ -42,34 +41,41 @@ public class TestSessionServer extends Thread {
 	private int maxSessions;
 	private int maxConnections;
 	private String serviceNames;
-	private String pidFile;
+	private String serverName;
+
+	private static final String fs = System.getProperty("file.separator");
 
 	/**
 	 * Main method if you like to start in debug mode.
 	 * 
 	 * @param args
-	 *            [0] listenerPort<br>
-	 *            [1] SC port<br>
-	 *            [2] maxSessions<br>
-	 *            [3] maxConnections<br>
-	 *            [4] serviceNames (comma delimited list)<br>
+	 *            [0] serverName<br>
+	 *            [1] listenerPort<br>
+	 *            [2] SC port<br>
+	 *            [3] maxSessions<br>
+	 *            [4] maxConnections<br>
+	 *            [5] serviceNames (comma delimited list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
 		logger.log(Level.OFF, "TestSessionServer is starting ...");
 		for (int i = 0; i < 7; i++) {
-			logger.log(Level.OFF, "args["+i+"]:"+args[i]);
-		}	
+			logger.log(Level.OFF, "args[" + i + "]:" + args[i]);
+		}
 		TestSessionServer server = new TestSessionServer();
-		server.setListenerPort(Integer.parseInt(args[0]));
-		server.setPort(Integer.parseInt(args[1]));
-		server.setMaxSessions(Integer.parseInt(args[2]));
-		server.setMaxConnections(Integer.parseInt(args[3]));
-		server.setServiceNames(args[4]);
+		server.setServerName(args[0]);
+		server.setListenerPort(Integer.parseInt(args[1]));
+		server.setPort(Integer.parseInt(args[2]));
+		server.setMaxSessions(Integer.parseInt(args[3]));
+		server.setMaxConnections(Integer.parseInt(args[4]));
+		server.setServiceNames(args[5]);
 		server.run();
 	}
 
 	@Override
 	public void run() {
+		// add exit handler
+		this.addExitHandler(FileUtility.getPath() + fs + this.serverName + ".pid");
+
 		ctr = new ThreadSafeCounter();
 		SCServer sc = new SCServer(TestConstants.HOST, this.port, this.listenerPort);
 		try {
@@ -77,19 +83,19 @@ public class TestSessionServer extends Thread {
 			sc.setImmediateConnect(true);
 			sc.startListener();
 
-			String serviceName = this.serviceNames; // TODO TRN handle multiple services
-			// for (int i = 0; i < serviceNames.length; i++) {
-			// }
-			SCSessionServer server = sc.newSessionServer(serviceName);
-			SCSessionServerCallback cbk = new SrvCallback(server);
-			try {
-				server.register(10, this.maxSessions, this.maxConnections, cbk);
-				FileUtility.createPIDfile(pidFile);
-				logger.log(Level.OFF, "TestSessionServer is running ...");
-			} catch (Exception e) {
-				logger.error("runSessionServer", e);
-				server.deregister();
+			String[] serviceNames = this.serviceNames.split(",");
+			for (String serviceName : serviceNames) {
+				SCSessionServer server = sc.newSessionServer(serviceName);
+				SCSessionServerCallback cbk = new SrvCallback(server);
+				try {
+					server.register(10, this.maxSessions, this.maxConnections, cbk);
+				} catch (Exception e) {
+					logger.error("runSessionServer", e);
+					server.deregister();
+				}
 			}
+			FileUtility.createPIDfile(FileUtility.getPath() + fs + this.serverName + ".pid");
+			logger.log(Level.OFF, "TestSessionServer is running ...");
 			// server.destroy();
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
@@ -132,7 +138,9 @@ public class TestSessionServer extends Thread {
 		@Override
 		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
 			Object data = request.getData();
-
+			if (data == null) {
+				return request;
+			}
 			SCMessage response = request;
 			// watch out for kill server message
 			if (data.getClass() == String.class) {
@@ -178,24 +186,52 @@ public class TestSessionServer extends Thread {
 
 		@Override
 		public void run() {
-			// sleep for 2 seconds before killing the server
 			try {
-				Thread.sleep(2000);
 				this.server.deregister();
-				this.server.getSCServer().stopListener();
-				System.exit(0);
 			} catch (Exception e) {
 				logger.error("run", e);
+			} finally {
+				try {
+					this.server.getSCServer().stopListener();
+					// sleep for 1/2 seconds before killing the server
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+				} finally {
+					System.exit(0);
+				}
 			}
 		}
 	}
 
-	public String getPidFile() {
-		return pidFile;
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
 	}
 
-	public void setPidFile(String pidFile) {
-		this.pidFile = pidFile;
+	/**
+	 * Adds the shutdown hook.
+	 */
+	private void addExitHandler(String pidFileNameFull) {
+		TestServerExitHandler exitHandler = new TestServerExitHandler(pidFileNameFull);
+		Runtime.getRuntime().addShutdownHook(exitHandler);
+	}
+
+	/**
+	 * The Class TestServerExitHandler.
+	 */
+	private static class TestServerExitHandler extends Thread {
+		private String pidFileNameFull = null;
+
+		public TestServerExitHandler(String pidFileNameFull) {
+			this.pidFileNameFull = pidFileNameFull;
+		}
+
+		@Override
+		public void run() {
+			FileUtility.deletePIDfile(this.pidFileNameFull);
+			logger.log(Level.OFF, "Delete PID-file: " + this.pidFileNameFull);
+			logger.log(Level.OFF, "TestServer exiting");
+			logger.log(Level.OFF, "<<<");
+		}
 	}
 }
 
