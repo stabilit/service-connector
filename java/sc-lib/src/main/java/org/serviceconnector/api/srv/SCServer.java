@@ -187,8 +187,8 @@ public class SCServer {
 			throw new InvalidParameterException("connectionType must be set.");
 		}
 	
-		ValidatorUtility.validateInt(0, this.scPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
-		ValidatorUtility.validateInt(0, this.listenerPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(1, this.scPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(1, this.listenerPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 
 		if (this.scPort == this.listenerPort) {
 			throw new InvalidParameterException("SC port and listener port must not be the same.");
