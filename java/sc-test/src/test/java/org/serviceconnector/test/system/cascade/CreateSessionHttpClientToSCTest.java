@@ -54,8 +54,8 @@ public class CreateSessionHttpClientToSCTest {
 		ctrl = new ProcessesController();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
-				TestConstants.sessionServiceNames);
+				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.sesServiceName1);
 	}
 
 	@Before
@@ -137,7 +137,7 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t05_deleteSession() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		sessionService.deleteSession();
 		assertEquals("Session is not deleted ", true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
@@ -149,12 +149,11 @@ public class CreateSessionHttpClientToSCTest {
 	@Test
 	public void t10_createSession() throws Exception {
 		
-		String serviceName = ""; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService("");
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -174,12 +173,12 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t11_createSession() throws Exception {
-		String serviceName = ""; 
+
 		String data = " "; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService("");
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -198,13 +197,11 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t12_createSession() throws Exception {
-
-		String serviceName = " "; 
 		String data = " "; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(" ");
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -223,13 +220,11 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t13_createSession() throws Exception {
-
-		String serviceName = TestConstants.pangram; 
 		String data = " "; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.pangram);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -248,14 +243,12 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws service exception
 	 */
 	@Test
-	public void t14_createSession() throws Exception {
-
-		String serviceName = " "; 
+	public void t14_createSession() throws Exception { 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(" ");
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -275,12 +268,11 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t15_createSession() throws Exception {
-		String serviceName = TestConstants.pangram; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.pangram);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -299,13 +291,11 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t16_createSession() throws Exception {
-
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -323,13 +313,12 @@ public class CreateSessionHttpClientToSCTest {
 	 * Expectation:	throws SCMPValidator exception
 	 */
 	@Test
-	public void t20_createSessionInfo() throws Exception {
-		String serviceName = TestConstants.sessionServiceNames; 
+	public void t20_createSessionInfo() throws Exception { 
 		String data = null; 
 		String sessionInfo = ""; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -350,12 +339,11 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t21_createSessionInfo() throws Exception {
-		String serviceName = TestConstants.sessionServiceNames;
 		String messageData = null;
 		String sessionInfo = " ";
 		int timeoutInSeconds = 10;
 		
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
@@ -369,12 +357,11 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t22_createSessionInfo() throws Exception {
-		String serviceName = TestConstants.sessionServiceNames;
 		String messageData = null;
 		String sessionInfo = TestConstants.pangram;
 		int timeoutInSeconds = 10;
 		
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
@@ -393,12 +380,11 @@ public class CreateSessionHttpClientToSCTest {
 			sb.append('a');
 		}
 
-		String serviceName = TestConstants.sessionServiceNames;
 		String messageData = null;
 		String sessionInfo = sb.toString();
 		int timeoutInSeconds = 10;
 		
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
@@ -416,13 +402,11 @@ public class CreateSessionHttpClientToSCTest {
 		for (int i = 0; i < 257; i++) {
 			sb.append('a');
 		}
-		
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = sb.toString(); 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -442,13 +426,11 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t25_createSessionInfo() throws Exception {
-		
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = " "; 
 		String sessionInfo = ""; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -467,12 +449,11 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t26_createSessionInfo() throws Exception {
-		String serviceName = TestConstants.sessionServiceNames;
 		String messageData = " ";
 		String sessionInfo = " ";
 		int timeoutInSeconds = 10;
 		
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
@@ -487,12 +468,11 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t27_createSessionInfo() throws Exception {
-		String serviceName = TestConstants.sessionServiceNames;
 		String messageData = " ";
 		String sessionInfo = TestConstants.pangram;
 		int timeoutInSeconds = 10;
 		
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
@@ -511,13 +491,11 @@ public class CreateSessionHttpClientToSCTest {
 		for (int i = 0; i < 256; i++) {
 			sb.append('a');
 		}
-
-		String serviceName = TestConstants.sessionServiceNames;
 		String messageData = " ";
 		String sessionInfo = sb.toString();
 		int timeoutInSeconds = 10;
 		
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
@@ -532,11 +510,10 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t30_deleteSessionService() throws Exception {
-		String serviceName = TestConstants.sessionServiceNames;
 		String messageData = null;
 		String sessionInfo = "sessionInfo";
 		
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( 10, scMessage);
@@ -550,11 +527,10 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t31_deleteSessionService() throws Exception {
-		String serviceName = TestConstants.sessionServiceNames;
 		String messageData = null;
 		String sessionInfo = " ";
 		
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( 10, scMessage);
@@ -568,11 +544,10 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 @Test
 	public void t32_deleteSessionService() throws Exception {
-		String serviceName = TestConstants.sessionServiceNames;
 		String messageData = " ";
 		String sessionInfo = "sessionInfo";
 		
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( 10, scMessage);
@@ -586,11 +561,10 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t33_deleteSessionService() throws Exception {
-		String serviceName = TestConstants.sessionServiceNames;
 		String messageData = " ";
 		String sessionInfo = " ";
 		
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( 10, scMessage);
@@ -604,7 +578,7 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t400_createSession() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 10, scMessage);
@@ -624,7 +598,7 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t401_createSession() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage0 = new SCMessage();
 		scMessage0.setSessionInfo("sessionInfo");
 		sessionService.createSession( 10, scMessage0);
@@ -647,8 +621,8 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t402_createSession() throws Exception {
-		SCSessionService sessionService0 = client.newSessionService(TestConstants.sessionServiceNames);
-		SCSessionService sessionService1 = client.newSessionService(TestConstants.publishServiceNames);
+		SCSessionService sessionService0 = client.newSessionService(TestConstants.sesServiceName1);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.pubServiceName1);
 
 		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
 		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
@@ -679,8 +653,8 @@ public class CreateSessionHttpClientToSCTest {
 	 */
 	@Test
 	public void t403_createSession() throws Exception {
-		SCSessionService sessionService0 = client.newSessionService(TestConstants.sessionServiceNames);
-		SCSessionService sessionService1 = client.newSessionService(TestConstants.publishServiceNames);
+		SCSessionService sessionService0 = client.newSessionService(TestConstants.sesServiceName1);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.pubServiceName1);
 
 		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
 		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
@@ -712,7 +686,7 @@ public class CreateSessionHttpClientToSCTest {
 	 */	
 	@Test
 	public void t404_createSession() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		for (int i = 0; i < 1000; i++) {
 			if ((i % 100) == 0)
 				testLogger.info("createSession_12 cycle:\t" + i + " ...");
@@ -731,13 +705,11 @@ public class CreateSessionHttpClientToSCTest {
 	 */	
 	@Test
 	public void t50_echoInterval() throws Exception {
-		
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -758,13 +730,11 @@ public class CreateSessionHttpClientToSCTest {
 	@Test
 	public void t51_echoInterval() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", -1, 10);
-
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -784,13 +754,10 @@ public class CreateSessionHttpClientToSCTest {
 	@Test
 	public void t52_echoInterval() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 1, 10);
-
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
-
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -811,13 +778,10 @@ public class CreateSessionHttpClientToSCTest {
 	@Test
 	public void t53_echoInterval() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", Integer.MIN_VALUE, 10);
-
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
-
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -839,12 +803,11 @@ public class CreateSessionHttpClientToSCTest {
 	public void t54_echoInterval() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", Integer.MAX_VALUE, 10);
 
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -864,12 +827,11 @@ public class CreateSessionHttpClientToSCTest {
 	 */	
 	@Test
 	public void t55_echoInterval() throws Exception {
-		String serviceName = TestConstants.sessionServiceNames;
 		String messageData = null;
 		String sessionInfo = "sessionInfo";
 		int timeoutInSeconds = 10;
 		
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
@@ -886,12 +848,11 @@ public class CreateSessionHttpClientToSCTest {
 	public void t56_echoInterval() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 3601, 10);
 
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 10;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -913,12 +874,11 @@ public class CreateSessionHttpClientToSCTest {
 	public void t60_timeout() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 3600, 0);
 
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 0;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -940,12 +900,11 @@ public class CreateSessionHttpClientToSCTest {
 	public void t61_timeout() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 300, -1);
 		
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = -1;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -965,7 +924,7 @@ public class CreateSessionHttpClientToSCTest {
 	 */	
 	@Test
 	public void t62_timeout() throws Exception {
-		String serviceName = TestConstants.sessionServiceNames;
+		String serviceName = TestConstants.sesServiceName1;
 		String messageData = null;
 		String sessionInfo = "sessionInfo";
 		int timeoutInSeconds = 10;
@@ -987,12 +946,11 @@ public class CreateSessionHttpClientToSCTest {
 	public void t63_timeout() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 300, Integer.MIN_VALUE);
 
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = Integer.MIN_VALUE;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -1015,12 +973,11 @@ public class CreateSessionHttpClientToSCTest {
 	public void t64_timeout() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 300, Integer.MAX_VALUE);
 
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = Integer.MAX_VALUE;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -1040,12 +997,11 @@ public class CreateSessionHttpClientToSCTest {
 	 */		
 	@Test
 	public void t65_timeout() throws Exception {
-		String serviceName = TestConstants.sessionServiceNames;
 		String messageData = null;
 		String sessionInfo = "sessionInfo";
 		int timeoutInSeconds = 10;
 		
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
@@ -1062,12 +1018,11 @@ public class CreateSessionHttpClientToSCTest {
 	public void t66_timeout() throws Exception {
 		//this.testCreateSessionWithException(TestConstants.sessionServiceNames, null, "sessionInfo", 300, 3601);
 
-		String serviceName = TestConstants.sessionServiceNames; 
 		String data = null; 
 		String sessionInfo = "sessionInfo"; 
 		int timeoutInSeconds = 3601;
 
-		SCSessionService sessionService = client.newSessionService(serviceName);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
@@ -1086,7 +1041,7 @@ public class CreateSessionHttpClientToSCTest {
 	 */	
 	@Test (expected = SCMPValidatorException.class)
 	public void t405_createSession() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		sessionService.createSession( -1, null);
 	}
 
@@ -1098,7 +1053,7 @@ public class CreateSessionHttpClientToSCTest {
 	 */	
 	@Test (expected = SCServiceException.class)
 	public void t406_createSession() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(" ");
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 10, scMessage);
@@ -1116,7 +1071,7 @@ public class CreateSessionHttpClientToSCTest {
 	 */	
 	@Test
 	public void t407_createSession() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		for (int i = 0; i < 1000; i++) {
 			if ((i % 100) == 0)
 				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
@@ -1186,7 +1141,7 @@ public class CreateSessionHttpClientToSCTest {
 	 */	
 	@Test(expected = SCMPValidatorException.class)
 	public void t411_createSession_emptySessionInfoDataOneChar_throwsException() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo("");
 		sessionService.createSession( 10, scMessage);
@@ -1200,7 +1155,7 @@ public class CreateSessionHttpClientToSCTest {
 	 */	
 	@Test
 	public void t412_createSession_whiteSpaceSessionInfoDataOneChar_sessionIdIsNotEmpty() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(" ");
 		sessionService.createSession( 10, scMessage);
@@ -1214,7 +1169,7 @@ public class CreateSessionHttpClientToSCTest {
 	 */	
 	@Test
 	public void t413_createSession_arbitrarySpaceSessionInfoDataOneChar_sessionIdIsNotEmpty() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(TestConstants.pangram);
 		sessionService.createSession( 10, scMessage);
@@ -1232,7 +1187,7 @@ public class CreateSessionHttpClientToSCTest {
 		for (int i = 0; i < 256; i++) {
 			sb.append('a');
 		}
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(sb.toString());
 		sessionService.createSession( 10, scMessage);
@@ -1250,7 +1205,7 @@ public class CreateSessionHttpClientToSCTest {
 		for (int i = 0; i < 257; i++) {
 			sb.append('a');
 		}
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		try {
 			SCMessage scMessage = new SCMessage("a");
 			scMessage.setSessionInfo(sb.toString());
@@ -1268,7 +1223,7 @@ public class CreateSessionHttpClientToSCTest {
 	 */	
 	@Test
 	public void deleteSession_afterValidCreateSessionDataOneChar_noSessionId() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 10, scMessage);
@@ -1278,7 +1233,7 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void deleteSession_whiteSpaceSessionInfoDataOneChar_noSessionId() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(" ");
 		sessionService.createSession( 10, scMessage);
@@ -1288,7 +1243,7 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void createSession_twiceDataOneChar_throwsException() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 10, scMessage);
@@ -1306,8 +1261,8 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void createSession_twiceWithDifferentSessionServicesDataOneChar_differentSessionIds() throws Exception {
-		SCSessionService sessionService0 = client.newSessionService(TestConstants.sessionServiceNames);
-		SCSessionService sessionService1 = client.newSessionService(TestConstants.publishServiceNames);
+		SCSessionService sessionService0 = client.newSessionService(TestConstants.sesServiceName1);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.pubServiceName1);
 
 		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
 		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
@@ -1334,7 +1289,7 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void createSession_1000times_passes() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		for (int i = 0; i < 1000; i++) {
 			if ((i % 100) == 0)
 				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
@@ -1395,7 +1350,7 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test(expected = SCMPValidatorException.class)
 	public void createSession_emptySessionInfoData60kBByteArray_throwsException() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo("");
 		sessionService.createSession( 10, scMessage);
@@ -1405,7 +1360,7 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void createSession_whiteSpaceSessionInfoData60kBByteArray_sessionIdIsNotEmpty() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo(" ");
 		sessionService.createSession( 10, scMessage);
@@ -1415,7 +1370,7 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void createSession_arbitrarySpaceSessionInfoData60kBByteArray_sessionIdIsNotEmpty() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo(TestConstants.pangram);
 		sessionService.createSession( 10, scMessage);
@@ -1425,7 +1380,7 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void createSession_256LongSessionInfoData60kBByteArray_sessionIdIsNotEmpty() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo(TestConstants.stringLength256);
 		sessionService.createSession( 10, scMessage);
@@ -1435,7 +1390,7 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void deleteSession_afterValidCreateSessionData60kBByteArray_noSessionId() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 10, scMessage);
@@ -1445,7 +1400,7 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void deleteSession_whiteSpaceSessionInfoData60kBByteArray_noSessionId() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo(" ");
 		sessionService.createSession( 10, scMessage);
@@ -1455,7 +1410,7 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void createSession_twiceData60kBByteArray_throwsException() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 10, scMessage);
@@ -1471,8 +1426,8 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void createSession_twiceWithDifferentSessionServicesData60kBByteArray_differentSessionIds() throws Exception {
-		SCSessionService sessionService0 = client.newSessionService(TestConstants.sessionServiceNames);
-		SCSessionService sessionService1 = client.newSessionService(TestConstants.publishServiceNames);
+		SCSessionService sessionService0 = client.newSessionService(TestConstants.sesServiceName1);
+		SCSessionService sessionService1 = client.newSessionService(TestConstants.pubServiceName1);
 
 		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
 		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
@@ -1499,7 +1454,7 @@ public class CreateSessionHttpClientToSCTest {
 
 	@Test
 	public void createSession_1000timesData60kBByteArray_passes() throws Exception {
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		for (int i = 0; i < 1000; i++) {
 			if ((i % 100) == 0)
 				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
@@ -1520,7 +1475,7 @@ public class CreateSessionHttpClientToSCTest {
 		for (int i = 0; i < sessionsCount; i++) {
 			if ((i % 100) == 0)
 				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
-			sessionServices[i] = client.newSessionService(TestConstants.sessionServiceNames);
+			sessionServices[i] = client.newSessionService(TestConstants.sesServiceName1);
 			sessionServices[i].createSession( 10, new SCMessage());
 			sessions[i] = sessionServices[i].getSessionId();
 		}
@@ -1552,7 +1507,7 @@ public class CreateSessionHttpClientToSCTest {
 			for (int i = 0; i < sessionsCount; i++) {
 				if ((i % 100) == 0)
 					testLogger.info("createSession_1001times cycle:\t" + i + " ...");
-				sessionServices[i] = client.newSessionService(TestConstants.sessionServiceNames);
+				sessionServices[i] = client.newSessionService(TestConstants.sesServiceName1);
 				sessionServices[i].createSession( 10, new SCMessage());
 				sessions[i] = sessionServices[i].getSessionId();
 				ctr++;
@@ -1632,7 +1587,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void sessionId_uniqueCheckFor10000IdsByOneClient_allSessionIdsAreUnique() throws Exception {
 		int clientsCount = 10000;
 
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		String[] sessions = new String[clientsCount];
 
 		for (int i = 0; i < clientsCount; i++) {

@@ -59,8 +59,8 @@ public class ChangeSubscriptionClientTest {
 		ctrl = new ProcessesController();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
-					TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
-					TestConstants.publishServiceNames );
+					TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+					TestConstants.pubServiceName1 );
 	}
 
 	@Before
@@ -109,7 +109,7 @@ public class ChangeSubscriptionClientTest {
 	@Test
 	public void changeSubscription_serviceNameValidNotEstablishedPreviousSubscription_throwsSCException()
 			throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
@@ -125,7 +125,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_afterUnsubscribed_throwsSCException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
@@ -144,7 +144,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toTheSameMask_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
@@ -159,7 +159,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMaskNull_throwsValidatorException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
@@ -177,7 +177,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMaskEmpty_throwsValidatorException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
@@ -196,7 +196,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMaskWhiteSpace_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
@@ -210,7 +210,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMaskOneChar_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
@@ -225,7 +225,7 @@ public class ChangeSubscriptionClientTest {
 	// TODO JOT knows about
 	@Test
 	public void changeSubscription_toMaskPangram_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
@@ -239,7 +239,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMask256LongString_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
@@ -253,7 +253,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_toMask257LongString_throwsValidatorException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
@@ -272,7 +272,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_twice_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
@@ -288,7 +288,7 @@ public class ChangeSubscriptionClientTest {
 
 	@Test
 	public void changeSubscription_10000Times_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
@@ -313,7 +313,7 @@ public class ChangeSubscriptionClientTest {
 		for (int i = 0; i < loop; i++) {
 			if ((i % 500) == 0)
 				testLogger.info("ubscribeChangeSubscriptionUnsubscribe_10000Times cycle:\t" + i + " ...");
-			SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+			SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
 			subscibeMessage.setSessionInfo("sessionInfo");

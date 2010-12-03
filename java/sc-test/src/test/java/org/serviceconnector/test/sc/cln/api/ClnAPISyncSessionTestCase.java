@@ -22,6 +22,7 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.sc.SetupTestCases;
 
 public class ClnAPISyncSessionTestCase {
@@ -35,16 +36,14 @@ public class ClnAPISyncSessionTestCase {
 	public void testClnAPI() throws Exception {
 		SCClient sc = null;
 		try {
-			sc = new SCClient();
+			sc = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP,ConnectionType.NETTY_HTTP);
 			sc.setMaxConnections(100);
-
-			// connects to SC, checks connection to SC
-			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+			sc.attach();
 
 			SCSessionService sessionServiceA = sc.newSessionService("session-1");
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
-			sessionServiceA.createSession(10, 10, scMessage);
+			sessionServiceA.createSession(10, scMessage);
 
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];

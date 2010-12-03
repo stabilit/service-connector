@@ -48,9 +48,6 @@ public class NewServiceTest {
 	private static ProcessCtx scCtx;
 	private SCClient client;
 	private int threadCount = 0;
-	private String sessionServiceName = TestConstants.sessionServiceNames;
-	private String publishServiceName = TestConstants.publishServiceNames;
-	private String fileServiceName = TestConstants.fileServiceNames;
 	
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -138,7 +135,7 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t106_newSessionService() throws Exception {
-		assertEquals("create", true, client.newSessionService(TestConstants.sessionServiceNames) instanceof SCSessionService);
+		assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
 	}
 
 	/**
@@ -147,8 +144,8 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t107_newSessionService() throws Exception {
-		assertEquals("create", true, client.newSessionService(TestConstants.sessionServiceNames) instanceof SCSessionService);
-		assertEquals("create", true, client.newSessionService(TestConstants.sessionServiceNames) instanceof SCSessionService);
+		assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
+		assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
 	}
 
 	/**
@@ -157,8 +154,8 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t108_newSessionService() throws Exception {
-		assertEquals("create", true, client.newSessionService(TestConstants.sessionServiceNames) instanceof SCSessionService);
-		assertEquals("create", true, client.newSessionService(TestConstants.publishServiceNames) instanceof SCSessionService);
+		assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
+		assertEquals("create", true, client.newSessionService(TestConstants.pubServiceName1) instanceof SCSessionService);
 	}
 	
 	/**
@@ -170,7 +167,7 @@ public class NewServiceTest {
 		int serviceCount = 1000;
 		SCSessionService[] services = new SCSessionService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {
-			services[i] = client.newSessionService(TestConstants.sessionServiceNames);
+			services[i] = client.newSessionService(TestConstants.sesServiceName1);
 			assertEquals(true, services[i] instanceof SCSessionService);
 		}
 	}
@@ -222,7 +219,7 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t205_newPublisService() throws Exception {
-		assertEquals("create", true, client.newPublishService(publishServiceName) instanceof SCPublishService);
+		assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
 
 	/**
@@ -231,8 +228,8 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t206_newPublisService() throws Exception {
-		assertEquals("create", true, client.newPublishService(publishServiceName) instanceof SCPublishService);
-		assertEquals("create", true, client.newPublishService(publishServiceName) instanceof SCPublishService);
+		assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
+		assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
 
 	/**
@@ -241,8 +238,8 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t207_newPublisService() throws Exception {
-		assertEquals("create", true, client.newPublishService(sessionServiceName) instanceof SCPublishService);
-		assertEquals("create", true, client.newPublishService(publishServiceName) instanceof SCPublishService);
+		assertEquals("create", true, client.newPublishService(TestConstants.sesServiceName1) instanceof SCPublishService);
+		assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
 	
 	/**
@@ -254,7 +251,7 @@ public class NewServiceTest {
 		int serviceCount = 1000;
 		SCPublishService[] services = new SCPublishService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {
-			services[i] = client.newPublishService(publishServiceName);
+			services[i] = client.newPublishService(TestConstants.pubServiceName1);
 			assertEquals(true, services[i] instanceof SCPublishService);
 		}
 	}
@@ -304,7 +301,7 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t305_newFileService() throws Exception {
-		assertEquals("create", true, client.newFileService(fileServiceName) instanceof SCFileService);
+		assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
 	}
 
 	/**
@@ -313,8 +310,8 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t306_newFileService() throws Exception {
-		assertEquals("create", true, client.newFileService(fileServiceName) instanceof SCFileService);
-		assertEquals("create", true, client.newFileService(fileServiceName) instanceof SCFileService);
+		assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
+		assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
 	}
 
 	/**
@@ -323,8 +320,8 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t307_newFileService() throws Exception {
-		assertEquals("create", true, client.newFileService(sessionServiceName) instanceof SCFileService);
-		assertEquals("create", true, client.newFileService(publishServiceName) instanceof SCFileService);
+		assertEquals("create", true, client.newFileService(TestConstants.sesServiceName1) instanceof SCFileService);
+		assertEquals("create", true, client.newFileService(TestConstants.pubServiceName1) instanceof SCFileService);
 	}
 	
 	/**
@@ -336,7 +333,7 @@ public class NewServiceTest {
 		int serviceCount = 1000;
 		SCFileService[] services = new SCFileService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {
-			services[i] = client.newFileService(fileServiceName);
+			services[i] = client.newFileService(TestConstants.filServiceName1);
 			assertEquals(true, services[i] instanceof SCFileService);
 		}
 	}

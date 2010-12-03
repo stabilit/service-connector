@@ -44,7 +44,6 @@ public class AfterSCRestartClientTest {
 	private static ProcessCtx scCtx;
 	private SCMgmtClient client;
 	private int threadCount = 0;
-	private String sessionServiceName = TestConstants.sessionServiceNames;
 
 	
 	@BeforeClass
@@ -144,7 +143,7 @@ public class AfterSCRestartClientTest {
 		client.attach();
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.enableService(sessionServiceName);
+		client.enableService(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -157,7 +156,7 @@ public class AfterSCRestartClientTest {
 		client.attach();
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.disableService(sessionServiceName);
+		client.disableService(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -170,7 +169,7 @@ public class AfterSCRestartClientTest {
 		client.attach();
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.getWorkload(sessionServiceName);
+		client.getWorkload(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -239,7 +238,7 @@ public class AfterSCRestartClientTest {
 		client.attach();
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.enableService(sessionServiceName);
+		client.enableService(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -252,7 +251,7 @@ public class AfterSCRestartClientTest {
 		client.attach();
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.disableService(sessionServiceName);
+		client.disableService(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -265,6 +264,6 @@ public class AfterSCRestartClientTest {
 		client.attach();
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		client.getWorkload(sessionServiceName);
+		client.getWorkload(TestConstants.sesServiceName1);
 	}
 }

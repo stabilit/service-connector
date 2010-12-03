@@ -60,7 +60,7 @@ public class SCServerTest {
 	 * Expectation: Host, Port and listener Port was set
 	 */
 	@Test
-	public void t01_construtor() throws Exception {
+	public void t01_constructor() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
 		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
 		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
@@ -76,7 +76,7 @@ public class SCServerTest {
 	 * Expectation: throws InvalidParameterException
 	 */
 	@Test (expected = InvalidParameterException.class)
-	public void t02_construtor() throws Exception {
+	public void t02_constructor() throws Exception {
 		server = new SCServer(null, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER);
 		assertEquals("Host not equal", null, server.getSCHost());
 		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
@@ -91,7 +91,7 @@ public class SCServerTest {
 	 * Expectation: throws SCMPValidatorException
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t03_construtor() throws Exception {
+	public void t03_constructor() throws Exception {
 		server = new SCServer(TestConstants.HOST, Integer.MIN_VALUE, TestConstants.PORT_LISTENER);
 		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
 		assertEquals("Port not equal", Integer.MIN_VALUE, server.getSCPort());
@@ -106,7 +106,7 @@ public class SCServerTest {
 	 * Expectation: throws SCMPValidatorException
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t04_construtor() throws Exception {
+	public void t04_constructor() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, Integer.MIN_VALUE);
 		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
 		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
@@ -121,7 +121,7 @@ public class SCServerTest {
 	 * Expectation: throws SCMPCommunicationException
 	 */
 	@Test
-	public void t05_construtor() throws Exception {
+	public void t05_constructor() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP);
 		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
 		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
@@ -132,11 +132,11 @@ public class SCServerTest {
 	}
 	
 	/**
-	 * Description:	Invoke SCServer constructor with host, port, listener port and connection type=null. <br>
+	 * Description:	SCServer with host, port, listener port and connection type=null. <br>
 	 * Expectation: throws InvalidParameterException
 	 */
 	@Test (expected = InvalidParameterException.class)
-	public void t06_construtor() throws Exception {
+	public void t06_constructor() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, null);
 		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
 		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
@@ -146,6 +146,36 @@ public class SCServerTest {
 		server.startListener();
 	}
 
+	/**
+	 * Description:	start listener to the same port <br>
+	 * Expectation: throws InvalidParameterException
+	 */
+	@Test (expected = InvalidParameterException.class)
+	public void t07_constructor() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
+		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_TCP, server.getListenerPort());
+		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, server.getConnectionType());
+		assertNotNull(server);
+		server.startListener();
+	}
+
+	/**
+	 * Description:	SCServer with nonexisting host <br>
+	 * Expectation: throws InvalidParameterException
+	 */
+	@Test (expected = InvalidParameterException.class)
+	public void t08_constructor() throws Exception {
+		server = new SCServer("gaga", TestConstants.PORT_TCP, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		assertEquals("Host not equal", "gaga", server.getSCHost());
+		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_TCP, server.getListenerPort());
+		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, server.getConnectionType());
+		assertNotNull(server);
+		server.startListener();
+	}
+	
 	/**
 	 * Description:	Set KeepAliveInterval with valid value. <br>
 	 * Expectation: KeepAliveInterval was set

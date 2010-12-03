@@ -55,8 +55,8 @@ public class EnableServiceDisableServiceClientToSCTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
-				TestConstants.publishServiceNames );
+				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.pubServiceName1 );
 
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP);
 		client.attach();
@@ -90,16 +90,16 @@ public class EnableServiceDisableServiceClientToSCTest {
 	 */
 	@Test
 	public void createSession_1() throws Exception {
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
+		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
 
 		// create session 
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 60, scMessage);
 
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
+		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
@@ -111,20 +111,20 @@ public class EnableServiceDisableServiceClientToSCTest {
 	// TODO doubt this test case is useful ?
 	@Test
 	public void createSession_2() throws Exception {
-		assertEquals(false, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.enableService(TestConstants.sessionServiceNames);
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
+		assertEquals(false, client.isServiceEnabled(TestConstants.sesServiceName1));
+		client.enableService(TestConstants.sesServiceName1);
+		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
 
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 60, scMessage);
 
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
+		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
-		client.disableService(TestConstants.sessionServiceNames);
+		client.disableService(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -133,9 +133,9 @@ public class EnableServiceDisableServiceClientToSCTest {
 	 */
 	@Test
 	public void createSession_3() throws Exception {
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.disableService(TestConstants.sessionServiceNames);
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		client.disableService(TestConstants.sesServiceName1);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 
 		try {
 			SCMessage scMessage = new SCMessage();
@@ -145,9 +145,9 @@ public class EnableServiceDisableServiceClientToSCTest {
 			ex = e;
 		}
 		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(false, client.isServiceEnabled(TestConstants.sessionServiceNames));
+		assertEquals(false, client.isServiceEnabled(TestConstants.sesServiceName1));
 		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
-		client.enableService(TestConstants.sessionServiceNames);
+		client.enableService(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -161,13 +161,13 @@ public class EnableServiceDisableServiceClientToSCTest {
 	@Test
 	public void createSession_4() throws Exception {
 		// 1.
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
-		client.disableService(TestConstants.sessionServiceNames);
-		client.enableService(TestConstants.sessionServiceNames);
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
+		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		client.disableService(TestConstants.sesServiceName1);
+		client.enableService(TestConstants.sesServiceName1);
+		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
 
 		// 2.
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 60, scMessage);
@@ -186,18 +186,18 @@ public class EnableServiceDisableServiceClientToSCTest {
 	@Test
 	public void createSession_5() throws Exception {
 		// 1.
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
+		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
 
 		for (int i = 0; i < 1000; i++) {
 			if ((i % 100) == 0)
 				testLogger.info("EnabledDisableService_1000Times cycle:\t" + i + " ...");
-			client.disableService(TestConstants.sessionServiceNames);
-			client.enableService(TestConstants.sessionServiceNames);
+			client.disableService(TestConstants.sesServiceName1);
+			client.enableService(TestConstants.sesServiceName1);
 		}
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
+		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		
 		// 2.
-		SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 60, scMessage);
@@ -215,17 +215,17 @@ public class EnableServiceDisableServiceClientToSCTest {
 	// TODO doubt this test case is useful ? disabled & enabled first the service
 	@Test
 	public void createSession_6() throws Exception {
-		assertEquals(true, client.isServiceEnabled(TestConstants.sessionServiceNames));
+		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
 
 		for (int i = 0; i < 1000; i++) {
 			if ((i % 100) == 0)
 				testLogger.info("EnabledDisableService_1000Times cycle:\t" + i + " ...");
 			// 1.
-			client.disableService(TestConstants.sessionServiceNames);
-			client.enableService(TestConstants.sessionServiceNames);
+			client.disableService(TestConstants.sesServiceName1);
+			client.enableService(TestConstants.sesServiceName1);
 			
 			// 2.
-			SCSessionService sessionService = client.newSessionService(TestConstants.sessionServiceNames);
+			SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
 			sessionService.createSession( 60, scMessage);

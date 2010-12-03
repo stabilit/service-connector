@@ -118,32 +118,32 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 	@Test
 	public void deregisterServer_afterValidRegister_registeredThenNotRegistered() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 1);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceNames, 1, 1,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sesServiceName1, 1, 1,
 				new CallBack());
-		assertEquals(true, server.isRegistered(TestConstants.sessionServiceNames));
-		server.deregister(TestConstants.sessionServiceNames);
-		assertEquals(false, server.isRegistered(TestConstants.sessionServiceNames));
+		assertEquals(true, server.isRegistered(TestConstants.sesServiceName1));
+		server.deregister(TestConstants.sesServiceName1);
+		assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
 	}
 
 	@Test
 	public void deregisterServer_afterValidRegisterDifferentServiceName_registeredThenNotRegistered() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 1);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.publishServiceNames, 1, 1,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.pubServiceName1, 1, 1,
 				new CallBack());
-		assertEquals(true, server.isRegistered(TestConstants.publishServiceNames));
-		server.deregister(TestConstants.publishServiceNames);
-		assertEquals(false, server.isRegistered(TestConstants.publishServiceNames));
+		assertEquals(true, server.isRegistered(TestConstants.pubServiceName1));
+		server.deregister(TestConstants.pubServiceName1);
+		assertEquals(false, server.isRegistered(TestConstants.pubServiceName1));
 	}
 
 	@Test
 	public void deregisterServer_differentThanRegistered_registered() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 1);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceNames, 1, 1,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sesServiceName1, 1, 1,
 				new CallBack());
-		assertEquals(true, server.isRegistered(TestConstants.sessionServiceNames));
-		server.deregister(TestConstants.publishServiceNames);
-		assertEquals(true, server.isRegistered(TestConstants.sessionServiceNames));
-		server.deregister(TestConstants.sessionServiceNames);
+		assertEquals(true, server.isRegistered(TestConstants.sesServiceName1));
+		server.deregister(TestConstants.pubServiceName1);
+		assertEquals(true, server.isRegistered(TestConstants.sesServiceName1));
+		server.deregister(TestConstants.sesServiceName1);
 	}
 
 	@Test
@@ -153,10 +153,10 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 		for (int i = 0; i < cycles; i++) {
 			if ((i % 100) == 0)
 				testLogger.info("Register/Deregister cycle nr. " + i + "...");
-			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceNames, 1, 1, new CallBack());
-			assertEquals(true, server.isRegistered(TestConstants.sessionServiceNames));
-			server.deregister(TestConstants.sessionServiceNames);
-			assertEquals(false, server.isRegistered(TestConstants.sessionServiceNames));
+			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sesServiceName1, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(TestConstants.sesServiceName1));
+			server.deregister(TestConstants.sesServiceName1);
+			assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
 		}
 	}
 
@@ -170,19 +170,19 @@ public class RegisterServerDeregisterServerConnectionTypeTcpTest {
 			server = new SCSessionServer();
 			((SCSessionServer) server).setConnectionType("netty.tcp");
 			server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sessionServiceNames, 1, 1, new CallBack());
-			assertEquals(true, server.isRegistered(TestConstants.sessionServiceNames));
-			server.deregister(TestConstants.sessionServiceNames);
-			assertEquals(false, server.isRegistered(TestConstants.sessionServiceNames));
+			server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.sesServiceName1, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(TestConstants.sesServiceName1));
+			server.deregister(TestConstants.sesServiceName1);
+			assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
 			server.destroy();
 			server = null;
 			server = new SCSessionServer();
 			((SCSessionServer) server).setConnectionType("netty.http");
 			server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-			server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.sessionServiceNames, 1, 1, new CallBack());
-			assertEquals(true, server.isRegistered(TestConstants.sessionServiceNames));
-			server.deregister(TestConstants.sessionServiceNames);
-			assertEquals(false, server.isRegistered(TestConstants.sessionServiceNames));
+			server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.sesServiceName1, 1, 1, new CallBack());
+			assertEquals(true, server.isRegistered(TestConstants.sesServiceName1));
+			server.deregister(TestConstants.sesServiceName1);
+			assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
 			server.destroy();
 			// Thread.sleep(3000);
 		}

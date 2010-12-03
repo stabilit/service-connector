@@ -27,6 +27,7 @@ import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.sc.SetupTestCases;
 
 public class ClnAPIPublishTestCase {
@@ -43,11 +44,9 @@ public class ClnAPIPublishTestCase {
 		SCClient sc = null;
 		SCPublishService publishServiceA = null;
 		try {
-			sc = new SCClient();
+			sc = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP,ConnectionType.NETTY_HTTP);
 			sc.setMaxConnections(100);
-
-			// connects to SC, checks connection to SC
-			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+			sc.attach();
 
 			publishServiceA = sc.newPublishService("publish-1");
 			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
@@ -73,11 +72,9 @@ public class ClnAPIPublishTestCase {
 		SCClient sc = null;
 		SCPublishService publishServiceA = null;
 		try {
-			sc = new SCClient();
+			sc = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP,ConnectionType.NETTY_HTTP);
 			sc.setMaxConnections(100);
-
-			// connects to SC, checks connection to SC
-			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+			sc.attach();
 
 			publishServiceA = sc.newPublishService("publish-1");
 			SCMessageCallback callback = new TestPublishCallback(publishServiceA);

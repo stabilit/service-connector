@@ -43,7 +43,6 @@ public class EnableDisableServiceTest {
 	private static ProcessCtx scCtx;
 	private SCMgmtClient client;
 	private int threadCount = 0;
-	private String serviceName = TestConstants.sessionServiceNames;
 	
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -117,7 +116,7 @@ public class EnableDisableServiceTest {
 	@Test(expected = SCServiceException.class)
 	public void t04_disable_enable() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
-		assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
+		assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 	
 	/**
@@ -128,7 +127,7 @@ public class EnableDisableServiceTest {
 	public void t05_default() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
 		client.attach(2);
-		assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
+		assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 	
 	/**
@@ -138,7 +137,7 @@ public class EnableDisableServiceTest {
 	@Test(expected = SCServiceException.class)
 	public void t06_disable_enable() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
-		client.disableService(serviceName);
+		client.disableService(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -149,11 +148,11 @@ public class EnableDisableServiceTest {
 	public void t07_disable_enable() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
 		client.attach(2);
-		assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
-		client.disableService(serviceName);
-		assertEquals("Disabled ", false, client.isServiceEnabled(serviceName));
-		client.enableService(serviceName);
-		assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
+		assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		client.disableService(TestConstants.sesServiceName1);
+		assertEquals("Disabled ", false, client.isServiceEnabled(TestConstants.sesServiceName1));
+		client.enableService(TestConstants.sesServiceName1);
+		assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 	
 	/**
@@ -164,13 +163,13 @@ public class EnableDisableServiceTest {
 	public void t08_disable_enable() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
 		client.attach(2);
-		assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
-		client.disableService(serviceName);
-		client.disableService(serviceName);
-		assertEquals("Disabled ", false, client.isServiceEnabled(serviceName));
-		client.enableService(serviceName);
-		client.enableService(serviceName);
-		assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
+		assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		client.disableService(TestConstants.sesServiceName1);
+		client.disableService(TestConstants.sesServiceName1);
+		assertEquals("Disabled ", false, client.isServiceEnabled(TestConstants.sesServiceName1));
+		client.enableService(TestConstants.sesServiceName1);
+		client.enableService(TestConstants.sesServiceName1);
+		assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 
 	/**
@@ -184,10 +183,10 @@ public class EnableDisableServiceTest {
 		int nr = 1000;
 		for (int i = 0; i < nr; i++) {
 			if (((i+1) % 100) == 0) testLogger.info("Enable/disable nr. " + (i+1) + "...");
-			client.disableService(serviceName);
-			assertEquals("Disabled ", false, client.isServiceEnabled(serviceName));
-			client.enableService(serviceName);
-			assertEquals("Enabled ", true, client.isServiceEnabled(serviceName));
+			client.disableService(TestConstants.sesServiceName1);
+			assertEquals("Disabled ", false, client.isServiceEnabled(TestConstants.sesServiceName1));
+			client.enableService(TestConstants.sesServiceName1);
+			assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		}
 	}
 }

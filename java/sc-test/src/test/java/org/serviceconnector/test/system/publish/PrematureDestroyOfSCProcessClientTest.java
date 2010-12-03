@@ -60,8 +60,8 @@ public class PrematureDestroyOfSCProcessClientTest {
 		try {
 			scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 			srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
-					TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
-					TestConstants.publishServiceNames );
+					TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+					TestConstants.pubServiceName1 );
 			
 		} catch (Exception e) {
 			logger.error("setUp", e);
@@ -96,7 +96,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 	@Test
 	public void subscribe_withoutSC_throwsException() throws Exception {
 		ctrl.stopSC(scCtx);
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		try {
 			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 			subscibeMessage.setMask(TestConstants.mask);
@@ -111,7 +111,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test
 	public void unsubscribe_withoutSC_throwsException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
@@ -129,7 +129,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test
 	public void publish_withoutSC_noMessagesReceived() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);
@@ -153,7 +153,7 @@ public class PrematureDestroyOfSCProcessClientTest {
 
 	@Test
 	public void publish_afterReceivingAMessageWaitFor5Seconds_noOtherMessagesReceived() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.publishServiceNames);
+		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
 		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
 		subscibeMessage.setMask(TestConstants.mask);

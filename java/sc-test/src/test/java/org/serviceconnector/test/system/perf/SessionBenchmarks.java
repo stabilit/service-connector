@@ -56,8 +56,8 @@ public class SessionBenchmarks {
 		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sessionServerName, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
-				TestConstants.sessionServiceNames);
+				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.sesServiceName1);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
@@ -95,7 +95,7 @@ public class SessionBenchmarks {
 	public void benchmark_1000_msg_compressed() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
-		SCSessionService service = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setCompressed(true);
 		request.setSessionInfo("sessionInfo");
 		response = service.createSession(10, request);
@@ -121,7 +121,7 @@ public class SessionBenchmarks {
 	public void benchmark_1000_msg_uncompressed() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
-		SCSessionService service = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo("sessionInfo");
 		request.setCompressed(false);
 		response = service.createSession(10, request);
@@ -147,7 +147,7 @@ public class SessionBenchmarks {
 	public void benchmark_100000_msg() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
-		SCSessionService service = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo("sessionInfo");
 		response = service.createSession(10, request);
 
@@ -173,7 +173,7 @@ public class SessionBenchmarks {
 	public void benchmark_10000_sessions() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
-		SCSessionService service = client.newSessionService(TestConstants.sessionServiceNames);
+		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 
 		int nr = 10000;
 		long start = System.currentTimeMillis();

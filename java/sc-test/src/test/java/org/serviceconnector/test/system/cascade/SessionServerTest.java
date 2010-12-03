@@ -81,7 +81,7 @@ public class SessionServerTest {
 		server.startListener();
 //		srvCallback = new SrvCallback();
 		
-		sessionServer = server.newSessionServer(TestConstants.sessionServerName);
+		sessionServer = server.newSessionServer(TestConstants.sesServerName1);
 		srvCallback = new SrvCallback(sessionServer);
 		sessionServer.register(10, 10, srvCallback);
 	}

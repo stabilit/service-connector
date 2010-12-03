@@ -190,6 +190,10 @@ public class SCServer {
 		ValidatorUtility.validateInt(0, this.scPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		ValidatorUtility.validateInt(0, this.listenerPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 
+		if (this.scPort == this.listenerPort) {
+			throw new InvalidParameterException("SC port and listener port must not be the same.");
+		}
+		
 		if (this.nics == null || this.nics.size() == 0) {
 			nics = new ArrayList<String>();
 			try {

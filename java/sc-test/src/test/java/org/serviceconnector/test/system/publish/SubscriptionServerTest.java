@@ -64,14 +64,14 @@ public class SubscriptionServerTest {
 		server = new SCPublishServer();
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
 		srvCallback = new SrvCallback();
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.publishServiceNames, 10, 10,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.pubServiceName1, 10, 10,
 				srvCallback);
 
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		server.deregister(TestConstants.publishServiceNames);
+		server.deregister(TestConstants.pubServiceName1);
 		server.destroy();
 		server = null;
 		srvCallback = null;

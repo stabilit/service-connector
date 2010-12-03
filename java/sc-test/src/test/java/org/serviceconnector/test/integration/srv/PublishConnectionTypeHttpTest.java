@@ -64,13 +64,13 @@ public class PublishConnectionTypeHttpTest {
 		server = new SCPublishServer();
 		((SCPublishServer) server).setConnectionType("netty.http");
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.publishServiceNames, 1, 1,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.pubServiceName1, 1, 1,
 				new SCPublishServerCallback());
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		server.deregister(TestConstants.publishServiceNames);
+		server.deregister(TestConstants.pubServiceName1);
 		server.destroy();
 		server = null;
 		ex = null;
@@ -137,7 +137,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData("something");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -145,7 +145,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData("something");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test(expected = SCServiceException.class)
@@ -153,22 +153,22 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData("something");
-		server.publish(TestConstants.sessionServiceNames, publishMessage);
+		server.publish(TestConstants.sesServiceName1, publishMessage);
 	}
 
 	@Test(expected = SCServiceException.class)
 	public void publish_serviceNameSessionServiceWithRegistering_throwsSCException() throws Exception {
-		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.sessionServiceNames, 1, 1,
+		server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.sesServiceName1, 1, 1,
 				new SCPublishServerCallback());
 		try {
 			SCPublishMessage publishMessage = new SCPublishMessage();
 			publishMessage.setMask(TestConstants.mask);
 			publishMessage.setData("something");
-			server.publish(TestConstants.sessionServiceNames, publishMessage);
+			server.publish(TestConstants.sesServiceName1, publishMessage);
 		} catch (Exception e) {
 			ex = e;
 		} finally {
-			server.deregister(TestConstants.sessionServiceNames);
+			server.deregister(TestConstants.sesServiceName1);
 		}
 		if (ex != null) {
 			throw ex;
@@ -180,7 +180,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(null);
 		publishMessage.setData("something");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test(expected = SCMPValidatorException.class)
@@ -188,7 +188,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask("");
 		publishMessage.setData("something");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -196,7 +196,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(" ");
 		publishMessage.setData("something");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -204,7 +204,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask("a");
 		publishMessage.setData("something");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -212,7 +212,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.pangram);
 		publishMessage.setData("something");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -220,7 +220,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.stringLength256);
 		publishMessage.setData("something");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test(expected = SCMPValidatorException.class)
@@ -228,7 +228,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.stringLength257);
 		publishMessage.setData("something");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -236,7 +236,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData("something");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -244,7 +244,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
 		publishMessage.setData("something");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -252,7 +252,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData(null);
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -260,7 +260,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData("");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -268,7 +268,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData(" ");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -276,7 +276,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData("a");
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -284,7 +284,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData(TestConstants.pangram);
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -296,7 +296,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData(sb.toString());
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -308,7 +308,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData(sb.toString());
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test(expected = InvalidParameterException.class)
@@ -316,7 +316,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData(new Object());
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test(expected = InvalidParameterException.class)
@@ -324,7 +324,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData(new SCMessage());
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -332,7 +332,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData(new byte[TestConstants.dataLength60kB]);
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -340,7 +340,7 @@ public class PublishConnectionTypeHttpTest {
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setData(new byte[TestConstants.dataLength1MB]);
-		server.publish(TestConstants.publishServiceNames, publishMessage);
+		server.publish(TestConstants.pubServiceName1, publishMessage);
 	}
 
 	@Test
@@ -349,7 +349,7 @@ public class PublishConnectionTypeHttpTest {
 			SCPublishMessage publishMessage = new SCPublishMessage();
 			publishMessage.setMask(TestConstants.mask);
 			publishMessage.setData(new byte[128]);
-			server.publish(TestConstants.publishServiceNames, publishMessage);
+			server.publish(TestConstants.pubServiceName1, publishMessage);
 		}
 	}
 }

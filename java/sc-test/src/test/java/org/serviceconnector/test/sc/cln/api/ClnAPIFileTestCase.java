@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.sc.SetupTestCases;
 
 public class ClnAPIFileTestCase {
@@ -38,8 +39,8 @@ public class ClnAPIFileTestCase {
 
 		SCClient sc = null;
 		try {
-			sc = new SCClient();
-			sc.attach(TestConstants.HOST, TestConstants.PORT_HTTP);
+			sc = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP,ConnectionType.NETTY_HTTP);
+			sc.attach();
 
 			SCFileService fileServiceA = sc.newFileService("file-1");
 
@@ -57,7 +58,7 @@ public class ClnAPIFileTestCase {
 
 			targetFileName = "uploadFile.txt";
 			FileOutputStream outStream = new FileOutputStream(new File("src/main/resources/downloaded_uploadFile.txt"));
-			fileServiceA.downloadFile(targetFileName, outStream, 600);
+			fileServiceA.downloadFile(600, targetFileName, outStream);
 			outStream.close();
 
 //			targetFileName = "uploadFileLarge.zip";

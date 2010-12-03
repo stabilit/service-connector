@@ -33,11 +33,13 @@ public class TestConstants {
 	public static final String SCProperties = "sc.properties";
 	public static final String SCcascadedProperties = "sc-cascaded.properties";
 	
-	public static final String sessionServiceNames = "session-1";
-	public static final String sessionServerName = "session-1";
-	public static final String publishServiceNames = "publish-1";
-	public static final String publishServerName = "publish-1";
-	public static final String fileServiceNames = "file-1";
+	public static final String sesServiceName1 = "session-1";
+	public static final String sesServiceName2 = "session-2";
+	public static final String sesServerName1 = "session-1";
+	public static final String pubServiceName1 = "publish-1";
+	public static final String pubServiceName2 = "publish-2";
+	public static final String pubServerName1 = "publish-1";
+	public static final String filServiceName1 = "file-1";
 	
 	public static final String killServerCmd = "kill";
 	

@@ -28,8 +28,6 @@ public class AfterSCAbortClientTest {
 	private static ProcessCtx scCtx;
 	private SCMgmtClient client;
 	private int threadCount = 0;
-	private String sessionServiceName = TestConstants.sessionServiceNames;
-
 	
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -96,7 +94,7 @@ public class AfterSCAbortClientTest {
 		client.attach();
 		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
-		client.enableService(sessionServiceName);
+		client.enableService(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -109,7 +107,7 @@ public class AfterSCAbortClientTest {
 		client.attach();
 		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
-		client.disableService(sessionServiceName);
+		client.disableService(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -122,7 +120,7 @@ public class AfterSCAbortClientTest {
 		client.attach();
 		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
-		client.getWorkload(sessionServiceName);
+		client.getWorkload(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -159,7 +157,7 @@ public class AfterSCAbortClientTest {
 		client.attach();
 		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
-		client.enableService(sessionServiceName);
+		client.enableService(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -172,7 +170,7 @@ public class AfterSCAbortClientTest {
 		client.attach();
 		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
-		client.disableService(sessionServiceName);
+		client.disableService(TestConstants.sesServiceName1);
 	}
 
 	/**
@@ -185,7 +183,7 @@ public class AfterSCAbortClientTest {
 		client.attach();
 		assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
-		client.getWorkload(sessionServiceName);
+		client.getWorkload(TestConstants.sesServiceName1);
 	}
 
 }
