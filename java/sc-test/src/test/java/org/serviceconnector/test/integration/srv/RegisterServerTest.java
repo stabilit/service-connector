@@ -29,6 +29,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
@@ -37,9 +38,7 @@ import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.srv.TestSessionServer.SrvCallback;
 
 public class RegisterServerTest {
 
@@ -52,6 +51,8 @@ public class RegisterServerTest {
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;
 	private SCServer server;
+	private SCSessionServer sessionServer;
+	private SCPublishServer publishServer;
 	private int threadCount = 0;
 
 	@BeforeClass
@@ -68,6 +69,10 @@ public class RegisterServerTest {
 	@After
 	public void afterOneTest() throws Exception {
 		try {
+			sessionServer.deregister();
+		} catch (Exception e) {}
+		sessionServer = null;
+		try {
 			server.stopListener();
 		} catch (Exception e) {}
 		server = null;
@@ -83,190 +88,235 @@ public class RegisterServerTest {
 		} catch (Exception e) {}
 		ctrl = null;
 	}	
+
+	/**
+	 * Description:	register session server on port  SC is not listening<br>
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t101_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, 9002, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		sessionServer.register(1, 1, cbk);
+		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+	}
+
+	/**
+	 * Description:	register session server with no service name<br>
+	 * Expectation:	throws InvalidParameterException
+	 */
+	@Test (expected = InvalidParameterException.class)
+	public void t102_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, 9002, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		sessionServer = server.newSessionServer(null);
+	}
+
+	/**
+	 * Description:	register session server with service name = ""<br>
+	 * Expectation:	throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t103_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, 9002, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		sessionServer = server.newSessionServer("");
+	}
 	
+	/**
+	 * Description:	register session server with service name = " "<br>
+	 * Expectation:	throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t104_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, 9002, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		sessionServer = server.newSessionServer(" ");
+	}
+
+	/**
+	 * Description:	register session server with callback = null<br>
+	 * Expectation:	throws InvalidParameterException
+	 */
+	@Test (expected = InvalidParameterException.class)
+	public void t105_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = null;
+		sessionServer.register(1, 1, cbk);
+	}
+
 	/**
 	 * Description:	register session server with 1 session and 1 connection<br>
 	 * Expectation:	passes
 	 */
 	@Test
-	public void t101_register() throws Exception {
+	public void t106_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		sessionServer.register(1, 1, new CallBack(sessionServer));
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		sessionServer.register(1, 1, cbk);
+		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+	}
+
+
+	/**
+	 * Description:	register session server with 10 sessions and 10 connections<br>
+	 * Expectation:	passes
+	 */
+	@Test
+	public void t107_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		sessionServer.register(10, 10, cbk);
 		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
-	 * Description:	register session server with callback = null<br>
-	 * Expectation:	throws
+	 * Description:	register session server with 1 session and 10 connections<br>
+	 * Expectation:	throws SCMPValidatorException
 	 */
-	@Test
-	public void t102_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP); 
+	@Test (expected = SCMPValidatorException.class)
+	public void t108_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = null;
-		sessionServer.register(1, 1, cbk);
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		sessionServer.register(1, 10, cbk);
+	}
+
+	/**
+	 * Description:	register session server with 10 session and 20 connections<br>
+	 * Expectation:	throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t109_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		sessionServer.register(10, 20, cbk);
+	}
+
+	/**
+	 * Description:	register session server with 0 session and 1 connection<br>
+	 * Expectation:	throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t110_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		sessionServer.register(0, 1, cbk);
 	}
 	
 	/**
-	 * Description:	register session server to two services with same callback<br>
-	 * Expectation:	throws
+	 * Description:	register session server with 1 session and 0 connection<br>
+	 * Expectation:	throws SCMPValidatorException
 	 */
-	@Test
-	public void t102_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP); 
+	@Test (expected = SCMPValidatorException.class)
+	public void t111_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = null;
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		sessionServer.register(1, 0, cbk);
+	}
+
+	/**
+	 * Description:	register session server with 0 session and 0 connection<br>
+	 * Expectation:	throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t112_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		sessionServer.register(0, 0, cbk);
+	}
+
+	/**
+	 * Description:	register session server with 1 session and 1 connection twice<br>
+	 * Expectation:	throws InvalidActivityException
+	 */
+	@Test (expected = InvalidActivityException.class)
+	public void t113_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		sessionServer.register(1, 1, cbk);
 		sessionServer.register(1, 1, cbk);
 	}
+
+	/**
+	 * Description:	register session server before listener is started<br>
+	 * Expectation:	throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t114_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		sessionServer.register(1, 1, cbk);
+		server.startListener();
+	}
 	
-
+	
+	/**
+	 * Description:	register two session servers to two services with two callbacks<br>
+	 * Expectation:	passes
+	 */
 	@Test
-	public void registerServer_emptyHostTranslatesAsLocalhost_registered() throws Exception {
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		server.registerServer("", TestConstants.PORT_HTTP, TestConstants.sesServiceName1, 1, 1, new CallBack());
-		assertEquals(true, server.isRegistered(TestConstants.sesServiceName1));
-		server.deregister(TestConstants.sesServiceName1);
+	public void t198_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk1 = new CallBack(sessionServer1);
+		sessionServer1.register(1, 1, cbk1);
+		assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		
+		SCSessionServer sessionServer2 = server.newSessionServer(TestConstants.sesServiceName2);
+		SCSessionServerCallback cbk2 = new CallBack(sessionServer2);
+		sessionServer2.register(1, 1, cbk2);
+		assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		
+		sessionServer1.deregister();
+		sessionServer2.deregister();
+	}
+	
+	/**
+	 * Description:	register two session servers to two services with same callback<br>
+	 * Expectation:	passes
+	 */
+	@Test
+	public void t199_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer1);
+		sessionServer1.register(1, 1, cbk);
+		assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		
+		SCSessionServer sessionServer2 = server.newSessionServer(TestConstants.sesServiceName2);
+		sessionServer2.register(1, 1, cbk);
+		assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		
+		sessionServer1.deregister();
+		sessionServer2.deregister();
 	}
 
-	@Test
-	public void registerServer_whiteSpaceHost_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		try {
-			server.registerServer(" ", TestConstants.PORT_HTTP, TestConstants.sesServiceName1, 1, 1, new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
-		assertEquals(true, ex instanceof SCServiceException);
-	}
 
-	@Test
-	public void registerServer_noHost_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		try {
-			server.registerServer(null, TestConstants.PORT_HTTP, TestConstants.sesServiceName1, 1, 1, new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
-		assertEquals(true, ex instanceof InvalidParameterException);
-	}
-
-	@Test
-	public void registerServer_portNotInSCProperties_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		try {
-			server.registerServer(TestConstants.HOST, 9002, TestConstants.sesServiceName1, 1, 1, new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
-		assertEquals(true, ex instanceof SCServiceException);
-	}
-
-	@Test
-	public void registerServer_port0NotInSCProps_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		try {
-			server.registerServer(TestConstants.HOST, 0, TestConstants.sesServiceName1, 1, 1, new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
-		assertEquals(true, ex instanceof SCServiceException);
-	}
-
-	@Test
-	public void registerServer_portMinNotInSCProps_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		try {
-			server.registerServer(TestConstants.HOST, TestConstants.PORT_MIN, TestConstants.sesServiceName1, 1, 1,
-					new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
-		assertEquals(true, ex instanceof SCServiceException);
-	}
-
-	@Test
-	public void registerServer_portMinus1OutOfRange_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		try {
-			server.registerServer(TestConstants.HOST, -1, TestConstants.sesServiceName1, 1, 1, new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
-		assertEquals(true, ex instanceof SCMPValidatorException);
-	}
-
-	@Test
-	public void registerServer_portMaxAllowedNotInSCProps_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		try {
-			server.registerServer(TestConstants.HOST, 0xFFFF, TestConstants.sesServiceName1, 1, 1, new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
-		assertEquals(true, ex instanceof SCServiceException);
-	}
-
-	@Test
-	public void registerServer_portMaxAllowedPlus1_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		try {
-			server.registerServer(TestConstants.HOST, 0xFFFF + 1, TestConstants.sesServiceName1, 1, 1, new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
-		assertEquals(true, ex instanceof SCMPValidatorException);
-	}
-
-	@Test
-	public void registerServer_portIntMaxOutOfRange_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		try {
-			server.registerServer(TestConstants.HOST, Integer.MAX_VALUE, TestConstants.sesServiceName1, 1, 1,
-					new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
-		assertEquals(true, ex instanceof SCMPValidatorException);
-	}
-
-	@Test
-	public void registerServer_portIntMinOutOfRange_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		try {
-			server.registerServer(TestConstants.HOST, Integer.MIN_VALUE, TestConstants.sesServiceName1, 1, 1,
-					new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered(TestConstants.sesServiceName1));
-		assertEquals(true, ex instanceof SCMPValidatorException);
-	}
-
-	@Test
-	public void registerServer_noServiceName_notRegisteredThrowsException() throws Exception {
-		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);
-		try {
-			server.registerServer(TestConstants.HOST, TestConstants.PORT_HTTP, null, 1, 1, new CallBack());
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(false, server.isRegistered(null));
-		assertEquals(true, ex instanceof SCMPValidatorException);
-	}
-
+	
+	// ----------------------------
 	@Test
 	public void registerServer_validServiceNameInSCProps_registered() throws Exception {
 		server.startListener(TestConstants.HOST, TestConstants.PORT_LISTENER, 0);

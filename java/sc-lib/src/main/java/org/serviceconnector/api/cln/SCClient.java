@@ -106,7 +106,7 @@ public class SCClient {
 			throw new InvalidParameterException("host must be set");
 		}
 		ValidatorUtility.validateInt(1, operationTimeout, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		ValidatorUtility.validateInt(0, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(1, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		AppContext.init();
 		synchronized (AppContext.communicatorsLock) {
 			this.requester = new SCRequester(new RequesterContext(this.host, this.port, this.connectionType.getValue(),

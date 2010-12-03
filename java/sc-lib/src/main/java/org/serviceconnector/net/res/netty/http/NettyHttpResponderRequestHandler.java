@@ -328,7 +328,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 	private void cleanUpDeadServer(String host, int port) {
 		String wildKey = "_" + host + "/" + port;
-
+		logger.debug("clean up dead server with key " + wildKey);
 		ServerRegistry serverRegistry = AppContext.getServerRegistry();
 		Set<String> keySet = serverRegistry.keySet();
 

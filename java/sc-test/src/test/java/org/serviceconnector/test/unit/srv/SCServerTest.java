@@ -162,7 +162,7 @@ public class SCServerTest {
 	}
 
 	/**
-	 * Description:	SCServer with nonexisting host <br>
+	 * Description:	SCServer with non-existing host <br>
 	 * Expectation: throws InvalidParameterException
 	 */
 	@Test (expected = InvalidParameterException.class)
@@ -177,11 +177,103 @@ public class SCServerTest {
 	}
 	
 	/**
+	 * Description:	SCServer with empty host <br>
+	 * Expectation: throws InvalidParameterException
+	 */
+	@Test (expected = InvalidParameterException.class)
+	public void t09_constructor() throws Exception {
+		server = new SCServer(" ", TestConstants.PORT_TCP, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		assertEquals("Host not equal", " ", server.getSCHost());
+		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_TCP, server.getListenerPort());
+		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, server.getConnectionType());
+		assertNotNull(server);
+		server.startListener();
+	}
+
+	/**
+	 * Description:	SCServer with host = null <br>
+	 * Expectation: throws InvalidParameterException
+	 */
+	@Test (expected = InvalidParameterException.class)
+	public void t10_constructor() throws Exception {
+		server = new SCServer(null, TestConstants.PORT_TCP, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		assertEquals("Host not equal", null, server.getSCHost());
+		assertEquals("Port not equal", TestConstants.PORT_TCP, server.getSCPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_TCP, server.getListenerPort());
+		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, server.getConnectionType());
+		assertNotNull(server);
+		server.startListener();
+	}	
+
+	/**
+	 * Description:	SCServer with port = 0 <br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t11_constructor() throws Exception {
+		server = new SCServer(TestConstants.HOST, 0, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
+		assertEquals("Port not equal", 0, server.getSCPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_TCP, server.getListenerPort());
+		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, server.getConnectionType());
+		assertNotNull(server);
+		server.startListener();
+	}	
+
+	/**
+	 * Description:	SCServer with port = MIN <br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t12_constructor() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_MIN, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
+		assertEquals("Port not equal", TestConstants.PORT_MIN, server.getSCPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_TCP, server.getListenerPort());
+		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, server.getConnectionType());
+		assertNotNull(server);
+		server.startListener();
+	}	
+
+	/**
+	 * Description:	SCServer with port = MAX <br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t13_constructor() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_MAX, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
+		assertEquals("Port not equal", TestConstants.PORT_MAX, server.getSCPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_TCP, server.getListenerPort());
+		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, server.getConnectionType());
+		assertNotNull(server);
+		server.startListener();
+	}	
+
+	/**
+	 * Description:	SCServer with port = MAX + 1 <br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t14_constructor() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_MAX + 1, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		assertEquals("Host not equal", TestConstants.HOST, server.getSCHost());
+		assertEquals("Port not equal", TestConstants.PORT_MAX + 1, server.getSCPort());
+		assertEquals("Listener Port not equal", TestConstants.PORT_TCP, server.getListenerPort());
+		assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, server.getConnectionType());
+		assertNotNull(server);
+		server.startListener();
+	}	
+
+	
+	
+	/**
 	 * Description:	Set KeepAliveInterval with valid value. <br>
 	 * Expectation: KeepAliveInterval was set
 	 */
 	@Test
-	public void t10_KeepAliveInterval() throws Exception {
+	public void t60_KeepAliveInterval() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP);
 		server.setKeepAliveIntervalSeconds(10);
 		assertEquals("KeepAliveInterval not equal", 10, server.getKeepAliveIntervalSeconds());
@@ -194,7 +286,7 @@ public class SCServerTest {
 	 * Expectation: throws SCMPCommunicationException
 	 */
 	@Test
-	public void t11_KeepAliveInterval() throws Exception {
+	public void t61_KeepAliveInterval() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP);
 		server.setKeepAliveIntervalSeconds(-1);
 		assertEquals("KeepAliveInterval not equal", -1, server.getKeepAliveIntervalSeconds());
@@ -207,7 +299,7 @@ public class SCServerTest {
 	 * Expectation: ImmediateConnect was set
 	 */
 	@Test
-	public void t20_ImmediateConnect() throws Exception {
+	public void t70_ImmediateConnect() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP);
 		assertEquals("ImmediateConnect not equal", false, server.isImmediateConnect());
 		server.setImmediateConnect(true);
@@ -223,7 +315,7 @@ public class SCServerTest {
 	 * Expectation: Listener is stopped
 	 */
 	@Test
-	public void t30_Listener() throws Exception {
+	public void t80_Listener() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP);
 		assertNotNull(server);
 		server.startListener();

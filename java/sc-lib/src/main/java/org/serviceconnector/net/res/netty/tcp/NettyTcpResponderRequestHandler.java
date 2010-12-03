@@ -54,8 +54,8 @@ import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
 
 /**
- * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the Netty framework
- * by catching events (message received, exception caught). Functionality to handle large messages is also inside.
+ * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the Netty
+ * framework by catching events (message received, exception caught). Functionality to handle large messages is also inside.
  * 
  * @author JTraber
  */
@@ -190,6 +190,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
 		super.channelClosed(ctx, e);
 		InetSocketAddress socketAddress = (InetSocketAddress) e.getChannel().getRemoteAddress();
+		logger.warn("channel closed for " + socketAddress);
 		if (AppContext.isScEnvironment()) {
 			this.cleanUpDeadServer(socketAddress.getHostName(), socketAddress.getPort());
 		}
@@ -315,7 +316,7 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 
 	private void cleanUpDeadServer(String host, int port) {
 		String wildKey = "_" + host + "/" + port;
-
+		logger.debug("clean up dead server with key " + wildKey);
 		ServerRegistry serverRegistry = AppContext.getServerRegistry();
 		Set<String> keySet = serverRegistry.keySet();
 

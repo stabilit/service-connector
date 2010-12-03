@@ -117,6 +117,7 @@ public abstract class Server {
 	 * Destroy server.
 	 */
 	public void destroy() {
+		logger.debug("server destroy " + this.serverKey);
 		this.requester.destroy();
 		AppContext.getServerRegistry().removeServer(this.getServerKey());
 		this.requester = null;
