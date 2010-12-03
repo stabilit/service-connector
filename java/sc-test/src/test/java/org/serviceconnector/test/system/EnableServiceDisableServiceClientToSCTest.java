@@ -39,7 +39,7 @@ public class EnableServiceDisableServiceClientToSCTest {
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	private static ProcessCtx scCtx;
-	private ProcessCtx srvCtx;
+	private static ProcessCtx srvCtx;
 
 	private SCMgmtClient client;
 	private Exception ex;
@@ -50,16 +50,18 @@ public class EnableServiceDisableServiceClientToSCTest {
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		Thread.sleep(1000);
+		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.pubServiceName1 );
+		Thread.sleep(1000);
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
-				TestConstants.pubServiceName1 );
 
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP);
-		client.attach();
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		client.attach(5);
 	}
 
 	@After
@@ -67,10 +69,6 @@ public class EnableServiceDisableServiceClientToSCTest {
 		try {
 			client.detach();
 		} catch (Exception e) { }
-		try {
-			ctrl.stopServer(srvCtx);
-		} catch (Exception e) {	}
-		srvCtx = null;
 		client = null;
 		ex = null;
 	}
@@ -80,6 +78,10 @@ public class EnableServiceDisableServiceClientToSCTest {
 		try {
 			ctrl.stopSC(scCtx);
 		} catch (Exception e) {	}
+		try {
+			ctrl.stopServer(srvCtx);
+		} catch (Exception e) {	}
+		srvCtx = null;
 		scCtx = null;
 		ctrl = null;
 	}
@@ -185,23 +187,33 @@ public class EnableServiceDisableServiceClientToSCTest {
 	// TODO doubt this test case is useful ? disabled & enabled first the service
 	@Test
 	public void createSession_5() throws Exception {
+		int totCycle = 1000;
 		// 1.
 		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
 
-		for (int i = 0; i < 1000; i++) {
-			if ((i % 100) == 0)
-				testLogger.info("EnabledDisableService_1000Times cycle:\t" + i + " ...");
+		for (int i = 1; i < totCycle+1; i++) {
+			if ((i % 100) == 0) {
+				testLogger.info("createSession_5: enable/disable service "+totCycle+" times cycle:\t" + i + " ...");
+			}
 			client.disableService(TestConstants.sesServiceName1);
 			client.enableService(TestConstants.sesServiceName1);
 		}
-		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		
+		testLogger.info("1.");
+		
+		assertEquals("is not disabled", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		
 		// 2.
+		testLogger.info("2.");
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
+		testLogger.info("3.");
 		sessionService.createSession( 60, scMessage);
+		
+		testLogger.info("4.");
 		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		testLogger.info("start delete session");
 		sessionService.deleteSession();
 	}
 
@@ -215,11 +227,14 @@ public class EnableServiceDisableServiceClientToSCTest {
 	// TODO doubt this test case is useful ? disabled & enabled first the service
 	@Test
 	public void createSession_6() throws Exception {
+		int totCycle = 1000;
+		// 1.
 		assertEquals(true, client.isServiceEnabled(TestConstants.sesServiceName1));
 
-		for (int i = 0; i < 1000; i++) {
-			if ((i % 100) == 0)
-				testLogger.info("EnabledDisableService_1000Times cycle:\t" + i + " ...");
+		for (int i = 1; i < totCycle+1; i++) {
+			if ((i % 100) == 0) {
+				testLogger.info("createSession_6: enable/disable service "+totCycle+" times cycle:\t" + i + " ...");
+			}
 			// 1.
 			client.disableService(TestConstants.sesServiceName1);
 			client.enableService(TestConstants.sesServiceName1);
