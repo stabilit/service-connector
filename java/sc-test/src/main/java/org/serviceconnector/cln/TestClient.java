@@ -35,7 +35,7 @@ public class TestClient {
 	 * @param args
 	 *            [0] clientType ("session" or "publish")<br>
 	 *            [1] PID file<br>
-	 *            [2] SC port<br>
+	 *            [2] SC host<br>
 	 *            [3] SC port<br>
 	 *            [4] connectionType<br>
 	 *            [5] maxConnections<br>

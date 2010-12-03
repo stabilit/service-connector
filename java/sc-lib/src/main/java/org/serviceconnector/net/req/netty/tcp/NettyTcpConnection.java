@@ -69,7 +69,7 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 			// complete localSocketAdress
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
-			logger.error("connect", ex);
+			logger.error("connect failed to " + this.localSocketAddress.toString(), ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect failed to "
 					+ this.localSocketAddress.toString());
 		}
@@ -82,7 +82,7 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 	/** {@inheritDoc} */
 	@Override
 	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception {
-		//logger.info("send cache id = " + scmp.getCacheId());
+		// logger.info("send cache id = " + scmp.getCacheId());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scmp);
 		encoderDecoder.encode(baos, scmp);
