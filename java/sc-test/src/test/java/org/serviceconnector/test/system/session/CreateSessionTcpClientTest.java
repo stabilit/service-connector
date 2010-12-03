@@ -56,7 +56,7 @@ public class CreateSessionTcpClientTest {
 		ctrl = new ProcessesController();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 1000, 10,
 				TestConstants.sesServiceName1 );
 	}
 
@@ -924,13 +924,13 @@ public class CreateSessionTcpClientTest {
 	@Test
 	public void createSession_1000SessionsAtOnce_acceptAllOfThem() throws Exception {
 		int i = 0;
-		int sessionsCount = 10;
+		int sessionsCount = 1000;
 		String[] sessions = new String[sessionsCount];
 		SCSessionService[] sessionServices = new SCSessionService[sessionsCount];
 		try {
-			for (i = 1; i < sessionsCount+1; i++) {
-				if ((i % 100) == 0)
-					testLogger.info("createSession_1000times cycle:\t" + i + " ...");
+			for (i = 0; i < sessionsCount; i++) {
+				if ((((i+1) % 100) == 0)) 
+					testLogger.info("createSession_1000times cycle:\t" + (i+1) + " ...");
 				sessionServices[i] = client.newSessionService(TestConstants.sesServiceName1);
 				sessionServices[i].createSession( 10, new SCMessage());
 				sessions[i] = sessionServices[i].getSessionId();
@@ -958,14 +958,14 @@ public class CreateSessionTcpClientTest {
 
 	@Test
 	public void createSession_1001SessionsAtOnce_exceedsConnectionsLimitThrowsException() throws Exception {
-		int sessionsCount = 100;
+		int sessionsCount = 1001;
 		int ctr = 0;
 		String[] sessions = new String[sessionsCount];
 		SCSessionService[] sessionServices = new SCSessionService[sessionsCount];
 		try {
-			for (int i = 1; i < sessionsCount+1; i++) {
-				if ((i % 100) == 0)
-					testLogger.info("createSession_1001times cycle:\t" + i + " ...");
+			for (int i = 0; i < sessionsCount; i++) {
+				if (((i+1) % 100) == 0)
+					testLogger.info("createSession_1001times cycle:\t" + (i+1) + " ...");
 				sessionServices[i] = client.newSessionService(TestConstants.sesServiceName1);
 				sessionServices[i].createSession( 10, new SCMessage());
 				sessions[i] = sessionServices[i].getSessionId();
@@ -1019,37 +1019,17 @@ public class CreateSessionTcpClientTest {
 		client2 = null;
 	}
 
-	@Test
-	public void createSession_overBothConnectionTypesDifferentServices_passes() throws Exception {
-		SCClient client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		client2.attach();
-
-		SCSessionService session1 = client.newSessionService(TestConstants.sesServiceName1);
-		SCSessionService session2 = client2.newSessionService(TestConstants.pubServiceName1);
-
-		session1.createSession( 10, new SCMessage());
-		session2.createSession( 10, new SCMessage());
-
-		assertEquals(false, session1.getSessionId().equals(session2.getSessionId()));
-
-		session1.deleteSession();
-		session2.deleteSession();
-
-		assertEquals(session1.getSessionId(), session2.getSessionId());
-		client2.detach();
-		client2 = null;
-	}
 
 	@Test
-	public void sessionId_uniqueCheckFor10000IdsByOneClient_allSessionIdsAreUnique() throws Exception {
-		int clientsCount = 10000;
+	public void sessionId_uniqueCheckFor1000IdsByOneClient_allSessionIdsAreUnique() throws Exception {
+		int clientsCount = 1000;
 
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		String[] sessions = new String[clientsCount];
 
-		for (int i = 1; i < clientsCount+1; i++) {
-			if ((i % 500) == 0)
-				testLogger.info("createSession_10000times cycle:\t" + i + " ...");
+		for (int i = 0; i < clientsCount; i++) {
+			if (((i+1) % 100) == 0)
+				testLogger.info("createSession_10000times cycle:\t" + (i+1) + " ...");
 			sessionService.createSession( 60, new SCMessage());
 			sessions[i] = sessionService.getSessionId();
 			sessionService.deleteSession();
