@@ -50,11 +50,10 @@ public class EnableServiceDisableServiceClientToSCTest {
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		Thread.sleep(1000);
+
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
 				TestConstants.pubServiceName1 );
-		Thread.sleep(1000);
 	}
 
 	@Before

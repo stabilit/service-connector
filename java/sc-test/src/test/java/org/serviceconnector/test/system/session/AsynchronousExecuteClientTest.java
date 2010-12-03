@@ -86,17 +86,26 @@ public class AsynchronousExecuteClientTest {
 		ctrl = null;
 	}
 
+	/**
+	 * Description:  <br>
+	 * Expectation: SCServiceException
+	 */
 	@Test(expected = SCServiceException.class)
 	public void execute_beforeCreateSession_throwsException() throws Exception {
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		service.send(new SCMessage(), new MsgCallback(service));
 	}
 
+	/**
+	 * Description: Send message with empty string. <br>
+	 * Expectation: Server return the same message data.
+	 */
 	@Test
-	public void execute_messageDataEmptyString_returnsTheSameMessageData() throws Exception {
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
+	public void t100_sendMessage() throws Exception {
 		SCMessage message = new SCMessage("");
 		message.setSessionInfo("sessionInfo");
+
+		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		service.createSession( 10, message);
 
 		MsgCallback callback = new MsgCallback(service);
@@ -113,12 +122,18 @@ public class AsynchronousExecuteClientTest {
 		assertEquals(message.isFault(), response.isFault());
 	}
 
+	/**
+	 * Description: Send message with single character as data. <br>
+	 * Expectation: Server return the same message data.
+	 */
 	@Test
-	public void execute_messageDataSingleChar_returnsTheSameMessageData() throws Exception {
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
+	public void t101_sendMessage() throws Exception {
 		SCMessage message = new SCMessage("a");
 		message.setSessionInfo("sessionInfo");
+
+		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		service.createSession( 10, message);
+
 		MsgCallback callback = new MsgCallback(service);
 		service.send(message, callback);
 		// wait until message received
@@ -133,11 +148,16 @@ public class AsynchronousExecuteClientTest {
 		assertEquals(message.isFault(), response.isFault());
 	}
 
+	/**
+	 * Description: Send message with arbitrary data. <br>
+	 * Expectation: Server return the same message data.
+	 */
 	@Test
-	public void execute_messageDataArbitrary_returnsTheSameMessageData() throws Exception {
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		SCMessage message = new SCMessage("The quick brown fox jumps over a lazy dog.");
+	public void t102_sendMessage() throws Exception {
+		SCMessage message = new SCMessage(TestConstants.pangram);
 		message.setSessionInfo("sessionInfo");
+
+		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		service.createSession( 10, message);
 
 		MsgCallback callback = new MsgCallback(service);
@@ -154,13 +174,16 @@ public class AsynchronousExecuteClientTest {
 		assertEquals(message.isFault(), response.isFault());
 	}
 
+	/**
+	 * Description: Send message with 1MB array data. <br>
+	 * Expectation: Server return the same message data.
+	 */
 	@Test
-	public void execute_messageData1MBArray_returnsTheSameMessageData() throws Exception {
-
+	public void t103_sendMessage() throws Exception {
 		SCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
+		message.setSessionInfo("sessionInfo");
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
 		service.createSession( 10, message);
 
 		MsgCallback callback = new MsgCallback(service);
@@ -177,14 +200,17 @@ public class AsynchronousExecuteClientTest {
 		assertEquals(message.isFault(), response.isFault());
 	}
 
+	/**
+	 * Description: Send message with white space into message info. <br>
+	 * Expectation: Server return the same message data.
+	 */
 	@Test
-	public void execute_messageWhiteSpaceMessageInfo_returnsTheSameMessage() throws Exception {
-
+	public void t104_sendMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
+		message.setSessionInfo("sessionInfo");
 		message.setMessageInfo(" ");
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
 		service.createSession( 10, message);
 
 		MsgCallback callback = new MsgCallback(service);
@@ -201,14 +227,17 @@ public class AsynchronousExecuteClientTest {
 		assertEquals(message.isFault(), response.isFault());
 	}
 
+	/**
+	 * Description: Send message with single character message info. <br>
+	 * Expectation: Server return the same message data.
+	 */
 	@Test
-	public void execute_messageSingleCharMessageInfo_returnsTheSameMessage() throws Exception {
-
+	public void t105_snedMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
+		message.setSessionInfo("sessionInfo");
 		message.setMessageInfo("a");
-
+	
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
 		service.createSession( 10, message);
 
 		MsgCallback callback = new MsgCallback(service);
@@ -225,14 +254,17 @@ public class AsynchronousExecuteClientTest {
 		assertEquals(message.isFault(), response.isFault());
 	}
 
+	/**
+	 * Description: Send message with arbitrary message info. <br>
+	 * Expectation: Server return the same message data.
+	 */
 	@Test
-	public void execute_messageArbitraryMessageInfo_returnsTheSameMessage() throws Exception {
-
+	public void t106_sendMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setSessionInfo("sessionInfo");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
 		service.createSession( 10, message);
 
 		MsgCallback callback = new MsgCallback(service);
@@ -249,16 +281,20 @@ public class AsynchronousExecuteClientTest {
 		assertEquals(message.isFault(), response.isFault());
 	}
 
+	/**
+	 * Description: Send message with arbitrary message info and compress. <br>
+	 * Expectation: Server return the same message data.
+	 */
 	@Test
-	public void execute_messageCompressedTrue_returnsTheSameMessage() throws Exception {
-
+	public void t107_sendMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setSessionInfo("sessionInfo");
+		message.setMessageInfo(TestConstants.pangram);
 		message.setCompressed(true);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
 		service.createSession( 10, message);
+		
 		MsgCallback callback = new MsgCallback(service);
 		service.send(message, callback);
 		// wait until message received
@@ -273,15 +309,19 @@ public class AsynchronousExecuteClientTest {
 		assertEquals(message.isFault(), response.isFault());
 	}
 
-	@Test
-	public void execute_messageCompressedFalse_returnsTheSameMessage() throws Exception {
 
+	/**
+	 * Description: Send message with arbitrary message info and compress is false. <br>
+	 * Expectation: Server return the same message data.
+	 */
+	@Test
+	public void t108_sendMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setSessionInfo("sessionInfo");
+		message.setMessageInfo(TestConstants.pangram);
 		message.setCompressed(false);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
 		service.createSession( 10, message);
 
 		MsgCallback callback = new MsgCallback(service);
@@ -298,16 +338,19 @@ public class AsynchronousExecuteClientTest {
 		assertEquals(message.isFault(), response.isFault());
 	}
 
-	// TODO FJU when is the messages session id supposed to be modified?
+	/**
+	 * Description: Send message with empty session ID. <br>
+	 * Expectation: Server return the same message data.
+	 */	
 	@Test
-	public void execute_messageSessionIdEmptyString_returnsTheSameMessage() throws Exception {
+	public void t109_sendMessage() throws Exception {
 
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setSessionInfo("sessionInfo");
+		message.setMessageInfo(TestConstants.pangram);
 		message.setSessionId("");
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
 		service.createSession( 10, message);
 
 		MsgCallback callback = new MsgCallback(service);
@@ -326,15 +369,19 @@ public class AsynchronousExecuteClientTest {
 		assertEquals(message.isFault(), response.isFault());
 	}
 
+	/**
+	 * Description: Send message with white space as session ID. <br>
+	 * Expectation: Server return the same message data.
+	 */	
 	@Test
 	public void execute_messageSessionIdWhiteSpaceString_returnsTheSameMessage() throws Exception {
 
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setSessionInfo("sessionInfo");
+		message.setMessageInfo(TestConstants.pangram);
 		message.setSessionId(" ");
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
 		service.createSession( 10, message);
 
 		MsgCallback callback = new MsgCallback(service);
@@ -357,7 +404,7 @@ public class AsynchronousExecuteClientTest {
 	public void execute_messageSessionIdSingleChar_returnsTheSameMessage() throws Exception {
 
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 		message.setSessionId("a");
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
@@ -384,8 +431,8 @@ public class AsynchronousExecuteClientTest {
 	public void execute_messageSessionIdArbitraryString_returnsTheSameMessage() throws Exception {
 
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
-		((SCMessage) message).setSessionId("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
+		((SCMessage) message).setSessionId(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -411,7 +458,7 @@ public class AsynchronousExecuteClientTest {
 	public void execute_messageSessionIdLikeSessionIdString_returnsCorrectSessionId() throws Exception {
 
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 		((SCMessage) message).setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
@@ -439,7 +486,7 @@ public class AsynchronousExecuteClientTest {
 	public void execute_messageSessionIdSetManually_returnsTheSameMessage() throws Exception {
 
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -469,7 +516,7 @@ public class AsynchronousExecuteClientTest {
 			throws Exception {
 
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service0 = client.newSessionService(TestConstants.sesServiceName1);
 		service0.createSession( 10, message);
@@ -502,7 +549,7 @@ public class AsynchronousExecuteClientTest {
 			throws Exception {
 
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service0 = client.newSessionService(TestConstants.sesServiceName1);
 		service0.createSession( 10, message);
@@ -533,7 +580,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeout1_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -558,7 +605,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeout2_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -583,7 +630,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeout0_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -606,7 +653,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeoutMinus1_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -628,7 +675,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeoutIntMin_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -650,7 +697,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeoutIntMax_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -672,7 +719,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeoutAllowedMax_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -695,7 +742,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeoutAllowedMaxPlus1_returnsSameMessage() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -717,7 +764,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeout1_passes() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -740,7 +787,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeout2_passes() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -763,7 +810,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeoutMaxAllowed_passes() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -786,7 +833,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeoutMaxAllowedPlus1_throwsSCMPValidatorException() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -806,7 +853,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeoutIntMax_throwsSCMPValidatorException() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -826,7 +873,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeoutIntMin_throwsSCMPValidatorException() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -846,7 +893,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeout0_throwsSCMPValidatorException() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
@@ -866,7 +913,7 @@ public class AsynchronousExecuteClientTest {
 	@Test
 	public void execute_timeoutMinus1_throwsSCMPValidatorException() throws Exception {
 		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo("The quick brown fox jumps over a lazy dog.");
+		message.setMessageInfo(TestConstants.pangram);
 
 		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
 		message.setSessionInfo("sessionInfo");
