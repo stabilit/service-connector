@@ -285,7 +285,29 @@ public class RegisterSessionServerTest {
 		server.startListener();
 	}
 	
-	
+	/**
+	 * Description:	register /de-register session server with 1 session and 1 connection 1000 times<br>
+	 * Expectation:	passes
+	 */
+	@Test
+	public void t116_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		int nr = 1000;
+		int sleep = 0;
+		for (int i = 0; i < nr; i++) {
+			if (((i+1) % 100) == 0) testLogger.info("Register/deregister nr. " + (i+1) + "...");
+			sessionServer.register(1, 1, cbk);
+			assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+			if (sleep > 0) 
+				Thread.sleep(sleep);
+			sessionServer.deregister();
+			assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
+		}
+	}
+
 	/**
 	 * Description:	register two session servers to two services with two callbacks<br>
 	 * Expectation:	passes
@@ -525,6 +547,29 @@ public class RegisterSessionServerTest {
 	}
 	
 	
+	/**
+	 * Description:	register /de-register session server with 1 session and 1 connection 1000 times<br>
+	 * Expectation:	passes
+	 */
+	@Test
+	public void t216_register() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server.startListener();
+		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
+		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		int nr = 1000;
+		int sleep = 0;
+		for (int i = 0; i < nr; i++) {
+			if (((i+1) % 100) == 0) testLogger.info("Register/deregister nr. " + (i+1) + "...");
+			sessionServer.register(1, 1, cbk);
+			assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+			if (sleep > 0) 
+				Thread.sleep(sleep);
+			sessionServer.deregister();
+			assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
+		}
+	}
+
 	/**
 	 * Description:	register two session servers to two services with two callbacks<br>
 	 * Expectation:	passes

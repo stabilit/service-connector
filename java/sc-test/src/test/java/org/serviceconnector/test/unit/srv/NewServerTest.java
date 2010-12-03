@@ -27,7 +27,6 @@ import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.log.Loggers;
-import org.serviceconnector.test.unit.cln.SCClientTest;
 
 
 public class NewServerTest {
@@ -73,7 +72,6 @@ public class NewServerTest {
 	public void t02_SessionServer() throws Exception {
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		assertNotNull("No SessionServer", sessionServer);
-		sessionServer.destroy();
 	}
 
 	/**
@@ -118,7 +116,6 @@ public class NewServerTest {
 	public void t22_PublishServer() throws Exception {
 		SCPublishServer publishServer = server.newPublishServer(TestConstants.sesServiceName1);
 		assertNotNull("No PublishServer", publishServer);
-		publishServer.destroy();
 	}
 
 	/**

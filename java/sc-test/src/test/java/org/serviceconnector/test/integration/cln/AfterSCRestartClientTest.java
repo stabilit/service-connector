@@ -31,7 +31,6 @@ import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
-
 public class AfterSCRestartClientTest {
 
 	/** The Constant testLogger. */

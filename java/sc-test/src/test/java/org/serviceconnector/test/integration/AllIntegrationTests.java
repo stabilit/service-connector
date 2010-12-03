@@ -32,7 +32,7 @@ import org.serviceconnector.test.integration.srv.RegisterSessionServerTest;
 import org.serviceconnector.test.integration.srv.RegisterPublishServerTest;
 import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeHttpTest;
 import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeTcpTest;
-import org.serviceconnector.test.integration.srv.RegisterServerToMultipleSCTest;
+import org.serviceconnector.test.integration.srv.MultipleSCsServerTest;
 import org.serviceconnector.test.integration.srv.AfterSCRestartServerTest;
 
 @RunWith(Suite.class)
@@ -49,7 +49,7 @@ import org.serviceconnector.test.integration.srv.AfterSCRestartServerTest;
 		AfterSCAbortServerTest.class,
 		RegisterServerDeregisterServerConnectionTypeHttpTest.class,
 		RegisterServerDeregisterServerConnectionTypeTcpTest.class,
-		RegisterServerToMultipleSCTest.class,
+		MultipleSCsServerTest.class,
 		RegisterSessionServerTest.class, 
 		RegisterPublishServerTest.class,
 		AfterSCRestartServerTest.class,

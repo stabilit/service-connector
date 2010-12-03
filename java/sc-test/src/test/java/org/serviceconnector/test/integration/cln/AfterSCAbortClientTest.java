@@ -61,7 +61,7 @@ public class AfterSCAbortClientTest {
 
 
 	/**
-	 * Description: attach to not running SC<br> 
+	 * Description: attach after SC was aborted<br> 
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
@@ -72,7 +72,7 @@ public class AfterSCAbortClientTest {
 	}
 
 	/**
-	 * Description: detach from aborted SC<br> 
+	 * Description: detach after SC was aborted<br> 
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class)
@@ -124,7 +124,7 @@ public class AfterSCAbortClientTest {
 	}
 
 	/**
-	 * Description: attach to not running SC<br> 
+	 * Description: attach after SC was aborted<br> 
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
@@ -135,7 +135,7 @@ public class AfterSCAbortClientTest {
 	}
 
 	/**
-	 * Description: detach from aborted SC<br> 
+	 * Description: detach after SC was aborted<br> 
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class)

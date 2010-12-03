@@ -317,12 +317,34 @@ public class SCServerTest {
 	@Test
 	public void t80_Listener() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP);
-		assertNotNull(server);
+		assertNotNull("server exists", server);
 		server.startListener();
 		assertEquals("Listener is not running", true, server.isListening());
 		server.stopListener();
 		assertEquals("Listener is running", false, server.isListening());
 	}
 	
+	/**
+	 * Description:	Start and stop Listener 100 times. <br>
+	 * Expectation: Listener is stopped
+	 */
+	@Test
+	public void t81_Listener() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP);
+		assertNotNull("server exists", server);
+		int nr = 100;
+		int sleep = 0;
+		for (int i = 0; i < nr; i++) {
+			if (((i+1) % 10) == 0) testLogger.info("Start/stop listener nr. " + (i+1) + "...");
+			server.startListener();
+			assertEquals("Listener is running", true, server.isListening());
+			if (sleep > 0) 
+				Thread.sleep(sleep);
+			server.stopListener();
+			assertEquals("Listener is not running", false, server.isListening());
+		}
+
+
+	}
 
 }

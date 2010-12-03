@@ -82,11 +82,11 @@ public class AttachDetachTest {
 	@Test
 	public void t01_attachDetach() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
-		assertEquals("Client is detached", false, client.isAttached());
+		assertEquals("Client is attached", false, client.isAttached());
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		assertEquals("Client is not attached", true, client.isAttached());
 		client.detach();
-		assertEquals("Client is detached", false, client.isAttached());
+		assertEquals("Client is attached", false, client.isAttached());
 	}
 
 	
@@ -98,7 +98,7 @@ public class AttachDetachTest {
 	public void t02_attachDetach() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		assertEquals("Client is not attached", true, client.isAttached());
 		client.attach();
 	}
 
@@ -109,9 +109,9 @@ public class AttachDetachTest {
 	@Test
 	public void t03_attachDetach() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
-		assertEquals("Client is detached", false, client.isAttached());
+		assertEquals("Client is attached", false, client.isAttached());
 		client.detach();
-		assertEquals("Client is detached", false, client.isAttached());
+		assertEquals("Client is attached", false, client.isAttached());
 	}
 
 	/**
@@ -122,12 +122,12 @@ public class AttachDetachTest {
 	public void t04_attachDetach() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		assertEquals("Client is not attached", true, client.isAttached());
 		int nr = 100;
 		for (int i = 0; i < nr; i++) {
 			client.detach();
 		}
-		assertEquals("Client is detached", false, client.isAttached());
+		assertEquals("Client is attached", false, client.isAttached());
 	}
 	
 	/**
@@ -142,11 +142,11 @@ public class AttachDetachTest {
 		for (int i = 0; i < nr; i++) {
 			if (((i+1) % 100) == 0) testLogger.info("Attach/detach nr. " + (i+1) + "...");
 			client.attach();
-			assertEquals("Client is attached", true, client.isAttached());
+			assertEquals("Client is not attached", true, client.isAttached());
 			if (sleep > 0) 
 				Thread.sleep(sleep);
 			client.detach();
-			assertEquals("Client is detached", false, client.isAttached());
+			assertEquals("Client is attached", false, client.isAttached());
 		}
 	}
 
@@ -162,11 +162,11 @@ public class AttachDetachTest {
 		for (int i = 0; i < nr; i++) {
 			if (((i+1) % 100) == 0) testLogger.info("Attach/detach nr. " + (i+1) + "...");
 			client.attach();
-			assertEquals("Client is attached", true, client.isAttached());
+			assertEquals("Client is not attached", true, client.isAttached());
 			if (sleep > 0) 
 				Thread.sleep(sleep);
 			client.detach();
-			assertEquals("Client is detached", false, client.isAttached());
+			assertEquals("Client is attached", false, client.isAttached());
 		}
 	}
 
@@ -187,13 +187,13 @@ public class AttachDetachTest {
 		for (int i= 0; i < clientsCount; i++) {
 			if (((i+1) % 200) == 0) testLogger.info("Attaching client nr. " + (i+1) );
 			clients[i].attach();
-			assertEquals("Client is attached", true, clients[i].isAttached());
+			assertEquals("Client is not attached", true, clients[i].isAttached());
 		}
 		//detach
 		for (int i = 0; i < clientsCount; i++) {
 			if (((i+1) % 200) == 0) testLogger.info("Detaching client nr. " + (i+1) + "...");
 			clients[i].detach();
-			assertEquals("Client is detached", false, clients[i].isAttached());
+			assertEquals("Client is attached", false, clients[i].isAttached());
 		}
 		clients = null;
 	}
