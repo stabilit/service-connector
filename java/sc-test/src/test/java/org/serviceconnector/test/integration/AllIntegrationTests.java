@@ -18,22 +18,19 @@ package org.serviceconnector.test.integration;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.integration.cln.AttachDetachTest;
-import org.serviceconnector.test.integration.cln.AttachTest;
-import org.serviceconnector.test.integration.cln.MultipleSCsClientTest;
-import org.serviceconnector.test.integration.cln.EnableDisableServiceTest;
-import org.serviceconnector.test.integration.cln.NewServiceTest;
 import org.serviceconnector.test.integration.cln.AfterSCAbortClientTest;
 import org.serviceconnector.test.integration.cln.AfterSCRestartClientTest;
+import org.serviceconnector.test.integration.cln.AttachDetachTest;
+import org.serviceconnector.test.integration.cln.AttachTest;
+import org.serviceconnector.test.integration.cln.EnableDisableServiceTest;
+import org.serviceconnector.test.integration.cln.MultipleSCsClientTest;
+import org.serviceconnector.test.integration.cln.NewServiceTest;
 import org.serviceconnector.test.integration.srv.AfterSCAbortServerTest;
-import org.serviceconnector.test.integration.srv.PublishConnectionTypeHttpTest;
-import org.serviceconnector.test.integration.srv.PublishConnectionTypeTcpTest;
-import org.serviceconnector.test.integration.srv.RegisterSessionServerTest;
-import org.serviceconnector.test.integration.srv.RegisterPublishServerTest;
-import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeHttpTest;
-import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeTcpTest;
-import org.serviceconnector.test.integration.srv.MultipleSCsServerTest;
 import org.serviceconnector.test.integration.srv.AfterSCRestartServerTest;
+import org.serviceconnector.test.integration.srv.MultipleSCsServerTest;
+import org.serviceconnector.test.integration.srv.PublishServerTest;
+import org.serviceconnector.test.integration.srv.RegisterPublishServerTest;
+import org.serviceconnector.test.integration.srv.RegisterSessionServerTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { 
@@ -46,15 +43,12 @@ import org.serviceconnector.test.integration.srv.AfterSCRestartServerTest;
 		AfterSCAbortClientTest.class,
 		AfterSCRestartClientTest.class, 
 	// server tests
-		AfterSCAbortServerTest.class,
-		RegisterServerDeregisterServerConnectionTypeHttpTest.class,
-		RegisterServerDeregisterServerConnectionTypeTcpTest.class,
-		MultipleSCsServerTest.class,
 		RegisterSessionServerTest.class, 
 		RegisterPublishServerTest.class,
+		PublishServerTest.class,
+		MultipleSCsServerTest.class,
+		AfterSCAbortServerTest.class,
 		AfterSCRestartServerTest.class,
-		PublishConnectionTypeHttpTest.class, 
-		PublishConnectionTypeTcpTest.class
 })
 public class AllIntegrationTests {
 }

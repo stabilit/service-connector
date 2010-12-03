@@ -21,7 +21,7 @@ import org.serviceconnector.util.ValidatorUtility;
 
 public class SCPublishMessage extends SCMessage {
 
-	private String mask;
+	private String mask = null;
 
 	public SCPublishMessage() {
 	}
@@ -39,7 +39,9 @@ public class SCPublishMessage extends SCMessage {
 	}
 
 	public void setMask(String mask) throws SCMPValidatorException {
-		ValidatorUtility.validateStringLength(1, mask.trim(), 256, SCMPError.HV_WRONG_MASK);
+		if (mask != null) {
+			ValidatorUtility.validateStringLength(1, mask.trim(), 256, SCMPError.HV_WRONG_MASK);
+		}
 		this.mask = mask;
 	}
 }
