@@ -160,9 +160,9 @@ public class RegisterServerCommand extends CommandAdapter {
 			}
 			// immmediateConnect
 			message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
-			// portNr - portNr >= 0 && portNr <= 0xFFFF
+			// portNr - portNr >= 1 && portNr <= 0xFFFF
 			String portNr = (String) message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
-			ValidatorUtility.validateInt(0, portNr, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+			ValidatorUtility.validateInt(1, portNr, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 			// scVersion
 			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
 			SCMPMessage.SC_VERSION.isSupported(scVersion);
