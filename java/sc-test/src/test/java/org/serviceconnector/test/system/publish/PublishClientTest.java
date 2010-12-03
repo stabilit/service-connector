@@ -37,6 +37,9 @@ import org.serviceconnector.net.ConnectionType;
 
 public class PublishClientTest {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(PublishClientTest.class);
+	
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	private static ProcessCtx scCtx;

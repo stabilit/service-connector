@@ -38,6 +38,8 @@ import org.serviceconnector.service.SCServiceException;
 
 public class CreateSessionHttpClientToSCTest {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(CreateSessionHttpClientToSCTest.class);
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	private static ProcessesController ctrl;

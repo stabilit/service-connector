@@ -23,7 +23,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -35,7 +34,7 @@ public abstract class WebUtil {
 	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DefaultXMLLoaderFactory.class);
+	protected final static Logger logger = Logger.getLogger(WebUtil.class);
 
 	/**
 	 * Load resource.

@@ -36,7 +36,7 @@ public class NewServerTest {
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCClientTest.class);
+	protected final static Logger logger = Logger.getLogger(NewServerTest.class);
 	
 	private SCServer server;
 	

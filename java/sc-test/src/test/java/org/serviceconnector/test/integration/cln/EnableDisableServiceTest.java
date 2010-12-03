@@ -37,7 +37,7 @@ public class EnableDisableServiceTest {
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AttachDetachTest.class);
+	protected final static Logger logger = Logger.getLogger(EnableDisableServiceTest.class);
 
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;

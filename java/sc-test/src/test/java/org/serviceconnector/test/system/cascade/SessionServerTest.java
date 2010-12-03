@@ -38,6 +38,8 @@ import org.serviceconnector.log.Loggers;
 
 public class SessionServerTest {
 	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SessionServerTest.class);
+	/** The Constant logger. */
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	private static ProcessesController ctrl;

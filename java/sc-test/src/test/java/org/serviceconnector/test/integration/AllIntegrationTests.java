@@ -28,8 +28,8 @@ import org.serviceconnector.test.integration.cln.AfterSCRestartClientTest;
 import org.serviceconnector.test.integration.srv.AfterSCAbortServerTest;
 import org.serviceconnector.test.integration.srv.PublishConnectionTypeHttpTest;
 import org.serviceconnector.test.integration.srv.PublishConnectionTypeTcpTest;
-import org.serviceconnector.test.integration.srv.RegisterServerTest;
-import org.serviceconnector.test.integration.srv.RegisterServerConnectionTypeTcpTest;
+import org.serviceconnector.test.integration.srv.RegisterSessionServerTest;
+import org.serviceconnector.test.integration.srv.RegisterPublishServerTest;
 import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeHttpTest;
 import org.serviceconnector.test.integration.srv.RegisterServerDeregisterServerConnectionTypeTcpTest;
 import org.serviceconnector.test.integration.srv.RegisterServerToMultipleSCTest;
@@ -50,8 +50,8 @@ import org.serviceconnector.test.integration.srv.AfterSCRestartServerTest;
 		RegisterServerDeregisterServerConnectionTypeHttpTest.class,
 		RegisterServerDeregisterServerConnectionTypeTcpTest.class,
 		RegisterServerToMultipleSCTest.class,
-		RegisterServerTest.class, 
-		RegisterServerConnectionTypeTcpTest.class,
+		RegisterSessionServerTest.class, 
+		RegisterPublishServerTest.class,
 		AfterSCRestartServerTest.class,
 		PublishConnectionTypeHttpTest.class, 
 		PublishConnectionTypeTcpTest.class

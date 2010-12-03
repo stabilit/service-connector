@@ -29,7 +29,7 @@ import org.serviceconnector.util.DateTimeUtility;
 public class CacheComposite implements Serializable {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(Cache.class);
+	protected static final Logger logger = Logger.getLogger(CacheComposite.class);
 
 	/**
 	 * The Enum CACHE_STATE.

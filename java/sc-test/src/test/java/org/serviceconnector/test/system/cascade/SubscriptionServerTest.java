@@ -28,7 +28,6 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
-import org.serviceconnector.cln.TestPublishClient;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 
