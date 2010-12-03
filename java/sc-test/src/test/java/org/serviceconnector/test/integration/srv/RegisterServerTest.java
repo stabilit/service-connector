@@ -75,6 +75,10 @@ public class RegisterServerTest {
 		try {
 			server.stopListener();
 		} catch (Exception e) {}
+		try {
+			server.destroy();
+		} catch (Exception e) {}
+
 		server = null;
 //		assertEquals("number of threads", threadCount, Thread.activeCount());
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));

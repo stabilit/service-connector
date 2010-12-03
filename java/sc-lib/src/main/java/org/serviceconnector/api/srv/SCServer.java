@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -186,14 +187,14 @@ public class SCServer {
 		if (this.connectionType == null) {
 			throw new InvalidParameterException("connectionType must be set.");
 		}
-	
+
 		ValidatorUtility.validateInt(1, this.scPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		ValidatorUtility.validateInt(1, this.listenerPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 
 		if (this.scPort == this.listenerPort) {
 			throw new InvalidParameterException("SC port and listener port must not be the same.");
 		}
-		
+
 		if (this.nics == null || this.nics.size() == 0) {
 			nics = new ArrayList<String>();
 			try {
@@ -245,9 +246,10 @@ public class SCServer {
 		this.responder.stopListening();
 		this.responder.destroy();
 	}
-	
+
 	public void destroy() {
 		this.requester.destroy();
+		AppContext.destroy();
 	}
 
 	public SCSessionServer newSessionServer(String serviceName) throws Exception {
