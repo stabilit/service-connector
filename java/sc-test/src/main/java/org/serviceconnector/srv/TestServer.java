@@ -47,11 +47,6 @@ public class TestServer {
 		}		
 		TestServer testServer = new TestServer();
 		String pidFileNameFull = args[1];
-		try {
-			testServer.createPIDfile(pidFileNameFull); 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		testServer.addExitHandler(pidFileNameFull);
 
 		if (args[0].equals(TestConstants.SERVER_TYPE_SESSION)) {
@@ -61,6 +56,11 @@ public class TestServer {
 			server.setMaxSessions(Integer.parseInt(args[4]));
 			server.setMaxConnections(Integer.parseInt(args[5]));
 			server.setServiceNames(args[6]);
+			try {
+				testServer.createPIDfile(pidFileNameFull); 
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			server.start();
 
 		} else if (args[0].equals(TestConstants.SERVER_TYPE_PUBLISH)) {
@@ -71,28 +71,6 @@ public class TestServer {
 			server.setMaxConnections(Integer.parseInt(args[5]));
 			server.setServiceNames(args[6]);
 			server.start();
-		}	
-	}
-
-	/**
-	 * Create file containing the PID of the SC process. Is used for testing purpose to verify that SC is running properly.
-	 */
-	private void createPIDfile(String fileNameFull) throws Exception {
-		FileWriter fw = null;
-		try {
-			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-			long pid = Long.parseLong(processName.split("@")[0]);
-
-			// create the pid file
-			File pidFile = new File(fileNameFull);
-			fw = new FileWriter(pidFile);
-			fw.write("pid: " + pid);
-			fw.flush();
-			logger.log(Level.OFF, "Create PID-file: " + fileNameFull + " PID:" + pid);
-		} finally {
-			if (fw != null) {
-				fw.close();
-			}
 		}
 	}
 
@@ -114,10 +92,6 @@ public class TestServer {
 			this.pidFileNameFull = pidFileNameFull;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Thread#run()
-		 */
 		@Override
 		public void run() {
 			File pidFile = new File(this.pidFileNameFull);

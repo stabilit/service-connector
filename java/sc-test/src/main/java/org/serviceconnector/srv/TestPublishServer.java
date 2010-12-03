@@ -41,6 +41,7 @@ public class TestPublishServer extends Thread {
 	private int maxSessions;
 	private int maxConnections;
 	private String serviceNames;
+	private String pidFile;
 
 	private ThreadSafeCounter ctr;
 	private static boolean killPublishServer = false;
@@ -171,6 +172,14 @@ public class TestPublishServer extends Thread {
 				}
 			}
 		}
+	}
+
+	public String getPidFile() {
+		return pidFile;
+	}
+
+	public void setPidFile(String pidFile) {
+		this.pidFile = pidFile;
 	}
 }
 

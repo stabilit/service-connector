@@ -130,8 +130,7 @@ public class ProcessesController {
 				scProcess.getProcess().waitFor();
 				// make sure the pid file is deleted under any circumstances
 				try {
-					File pidFile = new File(scProcess.getPidFileNameFull());
-					pidFile.delete();
+					FileUtility.deletePIDfile(scProcess.getPidFileNameFull());
 				} catch (Exception e) {
 				}
 			}
@@ -220,6 +219,7 @@ public class ProcessesController {
 				SCSessionService scSessionService = client.newSessionService(serviceName);
 
 				SCMessage scMessage = new SCMessage();
+				scMessage.setSessionInfo(TestConstants.killServerCmd);
 				scMessage.setData(TestConstants.killServerCmd);
 				try {
 					scSessionService.createSession(scMessage);
@@ -242,8 +242,7 @@ public class ProcessesController {
 				srvProcess.getProcess().waitFor();
 				// make sure the pid file is deleted under any circumstances
 				try {
-					File pidFile = new File(srvProcess.getPidFileNameFull());
-					pidFile.delete();
+					FileUtility.deletePIDfile(srvProcess.getPidFileNameFull());
 				} catch (Exception e) {
 				}
 			}

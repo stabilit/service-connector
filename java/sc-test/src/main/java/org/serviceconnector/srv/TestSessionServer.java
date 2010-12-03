@@ -17,6 +17,7 @@ package org.serviceconnector.srv;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
@@ -26,6 +27,7 @@ import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.SessionLogger;
+import org.serviceconnector.util.FileUtility;
 
 public class TestSessionServer extends Thread {
 	/** The Constant logger. */
@@ -40,6 +42,7 @@ public class TestSessionServer extends Thread {
 	private int maxSessions;
 	private int maxConnections;
 	private String serviceNames;
+	private String pidFile;
 
 	/**
 	 * Main method if you like to start in debug mode.
@@ -52,6 +55,10 @@ public class TestSessionServer extends Thread {
 	 *            [4] serviceNames (comma delimited list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
+		logger.log(Level.OFF, "TestSessionServer is starting ...");
+		for (int i = 0; i < 7; i++) {
+			logger.log(Level.OFF, "args["+i+"]:"+args[i]);
+		}	
 		TestSessionServer server = new TestSessionServer();
 		server.setListenerPort(Integer.parseInt(args[0]));
 		server.setPort(Integer.parseInt(args[1]));
@@ -63,7 +70,6 @@ public class TestSessionServer extends Thread {
 
 	@Override
 	public void run() {
-		logger.log(Level.OFF, "TestSessionServer is running ...");
 		ctr = new ThreadSafeCounter();
 		SCServer sc = new SCServer(TestConstants.HOST, this.port, this.listenerPort);
 		try {
@@ -78,6 +84,8 @@ public class TestSessionServer extends Thread {
 			SCSessionServerCallback cbk = new SrvCallback(server);
 			try {
 				server.register(10, this.maxSessions, this.maxConnections, cbk);
+				FileUtility.createPIDfile(pidFile);
+				logger.log(Level.OFF, "TestSessionServer is running ...");
 			} catch (Exception e) {
 				logger.error("runSessionServer", e);
 				server.deregister();
@@ -180,6 +188,14 @@ public class TestSessionServer extends Thread {
 				logger.error("run", e);
 			}
 		}
+	}
+
+	public String getPidFile() {
+		return pidFile;
+	}
+
+	public void setPidFile(String pidFile) {
+		this.pidFile = pidFile;
 	}
 }
 

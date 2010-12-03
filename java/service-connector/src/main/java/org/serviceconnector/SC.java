@@ -37,6 +37,7 @@ import org.serviceconnector.server.ServerLoader;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
+import org.serviceconnector.util.FileUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.cmd.sc.ServiceConnectorWebCommandFactory;
@@ -136,7 +137,7 @@ public final class SC {
 			responder.startListenAsync();
 		}
 		if (AppContext.getBasicConfiguration().isWritePID()) {
-			AppContext.getBasicConfiguration().createPIDfile();
+			FileUtility.createPIDfile(FileUtility.getPath() + Constants.PID_FILE_NAME);
 		}
 		logger.log(Level.OFF, "Service Connector is running ...");
 	}
@@ -214,7 +215,7 @@ public final class SC {
 		@Override
 		public void run() {
 			AppContext.getCacheManager().destroy();
-			AppContext.getBasicConfiguration().deletePIDfile();
+			FileUtility.deletePIDfile(FileUtility.getPath() + Constants.PID_FILE_NAME);
 			logger.log(Level.OFF, "Service Connector exiting");
 			logger.log(Level.OFF, "<<<");
 			
