@@ -37,12 +37,11 @@ public class SessionServerTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SessionServerTest.class);
 
-	private SrvCallback srvCallback;
-	private SCSessionServer server;
-
+	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;
 
-	private static ProcessesController ctrl;
+	private SrvCallback srvCallback;
+	private SCSessionServer server;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {

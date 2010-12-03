@@ -29,7 +29,6 @@ import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.test.integration.cln.AttachDetachTest;
 
 public class AttachBenchmarks {
 
