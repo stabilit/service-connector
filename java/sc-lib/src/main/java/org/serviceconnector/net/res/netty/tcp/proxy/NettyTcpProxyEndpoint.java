@@ -161,7 +161,7 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				logger.info("NettyTcpProxyEndpoint got stopped : " + host + ":" + port);
+				logger.info("NettyTcpProxyEndpoint stopped : " + host + ":" + port);
 			}
 		}
 	}

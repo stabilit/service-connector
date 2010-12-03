@@ -144,7 +144,7 @@ public class AttachTest {
 	 * Description: Attach client with default host and port zero.<br>
 	 * Expectation:	throws Exception.
 	 */
-	@Test (expected = SCServiceException.class)
+	@Test (expected = SCMPValidatorException.class)
 	public void t050_attach() throws Exception {
 		client = newSCClient(TestConstants.HOST, 0, ConnectionType.NETTY_TCP);
 		client.attach();
