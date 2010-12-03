@@ -70,7 +70,6 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		scMessage.setData(reqMessage.getBody());
 		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		scMessage.setSessionId(reqMessage.getSessionId());
 		scMessage.setCacheId(reqMessage.getCacheId());
 
 		// inform callback with scMessages
@@ -86,26 +85,28 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setCacheId(reqMessage.getCacheId());
-		// set cache expiration, 1 hour 
+		// set cache expiration, 1 hour
 		Date now = new Date();
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, TimeMillis.HOUR.getMillis());	
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, TimeMillis.HOUR.getMillis());
 		reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility.getTimeAsString(expirationDate));
-		
+
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 		reply.setMessageType(this.getKey());
-		if (scReply.isCompressed()) {
-			reply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
-		}
-		String msgInfo = scReply.getMessageInfo();
-		if (msgInfo != null) {
-			reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, msgInfo);
-		}
-		reply.setBody(scReply.getData());
+		if (scReply != null) {
+			if (scReply.isCompressed()) {
+				reply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+			}
+			String msgInfo = scReply.getMessageInfo();
+			if (msgInfo != null) {
+				reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, msgInfo);
+			}
+			reply.setBody(scReply.getData());
 
-		if (scReply.isFault()) {
-			SCMessageFault scFault = (SCMessageFault) scReply;
-			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
-			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
+			if (scReply.isFault()) {
+				SCMessageFault scFault = (SCMessageFault) scReply;
+				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
+				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
+			}
 		}
 		response.setSCMP(reply);
 	}

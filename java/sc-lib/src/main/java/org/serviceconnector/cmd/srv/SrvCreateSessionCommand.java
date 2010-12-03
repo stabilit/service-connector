@@ -86,13 +86,14 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(this.getKey());
-		reply.setBody(scReply.getData());
-
-		if (scReply.isFault()) {
-			SCMessageFault scFault = (SCMessageFault) scReply;
-			reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
-			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
+		if (scReply != null) {
+			reply.setBody(scReply.getData());
+			if (scReply.isFault()) {
+				SCMessageFault scFault = (SCMessageFault) scReply;
+				reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
+				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
+			}
 		}
 		response.setSCMP(reply);
 	}
