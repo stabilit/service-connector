@@ -245,6 +245,10 @@ public class SCServer {
 		this.responder.stopListening();
 		this.responder.destroy();
 	}
+	
+	public void destroy() {
+		this.requester.destroy();
+	}
 
 	public SCSessionServer newSessionServer(String serviceName) throws Exception {
 		if (this.listening == false) {

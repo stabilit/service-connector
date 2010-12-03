@@ -287,7 +287,7 @@ public class SCSessionServer {
 	public String getServiceName() {
 		return this.serviceName;
 	}
-	
+
 	public SCServer getSCServer() {
 		return this.scServer;
 	}
@@ -307,9 +307,5 @@ public class SCSessionServer {
 			this.synchronous = synchronous;
 		}
 		// nothing to implement in this case - everything is done by super-class
-	}
-
-	public void destroy() {
-		this.requester.destroy();
 	}
 }
