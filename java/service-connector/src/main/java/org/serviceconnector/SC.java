@@ -100,7 +100,7 @@ public final class SC {
 		}
 		// indicates that AppContext is running in a SC environment
 		AppContext.setSCEnvironment(true);
-		
+
 		// write system information to log
 		SystemInfo.setConfigFileName(configFileName);
 		SC.writeSystemInfoToLog();
@@ -208,17 +208,13 @@ public final class SC {
 	 */
 	private static class SCExitHandler extends Thread {
 
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Thread#run()
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public void run() {
 			AppContext.getCacheManager().destroy();
 			FileUtility.deletePIDfile(FileUtility.getPath() + Constants.PID_FILE_NAME);
 			logger.log(Level.OFF, "Service Connector exiting");
 			logger.log(Level.OFF, "<<<");
-			
 		}
 	}
 }
