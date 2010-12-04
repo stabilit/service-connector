@@ -263,7 +263,29 @@ public class ExecuteTest {
 		service.deleteSession();
 	}
 
+	/**
+	 * Description: continue message exchange after session rejection<br>
+	 * Expectation: throws SCserviceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t09_rejectSession() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setCompressed(false);
+		@SuppressWarnings("unused")
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		request.setSessionInfo(TestConstants.rejectSessionCmd);
+		try {
+			response = service.createSession(request);
+		} catch (Exception e) {
+			// ignore rejection
+		}
+		request.setMessageInfo("echo");
+		response = service.execute(request);
+	}
 
+	
+	
 //	@Test
 //	public void execute_timeoutExpiresOnServer_throwsException() throws Exception {
 //		SCMessage message = new SCMessage();

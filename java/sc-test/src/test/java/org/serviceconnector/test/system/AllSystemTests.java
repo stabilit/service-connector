@@ -24,14 +24,12 @@ import org.serviceconnector.test.system.publish.SubscribeUnsubscribeClientTest;
 import org.serviceconnector.test.system.publish.SubscriptionServerTest;
 import org.serviceconnector.test.system.session.AfterSCAbortSessionTest;
 import org.serviceconnector.test.system.session.AfterSCRestartSessionTest;
-import org.serviceconnector.test.system.session.ExecuteAsynchronousTest;
 import org.serviceconnector.test.system.session.CreateSessionTest;
 import org.serviceconnector.test.system.session.DeleteSessionTest;
+import org.serviceconnector.test.system.session.ExecuteAsynchronousTest;
 import org.serviceconnector.test.system.session.ExecuteTest;
 import org.serviceconnector.test.system.session.PrematureDestroyOfSCProcessClientTest;
 import org.serviceconnector.test.system.session.PrematureDestroyOfServerProcessClientTest;
-import org.serviceconnector.test.system.session.RejectSessionClientTest;
-import org.serviceconnector.test.system.session.SessionServerTestFillipe;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
@@ -45,8 +43,7 @@ import org.serviceconnector.test.system.session.SessionServerTestFillipe;
 		
 		PrematureDestroyOfSCProcessClientTest.class, 
 		PrematureDestroyOfServerProcessClientTest.class,
-		RejectSessionClientTest.class,
-		SessionServerTestFillipe.class,
+
 
 		// publish tests
 		SubscribeClientTest.class, 

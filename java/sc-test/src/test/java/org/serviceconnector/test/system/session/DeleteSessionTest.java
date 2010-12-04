@@ -117,6 +117,14 @@ public class DeleteSessionTest {
 		service.deleteSession();
 	}
 
-	
+	/**
+	 * Description: Delete session before create session<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t02_deleteSession() throws Exception {
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		service.deleteSession();
+	}
 
 }

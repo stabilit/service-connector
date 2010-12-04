@@ -128,7 +128,7 @@ public class TestSessionServer extends TestStatefulServer {
 					response = new SCMessageFault();
 					try {
 						((SCMessageFault) response).setAppErrorCode(4000);
-						((SCMessageFault) response).setAppErrorText("session rejected!");
+						((SCMessageFault) response).setAppErrorText("session rejected intentionaly!");
 					} catch (SCMPValidatorException e) {
 					}
 				}

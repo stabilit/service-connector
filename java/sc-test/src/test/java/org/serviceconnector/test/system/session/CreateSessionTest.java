@@ -15,6 +15,7 @@
  */
 package org.serviceconnector.test.system.session;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -283,26 +284,11 @@ public class CreateSessionTest {
 	}
 	
 	/**
-	 * Description: Reject session by server<br>
-	 * Expectation: throws SCServiceException
-	 */
-	@Test (expected = SCServiceException.class )
-	public void t13_rejectSession() throws Exception {	
-		SCMessage request = new SCMessage();
-		@SuppressWarnings("unused")
-		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		request.setSessionInfo(TestConstants.rejectSessionCmd);
-		response = service.createSession(request);
-		service.deleteSession();
-	}
-
-	/**
 	 * Description: Create session with echo interval = 1<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t14_echoInterval() throws Exception {	
+	public void t13_echoInterval() throws Exception {	
 		SCMessage request = new SCMessage(new byte[128]);
 		@SuppressWarnings("unused")
 		SCMessage response = null;
@@ -317,7 +303,7 @@ public class CreateSessionTest {
 	 * Expectation: throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class )
-	public void t15_echoInterval() throws Exception {	
+	public void t14_echoInterval() throws Exception {	
 		SCMessage request = new SCMessage(new byte[128]);
 		@SuppressWarnings("unused")
 		SCMessage response = null;
@@ -327,4 +313,38 @@ public class CreateSessionTest {
 		service.deleteSession();
 	}
 	
+	/**
+	 * Description: Reject session by server<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class )
+	public void t15_rejectSession() throws Exception {	
+		SCMessage request = new SCMessage();
+		@SuppressWarnings("unused")
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		request.setSessionInfo(TestConstants.rejectSessionCmd);
+		response = service.createSession(request);
+		service.deleteSession();
+	}	
+
+	/**
+	 * Description: Reject session by server, check error code<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t16_rejectSession() throws Exception {	
+		SCMessage request = new SCMessage();
+		SCMessage response = new SCMessage();
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		request.setSessionInfo(TestConstants.rejectSessionCmd);
+		try {
+			response = service.createSession(request);
+		} catch (SCServiceException e) {	
+			assertEquals("is fault", false, response.isFault());
+			assertEquals("is not appErrorCode", "4000", e.getAppErrorCode());
+			assertEquals("is not appErrorText", false, e.getAppErrorText().equals(""));
+		}
+		service.deleteSession();
+	}
 }
