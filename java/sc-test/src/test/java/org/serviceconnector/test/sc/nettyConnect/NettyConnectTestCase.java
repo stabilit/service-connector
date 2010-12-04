@@ -45,7 +45,7 @@ public class NettyConnectTestCase {
 		IConnection connection = connectionFactory.createConnection("netty.http");
 		connection.setHost(TestConstants.HOST);
 		connection.setPort(TestConstants.PORT_HTTP);
-		connection.setIdleTimeout(0);
+		connection.setIdleTimeoutSeconds(0);
 		IIdleConnectionCallback idleCallback = new IdleCallback();
 		ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
 		connection.setContext(connectionContext);
@@ -76,7 +76,7 @@ public class NettyConnectTestCase {
 			connections[i] = connection;
 			connection.setHost(TestConstants.HOST);
 			connection.setPort(TestConstants.PORT_HTTP);
-			connection.setIdleTimeout(0);
+			connection.setIdleTimeoutSeconds(0);
 			IIdleConnectionCallback idleCallback = new IdleCallback();
 			ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
 			connection.setContext(connectionContext);
