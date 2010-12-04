@@ -21,6 +21,8 @@
  */
 package org.serviceconnector.srv;
 
+import java.lang.reflect.Method;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
@@ -82,12 +84,10 @@ public class TestPublishServer extends TestStatefulServer {
 
 			String[] serviceNames = this.serviceNames.split(",");
 			for (String serviceName : serviceNames) {
-				SCPublishServer server = sc.newPublishServer(serviceName); // no other params possible
+				SCPublishServer server = sc.newPublishServer(serviceName);
 				SCPublishServerCallback cbk = new SrvCallback(server);
 				try {
 					server.register(10, this.maxSessions, this.maxConnections, cbk);
-					PublishThread pubThread = new PublishThread(server);
-					pubThread.start();
 				} catch (Exception e) {
 					logger.error("runSessionServer", e);
 					server.deregister();
@@ -110,14 +110,38 @@ public class TestPublishServer extends TestStatefulServer {
 
 	private class PublishThread extends Thread {
 		SCPublishServer publishSrv;
+		Method method;
+		SCMessage request;
+		int operationTimeoutInMillis = 0;
 
-		public PublishThread(SCPublishServer publishSrv) {
+		public PublishThread(SCPublishServer publishSrv, Method method, SCMessage request, int operationTimeoutInMillis) {
 			this.publishSrv = publishSrv;
+			this.method = method;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public void run() {
+
+			try {
+				// first sleep 2 seconds to give test client time to stay ready
+				Thread.sleep(2000);
+				method.invoke(this, request, operationTimeoutInMillis);
+			} catch (Exception e1) {
+				logger.warn("could not invoke " + method.getName() + "successfully.");
+				return;
+			}
+			logger.log(Level.OFF, "executed method " + method.getName() + " on server");
+
+		}
+
+		/**
+		 * This method might get invoked by reflection if client requests it in sessionInfo of a subscribe message
+		 * 
+		 * @param request
+		 * @param operationTimeoutInMillis
+		 */
+		public void publish100Message(SCMessage request, int operationTimeoutInMillis) {
 			SCPublishMessage pubMessage = new SCPublishMessage();
 			for (int i = 0; i < 100; i++) {
 				try {
@@ -151,11 +175,11 @@ public class TestPublishServer extends TestStatefulServer {
 		@Override
 		public SCMessage subscribe(SCMessage message, int operationTimeoutInMillis) {
 			logger.info("PublishServer.SrvCallback.subscribe()");
+			SCMessage response = message;
 			Object data = message.getData();
 			if (data == null) {
-				return message;
+				return response;
 			}
-			SCMessage response = message;
 			// watch out for kill server message
 			if (data.getClass() == String.class) {
 				String dataString = (String) data;
@@ -169,7 +193,22 @@ public class TestPublishServer extends TestStatefulServer {
 					}
 					KillThread<SCPublishServer> kill = new KillThread<SCPublishServer>(this.scPublishServer);
 					kill.start();
+				} else {
+					// watch out for method to call
+					String methodName = message.getSessionInfo();
+					if (methodName != null) {
+						try {
+							Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
+							PublishThread publishThread = new PublishThread(this.scPublishServer, method, message,
+									operationTimeoutInMillis);
+							publishThread.start();
+							return response;
+						} catch (Exception e) {
+							logger.warn("method " + methodName + " not found on server");
+						}
+					}
 				}
+
 			}
 			return response;
 		}
