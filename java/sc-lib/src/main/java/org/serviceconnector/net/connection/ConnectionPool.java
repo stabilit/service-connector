@@ -420,7 +420,8 @@ public class ConnectionPool {
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception ex) {
-			logger.error("send keepalive", ex);
+			logger.error("send keepalive failed", ex);
+			this.forceClosingConnection(connection);
 		}
 	}
 
