@@ -34,10 +34,10 @@ import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.service.SCServiceException;
 
-public class AsynchronousExecuteClientTest {
+public class ExecuteAsynchronousTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AsynchronousExecuteClientTest.class);
+	protected final static Logger logger = Logger.getLogger(ExecuteAsynchronousTest.class);
 
 	private static ProcessCtx scCtx;
 	private static ProcessCtx srvCtx;
@@ -998,14 +998,14 @@ public class AsynchronousExecuteClientTest {
 		@Override
 		public void receive(SCMessage msg) {
 			response = msg;
-			AsynchronousExecuteClientTest.messageReceived = true;
+			ExecuteAsynchronousTest.messageReceived = true;
 		}
 
 		@Override
 		public void receive(Exception e) {
 			logger.error("callback", e);
 			exc = e;
-			AsynchronousExecuteClientTest.messageReceived = true;
+			ExecuteAsynchronousTest.messageReceived = true;
 		}
 
 	}

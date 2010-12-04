@@ -22,9 +22,11 @@ import org.serviceconnector.test.system.publish.PublishClientTest;
 import org.serviceconnector.test.system.publish.SubscribeClientTest;
 import org.serviceconnector.test.system.publish.SubscribeUnsubscribeClientTest;
 import org.serviceconnector.test.system.publish.SubscriptionServerTest;
-import org.serviceconnector.test.system.session.AsynchronousExecuteClientTest;
-import org.serviceconnector.test.system.session.CreateSessionHttpClientTest;
+import org.serviceconnector.test.system.session.AfterSCAbortSessionTest;
+import org.serviceconnector.test.system.session.AfterSCRestartSessionTest;
+import org.serviceconnector.test.system.session.ExecuteAsynchronousTest;
 import org.serviceconnector.test.system.session.CreateSessionTest;
+import org.serviceconnector.test.system.session.DeleteSessionTest;
 import org.serviceconnector.test.system.session.ExecuteTest;
 import org.serviceconnector.test.system.session.PrematureDestroyOfSCProcessClientTest;
 import org.serviceconnector.test.system.session.PrematureDestroyOfServerProcessClientTest;
@@ -34,10 +36,13 @@ import org.serviceconnector.test.system.session.SessionServerTestFillipe;
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
 		// session tests
-		CreateSessionHttpClientTest.class, 
 		CreateSessionTest.class,
+		DeleteSessionTest.class,
 		ExecuteTest.class, 
-		AsynchronousExecuteClientTest.class,
+		ExecuteAsynchronousTest.class,
+		AfterSCAbortSessionTest.class,
+		AfterSCRestartSessionTest.class,
+		
 		PrematureDestroyOfSCProcessClientTest.class, 
 		PrematureDestroyOfServerProcessClientTest.class,
 		RejectSessionClientTest.class,
