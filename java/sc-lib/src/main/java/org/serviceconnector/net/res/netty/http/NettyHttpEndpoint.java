@@ -87,13 +87,13 @@ public class NettyHttpEndpoint extends EndpointAdapter implements Runnable {
 		try {
 			bool = this.answer.poll(baseConf.getConnectionTimeoutMillis(), TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener cannot start");
 		}
 		if (bool == null) {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "startup listener timed out");
 		}
 		if (bool == false) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener cannot start");
 		}
 	}
 

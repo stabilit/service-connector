@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api;
 
+import java.io.InputStream;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
@@ -165,6 +166,32 @@ public class SCMessage {
 		return this.data;
 	}
 
+	/**
+	 * Gets the data length.
+	 * 
+	 * @return the data length
+	 */
+	public int getDataLength() {
+		if (this.data == null) {
+			return 0;
+		}
+		if (byte[].class == this.data.getClass()) {
+			return ((byte[]) this.data).length;
+		}
+		if (String.class == this.data.getClass()) {
+			return ((String) this.data).length();
+		}
+		if (this.data instanceof InputStream) {
+			/*
+			 * needs to be different in case of INPUT_STREAM body length is always unknown for streams. Set it on Integer.MAX_VALUE
+			 * 2^31-1 (2048 MB). Never rely on bodyLength for body type INPUT_STREAM.
+			 */
+			return Integer.MAX_VALUE;
+		}
+		return 0;
+	}
+
+	
 	/**
 	 * Gets the session id.
 	 * 

@@ -50,7 +50,6 @@ public class AttachBenchmark {
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}
 
 	@After
@@ -124,4 +123,68 @@ public class AttachBenchmark {
 		assertEquals(true, perf > 50);
 	}
 
+
+	/**
+	 * Description: Attach 5000 clients then detach them all.<br>
+	 * Expectation:	All clients are detached.
+	 */
+	@Test
+	public void benchmark_5000_clients_http() throws Exception {
+		int nr = 5000;
+		SCClient[] clients = new SCClient[nr];
+		// create clients
+		for (int i= 0; i < nr; i++) {
+			clients[i] = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		}
+		//attach
+		long start = System.currentTimeMillis();
+		for (int i= 0; i < nr; i++) {
+			if (((i+1) % 200) == 0) testLogger.info("Attaching client nr. " + (i+1) );
+			clients[i].attach();
+			assertEquals("Client is not attached", true, clients[i].isAttached());
+		}
+		//detach
+		for (int i = 0; i < nr; i++) {
+			if (((i+1) % 200) == 0) testLogger.info("Detaching client nr. " + (i+1) + "...");
+			clients[i].detach();
+			assertEquals("Client is attached", false, clients[i].isAttached());
+		}
+		long stop = System.currentTimeMillis();
+		long perf = nr * 1000 / (stop - start);
+		testLogger.info(nr + "attach/detach performance : " + perf + " cycles/sec.");
+		assertEquals(true, perf > 100);
+		clients = null;
+	}
+
+	/**
+	 * Description: Attach 5000 clients then detach them all.<br>
+	 * Expectation:	All clients are detached.
+	 */
+	@Test
+	public void benchmark_5000_clients_tcp() throws Exception {
+		int nr = 5000;
+		SCClient[] clients = new SCClient[nr];
+		// create clients
+		for (int i= 0; i < nr; i++) {
+			clients[i] = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		}
+		//attach
+		long start = System.currentTimeMillis();
+		for (int i= 0; i < nr; i++) {
+			if (((i+1) % 200) == 0) testLogger.info("Attaching client nr. " + (i+1) );
+			clients[i].attach();
+			assertEquals("Client is not attached", true, clients[i].isAttached());
+		}
+		//detach
+		for (int i = 0; i < nr; i++) {
+			if (((i+1) % 200) == 0) testLogger.info("Detaching client nr. " + (i+1) + "...");
+			clients[i].detach();
+			assertEquals("Client is attached", false, clients[i].isAttached());
+		}
+		long stop = System.currentTimeMillis();
+		long perf = nr * 1000 / (stop - start);
+		testLogger.info(nr + "attach/detach performance : " + perf + " cycles/sec.");
+		assertEquals(true, perf > 100);
+		clients = null;
+	}
 }

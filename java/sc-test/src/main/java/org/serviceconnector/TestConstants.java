@@ -42,6 +42,7 @@ public class TestConstants {
 	public static final String filServiceName1 = "file-1";
 	
 	public static final String killServerCmd = "kill";
+	public static final String rejectSessionCmd = "reject";
 	
 	public static final String pangram = "The quick brown fox jumps over a lazy dog.";
 	public static final String stringLength32 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";

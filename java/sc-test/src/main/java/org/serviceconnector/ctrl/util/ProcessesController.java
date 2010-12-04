@@ -244,18 +244,17 @@ public class ProcessesController {
 		int timeout = 10; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileName())) {
-				SCClient client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-				client.attach(timeout);
+				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
-				SCSessionService scSessionService = client.newSessionService(serviceName);
-
+				SCSessionService scSessionService = clientMgmt.newSessionService(serviceName);
+				clientMgmt.enableService(serviceName);	// service might be disabled during tests
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo(TestConstants.killServerCmd);
-				scMessage.setData(TestConstants.killServerCmd);
 				try {
 					scSessionService.createSession(scMessage);
 				} catch (SCServiceException ex) {
-					client.detach();
+					clientMgmt.detach();
 				}
 				FileUtility.waitNotExists(srvProcess.getPidFileName(), timeout);
 			}

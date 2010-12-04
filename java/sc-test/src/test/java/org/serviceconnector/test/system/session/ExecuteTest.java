@@ -97,7 +97,7 @@ public class ExecuteTest {
 	}
 
 	/**
-	 * Description: execute on session with service which has been disabled<br>
+	 * Description: exchange messages on session with service which has been disabled<br>
 	 * Expectation: passes
 	 */
 	@Test

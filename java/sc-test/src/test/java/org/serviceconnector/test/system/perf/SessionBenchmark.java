@@ -57,7 +57,7 @@ public class SessionBenchmark {
 		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 1, 1,
+				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 10000, 10,
 				TestConstants.sesServiceName1);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
@@ -118,7 +118,37 @@ public class SessionBenchmark {
 		testLogger.info(nr + " Sessions created and deleted performance : " + perf + " sessions/sec.");
 		assertEquals(true, perf > 100);
 	}
-//
+
+	
+	@Test
+	public void benchmark_1000_sessions() throws Exception {
+		SCMessage request = null;
+		@SuppressWarnings("unused")
+		SCMessage response = null;
+		int nr = 1000;
+		SCSessionService[] sessionServices = new SCSessionService[nr];
+		testLogger.info("Creating Services...");
+		for (int i = 0; i < nr; i++) {
+			sessionServices[i] = client.newSessionService(TestConstants.sesServiceName1);
+		}
+		
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < nr; i++) {
+			if (((i+1) % 100) == 0)
+				testLogger.info("Creating Session nr. " + (i+1) + "...");
+			response = sessionServices[i].createSession(10, request);
+		}
+		long stop = System.currentTimeMillis();
+		long perf = nr * 1000 / (stop - start);
+		testLogger.info(nr + " Sessions created and deleted performance : " + perf + " sessions/sec.");
+		assertEquals(true, perf > 100);
+		
+		for (int i = 0; i < nr; i++) {
+			sessionServices[i].deleteSession(10);
+		}
+	}
+
+	//
 //	@Test
 //	public void createSessionDeleteSession_10000Times_outputsTime() throws Exception {
 //

@@ -109,25 +109,28 @@ public class TestSessionServer extends TestStatefulServer {
 
 		@Override
 		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
-			Object data = request.getData();
-			if (data == null) {
-				return request;
-			}
 			SCMessage response = request;
-			// watch out for kill server message
-			if (data.getClass() == String.class) {
-				String dataString = (String) data;
-
-				if (dataString.equals(TestConstants.killServerCmd)) {
+			
+			String sessionInfo = request.getSessionInfo();
+			if (sessionInfo != null) {
+				if (sessionInfo.equals(TestConstants.killServerCmd)) {
 					logger.log(Level.OFF, "Kill request received, exiting ...");
 					response = new SCMessageFault();
 					try {
 						((SCMessageFault) response).setAppErrorCode(1050);
-						((SCMessageFault) response).setAppErrorText("create session rejected - kill server requested!");
+						((SCMessageFault) response).setAppErrorText("session rejected - kill server requested!");
 					} catch (SCMPValidatorException e) {
 					}
 					KillThread<SCSessionServer> kill = new KillThread<SCSessionServer>(this.scSessionServer);
 					kill.start();
+				}
+				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
+					response = new SCMessageFault();
+					try {
+						((SCMessageFault) response).setAppErrorCode(4000);
+						((SCMessageFault) response).setAppErrorText("session rejected!");
+					} catch (SCMPValidatorException e) {
+					}
 				}
 			}
 			sessionLogger.logCreateSession(this.getClass().getName(), request.getSessionId());

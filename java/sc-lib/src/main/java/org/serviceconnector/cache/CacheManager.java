@@ -132,7 +132,7 @@ public class CacheManager {
 	}
 
 	public void removeExpiredCaches() {
-		logger.info("check for expired caches and remove them");
+		logger.debug("check for expired messages in cache");
 		Object[] caches = this.getAllCaches();
 		if (caches == null) {
 			return;
@@ -172,15 +172,6 @@ public class CacheManager {
 		}
 
 		/**
-		 * Checks if is killed.
-		 *
-		 * @return true, if is killed
-		 */
-		public boolean isKilled() {
-			return killed;
-		}
-
-		/**
 		 * Sets the killed.
 		 * 
 		 * @param killed
@@ -194,11 +185,6 @@ public class CacheManager {
 			}
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Runnable#run()
-		 */
 		@Override
 		public void run() {
 			while (this.killed == false) {

@@ -103,6 +103,9 @@ public class SCSessionService extends SCService {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, this.serviceName);
 		if (scMessage != null) {
+			if (scMessage.getDataLength() > Constants.MAX_MESSAGE_SIZE) {
+				throw new SCServiceException("message > 60kB not allowed");
+			}
 			createSessionCall.setRequestBody(scMessage.getData());
 			createSessionCall.setCompressed(scMessage.isCompressed());
 			createSessionCall.setSessionInfo(scMessage.getSessionInfo());
