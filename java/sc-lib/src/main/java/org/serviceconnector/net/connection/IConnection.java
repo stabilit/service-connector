@@ -104,10 +104,10 @@ public interface IConnection {
 	/**
 	 * Sets the idle timeout.
 	 * 
-	 * @param idleTimeout
+	 * @param idleTimeoutSeconds
 	 *            the new idle timeout
 	 */
-	public abstract void setIdleTimeout(int idleTimeout);
+	public abstract void setIdleTimeoutSeconds(int idleTimeoutSeconds);
 
 	/**
 	 * Increment nr of idles.

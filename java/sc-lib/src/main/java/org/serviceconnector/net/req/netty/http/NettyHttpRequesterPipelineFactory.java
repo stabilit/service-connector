@@ -56,7 +56,7 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 		ChannelPipeline pipeline = Channels.pipeline();
 		// responsible for observing idle timeout - Netty
 		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context
-				.getIdleTimeout()));
+				.getIdleTimeoutSeconds()));
 		// responsible for decoding responses - Netty
 		pipeline.addLast("decoder", new HttpResponseDecoder());
 		// responsible for encoding requests - Netty

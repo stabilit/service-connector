@@ -31,7 +31,7 @@ public class ConnectionContext {
 	/** The connection. */
 	private IConnection connection;
 	/** The idle timeout. */
-	private int idleTimeout;
+	private int idleTimeoutSeconds;
 	/** The idle callback. */
 	private IIdleConnectionCallback idleCallback;
 
@@ -42,12 +42,12 @@ public class ConnectionContext {
 	 *            the connection
 	 * @param idleCallback
 	 *            the idle callback
-	 * @param idleTimeout
+	 * @param idleTimeoutSeconds
 	 *            the idle timeout
 	 */
-	public ConnectionContext(IConnection connection, IIdleConnectionCallback idleCallback, int idleTimeout) {
+	public ConnectionContext(IConnection connection, IIdleConnectionCallback idleCallback, int idleTimeoutSeconds) {
 		this.connection = connection;
-		this.idleTimeout = idleTimeout;
+		this.idleTimeoutSeconds = idleTimeoutSeconds;
 		this.idleCallback = idleCallback;
 	}
 
@@ -61,12 +61,12 @@ public class ConnectionContext {
 	}
 
 	/**
-	 * Gets the idle timeout.
+	 * Gets the idle timeout in seconds.
 	 *
 	 * @return the idle timeout
 	 */
-	public int getIdleTimeout() {
-		return this.idleTimeout;
+	public int getIdleTimeoutSeconds() {
+		return this.idleTimeoutSeconds;
 	}
 
 	/**

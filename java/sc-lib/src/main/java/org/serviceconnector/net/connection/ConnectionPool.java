@@ -63,7 +63,7 @@ public class ConnectionPool {
 	/** The close on free. */
 	private boolean closeOnFree;
 	/** The keep alive interval. */
-	private int keepAliveInterval;
+	private int keepAliveIntervalSeconds;
 	/** The free connections. */
 	private List<IConnection> freeConnections;
 	/** The used connections. */
@@ -80,10 +80,10 @@ public class ConnectionPool {
 	 *            the port
 	 * @param conType
 	 *            the connection type
-	 * @param keepAliveInterval
+	 * @param keepAliveIntervalSeconds
 	 *            the keep alive interval
 	 */
-	public ConnectionPool(String host, int port, String conType, int keepAliveInterval) {
+	public ConnectionPool(String host, int port, String conType, int keepAliveIntervalSeconds) {
 		this.host = host;
 		this.port = port;
 		this.connectionType = conType;
@@ -95,7 +95,7 @@ public class ConnectionPool {
 		this.freeConnections = Collections.synchronizedList(new ArrayList<IConnection>());
 		this.usedConnections = Collections.synchronizedList(new ArrayList<IConnection>());
 		this.connectionFactory = AppContext.getConnectionFactory();
-		this.keepAliveInterval = keepAliveInterval;
+		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
 	}
 
 	/**
@@ -185,9 +185,9 @@ public class ConnectionPool {
 		connection = connectionFactory.createConnection(this.connectionType);
 		connection.setHost(this.host);
 		connection.setPort(this.port);
-		connection.setIdleTimeout(this.keepAliveInterval);
+		connection.setIdleTimeoutSeconds(this.keepAliveIntervalSeconds);
 		IIdleConnectionCallback idleCallback = new IdleCallback();
-		ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, this.keepAliveInterval);
+		ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, this.keepAliveIntervalSeconds);
 		connection.setContext(connectionContext);
 		try {
 			connection.connect(); // can throw an exception
@@ -416,7 +416,7 @@ public class ConnectionPool {
 		try {
 			ConnectionPoolCallback callback = new ConnectionPoolCallback();
 			connection.send(keepAliveMessage, callback);
-			callback.getMessageSync(AppContext.getBasicConfiguration().getKeepAliveTimeout());
+			callback.getMessageSync(AppContext.getBasicConfiguration().getKeepAliveTimeoutMillis());
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception ex) {
@@ -430,7 +430,7 @@ public class ConnectionPool {
 	 * @return the keep alive interval
 	 */
 	public int getKeepAliveInterval() {
-		return this.keepAliveInterval;
+		return this.keepAliveIntervalSeconds;
 	}
 
 	/**

@@ -54,7 +54,7 @@ public class BasicConfiguration {
 	 * Used to observe the reply of a keep alive message. <br>
 	 * If the peer does not reply within this time, connection will be cleaned up.
 	 */
-	private int keepAliveTimeout = Constants.DEFAULT_KEEP_ALIVE_TIMEOUT;
+	private int keepAliveTimeoutMillis = Constants.DEFAULT_KEEP_ALIVE_TIMEOUT_MILLIS;
 	/**
 	 * Used to observe the reply of a abort session. <br>
 	 * If server does not reply within this time, the server will be cleaned up.
@@ -122,12 +122,12 @@ public class BasicConfiguration {
 	}
 
 	/**
-	 * Gets the keep alive timeout.
+	 * Gets the keep alive timeout in milliseconds.
 	 * 
-	 * @return the keep alive timeout
+	 * @return the keep alive timeout in milliseconds
 	 */
-	public int getKeepAliveTimeout() {
-		return keepAliveTimeout;
+	public int getKeepAliveTimeoutMillis() {
+		return keepAliveTimeoutMillis;
 	}
 
 	/**
@@ -205,11 +205,11 @@ public class BasicConfiguration {
 			this.commandValidation = localCMDValidation;
 			logger.info("commandValidation set to " + localCMDValidation);
 		}
-		// keepAliveTimeout
-		Integer localKeepAliveTimeout = compositeConfiguration.getInteger(Constants.ROOT_KEEP_ALIVE_TIMEOUT, null);
-		if (localKeepAliveTimeout != null && this.keepAliveTimeout != localKeepAliveTimeout) {
-			this.keepAliveTimeout = localKeepAliveTimeout;
-			logger.info("keepAliveTimeout set to " + localKeepAliveTimeout);
+		// keepAliveTimeout in milliseconds
+		Integer localKeepAliveTimeoutMillis = compositeConfiguration.getInteger(Constants.ROOT_KEEP_ALIVE_TIMEOUT_MILLIS, null);
+		if (localKeepAliveTimeoutMillis != null && this.keepAliveTimeoutMillis != localKeepAliveTimeoutMillis) {
+			this.keepAliveTimeoutMillis = localKeepAliveTimeoutMillis;
+			logger.info("keepAliveTimeoutMillis set to " + localKeepAliveTimeoutMillis);
 		}
 
 		// serverAbortTimeout

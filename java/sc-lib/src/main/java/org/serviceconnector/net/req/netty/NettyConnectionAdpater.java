@@ -167,7 +167,7 @@ public abstract class NettyConnectionAdpater implements IConnection {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setIdleTimeout(int idleTimeout) {
+	public void setIdleTimeoutSeconds(int idleTimeout) {
 		this.idleTimeout = idleTimeout;
 	}
 }

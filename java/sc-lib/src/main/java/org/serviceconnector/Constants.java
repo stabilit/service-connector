@@ -62,8 +62,8 @@ public final class Constants {
 	/** Default interval used for publishing services if the NO_DATA_INTERVAL was not set by API. */
 	public static final int DEFAULT_NO_DATA_INTERVAL_SECONDS = 300;
 
-	/** Default value used if no KEEP_ALIVE_TIMEOUT is configured. */
-	public static final int DEFAULT_KEEP_ALIVE_TIMEOUT = 2000;
+	/** Default value used if no DEFAULT_KEEP_ALIVE_TIMEOUT_MILLIS is configured. */
+	public static final int DEFAULT_KEEP_ALIVE_TIMEOUT_MILLIS = 2000;
 
 	/** The default keep alive interval, 0 = not active. */
 	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 0;
@@ -149,7 +149,7 @@ public final class Constants {
 	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
 	public static final String ROOT_CONNECTION_TIMEOUT = "root.connectionTimeoutMillis";
 	public static final String ROOT_SUBSCRIPTION_TIMEOUT = "root.subscriptionTimeout";
-	public static final String ROOT_KEEP_ALIVE_TIMEOUT = "root.keepAliveTimeout";
+	public static final String ROOT_KEEP_ALIVE_TIMEOUT_MILLIS = "root.keepAliveTimeout";
 	public static final String ROOT_SERVER_ABORT_TIMEOUT = "root.serverAbortTimeout";
 	public static final String ROOT_SCLISTFILES_SCRIPT_NAME = "root.scListfilesScriptName";
 	public static final String ROOT_SCUPLOADFILE_SCRIPT_NAME = "root.scUploadfileScriptName";

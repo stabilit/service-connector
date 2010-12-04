@@ -53,7 +53,7 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 		ChannelPipeline pipeline = Channels.pipeline();
 		// responsible for observing idle timeout - Netty
 		pipeline.addLast("idleTimeout", new NettyIdleHandler(this.context, this.timer, 0, 0, this.context
-				.getIdleTimeout()));
+				.getIdleTimeoutSeconds()));
 		// responsible for reading until SCMP frame is complete
 		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
 		// responsible for handling response
