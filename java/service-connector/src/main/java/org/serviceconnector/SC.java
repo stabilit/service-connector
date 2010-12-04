@@ -213,7 +213,7 @@ public final class SC {
 		public void run() {
 			AppContext.getCacheManager().destroy();
 			FileUtility.deletePIDfile(FileUtility.getPath() + Constants.PID_FILE_NAME);
-			logger.log(Level.OFF, "Service Connector exiting");
+			logger.log(Level.OFF, "Service Connector exit");
 			logger.log(Level.OFF, "<<<");
 		}
 	}

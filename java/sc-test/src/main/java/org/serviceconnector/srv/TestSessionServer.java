@@ -119,6 +119,7 @@ public class TestSessionServer extends TestStatefulServer {
 				String dataString = (String) data;
 
 				if (dataString.equals(TestConstants.killServerCmd)) {
+					logger.log(Level.OFF, "Kill request received, exiting ...");
 					response = new SCMessageFault();
 					try {
 						((SCMessageFault) response).setAppErrorCode(1050);

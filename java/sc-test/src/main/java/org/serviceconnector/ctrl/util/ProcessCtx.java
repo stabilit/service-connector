@@ -24,12 +24,10 @@ public class ProcessCtx {
 	protected final static Logger logger = Logger.getLogger(ProcessCtx.class);
 
 	private Process process = null;
-	private String runableFull = null;
+	private String runableName = null;
 	private String propertyFileName = null;
-	private String propertyFileNameFull = null;
 	private String log4jFileName = null;
-	private String log4jFileNameFull = null;
-	private String pidFileNameFull = null;
+	private String pidFileName = null;
 	private boolean running = false;
 	private String serviceNames;
 	private String processName;
@@ -50,12 +48,12 @@ public class ProcessCtx {
 		this.process = process;
 	}
 
-	public String getRunableFull() {
-		return runableFull;
+	public String getRunableName() {
+		return runableName;
 	}
 
-	public void setRunableFull(String runableFull) {
-		this.runableFull = runableFull;
+	public void setRunableName(String runableName) {
+		this.runableName = runableName;
 	}
 
 	public String getPropertyFileName() {
@@ -66,14 +64,6 @@ public class ProcessCtx {
 		this.propertyFileName = propertyFileName;
 	}
 
-	public String getPropertyFileNameFull() {
-		return propertyFileNameFull;
-	}
-
-	public void setPropertyFileNameFull(String propertyFileNameFull) {
-		this.propertyFileNameFull = propertyFileNameFull;
-	}
-
 	public String getLog4jFileName() {
 		return log4jFileName;
 	}
@@ -82,32 +72,28 @@ public class ProcessCtx {
 		this.log4jFileName = log4jFileName;
 	}
 
-	public String getLog4jFileNameFull() {
-		return log4jFileNameFull;
+	public String getPidFileName() {
+		return pidFileName;
 	}
 
-	public void setLog4jFileNameFull(String log4jFileNameFull) {
-		this.log4jFileNameFull = log4jFileNameFull;
-	}
-
-	public String getPidFileNameFull() {
-		return pidFileNameFull;
-	}
-
-	public void setPidFileNameFull(String pidFileNameFull) {
-		this.pidFileNameFull = pidFileNameFull;
+	public void setPidFileName(String pidFileName) {
+		this.pidFileName = pidFileName;
 	}
 
 	public boolean isRunning() {
 		return running;
 	}
 
-	public void setServiceNames(String serviceNames) {
-		this.serviceNames = serviceNames;
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 
 	public String getServiceNames() {
 		return serviceNames;
+	}
+
+	public void setServiceNames(String serviceNames) {
+		this.serviceNames = serviceNames;
 	}
 
 	public String getProcessName() {
@@ -118,15 +104,20 @@ public class ProcessCtx {
 		this.processName = processName;
 	}
 
-	public void setConnectionType(ConnectionType connectionType) {
-		this.connectionType = connectionType;
+	public int getSCPort() {
+		return scPort;
 	}
 
 	public void setSCPort(int scPort) {
 		this.scPort = scPort;
 	}
 
-	public int getSCPort() {
-		return scPort;
+	public ConnectionType getConnectionType() {
+		return connectionType;
 	}
+
+	public void setConnectionType(ConnectionType connectionType) {
+		this.connectionType = connectionType;
+	}
+
 }

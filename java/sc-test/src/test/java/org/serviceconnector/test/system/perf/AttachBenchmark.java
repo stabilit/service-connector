@@ -30,13 +30,13 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 
-public class AttachBenchmarks {
+public class AttachBenchmark {
 
 	/** The Constant testLogger. */
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AttachBenchmarks.class);
+	protected final static Logger logger = Logger.getLogger(AttachBenchmark.class);
 
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;

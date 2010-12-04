@@ -58,40 +58,38 @@ public class ProcessesController {
 		// Read & parse properties file.
 		Properties properties = new Properties();
 		properties.load(new FileInputStream(scPropertiesFullName));
-		return properties.getProperty("sc-tcp" + Constants.PROPERTY_QUALIFIER_PORT);
+		return properties.getProperty(TestConstants.configPortToken);
 	}
 
 	public ProcessCtx startSC(String log4jSCProperties, String scProperties) throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
 
-		String scRunableFull = userDir + fs + "target" + fs + TestConstants.scRunable;
-		if (FileUtility.notExists(scRunableFull)) {
-			testLogger.error("File:" + scRunableFull + " does not exist!");
-			throw new Exception("File:" + scRunableFull + " does not exist!");
+		String scRunableFullName = userDir + fs + "target" + fs + TestConstants.scRunable;
+		if (FileUtility.notExists(scRunableFullName)) {
+			testLogger.error("File:" + scRunableFullName + " does not exist!");
+			throw new Exception("File:" + scRunableFullName + " does not exist!");
 		}
-		proc.setRunableFull(scRunableFull);
+		proc.setRunableName(scRunableFullName);
 
-		String scPropertiesFull = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + scProperties;
-		if (FileUtility.notExists(scPropertiesFull)) {
-			testLogger.error("File:" + scPropertiesFull + " does not exist!");
-			throw new Exception("File:" + scPropertiesFull + " does not exist!");
+		String scPropertiesFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + scProperties;
+		if (FileUtility.notExists(scPropertiesFullName)) {
+			testLogger.error("File:" + scPropertiesFullName + " does not exist!");
+			throw new Exception("File:" + scPropertiesFullName + " does not exist!");
 		}
-		proc.setPropertyFileName(scProperties);
-		proc.setPropertyFileNameFull(scPropertiesFull);
+		proc.setPropertyFileName(scPropertiesFullName);
 
-		String log4jFileNameFull = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSCProperties;
-		if (FileUtility.notExists(log4jFileNameFull)) {
-			testLogger.error("File:" + log4jFileNameFull + " does not exist!");
-			throw new Exception("File:" + log4jFileNameFull + " does not exist!");
+		String log4jFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSCProperties;
+		if (FileUtility.notExists(log4jFileFullName)) {
+			testLogger.error("File:" + log4jFileFullName + " does not exist!");
+			throw new Exception("File:" + log4jFileFullName + " does not exist!");
 		}
-		proc.setLog4jFileName(log4jSCProperties);
-		proc.setLog4jFileNameFull(log4jFileNameFull);
+		proc.setLog4jFileName(log4jFileFullName);
 
-		String pidFileNameFull = getLogDirPath(log4jFileNameFull) + Constants.PID_FILE_NAME;
-		proc.setPidFileNameFull(pidFileNameFull);
+		String pidFileFullName = getLogDirPath(log4jFileFullName) + Constants.PID_FILE_NAME;
+		proc.setPidFileName(pidFileFullName);
 		// set sc port to SC stop at the end
-		proc.setSCPort(Integer.parseInt(this.getPortFromConfFile(scPropertiesFull)));
+		proc.setSCPort(Integer.parseInt(this.getPortFromConfFile(scPropertiesFullName)));
 
 		/*
 		 * start SC process Args: 
@@ -101,14 +99,14 @@ public class ProcessesController {
 		 * [3] SC runnable 
 		 * [4] -sc.configuration
 		 */
-		String command = "java -Dlog4j.configuration=file:" + log4jFileNameFull + " -jar " + scRunableFull + " -sc.configuration "
-				+ scPropertiesFull;
+		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + scRunableFullName + " -sc.configuration "
+				+ scPropertiesFullName;
 
 		Process process = Runtime.getRuntime().exec(command);
 		proc.setProcess(process);
 		int timeout = 10; // seconds
 		try {
-			FileUtility.waitExists(pidFileNameFull, timeout);
+			FileUtility.waitExists(pidFileFullName, timeout);
 			testLogger.info("SC started");
 		} catch (Exception e) {
 			testLogger.info(e.getMessage());
@@ -121,11 +119,11 @@ public class ProcessesController {
 	public void stopSC(ProcessCtx scProcess) throws Exception {
 		int timeout = 10; // seconds
 		try {
-			if (FileUtility.exists(scProcess.getPidFileNameFull())) {
+			if (FileUtility.exists(scProcess.getPidFileName())) {
 				SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, scProcess.getSCPort(), ConnectionType.NETTY_TCP);
 				client.attach(timeout);
 				client.killSC();
-				FileUtility.waitNotExists(scProcess.getPidFileNameFull(), timeout);
+				FileUtility.waitNotExists(scProcess.getPidFileName(), timeout);
 			}
 			testLogger.info("SC stopped");
 		} catch (Exception e) {
@@ -137,7 +135,7 @@ public class ProcessesController {
 				scProcess.getProcess().waitFor();
 				// make sure the pid file is deleted under any circumstances
 				try {
-					FileUtility.deletePIDfile(scProcess.getPidFileNameFull());
+					FileUtility.deletePIDfile(scProcess.getPidFileName());
 				} catch (Exception e) {
 				}
 			}
@@ -190,23 +188,22 @@ public class ProcessesController {
 
 		ProcessCtx proc = new ProcessCtx();
 
-		String srvRunableFull = userDir + fs + "target" + fs + TestConstants.serverRunable;
-		if (FileUtility.notExists(srvRunableFull)) {
-			testLogger.error("File:" + srvRunableFull + " does not exist!");
-			throw new Exception("File:" + srvRunableFull + " does not exist!");
+		String srvRunablFullName = userDir + fs + "target" + fs + TestConstants.serverRunable;
+		if (FileUtility.notExists(srvRunablFullName)) {
+			testLogger.error("File:" + srvRunablFullName + " does not exist!");
+			throw new Exception("File:" + srvRunablFullName + " does not exist!");
 		}
-		proc.setRunableFull(srvRunableFull);
+		proc.setRunableName(srvRunablFullName);
 
-		String log4jFileNameFull = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSrvProperties;
-		if (FileUtility.notExists(log4jFileNameFull)) {
-			testLogger.error("File:" + log4jFileNameFull + " does not exist!");
-			throw new Exception("File:" + log4jFileNameFull + " does not exist!");
+		String log4jFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSrvProperties;
+		if (FileUtility.notExists(log4jFileFullName)) {
+			testLogger.error("File:" + log4jFileFullName + " does not exist!");
+			throw new Exception("File:" + log4jFileFullName + " does not exist!");
 		}
-		proc.setLog4jFileName(log4jSrvProperties);
-		proc.setLog4jFileNameFull(log4jFileNameFull);
+		proc.setLog4jFileName(log4jFileFullName);
 
-		String pidFileNameFull = getLogDirPath(log4jFileNameFull) + fs + serverName + ".pid";
-		proc.setPidFileNameFull(pidFileNameFull);
+		String pidFileNameFull = getLogDirPath(log4jFileFullName) + fs + serverName + ".pid";
+		proc.setPidFileName(pidFileNameFull);
 
 		proc.setServiceNames(serviceNames);
 		proc.setProcessName(serverName);
@@ -226,7 +223,7 @@ public class ProcessesController {
 		 * [10] connectionType ("netty.tcp" or "netty.http")
 		 * [11] serviceNames (comma delimited list)
 		 */
-		String command = "java -Dlog4j.configuration=file:" + log4jFileNameFull + " -jar " + srvRunableFull + " " + serverType + " "
+		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + srvRunablFullName + " " + serverType + " "
 				+ serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " " + " "
 				+ connectionType.getValue() + " " + serviceNames;
 		Process srvProcess = Runtime.getRuntime().exec(command);
@@ -246,7 +243,7 @@ public class ProcessesController {
 	public void stopServer(ProcessCtx srvProcess) throws Exception {
 		int timeout = 10; // seconds
 		try {
-			if (FileUtility.exists(srvProcess.getPidFileNameFull())) {
+			if (FileUtility.exists(srvProcess.getPidFileName())) {
 				SCClient client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 				client.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
@@ -260,7 +257,7 @@ public class ProcessesController {
 				} catch (SCServiceException ex) {
 					client.detach();
 				}
-				FileUtility.waitNotExists(srvProcess.getPidFileNameFull(), timeout);
+				FileUtility.waitNotExists(srvProcess.getPidFileName(), timeout);
 			}
 			testLogger.info("Server stopped");
 		} catch (Exception e) {
@@ -272,7 +269,7 @@ public class ProcessesController {
 				srvProcess.getProcess().waitFor();
 				// make sure the pid file is deleted under any circumstances
 				try {
-					FileUtility.deletePIDfile(srvProcess.getPidFileNameFull());
+					FileUtility.deletePIDfile(srvProcess.getPidFileName());
 				} catch (Exception e) {
 				}
 			}

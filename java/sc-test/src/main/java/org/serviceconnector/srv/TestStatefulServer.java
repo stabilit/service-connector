@@ -70,20 +70,22 @@ public abstract class TestStatefulServer extends Thread {
 		/** {@inheritDoc} */
 		@Override
 		public void run() {
+			// sleep for 1/2 seconds before killing the server
+			try {
+				Thread.sleep(500);
+			} catch (Exception e) {
+			}
 			try {
 				this.server.deregister();
 			} catch (Exception e) {
-				logger.error("run", e);
-			} finally {
-				try {
-					this.server.getSCServer().stopListener();
-					// sleep for 1/2 seconds before killing the server
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-				} finally {
-					System.exit(0);
-				}
+				logger.error("deregister", e);
 			}
+			try {
+				this.server.getSCServer().stopListener();
+			} catch (Exception e) {
+				logger.error("stopListener", e);
+			} 
+			System.exit(0);
 		}
 	}
 
@@ -108,8 +110,7 @@ public abstract class TestStatefulServer extends Thread {
 		@Override
 		public void run() {
 			FileUtility.deletePIDfile(this.pidFileNameFull);
-			logger.log(Level.OFF, "Delete PID-file: " + this.pidFileNameFull);
-			logger.log(Level.OFF, "TestServer exiting");
+			logger.log(Level.OFF, "TestServer exit");
 			logger.log(Level.OFF, "<<<");
 		}
 	}
