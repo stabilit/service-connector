@@ -57,41 +57,43 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The HV_WRONG_IPLIST_FORMAT. */
 	HV_WRONG_IPLIST_FORMAT("420", "Invalid iplist format."),
 	/** The HV_WRONG_MAX_SESSIONS. */
-	HV_WRONG_MAX_SESSIONS("420", "Invalid maxSessions field."),
+	HV_WRONG_MAX_SESSIONS("420", "Invalid maxSessions value."),
 	/** The HV_WRONG_MAX_CONNECTIONS. */
-	HV_WRONG_MAX_CONNECTIONS("420", "Invalid maxConnections field."),
+	HV_WRONG_MAX_CONNECTIONS("420", "Invalid maxConnections value."),
 	/** The HV_WRONG_OPERATION_TIMEOUT. */
-	HV_WRONG_OPERATION_TIMEOUT("420", "Invalid operation timeout field."),
+	HV_WRONG_OPERATION_TIMEOUT("420", "Invalid operation timeout value."),
+	/** The HV_WRONG_ECHO_TIMEOUT. */
+	HV_WRONG_ECHO_TIMEOUT("420", "Invalid echoTimeout value."),
 	/** The HV_WRONG_ECHO_INTERVAL. */
-	HV_WRONG_ECHO_INTERVAL("420", "Invalid echoInterval field."),
+	HV_WRONG_ECHO_INTERVAL("420", "Invalid echoInterval value."),
 	/** The HV_WRONG_PORTNR. */
 	HV_WRONG_PORTNR("420", "Invalid portNr field."),
 	/** The HV_WRONG_KEEPALIVE_INTERVAL. */
-	HV_WRONG_KEEPALIVE_INTERVAL("420", "Invalid keepalive interval field."),
+	HV_WRONG_KEEPALIVE_INTERVAL("420", "Invalid keepalive interval value."),
 	/** The HV_WRONG_NODATA_INTERVAL. */
-	HV_WRONG_NODATA_INTERVAL("420", "Invalid not data interval field."),
+	HV_WRONG_NODATA_INTERVAL("420", "Invalid not data interval value."),
 	/** The HV_WRONG_MASK. */
 	HV_WRONG_MASK("420", "Invalid mask."),
 	/** The HV_WRONG_SESSION_INFO. */
-	HV_WRONG_SESSION_INFO("420", "Invalid session info field."),
+	HV_WRONG_SESSION_INFO("420", "Invalid session info value."),
 	/** The HV_WRONG_SERVICE_NAME. */
-	HV_WRONG_SERVICE_NAME("420", "Invalid service name field."),
+	HV_WRONG_SERVICE_NAME("420", "Invalid service name value."),
 	/** The HV_WRONG_MESSAGE_INFO. */
-	HV_WRONG_MESSAGE_INFO("420", "Invalid message info field."),
+	HV_WRONG_MESSAGE_INFO("420", "Invalid message info value."),
 	/** The HV_WRONG_MESSAGE_SEQUENCE_NR. */
-	HV_WRONG_MESSAGE_SEQUENCE_NR("420", "Invalid message sequence number field."),
+	HV_WRONG_MESSAGE_SEQUENCE_NR("420", "Invalid message sequence number value."),
 	/** The HV_WRONG_REMOTE_FILE_NAME. */
-	HV_WRONG_REMOTE_FILE_NAME("420", "Invalid remote file name field."),
+	HV_WRONG_REMOTE_FILE_NAME("420", "Invalid remote file name value."),
 	/** The HV_WRONG_MESSAGE_ID. */
-	HV_WRONG_SESSION_ID("420", "Invalid session id field."),
+	HV_WRONG_SESSION_ID("420", "Invalid session id value."),
 	/** The HV_WRONG_SC_ERROR_CODE. */
-	HV_WRONG_SC_ERROR_CODE("420", "Invalid sc error code field."),
+	HV_WRONG_SC_ERROR_CODE("420", "Invalid sc error code value."),
 	/** The HV_WRONG_SC_ERROR_TEXT. */
-	HV_WRONG_SC_ERROR_TEXT("420", "Invalid sc error text field."),
+	HV_WRONG_SC_ERROR_TEXT("420", "Invalid sc error text value."),
 	/** The HV_WRONG_APP_ERROR_CODE. */
-	HV_WRONG_APP_ERROR_CODE("420", "Invalid application error code field."),
+	HV_WRONG_APP_ERROR_CODE("420", "Invalid application error code value."),
 	/** The HV_WRONG_APP_ERROR_TEXT. */
-	HV_WRONG_APP_ERROR_TEXT("420", "Invalid application error text field."),
+	HV_WRONG_APP_ERROR_TEXT("420", "Invalid application error text value."),
 	/** The V_WRONG_CONFIGURATION_FILE_FORMAT. */
 	V_WRONG_CONFIGURATION_FILE("420", "Invalid configuration file."),
 

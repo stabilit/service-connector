@@ -149,7 +149,7 @@ public class CreateSessionTest {
 	 * Expectation: throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class )
-	public void t04_createSession() throws Exception {	
+	public void t04_createSessionTwice() throws Exception {	
 		SCMessage request = null;
 		@SuppressWarnings("unused")
 		SCMessage response = null;
@@ -166,7 +166,7 @@ public class CreateSessionTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t05_createSession() throws Exception {	
+	public void t05_createTwoSessions() throws Exception {	
 		SCMessage request = null;
 		@SuppressWarnings("unused")
 		SCMessage response = null;
@@ -259,7 +259,7 @@ public class CreateSessionTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t11_createSession() throws Exception {	
+	public void t11_createSession60kB() throws Exception {	
 		SCMessage request = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		@SuppressWarnings("unused")
 		SCMessage response = null;
@@ -273,7 +273,7 @@ public class CreateSessionTest {
 	 * Expectation: throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class )
-	public void t12_createSession() throws Exception {	
+	public void t12_createSession1MB() throws Exception {	
 		SCMessage request = new SCMessage(new byte[TestConstants.dataLength1MB]);
 		@SuppressWarnings("unused")
 		SCMessage response = null;
@@ -297,5 +297,34 @@ public class CreateSessionTest {
 		service.deleteSession();
 	}
 
+	/**
+	 * Description: Create session with echo interval = 1<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t14_echoInterval() throws Exception {	
+		SCMessage request = new SCMessage(new byte[128]);
+		@SuppressWarnings("unused")
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		service.setEchoIntervalInSeconds(1);
+		response = service.createSession(request);
+		service.deleteSession();
+	}
+
+	/**
+	 * Description: Create session with echo interval = 0<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class )
+	public void t15_echoInterval() throws Exception {	
+		SCMessage request = new SCMessage(new byte[128]);
+		@SuppressWarnings("unused")
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		service.setEchoIntervalInSeconds(0);
+		response = service.createSession(request);
+		service.deleteSession();
+	}
 	
 }

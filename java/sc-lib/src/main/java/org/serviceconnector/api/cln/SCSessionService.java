@@ -365,7 +365,8 @@ public class SCSessionService extends SCService {
 	 * @param echoTimeoutInSeconds
 	 *            the new echo timeout in seconds
 	 */
-	public void setEchoTimeoutInSeconds(int echoTimeoutInSeconds) {
+	public void setEchoTimeoutInSeconds(int echoTimeoutInSeconds) throws SCMPValidatorException {
+		ValidatorUtility.validateInt(1, echoTimeoutInSeconds, 3600, SCMPError.HV_WRONG_ECHO_TIMEOUT);
 		this.echoTimeoutInSeconds = echoTimeoutInSeconds;
 	}
 

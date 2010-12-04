@@ -17,6 +17,8 @@ package org.serviceconnector.test.system.perf;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -57,7 +59,7 @@ public class SessionBenchmark {
 		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 10000, 10,
+				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 50000, 10,
 				TestConstants.sesServiceName1);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
@@ -99,7 +101,7 @@ public class SessionBenchmark {
 	 * Expectation: Performance better than 200 sessions/sec.
 	 */
 	@Test
-	public void benchmark_sessions() throws Exception {
+	public void benchmark_10000_sessions_seriell() throws Exception {
 		SCMessage request = null;
 		@SuppressWarnings("unused")
 		SCMessage response = null;
@@ -121,41 +123,54 @@ public class SessionBenchmark {
 
 	
 	@Test
-	public void benchmark_1000_sessions() throws Exception {
+	public void benchmark_10000_sessions_paralell() throws Exception {
 		SCMessage request = null;
 		@SuppressWarnings("unused")
 		SCMessage response = null;
-		int nr = 1000;
+		int nr = 10000;
 		SCSessionService[] sessionServices = new SCSessionService[nr];
+		String[] sessionID = new String[nr];
 		testLogger.info("Creating Services...");
 		for (int i = 0; i < nr; i++) {
 			sessionServices[i] = client.newSessionService(TestConstants.sesServiceName1);
 		}
-		
 		long start = System.currentTimeMillis();
+		//create sessions
 		for (int i = 0; i < nr; i++) {
-			if (((i+1) % 100) == 0)
-				testLogger.info("Creating Session nr. " + (i+1) + "...");
+			if (((i+1) % 1000) == 0)
+				testLogger.info("Creating session nr. " + (i+1) + "...");
 			response = sessionServices[i].createSession(10, request);
+			sessionID[i] = sessionServices[i].getSessionId();
 		}
 		long stop = System.currentTimeMillis();
-		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr + " Sessions created and deleted performance : " + perf + " sessions/sec.");
-		assertEquals(true, perf > 100);
-		
+		long perf1 = nr * 1000 / (stop - start);
+
+		// check duplicate sessionIDs
+		Arrays.sort(sessionID);
+		boolean duplicates = false;
+		for (int i = 1; i < nr; i++) {
+			if (sessionID[i].equals(sessionID[i - 1])) {
+				duplicates = true;
+				break;
+			}
+		}
+		assertEquals("sessions not unique", false, duplicates);
+		//delete sessions
+		start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
+			if (((i+1) % 1000) == 0)
+				testLogger.info("Deleting session nr. " + (i+1) + "...");
 			sessionServices[i].deleteSession(10);
 		}
+		stop = System.currentTimeMillis();
+		long perf2 = nr * 1000 / (stop - start);
+		testLogger.info(nr + " Session creation performance : " + perf1 + " sessions/sec.");
+		testLogger.info(nr + " Session deletion performance : " + perf2 + " sessions/sec.");
+		assertEquals(true, perf1 > 100);
+		assertEquals(true, perf2 > 500);
+		
 	}
 
-	//
-//	@Test
-//	public void createSessionDeleteSession_10000Times_outputsTime() throws Exception {
-//
-//		ClientThreadController clientCtrl = new ClientThreadController(false, true, 1, 10000, 0, 0);
-//		long result = clientCtrl.perform();
-//		assertEquals(true, result < 25000);
-//	}
 //
 //	@Test
 //	public void createSessionExecuteDeleteSession_10000ExecuteMessagesDividedInto10ParallelClients_outputsTime() throws Exception {
@@ -169,40 +184,4 @@ public class SessionBenchmark {
 //		assertEquals(true, result < 25000);
 //	}
 //
-//	@Test
-//	public void createSessionExecuteDeleteSession_10000ExecuteMessagesSentByOneClient_outputsTime() throws Exception {
-//		int threadCount = Thread.activeCount();
-//
-//		ClientThreadController clientCtrl = new ClientThreadController(false, false, 1, 100, 100, 128);
-//		long result = clientCtrl.perform();
-//
-//		testLogger.info("Threads before initializing clients:\t" + threadCount);
-//		testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
-//		assertEquals(true, result < 25000);
-//	}
-//
-//	@Test
-//	public void createSessionExecuteDeleteSession_roughly100000ExecuteMessagesByParallelClients_outputsBestTimeAndNumberOfClients()
-//			throws Exception {
-//		long previousResult = Long.MAX_VALUE;
-//		long result = Long.MAX_VALUE - 1;
-//		int clientsCount = 0;
-//
-//		while (result < previousResult) {
-//			previousResult = result;
-//			clientsCount++;
-//
-//			ClientThreadController clientCtrl = new ClientThreadController(false, true, clientsCount,
-//					100000 / (1000 * clientsCount), 1000, 128);
-//
-//			result = clientCtrl.perform();
-//
-//			scProcess = ctrl.restartSC(scProcess);
-//			srvProcess = ctrl.restartServer(srvProcess);
-//		}
-//
-//		testLogger.info("Best performance to execute roughly 100000 messages was " + previousResult + "ms using " + --clientsCount
-//				+ " parallel clients");
-//		assertEquals(true, previousResult < 25000);
-//	}
 }

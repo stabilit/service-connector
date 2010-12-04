@@ -149,7 +149,7 @@ public class TestSessionServer extends TestStatefulServer {
 
 		@Override
 		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
-			// watch out for method to call
+			// watch out for method to call passed in messageInfo
 			SCMessage response = request;
 			String methodName = request.getMessageInfo();
 			if (methodName != null) {
@@ -169,127 +169,96 @@ public class TestSessionServer extends TestStatefulServer {
 			return new SCMessage();
 		}
 
+		// methods invoked by name (passed in messageInfo)
 		public SCMessage echo(SCMessage request, int operationTimeoutInMillis) {
 			return request;
 		}
 	}
 }
 
-// class SrvCallback extends SCSessionServerCallback {
-// private SessionServerContext outerContext;
-// public SrvCallback(SessionServerContext context) {
-// this.outerContext = context;
-// }
+//class SrvCallback extends SCSessionServerCallback {
+//	private SessionServerContext outerContext;
 //
-// @Override
-// public SCMessage createSession(SCMessage message, int operationTimeoutInMillis) {
-// logger.info("SessionServer.SrvCallback.createSession()\n" + message.getData());
-// if (message.getData() != null && message.getData() instanceof String) {
-// String dataString = (String) message.getData();
-// if (dataString.equals("reject")) {
-// SCMessageFault response = new SCMessageFault();
-// response.setCompressed(message.isCompressed());
-// response.setData(message.getData());
-// response.setMessageInfo(message.getMessageInfo());
-// try {
-// response.setAppErrorCode(0);
-// response.setAppErrorText("\"This is the app error text\"");
-// } catch (SCMPValidatorException e) {
-// logger.error("rejecting create session", e);
-// }
-// logger.info("rejecting session");
-// return response;
-// }
-// }
-// return message;
-// }
+//	public SrvCallback(SessionServerContext context) {
+//		this.outerContext = context;
+//	}
 //
-// @Override
-// public void deleteSession(SCMessage message, int operationTimeoutInMillis) {
-// logger.trace("SessionServer.SrvCallback.deleteSession()");
-// }
+//	@Override
+//	public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
+//		ctr.increment();
 //
-// @Override
-// public void abortSession(SCMessage message, int operationTimeoutInMillis) {
-// logger.trace("SessionServer.SrvCallback.abortSession()");
-// }
+//		Object data = request.getData();
 //
-// @Override
-// public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
-// ctr.increment();
+//		if (data != null) {
+//			// watch out for kill server message
+//			if (data.getClass() == String.class) {
+//				String dataString = (String) data;
+//				if (dataString.equals("kill server")) {
+//					try {
+//						KillThread kill = new KillThread(this.outerContext.getServer());
+//						kill.start();
+//					} catch (Exception e) {
+//						logger.error("execute", e);
+//					}
+//				} else if (dataString.equals("executed")) {
+//					ctr.decrement();
+//					return new SCMessage(String.valueOf(ctr.value()));
+//				} else if (dataString.startsWith("timeout")) {
+//					int millis = Integer.parseInt(dataString.split(" ")[1]);
+//					try {
+//						logger.info("Sleeping " + dataString.split(" ")[1] + "ms in order to timeout.");
+//						Thread.sleep(millis);
+//					} catch (InterruptedException e) {
+//						logger.error("sleep in execute", e);
+//					}
+//				} else if (dataString.startsWith("register")) {
+//					String serviceName = dataString.split(" ")[1];
+//					boolean alreadyPresentService = false;
+//					for (int i = 0; i < serviceNames.length; i++) {
+//						if (serviceName.equals(serviceNames[i])) {
+//							alreadyPresentService = true;
+//							break;
+//						}
+//					}
+//					if (!alreadyPresentService) {
+//						if (!scSrv.isRegistered(serviceName)) {
+//							try {
+//								scSrv.registerServer(TestConstants.HOST, port, serviceName, 1000, maxConnections, new SrvCallback(
+//										new SessionServerContext()));
+//								String[] services = new String[serviceNames.length + 1];
+//								System.arraycopy(serviceNames, 0, services, 0, serviceNames.length);
+//								services[serviceNames.length] = serviceName;
+//								serviceNames = services;
+//							} catch (Exception e) {
+//								logger.error("register server " + serviceName, e);
+//							}
+//						}
+//					}
+//				} else if (dataString.startsWith("deregister")) {
+//					String serviceName = dataString.split(" ")[1];
 //
-// Object data = request.getData();
-//
-// if (data != null) {
-// // watch out for kill server message
-// if (data.getClass() == String.class) {
-// String dataString = (String) data;
-// if (dataString.equals("kill server")) {
-// try {
-// KillThread kill = new KillThread(this.outerContext.getServer());
-// kill.start();
-// } catch (Exception e) {
-// logger.error("execute", e);
-// }
-// } else if (dataString.equals("executed")) {
-// ctr.decrement();
-// return new SCMessage(String.valueOf(ctr.value()));
-// } else if (dataString.startsWith("timeout")) {
-// int millis = Integer.parseInt(dataString.split(" ")[1]);
-// try {
-// logger.info("Sleeping " + dataString.split(" ")[1] + "ms in order to timeout.");
-// Thread.sleep(millis);
-// } catch (InterruptedException e) {
-// logger.error("sleep in execute", e);
-// }
-// } else if (dataString.startsWith("register")) {
-// String serviceName = dataString.split(" ")[1];
-// boolean alreadyPresentService = false;
-// for (int i = 0; i < serviceNames.length; i++) {
-// if (serviceName.equals(serviceNames[i])) {
-// alreadyPresentService = true;
-// break;
-// }
-// }
-// if (!alreadyPresentService) {
-// if (!scSrv.isRegistered(serviceName)) {
-// try {
-// scSrv.registerServer(TestConstants.HOST, port, serviceName, 1000, maxConnections,
-// new SrvCallback(new SessionServerContext()));
-// String[] services = new String[serviceNames.length + 1];
-// System.arraycopy(serviceNames, 0, services, 0, serviceNames.length);
-// services[serviceNames.length] = serviceName;
-// serviceNames = services;
-// } catch (Exception e) {
-// logger.error("register server " + serviceName, e);
-// }
-// }
-// }
-// } else if (dataString.startsWith("deregister")) {
-// String serviceName = dataString.split(" ")[1];
-//
-// if (scSrv.isRegistered(serviceName)) {
-// try {
-// scSrv.deregisterServer(serviceName);
-// String[] services = new String[serviceNames.length - 1];
-// boolean alreadyDeleted = false;
-// for (int i = 0; i < serviceNames.length; i++) {
-// if (serviceName.equals(serviceNames[i])) {
-// alreadyDeleted = true;
-// } else if (alreadyDeleted) {
-// services[i - 1] = serviceNames[i];
-// } else {
-// services[i] = serviceNames[i];
-// }
-// }
-// serviceNames = services;
-// } catch (Exception e) {
-// logger.error("deregister server " + serviceName, e);
-// }
-// }
-// }
-// }
-// }
-// return request;
-// }
-// }
+//					if (scSrv.isRegistered(serviceName)) {
+//						try {
+//							scSrv.deregisterServer(serviceName);
+//							String[] services = new String[serviceNames.length - 1];
+//							boolean alreadyDeleted = false;
+//							for (int i = 0; i < serviceNames.length; i++) {
+//								if (serviceName.equals(serviceNames[i])) {
+//									alreadyDeleted = true;
+//								} else if (alreadyDeleted) {
+//									services[i - 1] = serviceNames[i];
+//								} else {
+//									services[i] = serviceNames[i];
+//								}
+//							}
+//							serviceNames = services;
+//						} catch (Exception e) {
+//							logger.error("deregister server " + serviceName, e);
+//						}
+//					}
+//				}
+//			}
+//		}
+//		return request;
+//	}
+//}
