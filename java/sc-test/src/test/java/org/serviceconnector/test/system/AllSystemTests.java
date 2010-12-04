@@ -29,7 +29,7 @@ import org.serviceconnector.test.system.session.ExecuteClientTest;
 import org.serviceconnector.test.system.session.PrematureDestroyOfSCProcessClientTest;
 import org.serviceconnector.test.system.session.PrematureDestroyOfServerProcessClientTest;
 import org.serviceconnector.test.system.session.RejectSessionClientTest;
-import org.serviceconnector.test.system.session.SessionServerTest;
+import org.serviceconnector.test.system.session.SessionServerTestFillipe;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
@@ -41,7 +41,7 @@ import org.serviceconnector.test.system.session.SessionServerTest;
 		PrematureDestroyOfSCProcessClientTest.class, 
 		PrematureDestroyOfServerProcessClientTest.class,
 		RejectSessionClientTest.class,
-		SessionServerTest.class,
+		SessionServerTestFillipe.class,
 
 		// publish tests
 		SubscribeClientTest.class, 

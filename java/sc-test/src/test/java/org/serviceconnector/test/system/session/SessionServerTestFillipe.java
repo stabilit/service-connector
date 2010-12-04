@@ -33,9 +33,9 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 
-public class SessionServerTest {
+public class SessionServerTestFillipe {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SessionServerTest.class);
+	protected final static Logger logger = Logger.getLogger(SessionServerTestFillipe.class);
 
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;
