@@ -25,7 +25,7 @@ import org.serviceconnector.test.system.publish.SubscriptionServerTest;
 import org.serviceconnector.test.system.session.AsynchronousExecuteClientTest;
 import org.serviceconnector.test.system.session.CreateSessionHttpClientTest;
 import org.serviceconnector.test.system.session.CreateSessionTest;
-import org.serviceconnector.test.system.session.ExecuteClientTest;
+import org.serviceconnector.test.system.session.ExecuteTest;
 import org.serviceconnector.test.system.session.PrematureDestroyOfSCProcessClientTest;
 import org.serviceconnector.test.system.session.PrematureDestroyOfServerProcessClientTest;
 import org.serviceconnector.test.system.session.RejectSessionClientTest;
@@ -36,7 +36,7 @@ import org.serviceconnector.test.system.session.SessionServerTestFillipe;
 		// session tests
 		CreateSessionHttpClientTest.class, 
 		CreateSessionTest.class,
-		ExecuteClientTest.class, 
+		ExecuteTest.class, 
 		AsynchronousExecuteClientTest.class,
 		PrematureDestroyOfSCProcessClientTest.class, 
 		PrematureDestroyOfServerProcessClientTest.class,

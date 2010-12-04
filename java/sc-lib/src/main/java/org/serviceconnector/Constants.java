@@ -66,7 +66,7 @@ public final class Constants {
 	public static final int DEFAULT_KEEP_ALIVE_TIMEOUT = 2000;
 
 	/** The default keep alive interval, 0 = not active. */
-	public static final int DEFAULT_KEEP_ALIVE_INTERVAL = 0;
+	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 0;
 
 	/** The default number of subsequent keep alive before the connection is closed. */
 	public static final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
@@ -76,8 +76,13 @@ public final class Constants {
 
 	/** The default maximal file sessions */
 	public static final int DEFAULT_MAX_FILE_SESSIONS = 10;
+
+	/** The message compression */
+	public static final boolean DEFAULT_COMPRESSION_FLAG = true;
+
 	/** The default upload script name */
 	public static final String DEFAULT_SCUPLOADFILE_SCRIPT_NAME = "scupload.php";
+
 	/** The default list files script name */
 	public static final String DEFAULT_SCLISTFILES_SCRIPT_NAME = "sclist.php";
 	/*

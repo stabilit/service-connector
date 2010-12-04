@@ -43,7 +43,7 @@ public class DemoSessionClient extends Thread {
 		SCSessionService service = null;
 		try {
 			sc.setMaxConnections(20); // can be set before attach
-			sc.setKeepAliveIntervalInSeconds(0); // can be set before attach
+			sc.setKeepAliveIntervalSeconds(0); // can be set before attach
 			sc.attach(); // regular
 			sc2.attach();
 			// sc.attach(10); // alternative with operation timeout

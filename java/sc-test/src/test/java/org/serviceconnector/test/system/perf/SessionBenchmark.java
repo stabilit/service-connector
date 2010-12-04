@@ -74,16 +74,16 @@ public class SessionBenchmark {
 			client.detach();
 		} catch (Exception e) {
 		}
+		client = null;
 		try {
 			ctrl.stopServer(srvCtx);
 		} catch (Exception e) {
 		}
+		srvCtx = null;
 		try {
 			ctrl.stopSC(scCtx);
 		} catch (Exception e) {
 		}
-		client = null;
-		srvCtx = null;
 		scCtx = null;
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
@@ -101,6 +101,7 @@ public class SessionBenchmark {
 	@Test
 	public void benchmark_sessions() throws Exception {
 		SCMessage request = null;
+		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		

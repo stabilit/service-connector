@@ -166,8 +166,8 @@ public class SCClientTest {
 	@Test
 	public void t20_keepAliveInterval() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
-		client.setKeepAliveIntervalInSeconds(0); // can be set before attach
-		assertEquals("MaxConnections not equal", 0, client.getKeepAliveIntervalInSeconds());
+		client.setKeepAliveIntervalSeconds(0); // can be set before attach
+		assertEquals("MaxConnections not equal", 0, client.getKeepAliveIntervalSeconds());
 	}
 	
 	/**
@@ -177,8 +177,8 @@ public class SCClientTest {
 	@Test
 	public void t21_keepAliveInterval() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
-		client.setKeepAliveIntervalInSeconds(Integer.MAX_VALUE); // can be set before attach
-		assertEquals("MaxConnections not equal", Integer.MAX_VALUE, client.getKeepAliveIntervalInSeconds());
+		client.setKeepAliveIntervalSeconds(Integer.MAX_VALUE); // can be set before attach
+		assertEquals("MaxConnections not equal", Integer.MAX_VALUE, client.getKeepAliveIntervalSeconds());
 	}
 
 	/**
@@ -188,8 +188,8 @@ public class SCClientTest {
 	@Test
 	public void t22_keepAliveInterval() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
-		client.setKeepAliveIntervalInSeconds(Integer.MIN_VALUE); // can be set before attach
-		assertEquals("MaxConnections not equal", Integer.MIN_VALUE, client.getKeepAliveIntervalInSeconds());
+		client.setKeepAliveIntervalSeconds(Integer.MIN_VALUE); // can be set before attach
+		assertEquals("MaxConnections not equal", Integer.MIN_VALUE, client.getKeepAliveIntervalSeconds());
 	}
 }
 	

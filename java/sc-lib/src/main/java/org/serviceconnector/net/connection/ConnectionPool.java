@@ -109,7 +109,7 @@ public class ConnectionPool {
 	 *            the connection type
 	 */
 	public ConnectionPool(String host, int port, String conType) {
-		this(host, port, conType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
+		this(host, port, conType, Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS);
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class ConnectionPool {
 	 *            the port
 	 */
 	public ConnectionPool(String host, int port) {
-		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE.getValue(), Constants.DEFAULT_KEEP_ALIVE_INTERVAL);
+		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE.getValue(), Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS);
 	}
 
 	/**

@@ -88,7 +88,7 @@ public class AttachTest {
 		SCClient client = new SCClient(host, port, connectionType);
 		assertEquals("Host ", host, client.getHost());
 		assertEquals("port ", port, client.getPort());
-		assertEquals("Keep Alive Interval ", Constants.DEFAULT_KEEP_ALIVE_INTERVAL, client.getKeepAliveIntervalInSeconds());
+		assertEquals("Keep Alive Interval ", Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS, client.getKeepAliveIntervalSeconds());
 		assertEquals("Attached ", false, client.isAttached());
 		assertEquals("max Connections ", Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE, client.getMaxConnections());
 		assertEquals("Connection Type ", connectionType, client.getConnectionType());
@@ -233,7 +233,7 @@ public class AttachTest {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		assertEquals("Client is attached", true, client.isAttached());
-		client.setKeepAliveIntervalInSeconds(10);	// too late => throws SCServiceException			
+		client.setKeepAliveIntervalSeconds(10);	// too late => throws SCServiceException			
 	}
 	
 	/**

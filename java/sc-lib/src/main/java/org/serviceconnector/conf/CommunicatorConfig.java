@@ -42,7 +42,7 @@ public class CommunicatorConfig {
 	/** The max pool size. */
 	private int maxPoolSize;
 	/** The keep alive interval. */
-	private int keepAliveInterval;
+	private int keepAliveIntervalSeconds;
 	/** The username. */
 	private String username;
 	/** The password. */
@@ -57,7 +57,7 @@ public class CommunicatorConfig {
 		this.interfaces = interfaces;
 		this.connectionType = connectionType;
 		this.maxPoolSize = maxPoolSize;
-		this.keepAliveInterval = keepAliveInterval;
+		this.keepAliveIntervalSeconds = keepAliveInterval;
 		this.remoteHostConfiguration = null;
 	}
 
@@ -73,7 +73,7 @@ public class CommunicatorConfig {
 		this.interfaces = null;
 		this.connectionType = null;
 		this.maxPoolSize = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
-		this.keepAliveInterval = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
+		this.keepAliveIntervalSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
 		this.remoteHostConfiguration = null;
 	}
 
@@ -234,17 +234,17 @@ public class CommunicatorConfig {
 	 * 
 	 * @return the keep alive interval
 	 */
-	public int getKeepAliveInterval() {
-		return keepAliveInterval;
+	public int getKeepAliveIntervalSeconds() {
+		return keepAliveIntervalSeconds;
 	}
 
 	/**
 	 * Sets the keep alive interval.
 	 * 
-	 * @param keepAliveInterval
+	 * @param keepAliveIntervalSeconds
 	 *            the new keep alive interval
 	 */
-	public void setKeepAliveInterval(int keepAliveInterval) {
-		this.keepAliveInterval = keepAliveInterval;
+	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) {
+		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
 	}
 }

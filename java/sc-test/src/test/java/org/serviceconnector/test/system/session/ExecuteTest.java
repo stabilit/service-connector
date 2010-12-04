@@ -25,63 +25,103 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.log.Loggers;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
-public class ExecuteClientTest {
+public class ExecuteTest {
+
+	/** The Constant testLogger. */
+	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ExecuteClientTest.class);
-
-	private static ProcessCtx scCtx;
-	private static ProcessCtx srvCtx;
-
-	private SCMgmtClient client;
-	private Exception ex;
+	protected final static Logger logger = Logger.getLogger(ExecuteTest.class);
 
 	private static ProcessesController ctrl;
+	private ProcessCtx scCtx;
+	private ProcessCtx srvCtx;
+	private SCClient client;
+	private SCSessionService service;
+	private int threadCount = 0;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
-				TestConstants.pubServiceName1 );
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP);
+		threadCount = Thread.activeCount();
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.sesServiceName1);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.sesServiceName1));
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.sesServiceName1));
-		client.detach();
+		try {
+			service.deleteSession();
+		} catch (Exception e1) {
+		}
+		service = null;
+		try {
+			client.detach();
+		} catch (Exception e) {
+		}
 		client = null;
-		ex = null;
+		try {
+			ctrl.stopServer(srvCtx);
+		} catch (Exception e) {
+		}
+		srvCtx = null;
+		try {
+			ctrl.stopSC(scCtx);
+		} catch (Exception e) {
+		}
+		scCtx = null;
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass
 	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopServer(srvCtx);
-		} catch (Exception e) {	}
-		try {
-			ctrl.stopSC(scCtx);
-		} catch (Exception e) {	}
-		srvCtx = null;
-		scCtx = null;
 		ctrl = null;
 	}
 
+	/**
+	 * Description: execute on session with service which has been disabled<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t01_disabledService() throws Exception {
+		SCMessage request = new SCMessage(new byte[128]);
+		request.setCompressed(false);
+		@SuppressWarnings("unused")
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+
+		// disable service
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		clientMgmt.attach();
+		clientMgmt.disableService(TestConstants.sesServiceName1);
+		clientMgmt.detach();
+		
+		// execute
+		response = service.execute(request);
+		service.deleteSession();
+	}
+
+	
+	
 	@Test(expected = SCServiceException.class)
 	public void execute_beforeCreateSession_throwsException() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);

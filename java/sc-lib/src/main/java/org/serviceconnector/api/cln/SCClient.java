@@ -51,7 +51,7 @@ public class SCClient {
 	/** The max connections to use in pool. */
 	private int maxConnections;
 	/** The keep alive interval. */
-	private int keepAliveIntervalInSeconds;
+	private int keepAliveIntervalSeconds;
 	/** The connection type. {netty.http} */
 	private ConnectionType connectionType;
 	/** The requester. */
@@ -73,7 +73,7 @@ public class SCClient {
 		this.host = host;
 		this.port = port;
 		this.connectionType = connectionType;
-		this.keepAliveIntervalInSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
+		this.keepAliveIntervalSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
 		this.attached = false;
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 	}
@@ -110,7 +110,7 @@ public class SCClient {
 		AppContext.init();
 		synchronized (AppContext.communicatorsLock) {
 			this.requester = new SCRequester(new RequesterContext(this.host, this.port, this.connectionType.getValue(),
-					keepAliveIntervalInSeconds, this.maxConnections));
+					keepAliveIntervalSeconds, this.maxConnections));
 			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 			SCServiceCallback callback = new SCServiceCallback(true);
 			try {
@@ -218,26 +218,26 @@ public class SCClient {
 	 * 
 	 * @return the keep alive interval in seconds
 	 */
-	public int getKeepAliveIntervalInSeconds() {
-		return this.keepAliveIntervalInSeconds;
+	public int getKeepAliveIntervalSeconds() {
+		return this.keepAliveIntervalSeconds;
 	}
 
 	/**
 	 * Sets the keep alive interval in seconds.
 	 * 
-	 * @param keepAliveIntervalInSeconds
+	 * @param keepAliveIntervalSeconds
 	 *            the new keep alive interval in seconds
 	 * @throws SCMPValidatorException
 	 * @throws Exception
-	 *             SCMPValidatorException - keepAliveIntervalInSeconds not within limits 0 to 3600 <br>
+	 *             SCMPValidatorException - keepAliveIntervalSeconds not within limits 0 to 3600 <br>
 	 *             SCServiceException - if called after attach
 	 */
-	public void setKeepAliveIntervalInSeconds(int keepAliveIntervalInSeconds) throws Exception {
-		ValidatorUtility.validateInt(0, this.keepAliveIntervalInSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
+	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) throws Exception {
+		ValidatorUtility.validateInt(0, this.keepAliveIntervalSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 		if (this.attached) {
 			throw new SCServiceException("cannot set property, client is already attached");
 		}
-		this.keepAliveIntervalInSeconds = keepAliveIntervalInSeconds;
+		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
 	}
 
 	/**

@@ -71,7 +71,7 @@ public class ServerLoader {
 			}
 
 			String keepAliveIntervalValue = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL);
-			int keepAliveInterval = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
+			int keepAliveInterval = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
 			if (keepAliveIntervalValue != null) {
 				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
 			}

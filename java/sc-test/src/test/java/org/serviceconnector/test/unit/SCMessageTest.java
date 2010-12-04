@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -53,30 +54,16 @@ public class SCMessageTest {
 	}
 	
 	/**
-	 * Description:	Check empty message<br>
-	 * Expectation:	all values are empty
+	 * Description:	Check default values <br>
+	 * Expectation:	passed, all values are default
 	 */
 	@Test
-	public void t01_construtor() {
-		assertEquals(null, message.getMessageInfo());
-		assertEquals(null, message.getData());
-		assertEquals(null, message.getSessionId());
-		assertEquals(true, message.isCompressed());
-	}
-
-	/**
-	 * Description:	Create empty message with Null-DataParameter<br>
-	 * Expectation:	all values are empty
-	 */
-	@Test
-	public void t02_constructor() {
-		message = new SCMessage();
-		message.setData(null);
-		assertEquals(null, message.getMessageInfo());
-		assertEquals(null, message.getData());
-		assertEquals(null, message.getSessionId());
-		assertEquals(true, message.isCompressed());
-		assertEquals(false, message.isFault());
+	public void t01_constructor() {
+		assertEquals("messageInfo is not null",null, message.getMessageInfo());
+		assertEquals("data is not null",null, message.getData());
+		assertEquals("sessionId is not null",null, message.getSessionId());
+		assertEquals("compressed flag is not default",Constants.DEFAULT_COMPRESSION_FLAG, message.isCompressed());
+		assertEquals("message is fault",false, message.isFault());
 	}
 
 	/**
@@ -202,7 +189,7 @@ public class SCMessageTest {
 	 * Expectation:	SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void t36_setMessageInfo() throws Exception {
+	public void t36_MessageInfo() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Short.MAX_VALUE; i++) {
 			sb.append('a');
@@ -254,4 +241,168 @@ public class SCMessageTest {
 		((SCMessage) message).setSessionId(sb.toString());
 		assertEquals(sb.toString(), message.getSessionId());
 	}
+	
+	/**
+	 * Description:	Set Null-Value as SessionInfo<br>
+	 * Expectation:	SessionInfo is set to Null
+	 */
+	@Test
+	public void t50_SessionInfo() throws Exception {
+		message.setSessionInfo(null);
+		assertEquals("is not null", null, message.getSessionInfo());
+	}
+
+	/**
+	 * Description:	Set Empty-Value as SessionInfo<br>
+	 * Expectation:	SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t51_SessionInfo() throws Exception {
+		message.setSessionInfo("");
+	}
+	
+	/**
+	 * Description:	Set empty Char as SessionInfo<br>
+	 * Expectation:	SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t52_SessionInfo() throws Exception {
+		message.setSessionInfo(" ");
+		assertEquals(" ", message.getSessionInfo());
+	}
+
+	/**
+	 * Description:	Set sinlge Char as SessionInfo<br>
+	 * Expectation:	MessageInfo is set to a single char Char
+	 */
+	@Test
+	public void t53_SessionInfo() throws Exception {
+		message.setSessionInfo("a");
+		assertEquals("a", message.getSessionInfo());
+		assertEquals(1, message.getSessionInfo().length());
+	}
+
+	/**
+	 * Description:	Set 256 Chars as SessionInfo<br>
+	 * Expectation:	MessageInfo is set to a single 256 chars
+	 */
+	@Test
+	public void t54_SessionInfo() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 256; i++) {
+			sb.append('a');
+		}
+		message.setSessionInfo(sb.toString());
+		assertEquals(sb.toString(), message.getSessionInfo());
+		assertEquals(256, message.getSessionInfo().length());
+	}
+
+	/**
+	 * Description:	Set 257 Chars as SessionInfo<br>
+	 * Expectation:	SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t55_SessionInfo() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 257; i++) {
+			sb.append('a');
+		}
+		message.setSessionInfo(sb.toString());
+	}
+	
+	/**
+	 * Description:	Set 32767 Chars as SessionInfo<br>
+	 * Expectation:	SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t56_SessionInfo() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < Short.MAX_VALUE; i++) {
+			sb.append('a');
+		}
+		message.setSessionInfo(sb.toString());
+	}
+
+	/**
+	 * Description:	Set Null-Value as CacheId<br>
+	 * Expectation:	CacheId is set to Null
+	 */
+	@Test
+	public void t60_CacheId() throws Exception {
+		message.setCacheId(null);
+		assertEquals("is not null", null, message.getCacheId());
+	}
+
+	/**
+	 * Description:	Set Empty-Value as CacheId<br>
+	 * Expectation:	SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t61_CacheId() throws Exception {
+		message.setCacheId("");
+	}
+	
+	/**
+	 * Description:	Set empty Char as CacheId<br>
+	 * Expectation:	SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t62_CacheId() throws Exception {
+		message.setCacheId(" ");
+		assertEquals(" ", message.getCacheId());
+	}
+
+	/**
+	 * Description:	Set sinlge Char as CacheId<br>
+	 * Expectation:	MessageInfo is set to a single char Char
+	 */
+	@Test
+	public void t63_CacheId() throws Exception {
+		message.setCacheId("a");
+		assertEquals("a", message.getCacheId());
+		assertEquals(1, message.getCacheId().length());
+	}
+
+	/**
+	 * Description:	Set 256 Chars as CacheId<br>
+	 * Expectation:	MessageInfo is set to a single 256 chars
+	 */
+	@Test
+	public void t64_CacheId() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 256; i++) {
+			sb.append('a');
+		}
+		message.setCacheId(sb.toString());
+		assertEquals(sb.toString(), message.getCacheId());
+		assertEquals(256, message.getCacheId().length());
+	}
+
+	/**
+	 * Description:	Set 257 Chars as CacheId<br>
+	 * Expectation:	SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t65_CacheId() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 257; i++) {
+			sb.append('a');
+		}
+		message.setCacheId(sb.toString());
+	}
+	
+	/**
+	 * Description:	Set 32767 Chars as CacheId<br>
+	 * Expectation:	SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t66_CacheId() throws Exception {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < Short.MAX_VALUE; i++) {
+			sb.append('a');
+		}
+		message.setCacheId(sb.toString());
+	}
+
+	
 }

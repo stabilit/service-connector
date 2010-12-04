@@ -112,7 +112,7 @@ public class ResponderConfiguration {
 				this.readPortConnectionTypeAndCredentials(apacheCompositeConfig, responderName, remoteHostConfig);
 				try {
 					// get keep alive interval
-					remoteHostConfig.setKeepAliveInterval(apacheCompositeConfig.getInt(remoteHost
+					remoteHostConfig.setKeepAliveIntervalSeconds(apacheCompositeConfig.getInt(remoteHost
 							+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL));
 					// get max connection pool size
 					remoteHostConfig.setMaxPoolSize(apacheCompositeConfig.getInt(remoteHost

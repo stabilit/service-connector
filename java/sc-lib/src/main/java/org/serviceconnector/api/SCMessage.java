@@ -19,6 +19,7 @@ package org.serviceconnector.api;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.ValidatorUtility;
@@ -52,7 +53,7 @@ public class SCMessage {
 	public SCMessage() {
 		this.messageInfo = null;
 		// default of compression is true
-		this.compressed = true;
+		this.compressed = Constants.DEFAULT_COMPRESSION_FLAG;
 		this.data = null;
 		this.sessionId = null;
 		this.sessionInfo = null;
@@ -198,7 +199,11 @@ public class SCMessage {
 	 * @param cacheId
 	 *            the new cache id
 	 */
-	public void setCacheId(String cacheId) {
+	public void setCacheId(String cacheId) throws SCMPValidatorException {
+		if (cacheId == null) {
+			return;
+		}
+		ValidatorUtility.validateStringLength(1, cacheId.trim(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.cacheId = cacheId;
 	}
 

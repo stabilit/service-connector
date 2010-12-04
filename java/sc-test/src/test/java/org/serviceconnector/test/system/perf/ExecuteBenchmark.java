@@ -25,10 +25,11 @@ public class ExecuteBenchmark {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ExecuteBenchmark.class);
 
+	private static ProcessesController ctrl;
 	private ProcessCtx scCtx;
 	private ProcessCtx srvCtx;
 	private SCClient client;
-	private static ProcessesController ctrl;
+	private SCSessionService service;
 	private int threadCount = 0;
 
 	@BeforeClass
@@ -50,19 +51,24 @@ public class ExecuteBenchmark {
 	@After
 	public void afterOneTest() throws Exception {
 		try {
+			service.deleteSession();
+		} catch (Exception e1) {
+		}
+		service = null;
+		try {
 			client.detach();
 		} catch (Exception e) {
 		}
+		client = null;
 		try {
 			ctrl.stopServer(srvCtx);
 		} catch (Exception e) {
 		}
+		srvCtx = null;
 		try {
 			ctrl.stopSC(scCtx);
 		} catch (Exception e) {
 		}
-		client = null;
-		srvCtx = null;
 		scCtx = null;
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
@@ -79,8 +85,9 @@ public class ExecuteBenchmark {
 	@Test
 	public void benchmark_msg_compressed() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
+		@SuppressWarnings("unused")
 		SCMessage response = null;
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
+		service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setCompressed(true);
 		request.setSessionInfo("sessionInfo");
 		response = service.createSession(10, request);
@@ -88,7 +95,7 @@ public class ExecuteBenchmark {
 		long start = System.currentTimeMillis();
 		long startPart = System.currentTimeMillis();
 		long stopPart = 0;
-		request.setMessageInfo("echo-f");
+		request.setMessageInfo("echo");
 		for (int i = 0; i < nr; i++) {
 			if (((i+1) % 1000) == 0) {
 				stopPart = System.currentTimeMillis();
@@ -111,8 +118,9 @@ public class ExecuteBenchmark {
 	@Test
 	public void benchmark_msg_uncompressed() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
+		@SuppressWarnings("unused")
 		SCMessage response = null;
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
+		service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo("sessionInfo");
 		request.setCompressed(false);
 		response = service.createSession(10, request);

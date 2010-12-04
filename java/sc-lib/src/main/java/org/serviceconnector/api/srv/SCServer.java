@@ -77,7 +77,7 @@ public class SCServer {
 		this.scPort = scPort;
 		this.listenerPort = listenerPort;
 		this.connectionType = connectionType;
-		this.keepAliveIntervalSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL;
+		this.keepAliveIntervalSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
 		this.listening = false;
 	}
 

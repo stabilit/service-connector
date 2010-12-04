@@ -100,7 +100,7 @@ public class RequesterConfiguration {
 				commConfig.setMaxPoolSize(apacheCompositeConfig.getInt(requesterName
 						+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE));
 				// get keep alive interval
-				commConfig.setKeepAliveInterval(apacheCompositeConfig.getInt(requesterName
+				commConfig.setKeepAliveIntervalSeconds(apacheCompositeConfig.getInt(requesterName
 						+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL));
 			} catch (Exception e) {
 				logger.error(e.toString());
