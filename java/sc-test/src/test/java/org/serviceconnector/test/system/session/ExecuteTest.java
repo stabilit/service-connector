@@ -161,8 +161,7 @@ public class ExecuteTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t04_regularLargeCompressed() throws Exception {
-		if (true) return; // TODO JOT this test does not work
+	public void t04_regularLargeCompressed() throws Exception { // TODO JOT this test does not work
 		SCMessage request = new SCMessage(new byte[TestConstants.dataLength1MB]);
 		request.setCompressed(true);
 		SCMessage response = null;
@@ -213,7 +212,6 @@ public class ExecuteTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.execute(request);
-		service.deleteSession();
 	}
 
 	/**

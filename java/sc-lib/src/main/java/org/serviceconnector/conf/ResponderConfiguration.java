@@ -78,7 +78,7 @@ public class ResponderConfiguration {
 						Enumeration<InetAddress> inetAdresses = netint.getInetAddresses();
 						for (InetAddress inetAddress : Collections.list(inetAdresses)) {
 							interfaces.add(inetAddress.getHostAddress());
-							logger.info("Responder " + responderName + "listens on " + inetAddress.getHostAddress());
+							logger.info("Responder " + responderName + " listens on " + inetAddress.getHostAddress());
 						}
 					}
 				} catch (Exception e) {

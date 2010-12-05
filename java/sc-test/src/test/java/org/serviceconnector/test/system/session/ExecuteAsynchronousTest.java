@@ -17,6 +17,8 @@ package org.serviceconnector.test.system.session;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.concurrent.TimeoutException;
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -27,969 +29,276 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
-import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.log.Loggers;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
 public class ExecuteAsynchronousTest {
 
+	/** The Constant testLogger. */
+	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ExecuteAsynchronousTest.class);
 
-	private static ProcessCtx scCtx;
-	private static ProcessCtx srvCtx;
-	private static boolean messageReceived;
-
-	private SCMgmtClient client;
-	private Exception ex;
-
+	private static boolean messageReceived = false;
 	private static ProcessesController ctrl;
+	private ProcessCtx scCtx;
+	private ProcessCtx srvCtx;
+	private SCClient client;
+	private SCSessionService service;
+	private int threadCount = 0;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
-				TestConstants.pubServiceName1 );
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP);
+		threadCount = Thread.activeCount();
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.sesServiceName1);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.sesServiceName1));
+		messageReceived = false;
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		assertEquals("available/allocated sessions", "1000/0", client.getWorkload(TestConstants.sesServiceName1));
-		client.detach();
+		try {
+			service.deleteSession();
+		} catch (Exception e1) {
+		}
+		service = null;
+		try {
+			client.detach();
+		} catch (Exception e) {
+		}
 		client = null;
-		ex = null;
-		messageReceived = false;
+		try {
+			ctrl.stopServer(srvCtx);
+		} catch (Exception e) {
+		}
+		srvCtx = null;
+		try {
+			ctrl.stopSC(scCtx);
+		} catch (Exception e) {
+		}
+		scCtx = null;
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass
 	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopServer(srvCtx);
-		} catch (Exception e) {	}
-		try {
-			ctrl.stopSC(scCtx);
-		} catch (Exception e) {	}
-		srvCtx = null;
-		scCtx = null;
 		ctrl = null;
 	}
 
 	/**
-	 * Description:  <br>
-	 * Expectation: SCServiceException
-	 */
-	@Test(expected = SCServiceException.class)
-	public void execute_beforeCreateSession_throwsException() throws Exception {
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		service.send(new SCMessage(), new MsgCallback(service));
-	}
-
-	/**
-	 * Description: Send message with empty string. <br>
-	 * Expectation: Server return the same message data.
+	 * Description: regular exchange messages<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void t100_sendMessage() throws Exception {
-		SCMessage message = new SCMessage("");
-		message.setSessionInfo("sessionInfo");
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
+	public void t01_regular() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setCompressed(false);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		request.setMessageInfo("echo");
+		messageReceived = false;
+		MsgCallback cbk = new MsgCallback(service);
+		service.send(request, cbk);
+		waitForMessage(10);
+		response = cbk.response;
+		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		assertEquals("fault is not the same",request.isFault(), response.isFault());
 		service.deleteSession();
-
-		assertEquals(null, response.getData());
-		assertEquals(message.getMessageInfo(), response.getMessageInfo());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
 	}
 
 	/**
-	 * Description: Send message with single character as data. <br>
-	 * Expectation: Server return the same message data.
+	 * Description: regular exchange messages<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void t101_sendMessage() throws Exception {
-		SCMessage message = new SCMessage("a");
-		message.setSessionInfo("sessionInfo");
+	public void t02_regularCompressed() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setCompressed(true);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		request.setMessageInfo("echo");
+		messageReceived = false;
+		MsgCallback cbk = new MsgCallback(service);
+		service.send(request, cbk);
+		waitForMessage(10);
+		response = cbk.response;
 
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
+		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		assertEquals("fault is not the same",request.isFault(), response.isFault());
 		service.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo(), response.getMessageInfo());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
 	}
 
-	/**
-	 * Description: Send message with arbitrary data. <br>
-	 * Expectation: Server return the same message data.
-	 */
-	@Test
-	public void t102_sendMessage() throws Exception {
-		SCMessage message = new SCMessage(TestConstants.pangram);
-		message.setSessionInfo("sessionInfo");
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		service.deleteSession();
-
-		assertEquals(message.getData(), response.getData());
-		assertEquals(message.getMessageInfo(), response.getMessageInfo());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	/**
-	 * Description: Send message with 1MB array data. <br>
-	 * Expectation: Server return the same message data.
-	 */
-	@Test
-	public void t103_sendMessage() throws Exception {
-		SCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
-		message.setSessionInfo("sessionInfo");
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		service.deleteSession();
-
-		assertEquals(((byte[]) message.getData()).length, ((byte[]) response.getData()).length);
-		assertEquals(message.getMessageInfo(), response.getMessageInfo());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	/**
-	 * Description: Send message with white space into message info. <br>
-	 * Expectation: Server return the same message data.
-	 */
-	@Test
-	public void t104_sendMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setSessionInfo("sessionInfo");
-		message.setMessageInfo(" ");
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		service.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	/**
-	 * Description: Send message with single character message info. <br>
-	 * Expectation: Server return the same message data.
-	 */
-	@Test
-	public void t105_snedMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setSessionInfo("sessionInfo");
-		message.setMessageInfo("a");
 	
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		service.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
-	}
-
 	/**
-	 * Description: Send message with arbitrary message info. <br>
-	 * Expectation: Server return the same message data.
+	 * Description: exchange 1MB message<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void t106_sendMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setSessionInfo("sessionInfo");
-		message.setMessageInfo(TestConstants.pangram);
+	public void t03_regularLarge() throws Exception {
+		SCMessage request = new SCMessage(new byte[TestConstants.dataLength1MB]);
+		request.setCompressed(false);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(new SCMessage());
+		request.setMessageInfo("echo");
+		messageReceived = false;
+		MsgCallback cbk = new MsgCallback(service);
+		service.send(request, cbk);
+		waitForMessage(10);
+		response = cbk.response;
 
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
+		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		assertEquals("fault is not the same",request.isFault(), response.isFault());
 		service.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
 	}
 
 	/**
-	 * Description: Send message with arbitrary message info and compress. <br>
-	 * Expectation: Server return the same message data.
+	 * Description: exchange 1MB message<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void t107_sendMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setSessionInfo("sessionInfo");
-		message.setMessageInfo(TestConstants.pangram);
-		message.setCompressed(true);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		service.createSession( 10, message);
-		
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
+	public void t04_regularLargeCompressed() throws Exception { // TODO JOT this test does not work
+		SCMessage request = new SCMessage(new byte[TestConstants.dataLength1MB]);
+		request.setCompressed(true);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(new SCMessage());
+		request.setMessageInfo("echo");
+		messageReceived = false;
+		MsgCallback cbk = new MsgCallback(service);
+		service.send(request, cbk);
+		waitForMessage(10);
+		response = cbk.response;
+		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		assertEquals("fault is not the same",request.isFault(), response.isFault());
 		service.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
 	}
 
+	/**
+	 * Description: send before create session<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t05_send() throws Exception {
+		SCMessage request = new SCMessage(new byte[128]);
+		request.setCompressed(false);
+		@SuppressWarnings("unused")
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		messageReceived = false;
+		MsgCallback cbk = new MsgCallback(service);
+		service.send(request, cbk);
+	}
 
 	/**
-	 * Description: Send message with arbitrary message info and compress is false. <br>
-	 * Expectation: Server return the same message data.
+	 * Description: send message after session rejection<br>
+	 * Expectation: throws SCserviceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t06_rejectSession() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setCompressed(false);
+		@SuppressWarnings("unused")
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		request.setSessionInfo(TestConstants.rejectSessionCmd);
+		try {
+			response = service.createSession(request);
+		} catch (Exception e) {
+			// ignore rejection
+		}
+		request.setMessageInfo("echo");
+		messageReceived = false;
+		MsgCallback cbk = new MsgCallback(service);
+		service.send(request, cbk);
+	}
+
+	/**
+	 * Description: screw up sessionId before message send<br>
+	 * Expectation: passes because sessionId is set internally again.
 	 */
 	@Test
-	public void t108_sendMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setSessionInfo("sessionInfo");
-		message.setMessageInfo(TestConstants.pangram);
-		message.setCompressed(false);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		service.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	/**
-	 * Description: Send message with empty session ID. <br>
-	 * Expectation: Server return the same message data.
-	 */	
-	@Test
-	public void t109_sendMessage() throws Exception {
-
-		SCMessage message = new SCMessage("Ahoj");
-		message.setSessionInfo("sessionInfo");
-		message.setMessageInfo(TestConstants.pangram);
-		message.setSessionId("");
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		String sessionId = service.getSessionId();
-		service.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(sessionId, response.getSessionId());
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	/**
-	 * Description: Send message with white space as session ID. <br>
-	 * Expectation: Server return the same message data.
-	 */	
-	@Test
-	public void execute_messageSessionIdWhiteSpaceString_returnsTheSameMessage() throws Exception {
-
-		SCMessage message = new SCMessage("Ahoj");
-		message.setSessionInfo("sessionInfo");
-		message.setMessageInfo(TestConstants.pangram);
-		message.setSessionId(" ");
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		String sessionId = service.getSessionId();
-		service.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(sessionId, response.getSessionId());
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	@Test
-	public void execute_messageSessionIdSingleChar_returnsTheSameMessage() throws Exception {
-
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-		message.setSessionId("a");
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		String sessionId = service.getSessionId();
-		service.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(sessionId, response.getSessionId());
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	@Test
-	public void execute_messageSessionIdArbitraryString_returnsTheSameMessage() throws Exception {
-
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-		((SCMessage) message).setSessionId(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		String sessionId = service.getSessionId();
-		service.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(sessionId, response.getSessionId());
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	@Test
-	public void execute_messageSessionIdLikeSessionIdString_returnsCorrectSessionId() throws Exception {
-
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-		((SCMessage) message).setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		String sessionId = service.getSessionId();
-		service.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(sessionId, response.getSessionId());
-		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	@Test
-	public void execute_messageSessionIdSetManually_returnsTheSameMessage() throws Exception {
-
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		((SCMessage) message).setSessionId(service.getSessionId());
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		String sessionId = service.getSessionId();
-		service.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(sessionId, response.getSessionId());
-		assertEquals(message.getSessionId(), response.getSessionId());
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	@Test
-	public void execute_messageSessionIdSetToIdOfDifferentSessionSameServiceThanExecuting_returnsCorrectSessionId()
-			throws Exception {
-
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service0 = client.newSessionService(TestConstants.sesServiceName1);
-		service0.createSession( 10, message);
-
-		SCSessionService service1 = client.newSessionService(TestConstants.sesServiceName1);
-		service1.createSession( 10, message);
-
-		((SCMessage) message).setSessionId(service1.getSessionId());
-
-		MsgCallback callback = new MsgCallback(service0);
-		service0.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		String sessionId0 = service0.getSessionId();
-		service0.deleteSession();
-		service1.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(sessionId0, response.getSessionId());
-		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	@Test
-	public void execute_messageSessionIdSetToIdOfDifferentSessionServiceThanExecuting_returnsCorrectSessionId()
-			throws Exception {
-
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service0 = client.newSessionService(TestConstants.sesServiceName1);
-		service0.createSession( 10, message);
-
-		SCSessionService service1 = client.newSessionService(TestConstants.pubServiceName1);
-		service1.createSession( 10, message);
-
-		((SCMessage) message).setSessionId(service1.getSessionId());
-
-		MsgCallback callback = new MsgCallback(service0);
-		service0.send(message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-		String sessionId0 = service0.getSessionId();
-		service0.deleteSession();
-		service1.deleteSession();
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(sessionId0, response.getSessionId());
-		assertEquals(false, message.getSessionId().equals(response.getSessionId()));
-		assertEquals(message.isFault(), response.isFault());
-	}
-
-	@Test
-	public void execute_timeout1_returnsSameMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(1, message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(service.getSessionId(), response.getSessionId());
-		assertEquals(message.isFault(), response.isFault());
-
-		service.deleteSession();
-	}
-
-	@Test
-	public void execute_timeout2_returnsSameMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(2, message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(service.getSessionId(), response.getSessionId());
-		assertEquals(message.isFault(), response.isFault());
-
-		service.deleteSession();
-	}
-
-	@Test
-	public void execute_timeout0_returnsSameMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
+	public void t07_sessionId() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setCompressed(false);
 		SCMessage response = null;
-		try {
-			MsgCallback callback = new MsgCallback(service);
-			service.send(0, message, callback);
-			// wait until message received
-		} catch (Exception e) {
-			ex = e;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		String sessionId = service.getSessionId();
+		request.setMessageInfo("echo");
+		request.setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
+		messageReceived = false;
+		MsgCallback cbk = new MsgCallback(service);
+		service.send(request, cbk);
+		waitForMessage(10);
+		response = cbk.response;
+		assertEquals("sessionId is not the same", sessionId, response.getSessionId());
+		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		assertEquals("fault is not the same",request.isFault(), response.isFault());
+		service.deleteSession();
+	}
+
+
+//	@Test
+//	public void execute_timeoutExpiresOnServer_throwsException() throws Exception {
+//		SCMessage message = new SCMessage();
+//		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
+//		message.setSessionInfo("sessionInfo");
+//		service.createSession( 10, message);
+//
+//		MsgCallback callback = new MsgCallback(service);
+//		service.send(2, new SCMessage("timeout 4000"), callback);
+//		// wait until message received
+//		while (messageReceived == false)
+//			;
+//		ex = callback.exc;
+//
+//		service.deleteSession();
+//		assertEquals(true, ex instanceof SCServiceException);
+//	}
+
+
+	
+	private void waitForMessage(int nrSeconds) throws Exception {
+		for (int i = 0; i < (nrSeconds*10); i++) {
+			if (messageReceived) {
+				return;
+			}
+			Thread.sleep(100);
 		}
-		assertEquals(true, ex instanceof SCMPValidatorException);
-		assertEquals(null, response);
-
-		service.deleteSession();
+		throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 	}
 
-	@Test
-	public void execute_timeoutMinus1_returnsSameMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		SCMessage response = null;
-		try {
-			MsgCallback callback = new MsgCallback(service);
-			service.send(-1, message, callback);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCMPValidatorException);
-		assertEquals(null, response);
-
-		service.deleteSession();
-	}
-
-	@Test
-	public void execute_timeoutIntMin_returnsSameMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		SCMessage response = null;
-		try {
-			MsgCallback callback = new MsgCallback(service);
-			service.send(Integer.MIN_VALUE, message, callback);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCMPValidatorException);
-		assertEquals(null, response);
-
-		service.deleteSession();
-	}
-
-	@Test
-	public void execute_timeoutIntMax_returnsSameMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		SCMessage response = null;
-		try {
-			MsgCallback callback = new MsgCallback(service);
-			service.send(Integer.MAX_VALUE, message, callback);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCMPValidatorException);
-		assertEquals(null, response);
-
-		service.deleteSession();
-	}
-
-	@Test
-	public void execute_timeoutAllowedMax_returnsSameMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(3600, message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
-		service.deleteSession();
-	}
-
-	@Test
-	public void execute_timeoutAllowedMaxPlus1_returnsSameMessage() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		SCMessage response = null;
-		try {
-			MsgCallback callback = new MsgCallback(service);
-			service.send(3601, message, callback);
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertEquals(true, ex instanceof SCMPValidatorException);
-		assertEquals(null, response);
-
-		service.deleteSession();
-	}
-
-	@Test
-	public void execute_timeout1_passes() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(1, message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
-		service.deleteSession();
-	}
-
-	@Test
-	public void execute_timeout2_passes() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(2, message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
-		service.deleteSession();
-	}
-
-	@Test
-	public void execute_timeoutMaxAllowed_passes() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(3600, message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo().toString(), response.getMessageInfo().toString());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
-		service.deleteSession();
-	}
-
-	@Test
-	public void execute_timeoutMaxAllowedPlus1_throwsSCMPValidatorException() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		try {
-			MsgCallback callback = new MsgCallback(service);
-			service.send(3601, message, callback);
-		} catch (Exception e) {
-			ex = e;
-		}
-
-		service.deleteSession();
-		assertEquals(true, ex instanceof SCMPValidatorException);
-	}
-
-	@Test
-	public void execute_timeoutIntMax_throwsSCMPValidatorException() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		try {
-			MsgCallback callback = new MsgCallback(service);
-			service.send(Integer.MAX_VALUE, message, callback);
-		} catch (Exception e) {
-			ex = e;
-		}
-
-		service.deleteSession();
-		assertEquals(true, ex instanceof SCMPValidatorException);
-	}
-
-	@Test
-	public void execute_timeoutIntMin_throwsSCMPValidatorException() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		try {
-			MsgCallback callback = new MsgCallback(service);
-			service.send(Integer.MIN_VALUE, message, callback);
-		} catch (Exception e) {
-			ex = e;
-		}
-
-		service.deleteSession();
-		assertEquals(true, ex instanceof SCMPValidatorException);
-	}
-
-	@Test
-	public void execute_timeout0_throwsSCMPValidatorException() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		try {
-			MsgCallback callback = new MsgCallback(service);
-			service.send(0, message, callback);
-		} catch (Exception e) {
-			ex = e;
-		}
-
-		service.deleteSession();
-		assertEquals(true, ex instanceof SCMPValidatorException);
-	}
-
-	@Test
-	public void execute_timeoutMinus1_throwsSCMPValidatorException() throws Exception {
-		SCMessage message = new SCMessage("Ahoj");
-		message.setMessageInfo(TestConstants.pangram);
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		try {
-			MsgCallback callback = new MsgCallback(service);
-			service.send(-1, message, callback);
-		} catch (Exception e) {
-			ex = e;
-		}
-
-		service.deleteSession();
-		assertEquals(true, ex instanceof SCMPValidatorException);
-	}
-
-	@Test
-	public void execute_timeoutExpiresOnServer_throwsException() throws Exception {
-		SCMessage message = new SCMessage();
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(2, new SCMessage("timeout 4000"), callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		ex = callback.exc;
-
-		service.deleteSession();
-		assertEquals(true, ex instanceof SCServiceException);
-	}
-
-	@Test
-	public void execute_timeoutCloselyExpires_throwsException() throws Exception {
-		SCMessage message = new SCMessage();
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(2, new SCMessage("timeout 2000"), callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		ex = callback.exc;
-		service.deleteSession();
-		assertEquals(true, ex instanceof SCServiceException);
-	}
-
-	@Test
-	public void execute_timeoutIsEnough_returnsSameMessage() throws Exception {
-		SCMessage message = new SCMessage("timeout 1500");
-
-		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-		message.setSessionInfo("sessionInfo");
-		service.createSession( 10, message);
-
-		MsgCallback callback = new MsgCallback(service);
-		service.send(2, message, callback);
-		// wait until message received
-		while (messageReceived == false)
-			;
-		SCMessage response = callback.response;
-
-		assertEquals(message.getData().toString(), response.getData().toString());
-		assertEquals(message.getMessageInfo(), response.getMessageInfo());
-		assertEquals(message.isCompressed(), response.isCompressed());
-		assertEquals(message.isFault(), response.isFault());
-		service.deleteSession();
-	}
-
+	
 	private class MsgCallback extends SCMessageCallback {
 		private SCMessage response = null;
-		private volatile Exception exc = null;
 
 		public MsgCallback(SCService service) {
 			super(service);
@@ -1004,7 +313,6 @@ public class ExecuteAsynchronousTest {
 		@Override
 		public void receive(Exception e) {
 			logger.error("callback", e);
-			exc = e;
 			ExecuteAsynchronousTest.messageReceived = true;
 		}
 

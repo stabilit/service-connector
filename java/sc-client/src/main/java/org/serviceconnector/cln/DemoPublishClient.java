@@ -23,6 +23,7 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.net.ConnectionType;
 
+@SuppressWarnings("unused")
 public class DemoPublishClient extends Thread {
 
 	/** The Constant logger. */

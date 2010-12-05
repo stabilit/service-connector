@@ -21,29 +21,17 @@
  */
 package org.serviceconnector.cln;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 
-/**
- * The Class SCAsyncSessionServiceExample. Demonstrates use of session service in asynchronous mode.
- */
-public class SCAsyncSessionServiceExample {
-
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCAsyncSessionServiceExample.class);
-
-	private static boolean messageReceived = false;
+public class SCSyncSessionClientExample {
 
 	public static void main(String[] args) {
-		SCAsyncSessionServiceExample example = new SCAsyncSessionServiceExample();
-		example.runExample();
+		SCSyncSessionClientExample.runExample();
 	}
 
-	public void runExample() {
+	public static void runExample() {
 		SCClient sc = null;
 		try {
 			sc = new SCClient("localhost", 7000);
@@ -62,12 +50,9 @@ public class SCAsyncSessionServiceExample {
 			SCMessage requestMsg = new SCMessage();
 			requestMsg.setData("Hello World");
 			requestMsg.setCompressed(false);
-			SCMessageCallback callback = new ExampleCallback(sessionServiceA);
-			sessionServiceA.send(requestMsg, callback);
+			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
 
-			// wait until message received
-			while (SCAsyncSessionServiceExample.messageReceived == false)
-				;
+			System.out.println(responseMsg.getData().toString());
 			// deletes the session
 			sessionServiceA.deleteSession();
 
@@ -80,28 +65,6 @@ public class SCAsyncSessionServiceExample {
 			} catch (Exception e) {
 				sc = null;
 			}
-		}
-	}
-
-	/**
-	 * The Class ExampleCallback. Callback used for asynchronously execution.
-	 */
-	private class ExampleCallback extends SCMessageCallback {
-
-		public ExampleCallback(SCService service) {
-			super(service);
-		}
-
-		@Override
-		public void receive(SCMessage msg) {
-			SCClient scClient = this.getService().getScClient();
-			System.out.println(msg);
-			SCAsyncSessionServiceExample.messageReceived = true;
-		}
-
-		@Override
-		public void receive(Exception ex) {
-			logger.error("callback", ex);
 		}
 	}
 }

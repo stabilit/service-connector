@@ -202,11 +202,16 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
-		logger.warn(th.toString());		// TODO JOT eventually more output. (TCP protocol connected to HTTP port)
 		NettyHttpResponse response = new NettyHttpResponse(e);
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception
 			return;
+		}
+		if (th instanceof java.io.IOException) {
+			logger.warn(th.toString());	// regular disconnect causes this expected exception
+		}
+		else {
+			logger.error("Response error",th);
 		}
 		if (th instanceof HasFaultResponseException) {
 			((HasFaultResponseException) e).setFaultResponse(response);

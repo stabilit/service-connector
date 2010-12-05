@@ -22,12 +22,11 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.net.ConnectionType;
 
+@SuppressWarnings("unused")
 public class DemoSessionClient extends Thread {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DemoSessionClient.class);
-
-	private static boolean pendingRequest = false;
 
 	public static void main(String[] args) {
 		DemoSessionClient demoSessionClient = new DemoSessionClient();

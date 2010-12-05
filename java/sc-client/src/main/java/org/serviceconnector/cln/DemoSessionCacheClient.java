@@ -22,6 +22,7 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.net.ConnectionType;
 
+@SuppressWarnings("unused")
 public class DemoSessionCacheClient extends Thread {
 
 	/** The Constant logger. */

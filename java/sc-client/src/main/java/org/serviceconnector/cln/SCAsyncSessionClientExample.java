@@ -21,17 +21,31 @@
  */
 package org.serviceconnector.cln;
 
+import java.util.concurrent.TimeoutException;
+
+import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 
-public class SCSyncSessionServiceExample {
+/**
+ * The Class SCAsyncSessionServiceExample. Demonstrates use of session service in asynchronous mode.
+ */
+public class SCAsyncSessionClientExample {
+
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCAsyncSessionClientExample.class);
+
+	private static boolean messageReceived = false;
 
 	public static void main(String[] args) {
-		SCSyncSessionServiceExample.runExample();
+		SCAsyncSessionClientExample example = new SCAsyncSessionClientExample();
+		example.runExample();
 	}
 
-	public static void runExample() {
+	public void runExample() {
 		SCClient sc = null;
 		try {
 			sc = new SCClient("localhost", 7000);
@@ -50,9 +64,11 @@ public class SCSyncSessionServiceExample {
 			SCMessage requestMsg = new SCMessage();
 			requestMsg.setData("Hello World");
 			requestMsg.setCompressed(false);
-			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
+			SCMessageCallback callback = new ExampleCallback(sessionServiceA);
+			sessionServiceA.send(requestMsg, callback);
 
-			System.out.println(responseMsg.getData().toString());
+			// wait until message received
+			waitForMessage(10);
 			// deletes the session
 			sessionServiceA.deleteSession();
 
@@ -65,6 +81,39 @@ public class SCSyncSessionServiceExample {
 			} catch (Exception e) {
 				sc = null;
 			}
+		}
+	}
+
+	private void waitForMessage(int nrSeconds) throws Exception {
+		for (int i = 0; i < (nrSeconds*10); i++) {
+			if (messageReceived) {
+				return;
+			}
+			Thread.sleep(100);
+		}
+		throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
+	}
+
+	/**
+	 * The Class ExampleCallback. Callback used for asynchronously execution.
+	 */
+	private class ExampleCallback extends SCMessageCallback {
+
+		public ExampleCallback(SCService service) {
+			super(service);
+		}
+
+		@Override
+		public void receive(SCMessage msg) {
+			@SuppressWarnings("unused")
+			SCClient client = this.getService().getScClient();
+			System.out.println(msg);
+			SCAsyncSessionClientExample.messageReceived = true;
+		}
+
+		@Override
+		public void receive(Exception ex) {
+			logger.error("callback", ex);
 		}
 	}
 }

@@ -22,17 +22,24 @@
 package org.serviceconnector.cln;
 
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.SCService;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.api.cln.SCPublishService;
 
-public class SCLargeMessageSessionServiceExample {
+public class SCPublishClientExample {
+
+	private int publishedMessageCounter = 0;
 
 	public static void main(String[] args) {
-		SCLargeMessageSessionServiceExample.runExample();
+		SCPublishClientExample test = new SCPublishClientExample();
+		test.runExample();
 	}
 
-	public static void runExample() {
+	public void runExample() {
 		SCClient sc = null;
+		SCPublishService publishServiceA = null;
 		try {
 			sc = new SCClient("localhost", 7000);
 			sc.setMaxConnections(100);
@@ -40,36 +47,41 @@ public class SCLargeMessageSessionServiceExample {
 			// connects to SC, checks connection to SC
 			sc.attach();
 
-			SCSessionService sessionServiceA = sc.newSessionService("session-1");
-			// creates a session
-			SCMessage scMessage = new SCMessage();
-			scMessage.setSessionInfo("sessionInfo");
-			sessionServiceA.setEchoTimeoutInSeconds(300);
-			sessionServiceA.createSession(60, scMessage);
-
-			SCMessage requestMsg = new SCMessage();
-			// set up large buffer
-			byte[] buffer = new byte[100000];
-			for (int i = 0; i < buffer.length; i++) {
-				buffer[i] = (byte) i;
-			}
-			requestMsg.setData(buffer);
-			requestMsg.setCompressed(false);
-			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
-
-			System.out.println(responseMsg.getData().toString());
-			// deletes the session
-			sessionServiceA.deleteSession();
-
+			publishServiceA = sc.newPublishService("publish-1");
+			SCMessageCallback callback = new TestPublishCallback(publishServiceA);
+			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
+			subscibeMessage.setMask("000012100012832102FADF-----------X-----------");
+			subscibeMessage.setSessionInfo("sessionInfo");
+			publishServiceA.subscribe(subscibeMessage, callback);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
 				// disconnects from SC
+				publishServiceA.unsubscribe();
 				sc.detach();
 			} catch (Exception e) {
 				sc = null;
 			}
+		}
+	}
+
+	class TestPublishCallback extends SCMessageCallback {
+
+		public TestPublishCallback(SCService service) {
+			super(service);
+		}
+
+		@Override
+		public void receive(SCMessage reply) {
+			publishedMessageCounter++;
+			System.out.println("ClnAPIPublishSubscribeTestCase.TestPublishCallback.callback() counter = "
+					+ publishedMessageCounter);
+		}
+
+		@Override
+		public void receive(Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 }
