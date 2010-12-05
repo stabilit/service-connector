@@ -37,6 +37,7 @@ import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
+@SuppressWarnings("unused")
 public class CreateSessionTest {
 
 	/** The Constant testLogger. */
@@ -105,7 +106,6 @@ public class CreateSessionTest {
 	@Test
 	public void t01_regular() throws Exception {	
 		SCMessage request = null;
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
@@ -125,9 +125,7 @@ public class CreateSessionTest {
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.sesServiceName1);
 		clientMgmt.detach();
-		
 		SCMessage request = null;
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
@@ -152,7 +150,6 @@ public class CreateSessionTest {
 	@Test (expected = SCServiceException.class )
 	public void t04_createSessionTwice() throws Exception {	
 		SCMessage request = null;
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
@@ -169,7 +166,6 @@ public class CreateSessionTest {
 	@Test
 	public void t05_createTwoSessions() throws Exception {	
 		SCMessage request = null;
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		SCSessionService service1 = client.newSessionService(TestConstants.sesServiceName1);
 		SCSessionService service2 = client.newSessionService(TestConstants.sesServiceName1);
@@ -192,7 +188,6 @@ public class CreateSessionTest {
 	@Test (expected = SCServiceException.class )
 	public void t06_createSession() throws Exception {	
 		SCMessage request = null;
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService("gaga");
 		response = service.createSession(request);
@@ -206,7 +201,6 @@ public class CreateSessionTest {
 	@Test (expected = SCServiceException.class )
 	public void t07_createSession() throws Exception {	
 		SCMessage request = null;
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName2);
 		response = service.createSession(request);
@@ -220,7 +214,6 @@ public class CreateSessionTest {
 	@Test (expected = SCMPValidatorException.class )
 	public void t08_createSession() throws Exception {	
 		SCMessage request = null;
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(0,request);
@@ -234,7 +227,6 @@ public class CreateSessionTest {
 	@Test (expected = SCMPValidatorException.class )
 	public void t09_createSession() throws Exception {	
 		SCMessage request = null;
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(-1,request);
@@ -248,7 +240,6 @@ public class CreateSessionTest {
 	@Test (expected = SCMPValidatorException.class )
 	public void t10_createSession() throws Exception {	
 		SCMessage request = null;
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(3601,request);
@@ -262,7 +253,6 @@ public class CreateSessionTest {
 	@Test
 	public void t11_createSession60kB() throws Exception {	
 		SCMessage request = new SCMessage(new byte[TestConstants.dataLength60kB]);
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
@@ -276,7 +266,6 @@ public class CreateSessionTest {
 	@Test (expected = SCServiceException.class )
 	public void t12_createSession1MB() throws Exception {	
 		SCMessage request = new SCMessage(new byte[TestConstants.dataLength1MB]);
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
@@ -290,7 +279,6 @@ public class CreateSessionTest {
 	@Test
 	public void t13_echoInterval() throws Exception {	
 		SCMessage request = new SCMessage(new byte[128]);
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		service.setEchoIntervalInSeconds(1);
@@ -305,7 +293,6 @@ public class CreateSessionTest {
 	@Test (expected = SCServiceException.class )
 	public void t14_echoInterval() throws Exception {	
 		SCMessage request = new SCMessage(new byte[128]);
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		service.setEchoIntervalInSeconds(0);
@@ -320,7 +307,6 @@ public class CreateSessionTest {
 	@Test (expected = SCServiceException.class )
 	public void t15_rejectSession() throws Exception {	
 		SCMessage request = new SCMessage();
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo(TestConstants.rejectSessionCmd);

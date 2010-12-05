@@ -34,6 +34,7 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 
+@SuppressWarnings("unused")
 public class SessionBenchmark {
 
 	/** The Constant testLogger. */
@@ -103,7 +104,6 @@ public class SessionBenchmark {
 	@Test
 	public void benchmark_10000_sessions_seriell() throws Exception {
 		SCMessage request = null;
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		
@@ -125,7 +125,6 @@ public class SessionBenchmark {
 	@Test
 	public void benchmark_10000_sessions_paralell() throws Exception {
 		SCMessage request = null;
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		int nr = 10000;
 		SCSessionService[] sessionServices = new SCSessionService[nr];

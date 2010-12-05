@@ -85,7 +85,6 @@ public class ExecuteBenchmark {
 	@Test
 	public void benchmark_msg_compressed() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setCompressed(true);
@@ -118,7 +117,6 @@ public class ExecuteBenchmark {
 	@Test
 	public void benchmark_msg_uncompressed() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo("sessionInfo");

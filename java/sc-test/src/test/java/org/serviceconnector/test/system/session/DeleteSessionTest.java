@@ -31,6 +31,7 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 
+@SuppressWarnings("unused")
 public class DeleteSessionTest {
 
 	/** The Constant testLogger. */
@@ -101,7 +102,6 @@ public class DeleteSessionTest {
 	public void t01_disabledService() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		request.setCompressed(false);
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);

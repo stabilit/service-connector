@@ -15,9 +15,6 @@
  */
 package org.serviceconnector.test.system.session;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -26,13 +23,19 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.SCMessageFault;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.service.SCServiceException;
 
+@SuppressWarnings("unused")
 public class AfterServerAbortSessionTest {
 	/** The Constant testLogger. */
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
@@ -40,6 +43,7 @@ public class AfterServerAbortSessionTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AfterServerAbortSessionTest.class);
 
+	private static boolean messageReceived = false;
 	private static ProcessesController ctrl;
 	private ProcessCtx scCtx;
 	private ProcessCtx srvCtx;
@@ -94,19 +98,100 @@ public class AfterServerAbortSessionTest {
 	}
 
 	/**
-	 * Description: Create session (regular)<br>
-	 * Expectation: passes
+	 * Description: create session after server was aborted<br>
+	 * Expectation: throws SCServiceException
 	 */
-	@Test
-	public void t01_regular() throws Exception {	
+	@Test (expected = SCServiceException.class)
+	public void t01_createSession() throws Exception {	
 		SCMessage request = null;
-		@SuppressWarnings("unused")
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		
+		ctrl.stopServer(srvCtx);
+		
+		response = service.createSession(request);
+	}
+
+	/**
+	 * Description: delete session after server was aborted<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t02_deleteSession() throws Exception {	
+		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		assertNotNull("the session ID is null", service.getSessionId());
+		
+		ctrl.stopServer(srvCtx); 
+		
 		service.deleteSession();
-		assertNull("the session ID is NOT null after deleteSession()", service.getSessionId());
+	}
+	
+	/**
+	 * Description: exchange message after server was aborted<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t03_execute() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setCompressed(false);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		
+		ctrl.stopServer(srvCtx);
+		
+		request.setMessageInfo("echo");
+		response = service.execute(request);
 	}
 
+	/**
+	 * Description: send message after server was aborted<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t04_send() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setCompressed(false);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		request.setMessageInfo("echo");
+		messageReceived = false;
+		MsgCallback cbk = new MsgCallback(service);
+		
+		ctrl.stopServer(srvCtx);
+		
+		service.send(request, cbk);
+	}
+
+
+	private class MsgCallback extends SCMessageCallback {
+		private SCMessage response = null;
+
+		public MsgCallback(SCService service) {
+			super(service);
+		}
+
+		@Override
+		public void receive(SCMessage msg) {
+			response = msg;
+			AfterServerAbortSessionTest.messageReceived = true;
+		}
+
+		@Override
+		public void receive(Exception e) {
+			logger.error("receive error: "+e.getMessage());
+			SCMessageFault fault = new SCMessageFault();
+			try {
+				fault.setAppErrorCode(1000);
+				fault.setAppErrorText(e.getMessage());
+			} catch (SCMPValidatorException e1) {
+			}
+			response = fault;
+			AfterServerAbortSessionTest.messageReceived = true;
+		}
+	}
+	
 }
