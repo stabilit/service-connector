@@ -78,7 +78,7 @@ public class SubscribeClientTest {
 	@After
 	public void afterOneTest() throws Exception {
 		try {
-			service.unsubscribe();
+			if (service.isSubscribed()) service.unsubscribe();
 		} catch (Exception e1) {
 		}
 		service = null;

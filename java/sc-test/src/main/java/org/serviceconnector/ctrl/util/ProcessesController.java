@@ -22,8 +22,10 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
@@ -208,6 +210,7 @@ public class ProcessesController {
 		proc.setServiceNames(serviceNames);
 		proc.setProcessName(serverName);
 		proc.setConnectionType(connectionType);
+		proc.setServerType(serverType);
 		/*
 		 * start server process Args: 
 		 * [0] -Dlog4j.configuration=file 
@@ -247,15 +250,28 @@ public class ProcessesController {
 				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
-				SCSessionService scSessionService = clientMgmt.newSessionService(serviceName);
 				clientMgmt.enableService(serviceName);	// service might be disabled during tests
-				SCMessage scMessage = new SCMessage();
-				scMessage.setSessionInfo(TestConstants.killServerCmd);
-				try {
-					scSessionService.createSession(scMessage);
-				} catch (SCServiceException ex) {
-					clientMgmt.detach();
+				if (srvProcess.getServerType()== TestConstants.SERVER_TYPE_SESSION) {
+					// Create session with KILL command
+					SCSessionService scSessionService = clientMgmt.newSessionService(serviceName);
+					SCMessage scMessage = new SCMessage();
+					scMessage.setSessionInfo(TestConstants.killServerCmd);
+					try {
+						scSessionService.createSession(scMessage);
+					} catch (SCServiceException ex) {
+					}
+				} else {
+					// Subscribe with KILL command
+					SCPublishService scPublishService = clientMgmt.newPublishService(serviceName);
+					SCSubscribeMessage scMessage = new SCSubscribeMessage();
+					SCMessageCallback cbk = new MsgCallback(scPublishService);
+					scMessage.setSessionInfo(TestConstants.killServerCmd);
+					try {
+						scPublishService.subscribe(scMessage, cbk);
+					} catch (SCServiceException ex) {
+					}
 				}
+				clientMgmt.detach();
 				FileUtility.waitNotExists(srvProcess.getPidFileName(), timeout);
 			}
 			testLogger.info("Server stopped");
@@ -272,6 +288,20 @@ public class ProcessesController {
 				} catch (Exception e) {
 				}
 			}
+		}
+	}
+	
+	private class MsgCallback extends SCMessageCallback {
+		public MsgCallback(SCPublishService service) {
+			super(service);
+		}
+
+		@Override
+		public void receive(SCMessage reply) {
+		}
+
+		@Override
+		public void receive(Exception e) {
 		}
 	}
 }
