@@ -87,16 +87,6 @@ public class SCServiceCallback extends SynchronousCallback {
 		}
 		if (scmpReply.isFault()) {
 			SCMPFault fault = (SCMPFault) scmpReply;
-			String errorCode = fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
-			if (errorCode != null && errorCode.equals(SCMPError.OPERATION_TIMEOUT_EXPIRED.getErrorCode())) {
-				// OTI run out on SC - mark session as dead!
-				this.service.inActivateSession();
-			}
-			Exception ex = fault.getCause();
-			if (ex != null && ex instanceof IdleTimeoutException) {
-				// OTI run out on client - mark session as dead!
-				this.service.inActivateSession();
-			}
 			SCServiceException e = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			e.setSCMPError(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			this.service.setRequestComplete();

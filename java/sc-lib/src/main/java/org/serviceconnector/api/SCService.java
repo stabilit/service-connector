@@ -78,13 +78,6 @@ public abstract class SCService {
 	}
 
 	/**
-	 * In activate session.
-	 */
-	public void inActivateSession() {
-		this.sessionActive = false;
-	}
-
-	/**
 	 * Gets the session id.
 	 * 
 	 * @return the session id
