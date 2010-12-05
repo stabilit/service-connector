@@ -304,14 +304,16 @@ public class ExecuteAsynchronousTest {
 		request.setData("5000"); 		// server will sleep 5000ms
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(3, request, cbk);	// SC oti = 3*0.8*1000 = 2400ms
+		service.send(2, request, cbk);	// SC oti = 2*0.8*1000 = 1600ms
 		waitForMessage(10);				// will wait max 10 seconds for response
 		response = cbk.response;
 		Thread.sleep(5000);				// wait for the server
+		
+		// second message
 		messageReceived = false;
 		request.setMessageInfo("echo");
 		request.setData("hallo");		// send second message
-		service.send(request, cbk);
+		service.send(2,request, cbk);
 		waitForMessage(10);				// will wait max 10 seconds for the second response
 		response = cbk.response;
 		assertEquals("message is not the same length", request.getDataLength(), response.getDataLength());
@@ -336,20 +338,29 @@ public class ExecuteAsynchronousTest {
 		request.setData("5000"); 		// server will sleep 5000ms
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(2, request, cbk);	// SC oti = 3*0.8*1000 = 2400ms
+		service.send(2, request, cbk);	// SC oti = 2*0.8*1000 = 1600ms
 		waitForMessage(10);				// will wait max 10 seconds for response
 		response = cbk.response;
 		
+		// second message
 		messageReceived = false;
 		request.setMessageInfo("echo");
 		request.setData("gaga");
-		service.send(request, cbk);		// send second message
-		waitForMessage(10);
+		service.send(2,request, cbk);
+		waitForMessage(10);				// will wait max 10 seconds for response
 		response = cbk.response;
 		assertEquals("message is not the same length", request.getDataLength(), response.getDataLength());
 		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		assertEquals("fault is not the same",request.isFault(), response.isFault());
+		
+		//third message (synchronous)
+		request.setData("abraka-dabra");
+		response = service.execute(request);
+		assertEquals("message is not the same length", request.getDataLength(), response.getDataLength());
+		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		assertEquals("fault is not the same",request.isFault(), response.isFault());		
 		service.deleteSession();
 	}	
 	

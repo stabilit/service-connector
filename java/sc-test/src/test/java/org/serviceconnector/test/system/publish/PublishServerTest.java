@@ -31,9 +31,9 @@ import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.cln.TestPublishClient;
 import org.serviceconnector.ctrl.util.ProcessesController;
 
-public class SubscriptionServerTest {
+public class PublishServerTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SubscriptionServerTest.class);
+	protected final static Logger logger = Logger.getLogger(PublishServerTest.class);
 
 	private SrvCallback srvCallback;
 	private SCPublishServer server;

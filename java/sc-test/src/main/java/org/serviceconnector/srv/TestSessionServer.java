@@ -110,9 +110,9 @@ public class TestSessionServer extends TestStatefulServer {
 		@Override
 		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
 			SCMessage response = request;
-			
 			String sessionInfo = request.getSessionInfo();
 			if (sessionInfo != null) {
+				// watch out for kill server message
 				if (sessionInfo.equals(TestConstants.killServerCmd)) {
 					logger.log(Level.OFF, "Kill request received, exiting ...");
 					response = new SCMessageFault();
@@ -124,6 +124,7 @@ public class TestSessionServer extends TestStatefulServer {
 					KillThread<SCSessionServer> kill = new KillThread<SCSessionServer>(this.scSessionServer);
 					kill.start();
 				}
+				// watch out for reject request
 				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
 					response = new SCMessageFault();
 					try {

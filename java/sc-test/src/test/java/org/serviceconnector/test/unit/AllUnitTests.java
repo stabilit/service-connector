@@ -23,7 +23,8 @@ import org.serviceconnector.test.unit.srv.SCServerTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { 
-		SCMessageTest.class,	
+		SCMessageTest.class,
+		SCSubscribeMessageTest.class,
 		SCClientTest.class, 
 		SCServerTest.class, 
 		NewServerTest.class})

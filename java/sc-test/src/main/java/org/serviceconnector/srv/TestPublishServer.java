@@ -37,6 +37,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.util.FileUtility;
 
+@SuppressWarnings("unused")
 public class TestPublishServer extends TestStatefulServer {
 	
 	static {
@@ -109,11 +110,9 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 	}
 
-	private class SrvCallback extends SCPublishServerCallback {
 
-		/** The Constant logger. */
-		protected final Logger logger = Logger.getLogger(SrvCallback.class);
-		
+	private class SrvCallback extends SCPublishServerCallback {
+	
 		public SrvCallback(SCPublishServer publishSrv) {
 			super(publishSrv);
 		}
@@ -121,9 +120,9 @@ public class TestPublishServer extends TestStatefulServer {
 		@Override
 		public SCMessage subscribe(SCSubscribeMessage request, int operationTimeoutInMillis) {
 			SCMessage response = request;
-			// watch out for kill server message
 			String sessionInfo = request.getSessionInfo();
 			if (sessionInfo != null) {
+				// watch out for kill server message
 				if (sessionInfo.equals(TestConstants.killServerCmd)) {
 					logger.log(Level.OFF, "Kill request received, exiting ...");
 					response = new SCMessageFault();
@@ -135,6 +134,7 @@ public class TestPublishServer extends TestStatefulServer {
 					KillThread<SCPublishServer> kill = new KillThread<SCPublishServer>(this.scPublishServer);
 					kill.start();
 				}
+				// watch out for reject request
 				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
 					response = new SCMessageFault();
 					try {
@@ -158,14 +158,27 @@ public class TestPublishServer extends TestStatefulServer {
 					}
 				}
 			}
-			subscriptionLogger.logSubscribe("publish-1", request.getSessionId(), "mask");
+			subscriptionLogger.logSubscribe("publish-1", request.getSessionId(), request.getMask());
 			return response;
 		}
 
 		@Override
 		public SCMessage changeSubscription(SCSubscribeMessage request, int operationTimeoutInMillis) {
-			subscriptionLogger.logChangeSubscribe("publish-1", request.getSessionId(), "mask");
-			return request;
+			subscriptionLogger.logChangeSubscribe("publish-1", request.getSessionId(), request.getMask());
+			SCMessage response = request;
+			String sessionInfo = request.getSessionInfo();
+			if (sessionInfo != null) {
+				// watch out for reject request
+				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
+					response = new SCMessageFault();
+					try {
+						((SCMessageFault) response).setAppErrorCode(4000);
+						((SCMessageFault) response).setAppErrorText("session rejected intentionaly!");
+					} catch (SCMPValidatorException e) {
+					}
+				}
+			}
+			return response;
 		}
 
 		@Override
@@ -189,14 +202,13 @@ public class TestPublishServer extends TestStatefulServer {
 		@Override
 		public void run() {
 			try {
-				// first sleep 2 seconds to give test client time to stay ready
-				Thread.sleep(2000);
+				// first sleep 1 second to give test client time to stay ready
+				Thread.sleep(1000);
 				method.invoke(this, request, operationTimeoutInMillis);
 			} catch (Exception e1) {
-				logger.warn("could not invoke " + method.getName() + "successfully.");
+				logger.warn("cannot not invoke " + method.getName());
 				return;
 			}
-			logger.log(Level.OFF, "executed method " + method.getName() + " on server");
 		}
 
 		/**
@@ -205,6 +217,9 @@ public class TestPublishServer extends TestStatefulServer {
 		 * @param request
 		 * @param operationTimeoutInMillis
 		 */
+		public void doNothing(SCMessage request, int operationTimeoutInMillis) {
+		}
+
 		public void publish100Message(SCMessage request, int operationTimeoutInMillis) {
 			SCPublishMessage pubMessage = new SCPublishMessage();
 			for (int i = 0; i < 100; i++) {
@@ -219,61 +234,8 @@ public class TestPublishServer extends TestStatefulServer {
 				}
 			}
 		}
-	}
-// try {
-// // start publishing
-// for (int i = 0; i < serviceNames.length; i++) {
-// Runnable run = new PublishRun(publishSrv, serviceNames[i]);
-// Thread thread = new Thread(run);
-// thread.start();
-// }
-// } catch (Exception ex) {
-// logger.error("runPublishServer", ex);
-// this.shutdown();
-// }
 
-// private static class PublishRun implements Runnable {
-// SCPublishServer server;
-// String serviceName;
-//
-// public PublishRun(SCPublishServer server, String serviceName) {
-// this.server = server;
-// this.serviceName = serviceName;
-// }
-//
-// @Override
-// public void run() {
-// int index = 0;
-// while (!TestPublishServer.killPublishServer) {
-// try {
-// if (index % 3 == 0) {
-// Thread.sleep(1000);
-// } else {
-// Thread.sleep(2000);
-// }
-// Object data = "publish message nr " + ++index;
-// SCPublishMessage publishMessage = new SCPublishMessage();
-// publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-// publishMessage.setData(data);
-// server.publish(serviceName, publishMessage);
-// logger.info("message nr " + index + " sent.");
-// } catch (Exception ex) {
-// logger.error("run", ex);
-// return;
-// }
-// }
-// }
-// }
-//
-// private void shutdown() {
-// TestPublishServer.killPublishServer = true;
-// try {
-// for (int i = 0; i < serviceNames.length; i++) {
-// this.publishSrv.deregisterServer(serviceNames[i]);
-// }
-// } catch (Exception ex) {
-// logger.error("shutdown", ex);
-// this.publishSrv = null;
-// }
-// }
+	
+	
+	}
 }

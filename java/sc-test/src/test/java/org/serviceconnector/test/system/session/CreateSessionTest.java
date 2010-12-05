@@ -72,7 +72,7 @@ public class CreateSessionTest {
 	@After
 	public void afterOneTest() throws Exception {
 		try {
-			if (service.isActive()) service.deleteSession();
+			service.deleteSession();
 		} catch (Exception e1) {
 		}
 		service = null;

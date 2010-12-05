@@ -19,17 +19,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.serviceconnector.test.system.publish.ChangeSubscriptionClientTest;
 import org.serviceconnector.test.system.publish.PublishClientTest;
-import org.serviceconnector.test.system.publish.SubscribeClientTest;
+import org.serviceconnector.test.system.publish.PublishServerTest;
+import org.serviceconnector.test.system.publish.SubscribeTest;
 import org.serviceconnector.test.system.publish.SubscribeUnsubscribeClientTest;
-import org.serviceconnector.test.system.publish.SubscriptionServerTest;
 import org.serviceconnector.test.system.session.AfterSCAbortSessionTest;
 import org.serviceconnector.test.system.session.AfterServerAbortSessionTest;
 import org.serviceconnector.test.system.session.CreateSessionTest;
 import org.serviceconnector.test.system.session.DeleteSessionTest;
 import org.serviceconnector.test.system.session.ExecuteAsynchronousTest;
 import org.serviceconnector.test.system.session.ExecuteTest;
-import org.serviceconnector.test.system.session.PrematureDestroyOfSCProcessClientTest;
-import org.serviceconnector.test.system.session.PrematureDestroyOfServerProcessClientTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
@@ -42,13 +40,10 @@ import org.serviceconnector.test.system.session.PrematureDestroyOfServerProcessC
 		AfterServerAbortSessionTest.class,
 
 		// publish tests
-		SubscribeClientTest.class, 
+		SubscribeTest.class, 
 		SubscribeUnsubscribeClientTest.class,
 		ChangeSubscriptionClientTest.class, 
 		PublishClientTest.class,
-		SubscriptionServerTest.class,
-
-		// special tests
-		EnableDisableServiceClientTest.class})
+		PublishServerTest.class})
 public class AllSystemTests {
 }
