@@ -298,7 +298,7 @@ public class SubscribeTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t12_subscribeTwice() throws Exception {
+	public void t12_twoSubscriptions() throws Exception {
 		SCPublishService service1 = client.newPublishService(TestConstants.pubServiceName1);
 		SCPublishService service2 = client.newPublishService(TestConstants.pubServiceName1);
 		
