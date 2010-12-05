@@ -32,11 +32,8 @@ import org.serviceconnector.call.SCMPEchoCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPLargeResponse;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ITimerRun;
@@ -276,24 +273,6 @@ public class SCSessionService extends SCService {
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		this.pendingRequest = false;
 		if (reply.isFault()) {
-			SCMPFault fault = null;
-			if (reply instanceof SCMPFault) {
-				fault = (SCMPFault) reply;
-			} else {
-				if (reply instanceof SCMPLargeResponse) {
-					fault = ((SCMPLargeResponse) reply).getFault();
-				}
-			}
-			String errorCode = fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
-			if (errorCode != null && errorCode.equals(SCMPError.OPERATION_TIMEOUT_EXPIRED.getErrorCode())) {
-				// OTI run out on SC - mark session as dead!
-				this.sessionActive = false;
-			}
-			Exception ex = fault.getCause();
-			if (ex != null && ex instanceof IdleTimeoutException) {
-				// OTI run out on client - mark session as dead!
-				this.sessionActive = false;
-			}
 			SCServiceException scEx = new SCServiceException("execute failed");
 			scEx.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			throw scEx;
@@ -339,6 +318,10 @@ public class SCSessionService extends SCService {
 		if (msgInfo != null) {
 			// message info optional
 			clnExecuteCall.setMessagInfo(msgInfo);
+		}
+		String cacheId = requestMsg.getCacheId();
+		if (cacheId != null) {
+			clnExecuteCall.setCacheId(cacheId);
 		}
 		clnExecuteCall.setCompressed(requestMsg.isCompressed());
 		clnExecuteCall.setRequestBody(requestMsg.getData());

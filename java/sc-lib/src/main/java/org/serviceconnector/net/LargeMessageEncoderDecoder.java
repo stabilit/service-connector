@@ -17,6 +17,7 @@
 package org.serviceconnector.net;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -98,23 +99,39 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 			if (body != null) {
 				if (byte[].class == body.getClass()) {
 					byte[] ba = (byte[]) body;
-
 					byte[] output = null;
+					// int bodyLength = ba.length;
 					int bodyLength = scmpMsg.getBodyLength();
 					int bodyOffset = scmpMsg.getBodyOffset();
 					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
 						// message compression required
-						output = new byte[ba.length];
+						output = new byte[bodyLength];
 						Deflater compresser = new Deflater();
-						compresser.setInput(ba, bodyOffset, ba.length);
+						// compresser.setInput(ba);
+						compresser.setInput(ba, bodyOffset, bodyLength);
 						compresser.finish();
-						bodyLength = compresser.deflate(output);
-						ba = output;
+						ByteArrayOutputStream baos = new ByteArrayOutputStream(output.length);
+						bodyLength = 0;
+						while (!compresser.finished()) {
+							int numCompressedBytes = compresser.deflate(output);
+							bodyLength += numCompressedBytes;
+							if (numCompressedBytes > 0) {
+								baos.write(output, 0, numCompressedBytes);
+								baos.flush();
+							}
+						}
+						baos.close();
+						ba = baos.toByteArray();
 					}
 					this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
 					bw.write(sb.toString());
 					bw.flush();
-					os.write(ba, bodyOffset, bodyLength);
+					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
+						// message compression required
+						os.write(ba);
+					} else {
+						os.write(ba, bodyOffset, bodyLength);
+					}
 					os.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
@@ -125,8 +142,8 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				}
 				if (String.class == body.getClass()) {
 					String t = (String) body;
-
 					byte[] output = null;
+					// int bodyLength = t.length();
 					int bodyLength = scmpMsg.getBodyLength();
 					// gets the offset of body - body of part message is written
 					int bodyOffset = scmpMsg.getBodyOffset();
@@ -137,14 +154,25 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						Deflater compresser = new Deflater();
 						compresser.setInput(ba, bodyOffset, bodyLength);
 						compresser.finish();
-						bodyLength = compresser.deflate(output);
+						ByteArrayOutputStream baos = new ByteArrayOutputStream(output.length);
+						bodyLength = 0;
+						while (!compresser.finished()) {
+							int numCompressedBytes = compresser.deflate(output, 0, output.length);
+							bodyLength += numCompressedBytes;
+							if (numCompressedBytes > 0) {
+								baos.write(output, 0, numCompressedBytes);
+								baos.flush();
+							}
+						}
+						baos.close();
+						output = baos.toByteArray();
 					}
 					this.writeHeadLine(bw, headerKey, bodyLength + sb.length(), headerSize);
 					bw.write(sb.toString()); // write header
 					bw.flush();
 					if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION) && AppContext.isScEnvironment() == false) {
 						// message compression required
-						os.write(output, bodyOffset, bodyLength);
+						os.write(output);
 						os.flush();
 					} else {
 						bw.write(t, bodyOffset, bodyLength);
