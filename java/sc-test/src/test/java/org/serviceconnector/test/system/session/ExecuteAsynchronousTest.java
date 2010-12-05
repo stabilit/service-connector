@@ -120,7 +120,7 @@ public class ExecuteAsynchronousTest {
 		service.send(request, cbk);
 		waitForMessage(10);
 		response = cbk.response;
-		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("message is not the same length", request.getDataLength(), response.getDataLength());
 		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		assertEquals("fault is not the same",request.isFault(), response.isFault());
@@ -145,7 +145,7 @@ public class ExecuteAsynchronousTest {
 		waitForMessage(10);
 		response = cbk.response;
 
-		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("message is not the same length", request.getDataLength(), response.getDataLength());
 		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		assertEquals("fault is not the same",request.isFault(), response.isFault());
@@ -171,7 +171,7 @@ public class ExecuteAsynchronousTest {
 		waitForMessage(10);
 		response = cbk.response;
 
-		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("message is not the same length", request.getDataLength(), response.getDataLength());
 		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		assertEquals("fault is not the same",request.isFault(), response.isFault());
@@ -195,7 +195,7 @@ public class ExecuteAsynchronousTest {
 		service.send(request, cbk);
 		waitForMessage(10);
 		response = cbk.response;
-		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("message is not the same length", request.getDataLength(), response.getDataLength());
 		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		assertEquals("fault is not the same",request.isFault(), response.isFault());
@@ -259,7 +259,7 @@ public class ExecuteAsynchronousTest {
 		waitForMessage(10);
 		response = cbk.response;
 		assertEquals("sessionId is not the same", sessionId, response.getSessionId());
-		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("message is not the same length", request.getDataLength(), response.getDataLength());
 		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		assertEquals("fault is not the same",request.isFault(), response.isFault());
@@ -315,7 +315,7 @@ public class ExecuteAsynchronousTest {
 		service.send(request, cbk);
 		waitForMessage(10);
 		response = cbk.response;
-		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("message is not the same length", request.getDataLength(), response.getDataLength());
 		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		assertEquals("fault is not the same",request.isFault(), response.isFault());
@@ -345,7 +345,7 @@ public class ExecuteAsynchronousTest {
 		service.send(request, cbk);
 		waitForMessage(10);
 		response = cbk.response;
-		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("message is not the same length", request.getDataLength(), response.getDataLength());
 		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		assertEquals("fault is not the same",request.isFault(), response.isFault());

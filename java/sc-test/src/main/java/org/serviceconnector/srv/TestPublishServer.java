@@ -37,7 +37,7 @@ import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.util.FileUtility;
 
 public class TestPublishServer extends TestStatefulServer {
-
+	
 	static {
 		TestStatefulServer.logger = Logger.getLogger(TestPublishServer.class);
 	}
@@ -89,7 +89,7 @@ public class TestPublishServer extends TestStatefulServer {
 				try {
 					server.register(10, this.maxSessions, this.maxConnections, cbk);
 				} catch (Exception e) {
-					logger.error("runSessionServer", e);
+					logger.error("runPublishServer", e);
 					server.deregister();
 				}
 			}
@@ -108,6 +108,71 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 	}
 
+	private class SrvCallback extends SCPublishServerCallback {
+
+		/** The Constant logger. */
+		protected final Logger logger = Logger.getLogger(SrvCallback.class);
+		
+		public SrvCallback(SCPublishServer publishSrv) {
+			super(publishSrv);
+		}
+
+		@Override
+		public SCMessage subscribe(SCMessage request, int operationTimeoutInMillis) {
+			SCMessage response = request;
+			// watch out for kill server message
+			String sessionInfo = request.getSessionInfo();
+			if (sessionInfo != null) {
+				if (sessionInfo.equals(TestConstants.killServerCmd)) {
+					logger.log(Level.OFF, "Kill request received, exiting ...");
+					response = new SCMessageFault();
+					try {
+						((SCMessageFault) response).setAppErrorCode(1050);
+						((SCMessageFault) response).setAppErrorText("session rejected - kill server requested!");
+					} catch (SCMPValidatorException e) {
+					}
+					KillThread<SCPublishServer> kill = new KillThread<SCPublishServer>(this.scPublishServer);
+					kill.start();
+				}
+				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
+					response = new SCMessageFault();
+					try {
+						((SCMessageFault) response).setAppErrorCode(4000);
+						((SCMessageFault) response).setAppErrorText("session rejected intentionaly!");
+					} catch (SCMPValidatorException e) {
+					}
+				} else {
+					// watch out for method to call
+					String methodName = request.getSessionInfo();
+					if (methodName != null) {
+						try {
+							Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
+							PublishThread publishThread = new PublishThread(this.scPublishServer, method, request,
+									operationTimeoutInMillis);
+							publishThread.start();
+							return response;
+						} catch (Exception e) {
+							logger.warn("method " + methodName + " not found on server");
+						}
+					}
+				}
+			}
+			subscriptionLogger.logSubscribe("publish-1", request.getSessionId(), "mask");
+			return response;
+		}
+
+		@Override
+		public SCMessage changeSubscription(SCMessage request, int operationTimeoutInMillis) {
+			subscriptionLogger.logChangeSubscribe("publish-1", request.getSessionId(), "mask");
+			return request;
+		}
+
+		@Override
+		public void unsubscribe(SCMessage request, int operationTimeoutInMillis) {
+			subscriptionLogger.logUnsubscribe("publish-1", request.getSessionId());
+		}
+	}
+
 	private class PublishThread extends Thread {
 		SCPublishServer publishSrv;
 		Method method;
@@ -122,7 +187,6 @@ public class TestPublishServer extends TestStatefulServer {
 		/** {@inheritDoc} */
 		@Override
 		public void run() {
-
 			try {
 				// first sleep 2 seconds to give test client time to stay ready
 				Thread.sleep(2000);
@@ -132,7 +196,6 @@ public class TestPublishServer extends TestStatefulServer {
 				return;
 			}
 			logger.log(Level.OFF, "executed method " + method.getName() + " on server");
-
 		}
 
 		/**
@@ -156,70 +219,6 @@ public class TestPublishServer extends TestStatefulServer {
 			}
 		}
 	}
-
-	private class SrvCallback extends SCPublishServerCallback {
-
-		/** The Constant logger. */
-		protected final Logger logger = Logger.getLogger(SrvCallback.class);
-
-		public SrvCallback(SCPublishServer publishSrv) {
-			super(publishSrv);
-		}
-
-		@Override
-		public SCMessage changeSubscription(SCMessage message, int operationTimeoutInMillis) {
-			logger.info("PublishServer.SrvCallback.changeSubscription()");
-			return message;
-		}
-
-		@Override
-		public SCMessage subscribe(SCMessage message, int operationTimeoutInMillis) {
-			logger.info("PublishServer.SrvCallback.subscribe()");
-			SCMessage response = message;
-			Object data = message.getData();
-			if (data == null) {
-				return response;
-			}
-			// watch out for kill server message
-			if (data.getClass() == String.class) {
-				String dataString = (String) data;
-
-				if (dataString.equals(TestConstants.killServerCmd)) {
-					response = new SCMessageFault();
-					try {
-						((SCMessageFault) response).setAppErrorCode(1050);
-						((SCMessageFault) response).setAppErrorText("subscribe rejected - kill server requested!");
-					} catch (SCMPValidatorException e) {
-					}
-					KillThread<SCPublishServer> kill = new KillThread<SCPublishServer>(this.scPublishServer);
-					kill.start();
-				} else {
-					// watch out for method to call
-					String methodName = message.getSessionInfo();
-					if (methodName != null) {
-						try {
-							Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
-							PublishThread publishThread = new PublishThread(this.scPublishServer, method, message,
-									operationTimeoutInMillis);
-							publishThread.start();
-							return response;
-						} catch (Exception e) {
-							logger.warn("method " + methodName + " not found on server");
-						}
-					}
-				}
-
-			}
-			return response;
-		}
-
-		@Override
-		public void unsubscribe(SCMessage message, int operationTimeoutInMillis) {
-			logger.info("PublishServer.SrvCallback.unsubscribe()");
-		}
-	}
-}
-
 // try {
 // // start publishing
 // for (int i = 0; i < serviceNames.length; i++) {
@@ -276,3 +275,4 @@ public class TestPublishServer extends TestStatefulServer {
 // this.publishSrv = null;
 // }
 // }
+}

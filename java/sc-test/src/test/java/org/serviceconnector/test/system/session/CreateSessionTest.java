@@ -104,7 +104,7 @@ public class CreateSessionTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t01_regular() throws Exception {	
+	public void t01_createSession() throws Exception {	
 		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
@@ -115,11 +115,169 @@ public class CreateSessionTest {
 	}
 	
 	/**
+	 * Description: Create session to publish service<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class )
+	public void t02_createSession() throws Exception {	
+		SCMessage request = null;
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.pubServiceName1);
+		response = service.createSession(request);
+		service.deleteSession();
+	}
+
+	/**
+	 * Description: Create session to file service<br>
+	 * Expectation: throws SCServiceException
+	 * (unfortunatelly this passes because file services uses sessions)
+	 *  TODO TRN file service accepts create session (sessionService)
+	 */
+	@Test (expected = SCServiceException.class )
+	public void t03_createSession() throws Exception {	
+		SCMessage request = null;
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.filServiceName1);
+		response = service.createSession(request);
+		service.deleteSession();
+	}
+	
+	/**
+	 * Description: Create session to service which does not exist<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class )
+	public void t04_createSession() throws Exception {	
+		SCMessage request = null;
+		SCMessage response = null;
+		service = client.newSessionService("gaga");
+		response = service.createSession(request);
+		service.deleteSession();
+	}
+
+	/**
+	 * Description: Create session to service not served by a server<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class )
+	public void t05_createSession() throws Exception {	
+		SCMessage request = null;
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName2);
+		response = service.createSession(request);
+		service.deleteSession();
+	}
+
+	/**
+	 * Description: Create session with operationTimeout = 0<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class )
+	public void t06_createSession() throws Exception {	
+		SCMessage request = null;
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(0,request);
+		service.deleteSession();
+	}
+
+	/**
+	 * Description: Create session with operationTimeout = -1<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class )
+	public void t07_createSession() throws Exception {	
+		SCMessage request = null;
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(-1,request);
+		service.deleteSession();
+	}
+
+	/**
+	 * Description: Create session with operationTimeout = 3601<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class )
+	public void t08_createSession() throws Exception {	
+		SCMessage request = null;
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(3601,request);
+		service.deleteSession();
+	}
+
+	/**
+	 * Description: Create session with 60kB message<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t09_createSession60kB() throws Exception {	
+		SCMessage request = new SCMessage(new byte[TestConstants.dataLength60kB]);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		service.deleteSession();
+	}
+
+	/**
+	 * Description: Create session with large message<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class )
+	public void t10_createSession1MB() throws Exception {	
+		SCMessage request = new SCMessage(new byte[TestConstants.dataLength1MB]);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		service.deleteSession();
+	}
+
+	/**
+	 * Description: Create session twice<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class )
+	public void t11_createSessionTwice() throws Exception {	
+		SCMessage request = null;
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		assertNotNull("the session ID is null", service.getSessionId());
+		response = service.createSession(request);
+		service.deleteSession();
+		assertNull("the session ID is NOT null after deleteSession()", service.getSessionId());
+	}
+
+	/**
+	 * Description: Create two sessions to the same service<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t12_createTwoSessions() throws Exception {	
+		SCMessage request = null;
+		SCMessage response = null;
+		SCSessionService service1 = client.newSessionService(TestConstants.sesServiceName1);
+		SCSessionService service2 = client.newSessionService(TestConstants.sesServiceName1);
+		
+		response = service1.createSession(request);
+		assertNotNull("the session ID is null", service1.getSessionId());
+		response = service2.createSession(request);
+		assertNotNull("the session ID is null", service2.getSessionId());
+
+		service1.deleteSession();
+		assertNull("the session ID is NOT null after deleteSession()", service1.getSessionId());
+		service2.deleteSession();
+		assertNull("the session ID is NOT null after deleteSession()", service2.getSessionId());
+	}
+
+	
+	/**
 	 * Description: Create session with service which has been disabled<br>
 	 * Expectation: throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class )
-	public void t02_disabledService() throws Exception {
+	public void t20_disabledService() throws Exception {
 		// disable service
 		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
 		clientMgmt.attach();
@@ -137,139 +295,10 @@ public class CreateSessionTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t03_deleteSession() throws Exception {	
+	public void t30_deleteSession() throws Exception {	
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		service.deleteSession();
 		assertNull("the session ID is NOT null after deleteSession()", service.getSessionId());
-	}
-
-	/**
-	 * Description: Create session twice<br>
-	 * Expectation: throws SCServiceException
-	 */
-	@Test (expected = SCServiceException.class )
-	public void t04_createSessionTwice() throws Exception {	
-		SCMessage request = null;
-		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
-		assertNotNull("the session ID is null", service.getSessionId());
-		response = service.createSession(request);
-		service.deleteSession();
-		assertNull("the session ID is NOT null after deleteSession()", service.getSessionId());
-	}
-
-	/**
-	 * Description: Create two sessions to the same service<br>
-	 * Expectation: passes
-	 */
-	@Test
-	public void t05_createTwoSessions() throws Exception {	
-		SCMessage request = null;
-		SCMessage response = null;
-		SCSessionService service1 = client.newSessionService(TestConstants.sesServiceName1);
-		SCSessionService service2 = client.newSessionService(TestConstants.sesServiceName1);
-		
-		response = service1.createSession(request);
-		assertNotNull("the session ID is null", service1.getSessionId());
-		response = service2.createSession(request);
-		assertNotNull("the session ID is null", service2.getSessionId());
-
-		service1.deleteSession();
-		assertNull("the session ID is NOT null after deleteSession()", service1.getSessionId());
-		service2.deleteSession();
-		assertNull("the session ID is NOT null after deleteSession()", service2.getSessionId());
-	}
-
-	/**
-	 * Description: Create session to service which does not exist<br>
-	 * Expectation: throws SCServiceException
-	 */
-	@Test (expected = SCServiceException.class )
-	public void t06_createSession() throws Exception {	
-		SCMessage request = null;
-		SCMessage response = null;
-		service = client.newSessionService("gaga");
-		response = service.createSession(request);
-		service.deleteSession();
-	}
-
-	/**
-	 * Description: Create session to service not served by a server<br>
-	 * Expectation: throws SCServiceException
-	 */
-	@Test (expected = SCServiceException.class )
-	public void t07_createSession() throws Exception {	
-		SCMessage request = null;
-		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName2);
-		response = service.createSession(request);
-		service.deleteSession();
-	}
-
-	/**
-	 * Description: Create session with operationTimeout = 0<br>
-	 * Expectation: throws SCMPValidatorException
-	 */
-	@Test (expected = SCMPValidatorException.class )
-	public void t08_createSession() throws Exception {	
-		SCMessage request = null;
-		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(0,request);
-		service.deleteSession();
-	}
-
-	/**
-	 * Description: Create session with operationTimeout = -1<br>
-	 * Expectation: throws SCMPValidatorException
-	 */
-	@Test (expected = SCMPValidatorException.class )
-	public void t09_createSession() throws Exception {	
-		SCMessage request = null;
-		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(-1,request);
-		service.deleteSession();
-	}
-
-	/**
-	 * Description: Create session with operationTimeout = 3601<br>
-	 * Expectation: throws SCMPValidatorException
-	 */
-	@Test (expected = SCMPValidatorException.class )
-	public void t10_createSession() throws Exception {	
-		SCMessage request = null;
-		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(3601,request);
-		service.deleteSession();
-	}
-
-	/**
-	 * Description: Create session with 60kB message<br>
-	 * Expectation: passes
-	 */
-	@Test
-	public void t11_createSession60kB() throws Exception {	
-		SCMessage request = new SCMessage(new byte[TestConstants.dataLength60kB]);
-		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
-		service.deleteSession();
-	}
-
-	/**
-	 * Description: Create session with large message<br>
-	 * Expectation: throws SCServiceException
-	 */
-	@Test (expected = SCServiceException.class )
-	public void t12_createSession1MB() throws Exception {	
-		SCMessage request = new SCMessage(new byte[TestConstants.dataLength1MB]);
-		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
-		service.deleteSession();
 	}
 	
 	/**
@@ -288,9 +317,9 @@ public class CreateSessionTest {
 
 	/**
 	 * Description: Create session with echo interval = 0<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test (expected = SCServiceException.class )
+	@Test (expected = SCMPValidatorException.class )
 	public void t14_echoInterval() throws Exception {	
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
