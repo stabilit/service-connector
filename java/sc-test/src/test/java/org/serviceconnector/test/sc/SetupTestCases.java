@@ -25,6 +25,7 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.SCPublishMessage;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
@@ -388,7 +389,7 @@ public class SetupTestCases {
 		}
 
 		@Override
-		public SCMessage changeSubscription(SCMessage message, int operationTimeoutInMillis) {
+		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutInMillis) {
 			Object obj = message.getData();
 			if (obj != null && obj instanceof String) {
 				String data = (String) obj;
@@ -406,7 +407,7 @@ public class SetupTestCases {
 		}
 
 		@Override
-		public SCMessage subscribe(SCMessage message, int operationTimeoutInMillis) {
+		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
 			Object obj = message.getData();
 			if (obj != null && obj instanceof String) {
 				String data = (String) obj;
@@ -426,7 +427,7 @@ public class SetupTestCases {
 		}
 
 		@Override
-		public void unsubscribe(SCMessage message, int operationTimeoutInMillis) {
+		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
 		}
 	}
 

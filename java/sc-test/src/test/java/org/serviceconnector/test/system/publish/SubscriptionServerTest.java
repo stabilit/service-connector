@@ -25,6 +25,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.cln.TestPublishClient;
@@ -209,21 +210,21 @@ public class SubscriptionServerTest {
 		}
 
 		@Override
-		public SCMessage changeSubscription(SCMessage message, int operationTimeoutInMillis) {
+		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutInMillis) {
 			messagesExchanged++;
 			changeSubMsg = message;
 			return message;
 		}
 
 		@Override
-		public SCMessage subscribe(SCMessage message, int operationTimeoutInMillis) {
+		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
 			messagesExchanged++;
 			subscribeMsg = message;
 			return message;
 		}
 
 		@Override
-		public void unsubscribe(SCMessage message, int operationTimeoutInMillis) {
+		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
 			messagesExchanged++;
 			unsubscribeMsg = message;
 		}

@@ -29,6 +29,7 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.SCPublishMessage;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
@@ -118,7 +119,7 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 
 		@Override
-		public SCMessage subscribe(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage subscribe(SCSubscribeMessage request, int operationTimeoutInMillis) {
 			SCMessage response = request;
 			// watch out for kill server message
 			String sessionInfo = request.getSessionInfo();
@@ -162,13 +163,13 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 
 		@Override
-		public SCMessage changeSubscription(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage changeSubscription(SCSubscribeMessage request, int operationTimeoutInMillis) {
 			subscriptionLogger.logChangeSubscribe("publish-1", request.getSessionId(), "mask");
 			return request;
 		}
 
 		@Override
-		public void unsubscribe(SCMessage request, int operationTimeoutInMillis) {
+		public void unsubscribe(SCSubscribeMessage request, int operationTimeoutInMillis) {
 			subscriptionLogger.logUnsubscribe("publish-1", request.getSessionId());
 		}
 	}
