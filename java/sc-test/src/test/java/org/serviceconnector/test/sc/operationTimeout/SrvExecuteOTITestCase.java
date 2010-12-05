@@ -45,7 +45,7 @@ public class SrvExecuteOTITestCase extends SuperSessionTestCase {
 
 		clnExecuteCall.invoke(callback, 2000);
 		SCMPMessage responseMessage = callback.getMessageSync(2000);
-		SCTest.verifyError(responseMessage, SCMPError.PROXY_TIMEOUT, "executing command timed out", SCMPMsgType.CLN_EXECUTE);
+		SCTest.verifyError(responseMessage, SCMPError.OPERATION_TIMEOUT_EXPIRED, "executing command timed out", SCMPMsgType.CLN_EXECUTE);
 
 		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");

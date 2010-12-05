@@ -285,7 +285,7 @@ public class SCSessionService extends SCService {
 				}
 			}
 			String errorCode = fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
-			if (errorCode != null && errorCode.equals(SCMPError.PROXY_TIMEOUT.getErrorCode())) {
+			if (errorCode != null && errorCode.equals(SCMPError.OPERATION_TIMEOUT_EXPIRED.getErrorCode())) {
 				// OTI run out on SC - mark session as dead!
 				this.sessionActive = false;
 			}

@@ -28,15 +28,18 @@ import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
+@SuppressWarnings("unused")
 public class ExecuteAsynchronousTest {
 
 	/** The Constant testLogger. */
@@ -207,7 +210,6 @@ public class ExecuteAsynchronousTest {
 	public void t05_send() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		request.setCompressed(false);
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		messageReceived = false;
@@ -223,7 +225,6 @@ public class ExecuteAsynchronousTest {
 	public void t06_rejectSession() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo(TestConstants.rejectSessionCmd);
@@ -266,25 +267,91 @@ public class ExecuteAsynchronousTest {
 	}
 
 
-//	@Test
-//	public void execute_timeoutExpiresOnServer_throwsException() throws Exception {
-//		SCMessage message = new SCMessage();
-//		SCSessionService service = client.newSessionService(TestConstants.sesServiceName1);
-//		message.setSessionInfo("sessionInfo");
-//		service.createSession( 10, message);
-//
-//		MsgCallback callback = new MsgCallback(service);
-//		service.send(2, new SCMessage("timeout 4000"), callback);
-//		// wait until message received
-//		while (messageReceived == false)
-//			;
-//		ex = callback.exc;
-//
-//		service.deleteSession();
-//		assertEquals(true, ex instanceof SCServiceException);
-//	}
 
-
+	/**
+	 * Description: operation timeout expired during execution<br>
+	 * Expectation: passes, gets back a fault response
+	 */
+	@Test
+	public void t10_operationTimeout() throws Exception {
+		SCMessage request = new SCMessage("hallo");
+		request.setCompressed(false);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		request.setMessageInfo("sleep");
+		request.setData("5000"); // server will sleep 5000ms
+		messageReceived = false;
+		MsgCallback cbk = new MsgCallback(service);
+		service.send(3, request, cbk); // SC oti = 3*0.8*1000 = 2400ms
+		waitForMessage(10);
+		response = cbk.response;
+		assertEquals("is not fault ",true, response.isFault());
+	}
+	
+	/**
+	 * Description: operation timeout expired during execution, catch exception and continue after a while<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t11_operationTimeout() throws Exception {
+		SCMessage request = new SCMessage("hallo");
+		request.setCompressed(false);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		request.setMessageInfo("sleep");
+		request.setData("5000"); // server will sleep 5000ms
+		messageReceived = false;
+		MsgCallback cbk = new MsgCallback(service);
+		try {
+			service.send(3, request, cbk);	// SC oti = 3*0.8*1000 = 2400ms
+		} catch (SCServiceException e) {
+			waitForMessage(10);			// will wait 10 seconds for response
+			response = cbk.response;
+		}
+		request.setMessageInfo("echo");
+		request.setData("hallo");
+		service.send(request, cbk);
+		waitForMessage(10);
+		response = cbk.response;
+		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		assertEquals("fault is not the same",request.isFault(), response.isFault());
+		service.deleteSession();
+	}
+	
+	/**
+	 * Description: operation timeout expired during execution, catch exception and continue immediatelly<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t12_operationTimeout() throws Exception {
+		SCMessage request = new SCMessage("hallo");
+		request.setCompressed(false);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		request.setMessageInfo("sleep");
+		request.setData("5000"); // server will sleep 5000ms
+		messageReceived = false;
+		MsgCallback cbk = new MsgCallback(service);
+		try {
+			service.send(3, request, cbk);	// SC oti = 3*0.8*1000 = 2400ms
+		} catch (SCServiceException e) {
+		}
+		request.setMessageInfo("echo");
+		request.setData("hallo");
+		service.send(request, cbk);
+		waitForMessage(10);
+		response = cbk.response;
+		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		assertEquals("fault is not the same",request.isFault(), response.isFault());
+		service.deleteSession();
+	}	
+	
 	
 	private void waitForMessage(int nrSeconds) throws Exception {
 		for (int i = 0; i < (nrSeconds*10); i++) {
@@ -312,7 +379,14 @@ public class ExecuteAsynchronousTest {
 
 		@Override
 		public void receive(Exception e) {
-			logger.error("callback", e);
+			logger.error("receive error: "+e.getMessage());
+			SCMessageFault fault = new SCMessageFault();
+			try {
+				fault.setAppErrorCode(1000);
+				fault.setAppErrorText(e.getMessage());
+			} catch (SCMPValidatorException e1) {
+			}
+			response = fault;
 			ExecuteAsynchronousTest.messageReceived = true;
 		}
 

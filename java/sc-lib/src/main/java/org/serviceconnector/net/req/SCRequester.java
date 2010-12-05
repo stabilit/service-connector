@@ -393,7 +393,7 @@ public class SCRequester implements IRequester {
 		public void timeout() {
 			this.disconnectConnection();
 			try {
-				SCMPFault fault = new SCMPFault(SCMPError.REQUEST_TIMEOUT, "OTI run out on client");
+				SCMPFault fault = new SCMPFault(SCMPError.REQUEST_TIMEOUT, "Operation timeout expired on client");
 				fault.setMessageType(requestMsg.getMessageType());
 				this.scmpCallback.callback(fault);
 			} catch (Exception e) {

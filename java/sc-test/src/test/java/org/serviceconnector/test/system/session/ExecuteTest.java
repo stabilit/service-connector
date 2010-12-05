@@ -23,6 +23,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
@@ -34,6 +35,7 @@ import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
+@SuppressWarnings("unused")
 public class ExecuteTest {
 
 	/** The Constant testLogger. */
@@ -184,7 +186,6 @@ public class ExecuteTest {
 	public void t05_disabledService() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		request.setCompressed(false);
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
@@ -208,7 +209,6 @@ public class ExecuteTest {
 	public void t06_execute() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		request.setCompressed(false);
-		@SuppressWarnings("unused")
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.execute(request);
@@ -269,7 +269,7 @@ public class ExecuteTest {
 	public void t09_rejectSession() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
-		@SuppressWarnings("unused")
+
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo(TestConstants.rejectSessionCmd);
@@ -282,22 +282,78 @@ public class ExecuteTest {
 		response = service.execute(request);
 	}
 
+	/**
+	 * Description: operation timeout expired during execution<br>
+	 * Expectation: throws SCserviceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t10_operationTimeout() throws Exception {
+		SCMessage request = new SCMessage("hallo");
+		request.setCompressed(false);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		request.setMessageInfo("sleep");
+		request.setData("5000"); // server will sleep 5000ms
+		// will get exception here
+		response = service.execute(3,request);	// SC oti = 3*0.8*1000 = 2400ms
+	}
 	
+	/**
+	 * Description: operation timeout expired during execution, catch exception and continue after a while<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t11_operationTimeout() throws Exception {
+		SCMessage request = new SCMessage("hallo");
+		request.setCompressed(false);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		request.setMessageInfo("sleep");
+		request.setData("5000"); // server will sleep 5000ms
+		try {
+			response = service.execute(3,request);	// SC oti = 3*0.8*1000 = 2400ms
+		} catch (SCServiceException e) {
+			// will get here after 3000 ms, sleep another 4000 to allow SC cleanup
+			Thread.sleep(4000);
+		}
+		request.setMessageInfo("echo");
+		request.setData("hallo");
+		response = service.execute(request);
+		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		assertEquals("fault is not the same",request.isFault(), response.isFault());
+		service.deleteSession();
+	}
 	
-//	@Test
-//	public void execute_timeoutExpiresOnServer_throwsException() throws Exception {
-//		SCMessage message = new SCMessage();
-//		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
-//		message.setSessionInfo("sessionInfo");
-//		sessionService.createSession( 60, message);
-//
-//		try {
-//			sessionService.execute(2, new SCMessage("timeout 4000"));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		sessionService.deleteSession();
-//	}
-
+	/**
+	 * Description: operation timeout expired during execution, catch exception and continue immediatelly<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t12_operationTimeout() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		request.setMessageInfo("sleep");
+		request.setData("5000"); // server will sleep 5000ms
+		try {
+			response = service.execute(3,request);	// SC oti = 3*0.8*1000 = 2400ms
+		} catch (SCServiceException e) {
+			// will get here after 3000 ms
+			// continue immediatelly
+		}
+		request.setMessageInfo("echo");
+		request.setData("hallo");
+		response = service.execute(request);
+		assertEquals("message is not the same length", request.getDataLength(), request.getDataLength());
+		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		assertEquals("fault is not the same",request.isFault(), response.isFault());
+		service.deleteSession();
+	}
 }

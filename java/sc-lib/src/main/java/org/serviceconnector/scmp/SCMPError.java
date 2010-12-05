@@ -34,8 +34,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The NOT_FOUND. */
 	NOT_FOUND("404", "Not found."),
 	/** The REQUEST_TIMEOUT. */
-	REQUEST_TIMEOUT("408",
-			"Request Timeout. The client did not produce a request within the time that the server was prepared to wait."),
+	REQUEST_TIMEOUT("408", "The SC did not timely respond to the request"),
 
 	/** 420 Validation errors */
 	/** The header validation error. */
@@ -103,9 +102,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The service is DISABLED. */
 	SERVICE_DISABLED("501", "Service is disabled."),
 	/** The PROXY_TIMEOUT. */
-	PROXY_TIMEOUT(
-			"504",
-			"Proxy Timeout. The server, while acting as a proxy, did not receive a timely response from the upstream server specified by the URI."),
+	OPERATION_TIMEOUT_EXPIRED("504", "The server did not timely respond to the request."),
 	/** The UPLOAD_FILE_FAILED. */
 	UPLOAD_FILE_FAILED("505", "Uploading file failed."),
 	/** 6xx errors caused by service connector */

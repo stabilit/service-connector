@@ -159,7 +159,6 @@ public class TestSessionServer extends TestStatefulServer {
 				try {
 					Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
 					response = (SCMessage) method.invoke(this, request, operationTimeoutInMillis);
-					logger.log(Level.OFF, "executed method " + method.getName() + " on server");
 					return response;
 				} catch (Exception e) {
 					logger.warn("method " + methodName + " not found on server");
@@ -171,6 +170,21 @@ public class TestSessionServer extends TestStatefulServer {
 
 		// methods invoked by name (passed in messageInfo)
 		public SCMessage echo(SCMessage request, int operationTimeoutInMillis) {
+			// do not log! it is used for performance benchmarks
+			return request;
+		}
+		
+		public SCMessage sleep(SCMessage request, int operationTimeoutInMillis) {
+			String dataString = (String) request.getData();
+			int millis = Integer.parseInt(dataString);
+			try {
+				logger.info("Sleeping " + millis + "ms");
+				Thread.sleep(millis);
+			} catch (InterruptedException e) {
+				logger.warn("sleep interrupted " + e.getMessage());
+			} catch (Exception e) {
+				logger.error("sleep error", e);
+			}
 			return request;
 		}
 	}
