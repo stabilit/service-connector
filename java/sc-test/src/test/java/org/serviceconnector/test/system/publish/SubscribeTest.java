@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.security.InvalidParameterException;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -121,6 +122,7 @@ public class SubscribeTest {
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		//waitForMessage(10);
 		assertNotNull("the session ID is null", service.getSessionId());
 		assertEquals("message is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		assertEquals("messageInfo is not the same", subMsgRequest.getSessionInfo(), subMsgResponse.getSessionInfo());
@@ -1144,6 +1146,17 @@ public class SubscribeTest {
 //		assertEquals(true, service.isSubscribed());
 //	}
 
+	private void waitForMessage(int nrSeconds) throws Exception {
+		for (int i = 0; i < (nrSeconds*10); i++) {
+			if (messageReceived) {
+				return;
+			}
+			Thread.sleep(100);
+		}
+		throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
+	}
+
+	
 	private class MsgCallback extends SCMessageCallback {
 		private SCMessage response = null;
 
