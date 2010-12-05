@@ -142,7 +142,6 @@ public class TestPublishServer extends TestStatefulServer {
 					} catch (SCMPValidatorException e) {
 					}
 				} else {
-					// watch out for method to call
 					String methodName = request.getSessionInfo();
 					PublishThread publishThread = new PublishThread(this.scPublishServer, methodName, request,
 							operationTimeoutInMillis);
