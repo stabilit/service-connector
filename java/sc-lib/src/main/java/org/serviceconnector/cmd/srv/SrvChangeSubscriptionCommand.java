@@ -71,6 +71,7 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 		scMessage.setSessionInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 		scMessage.setSessionId(sessionId);
 		scMessage.setMask(reqMessage.getHeader(SCMPHeaderAttributeKey.MASK));
+		scMessage.setServiceName(reqMessage.getServiceName());
 
 		// inform callback with scMessages
 		SCMessage scReply = srvService.getCallback().changeSubscription(scMessage,
@@ -85,11 +86,17 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 		reply.setServiceName(serviceName);
 		reply.setMessageType(this.getKey());
 
-		if (scReply.isFault()) {
-			SCMessageFault scFault = (SCMessageFault) scReply;
-			reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
-			reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
+		if (scReply != null) {
+			if (scReply.isCompressed()) {
+				reply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+			}
+			reply.setBody(scReply.getData());
+			if (scReply.isFault()) {
+				SCMessageFault scFault = (SCMessageFault) scReply;
+				reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
+				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
+			}
 		}
 		response.setSCMP(reply);
 	}

@@ -47,6 +47,8 @@ public class SCMessage {
 	private String sessionId;
 	/** The cache id. */
 	private String cacheId;
+	/** The service name. */
+	private String serviceName;
 
 	/**
 	 * Instantiates a new SCMessage.
@@ -191,7 +193,6 @@ public class SCMessage {
 		return 0;
 	}
 
-	
 	/**
 	 * Gets the session id.
 	 * 
@@ -218,6 +219,14 @@ public class SCMessage {
 	 */
 	public String getCacheId() {
 		return cacheId;
+	}
+
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
 	}
 
 	/**

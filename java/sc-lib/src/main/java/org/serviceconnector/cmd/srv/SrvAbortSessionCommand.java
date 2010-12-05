@@ -66,6 +66,7 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setSessionId(sessionId);
+		scMessage.setServiceName(reqMessage.getServiceName());
 
 		// inform callback with scMessages
 		srvService.getCallback().abortSession(scMessage,

@@ -67,7 +67,8 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setSessionId(sessionId);
-
+		scMessage.setServiceName(reqMessage.getServiceName());
+		
 		// inform callback with scMessages
 		srvService.getCallback().deleteSession(scMessage,
 				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));

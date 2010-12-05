@@ -71,7 +71,8 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setCacheId(reqMessage.getCacheId());
-
+		scMessage.setServiceName(reqMessage.getServiceName());
+		
 		// inform callback with scMessages
 		SCMessage scReply = srvService.getCallback().execute(scMessage,
 				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));

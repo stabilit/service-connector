@@ -93,6 +93,7 @@ public class SCPublishService extends SCService {
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		changeSubscriptionCall.setMask(scSubscribeMessage.getMask());
 		changeSubscriptionCall.setCompressed(scSubscribeMessage.isCompressed());
+		changeSubscriptionCall.setRequestBody(scSubscribeMessage.getData());
 		SCServiceCallback callback = new SCServiceCallback(true);
 
 		try {
@@ -169,6 +170,7 @@ public class SCPublishService extends SCService {
 		subscribeCall.setSessionInfo(scSubscribeMessage.getSessionInfo());
 		subscribeCall.setNoDataIntervalSeconds(scSubscribeMessage.getNoDataIntervalInSeconds());
 		subscribeCall.setCompressed(scSubscribeMessage.isCompressed());
+		subscribeCall.setRequestBody(scSubscribeMessage.getData());
 		try {
 			subscribeCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
@@ -251,8 +253,7 @@ public class SCPublishService extends SCService {
 	 */
 	public synchronized void unsubscribe(int operationTimeoutSeconds, SCMessage scMessage) throws Exception {
 		if (this.sessionActive == false) {
-			// unsubscribe not possible - not subscribed on this service just
-			// ignore
+			// unsubscribe not possible - not subscribed on this service just ignore
 			return;
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
@@ -311,7 +312,7 @@ public class SCPublishService extends SCService {
 				} else {
 					SCServiceException ex = new SCServiceException("SCPublishService operation failed");
 					ex.setSCMPError(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-					super.callback(ex);
+					this.callback(ex);
 				}
 				return;
 			}
@@ -332,6 +333,16 @@ public class SCPublishService extends SCService {
 				// data reply received - give to application
 				super.callback(reply);
 			}
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void callback(Exception ex) {
+			if (SCPublishService.this.sessionActive == false) {
+				// ignore exception - session not active
+				return;
+			}
+			super.callback(ex);
 		}
 	}
 }

@@ -65,7 +65,8 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 		SCSubscribeMessage scMessage = new SCSubscribeMessage();
 		scMessage.setData(reqMessage.getBody());
 		scMessage.setSessionId(sessionId);
-
+		scMessage.setServiceName(reqMessage.getServiceName());
+		
 		// inform callback with scMessages
 		srvService.getCallback().unsubscribe(scMessage,
 				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));

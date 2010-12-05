@@ -70,7 +70,8 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setSessionId(sessionId);
 		scMessage.setSessionInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
-
+		scMessage.setServiceName(reqMessage.getServiceName());
+		
 		// inform callback with scMessages
 		SCMessage scReply = srvService.getCallback().createSession(scMessage,
 				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
@@ -86,7 +87,11 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setMessageType(this.getKey());
+
 		if (scReply != null) {
+			if (scReply.isCompressed()) {
+				reply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+			}
 			reply.setBody(scReply.getData());
 			if (scReply.isFault()) {
 				SCMessageFault scFault = (SCMessageFault) scReply;
