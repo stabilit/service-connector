@@ -301,19 +301,18 @@ public class ExecuteAsynchronousTest {
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
 		request.setMessageInfo("sleep");
-		request.setData("5000"); // server will sleep 5000ms
+		request.setData("5000"); 		// server will sleep 5000ms
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		try {
-			service.send(3, request, cbk);	// SC oti = 3*0.8*1000 = 2400ms
-		} catch (SCServiceException e) {
-			waitForMessage(10);			// will wait 10 seconds for response
-			response = cbk.response;
-		}
+		service.send(3, request, cbk);	// SC oti = 3*0.8*1000 = 2400ms
+		waitForMessage(10);				// will wait max 10 seconds for response
+		response = cbk.response;
+		Thread.sleep(5000);				// wait for the server
+		messageReceived = false;
 		request.setMessageInfo("echo");
-		request.setData("hallo");
+		request.setData("hallo");		// send second message
 		service.send(request, cbk);
-		waitForMessage(10);
+		waitForMessage(10);				// will wait max 10 seconds for the second response
 		response = cbk.response;
 		assertEquals("message is not the same length", request.getDataLength(), response.getDataLength());
 		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
@@ -332,17 +331,19 @@ public class ExecuteAsynchronousTest {
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
 		request.setMessageInfo("sleep");
-		request.setData("5000"); // server will sleep 5000ms
+		request.setData("5000"); 		// server will sleep 5000ms
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		try {
-			service.send(3, request, cbk);	// SC oti = 3*0.8*1000 = 2400ms
-		} catch (SCServiceException e) {
-		}
+		service.send(2, request, cbk);	// SC oti = 3*0.8*1000 = 2400ms
+		waitForMessage(10);				// will wait max 10 seconds for response
+		response = cbk.response;
+		
+		messageReceived = false;
 		request.setMessageInfo("echo");
-		request.setData("hallo");
-		service.send(request, cbk);
+		request.setData("gaga");
+		service.send(request, cbk);		// send second message
 		waitForMessage(10);
 		response = cbk.response;
 		assertEquals("message is not the same length", request.getDataLength(), response.getDataLength());
