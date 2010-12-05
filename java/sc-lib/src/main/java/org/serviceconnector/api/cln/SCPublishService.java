@@ -334,15 +334,5 @@ public class SCPublishService extends SCService {
 				super.callback(reply);
 			}
 		}
-
-		/** {@inheritDoc} */
-		@Override
-		public void callback(Exception ex) {
-			if (SCPublishService.this.sessionActive == false) {
-				// ignore exception - session not active
-				return;
-			}
-			super.callback(ex);
-		}
 	}
 }
