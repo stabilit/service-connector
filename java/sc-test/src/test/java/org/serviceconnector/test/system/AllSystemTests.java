@@ -23,7 +23,7 @@ import org.serviceconnector.test.system.publish.SubscribeClientTest;
 import org.serviceconnector.test.system.publish.SubscribeUnsubscribeClientTest;
 import org.serviceconnector.test.system.publish.SubscriptionServerTest;
 import org.serviceconnector.test.system.session.AfterSCAbortSessionTest;
-import org.serviceconnector.test.system.session.AfterSCRestartSessionTest;
+import org.serviceconnector.test.system.session.AfterServerAbortSessionTest;
 import org.serviceconnector.test.system.session.CreateSessionTest;
 import org.serviceconnector.test.system.session.DeleteSessionTest;
 import org.serviceconnector.test.system.session.ExecuteAsynchronousTest;
@@ -39,11 +39,7 @@ import org.serviceconnector.test.system.session.PrematureDestroyOfServerProcessC
 		ExecuteTest.class, 
 		ExecuteAsynchronousTest.class,
 		AfterSCAbortSessionTest.class,
-		AfterSCRestartSessionTest.class,
-		
-		PrematureDestroyOfSCProcessClientTest.class, 
-		PrematureDestroyOfServerProcessClientTest.class,
-
+		AfterServerAbortSessionTest.class,
 
 		// publish tests
 		SubscribeClientTest.class, 
@@ -53,6 +49,6 @@ import org.serviceconnector.test.system.session.PrematureDestroyOfServerProcessC
 		SubscriptionServerTest.class,
 
 		// special tests
-		EnableServiceDisableServiceClientToSCTest.class})
+		EnableDisableServiceClientTest.class})
 public class AllSystemTests {
 }

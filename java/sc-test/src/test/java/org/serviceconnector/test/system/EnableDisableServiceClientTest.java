@@ -32,9 +32,9 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.service.SCServiceException;
 
-public class EnableServiceDisableServiceClientToSCTest {
+public class EnableDisableServiceClientTest {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(EnableServiceDisableServiceClientToSCTest.class);
+	protected final static Logger logger = Logger.getLogger(EnableDisableServiceClientTest.class);
 
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
