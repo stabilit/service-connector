@@ -18,6 +18,7 @@ package org.serviceconnector.srv;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
+import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
@@ -87,13 +88,13 @@ public class DemoPublishServer extends Thread {
 		}
 
 		@Override
-		public SCMessage changeSubscription(SCMessage message, int operationTimeoutInMillis) {
+		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutInMillis) {
 			logger.info("PublishServer.SrvCallback.changeSubscription()");
 			return message;
 		}
 
 		@Override
-		public SCMessage subscribe(SCMessage message, int operationTimeoutInMillis) {
+		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
 			logger.info("PublishServer.SrvCallback.subscribe()");
 			try {
 				Thread.sleep(10000);
@@ -104,7 +105,7 @@ public class DemoPublishServer extends Thread {
 		}
 
 		@Override
-		public void unsubscribe(SCMessage message, int operationTimeoutInMillis) {
+		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
 			logger.info("PublishServer.SrvCallback.unsubscribe()");
 			Object data = message.getData();
 			// watch out for kill server message
