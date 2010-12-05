@@ -98,4 +98,40 @@ public class SCSubscribeMessageTest {
 		message.setMask("abc%xy");
 	}
 
+	/**
+	 * Description:	Set noDataInteval = -1 <br>
+	 * Expectation:	throws SCMPValidatorException 
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t15_noDataInteval() throws Exception {
+		message.setNoDataIntervalInSeconds(-1);
+	}
+
+	/**
+	 * Description:	Set noDataInteval = 0 <br>
+	 * Expectation:	throws SCMPValidatorException 
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t16_noDataInteval() throws Exception {
+		message.setNoDataIntervalInSeconds(0);
+	}
+	
+	/**
+	 * Description:	Set noDataInteval = 1 <br>
+	 * Expectation:	passes
+	 */
+	@Test 
+	public void t17_noDataInteval() throws Exception {
+		message.setNoDataIntervalInSeconds(1);
+	}
+	
+
+	/**
+	 * Description:	Set noDataInteval = 67000 <br>
+	 * Expectation:	throws SCMPValidatorException 
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t18_noDataInteval() throws Exception {
+		message.setNoDataIntervalInSeconds(67000);
+	}
 }

@@ -35,6 +35,7 @@ import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
@@ -122,7 +123,6 @@ public class SubscribeTest {
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		//waitForMessage(10);
 		assertNotNull("the session ID is null", service.getSessionId());
 		assertEquals("message is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		assertEquals("messageInfo is not the same", subMsgRequest.getSessionInfo(), subMsgResponse.getSessionInfo());
@@ -130,7 +130,7 @@ public class SubscribeTest {
 		assertEquals("fault is not the same", subMsgRequest.isFault(), subMsgResponse.isFault());
 
 		service.unsubscribe();
-		assertNull("the session ID is NOT null after unsubscribe()", service.getSessionId());
+		assertNull("the session ID is not null)", service.getSessionId());
 	}
 
 	/**
@@ -149,24 +149,15 @@ public class SubscribeTest {
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		assertNotNull("the session ID is null", service.getSessionId());
-		assertEquals("message is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-		assertEquals("messageInfo is not the same", subMsgRequest.getSessionInfo(), subMsgResponse.getSessionInfo());
-		assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-		assertEquals("fault is not the same", subMsgRequest.isFault(), subMsgResponse.isFault());
-
-		service.unsubscribe();
-		assertNull("the session ID is NOT null after unsubscribe()", service.getSessionId());
 	}
 
 	/**
-	 * Description: subscribe with = " "<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Description: subscribe with service name = null<br>
+	 * Expectation: throws InvalidParameterException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = InvalidParameterException.class)
 	public void t04_subscribe() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
-		
+		service = client.newPublishService(null);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = new SCSubscribeMessage();
 		subMsgRequest.setMask(" ");
@@ -175,988 +166,175 @@ public class SubscribeTest {
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		assertNotNull("the session ID is null", service.getSessionId());
+	}
+
+	/**
+	 * Description: subscribe with service name = ""<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t05_subscribe() throws Exception {
+		service = client.newPublishService("");
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = new SCSubscribeMessage();
+		subMsgRequest.setMask(" ");
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+	}
+
+	/**
+	 * Description: subscribe with service name = " "<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t06_subscribe() throws Exception {
+		service = client.newPublishService(" ");
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = new SCSubscribeMessage();
+		subMsgRequest.setMask(" ");
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+	}
+
+	/**
+	 * Description: subscribe with non-existing service name<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t07_subscribe() throws Exception {
+		service = client.newPublishService("gaga");
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = new SCSubscribeMessage();
+		subMsgRequest.setMask(" ");
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+	}
+	
+	/**
+	 * Description: subscribe with session service name<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t08_subscribe() throws Exception {
+		service = client.newPublishService(TestConstants.sesServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = new SCSubscribeMessage();
+		subMsgRequest.setMask(" ");
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+	}
+	
+	/**
+	 * Description: subscribe with file service name<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t09_subscribe() throws Exception {
+		service = client.newPublishService(TestConstants.filServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = new SCSubscribeMessage();
+		subMsgRequest.setMask(" ");
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+	}
+
+
+	/**
+	 * Description: subscribe to disabed service<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class )
+	public void t10_disabledService() throws Exception {
+		// disable service
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		clientMgmt.attach();
+		clientMgmt.disableService(TestConstants.pubServiceName1);
+		clientMgmt.detach();
+
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = new SCSubscribeMessage();
+		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+	}
+
+	/**
+	 * Description: subscribe service with no callack<br>
+	 * Expectation: throws InvalidParameterException
+	 */
+	@Test (expected = InvalidParameterException.class )
+	public void t11_noDataInterval() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = new SCSubscribeMessage();
+		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		subMsgResponse = service.subscribe(subMsgRequest, null);
+	}
+
+	/**
+	 * Description: subscribe twice<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t12_subscribeTwice() throws Exception {
+		SCPublishService service1 = client.newPublishService(TestConstants.pubServiceName1);
+		SCPublishService service2 = client.newPublishService(TestConstants.pubServiceName1);
+		
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = new SCSubscribeMessage();
+		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		
+		MsgCallback cbk1 = new MsgCallback(service1);
+		MsgCallback cbk2 = new MsgCallback(service2);
+		
+		subMsgResponse = service1.subscribe(subMsgRequest, cbk1);
+		assertNotNull("the session ID is null", service1.getSessionId());
 		assertEquals("message is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		assertEquals("messageInfo is not the same", subMsgRequest.getSessionInfo(), subMsgResponse.getSessionInfo());
 		assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 		assertEquals("fault is not the same", subMsgRequest.isFault(), subMsgResponse.isFault());
+		
+		subMsgResponse = service2.subscribe(subMsgRequest, cbk2);
+		assertNotNull("the session ID is null", service2.getSessionId());
+		assertEquals("message is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		assertEquals("messageInfo is not the same", subMsgRequest.getSessionInfo(), subMsgResponse.getSessionInfo());
+		assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+		assertEquals("fault is not the same", subMsgRequest.isFault(), subMsgResponse.isFault());
+		
+		service1.unsubscribe();
+		assertNull("the session ID is not null)", service1.getSessionId());
+		service2.unsubscribe();
+		assertNull("the session ID is not null)", service2.getSessionId());
 
-		service.unsubscribe();
-		assertNull("the session ID is NOT null after unsubscribe()", service.getSessionId());
 	}
 
 	
-	//	@Test
-//	public void getSessionId_fromNewlyCreatedPublishService_emptySessionId() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		assertEquals(null, service.getSessionId());
-//	}
-//
-//	@Test
-//	public void isSubscribed_serviceNameEmpty_false() throws Exception {
-//		SCPublishService service = client.newPublishService("");
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void isSubscribed_serviceNameWhiteSpace_false() throws Exception {
-//		SCPublishService service = client.newPublishService(" ");
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void isSubscribed_serviceNameSingleChar_false() throws Exception {
-//		SCPublishService service = client.newPublishService("a");
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void isSubscribed_serviceNameNotExisting_false() throws Exception {
-//		SCPublishService service = client.newPublishService("notExistingService");
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void isSubscribed_serviceNameSessionService_false() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void isSubscribed_serviceNameDisabled_false() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void isSubscribed_fromNewlyCreatedPublishService_false() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameEmptyMaskNull_throwsValidatorException() throws Exception {
-//		SCPublishService service = client.newPublishService("");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(null);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameEmptyMaskEmpty_throwsValidatorException() throws Exception {
-//		SCPublishService service = client.newPublishService("");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameEmptyMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService("");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("a");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameEmptyMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService("");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(" ");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameEmptyMask256LongString_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService("");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.stringLength256);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameEmptyMask257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService("");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.stringLength257);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	// TODO FJU why returns % sign in mask InvalidParameterException instead of
-//	// SCMPValidator as everything other does?
-//	@Test
-//	public void subscribe_serviceNameEmptyMaskContainingPercentSign_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService("");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO%----------X-----------");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameEmptyMaskSameAsInServer_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService("");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameNotExistingServiceMaskNull_throwsValidatorException() throws Exception {
-//		SCPublishService service = client.newPublishService("notExistingService");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(null);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameNotExistingServiceMaskEmpty_throwsValidatorException() throws Exception {
-//		SCPublishService service = client.newPublishService("notExistingService");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameNotExistingServiceMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService("notExistingService");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("a");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameNotExistingServiceMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService("notExistingService");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(" ");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameNotExistingServiceMask256LongString_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService("notExistingService");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.stringLength256);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameNotExistingServiceMask257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService("notExistingService");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.stringLength257);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameNotExistingServiceMaskContainingPercentSign_throwsValidatorExceptionNotSubscribed()
-//			throws Exception {
-//		SCPublishService service = client.newPublishService("notExistingService");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO%----------X-----------");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameNotExistingServiceMaskSameAsInServer_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService("notExistingService");
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameSessionServiceMaskNull_throwsValidatorException() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(null);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameSessionServiceMaskEmpty_throwsValidatorException() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameSessionServiceMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("a");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameSessionServiceMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo(" ");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameSessionServiceMask256LongString_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.stringLength256);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameSessionServiceMask257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.stringLength257);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameSessionServiceMaskContainingPercentSign_throwsValidatorExceptionNotSubscribed()
-//			throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO%----------X-----------");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameSessionServiceMaskSameAsInServer_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo(" ");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameDisabledMaskNull_throwsValidatorException() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(null);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameDisabledMaskEmpty_throwsValidatorException() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameDisabledMaskOneChar_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("a");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameDisabledMaskWhiteSpace_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(" ");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameDisabledMask256LongString_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.stringLength256);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameDisabledMask257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.stringLength257);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameDisabledMaskContainingPercentSign_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO%----------X-----------");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameDisabledMaskSameAsInServer_throwsSCExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameValidMaskNull_throwsValidatorException() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(null);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameValidMaskEmpty_throwsValidatorException() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameValidMaskOneChar_isSubscribedSessionIdExists() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask("a");
-//		subscibeMessage.setSessionInfo("sessionInfo");
-//		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		service.unsubscribe();
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameValidMaskWhiteSpace_isSubscribedSessionIdExists() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.mask);
-//		subscibeMessage.setSessionInfo(" ");
-//		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		service.unsubscribe();
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameValidMask256LongString_isSubscribedSessionIdExists() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.stringLength256);
-//		subscibeMessage.setSessionInfo("sessionInfo");
-//		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		service.unsubscribe();
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameValidMask257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.stringLength257);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameValidMaskContainingPercentSign_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask("0000121ABCDEFGHIJKLMNO%----------X-----------");
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_serviceNameValidMaskSameAsInServer_isSubscribedSessionIdExists() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.mask);
-//		subscibeMessage.setSessionInfo("sessionInfo");
-//		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		service.unsubscribe();
-//	}
-//
-//	@Test
-//	public void subscribe_sessionInfoOneChar_isSubscribedSessionIdExists() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.mask);
-//		subscibeMessage.setSessionInfo("a");
-//		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		service.unsubscribe();
-//	}
-//
-//	@Test
-//	public void subscribe_sessionInfoPangram_isSubscribedSessionIdExists() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.mask);
-//		subscibeMessage.setSessionInfo(TestConstants.pangram);
-//		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		service.unsubscribe();
-//	}
-//
-//	@Test
-//	public void subscribe_sessionInfo256LongString_isSubscribedSessionIdExists() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.stringLength256);
-//		subscibeMessage.setSessionInfo("sessionInfo");
-//		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		service.unsubscribe();
-//	}
-//
-//	@Test
-//	public void subscribe_sessionInfo257LongString_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo(TestConstants.stringLength257);
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_noDataInterval0_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			subscibeMessage.setNoDataIntervalInSeconds(0);
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_noDataIntervalMinus1_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			subscibeMessage.setNoDataIntervalInSeconds(-1);
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_noDataInterval1_isSubscribedSessionIdExists() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.mask);
-//		subscibeMessage.setSessionInfo("sessionInfo");
-//		subscibeMessage.setNoDataIntervalInSeconds(1);
-//		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		service.unsubscribe();
-//	}
-//
-//	@Test
-//	public void subscribe_noDataIntervalMaxAllowed_isSubscribedSessionIdExists() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.mask);
-//		subscibeMessage.setSessionInfo("sessionInfo");
-//		subscibeMessage.setNoDataIntervalInSeconds(3600);
-//		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		service.unsubscribe();
-//	}
-//
-//	@Test
-//	public void subscribe_noDataIntervalMaxAllowedPlusOne_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			subscibeMessage.setNoDataIntervalInSeconds(3601);
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_noDataIntervalIntMax_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			subscibeMessage.setNoDataIntervalInSeconds(Integer.MAX_VALUE);
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_callbackNull_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, null);
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof InvalidParameterException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_timeout0_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_timeoutMinus1_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	// this might sometimes fail with timeout
-//	@Test
-//	public void subscribe_timeout1_eitherSubscribedOrTimedOut() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			assertEquals(true, e.getMessage().toLowerCase().contains("timeout"));
-//			assertEquals(false, service.isSubscribed());
-//			assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//			return;
-//		}
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		service.unsubscribe();
-//	}
-//
-//	@Test
-//	public void subscribe_timeoutMaxAllowed_isSubscribedSessionIdExists() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.mask);
-//		subscibeMessage.setSessionInfo("sessionInfo");
-//		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		service.unsubscribe();
-//	}
-//
-//	@Test
-//	public void subscribe_timeoutMaxAllowedPlusOne_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_timeoutIntMax_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_timeoutIntMin_throwsValidatorExceptionNotSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		try {
-//			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//			subscibeMessage.setMask(TestConstants.mask);
-//			subscibeMessage.setSessionInfo("sessionInfo");
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
-//	}
-//
-//	@Test
-//	public void subscribe_twiceInARow_throwsSCExceptionRemainsSubscribed() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.mask);
-//		subscibeMessage.setSessionInfo("sessionInfo");
-//		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		try {
-//			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		} catch (Exception e) {
-//			ex = e;
-//		}
-//		assertEquals(true, ex.getMessage().equals("already subscribed"));
-//		assertEquals(SCServiceException.class, ex.getClass());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(true, service.isSubscribed());
-//	}
 
-	private void waitForMessage(int nrSeconds) throws Exception {
-		for (int i = 0; i < (nrSeconds*10); i++) {
-			if (messageReceived) {
-				return;
-			}
-			Thread.sleep(100);
-		}
-		throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
-	}
-
-	
 	private class MsgCallback extends SCMessageCallback {
 		private SCMessage response = null;
 
