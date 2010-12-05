@@ -39,7 +39,7 @@ import org.serviceconnector.util.FileUtility;
 
 @SuppressWarnings("unused")
 public class TestPublishServer extends TestStatefulServer {
-	
+
 	static {
 		TestStatefulServer.logger = Logger.getLogger(TestPublishServer.class);
 	}
@@ -110,9 +110,8 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 	}
 
-
 	private class SrvCallback extends SCPublishServerCallback {
-	
+
 		public SrvCallback(SCPublishServer publishSrv) {
 			super(publishSrv);
 		}
@@ -145,17 +144,10 @@ public class TestPublishServer extends TestStatefulServer {
 				} else {
 					// watch out for method to call
 					String methodName = request.getSessionInfo();
-					if (methodName != null) {
-						try {
-							Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
-							PublishThread publishThread = new PublishThread(this.scPublishServer, method, request,
-									operationTimeoutInMillis);
-							publishThread.start();
-							return response;
-						} catch (Exception e) {
-							logger.warn("method " + methodName + " not found on server");
-						}
-					}
+					PublishThread publishThread = new PublishThread(this.scPublishServer, methodName, request,
+							operationTimeoutInMillis);
+					publishThread.start();
+					return response;
 				}
 			}
 			subscriptionLogger.logSubscribe("publish-1", request.getSessionId(), request.getMask());
@@ -189,24 +181,25 @@ public class TestPublishServer extends TestStatefulServer {
 
 	private class PublishThread extends Thread {
 		SCPublishServer publishSrv;
-		Method method;
+		String methodName;
 		SCMessage request;
 		int operationTimeoutInMillis = 0;
 
-		public PublishThread(SCPublishServer publishSrv, Method method, SCMessage request, int operationTimeoutInMillis) {
+		public PublishThread(SCPublishServer publishSrv, String methodName, SCMessage request, int operationTimeoutInMillis) {
 			this.publishSrv = publishSrv;
-			this.method = method;
+			this.methodName = methodName;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public void run() {
 			try {
+				Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
 				// first sleep 1 second to give test client time to stay ready
 				Thread.sleep(1000);
 				method.invoke(this, request, operationTimeoutInMillis);
 			} catch (Exception e1) {
-				logger.warn("cannot not invoke " + method.getName());
+				logger.warn("cannot not invoke " + methodName);
 				return;
 			}
 		}
@@ -235,7 +228,5 @@ public class TestPublishServer extends TestStatefulServer {
 			}
 		}
 
-	
-	
 	}
 }
