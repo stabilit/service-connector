@@ -85,7 +85,7 @@ public class SCMessage {
 		if (messageInfo == null) {
 			return;
 		}
-		ValidatorUtility.validateStringLength(1, messageInfo.trim(), 256, SCMPError.HV_WRONG_MESSAGE_INFO);
+		ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 		this.messageInfo = messageInfo;
 	}
 
@@ -109,7 +109,7 @@ public class SCMessage {
 		if (sessionInfo == null) {
 			return;
 		}
-		ValidatorUtility.validateStringLength(1, sessionInfo.trim(), 256, SCMPError.HV_WRONG_SESSION_INFO);
+		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.sessionInfo = sessionInfo;
 	}
 
@@ -230,7 +230,7 @@ public class SCMessage {
 		if (cacheId == null) {
 			return;
 		}
-		ValidatorUtility.validateStringLength(1, cacheId.trim(), 256, SCMPError.HV_WRONG_SESSION_INFO);
+		ValidatorUtility.validateStringLength(1, cacheId, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.cacheId = cacheId;
 	}
 

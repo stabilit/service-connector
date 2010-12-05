@@ -323,6 +323,10 @@ public class StatefulServer extends Server {
 			// delete session in global registries
 			if (session instanceof Subscription) {
 				StatefulServer.subscriptionRegistry.removeSubscription(session.getId());
+				if(session.getServer() == null) {
+					// server already destroyed
+					continue;
+				}
 				SubscriptionQueue<SCMPMessage> queue = ((PublishService) ((StatefulServer) session.getServer()).getService())
 						.getSubscriptionQueue();
 				queue.unsubscribe(session.getId());

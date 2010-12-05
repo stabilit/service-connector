@@ -306,7 +306,13 @@ public class SCPublishService extends SCService {
 			if (reply.isFault()) {
 				// operation failed
 				SCMPFault fault = (SCMPFault) reply;
-				super.callback(fault.getCause());
+				if (fault.getCause() != null) {
+					super.callback(fault.getCause());
+				} else {
+					SCServiceException ex = new SCServiceException("SCPublishService operation failed");
+					ex.setSCMPError(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+					super.callback(ex);
+				}
 				return;
 			}
 			if (SCPublishService.this.sessionActive) {

@@ -82,7 +82,7 @@ public class SCMessageFault extends SCMessage {
 	 * @throws SCMPValidatorException
 	 */
 	public void setAppErrorText(String appErrorText) throws SCMPValidatorException {
-		ValidatorUtility.validateStringLength(1, appErrorText.trim(), 256, SCMPError.HV_WRONG_APP_ERROR_TEXT);
+		ValidatorUtility.validateStringLength(1, appErrorText, 256, SCMPError.HV_WRONG_APP_ERROR_TEXT);
 		this.appErrorText = appErrorText;
 	}
 }

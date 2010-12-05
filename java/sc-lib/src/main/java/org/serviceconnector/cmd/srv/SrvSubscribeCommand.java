@@ -112,13 +112,15 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 			}
 			// mask
 			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
-			ValidatorUtility.validateStringLength(1, mask.trim(), 256, SCMPError.HV_WRONG_MASK);
+			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 			// ipAddressList
 			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 			// sessionInfo
 			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-			ValidatorUtility.validateStringLength(1, sessionInfo.trim(), 256, SCMPError.HV_WRONG_SESSION_INFO);
+			if (sessionInfo != null) {
+				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+			}
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(SrvSubscribeCommand.this.getKey());

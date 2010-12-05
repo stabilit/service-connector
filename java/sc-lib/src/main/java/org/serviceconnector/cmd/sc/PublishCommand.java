@@ -96,11 +96,11 @@ public class PublishCommand extends CommandAdapter {
 			// message info
 			String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 			if (messageInfo != null) {
-				ValidatorUtility.validateStringLength(1, messageInfo.trim(), 256, SCMPError.HV_WRONG_MESSAGE_INFO);
+				ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 			}
 			// mask
 			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
-			ValidatorUtility.validateStringLength(1, mask.trim(), 256, SCMPError.HV_WRONG_MASK);
+			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

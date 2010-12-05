@@ -182,7 +182,7 @@ public final class ValidatorUtility {
 	}
 
 	/**
-	 * Validate string.
+	 * Validate string. Trims string before length control.
 	 * 
 	 * @param minSizeInc
 	 *            the minimum inclusive size
@@ -199,7 +199,7 @@ public final class ValidatorUtility {
 		if (stringValue == null) {
 			throw new SCMPValidatorException(error, "StringValue must be set");
 		}
-		int length = stringValue.getBytes().length;
+		int length = stringValue.trim().getBytes().length;
 
 		if (length < minSizeInc || length > maxSizeInc) {
 			throw new SCMPValidatorException(error, "StringValue length " + length + " is not within limits " + minSizeInc + " to "
