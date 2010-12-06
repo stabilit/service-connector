@@ -62,11 +62,11 @@ public class DemoSessionClient extends Thread {
 			SCMessage responseMsg = new SCMessage();
 			SCMessageCallback cbk = new DemoSessionClientCallback(service); // callback on service!!
 			for (int i = 0; i < 10; i++) {
-				requestMsg.setData("body nr : " + i);
-				logger.info("Message sent: " + requestMsg.getData());
-
 				responseMsg = service.execute(requestMsg); // regular synchronous call
 				logger.info("Message received: " + responseMsg.getData());
+				
+				requestMsg.setData("body nr : " + i);
+				logger.info("Message sent: " + requestMsg.getData());
 				service.send(requestMsg, cbk); // regular asynchronous call
 				Thread.sleep(1000);
 			}

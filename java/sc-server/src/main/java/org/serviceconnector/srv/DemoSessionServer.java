@@ -42,7 +42,6 @@ public class DemoSessionServer extends Thread {
 	public void run() {
 
 		SCServer sc = new SCServer("localhost", 9000, 9002); // regular, defaults documented in javadoc
-		// sc = new SCServer("localhost", 9000, 9002, ConnectionType.NETTY_TCP); // alternative with connection type
 
 		try {
 			sc.setKeepAliveIntervalSeconds(10); // can be set before register

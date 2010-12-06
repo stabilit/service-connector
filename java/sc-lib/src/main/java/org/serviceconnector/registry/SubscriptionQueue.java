@@ -249,6 +249,7 @@ public class SubscriptionQueue<E> {
 			// unsubscribe & pointer is in listen mode - run a timeout
 			dataPointer.cancel();
 			dataPointer.timerRun.timeout();
+			dataPointer.stopListen();
 		}
 		this.pointerMap.remove(sessionId);
 		dataPointer.destroy();

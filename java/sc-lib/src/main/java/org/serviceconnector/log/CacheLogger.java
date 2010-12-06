@@ -16,38 +16,46 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.log;
 
-/**
- * The Enum Loggers. All available log4j Loggers beside class loggers in SCM.
- */
-public enum Loggers {
+import org.apache.log4j.Logger;
 
-	CONNECTION("ConnectionLogger"), //
-	SESSION("SessionLogger"), //
-	CACHE("CacheLogger"), //
-	SUBSCRIPTION("SubscriptionLogger"), //
-	MESSAGE("MessageLogger"), //
-	PERFORMANCE("PerformanceLogger"),
-	TEST("TestLogger");
+public class CacheLogger {
 
-	/** The value. */
-	private String value;
+	private static final Logger cacheLogger = Logger.getLogger(Loggers.SESSION.getValue());
+	private static final CacheLogger instance = new CacheLogger();
 
 	/**
-	 * Instantiates a new logger.
-	 * 
-	 * @param value
-	 *            the value
+	 * Private constructor for singleton use.
 	 */
-	private Loggers(String value) {
-		this.value = value;
+	private CacheLogger() {
 	}
 
+	public static CacheLogger getInstance() {
+		return CacheLogger.instance;
+	}
+
+	// /**
+	// * @param className
+	// * @param sessionId
+	// */
+	// public synchronized void logCache(String className, String sessionId) {
+	// if (cacheLogger.isTraceEnabled()) {
+	// Formatter format = new Formatter();
+	// format.format("", sessionId);
+	// cacheLogger.debug(format.toString());
+	// format.close();
+	// }
+	// }
+
 	/**
-	 * Gets the value.
-	 * 
-	 * @return the value
+	 * @return
 	 */
-	public String getValue() {
-		return value;
+	public boolean isEnabled() {
+		return cacheLogger.isTraceEnabled();
+	}
+
+	public void debug(String message) {
+		if (cacheLogger.isTraceEnabled()) {
+			cacheLogger.debug(message);
+		}
 	}
 }

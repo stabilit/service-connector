@@ -129,6 +129,9 @@ public final class Constants {
 
 	/** File containing the Sc process PID. Created at startup and deleted on exit or error. Used to check is sc is running. */
 	public static final String PID_FILE_NAME = "/sc.pid";
+	
+	/** The Constant IPV6_LOOPBACK_NIC. */
+	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
 
 	/*
 	 * console command constants *************************
