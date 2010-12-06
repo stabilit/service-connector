@@ -256,6 +256,7 @@ public class SCPublishService extends SCService {
 			// unsubscribe not possible - not subscribed on this service just ignore
 			return;
 		}
+		this.sessionActive = false;
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		try {
 			this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
@@ -277,7 +278,6 @@ public class SCPublishService extends SCService {
 				throw ex;
 			}
 		} finally {
-			this.sessionActive = false;
 			this.sessionId = null;
 		}
 	}
