@@ -125,7 +125,6 @@ public class SubscribeTest {
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
 		assertNotNull("the session ID is null", service.getSessionId());
 		assertEquals("message is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-		assertEquals("messageInfo is not the same", subMsgRequest.getSessionInfo(), subMsgResponse.getSessionInfo());
 		assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 		assertEquals("fault is not the same", subMsgRequest.isFault(), subMsgResponse.isFault());
 
