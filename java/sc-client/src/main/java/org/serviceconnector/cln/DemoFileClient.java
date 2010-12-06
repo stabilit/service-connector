@@ -37,36 +37,32 @@ public class DemoFileClient extends Thread {
 
 	@Override
 	public void run() {
-
-		//SCClient sc = new SCClient("localhost", 7000); // regular defaults must be documented in javadoc
-		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP); // alternative with connection type
+		// Connection to SC over HTTP
+		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP);
 
 		try {
-			sc.setMaxConnections(20); // can be set before attach
-			sc.setKeepAliveIntervalSeconds(10); // can be set before attach
-			sc.attach(); // regular
-//			sc.attach(10); // alternative with operation timeout
+			sc.setMaxConnections(20); // can be set before attach, default 100 Connections
+			sc.setKeepAliveIntervalSeconds(10); // can be set before attach, default 0 -> inactive
+			sc.attach(); // attaching client to SC , communication starts
 
-			SCFileService service = sc.newFileService("file-1"); // no other params possible
+			SCFileService service = sc.newFileService("file-1"); // name of the service to use
 
 			File localFile = new File("src/main/resources/ClientContent.txt");
 			InputStream inpStream = new FileInputStream(localFile);
 			String targetFileName = "uploadedContent.txt";
 
-			service.uploadFile(targetFileName, inpStream); // regular
-			// service.uploadFile(600, targetFileName, inpStream); // alternative with operation timeout
+			service.uploadFile(targetFileName, inpStream); // regular upload
 
 			localFile = new File("src/main/resources/ServerContent.txt");
 			FileOutputStream outStream = new FileOutputStream(localFile);
 			targetFileName = "ClientContentCopied.txt";
-			service.downloadFile(targetFileName, outStream); // regular
-			// service.downloadFile(600, targetFileName, outStream); // alternative with operation timeout
+			service.downloadFile(targetFileName, outStream); // regular download
 			outStream.close();
 		} catch (Exception e) {
 			logger.error("run", e);
 		} finally {
 			try {
-				sc.detach();
+				sc.detach(); // detaches from SC, stops communication
 			} catch (Exception e) {
 				logger.error("cleanup", e);
 			}

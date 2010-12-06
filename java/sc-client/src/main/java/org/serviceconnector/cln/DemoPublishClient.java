@@ -21,6 +21,7 @@ import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
+import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.net.ConnectionType;
 
 @SuppressWarnings("unused")
@@ -37,45 +38,38 @@ public class DemoPublishClient extends Thread {
 	@Override
 	public void run() {
 
-		// SCClient sc = new SCClient("localhost", 7000); // regular, defaults documented in javadoc
-		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP); // alternative with connection type
+		// Connection to SC over HTTP
+		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP);
 		SCPublishService service = null;
+
 		try {
-			sc.setMaxConnections(20); // can be set before attach
-			sc.setKeepAliveIntervalSeconds(10); // can be set before attach
-			sc.attach(); // regular
-			// sc.attach(10); // alternative with operation timeout
+			sc.setMaxConnections(20); // can be set before attach, default 100 Connections
+			sc.setKeepAliveIntervalSeconds(10); // can be set before attach, default 0 -> inactive
+			sc.attach(); // attaching client to SC , communication starts
 
 			String serviceName = "publish-1";
-			service = sc.newPublishService(serviceName); // no other params possible
+			service = sc.newPublishService(serviceName); // name of the service to use
 
 			SCMessageCallback cbk = new DemoPublishClientCallback(service); // callback on service!!
-			String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
+			// set up subscribe message
 			SCSubscribeMessage msg = new SCSubscribeMessage();
+			String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
 			msg.setSessionInfo("subscription-info"); // optional
 			msg.setData("certificate or what so ever"); // optional
 			msg.setMask(mask); // mandatory
 			msg.setNoDataIntervalInSeconds(100); // mandatory
-			SCSubscribeMessage reply = service.subscribe(msg, cbk); // regular
-			reply = service.subscribe(10, msg, cbk); // alternative with operation timeout
+			SCSubscribeMessage reply = service.subscribe(msg, cbk); // regular subscribe
 
 			String sid = service.getSessionId();
 
-			// while (true) {
-			// service.receive(cbk); // wait for response
-			// cbk.receive(); // wait for response ?
-			// responseMsg = cbk.getMessage(); // response message
-			// }
+			// wait to receive messages
+			Thread.sleep(10000);
 		} catch (Exception e) {
 			logger.error("run", e);
 		} finally {
 			try {
 				service.unsubscribe(); // regular
-				// service.unsubscribe(10); // alternative with operation timeout
-				SCMessage msg = new SCMessage();
-				msg.setSessionInfo("subscription-info");
-				// service.unsubscribe(10, msg); // alternative with operation timeout and session info
-				sc.detach();
+				sc.detach(); // detaches from SC, stops communication
 			} catch (Exception e) {
 				logger.info("cleanup " + e.toString());
 			}

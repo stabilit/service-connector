@@ -45,7 +45,6 @@ public class DemoSessionCacheClient extends Thread {
 			sc.setMaxConnections(20); // can be set before attach
 			sc.setKeepAliveIntervalSeconds(0); // can be set before attach
 			sc.attach(); // regular
-			// sc.attach(10); // alternative with operation timeout
 
 			String serviceName = "session-1";
 			service = sc.newSessionService(serviceName); // regular, no other params possible
