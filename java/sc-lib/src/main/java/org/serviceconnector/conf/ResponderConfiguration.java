@@ -77,6 +77,10 @@ public class ResponderConfiguration {
 					for (NetworkInterface netint : Collections.list(nets)) {
 						Enumeration<InetAddress> inetAdresses = netint.getInetAddresses();
 						for (InetAddress inetAddress : Collections.list(inetAdresses)) {
+							if (inetAddress.getHostAddress().equals(Constants.IPV6_LOOPBACK_NIC)) {
+								// ignore IPV6_LOOPBACK_NIC, bind not possible on this NIC
+								continue;
+							}
 							interfaces.add(inetAddress.getHostAddress());
 							logger.info("Responder " + responderName + " listens on " + inetAddress.getHostAddress());
 						}
