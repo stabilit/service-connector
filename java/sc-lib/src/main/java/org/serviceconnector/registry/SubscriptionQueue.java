@@ -233,7 +233,7 @@ public class SubscriptionQueue<E> {
 	public void changeSubscription(String sessionId, SubscriptionMask mask) {
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		if (dataPointer != null) {
-			dataPointer.changeFilterMask(mask);
+			dataPointer.changeMask(mask);
 		}
 	}
 
@@ -309,12 +309,12 @@ public class SubscriptionQueue<E> {
 		}
 
 		/**
-		 * Change filter mask.
+		 * Change mask.
 		 * 
-		 * @param filterMask
-		 *            the filter mask
+		 * @param mask
+		 *            the mask
 		 */
-		public void changeFilterMask(SubscriptionMask mask) {
+		public void changeMask(SubscriptionMask mask) {
 			this.mask = mask;
 			if (this.node == null) {
 				return;

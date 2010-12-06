@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.log;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 public class CacheLogger {
@@ -54,8 +55,20 @@ public class CacheLogger {
 	}
 
 	public void debug(String message) {
-		if (cacheLogger.isTraceEnabled()) {
+		if (cacheLogger.isDebugEnabled()) {
 			cacheLogger.debug(message);
+		}
+	}
+
+	public void warn(String message) {
+		if (cacheLogger.isEnabledFor(Level.WARN)) {
+			cacheLogger.warn(message);
+		}
+	}
+
+	public void info(String message) {
+		if (cacheLogger.isEnabledFor(Level.INFO)) {
+			cacheLogger.info(message);
 		}
 	}
 }

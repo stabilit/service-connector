@@ -16,17 +16,16 @@
 package org.serviceconnector.cache;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.log.CacheLogger;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SCMPCacheConfiguration.
  */
 public class CacheConfiguration implements ICacheConfiguration {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(CacheConfiguration.class);
+	protected final static CacheLogger logger = CacheLogger.getInstance();
 
 	/** The cache enabled. */
 	private boolean cacheEnabled;
@@ -45,10 +44,9 @@ public class CacheConfiguration implements ICacheConfiguration {
 
 	/** The max elements on disk. */
 	private int maxElementsOnDisk;
-	
+
 	/** The expiration thread timeout in seconds. */
 	private int expirationThreadTimeoutSeconds;
-	
 
 	/**
 	 * Instantiates a new sCMP cache configuration.
@@ -64,11 +62,9 @@ public class CacheConfiguration implements ICacheConfiguration {
 	}
 
 	/**
-	 * Loads cache parameters from properties file.
-	 * 
-	 * # Service Connector cache parameters cache.enabled=true cache.name=scCache cache.diskPersistent=true
-	 * cache.diskPath=../../dev/ cache cache.timeIdleSeconds=60 cache.timeToLiveSeconds=120 cache.maxElementsInMemory=10000
-	 * cache.maxElementsOnDisk=1000000
+	 * Loads cache parameters from properties file. # Service Connector cache parameters cache.enabled=true cache.name=scCache
+	 * cache.diskPersistent=true cache.diskPath=../../dev/ cache cache.timeIdleSeconds=60 cache.timeToLiveSeconds=120
+	 * cache.maxElementsInMemory=10000 cache.maxElementsOnDisk=1000000
 	 * 
 	 * @param fileName
 	 *            the file name
@@ -182,20 +178,21 @@ public class CacheConfiguration implements ICacheConfiguration {
 	public int getMaxElementsOnDisk() {
 		return maxElementsOnDisk;
 	}
-	
+
 	/**
 	 * Gets the expiration thread timeout seconds.
-	 *
+	 * 
 	 * @return the expiration thread timeout seconds
 	 */
 	public int getExpirationThreadTimeoutSeconds() {
 		return expirationThreadTimeoutSeconds;
 	}
-	
+
 	/**
 	 * Sets the expiration thread timeout seconds.
-	 *
-	 * @param expirationThreadTimeoutSeconds the new expiration thread timeout seconds
+	 * 
+	 * @param expirationThreadTimeoutSeconds
+	 *            the new expiration thread timeout seconds
 	 */
 	public void setExpirationThreadTimeoutSeconds(int expirationThreadTimeoutSeconds) {
 		this.expirationThreadTimeoutSeconds = expirationThreadTimeoutSeconds;
