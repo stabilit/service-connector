@@ -28,6 +28,12 @@ public abstract class SCPublishServerCallback {
 	/** The sc publish server. */
 	protected SCPublishServer scPublishServer = null;
 
+	/**
+	 * Instantiates a new SCPublishServerCallback.
+	 * 
+	 * @param scPublishServer
+	 *            the server
+	 */
 	public SCPublishServerCallback(SCPublishServer scPublishServer) {
 		this.scPublishServer = scPublishServer;
 	}
