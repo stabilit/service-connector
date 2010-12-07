@@ -121,7 +121,7 @@ public class DemoPublishServer extends Thread {
 			try {
 				Thread.sleep(2000);
 				SCPublishMessage pubMessage = new SCPublishMessage();
-				for (int i = 0; i < 10; i++) {
+				for (int i = 0; i < 5; i++) {
 					pubMessage.setData("publish message nr : " + i);
 					pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
 					publishSrv.publish(pubMessage);

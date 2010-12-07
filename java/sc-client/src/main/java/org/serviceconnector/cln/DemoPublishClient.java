@@ -61,7 +61,7 @@ public class DemoPublishClient extends Thread {
 			String sid = service.getSessionId();
 
 			// wait to receive messages
-			while (cbk.receivedMsg < 10) {
+			while (cbk.receivedMsg < 5) {
 				Thread.sleep(1500);
 			}
 		} catch (Exception e) {

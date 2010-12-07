@@ -60,14 +60,14 @@ public class DemoSessionClient {
 			SCMessage requestMsg = new SCMessage();
 			SCMessage responseMsg = new SCMessage();
 			SCMessageCallback cbk = new DemoSessionClientCallback(service); // callback on service!!
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 5; i++) {
 				requestMsg.setData("body nr : " + i);
 				responseMsg = service.execute(requestMsg); // regular synchronous call
 				logger.info("Message sent sync: " + requestMsg.getData());
 				logger.info("Message received sync: " + responseMsg.getData());
 				Thread.sleep(2000);
 			}
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 5; i++) {
 				requestMsg.setData("body nr : " + i);
 				service.send(requestMsg, cbk); // regular asynchronous call
 				logger.info("Message sent async: " + requestMsg.getData());
