@@ -60,8 +60,6 @@ public class MessageLogger {
 			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.SESSION_ID,message));
 			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.MASK,message));
 			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.IP_ADDRESS_LIST,message));
-			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.MASK,message));
-			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.MASK,message));
 			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.CASCADED_MASK,message));
 			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT,message));
 			builder.append(this.formatAttribute(SCMPHeaderAttributeKey.CACHE_ID,message));
