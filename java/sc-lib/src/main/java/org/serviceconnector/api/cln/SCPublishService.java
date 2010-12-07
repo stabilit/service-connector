@@ -20,7 +20,6 @@ import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.SCSubscribeMessage;
@@ -234,6 +233,18 @@ public class SCPublishService extends SCService {
 	/**
 	 * Unsubscribe.
 	 * 
+	 * @param scSubscribeMessage
+	 *            the sc subscribe message
+	 * @throws Exception
+	 *             the exception
+	 */
+	public synchronized void unsubscribe(SCSubscribeMessage scSubscribeMessage) throws Exception {
+		this.unsubscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage);
+	}
+
+	/**
+	 * Unsubscribe.
+	 * 
 	 * @param operationTimeoutSeconds
 	 *            the operation timeout seconds
 	 * @throws Exception
@@ -251,7 +262,7 @@ public class SCPublishService extends SCService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void unsubscribe(int operationTimeoutSeconds, SCMessage scMessage) throws Exception {
+	public synchronized void unsubscribe(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage) throws Exception {
 		if (this.sessionActive == false) {
 			// unsubscribe not possible - not subscribed on this service just ignore
 			return;
@@ -263,8 +274,8 @@ public class SCPublishService extends SCService {
 			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
 					this.requester, this.serviceName, this.sessionId);
 			SCServiceCallback callback = new SCServiceCallback(true);
-			if (scMessage != null) {
-				unsubscribeCall.setSessionInfo(scMessage.getSessionInfo());
+			if (scSubscribeMessage != null) {
+				unsubscribeCall.setSessionInfo(scSubscribeMessage.getSessionInfo());
 			}
 			try {
 				unsubscribeCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
