@@ -1,5 +1,5 @@
 @echo off
-del ..\documentation\apidocs\*.* /Q/F
+del ..\doc\apidocs\*.* /Q/F
 
 rem create javadoc and copies everything to documentation
 call mvn-javadoc-cmd.bat ..\..\java\sc-lib
