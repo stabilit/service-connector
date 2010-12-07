@@ -28,6 +28,8 @@ import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.TimeMillis;
 
 public class CacheManager {
+	
+	
 	/** The Constant logger. */
 	protected final static CacheLogger cacheLogger = CacheLogger.getInstance();
 
