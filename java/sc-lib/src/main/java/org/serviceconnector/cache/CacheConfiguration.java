@@ -16,8 +16,10 @@
 package org.serviceconnector.cache;
 
 import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.log.CacheLogger;
+import org.serviceconnector.test.system.publish.SubscribeTest;
 
 /**
  * The Class SCMPCacheConfiguration.
@@ -25,8 +27,8 @@ import org.serviceconnector.log.CacheLogger;
 public class CacheConfiguration implements ICacheConfiguration {
 
 	/** The Constant logger. */
-	protected final static CacheLogger logger = CacheLogger.getInstance();
-
+	protected final static Logger logger = Logger.getLogger(CacheConfiguration.class);
+	
 	/** The cache enabled. */
 	private boolean cacheEnabled;
 

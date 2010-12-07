@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 
 public class CacheLogger {
 
-	private static final Logger cacheLogger = Logger.getLogger(Loggers.SESSION.getValue());
+	private static final Logger cacheLogger = Logger.getLogger(Loggers.CACHE.getValue());
 	private static final CacheLogger instance = new CacheLogger();
 
 	/**
