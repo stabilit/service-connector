@@ -107,8 +107,8 @@ public class SCClient {
 		}
 		ValidatorUtility.validateInt(1, operationTimeout, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		ValidatorUtility.validateInt(1, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
-		AppContext.init();
 		synchronized (AppContext.communicatorsLock) {
+			AppContext.init();
 			this.requester = new SCRequester(new RequesterContext(this.host, this.port, this.connectionType.getValue(),
 					keepAliveIntervalSeconds, this.maxConnections));
 			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);

@@ -16,18 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty;
 
-import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelEvent;
-import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.log.ConnectionLogger;
-import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.ResponseAdapter;
-import org.serviceconnector.scmp.SCMPMessage;
 
 /**
  * The Class NettyTcpResponse is responsible for writing a response to a ChannelBuffer. Encodes SCMP to a TCP frame. Based on JBoss
@@ -38,14 +32,6 @@ public class NettyTcpResponse extends ResponseAdapter {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyTcpResponse.class);
 
-	/** The Constant connectionLogger. */
-	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-
-	/** The event from Netty framework. */
-	private ChannelEvent event;
-	/** The encoder decoder. */
-	private IEncoderDecoder encoderDecoder;
-
 	/**
 	 * Instantiates a new netty tcp response.
 	 * 
@@ -53,42 +39,7 @@ public class NettyTcpResponse extends ResponseAdapter {
 	 *            the event
 	 */
 	public NettyTcpResponse(ChannelEvent event) {
-		this.scmp = null;
-		this.event = event;
-	}
-
-	/**
-	 * Gets the event.
-	 * 
-	 * @return the event
-	 */
-	public ChannelEvent getEvent() {
-		return event;
-	}
-
-	/**
-	 * Gets the buffer. Encodes the scmp.
-	 * 
-	 * @return the buffer
-	 * @throws Exception
-	 *             the exception
-	 */
-	public ChannelBuffer getBuffer() throws Exception {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(this.scmp);
-		encoderDecoder.encode(baos, scmp);
-		byte[] buf = baos.toByteArray();
-		return ChannelBuffers.copiedBuffer(buf);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setSCMP(SCMPMessage scmp) {
-		if (scmp == null) {
-			return;
-		}
-		scmp.setIsReply(true);
-		this.scmp = scmp;
+		super(event);
 	}
 
 	/** {@inheritDoc} */

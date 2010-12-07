@@ -143,8 +143,8 @@ public class SCSessionServer {
 		int keepAliveIntervalSeconds = this.scServer.getKeepAliveIntervalSeconds();
 		boolean immediateConnect = this.scServer.isImmediateConnect();
 		
-		AppContext.init();
 		synchronized (AppContext.communicatorsLock) {
+			AppContext.init();
 			this.requester.getContext().getSCMPMsgSequenceNr().reset();
 			
 			SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(

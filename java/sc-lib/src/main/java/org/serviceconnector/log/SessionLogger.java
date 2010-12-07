@@ -29,6 +29,7 @@ public class SessionLogger {
 	private String CREATE_SESSION_STR = "create session:%s";
 	private String DELETE_SESSION_STR = "delete session:%s";
 	private String ABORT_SESSION_STR = "abort session:%s";
+	private String TIMEOUT_SESSION_STR = "timeout session:%s";
 
 	/**
 	 * Private constructor for singleton use.
@@ -61,6 +62,19 @@ public class SessionLogger {
 		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(DELETE_SESSION_STR, sessionId);
+			sessionLogger.debug(format.toString());
+			format.close();
+		}
+	}
+	
+	/**
+	 * @param className
+	 * @param sessionId
+	 */
+	public synchronized void logTimeoutSession(String className, String sessionId) {
+		if (sessionLogger.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(TIMEOUT_SESSION_STR, sessionId);
 			sessionLogger.debug(format.toString());
 			format.close();
 		}

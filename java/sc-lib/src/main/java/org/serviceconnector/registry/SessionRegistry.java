@@ -203,7 +203,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			Server server = session.getServer();
 			// aborts session on server
 			server.abortSession(session);
-			// TODO for jan.. log session timeout
+			sessionLogger.logTimeoutSession(this.getClass().getName(), session.getId());
 		}
 
 		/** {@inheritDoc} */

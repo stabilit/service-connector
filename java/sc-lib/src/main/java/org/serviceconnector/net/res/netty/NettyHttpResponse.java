@@ -16,24 +16,17 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty;
 
-import java.io.ByteArrayOutputStream;
 import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelEvent;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
-import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.log.ConnectionLogger;
-import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
-import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.ResponseAdapter;
-import org.serviceconnector.scmp.SCMPMessage;
 
 /**
  * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http frame. Based on JBoss
@@ -44,14 +37,6 @@ public class NettyHttpResponse extends ResponseAdapter {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpResponse.class);
 
-	/** The Constant connectionLogger. */
-	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-
-	/** The event from Netty framework. */
-	private ChannelEvent event;
-	/** The encoder decoder. */
-	private IEncoderDecoder encoderDecoder;
-
 	/**
 	 * Instantiates a new netty http response.
 	 * 
@@ -59,43 +44,7 @@ public class NettyHttpResponse extends ResponseAdapter {
 	 *            the event from Netty Framework
 	 */
 	public NettyHttpResponse(ChannelEvent event) {
-		this.scmp = null;
-		this.event = event;
-	}
-
-	/**
-	 * Gets the event.
-	 * 
-	 * @return the event
-	 */
-	public ChannelEvent getEvent() {
-		return event;
-	}
-
-	/**
-	 * Gets the buffer. Encodes the scmp.
-	 * 
-	 * @return the buffer
-	 * @throws Exception
-	 *             the exception
-	 */
-	public ChannelBuffer getBuffer() throws Exception {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		FlyweightEncoderDecoderFactory encoderDecoderFactory = AppContext.getEncoderDecoderFactory();
-		encoderDecoder = encoderDecoderFactory.createEncoderDecoder(this.scmp);
-		encoderDecoder.encode(baos, this.scmp);
-		byte[] buf = baos.toByteArray();
-		return ChannelBuffers.copiedBuffer(buf);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setSCMP(SCMPMessage scmp) {
-		if (scmp == null) {
-			return;
-		}
-		scmp.setIsReply(true);
-		this.scmp = scmp;
+		super(event);
 	}
 
 	/** {@inheritDoc} */
