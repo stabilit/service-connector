@@ -18,6 +18,7 @@ package org.serviceconnector.log;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.serviceconnector.cache.CacheException;
 
 public class CacheLogger {
 
@@ -69,6 +70,12 @@ public class CacheLogger {
 	public void info(String message) {
 		if (cacheLogger.isEnabledFor(Level.INFO)) {
 			cacheLogger.info(message);
+		}
+	}
+
+	public void error(String message, CacheException e) {
+		if (cacheLogger.isEnabledFor(Level.ERROR)) {
+			cacheLogger.error(message, e);
 		}
 	}
 }

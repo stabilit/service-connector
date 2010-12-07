@@ -29,6 +29,7 @@ import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.log.CacheLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -98,6 +99,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 							int size = cacheComposite.getSize();
 							int sequenceNr = cacheId.getSequenceNrInt();
 							if (!(message.isPart() && (sequenceNr == size))) {
+								CacheLogger.getInstance().warn(
+										"cache is loading retry later, service name = " + message.getServiceName());
 								SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
 										"cache is loading, retry it later, service name = " + message.getServiceName());
 								scmpCommandException.setMessageType(this.getKey());
@@ -143,6 +146,9 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 						// schedule session timeout
 						Session session = this.sessionRegistry.getSession(sessionId);
 						this.sessionRegistry.scheduleSessionTimeout(session);
+						CacheLogger.getInstance().debug(
+								"Sent a cache message to the client (" + cacheId + " "
+										+ message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME) + ")");
 						return;
 					}
 				}

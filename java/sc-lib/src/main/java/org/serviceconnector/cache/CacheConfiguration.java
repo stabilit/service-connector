@@ -18,8 +18,6 @@ package org.serviceconnector.cache;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.log.CacheLogger;
-import org.serviceconnector.test.system.publish.SubscribeTest;
 
 /**
  * The Class SCMPCacheConfiguration.

@@ -18,23 +18,21 @@ package org.serviceconnector.cache;
 import java.util.Date;
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.cache.CacheComposite.CACHE_STATE;
 import org.serviceconnector.cache.impl.CacheImplFactory;
 import org.serviceconnector.cache.impl.ICacheImpl;
+import org.serviceconnector.log.CacheLogger;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Cache.
  */
 public class Cache {
 
-	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(Cache.class);
+	protected static final CacheLogger cacheLogger = CacheLogger.getInstance();
 
 	/** The manager. */
 	private CacheManager manager;
@@ -75,7 +73,7 @@ public class Cache {
 
 	/**
 	 * Gets the composite size.
-	 *
+	 * 
 	 * @return the composite size
 	 */
 	public synchronized int getCompositeSize() {
@@ -97,7 +95,7 @@ public class Cache {
 	 */
 	public CacheComposite getComposite(String cacheId) throws CacheException {
 		if (cacheId == null) {
-			throw new CacheException("no cache id");		
+			throw new CacheException("no cache id");
 		}
 		return getComposite(new CacheId(cacheId));
 	}
@@ -247,10 +245,11 @@ public class Cache {
 			// update last modification time
 			cacheComposite.setLastModified();
 			if (message.isPart() == false) {
-				logger.info("cache has been loaded, cacheId = " + cacheId);
+				cacheLogger.debug("cache has been loaded, cacheId = " + cacheId);
 				cacheComposite.setCacheState(CACHE_STATE.LOADED);
 			}
 			this.cacheImpl.put(cacheKey, cacheComposite);
+			cacheLogger.info("Put message (" + scmpCacheId + ") in cache, expiration time " + cacheExpirationDateTime);
 			return msgCacheId;
 		} catch (CacheException e) {
 			throw e;
@@ -332,6 +331,7 @@ public class Cache {
 				return;
 			}
 		}
+		cacheLogger.info("Cache message (" + cacheKey + ") got removed because of expiration time");
 		return;
 	}
 
@@ -549,14 +549,14 @@ public class Cache {
 				if (cacheComposite.isModificationExpired()) {
 					// modification timeout expired, remove this composite from cache
 					this.removeComposite(new CacheKey(cacheId));
-					logger.warn("cache has been removed, reason: cache is loading but response timeout exceeded, cacheId = "
+					cacheLogger.warn("cache has been removed, reason: cache is loading but response timeout exceeded, cacheId = "
 							+ cacheId);
 				}
 				return true;
 			}
 			return false;
 		} catch (CacheException e) {
-			logger.error("isLoading", e);
+			cacheLogger.error("isLoading", e);
 		}
 		return false;
 	}
@@ -579,7 +579,7 @@ public class Cache {
 			}
 			return false;
 		} catch (CacheException e) {
-			logger.error("isLoaded", e);
+			cacheLogger.error("isLoaded", e);
 		}
 		return false;
 	}
@@ -603,9 +603,9 @@ public class Cache {
 			this.putRegistry(cacheKey);
 			Statistics.getInstance().incrementCachedMessages(0);
 			this.cacheImpl.put(cacheKey, cacheComposite);
-			logger.info("start loading cache, cacheId = " + cacheId);
+			cacheLogger.debug("start loading cache, cacheId = " + cacheId);
 		} catch (CacheException e) {
-			logger.error("startLoading", e);
+			cacheLogger.error("startLoading", e);
 		}
 		return;
 	}
