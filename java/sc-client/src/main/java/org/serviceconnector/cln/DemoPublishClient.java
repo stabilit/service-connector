@@ -21,7 +21,6 @@ import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
-import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.net.ConnectionType;
 
 @SuppressWarnings("unused")
@@ -37,7 +36,6 @@ public class DemoPublishClient extends Thread {
 
 	@Override
 	public void run() {
-
 		// Connection to SC over HTTP
 		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP);
 		SCPublishService service = null;
@@ -50,7 +48,7 @@ public class DemoPublishClient extends Thread {
 			String serviceName = "publish-1";
 			service = sc.newPublishService(serviceName); // name of the service to use
 
-			SCMessageCallback cbk = new DemoPublishClientCallback(service); // callback on service!!
+			DemoPublishClientCallback cbk = new DemoPublishClientCallback(service); // callback on service!!
 			// set up subscribe message
 			SCSubscribeMessage msg = new SCSubscribeMessage();
 			String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
@@ -63,12 +61,16 @@ public class DemoPublishClient extends Thread {
 			String sid = service.getSessionId();
 
 			// wait to receive messages
-			Thread.sleep(10000);
+			while (cbk.receivedMsg < 10) {
+				Thread.sleep(1500);
+			}
 		} catch (Exception e) {
 			logger.error("run", e);
 		} finally {
 			try {
-				service.unsubscribe(); // regular
+				SCSubscribeMessage msg = new SCSubscribeMessage();
+				msg.setSessionInfo("kill server"); // optional
+				service.unsubscribe(msg); // regular
 				sc.detach(); // detaches from SC, stops communication
 			} catch (Exception e) {
 				logger.info("cleanup " + e.toString());
@@ -78,7 +80,7 @@ public class DemoPublishClient extends Thread {
 
 	private class DemoPublishClientCallback extends SCMessageCallback {
 
-		private SCMessage pubMessage;
+		public int receivedMsg = 0;
 
 		public DemoPublishClientCallback(SCPublishService service) {
 			super(service);
@@ -86,16 +88,14 @@ public class DemoPublishClient extends Thread {
 
 		@Override
 		public void receive(SCMessage reply) {
-			this.pubMessage = reply;
-			System.out.println("Publish client received: " + reply.getData());
-		}
-
-		public SCMessage getMessage() {
-			return this.pubMessage;
+			receivedMsg++;
+			System.out.println("DemoPublishClient.DemoPublishClientCallback.receive() " + reply.getData());
 		}
 
 		@Override
 		public void receive(Exception e) {
+			receivedMsg++;
+			System.out.println("DemoPublishClient.DemoPublishClientCallback.receive() " + e.getMessage());
 		}
 	}
 }

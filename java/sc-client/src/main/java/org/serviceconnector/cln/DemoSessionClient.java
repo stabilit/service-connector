@@ -23,17 +23,16 @@ import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.net.ConnectionType;
 
 @SuppressWarnings("unused")
-public class DemoSessionClient extends Thread {
+public class DemoSessionClient {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DemoSessionClient.class);
 
 	public static void main(String[] args) {
 		DemoSessionClient demoSessionClient = new DemoSessionClient();
-		demoSessionClient.start();
+		demoSessionClient.run();
 	}
 
-	@Override
 	public void run() {
 
 		// Connection to SC over HTTP
@@ -62,19 +61,25 @@ public class DemoSessionClient extends Thread {
 			SCMessage responseMsg = new SCMessage();
 			SCMessageCallback cbk = new DemoSessionClientCallback(service); // callback on service!!
 			for (int i = 0; i < 10; i++) {
-				responseMsg = service.execute(requestMsg); // regular synchronous call
-				logger.info("Message received: " + responseMsg.getData());
-				
 				requestMsg.setData("body nr : " + i);
-				logger.info("Message sent: " + requestMsg.getData());
+				responseMsg = service.execute(requestMsg); // regular synchronous call
+				logger.info("Message sent sync: " + requestMsg.getData());
+				logger.info("Message received sync: " + responseMsg.getData());
+				Thread.sleep(2000);
+			}
+			for (int i = 0; i < 10; i++) {
+				requestMsg.setData("body nr : " + i);
 				service.send(requestMsg, cbk); // regular asynchronous call
-				Thread.sleep(1000);
+				logger.info("Message sent async: " + requestMsg.getData());
+				Thread.sleep(2000);
 			}
 		} catch (Exception e) {
 			logger.error("run", e);
 		} finally {
 			try {
-				service.deleteSession(); // regular
+				SCMessage msg = new SCMessage();
+				msg.setSessionInfo("kill server"); // optional
+				service.deleteSession(msg); // regular
 				sc.detach(); // detaches from SC, stops communication
 			} catch (Exception e) {
 				logger.error("cleanup", e);
@@ -91,15 +96,13 @@ public class DemoSessionClient extends Thread {
 
 		@Override
 		public void receive(SCMessage reply) {
+			System.out.println("DemoSessionClient.DemoSessionClientCallback.receive() async" + reply.toString());
 			this.replyMessage = reply;
-		}
-
-		public SCMessage getMessage() {
-			return this.replyMessage;
 		}
 
 		@Override
 		public void receive(Exception e) {
+			System.out.println("DemoSessionClient.DemoSessionClientCallback.receive() " + e.getMessage());
 		}
 	}
 }

@@ -15,6 +15,9 @@
  */
 package org.serviceconnector.cln;
 
+import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.net.ConnectionType;
+
 public class DemoClient {
 
 	public static void main(String[] args) throws Exception {
@@ -22,9 +25,15 @@ public class DemoClient {
 		DemoSessionClient demoSessionClient = new DemoSessionClient();
 		DemoPublishClient demoPublishClient = new DemoPublishClient();
 		DemoFileClient demoFileClient = new DemoFileClient();
-		
-		demoSessionClient.start();	
-		demoPublishClient.start();
-		//demoFileClient.start();
+
+		demoSessionClient.run();
+		demoPublishClient.run();
+//		demoFileClient.start();
+
+		Thread.sleep(1000);
+		SCMgmtClient client = new SCMgmtClient("localhost", 9000, ConnectionType.NETTY_TCP);
+		client.attach();
+		client.killSC();
+		client.detach();
 	}
 }
