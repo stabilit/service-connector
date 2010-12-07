@@ -39,8 +39,7 @@ public class DemoPublishServer extends Thread {
 	@Override
 	public void run() {
 
-		SCServer sc = new SCServer("localhost", 9000, 9001); // regular, defaults documented in javadoc
-		// SCServer sc = new SCServer("localhost", 9000, 9001, ConnectionType.NETTY_TCP); // alternative with connection type
+		SCServer sc = new SCServer("localhost", 9000, 9001); // regular, defaults documented in java doc
 
 		try {
 			sc.setKeepAliveIntervalSeconds(10); // can be set before register
@@ -48,33 +47,22 @@ public class DemoPublishServer extends Thread {
 			sc.startListener(); // regular
 
 			String serviceName = "publish-1";
-			SCPublishServer publishSrv = sc.newPublishServer(serviceName); // no other params possible
+			SCPublishServer publishSrv = sc.newPublishServer(serviceName);
+			try {
 
-			int maxSessions = 10;
-			int maxConnections = 5;
-			SCPublishServerCallback cbk = new SrvCallback(publishSrv);
+				int maxSessions = 10;
+				int maxConnections = 5;
+				SCPublishServerCallback cbk = new SrvCallback(publishSrv);
 
-			publishSrv.register(maxSessions, maxConnections, cbk); // regular
-			// publishSrv.registerServer(10, maxSessions, maxConnections, cbk); // alternative with operation timeout
-
-			SCPublishMessage pubMessage = new SCPublishMessage();
-			for (int i = 0; i < 10; i++) {
-				pubMessage.setData("publish message nr : " + i);
-				pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-				// publishSrv.publish(pubMessage); // regular
-				publishSrv.publish(10, pubMessage); // alternative with operation timeout
-				Thread.sleep(1000);
+				publishSrv.register(maxSessions, maxConnections, cbk);
+			} catch (Exception e) {
+				publishSrv.deregister();
+				throw e;
 			}
 		} catch (Exception e) {
 			logger.error("runPublishServer", e);
-		} finally {
-			try {
-				// publishSrv.deregisterServer();
-				// publishSrv.deregisterServer(10, serviceName);
-			} catch (Exception e1) {
-				logger.error("run", e1);
-			}
-			// sc.stopListener();
+			sc.stopListener();
+			sc.destroy();
 		}
 	}
 
@@ -96,29 +84,73 @@ public class DemoPublishServer extends Thread {
 		@Override
 		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
 			logger.info("PublishServer.SrvCallback.subscribe()");
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException ex) {
-				logger.error("subscribe", ex);
-			}
+			PublishThread publish = new PublishThread(this.scPublishServer);
+			publish.start();
 			return message;
 		}
 
 		@Override
 		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
 			logger.info("PublishServer.SrvCallback.unsubscribe()");
-			Object data = message.getData();
+			String sessionInfo = message.getSessionInfo();
 			// watch out for kill server message
-			if (data != null && data.getClass() == String.class) {
-				String dataString = (String) data;
-				if (dataString.equals("kill server")) {
+			if (sessionInfo != null) {
+				if (sessionInfo.equals("kill server")) {
 					try {
-						this.scPublishServer.deregister();
-						// SCServer sc = server.getSCServer().stopListener();
+						KillThread kill = new KillThread(this.scPublishServer);
+						kill.start();
 					} catch (Exception ex) {
 						logger.error("unsubscribe", ex);
 					}
 				}
+			}
+		}
+	}
+
+	private class PublishThread extends Thread {
+
+		private SCPublishServer publishSrv;
+
+		public PublishThread(SCPublishServer publishSrv) {
+			super();
+			this.publishSrv = publishSrv;
+		}
+
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(2000);
+				SCPublishMessage pubMessage = new SCPublishMessage();
+				for (int i = 0; i < 10; i++) {
+					pubMessage.setData("publish message nr : " + i);
+					pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
+					publishSrv.publish(pubMessage);
+					Thread.sleep(2000);
+				}
+			} catch (Exception e) {
+				logger.warn("publish failed");
+			}
+		}
+	}
+
+	protected class KillThread extends Thread {
+		private SCPublishServer scPublishServer;
+
+		public KillThread(SCPublishServer scPublishServer) {
+			this.scPublishServer = scPublishServer;
+		}
+
+		@Override
+		public void run() {
+			// sleep for 2 seconds before killing the server
+			try {
+				Thread.sleep(500);
+				this.scPublishServer.deregister();
+				SCServer scServer = this.scPublishServer.getSCServer();
+				scServer.stopListener();
+				scServer.destroy();
+			} catch (Exception e) {
+				logger.error("run", e);
 			}
 		}
 	}

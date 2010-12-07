@@ -59,13 +59,12 @@ public class DemoSessionServer extends Thread {
 			} catch (Exception e) {
 				logger.error("runSessionServer", e);
 				server.deregister();
-				// server.deregisterServer(10);
+				throw e;
 			}
-			server.deregister();
 		} catch (Exception e) {
 			logger.error("runSessionServer", e);
-		} finally {
 			sc.stopListener();
+			sc.destroy();
 		}
 	}
 
@@ -84,6 +83,15 @@ public class DemoSessionServer extends Thread {
 		@Override
 		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
 			logger.info("Session deleted");
+			String sessionInfo = request.getSessionInfo();
+			// watch out for kill server message
+			if (sessionInfo != null) {
+				if (sessionInfo.equals("kill server")) {
+					System.out.println("DemoSessionServer.SrvCallback.deleteSession() kill server received");
+					KillThread kill = new KillThread(this.scSessionServer);
+					kill.start();
+				}
+			}
 		}
 
 		@Override
@@ -94,17 +102,7 @@ public class DemoSessionServer extends Thread {
 		@Override
 		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
 			Object data = request.getData();
-
-			// watch out for kill server message
-			if (data.getClass() == String.class) {
-				String dataString = (String) data;
-				if (dataString.equals("kill server")) {
-					KillThread kill = new KillThread(this.scSessionServer);
-					kill.start();
-				} else {
-					logger.info("Message received: " + data);
-				}
-			}
+			System.out.println("DemoSessionServer.SrvCallback.execute() " + data);
 			return request;
 		}
 	}
@@ -120,9 +118,11 @@ public class DemoSessionServer extends Thread {
 		public void run() {
 			// sleep for 2 seconds before killing the server
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(500);
 				this.server.deregister();
-				// SCServer sc = server.getSCServer().stopListener();
+				SCServer sc = server.getSCServer();
+				sc.stopListener();
+				sc.destroy();
 			} catch (Exception e) {
 				logger.error("run", e);
 			}
