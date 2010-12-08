@@ -54,8 +54,8 @@ import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
 
 /**
- * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the Netty
- * framework by catching events (message received, exception caught). Functionality to handle large messages is also inside.
+ * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the Netty framework
+ * by catching events (message received, exception caught). Functionality to handle large messages is also inside.
  * 
  * @author JTraber
  */
@@ -83,12 +83,20 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 
 			if (scmpReq == null) {
 				// no scmp protocol used - nothing to return
+				this.sendUnknownRequestError(response);
 				return;
 			}
 			if (scmpReq.isKeepAlive()) {
 				scmpReq.setIsReply(true);
 				response.setSCMP(scmpReq);
 				response.write();
+				return;
+			}
+			if (scmpReq.isFault()) {
+				// fault received nothing to to return - delete largeRequest/largeResponse
+				this.sendUnknownRequestError(response, scmpReq);
+				NettyTcpResponderRequestHandler.compositeRegistry.removeSCMPLargeRequest(sessionId);
+				NettyTcpResponderRequestHandler.compositeRegistry.removeSCMPLargeResponse(sessionId);
 				return;
 			}
 
@@ -206,10 +214,9 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			logger.warn(th.toString());	// regular disconnect causes this expected exception
-		}
-		else {
-			logger.error("Response error",th);
+			logger.warn(th.toString()); // regular disconnect causes this expected exception
+		} else {
+			logger.error("Response error", th);
 		}
 		if (th instanceof HasFaultResponseException) {
 			((HasFaultResponseException) th).setFaultResponse(response);
@@ -270,6 +277,12 @@ public class NettyTcpResponderRequestHandler extends SimpleChannelUpstreamHandle
 		} catch (Throwable th) {
 			logger.error("send fault", th);
 		}
+	}
+
+	private void sendUnknownRequestError(IResponse response) throws Exception {
+		SCMPMessage message = new SCMPMessage();
+		message.setMessageType(SCMPMsgType.UNDEFINED);
+		this.sendUnknownRequestError(response, message);
 	}
 
 	private void sendUnknownRequestError(IResponse response, SCMPMessage scmpReq) throws Exception {

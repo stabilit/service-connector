@@ -32,6 +32,9 @@ public class FileService extends Service {
 	private FileServer server;
 	private String path;
 
+	private String scUploadScript;
+	private String scGetFileListScript;
+
 	/**
 	 * Instantiates a new publish service.
 	 * 
@@ -40,9 +43,11 @@ public class FileService extends Service {
 	 * @param type
 	 *            the type
 	 */
-	public FileService(String name, String path) {
+	public FileService(String name, String path, String scUploadScript, String scGetFileListScript) {
 		super(name, ServiceType.FILE_SERVICE);
 		this.path = path;
+		this.scUploadScript = scUploadScript;
+		this.scGetFileListScript = scGetFileListScript;
 	}
 
 	public void setServer(FileServer server) {
@@ -51,6 +56,14 @@ public class FileService extends Service {
 
 	public String getPath() {
 		return path;
+	}
+
+	public String getUploadFileScriptName() {
+		return this.scUploadScript;
+	}
+
+	public String getGetFileListScriptName() {
+		return this.scGetFileListScript;
 	}
 
 	public synchronized FileServer allocateFileSession(FileSession session) throws Exception {

@@ -175,6 +175,11 @@ public class SCRequester implements IRequester {
 		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
+			if (scmpReply.isFault()) {
+				// reset large response/request if any in process
+				this.largeResponse = null;
+				this.largeRequest = null;
+			}
 			// ------------------- handling large request --------------------
 			if (largeRequest != null) {
 				// handle large messages

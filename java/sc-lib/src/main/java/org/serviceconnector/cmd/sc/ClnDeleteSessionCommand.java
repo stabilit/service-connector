@@ -71,7 +71,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 
 		switch (abstractServer.getType()) {
 		case STATEFUL_SERVER:
-			// code for type session service is below
+			// code for type session service is below switch statement
 			break;
 		case FILE_SERVER:
 			this.sessionRegistry.removeSession(session);

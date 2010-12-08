@@ -88,12 +88,20 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 
 			if (scmpReq == null) {
 				// no scmp protocol used - nothing to return
+				this.sendUnknownRequestError(response);
 				return;
 			}
 			if (scmpReq.isKeepAlive()) {
 				scmpReq.setIsReply(true);
 				response.setSCMP(scmpReq);
 				response.write();
+				return;
+			}
+			if (scmpReq.isFault()) {
+				// fault received nothing to to return - delete largeRequest/largeResponse
+				this.sendUnknownRequestError(response, scmpReq);
+				NettyHttpResponderRequestHandler.compositeRegistry.removeSCMPLargeRequest(sessionId);
+				NettyHttpResponderRequestHandler.compositeRegistry.removeSCMPLargeResponse(sessionId);
 				return;
 			}
 
@@ -104,7 +112,6 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			request.read();
 			ICommand command = AppContext.getCommandFactory().getCommand(request.getKey());
 			// gets the command
-			// ICommand command = CommandFactory.getCurrentCommandFactory().getCommand(request.getKey());
 			if (command == null) {
 				this.sendUnknownRequestError(response, scmpReq);
 				return;
@@ -145,7 +152,7 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 					return;
 				}
 				// removes largeResponse - request is complete don't need to know preceding messages any more
-				NettyHttpResponderRequestHandler.compositeRegistry.removeSCMPLargeResponse(scmpReq.getSessionId());
+				NettyHttpResponderRequestHandler.compositeRegistry.removeSCMPLargeResponse(sessionId);
 			}
 			// validate request and run command
 			try {
@@ -208,10 +215,9 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			logger.warn(th.toString());	// regular disconnect causes this expected exception
-		}
-		else {
-			logger.error("Response error",th);
+			logger.warn(th.toString()); // regular disconnect causes this expected exception
+		} else {
+			logger.error("Response error", th);
 		}
 		if (th instanceof HasFaultResponseException) {
 			((HasFaultResponseException) e).setFaultResponse(response);
@@ -273,6 +279,12 @@ public class NettyHttpResponderRequestHandler extends SimpleChannelUpstreamHandl
 		} catch (Throwable th) {
 			logger.error("send fault", th);
 		}
+	}
+
+	private void sendUnknownRequestError(IResponse response) throws Exception {
+		SCMPMessage message = new SCMPMessage();
+		message.setMessageType(SCMPMsgType.UNDEFINED);
+		this.sendUnknownRequestError(response, message);
 	}
 
 	private void sendUnknownRequestError(IResponse response, SCMPMessage scmpReq) throws Exception {

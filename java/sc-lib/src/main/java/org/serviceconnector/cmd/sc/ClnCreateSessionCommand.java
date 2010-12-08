@@ -75,12 +75,14 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 
 		switch (abstractService.getType()) {
 		case SESSION_SERVICE:
-			// code for type session service is below
+			// code for type session service is below switch statement
 			break;
 		case FILE_SERVICE:
+			FileService fileService = (FileService) abstractService;
 			// create file session
-			FileSession fileSession = new FileSession(sessionInfo, ipAddressList, ((FileService) abstractService).getPath());
-			FileServer fileServer = ((FileService) abstractService).allocateFileSession(fileSession);
+			FileSession fileSession = new FileSession(sessionInfo, ipAddressList, fileService.getPath(), fileService
+					.getUploadFileScriptName(), fileService.getGetFileListScriptName());
+			FileServer fileServer = fileService.allocateFileSession(fileSession);
 			// add server to session
 			fileSession.setServer(fileServer);
 			fileSession.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());
@@ -95,6 +97,9 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			return;
 		case CASCADED_SERVICE:
 			// TODO JOT cascaded service
+			break;
+		default:
+			throw new SCMPCommandException(SCMPError.SC_ERROR, "create session command not allowed for service " + serviceName);
 		}
 
 		// create session

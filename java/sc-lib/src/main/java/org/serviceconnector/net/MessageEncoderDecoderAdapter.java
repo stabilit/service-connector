@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 import org.apache.log4j.Logger;
@@ -218,5 +219,27 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			sb.append("\n");
 		}
 		return sb;
+	}
+	
+	protected byte[] compressBody(byte[] bodyBuffer, int bodyOffset, int bodyLength) throws IOException {
+		byte[] output = null;
+		// message compression required
+		output = new byte[bodyLength];
+		Deflater compresser = new Deflater();
+		// compresser.setInput(ba);
+		compresser.setInput(bodyBuffer, bodyOffset, bodyLength);
+		compresser.finish();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(output.length);
+		int numCompressedBytes = 0;
+		while (!compresser.finished()) {
+			numCompressedBytes = compresser.deflate(output);
+			if (numCompressedBytes > 0) {
+				baos.write(output, 0, numCompressedBytes);
+				baos.flush();
+			}
+		}
+		baos.close();
+		bodyBuffer = baos.toByteArray();
+		return bodyBuffer;
 	}
 }

@@ -26,14 +26,16 @@ public class FileSession extends Session {
 	private String path;
 	private HttpURLConnection httpURLConnection;
 	private InputStream is;
-	private int outstandingDownloadLength;
+	private String uploadScript;
+	private String getFileListScript;
 
-	public FileSession(String sessionInfo, String ipAddressList, String path) {
+	public FileSession(String sessionInfo, String ipAddressList, String path, String uploadScript, String getFileListScript) {
 		super(sessionInfo, ipAddressList);
 		this.streaming = false;
 		this.path = path;
-		this.outstandingDownloadLength = 0;
 		this.is = null;
+		this.getFileListScript = getFileListScript;
+		this.uploadScript = uploadScript;
 	}
 
 	/**
@@ -80,7 +82,7 @@ public class FileSession extends Session {
 	public void setHttpUrlConnection(HttpURLConnection httpCon) {
 		this.httpURLConnection = httpCon;
 	}
-	
+
 	public void setInputStream(InputStream is) {
 		this.is = is;
 	}
@@ -92,12 +94,12 @@ public class FileSession extends Session {
 	public InputStream getInputStream() {
 		return this.is;
 	}
-
-	public void setOutstandingDownloadContentLength(int contentLength) {
-		this.outstandingDownloadLength = contentLength;
+	
+	public String getUploadFileScriptName() {
+		return this.uploadScript;
 	}
 
-	public int getOutstandingDownloadLength() {
-		return outstandingDownloadLength;
+	public String getGetFileListScriptName() {
+		return this.getFileListScript;
 	}
 }

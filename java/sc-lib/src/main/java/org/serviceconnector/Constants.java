@@ -80,11 +80,6 @@ public final class Constants {
 	/** The message compression */
 	public static final boolean DEFAULT_COMPRESSION_FLAG = true;
 
-	/** The default upload script name */
-	public static final String DEFAULT_SCUPLOADFILE_SCRIPT_NAME = "scupload.php";
-
-	/** The default list files script name */
-	public static final String DEFAULT_SCLISTFILES_SCRIPT_NAME = "sclist.php";
 	/*
 	 * Various Constants *********
 	 */
@@ -129,7 +124,7 @@ public final class Constants {
 
 	/** File containing the Sc process PID. Created at startup and deleted on exit or error. Used to check is sc is running. */
 	public static final String PID_FILE_NAME = "/sc.pid";
-	
+
 	/** The Constant IPV6_LOOPBACK_NIC. */
 	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
 
@@ -154,8 +149,6 @@ public final class Constants {
 	public static final String ROOT_SUBSCRIPTION_TIMEOUT = "root.subscriptionTimeout";
 	public static final String ROOT_KEEP_ALIVE_TIMEOUT_MILLIS = "root.keepAliveTimeout";
 	public static final String ROOT_SERVER_ABORT_TIMEOUT = "root.serverAbortTimeout";
-	public static final String ROOT_SCLISTFILES_SCRIPT_NAME = "root.scListfilesScriptName";
-	public static final String ROOT_SCUPLOADFILE_SCRIPT_NAME = "root.scUploadfileScriptName";
 
 	public static final String PROPERTY_LISTENERS = "listeners";
 	public static final String PROPERTY_SERVICE_NAMES = "serviceNames";
@@ -175,6 +168,8 @@ public final class Constants {
 	public static final String PROPERTY_QALIFIER_MAX_SESSIONS = ".maxSessions";
 	public static final String PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL = ".keepAliveInterval";
 	public static final String PROPERTY_QUALIFIER_PATH = ".path";
+	public static final String PROPERTY_QUALIFIER_LIST_SCRIPT = ".listScript";
+	public static final String PROPERTY_QUALIFIER_UPLOAD_SCRIPT = ".uploadScript";
 
 	public static final boolean DEFAULT_CACHE_ENABLED = false;
 	public static final String DEFAULT_CACHE_NAME = "scCache";

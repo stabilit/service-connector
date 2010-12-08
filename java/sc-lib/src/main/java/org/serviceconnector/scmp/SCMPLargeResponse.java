@@ -40,8 +40,6 @@ public class SCMPLargeResponse extends SCMPMessage {
 	private List<SCMPMessage> scmpList;
 	/** The part request, request to pull. */
 	private SCMPMessage currentPart;
-	/** The scmp fault. */
-	private SCMPFault scmpFault;
 	/** The scmp offset. */
 	private int offest;
 	/** The output stream. */
@@ -63,7 +61,6 @@ public class SCMPLargeResponse extends SCMPMessage {
 		this.outputStream = null;
 		this.writer = null;
 		this.offest = 0;
-		this.scmpFault = null;
 		// default compositeReceiver is not complete
 		this.complete = false;
 		scmpList = new ArrayList<SCMPMessage>();
@@ -72,7 +69,7 @@ public class SCMPLargeResponse extends SCMPMessage {
 		currentPart.setMessageType(request.getMessageType());
 		currentPart.setSessionId(request.getSessionId());
 		currentPart.setCacheId(request.getCacheId());
-		//logger.info("cache id = " + request.getCacheId());
+		// logger.info("cache id = " + request.getCacheId());
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.OPERATION_TIMEOUT); // tries to set operation timeout
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
 		currentPart.setHeader(messagePart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
@@ -97,12 +94,6 @@ public class SCMPLargeResponse extends SCMPMessage {
 		if (message == null) {
 			return;
 		}
-		if (message.isFault()) {
-			// stop pulling in case of exception
-			this.scmpList.clear();
-			this.scmpFault = (SCMPFault) message;
-			reset();
-		}
 		int bodyLength = message.getBodyLength();
 		this.offest += bodyLength;
 		this.scmpList.add(message);
@@ -114,24 +105,6 @@ public class SCMPLargeResponse extends SCMPMessage {
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean isFault() {
-		if (this.scmpFault != null) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Gets the fault.
-	 *
-	 * @return the fault
-	 */
-	public SCMPFault getFault() {
-		return this.scmpFault;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public boolean isComposite() {
 		return true;
 	}
@@ -139,9 +112,6 @@ public class SCMPLargeResponse extends SCMPMessage {
 	/** {@inheritDoc} */
 	@Override
 	public int getBodyLength() {
-		if (this.scmpFault != null) {
-			return scmpFault.getBodyLength();
-		}
 		Object body = this.getBody();
 		if (body == null) {
 			return 0;
@@ -163,9 +133,6 @@ public class SCMPLargeResponse extends SCMPMessage {
 		}
 		if (this.writer != null) {
 			return this.writer.toString();
-		}
-		if (this.scmpFault != null) {
-			return scmpFault.getBody();
 		}
 		if (this.scmpList == null || this.scmpList.size() <= 0) {
 			return 0;
@@ -291,16 +258,5 @@ public class SCMPLargeResponse extends SCMPMessage {
 	 */
 	public void complete() {
 		this.complete = true;
-	}
-
-	/**
-	 * Reset composite.
-	 */
-	private void reset() {
-		this.currentPart = null;
-		this.scmpList.clear();
-		this.offest = 0;
-		this.outputStream = null;
-		this.writer = null;
 	}
 }

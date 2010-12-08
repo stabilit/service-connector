@@ -73,7 +73,17 @@ public class ServiceLoader {
 				break;
 			case FILE_SERVICE:
 				String path = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_PATH);
-				service = new FileService(serviceName, path);
+				String scUploadFileScriptName = config.getString(serviceName + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT);
+				if(scUploadFileScriptName == null) {
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "service " + serviceName
+							+ " must set  " + Constants.PROPERTY_QUALIFIER_LIST_SCRIPT);
+				}
+				String scGetFileListScriptName = config.getString(serviceName + Constants.PROPERTY_QUALIFIER_LIST_SCRIPT);
+				if(scGetFileListScriptName == null) {
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "service " + serviceName
+							+ " must set  " + Constants.PROPERTY_QUALIFIER_LIST_SCRIPT);
+				}
+				service = new FileService(serviceName, path, scUploadFileScriptName, scGetFileListScriptName);
 				String remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
 				Server server = AppContext.getServerRegistry().getServer(remoteHost);
 				if (server == null) {

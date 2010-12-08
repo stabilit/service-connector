@@ -30,10 +30,6 @@ public class BasicConfiguration {
 	/** The write pid. */
 	private boolean writePID = false;
 
-	/** The upload_script_name. */
-	private String scUploadFileScriptName = Constants.DEFAULT_SCUPLOADFILE_SCRIPT_NAME;
-	/** The listfiles_script_name. */
-	private String scListfilesScriptName = Constants.DEFAULT_SCLISTFILES_SCRIPT_NAME;
 	/**
 	 * Multiplier to calculate the operation timeout.<br>
 	 * SC must adapt (shorten) the timeout passed from client to get the right timeout.
@@ -140,24 +136,6 @@ public class BasicConfiguration {
 	}
 
 	/**
-	 * Gets the sC upload file script name.
-	 * 
-	 * @return the sC upload file script name
-	 */
-	public String getSCUploadFileScriptName() {
-		return scUploadFileScriptName;
-	}
-
-	/**
-	 * Gets the sC listfiles script name.
-	 * 
-	 * @return the sC listfiles script name
-	 */
-	public String getSCListfilesScriptName() {
-		return scListfilesScriptName;
-	}
-
-	/**
 	 * inits the configuration.
 	 * 
 	 * @param compositeConfiguration
@@ -217,20 +195,6 @@ public class BasicConfiguration {
 		if (localSrvAbortTimeout != null && this.srvAbortTimeout != localSrvAbortTimeout) {
 			this.srvAbortTimeout = localSrvAbortTimeout;
 			logger.info("srvAbortTimeout set to " + localSrvAbortTimeout);
-		}
-
-		// scListfilesScriptName
-		String scListfilesScriptName = compositeConfiguration.getString(Constants.ROOT_SCLISTFILES_SCRIPT_NAME, null);
-		if (scListfilesScriptName != null && this.scListfilesScriptName != scListfilesScriptName) {
-			this.scListfilesScriptName = scListfilesScriptName;
-			logger.info("scListfilesScriptName set to " + scListfilesScriptName);
-		}
-
-		// scUploadfileScriptName
-		String scUploadfileScriptName = compositeConfiguration.getString(Constants.ROOT_SCUPLOADFILE_SCRIPT_NAME, null);
-		if (scUploadfileScriptName != null && this.scListfilesScriptName != scUploadfileScriptName) {
-			this.scListfilesScriptName = scUploadfileScriptName;
-			logger.info("scListfilesScriptName set to " + scUploadfileScriptName);
 		}
 	}
 }

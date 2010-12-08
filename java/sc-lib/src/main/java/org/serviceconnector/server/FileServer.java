@@ -65,7 +65,7 @@ public class FileServer extends Server {
 		} else {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
-			URL url = new URL("http://" + this.host + ":" + this.portNr + path + basConf.getSCUploadFileScriptName() + "?name="
+			URL url = new URL("http://" + this.host + ":" + this.portNr + path + session.getUploadFileScriptName() + "?name="
 					+ remoteFileName);
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("PUT");
@@ -156,7 +156,7 @@ public class FileServer extends Server {
 		}
 	}
 
-	public void serverListFiles(int timeoutInSeconds) throws Exception {
+	public void serverGetFilelist(FileSession session, int timeoutInSeconds) throws Exception {
 		// TODO JOT
 	}
 

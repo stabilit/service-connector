@@ -28,8 +28,7 @@ import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.TimeMillis;
 
 public class CacheManager {
-	
-	
+
 	/** The Constant logger. */
 	protected final static CacheLogger cacheLogger = CacheLogger.getInstance();
 
@@ -58,7 +57,7 @@ public class CacheManager {
 			cacheLogger.debug("initialize using default configuration");
 			cacheConfiguration = new CacheConfiguration();
 		} else {
-			cacheLogger.debug("initialize using application context cache configuration");		
+			cacheLogger.debug("initialize using application context cache configuration");
 		}
 		initialize(cacheConfiguration);
 	}
@@ -86,30 +85,33 @@ public class CacheManager {
 		if (this.cacheConfiguration.getExpirationThreadTimeoutSeconds() > 0) {
 			expirationTimeoutRun = new ExpirationTimeoutRun(this.cacheConfiguration.getExpirationThreadTimeoutSeconds());
 			this.expirationThread = new Thread(expirationTimeoutRun);
-			cacheLogger.debug("start cache expiration thread using timeout (s) = " + this.cacheConfiguration.getExpirationThreadTimeoutSeconds());
+			cacheLogger.debug("start cache expiration thread using timeout (s) = "
+					+ this.cacheConfiguration.getExpirationThreadTimeoutSeconds());
 			expirationThread.start();
-		}		
+		}
 	}
-	
+
 	public void clearAll() {
-		CacheImplFactory.clearAll();	
+		CacheImplFactory.clearAll();
 	}
-	
+
 	/**
 	 * Destroy.
 	 */
 	public void destroy() {
 		cacheLogger.debug("destroy, set expiration thread killed");
-		this.expirationTimeoutRun.setKilled(true);
-		try {
-			cacheLogger.debug("destroy, join expiration thread");
-			this.expirationThread.join(5 * TimeMillis.SECOND.getMillis());  // wait 5 seconds max to join this thread
-			cacheLogger.debug("destroy, join done");
-		} catch (InterruptedException e) {
-			cacheLogger.debug(e.toString());
+		if (this.expirationTimeoutRun != null) {
+			this.expirationTimeoutRun.setKilled(true);
+			try {
+				cacheLogger.debug("destroy, join expiration thread");
+				this.expirationThread.join(5 * TimeMillis.SECOND.getMillis()); // wait 5 seconds max to join this thread
+				cacheLogger.debug("destroy, join done");
+			} catch (InterruptedException e) {
+				cacheLogger.debug(e.toString());
+			}
+			this.expirationThread = null;
+			this.expirationTimeoutRun = null;
 		}
-		this.expirationThread = null;
-		this.expirationTimeoutRun = null;
 		CacheImplFactory.destroy();
 	}
 
@@ -183,7 +185,7 @@ public class CacheManager {
 			cacheLogger.debug("kill cache expiration thread");
 			this.killed = killed;
 			synchronized (this) {
-				this.notifyAll();				
+				this.notifyAll();
 			}
 		}
 
@@ -191,8 +193,8 @@ public class CacheManager {
 		public void run() {
 			while (this.killed == false) {
 				try {
-					synchronized(this) {
-					   this.wait(this.timeoutSeconds * 1000);
+					synchronized (this) {
+						this.wait(this.timeoutSeconds * 1000);
 					}
 					if (this.killed) {
 						cacheLogger.debug("terminate expiration thread (killed)");

@@ -50,6 +50,7 @@ public class SCMessage {
 	/** The service name. */
 	private String serviceName;
 
+
 	/**
 	 * Instantiates a new SCMessage.
 	 */

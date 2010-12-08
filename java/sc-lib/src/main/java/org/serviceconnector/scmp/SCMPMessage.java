@@ -70,21 +70,6 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * Parses the msg sequence nr.
-	 * 
-	 * @param msgSequenceNr
-	 *            the msg sequence nr
-	 * @return the sCMP message sequence nr
-	 */
-	public static SCMPMessageSequenceNr parseMsgSequenceNr(String msgSequenceNr) {
-		if (msgSequenceNr == null) {
-			return null;
-		}
-		int sequenceNr = Integer.parseInt(msgSequenceNr);
-		return new SCMPMessageSequenceNr(sequenceNr);
-	}
-
-	/**
 	 * Sets the message type.
 	 * 
 	 * @param messageType

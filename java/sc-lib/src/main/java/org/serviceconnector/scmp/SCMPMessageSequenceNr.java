@@ -17,7 +17,6 @@
 package org.serviceconnector.scmp;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cmd.SCMPValidatorException;
 
 /**
  * The Class SCMPMessageSequenceNr. Provides correct message sequence number (msn) for a specific request/response. Message sequence
@@ -60,20 +59,6 @@ public class SCMPMessageSequenceNr {
 			// in case an exception number gets reseted
 			this.reset();
 		}
-	}
-
-	public void validateAndUpdate(SCMPMessage message) throws SCMPValidatorException {
-		String messagSequenceNrValue = message.getMessageSequenceNr();
-		long inMsgSequenceNr = 0;
-		try {
-			inMsgSequenceNr = Long.parseLong(messagSequenceNrValue);
-		} catch (NumberFormatException ex) {
-			logger.warn("parsing message sequence number failed, not a Long value");
-		}
-		if (inMsgSequenceNr <= this.msgSequenceNr) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "message sequence number is not ascending");
-		}
-		this.msgSequenceNr = inMsgSequenceNr;
 	}
 
 	/**
