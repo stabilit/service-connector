@@ -63,7 +63,6 @@ public class SCMessageTest {
 		assertEquals("data is not null",null, message.getData());
 		assertEquals("sessionId is not null",null, message.getSessionId());
 		assertEquals("compressed flag is not default",Constants.DEFAULT_COMPRESSION_FLAG, message.isCompressed());
-		assertEquals("message is fault",false, message.isFault());
 	}
 
 	/**

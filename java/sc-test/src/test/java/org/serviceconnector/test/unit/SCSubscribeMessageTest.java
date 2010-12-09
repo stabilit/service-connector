@@ -39,7 +39,6 @@ public class SCSubscribeMessageTest {
 		assertEquals("sessionId is not null",null, message.getSessionId());
 		assertEquals("mask is not null",null, message.getMask());
 		assertEquals("compressed flag is not default",Constants.DEFAULT_COMPRESSION_FLAG, message.isCompressed());
-		assertEquals("message is fault",false, message.isFault());
 	}
 
 	/**
