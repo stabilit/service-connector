@@ -66,15 +66,15 @@ public class FileService extends Service {
 		return this.scGetFileListScript;
 	}
 
-	public synchronized FileServer allocateFileSession(FileSession session) throws Exception {
+	public synchronized FileServer allocateFileServerAndCreateSession(FileSession session) throws Exception {
 		if (this.server.hasFreeSession()) {
 			this.server.addSession(session);
 			return this.server;
 		}
-		// no free session available
-		NoFreeSessionException noFreeSessionExc = new NoFreeSessionException(SCMPError.NO_FREE_SESSION, "for service "
+		// no free server available
+		NoFreeServerException noFreeSereverExc = new NoFreeServerException(SCMPError.NO_FREE_SERVER, "for service "
 				+ this.getServiceName());
-		noFreeSessionExc.setMessageType(SCMPMsgType.CLN_CREATE_SESSION);
-		throw noFreeSessionExc;
+		noFreeSereverExc.setMessageType(SCMPMsgType.CLN_CREATE_SESSION);
+		throw noFreeSereverExc;
 	}
 }

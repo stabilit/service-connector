@@ -36,7 +36,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.IPublishTimerRun;
-import org.serviceconnector.service.NoFreeSessionException;
+import org.serviceconnector.service.NoFreeServerException;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
@@ -103,7 +103,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 					server = service.allocateServerAndSubscribe(reqMessage, callback, subscription, otiOnServerMillis);
 					// no exception has been thrown - get out of wait loop
 					break;
-				} catch (NoFreeSessionException ex) {
+				} catch (NoFreeServerException ex) {
 					if (i >= (tries - 1)) {
 						// only one loop outstanding - don't continue throw current exception
 						throw ex;

@@ -32,7 +32,7 @@ import org.serviceconnector.server.FileServer;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.FileSession;
-import org.serviceconnector.service.NoFreeSessionException;
+import org.serviceconnector.service.NoFreeServerException;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.SessionService;
@@ -82,7 +82,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			// create file session
 			FileSession fileSession = new FileSession(sessionInfo, ipAddressList, fileService.getPath(), fileService
 					.getUploadFileScriptName(), fileService.getGetFileListScriptName());
-			FileServer fileServer = fileService.allocateFileSession(fileSession);
+			FileServer fileServer = fileService.allocateFileServerAndCreateSession(fileSession);
 			// add server to session
 			fileSession.setServer(fileServer);
 			fileSession.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());
@@ -126,7 +126,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 							otiOnServerMillis);
 					// no exception has been thrown - get out of wait loop
 					break;
-				} catch (NoFreeSessionException ex) {
+				} catch (NoFreeServerException ex) {
 					if (i >= (tries - 1)) {
 						// only one loop outstanding - don't continue throw current exception
 						throw ex;

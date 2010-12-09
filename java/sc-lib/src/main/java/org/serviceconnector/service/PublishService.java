@@ -96,8 +96,8 @@ public class PublishService extends StatefulService {
 				return server;
 			}
 		}
-		// no free session available
-		NoFreeSessionException noFreeSessionExc = new NoFreeSessionException(SCMPError.NO_FREE_SESSION, "for service "
+		// no free server available
+		NoFreeServerException noFreeSessionExc = new NoFreeServerException(SCMPError.NO_FREE_SERVER, "for service "
 				+ msgToForward.getServiceName());
 		noFreeSessionExc.setMessageType(msgToForward.getMessageType());
 		throw noFreeSessionExc;

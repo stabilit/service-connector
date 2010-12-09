@@ -74,21 +74,21 @@ public class ServiceLoader {
 			case FILE_SERVICE:
 				String path = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_PATH);
 				String scUploadFileScriptName = config.getString(serviceName + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT);
-				if(scUploadFileScriptName == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "service " + serviceName
-							+ " must set  " + Constants.PROPERTY_QUALIFIER_LIST_SCRIPT);
+				if (scUploadFileScriptName == null) {
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property "
+							+ Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT + " is missing for service " + serviceName);
 				}
 				String scGetFileListScriptName = config.getString(serviceName + Constants.PROPERTY_QUALIFIER_LIST_SCRIPT);
-				if(scGetFileListScriptName == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "service " + serviceName
-							+ " must set  " + Constants.PROPERTY_QUALIFIER_LIST_SCRIPT);
+				if (scGetFileListScriptName == null) {
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property "
+							+ Constants.PROPERTY_QUALIFIER_LIST_SCRIPT + " is missing for service " + serviceName);
 				}
 				service = new FileService(serviceName, path, scUploadFileScriptName, scGetFileListScriptName);
 				String remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
 				Server server = AppContext.getServerRegistry().getServer(remoteHost);
 				if (server == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "service " + serviceName
-							+ " references an non existents file server named " + remoteHost);
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host "+ remoteHost
+							+ " configured for service " + serviceName + "does not exist");
 				}
 				((FileService) service).setServer((FileServer) server);
 				break;

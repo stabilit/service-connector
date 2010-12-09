@@ -112,9 +112,11 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The SERVER_ALREADY_REGISTERED for this service. */
 	SERVER_ALREADY_REGISTERED("602", "Server already registered for the service."),
 	/** The NO_FREE_SESSION. */
-	NO_FREE_SESSION("603", "No free session."),
+	NO_FREE_SERVER("603", "No free server available."),
+	/** The NO_FREE_CONNECTION. */
+	NO_FREE_CONNECTION("608", "No free connection available."),
 	/** The FRAME_DECODER. */
-	FRAME_DECODER("606", "Not possible to decode frame, scmp header line wrong."),
+	FRAME_DECODER("606", "Unable to decode frame, SCMP headline is wrong."),
 	/** The SESSION_ABORT. */
 	SESSION_ABORT("607", "Session aborted."),
 	/** The CONNECTION_EXCEPTION. */

@@ -143,7 +143,7 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		SCTest.checkReply(responseMessage);
 		Assert.assertFalse(responseMessage.isFault());
 		Assert.assertTrue(responseMessage1.isFault());
-		SCTest.verifyError(responseMessage1, SCMPError.NO_FREE_SESSION, "[for service session-1]", SCMPMsgType.CLN_CREATE_SESSION);
+		SCTest.verifyError(responseMessage1, SCMPError.NO_FREE_SERVER, "[for service session-1]", SCMPMsgType.CLN_CREATE_SESSION);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());

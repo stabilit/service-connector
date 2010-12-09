@@ -67,7 +67,7 @@ public class ClnSubscribeWaitMechanismTestCase extends SuperTestCase {
 		SCTest.checkReply(reply);
 		Assert.assertFalse(reply.isFault());
 		Assert.assertTrue(reply1.isFault());
-		SCTest.verifyError(reply1, SCMPError.NO_FREE_SESSION, "[for service publish-1]",
+		SCTest.verifyError(reply1, SCMPError.NO_FREE_SERVER, "[for service publish-1]",
 				SCMPMsgType.CLN_SUBSCRIBE);
 
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
