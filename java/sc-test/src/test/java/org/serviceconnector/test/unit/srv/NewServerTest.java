@@ -82,8 +82,8 @@ public class NewServerTest {
 	public void t03_ServerHostPort() throws Exception {
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		assertNotNull("Can not create SessionServer!", sessionServer);
-		assertEquals("SessionServer Host", TestConstants.HOST, sessionServer.getHost());
-		assertEquals("SessionServer Port", TestConstants.PORT_LISTENER, sessionServer.getPort());
+		assertEquals("SessionServer Host", TestConstants.HOST, sessionServer.getListenerInterfaces());
+		assertEquals("SessionServer Port", TestConstants.PORT_LISTENER, sessionServer.getListenerPort());
 	}	
 
 	/**
@@ -126,8 +126,8 @@ public class NewServerTest {
 	public void t23_ServerHostPort() throws Exception {
 		SCPublishServer publishServer = server.newPublishServer(TestConstants.sesServiceName1);
 		assertNotNull("Can not create PublishServer!", publishServer);
-		assertEquals("PublishServer Host", TestConstants.HOST, publishServer.getHost());
-		assertEquals("PublishServer Port", TestConstants.PORT_LISTENER, publishServer.getPort());
+		assertEquals("PublishServer Host", TestConstants.HOST, publishServer.getListenerInterfaces());
+		assertEquals("PublishServer Port", TestConstants.PORT_LISTENER, publishServer.getListenerPort());
 	}	
 
 	/**
