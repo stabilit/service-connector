@@ -356,7 +356,6 @@ public class CreateSessionTest {
 		try {
 			response = service.createSession(request);
 		} catch (SCServiceException e) {	
-			assertEquals("is fault", false, response.isFault());
 			assertEquals("is not appErrorCode", "4000", e.getAppErrorCode());
 			assertEquals("is not appErrorText", false, e.getAppErrorText().equals(""));
 		}

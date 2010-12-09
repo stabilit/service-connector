@@ -65,7 +65,11 @@ public class TestSessionServer extends TestStatefulServer {
 	@Override
 	public void run() {
 		// add exit handler
-		this.addExitHandler(FileUtility.getPath() + fs + this.serverName + ".pid");
+		try {
+			this.addExitHandler(FileUtility.getPath() + fs + this.serverName + ".pid");
+		} catch (SCMPValidatorException e1) {
+			logger.fatal("unable to get path to pid file", e1);
+		}
 
 		ctr = new ThreadSafeCounter();
 		SCServer sc = new SCServer(TestConstants.HOST, this.port, this.listenerPort, this.connectionType);
@@ -127,6 +131,7 @@ public class TestSessionServer extends TestStatefulServer {
 				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
 					response = new SCMessage();
 					try {
+						response.setReject(true);
 						response.setAppErrorCode(4000);
 						response.setAppErrorText("session rejected intentionaly!");
 					} catch (SCMPValidatorException e) {

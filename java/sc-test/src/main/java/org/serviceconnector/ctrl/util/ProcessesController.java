@@ -88,8 +88,9 @@ public class ProcessesController {
 		}
 		proc.setLog4jFileName(log4jFileFullName);
 
-		String pidFileFullName = getLogDirPath(log4jFileFullName) + Constants.PID_FILE_NAME;
+		String pidFileFullName = userDir + fs + "log" + fs + "sc" + fs + Constants.PID_FILE_NAME;
 		proc.setPidFileName(pidFileFullName);
+		
 		// set sc port to SC stop at the end
 		proc.setSCPort(Integer.parseInt(this.getPortFromConfFile(scPropertiesFullName)));
 
@@ -204,7 +205,7 @@ public class ProcessesController {
 		}
 		proc.setLog4jFileName(log4jFileFullName);
 
-		String pidFileNameFull = getLogDirPath(log4jFileFullName) + fs + serverName + ".pid";
+		String pidFileNameFull = userDir + fs + "log" + fs + "srv" + fs + serverName + ".pid";
 		proc.setPidFileName(pidFileNameFull);
 
 		proc.setServiceNames(serviceNames);
