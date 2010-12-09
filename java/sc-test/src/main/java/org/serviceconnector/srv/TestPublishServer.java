@@ -27,7 +27,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
@@ -124,10 +123,10 @@ public class TestPublishServer extends TestStatefulServer {
 				// watch out for kill server message
 				if (sessionInfo.equals(TestConstants.killServerCmd)) {
 					logger.log(Level.OFF, "Kill request received, exiting ...");
-					response = new SCMessageFault();
+					response = new SCMessage();
 					try {
-						((SCMessageFault) response).setAppErrorCode(1050);
-						((SCMessageFault) response).setAppErrorText("session rejected - kill server requested!");
+						response.setAppErrorCode(1050);
+						response.setAppErrorText("session rejected - kill server requested!");
 					} catch (SCMPValidatorException e) {
 					}
 					KillThread<SCPublishServer> kill = new KillThread<SCPublishServer>(this.scPublishServer);
@@ -135,10 +134,10 @@ public class TestPublishServer extends TestStatefulServer {
 				}
 				// watch out for reject request
 				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
-					response = new SCMessageFault();
+					response = new SCMessage();
 					try {
-						((SCMessageFault) response).setAppErrorCode(4000);
-						((SCMessageFault) response).setAppErrorText("session rejected intentionaly!");
+						response.setAppErrorCode(4000);
+						response.setAppErrorText("session rejected intentionaly!");
 					} catch (SCMPValidatorException e) {
 					}
 				} else {
@@ -161,10 +160,10 @@ public class TestPublishServer extends TestStatefulServer {
 			if (sessionInfo != null) {
 				// watch out for reject request
 				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
-					response = new SCMessageFault();
+					response = new SCMessage();
 					try {
-						((SCMessageFault) response).setAppErrorCode(4000);
-						((SCMessageFault) response).setAppErrorText("session rejected intentionaly!");
+						response.setAppErrorCode(4000);
+						response.setAppErrorText("session rejected intentionaly!");
 					} catch (SCMPValidatorException e) {
 					}
 				}
