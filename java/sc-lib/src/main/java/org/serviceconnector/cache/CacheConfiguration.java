@@ -45,8 +45,8 @@ public class CacheConfiguration implements ICacheConfiguration {
 	/** The max elements on disk. */
 	private int maxElementsOnDisk;
 
-	/** The expiration thread timeout in seconds. */
-	private int expirationThreadTimeoutSeconds;
+	/** The expiration thread interval (timeout) in seconds. */
+	private int expirationThreadIntervalSeconds;
 
 	/**
 	 * Instantiates a new sCMP cache configuration.
@@ -58,13 +58,20 @@ public class CacheConfiguration implements ICacheConfiguration {
 		this.diskPersistent = Constants.DEFAULT_CACHE_DISK_PERSISTENT;
 		this.maxElementsInMemory = Constants.DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY;
 		this.maxElementsOnDisk = Constants.DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK;
-		this.expirationThreadTimeoutSeconds = Constants.DEFAULT_CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS;
+		this.expirationThreadIntervalSeconds = Constants.DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS;
 	}
 
 	/**
-	 * Loads cache parameters from properties file. # Service Connector cache parameters cache.enabled=true cache.name=scCache
-	 * cache.diskPersistent=true cache.diskPath=../../dev/ cache cache.timeIdleSeconds=60 cache.timeToLiveSeconds=120
-	 * cache.maxElementsInMemory=10000 cache.maxElementsOnDisk=1000000
+	 * Loads cache parameters from properties file.</br> 
+	 * Service Connector cache parameters: </br>
+	 * cache.enabled=true</br> 
+	 * cache.name=scCache
+	 * cache.diskPersistent=true </br>
+	 * cache.diskPath=../../dev/cache </br>
+	 * cache.timeIdleSeconds=60 </br>
+	 * cache.timeToLiveSeconds=120</br>
+	 * cache.maxElementsInMemory=10000 </br>
+	 * cache.maxElementsOnDisk=1000000
 	 * 
 	 * @param fileName
 	 *            the file name
@@ -121,13 +128,13 @@ public class CacheConfiguration implements ICacheConfiguration {
 			logger.warn("default CACHE_MAX_ELEMENTS_ON_DISK = " + e.toString());
 		}
 		try {
-			int expirationThreadTimeoutSeconds = compositeConfiguration.getInt(Constants.CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS);
+			int expirationThreadTimeoutSeconds = compositeConfiguration.getInt(Constants.CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS);
 			if (expirationThreadTimeoutSeconds >= 0) {
-				this.expirationThreadTimeoutSeconds = expirationThreadTimeoutSeconds;
+				this.expirationThreadIntervalSeconds = expirationThreadTimeoutSeconds;
 			}
-			logger.info("cache configuration: expirationThreadTimeoutSeconds = " + this.expirationThreadTimeoutSeconds);
+			logger.info("cache configuration: expirationThreadTimeoutSeconds = " + this.expirationThreadIntervalSeconds);
 		} catch (Exception e) {
-			logger.warn("default CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS = " + e.toString());
+			logger.warn("default CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = " + e.toString());
 		}
 	}
 
@@ -180,21 +187,21 @@ public class CacheConfiguration implements ICacheConfiguration {
 	}
 
 	/**
-	 * Gets the expiration thread timeout seconds.
+	 * Gets the expiration thread interval seconds.
 	 * 
-	 * @return the expiration thread timeout seconds
+	 * @return the expiration thread interval seconds
 	 */
-	public int getExpirationThreadTimeoutSeconds() {
-		return expirationThreadTimeoutSeconds;
+	public int getExpirationThreadIntervalSeconds() {
+		return expirationThreadIntervalSeconds;
 	}
 
 	/**
-	 * Sets the expiration thread timeout seconds.
+	 * Sets the expiration thread interval seconds.
 	 * 
-	 * @param expirationThreadTimeoutSeconds
-	 *            the new expiration thread timeout seconds
+	 * @param expirationThreadIntervalSeconds
+	 *            the new expiration thread interval seconds
 	 */
-	public void setExpirationThreadTimeoutSeconds(int expirationThreadTimeoutSeconds) {
-		this.expirationThreadTimeoutSeconds = expirationThreadTimeoutSeconds;
+	public void setExpirationThreadIntervalSeconds(int expirationThreadIntervalSeconds) {
+		this.expirationThreadIntervalSeconds = expirationThreadIntervalSeconds;
 	}
 }

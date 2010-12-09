@@ -25,6 +25,9 @@ import org.apache.log4j.Category;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class FileUtility.
@@ -134,9 +137,9 @@ public class FileUtility {
 	/**
 	 * @return path of the current log4j configuration file
 	 */
-	public static String getPath() {
-		String fs = System.getProperty("file.separator");
-		String userDir = System.getProperty("user.dir");
+	public static String getPath() throws SCMPValidatorException{
+		
+		
 
 		Category rootLogger = logger.getParent();
 		Enumeration<?> appenders = rootLogger.getAllAppenders();
@@ -149,7 +152,17 @@ public class FileUtility {
 			}
 		}
 		String fileName = fileAppender.getFile();
-		String path = userDir + fs + fileName.substring(0, fileName.lastIndexOf("/"));
+		String fs = System.getProperty("file.separator");
+		int index = fileName.lastIndexOf(fs);
+		if (index == -1) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "invalid log directory " + fileName);
+		}
+		String path = null;
+		if (fileName.lastIndexOf(":") == -1) {	
+			path = System.getProperty("user.dir") + fs + fileName.substring(0, index); 	// relative path
+		} else {
+			path = fileName.substring(0, index);					//absolute path
+		}
 		return path;
 	}
 

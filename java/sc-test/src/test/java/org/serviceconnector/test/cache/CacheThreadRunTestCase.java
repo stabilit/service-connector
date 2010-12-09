@@ -63,7 +63,7 @@ public class CacheThreadRunTestCase {
 		serviceRegistry.addService("dummy", service);
 		CacheManager cacheManager = new CacheManager();
 		CacheConfiguration cacheConfiguration = new CacheConfiguration();
-		cacheConfiguration.setExpirationThreadTimeoutSeconds(2);
+		cacheConfiguration.setExpirationThreadIntervalSeconds(2);
 		try {
 			cacheManager.initialize(cacheConfiguration);
 			Thread.sleep(5000);

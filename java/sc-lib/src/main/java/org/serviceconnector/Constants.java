@@ -123,7 +123,7 @@ public final class Constants {
 	public static final String COMMA_OR_SEMICOLON = ",|;"; // TODO not used
 
 	/** File containing the Sc process PID. Created at startup and deleted on exit or error. Used to check is sc is running. */
-	public static final String PID_FILE_NAME = "/sc.pid";
+	public static final String PID_FILE_NAME = "sc.pid";
 
 	/** The Constant IPV6_LOOPBACK_NIC. */
 	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
@@ -177,7 +177,7 @@ public final class Constants {
 	public static final String DEFAULT_CACHE_DISK_PATH = "cache";
 	public static final int DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY = 0;
 	public static final int DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK = 100000;
-	public static final int DEFAULT_CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS = 60;
+	public static final int DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = 300;
 	// for internal use in class Cache
 	public static final int DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS = 60000;
 
@@ -187,7 +187,7 @@ public final class Constants {
 	public static final String CACHE_DISK_PATH = "cache.diskPath";
 	public static final String CACHE_MAX_ELEMENTS_IN_MEMORY = "cache.maxElementsInMemory";
 	public static final String CACHE_MAX_ELEMENTS_ON_DISK = "cache.maxElementsOnDisk";
-	public static final String CACHE_EXPIRATION_THREAD_TIMEOUT_SECONDS = "cache.expirationThreadTimeoutSeconds";
+	public static final String CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = "cache.expirationThreadIntervalSeconds";
 
 	/*
 	 * SCMP protocol constants ***********************
