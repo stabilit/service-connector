@@ -24,7 +24,7 @@
 #		to store the files.
 # - A declared file service on SC need to define the script in SC configuration
 #	 	(sc.properties). file-1.uploadScript=scupload.php 
-# - A notification mail is sent to all registerred recipients in this script
+# - A notification mail is sent to all registered recipients in this script
 # ------------------------------------------------------------------------------
 */
 /* PUT data in stdin Stream */
