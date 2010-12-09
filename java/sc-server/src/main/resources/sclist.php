@@ -16,31 +16,20 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
 /*
-# 							 						instructions for use  								
-#	- Call the script http://host:port/path/scupload.php?name=remoteFileName
-#		Substitute variable host, port, path and remoteFileName
-#		(http://localhost:8080/sc/scupload.php?name=clientLog.txt)
-# - The script stores a stream in a file. Put it to the folders where you like
-#		to store the files.
-# - A declared file service on SC need to define the script in SC configuration
-#	 	(sc.properties). file-1.uploadScript=scupload.php 
+#   instructions for use  								
+#	- Call the script http://host:port/path/sclist.php
 # ------------------------------------------------------------------------------
 */
-/* PUT data in stdin Stream */
-$putdata = fopen("php://input","r");
-$fileName = "myputfile.txt";
-if ($_REQUEST['name']) {
-	$fileName = $_REQUEST['name']; 
+if ($handle = opendir('.')) {
+	$i = 0;
+    while (false !== ($file = readdir($handle))) {
+        if ($file != "." && $file != "..") {
+        	if ( $i++ > 0) {
+        		echo "|";
+        	}
+            echo "$file";
+        }
+    }
+    closedir($handle);
 }
-
-/* Open file to write */
-$fp = fopen($fileName,"w");
-
-/* Loop - reading 1 Kb and write it to file */
-while ($data = fread($putdata,1024)) {
-	fwrite($fp,$data);
-}
-/* Close the stream */
-fclose($fp);
-fclose($putdata);
 ?>
