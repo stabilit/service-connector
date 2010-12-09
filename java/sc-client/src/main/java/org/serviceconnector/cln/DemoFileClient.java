@@ -40,13 +40,6 @@ public class DemoFileClient extends Thread {
 
 	@Override
 	public void run() {
-		
-		SCMessage message = new SCMessage();
-		try {
-			message.setCacheExpirationDateTime("2000-12-12T12:40:12.320+0100");
-		} catch (SCMPValidatorException e1) {
-			e1.printStackTrace();
-		}
 		// Connection to SC over HTTP
 		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP);
 
