@@ -19,10 +19,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 
 public class DemoFileClient extends Thread {
@@ -37,6 +40,13 @@ public class DemoFileClient extends Thread {
 
 	@Override
 	public void run() {
+		
+		SCMessage message = new SCMessage();
+		try {
+			message.setCacheExpirationDateTime("2000-12-12T12:40:12.320+0100");
+		} catch (SCMPValidatorException e1) {
+			e1.printStackTrace();
+		}
 		// Connection to SC over HTTP
 		SCClient sc = new SCClient("localhost", 7000, ConnectionType.NETTY_HTTP);
 
@@ -47,6 +57,9 @@ public class DemoFileClient extends Thread {
 
 			SCFileService service = sc.newFileService("file-1"); // name of the service to use
 
+			List<String> fileList = service.listFiles();
+			System.out.println(fileList);
+			
 			File localFile = new File("src/main/resources/ClientContent.txt");
 			InputStream inpStream = new FileInputStream(localFile);
 			String targetFileName = "uploadedContent.txt";
