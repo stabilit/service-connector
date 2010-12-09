@@ -26,25 +26,19 @@ public class CacheConfiguration implements ICacheConfiguration {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CacheConfiguration.class);
-	
+
 	/** The cache enabled. */
 	private boolean cacheEnabled;
-
 	/** The cache name. */
 	private String cacheName;
-
 	/** The disk path. */
 	private String diskPath;
-
 	/** The disk persistent. */
 	private boolean diskPersistent;
-
 	/** The max elements in memory. */
 	private int maxElementsInMemory;
-
 	/** The max elements on disk. */
 	private int maxElementsOnDisk;
-
 	/** The expiration thread interval (timeout) in seconds. */
 	private int expirationThreadIntervalSeconds;
 
@@ -62,16 +56,9 @@ public class CacheConfiguration implements ICacheConfiguration {
 	}
 
 	/**
-	 * Loads cache parameters from properties file.</br> 
-	 * Service Connector cache parameters: </br>
-	 * cache.enabled=true</br> 
-	 * cache.name=scCache
-	 * cache.diskPersistent=true </br>
-	 * cache.diskPath=../../dev/cache </br>
-	 * cache.timeIdleSeconds=60 </br>
-	 * cache.timeToLiveSeconds=120</br>
-	 * cache.maxElementsInMemory=10000 </br>
-	 * cache.maxElementsOnDisk=1000000
+	 * Loads cache parameters from properties file.</br> Service Connector cache parameters: </br> cache.enabled=true</br>
+	 * cache.name=scCache cache.diskPersistent=true </br> cache.diskPath=../../dev/cache </br> cache.timeIdleSeconds=60 </br>
+	 * cache.timeToLiveSeconds=120</br> cache.maxElementsInMemory=10000 </br> cache.maxElementsOnDisk=1000000
 	 * 
 	 * @param fileName
 	 *            the file name
@@ -79,108 +66,82 @@ public class CacheConfiguration implements ICacheConfiguration {
 	 *             the exception
 	 */
 	public synchronized void init(CompositeConfiguration compositeConfiguration) throws Exception {
-		try {
-			this.cacheEnabled = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED);
-			logger.info("cache configuration: cache enabled is " + this.cacheEnabled);
-		} catch (Exception e) {
-			logger.warn("default CACHE_ENABLED = " + e.toString());
+
+		Boolean cacheEnabled = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED);
+		if (cacheEnabled != null && this.cacheEnabled != cacheEnabled) {
+			this.cacheEnabled = cacheEnabled;
+			logger.info("cacheEnabled set to " + cacheEnabled);
 		}
-		try {
-			String sCacheName = compositeConfiguration.getString(Constants.CACHE_NAME);
-			if (sCacheName != null) {
-				this.cacheName = sCacheName;
-			}
-			logger.info("cache configuration: cache name = " + this.cacheName);
-		} catch (Exception e) {
-			logger.warn("default CACHE_NAME = " + e.toString());
+
+		String sCacheName = compositeConfiguration.getString(Constants.CACHE_NAME);
+		if (sCacheName != null && sCacheName != this.cacheName) {
+			this.cacheName = sCacheName;
+			logger.info("cacheName set to " + this.cacheName);
 		}
-		try {
-			this.diskPersistent = compositeConfiguration.getBoolean(Constants.CACHE_DISK_PERSISTENT);
-			logger.info("cache configuration: cache disk persistent is " + this.diskPersistent);
-		} catch (Exception e) {
-			logger.warn("default CACHE_DISK_PERSISTENT = " + e.toString());
+
+		Boolean diskPersistent = compositeConfiguration.getBoolean(Constants.CACHE_DISK_PERSISTENT);
+		if (diskPersistent != null && diskPersistent != this.diskPersistent) {
+			this.diskPersistent = diskPersistent;
+			logger.info("diskPersistent set to " + this.diskPersistent);
 		}
-		try {
-			String sDiskPath = compositeConfiguration.getString(Constants.CACHE_DISK_PATH);
-			if (sDiskPath != null) {
-				this.diskPath = sDiskPath;
-			}
-			logger.info("cache configuration: disk path = " + this.diskPath);
-		} catch (Exception e) {
-			logger.warn("default CACHE_DISK_PATH = " + e.toString());
+
+		String sDiskPath = compositeConfiguration.getString(Constants.CACHE_DISK_PATH);
+		if (sDiskPath != null && sDiskPath != this.diskPath) {
+			this.diskPath = sDiskPath;
+			logger.info("diskPath set to " + this.diskPath);
 		}
-		try {
-			int maxElementsInMemory = compositeConfiguration.getInt(Constants.CACHE_MAX_ELEMENTS_IN_MEMORY);
-			if (maxElementsInMemory > 0) {
-				this.maxElementsInMemory = maxElementsInMemory;
-			}
-			logger.info("cache configuration: max elements in memory = " + this.maxElementsInMemory);
-		} catch (Exception e) {
-			logger.warn("default CACHE_MAX_ELEMENTS_IN_MEMORY = " + e.toString());
+
+		Integer maxElementsInMemory = compositeConfiguration.getInteger(Constants.CACHE_MAX_ELEMENTS_IN_MEMORY, null);
+		if (maxElementsInMemory != null && maxElementsInMemory != this.maxElementsInMemory) {
+			this.maxElementsInMemory = maxElementsInMemory;
+			logger.info("maxElementsInMemory set to " + this.maxElementsInMemory);
 		}
-		try {
-			int maxElementsOnDisk = compositeConfiguration.getInt(Constants.CACHE_MAX_ELEMENTS_ON_DISK);
-			if (maxElementsOnDisk > 0) {
-				this.maxElementsOnDisk = maxElementsOnDisk;
-			}
-			logger.info("cache configuration: max elements on disk = " + this.maxElementsOnDisk);
-		} catch (Exception e) {
-			logger.warn("default CACHE_MAX_ELEMENTS_ON_DISK = " + e.toString());
+
+		Integer maxElementsOnDisk = compositeConfiguration.getInteger(Constants.CACHE_MAX_ELEMENTS_ON_DISK, null);
+		if (maxElementsOnDisk != null && maxElementsOnDisk != this.maxElementsOnDisk) {
+			this.maxElementsOnDisk = maxElementsOnDisk;
+			logger.info("maxElementsOnDisk set to " + this.maxElementsOnDisk);
 		}
-		try {
-			int expirationThreadTimeoutSeconds = compositeConfiguration.getInt(Constants.CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS);
-			if (expirationThreadTimeoutSeconds >= 0) {
-				this.expirationThreadIntervalSeconds = expirationThreadTimeoutSeconds;
-			}
-			logger.info("cache configuration: expirationThreadTimeoutSeconds = " + this.expirationThreadIntervalSeconds);
-		} catch (Exception e) {
-			logger.warn("default CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = " + e.toString());
+
+		Integer expirationThreadIntervalSeconds = compositeConfiguration.getInteger(
+				Constants.CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS, null);
+		if (expirationThreadIntervalSeconds != null && expirationThreadIntervalSeconds != this.expirationThreadIntervalSeconds) {
+			this.expirationThreadIntervalSeconds = expirationThreadIntervalSeconds;
+			logger.info("expirationThreadIntervalSeconds set to " + this.expirationThreadIntervalSeconds);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.serviceconnector.cache.ICacheConfiguration#isCacheEnabled()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isCacheEnabled() {
 		return cacheEnabled;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.serviceconnector.cache.ICacheConfiguration#isDiskPersistent()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean isDiskPersistent() {
 		return diskPersistent;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.serviceconnector.cache.ICacheConfiguration#getDiskPath()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String getDiskPath() {
 		return diskPath;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.serviceconnector.cache.ICacheConfiguration#getCacheName()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String getCacheName() {
 		return cacheName;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.serviceconnector.cache.ICacheConfiguration#getMaxElementsInMemory()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public int getMaxElementsInMemory() {
 		return maxElementsInMemory;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.serviceconnector.cache.ICacheConfiguration#getMaxElementsOnDisk()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public int getMaxElementsOnDisk() {
 		return maxElementsOnDisk;
