@@ -118,6 +118,15 @@ public class SCServer {
 	}
 
 	/**
+	 * Gets the listener interfaces.
+	 * 
+	 * @return the listener interfaces
+	 */
+	public List<String> getListenerInterfaces() {
+		return this.nics;
+	}
+
+	/**
 	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes connection to
 	 * server at the time registerServer is received.
 	 * 

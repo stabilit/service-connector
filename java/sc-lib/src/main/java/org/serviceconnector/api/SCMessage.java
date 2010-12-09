@@ -50,7 +50,6 @@ public class SCMessage {
 	/** The service name. */
 	private String serviceName;
 
-
 	/**
 	 * Instantiates a new SCMessage.
 	 */
@@ -144,6 +143,12 @@ public class SCMessage {
 		this.compressed = compressed;
 	}
 
+	/**
+	 * Sets the data.
+	 * 
+	 * @param data
+	 *            the new data
+	 */
 	public void setData(Object data) {
 		if (data == null) {
 			this.data = null;
@@ -222,10 +227,22 @@ public class SCMessage {
 		return cacheId;
 	}
 
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the service name
+	 */
 	public String getServiceName() {
 		return serviceName;
 	}
 
+	/**
+	 * Sets the service name. Needs to be the same service which is used to send the message. The name will be overwritten at the
+	 * time the message is sent.
+	 * 
+	 * @param serviceName
+	 *            the new service name
+	 */
 	public void setServiceName(String serviceName) {
 		this.serviceName = serviceName;
 	}
@@ -270,5 +287,4 @@ public class SCMessage {
 		builder.append("]");
 		return builder.toString();
 	}
-
 }

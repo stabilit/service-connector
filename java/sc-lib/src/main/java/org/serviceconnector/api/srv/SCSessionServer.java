@@ -17,6 +17,7 @@
 package org.serviceconnector.api.srv;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import javax.activity.InvalidActivityException;
 
@@ -142,11 +143,11 @@ public class SCSessionServer {
 		int listenerPort = this.scServer.getListenerPort();
 		int keepAliveIntervalSeconds = this.scServer.getKeepAliveIntervalSeconds();
 		boolean immediateConnect = this.scServer.isImmediateConnect();
-		
+
 		synchronized (AppContext.communicatorsLock) {
 			AppContext.init();
 			this.requester.getContext().getSCMPMsgSequenceNr().reset();
-			
+
 			SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
 					requester, this.serviceName);
 
@@ -259,9 +260,8 @@ public class SCSessionServer {
 	 * 
 	 * @return the host
 	 */
-	public String getHost() {
-		// TODO JOT .. host zurückgeben liste
-		return "localhost";
+	public List<String> getListenerInterfaces() {
+		return this.scServer.getListenerInterfaces();
 	}
 
 	/**
@@ -269,7 +269,7 @@ public class SCSessionServer {
 	 * 
 	 * @return the port
 	 */
-	public int getPort() {
+	public int getListenerPort() {
 		return this.scServer.getListenerPort();
 	}
 

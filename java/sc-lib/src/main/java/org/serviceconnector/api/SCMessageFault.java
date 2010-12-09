@@ -21,10 +21,9 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.ValidatorUtility;
 
-
 /**
- * The Class SCMessageFault. A SCMessageFault is the basic transport unit to communicate with a Service Connector in
- * case of an error situation.
+ * The Class SCMessageFault. A SCMessageFault is the basic transport unit to communicate with a Service Connector in case of an error
+ * situation.
  * 
  * @author JTraber
  */
@@ -37,6 +36,14 @@ public class SCMessageFault extends SCMessage {
 	private int appErrorCode;
 	/** The application error text. */
 	private String appErrorText;
+	/** The reject flag in case of a create session. */
+	private boolean reject;
+
+	public SCMessageFault() {
+		this.reject = false;
+		this.appErrorText = null;
+		this.appErrorCode = 0;
+	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -72,6 +79,25 @@ public class SCMessageFault extends SCMessage {
 	 */
 	public String getAppErrorText() {
 		return appErrorText;
+	}
+
+	/**
+	 * Sets the reject flag. Used to reject a session if a create session is requested.
+	 * 
+	 * @param reject
+	 *            the new reject
+	 */
+	public void setReject(boolean reject) {
+		this.reject = reject;
+	}
+
+	/**
+	 * Checks if is reject.
+	 * 
+	 * @return true, if is reject
+	 */
+	public boolean isReject() {
+		return reject;
 	}
 
 	/**
