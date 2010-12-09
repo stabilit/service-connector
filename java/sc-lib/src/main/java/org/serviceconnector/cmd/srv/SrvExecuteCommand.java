@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.srv;
 
-import java.util.Date;
-
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SrvSessionService;
@@ -30,8 +28,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.util.DateTimeUtility;
-import org.serviceconnector.util.TimeMillis;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -86,10 +82,10 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setCacheId(reqMessage.getCacheId());
 		// set cache expiration, 1 hour
-		Date now = new Date();
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, TimeMillis.HOUR.getMillis());
-		reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility.getTimeAsString(expirationDate));
+		if (scReply.getCacheExpirationDateTime() != null) {
+			reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, scReply.getCacheExpirationDateTime());
 
+		}
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 		reply.setMessageType(this.getKey());
 		if (scReply != null) {

@@ -18,6 +18,8 @@ package org.serviceconnector.api;
 
 import java.io.InputStream;
 import java.security.InvalidParameterException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -55,6 +57,8 @@ public class SCMessage {
 	private String appErrorText;
 	/** The reject flag used to reject a create session / subscribe. */
 	private boolean reject;
+	/** The cache expiration date time, format yyyy-MM-dd'T'hh:mm:ss.SSSZ. */
+	private String cacheExpirationDateTime;
 
 	/**
 	 * Instantiates a new SCMessage.
@@ -310,13 +314,55 @@ public class SCMessage {
 	}
 
 	/**
-	 * Sets the reject. 
+	 * Sets the reject.
 	 * 
 	 * @param reject
 	 *            the new reject
 	 */
 	public void setReject(boolean reject) {
 		this.reject = reject;
+	}
+
+	/**
+	 * Gets the cache expiration date time.
+	 * 
+	 * @return the cache expiration date time
+	 */
+	public String getCacheExpirationDateTime() {
+		return cacheExpirationDateTime;
+	}
+
+	/**
+	 * Sets the cache expiration date time.
+	 * 
+	 * @param cacheExpirationDateTime
+	 *            the new cache expiration date time
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
+	public void setCacheExpirationDateTime(Date cacheExpirationDateTime) throws SCMPValidatorException {
+		SimpleDateFormat format = new SimpleDateFormat(Constants.CED_DATE_FORMAT);
+		this.cacheExpirationDateTime = format.format(cacheExpirationDateTime);
+	}
+
+	/**
+	 * Sets the cache expiration date time. Format has to be yyyy-MM-dd'T'hh:mm:ss.SSSZ.
+	 * 
+	 * @param cacheExpirationDateTime
+	 *            the new cache expiration date time
+	 * @throws SCMPValidatorException
+	 */
+	public void setCacheExpirationDateTime(String cacheExpirationDateTime) throws SCMPValidatorException {
+		SimpleDateFormat format = new SimpleDateFormat(Constants.CED_DATE_FORMAT);
+		format.setLenient(false);
+
+		try {
+			format.parse(cacheExpirationDateTime);
+		} catch (Exception e) {
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "wrong format of cacheExpirationDateTime should be "
+					+ Constants.CED_DATE_FORMAT);
+		}
+		this.cacheExpirationDateTime = cacheExpirationDateTime;
 	}
 
 	/**

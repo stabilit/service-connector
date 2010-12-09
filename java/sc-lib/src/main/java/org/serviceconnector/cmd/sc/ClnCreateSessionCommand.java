@@ -134,7 +134,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 				} catch (ConnectionPoolBusyException ex) {
 					if (i >= (tries - 1)) {
 						// only one loop outstanding - don't continue throw current exception
-						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SC_ERROR,
+						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
 								"no free connection on server for service " + reqMessage.getServiceName());
 						scmpCommandException.setMessageType(this.getKey());
 						throw scmpCommandException;

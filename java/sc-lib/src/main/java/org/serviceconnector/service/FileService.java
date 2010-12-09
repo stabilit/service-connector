@@ -58,6 +58,10 @@ public class FileService extends Service {
 		return path;
 	}
 
+	public FileServer getServer() {
+		return this.server;
+	}
+
 	public String getUploadFileScriptName() {
 		return this.scUploadScript;
 	}

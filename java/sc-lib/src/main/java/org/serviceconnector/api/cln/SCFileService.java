@@ -17,6 +17,8 @@ package org.serviceconnector.api.cln;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.List;
 
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCService;
@@ -108,9 +110,13 @@ public class SCFileService extends SCService {
 		}
 	}
 
-	public synchronized void listFiles(int operationTimeoutSeconds) throws Exception {
+	public synchronized List<String> listFiles() throws Exception {
+		return this.listFiles(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	public synchronized List<String> listFiles(int operationTimeoutSeconds) throws Exception {
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		SCMPFileListCall fileListCall = (SCMPFileListCall) SCMPCallFactory.FILE_DOWNLOAD_CALL.newInstance(this.requester,
+		SCMPFileListCall fileListCall = (SCMPFileListCall) SCMPCallFactory.FILE_LIST_CALL.newInstance(this.requester,
 				this.serviceName);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
@@ -120,10 +126,13 @@ public class SCFileService extends SCService {
 		}
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
-			SCServiceException ex = new SCServiceException("upload File failed");
+			SCServiceException ex = new SCServiceException("list files failed");
 			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			throw ex;
 		}
+
+		String[] fileNames = ((String) reply.getBody()).split(",");
+		return Arrays.asList(fileNames);
 	}
 
 	private void createFileSession(int operationTimeoutSeconds) throws SCServiceException {

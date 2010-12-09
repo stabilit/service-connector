@@ -185,7 +185,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					// only one loop outstanding - don't continue throw current exception
 					// schedule session timeout
 					this.sessionRegistry.scheduleSessionTimeout(session);
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SC_ERROR,
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
 							"no free connection on server for service " + message.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;

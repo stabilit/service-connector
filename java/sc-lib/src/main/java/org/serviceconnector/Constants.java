@@ -188,6 +188,7 @@ public final class Constants {
 	public static final String CACHE_MAX_ELEMENTS_IN_MEMORY = "cache.maxElementsInMemory";
 	public static final String CACHE_MAX_ELEMENTS_ON_DISK = "cache.maxElementsOnDisk";
 	public static final String CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = "cache.expirationThreadIntervalSeconds";
+	public static final String CED_DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ss.SSSZ";
 
 	/*
 	 * SCMP protocol constants ***********************

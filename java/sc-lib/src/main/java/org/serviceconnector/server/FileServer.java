@@ -44,7 +44,6 @@ public class FileServer extends Server {
 	private List<FileSession> sessions;
 	/** The max sessions. */
 	private int maxSessions;
-	private static final String FS = System.getProperty("file.separator");
 
 	public FileServer(String serverKey, InetSocketAddress socketAddress, int portNr, int maxSessions, int maxConnections,
 			String connectionType, int keepAliveInterval) {
@@ -66,7 +65,7 @@ public class FileServer extends Server {
 		} else {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
-			URL url = new URL("http://" + this.host + ":" + this.portNr + FS + path + session.getUploadFileScriptName() + "?name="
+			URL url = new URL("http://" + this.host + ":" + this.portNr + "/" + path + session.getUploadFileScriptName() + "?name="
 					+ remoteFileName);
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("PUT");
@@ -120,7 +119,7 @@ public class FileServer extends Server {
 			// download request arrived - set up URL connection
 			String path = session.getPath();
 			try {
-				URL url = new URL("http://" + this.host + ":" + this.portNr + FS + path + remoteFileName);
+				URL url = new URL("http://" + this.host + ":" + this.portNr + "/" + path + remoteFileName);
 				httpCon = (HttpURLConnection) url.openConnection();
 				httpCon.connect();
 				in = httpCon.getInputStream();
@@ -158,12 +157,10 @@ public class FileServer extends Server {
 		}
 	}
 
-	public SCMPMessage serverGetFileList(FileSession session, int timeoutInSeconds) throws Exception {
+	public SCMPMessage serverGetFileList(String path, String listScriptName, int timeoutInSeconds) throws Exception {
 		HttpURLConnection httpCon = null;
 
-		// first stream package arrived - set up URL connection
-		String path = session.getPath();
-		URL url = new URL("http://" + this.host + ":" + this.portNr + FS + path + session.getUploadFileScriptName());
+		URL url = new URL("http://" + this.host + ":" + this.portNr + "/" + path + listScriptName + "?service=" + this.serviceName);
 		httpCon = (HttpURLConnection) url.openConnection();
 		httpCon.setRequestMethod("GET");
 		httpCon.setDoOutput(true);
