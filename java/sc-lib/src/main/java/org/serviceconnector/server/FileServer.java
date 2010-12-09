@@ -29,8 +29,8 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.FileSession;
@@ -44,6 +44,7 @@ public class FileServer extends Server {
 	private List<FileSession> sessions;
 	/** The max sessions. */
 	private int maxSessions;
+	private static final String FS = System.getProperty("file.separator");
 
 	public FileServer(String serverKey, InetSocketAddress socketAddress, int portNr, int maxSessions, int maxConnections,
 			String connectionType, int keepAliveInterval) {
@@ -65,7 +66,7 @@ public class FileServer extends Server {
 		} else {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
-			URL url = new URL("http://" + this.host + ":" + this.portNr + path + session.getUploadFileScriptName() + "?name="
+			URL url = new URL("http://" + this.host + ":" + this.portNr + FS + path + session.getUploadFileScriptName() + "?name="
 					+ remoteFileName);
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("PUT");
@@ -119,12 +120,13 @@ public class FileServer extends Server {
 			// download request arrived - set up URL connection
 			String path = session.getPath();
 			try {
-				URL url = new URL("http://" + this.host + ":" + this.portNr + path + remoteFileName);
+				URL url = new URL("http://" + this.host + ":" + this.portNr + FS + path + remoteFileName);
 				httpCon = (HttpURLConnection) url.openConnection();
 				httpCon.connect();
 				in = httpCon.getInputStream();
 			} catch (Exception e) {
-				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " " + e.getMessage());
+				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " "
+						+ e.getMessage());
 				return fault;
 			}
 			// set session to streaming mode
@@ -156,8 +158,48 @@ public class FileServer extends Server {
 		}
 	}
 
-	public void serverGetFilelist(FileSession session, int timeoutInSeconds) throws Exception {
-		// TODO JOT
+	public SCMPMessage serverGetFileList(FileSession session, int timeoutInSeconds) throws Exception {
+		HttpURLConnection httpCon = null;
+
+		// first stream package arrived - set up URL connection
+		String path = session.getPath();
+		URL url = new URL("http://" + this.host + ":" + this.portNr + FS + path + session.getUploadFileScriptName());
+		httpCon = (HttpURLConnection) url.openConnection();
+		httpCon.setRequestMethod("GET");
+		httpCon.setDoOutput(true);
+		httpCon.setDoInput(true);
+
+		InputStream in = null;
+		try {
+			httpCon = (HttpURLConnection) url.openConnection();
+			httpCon.connect();
+			in = httpCon.getInputStream();
+		} catch (Exception e) {
+			SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " "
+					+ e.getMessage());
+			return fault;
+		}
+		try {
+			// write the data to the client
+			SCMPMessage reply = null;
+			byte[] fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
+			int readBytes = in.read(fullBuffer);
+			if (readBytes < 0) {
+				// this is the end
+				reply = new SCMPMessage();
+				reply.setBody(new byte[0]);
+				in.close();
+				httpCon.disconnect();
+				return reply;
+			}
+			// set up part request, no poll request
+			reply = new SCMPPart(false);
+			reply.setBody(fullBuffer, 0, readBytes);
+			return reply;
+		} catch (Exception e) {
+			SCMPMessageFault fault = new SCMPMessageFault(e);
+			return fault;
+		}
 	}
 
 	/** {@inheritDoc} */
