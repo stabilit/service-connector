@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.SynchronousCallback;
 
@@ -55,13 +55,13 @@ public class CommandCallback extends SynchronousCallback {
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPFault(SCMPError.OPERATION_TIMEOUT_EXPIRED, ERROR_STRING_TIMEOUT);
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT_EXPIRED, ERROR_STRING_TIMEOUT);
 		} else if (ex instanceof IOException) {
-			fault = new SCMPFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
 		} else if (ex instanceof ConnectionPoolBusyException) {
-			fault = new SCMPFault(ex, SCMPError.SC_ERROR, ERROR_STRING_FAIL);
+			fault = new SCMPMessageFault(ex, SCMPError.SC_ERROR, ERROR_STRING_FAIL);
 		} else {
-			fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
 		}
 		super.callback(fault);
 	}

@@ -33,7 +33,7 @@ import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.sc.SCTest;
@@ -68,9 +68,9 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.setKeepAliveInterval(360);
 
 		registerServerCall.invoke(this.registerCallback, 1000);
-		SCMPFault fault = (SCMPFault) this.registerCallback.getMessageSync(3000);
+		SCMPMessageFault fault = (SCMPMessageFault) this.registerCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.NOT_FOUND, " [service not found]", SCMPMsgType.REGISTER_SERVER);
+		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.NOT_FOUND, " [service not found]", SCMPMsgType.REGISTER_SERVER);
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.invoke(this.registerCallback, 1000);
 		SCMPMessage fault = this.registerCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL, " [IntValue must be set]",
+		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL, " [IntValue must be set]",
 				SCMPMsgType.REGISTER_SERVER);
 
 		// maxSessions 0 value
@@ -98,7 +98,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.invoke(this.registerCallback, 1000);
 		fault = this.registerCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_MAX_SESSIONS, " [IntValue 0 too low]", SCMPMsgType.REGISTER_SERVER);
+		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_MAX_SESSIONS, " [IntValue 0 too low]", SCMPMsgType.REGISTER_SERVER);
 
 		// maxConnections 0 value
 		registerServerCall.setPortNumber(9100);
@@ -109,7 +109,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.invoke(this.registerCallback, 1000);
 		fault = this.registerCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_MAX_CONNECTIONS, " [IntValue 0 too low]",
+		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_MAX_CONNECTIONS, " [IntValue 0 too low]",
 				SCMPMsgType.REGISTER_SERVER);
 
 		// port too high 10000
@@ -121,7 +121,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.invoke(this.registerCallback, 1000);
 		fault = this.registerCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_PORTNR, " [IntValue 910000 not within limits]",
+		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_PORTNR, " [IntValue 910000 not within limits]",
 				SCMPMsgType.REGISTER_SERVER);
 	}
 

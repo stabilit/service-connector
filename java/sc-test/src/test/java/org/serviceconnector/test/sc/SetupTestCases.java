@@ -23,7 +23,6 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.SC;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
@@ -255,7 +254,8 @@ public class SetupTestCases {
 						e.printStackTrace();
 					}
 				} else if (body.startsWith("reject")) {
-					SCMessageFault fault = new SCMessageFault();
+					SCMessage fault = new SCMessage();
+					fault.setReject(true);
 					return fault;
 				}
 			}
@@ -291,7 +291,7 @@ public class SetupTestCases {
 					message.setData(sb.toString());
 					return message;
 				} else if (body.startsWith("appError")) {
-					SCMessageFault fault = new SCMessageFault();
+					SCMessage fault = new SCMessage();
 					try {
 						fault.setAppErrorCode(500);
 						fault.setAppErrorText("appErrorText");

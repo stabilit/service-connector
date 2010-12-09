@@ -105,7 +105,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 
 		if (reply.isFault() == false) {
 			boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-			if (Boolean.FALSE.equals(rejectSubscriptionFlag)) {
+			if (rejectSubscriptionFlag == false) {
 				// session has not been rejected
 				String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
 				SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(subscriptionId);

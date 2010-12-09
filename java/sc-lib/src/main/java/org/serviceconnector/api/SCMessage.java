@@ -49,6 +49,12 @@ public class SCMessage {
 	private String cacheId;
 	/** The service name. */
 	private String serviceName;
+	/** The application error code. */
+	private int appErrorCode;
+	/** The application error text. */
+	private String appErrorText;
+	/** The reject flag used to reject a create session / subscribe. */
+	private boolean reject;
 
 	/**
 	 * Instantiates a new SCMessage.
@@ -61,6 +67,9 @@ public class SCMessage {
 		this.sessionId = null;
 		this.sessionInfo = null;
 		this.cacheId = null;
+		this.appErrorCode = -1;
+		this.appErrorText = null;
+		this.reject = false;
 	}
 
 	public SCMessage(byte[] data) {
@@ -262,12 +271,64 @@ public class SCMessage {
 	}
 
 	/**
-	 * Checks if is fault.
+	 * Gets the application error code.
 	 * 
-	 * @return true, if is fault
+	 * @return the application error code
 	 */
-	public boolean isFault() {
-		return false;
+	public int getAppErrorCode() {
+		return this.appErrorCode;
+	}
+
+	/**
+	 * Sets the application error text.
+	 * 
+	 * @param appErrorText
+	 *            the new application error text
+	 * @throws SCMPValidatorException
+	 */
+	public void setAppErrorText(String appErrorText) throws SCMPValidatorException {
+		ValidatorUtility.validateStringLength(1, appErrorText, 256, SCMPError.HV_WRONG_APP_ERROR_TEXT);
+		this.appErrorText = appErrorText;
+	}
+
+	/**
+	 * Gets the application error text.
+	 * 
+	 * @return the application error text
+	 */
+	public String getAppErrorText() {
+		return this.appErrorText;
+	}
+
+	/**
+	 * Checks if is reject.
+	 * 
+	 * @return true, if is reject
+	 */
+	public boolean isReject() {
+		return this.reject;
+	}
+
+	/**
+	 * Sets the reject. 
+	 * 
+	 * @param reject
+	 *            the new reject
+	 */
+	public void setReject(boolean reject) {
+		this.reject = reject;
+	}
+
+	/**
+	 * Sets the application error code.
+	 * 
+	 * @param appErrorCode
+	 *            the new application error code
+	 * @throws SCMPValidatorException
+	 */
+	public void setAppErrorCode(int appErrorCode) throws SCMPValidatorException {
+		ValidatorUtility.validateInt(0, appErrorCode, SCMPError.HV_WRONG_APP_ERROR_CODE);
+		this.appErrorCode = appErrorCode;
 	}
 
 	/** {@inheritDoc} */

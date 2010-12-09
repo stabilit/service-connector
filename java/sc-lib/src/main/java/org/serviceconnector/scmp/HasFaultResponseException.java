@@ -31,7 +31,7 @@ public abstract class HasFaultResponseException extends Exception {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3781800906847958120L;
 	/** The fault message. */
-	protected SCMPFault fault = new SCMPFault();
+	protected SCMPMessageFault fault = new SCMPMessageFault();
 
 	/**
 	 * Instantiates a new checks for fault response exception.

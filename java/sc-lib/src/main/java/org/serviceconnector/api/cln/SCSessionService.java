@@ -120,7 +120,7 @@ public class SCSessionService extends SCService {
 			throw ex;
 		}
 		if (reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
-			SCServiceException ex = new SCServiceException("create session failed"
+			SCServiceException ex = new SCServiceException("create session failed, session rejected"
 					+ reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 			ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));

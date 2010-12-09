@@ -29,7 +29,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.AbstractSession;
@@ -84,7 +84,7 @@ public class FileServer extends Server {
 			out.write((byte[]) message.getBody());
 			out.flush();
 		} catch (Exception e) {
-			SCMPFault fault = new SCMPFault(e);
+			SCMPMessageFault fault = new SCMPMessageFault(e);
 			return fault;
 		}
 
@@ -94,7 +94,7 @@ public class FileServer extends Server {
 			out.close();
 			if (httpCon.getResponseCode() != HttpResponseStatus.OK.getCode()) {
 				// error handling
-				SCMPFault fault = new SCMPFault(SCMPError.UPLOAD_FILE_FAILED, httpCon.getResponseMessage());
+				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.UPLOAD_FILE_FAILED, httpCon.getResponseMessage());
 				return fault;
 			}
 			httpCon.disconnect();
@@ -124,7 +124,7 @@ public class FileServer extends Server {
 				httpCon.connect();
 				in = httpCon.getInputStream();
 			} catch (Exception e) {
-				SCMPFault fault = new SCMPFault(SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " " + e.getMessage());
+				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " " + e.getMessage());
 				return fault;
 			}
 			// set session to streaming mode
@@ -151,7 +151,7 @@ public class FileServer extends Server {
 			reply.setBody(fullBuffer, 0, readBytes);
 			return reply;
 		} catch (Exception e) {
-			SCMPFault fault = new SCMPFault(e);
+			SCMPMessageFault fault = new SCMPMessageFault(e);
 			return fault;
 		}
 	}

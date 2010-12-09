@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessage;
 
 /**
@@ -78,7 +78,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			// arrive late after operation timeout already run out, can be ignored
 			return;
 		}
-		SCMPMessage fault = new SCMPFault(ex);
+		SCMPMessage fault = new SCMPMessageFault(ex);
 		if (this.answer.offer(fault)) {
 			// queue empty object can be added
 			return;
@@ -105,12 +105,12 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			this.synchronous = false;
 			if (reply == null) {
 				// time runs out before message got received
-				SCMPFault fault = new SCMPFault(SCMPError.REQUEST_TIMEOUT, "Getting message synchronous failed");
+				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.REQUEST_TIMEOUT, "Getting message synchronous failed");
 				return fault;
 			}
 		} catch (Exception e) {
 			logger.error("getMessageSync", e);
-			SCMPFault fault = new SCMPFault(e);
+			SCMPMessageFault fault = new SCMPMessageFault(e);
 			return fault;
 		}
 		return reply;
@@ -132,7 +132,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			this.synchronous = false;
 		} catch (Exception e) {
 			logger.error("getMessageSyncEverWaiting", e);
-			SCMPFault fault = new SCMPFault(e);
+			SCMPMessageFault fault = new SCMPMessageFault(e);
 			return fault;
 		}
 		return reply;

@@ -38,7 +38,7 @@ import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -315,13 +315,13 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			SCMPMessage fault = null;
 			if (ex instanceof IdleTimeoutException) {
 				// operation timeout handling
-				fault = new SCMPFault(SCMPError.OPERATION_TIMEOUT_EXPIRED, ERROR_STRING_TIMEOUT);
+				fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT_EXPIRED, ERROR_STRING_TIMEOUT);
 			} else if (ex instanceof IOException) {
-				fault = new SCMPFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
+				fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
 			} else if (ex instanceof ConnectionPoolBusyException) {
-				fault = new SCMPFault(ex, SCMPError.SC_ERROR, ERROR_STRING_FAIL);
+				fault = new SCMPMessageFault(ex, SCMPError.SC_ERROR, ERROR_STRING_FAIL);
 			} else {
-				fault = new SCMPFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
+				fault = new SCMPMessageFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
 			}
 			// set sid & serviceName for EXC
 			try {

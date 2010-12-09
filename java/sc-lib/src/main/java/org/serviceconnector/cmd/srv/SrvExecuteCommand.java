@@ -20,7 +20,6 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.srv.SrvSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -72,7 +71,7 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setCacheId(reqMessage.getCacheId());
 		scMessage.setServiceName(reqMessage.getServiceName());
-		
+
 		// inform callback with scMessages
 		SCMessage scReply = srvService.getCallback().execute(scMessage,
 				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
@@ -94,19 +93,18 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 		reply.setMessageType(this.getKey());
 		if (scReply != null) {
+			reply.setBody(scReply.getData());
+			if (scReply.getMessageInfo() != null) {
+				reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, scReply.getMessageInfo());
+			}
 			if (scReply.isCompressed()) {
 				reply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 			}
-			String msgInfo = scReply.getMessageInfo();
-			if (msgInfo != null) {
-				reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, msgInfo);
+			if (scReply.getAppErrorCode() != -1) {
+				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scReply.getAppErrorCode());
 			}
-			reply.setBody(scReply.getData());
-
-			if (scReply.isFault()) {
-				SCMessageFault scFault = (SCMessageFault) scReply;
-				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scFault.getAppErrorCode());
-				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scFault.getAppErrorText());
+			if (scReply.getAppErrorText() != null) {
+				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scReply.getAppErrorText());
 			}
 		}
 		response.setSCMP(reply);

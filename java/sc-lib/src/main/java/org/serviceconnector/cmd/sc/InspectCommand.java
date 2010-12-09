@@ -26,7 +26,7 @@ import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -98,7 +98,7 @@ public class InspectCommand extends CommandAdapter {
 				}
 			} else {
 				logger.debug("service:" + serviceName + " not found");
-				scmpReply = new SCMPFault(SCMPError.NOT_FOUND, "service:" + serviceName + " not found");
+				scmpReply = new SCMPMessageFault(SCMPError.NOT_FOUND, "service:" + serviceName + " not found");
 			}
 			response.setSCMP(scmpReply);
 			return;

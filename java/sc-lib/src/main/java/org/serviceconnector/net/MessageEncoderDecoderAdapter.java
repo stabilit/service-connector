@@ -38,7 +38,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
 import org.serviceconnector.scmp.SCMPBodyType;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
@@ -90,7 +90,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			scmpMsg = new SCMPPart(true);
 			break;
 		case EXC:
-			scmpMsg = new SCMPFault();
+			scmpMsg = new SCMPMessageFault();
 			break;
 		case UNDEF:
 			throw new EncodingDecodingException("wrong protocol in message not possible to decode");

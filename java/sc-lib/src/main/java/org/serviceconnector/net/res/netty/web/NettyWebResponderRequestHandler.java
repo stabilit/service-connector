@@ -37,7 +37,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.net.res.netty.NettyHttpResponse;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
 import org.serviceconnector.web.cmd.IWebCommand;
@@ -90,7 +90,7 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 			// never reply in case of channel closed exception
 			return;
 		}
-		SCMPFault fault = new SCMPFault(SCMPError.SC_ERROR, th.getMessage());
+		SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SC_ERROR, th.getMessage());
 		response.setSCMP(fault);
 		response.write();
 	}

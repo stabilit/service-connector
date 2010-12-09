@@ -150,7 +150,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 
 			if (reply.isFault() == false) {
 				boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-				if (Boolean.FALSE.equals(rejectSessionFlag)) {
+				if (rejectSessionFlag == false) {
 					// session has not been rejected, add server to session
 					session.setServer(server);
 					session.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());

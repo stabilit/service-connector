@@ -30,7 +30,7 @@ import org.serviceconnector.net.res.netty.NettyTcpResponse;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
@@ -57,7 +57,7 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 			super.messageReceived(request, response, channel);
 		} catch (Exception e) {
 			logger.error("messageReceived", e);
-			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR, e.getMessage());
+			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, e.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
@@ -83,7 +83,7 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 			((HasFaultResponseException) th).setFaultResponse(response);
 			response.write();
 		}
-		SCMPFault fault = new SCMPFault(SCMPError.SC_ERROR, th.getMessage());
+		SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SC_ERROR, th.getMessage());
 		response.setSCMP(fault);
 		response.write();
 	}

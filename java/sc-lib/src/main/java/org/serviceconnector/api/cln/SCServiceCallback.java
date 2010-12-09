@@ -28,7 +28,7 @@ import org.serviceconnector.api.SCService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
@@ -86,7 +86,7 @@ public class SCServiceCallback extends SynchronousCallback {
 			return;
 		}
 		if (scmpReply.isFault()) {
-			SCMPFault fault = (SCMPFault) scmpReply;
+			SCMPMessageFault fault = (SCMPMessageFault) scmpReply;
 			SCServiceException e = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			e.setSCMPError(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			this.service.setRequestComplete();

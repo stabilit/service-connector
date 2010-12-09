@@ -27,7 +27,7 @@ import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.sc.SCTest;
@@ -67,7 +67,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.invoke(this.attachCallback, 1000);
 		SCMPMessage fault = this.attachCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_ECHO_INTERVAL, " [IntValue 0 not within limits]",
+		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_ECHO_INTERVAL, " [IntValue 0 not within limits]",
 				SCMPMsgType.CLN_CREATE_SESSION);
 
 		// serviceName not set
@@ -77,7 +77,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		createSessionCall.invoke(this.attachCallback, 1000);
 		fault = this.attachCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_WRONG_SERVICE_NAME, " [serviceName must be set]",
+		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_SERVICE_NAME, " [serviceName must be set]",
 				SCMPMsgType.CLN_CREATE_SESSION);
 	}
 

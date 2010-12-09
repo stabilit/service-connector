@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -157,7 +157,7 @@ public class SCTest {
 
 	public static void checkReply(SCMPMessage message) throws Exception {
 		if (message.isFault()) {
-			SCMPFault fault = (SCMPFault) message;
+			SCMPMessageFault fault = (SCMPMessageFault) message;
 			Exception ex = fault.getCause();
 			if (ex != null) {
 				throw ex;

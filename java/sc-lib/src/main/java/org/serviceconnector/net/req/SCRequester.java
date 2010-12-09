@@ -27,7 +27,7 @@ import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPLargeRequest;
 import org.serviceconnector.scmp.SCMPLargeResponse;
@@ -398,7 +398,7 @@ public class SCRequester implements IRequester {
 		public void timeout() {
 			this.disconnectConnection();
 			try {
-				SCMPFault fault = new SCMPFault(SCMPError.REQUEST_TIMEOUT, "Operation timeout expired on client");
+				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.REQUEST_TIMEOUT, "Operation timeout expired on client");
 				fault.setMessageType(requestMsg.getMessageType());
 				this.scmpCallback.callback(fault);
 			} catch (Exception e) {

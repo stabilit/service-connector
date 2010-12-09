@@ -31,7 +31,7 @@ import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
@@ -317,7 +317,7 @@ public class SCPublishService extends SCService {
 			}
 			if (reply.isFault()) {
 				// operation failed
-				SCMPFault fault = (SCMPFault) reply;
+				SCMPMessageFault fault = (SCMPMessageFault) reply;
 				if (fault.getCause() != null) {
 					super.callback(fault.getCause());
 				} else {
@@ -333,7 +333,7 @@ public class SCPublishService extends SCService {
 					SCPublishService.this.receivePublication();
 				} catch (Exception e) {
 					logger.info("subscribed " + e.toString());
-					SCMPFault fault = new SCMPFault(e);
+					SCMPMessageFault fault = new SCMPMessageFault(e);
 					super.callback(fault);
 					return;
 				}

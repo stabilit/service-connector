@@ -27,7 +27,7 @@ import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPManageCall;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -53,7 +53,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		manageCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync(3000);
 		// try to create a session on service enableService - should fail
-		SCMPFault fault = (SCMPFault) this.createSession();
+		SCMPMessageFault fault = (SCMPMessageFault) this.createSession();
 		SCTest.verifyError(fault, SCMPError.SERVICE_DISABLED, " [Service is disabled.]", SCMPMsgType.CLN_CREATE_SESSION);
 
 		// enable enableService by manage call
@@ -83,7 +83,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		Assert.assertEquals(SCMPMsgType.MANAGE.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 
 		// try to create another session on service enableService - should fail
-		fault = (SCMPFault) this.createSession();
+		fault = (SCMPMessageFault) this.createSession();
 		SCTest.verifyError(fault, SCMPError.SERVICE_DISABLED, " [service not found for enableService]",
 				SCMPMsgType.CLN_CREATE_SESSION);
 

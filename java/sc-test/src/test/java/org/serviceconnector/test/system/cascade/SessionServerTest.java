@@ -25,7 +25,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
@@ -92,7 +91,7 @@ public class SessionServerTest {
 	public void afterOneTest() throws Exception {
 		server.stopListener();
 		sessionServer.deregister();
-		sessionServer.destroy();
+		server.destroy();
 		srvCallback = null;
 		assertEquals("number of threads", threadCount, Thread.activeCount());
 	}

@@ -29,9 +29,9 @@ import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.server.StatefulServer;
@@ -127,7 +127,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 
 			if (reply.isFault() == false) {
 				boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-				if (Boolean.FALSE.equals(rejectSubscriptionFlag)) {
+				if (rejectSubscriptionFlag == false) {
 					// subscription has not been rejected, add server to subscription
 					subscription.setServer(server);
 					// finally add subscription to the registry
@@ -142,9 +142,13 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				} else {
 					// subscription has been rejected - remove subscription id from header
 					reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+					// creation failed remove from server
+					server.removeSession(subscription);
 				}
 			} else {
 				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+				// creation failed remove from server
+				server.removeSession(subscription);
 			}
 			// forward reply to client
 			reply.setIsReply(true);
@@ -259,7 +263,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			try {
 				reqMsg = request.getMessage();
 			} catch (Exception e1) {
-				SCMPFault fault = new SCMPFault(e1);
+				SCMPMessageFault fault = new SCMPMessageFault(e1);
 				response.setSCMP(fault);
 				try {
 					// send message back to client
@@ -276,7 +280,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			Subscription subscription = subscriptionRegistry.getSubscription(subscriptionId);
 			if (subscription == null) {
 				// subscription has already been deleted
-				SCMPFault fault = new SCMPFault(SCMPError.NOT_FOUND, "subscription not found");
+				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.NOT_FOUND, "subscription not found");
 				response.setSCMP(fault);
 				try {
 					// send message back to client

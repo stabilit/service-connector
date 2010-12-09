@@ -24,7 +24,7 @@ import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -101,7 +101,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		subscribeCall.invoke(callback, 3000);
 		SCMPMessage fault = callback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_ERROR, " [IntValue must be set]", SCMPMsgType.CLN_SUBSCRIBE);
+		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_ERROR, " [IntValue must be set]", SCMPMsgType.CLN_SUBSCRIBE);
 
 		// noDataInterval wrong
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -111,7 +111,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		subscribeCall.invoke(callback, 3000);
 		fault = callback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPFault) fault, SCMPError.HV_ERROR, " [IntValue must be set]", SCMPMsgType.CLN_SUBSCRIBE);
+		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_ERROR, " [IntValue must be set]", SCMPMsgType.CLN_SUBSCRIBE);
 	}
 
 	private class TestSubscribeCallback extends SynchronousCallback {

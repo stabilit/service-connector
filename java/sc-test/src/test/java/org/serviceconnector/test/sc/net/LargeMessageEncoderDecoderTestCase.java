@@ -28,7 +28,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPBodyType;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -330,7 +330,7 @@ public class LargeMessageEncoderDecoderTestCase {
 
 		String expectedString = SCImplTest.getSCMPString(headKey, header, body);
 
-		SCMPMessage encodeExc = new SCMPFault();
+		SCMPMessage encodeExc = new SCMPMessageFault();
 		encodeExc.setHeader(encodeScmp);
 		encodeExc.setBody(body.getBytes());
 

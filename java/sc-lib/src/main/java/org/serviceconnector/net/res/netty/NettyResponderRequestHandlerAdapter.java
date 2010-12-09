@@ -22,7 +22,7 @@ import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPFault;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPLargeRequest;
 import org.serviceconnector.scmp.SCMPLargeResponse;
@@ -245,7 +245,7 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 		if (ex instanceof HasFaultResponseException) {
 			((HasFaultResponseException) ex).setFaultResponse(response);
 		} else {
-			SCMPFault scmpFault = new SCMPFault(SCMPError.SERVER_ERROR, ex.getMessage());
+			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, ex.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
@@ -308,7 +308,7 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 	 *             the exception
 	 */
 	protected void sendBadRequestError(IResponse response, SCMPMessage scmpReq) throws Exception {
-		SCMPFault scmpFault = new SCMPFault(SCMPError.BAD_REQUEST, "messagType " + scmpReq.getMessageType());
+		SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.BAD_REQUEST, "messagType " + scmpReq.getMessageType());
 		scmpFault.setMessageType(scmpReq.getMessageType());
 		scmpFault.setLocalDateTime();
 		response.setSCMP(scmpFault);
