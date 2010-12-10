@@ -22,10 +22,8 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 
 public class DemoFileClient extends Thread {
@@ -50,18 +48,20 @@ public class DemoFileClient extends Thread {
 
 			SCFileService service = sc.newFileService("file-1"); // name of the service to use
 
-			List<String> fileList = service.listFiles();
-			System.out.println(fileList);
+			List<String> fileNameList = service.listFiles();
+			for (String fileName : fileNameList) {
+				System.out.println(fileName);
+			}
 			
-			File localFile = new File("src/main/resources/ClientContent.txt");
+			File localFile = new File("src/main/resources/uploadContent.txt");
 			InputStream inpStream = new FileInputStream(localFile);
-			String targetFileName = "uploadedContent.txt";
+			String targetFileName = "uploadContent.txt";
 
 			service.uploadFile(targetFileName, inpStream); // regular upload
 
-			localFile = new File("src/main/resources/ServerContent.txt");
+			localFile = new File("src/main/resources/downloadContent.txt");
 			FileOutputStream outStream = new FileOutputStream(localFile);
-			targetFileName = "ClientContentCopied.txt";
+			targetFileName = "uploadContent.txt";
 			service.downloadFile(targetFileName, outStream); // regular download
 			outStream.close();
 		} catch (Exception e) {
