@@ -34,7 +34,7 @@ public class SCServiceException extends Exception {
 	private static final long serialVersionUID = 75222936621899150L;
 
 	/** The application error code. */
-	private String appErrorCode;
+	private int appErrorCode;
 	/** The application error text. */
 	private String appErrorText;
 	/** The scmp error. */
@@ -67,8 +67,8 @@ public class SCServiceException extends Exception {
 	 * 
 	 * @return the application error code
 	 */
-	public String getAppErrorCode() {
-		return appErrorCode;
+	public int getAppErrorCode() {
+		return this.appErrorCode;
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class SCServiceException extends Exception {
 	 * @param appErrorCode
 	 *            the new application error code
 	 */
-	public void setAppErrorCode(String appErrorCode) {
+	public void setAppErrorCode(int appErrorCode) {
 		this.appErrorCode = appErrorCode;
 	}
 

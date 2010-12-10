@@ -98,6 +98,7 @@ public class SCMessage {
 	 */
 	public void setMessageInfo(String messageInfo) throws SCMPValidatorException {
 		if (messageInfo == null) {
+			this.messageInfo = null;
 			return;
 		}
 		ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
@@ -122,6 +123,7 @@ public class SCMessage {
 	 */
 	public void setSessionInfo(String sessionInfo) throws SCMPValidatorException {
 		if (sessionInfo == null) {
+			this.sessionInfo = null;
 			return;
 		}
 		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
@@ -268,6 +270,7 @@ public class SCMessage {
 	 */
 	public void setCacheId(String cacheId) throws SCMPValidatorException {
 		if (cacheId == null) {
+			this.cacheId = null;
 			return;
 		}
 		ValidatorUtility.validateStringLength(1, cacheId, 256, SCMPError.HV_WRONG_SESSION_INFO);
@@ -291,6 +294,10 @@ public class SCMessage {
 	 * @throws SCMPValidatorException
 	 */
 	public void setAppErrorText(String appErrorText) throws SCMPValidatorException {
+		if (appErrorText == null) {
+			this.appErrorText = null;
+			return;
+		}
 		ValidatorUtility.validateStringLength(1, appErrorText, 256, SCMPError.HV_WRONG_APP_ERROR_TEXT);
 		this.appErrorText = appErrorText;
 	}
@@ -302,6 +309,18 @@ public class SCMessage {
 	 */
 	public String getAppErrorText() {
 		return this.appErrorText;
+	}
+
+	/**
+	 * Sets the application error code.
+	 * 
+	 * @param appErrorCode
+	 *            the new application error code
+	 * @throws SCMPValidatorException
+	 */
+	public void setAppErrorCode(int appErrorCode) throws SCMPValidatorException {
+		ValidatorUtility.validateInt(0, appErrorCode, SCMPError.HV_WRONG_APP_ERROR_CODE);
+		this.appErrorCode = appErrorCode;
 	}
 
 	/**
@@ -341,6 +360,10 @@ public class SCMessage {
 	 *             the sCMP validator exception
 	 */
 	public void setCacheExpirationDateTime(Date cacheExpirationDateTime) throws SCMPValidatorException {
+		if (cacheExpirationDateTime == null) {
+			this.cacheExpirationDateTime = null;
+			return;
+		}
 		SimpleDateFormat format = new SimpleDateFormat(Constants.CED_DATE_FORMAT);
 		this.cacheExpirationDateTime = format.format(cacheExpirationDateTime);
 	}
@@ -353,6 +376,10 @@ public class SCMessage {
 	 * @throws SCMPValidatorException
 	 */
 	public void setCacheExpirationDateTime(String cacheExpirationDateTime) throws SCMPValidatorException {
+		if (cacheExpirationDateTime == null) {
+			this.cacheExpirationDateTime = null;
+			return;
+		}
 		SimpleDateFormat format = new SimpleDateFormat(Constants.CED_DATE_FORMAT);
 		format.setLenient(false);
 
@@ -363,18 +390,6 @@ public class SCMessage {
 					+ Constants.CED_DATE_FORMAT);
 		}
 		this.cacheExpirationDateTime = cacheExpirationDateTime;
-	}
-
-	/**
-	 * Sets the application error code.
-	 * 
-	 * @param appErrorCode
-	 *            the new application error code
-	 * @throws SCMPValidatorException
-	 */
-	public void setAppErrorCode(int appErrorCode) throws SCMPValidatorException {
-		ValidatorUtility.validateInt(0, appErrorCode, SCMPError.HV_WRONG_APP_ERROR_CODE);
-		this.appErrorCode = appErrorCode;
 	}
 
 	/** {@inheritDoc} */

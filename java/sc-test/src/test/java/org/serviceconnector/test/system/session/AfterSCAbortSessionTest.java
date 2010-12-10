@@ -15,10 +15,6 @@
  */
 package org.serviceconnector.test.system.session;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.concurrent.TimeoutException;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -28,7 +24,6 @@ import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;

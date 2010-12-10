@@ -26,11 +26,9 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.net.req.netty.IdleTimeoutException;
-import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.SynchronousCallback;
 
@@ -99,8 +97,12 @@ public class SCServiceCallback extends SynchronousCallback {
 		messageReply.setSessionId(scmpReply.getSessionId());
 		try {
 			messageReply.setMessageInfo(scmpReply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+			if (scmpReply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE) != null) {
+				messageReply.setAppErrorCode(scmpReply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+				messageReply.setAppErrorText(scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
+			}
 		} catch (SCMPValidatorException ex) {
-			logger.warn("Message info invalid when setting in scmessage");
+			logger.warn("attributes invalid when setting in scmessage");
 		}
 		// inform service request is completed
 		this.service.setRequestComplete();
