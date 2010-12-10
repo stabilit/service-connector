@@ -25,9 +25,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.sc.attach.AttachTestCase;
 import org.serviceconnector.test.sc.attach.DetachTestCase;
@@ -131,7 +131,7 @@ public class SCTest {
 		return map;
 	}
 
-	public static void Assert.assertEqualsUnorderedStringIgnorePorts(String expected, String actual) {
+	public static void assertEqualsUnorderedStringIgnorePorts(String expected, String actual) {
 		// actual = actual.replaceAll("127.0.0.1/", "localhost/");
 		actual = actual.replaceAll("localhost/\\d*:", "localhost/:");
 

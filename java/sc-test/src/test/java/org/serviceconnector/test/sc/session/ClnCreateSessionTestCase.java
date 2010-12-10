@@ -27,8 +27,8 @@ import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
@@ -115,7 +115,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		} else {
 			expectedScEntry = sessId + ":" + sessId + ":session-1_localhost/:" + 41000 + " : 1|";
 		}
-		SCTest.Assert.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
+		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
