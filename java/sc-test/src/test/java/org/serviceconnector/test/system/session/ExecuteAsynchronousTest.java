@@ -30,12 +30,15 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCServiceCallback;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.call.SCMPEchoCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.service.SCServiceException;
 
 @SuppressWarnings("unused")
@@ -94,7 +97,7 @@ public class ExecuteAsynchronousTest {
 		} catch (Exception e) {
 		}
 		scCtx = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass
@@ -120,10 +123,10 @@ public class ExecuteAsynchronousTest {
 		waitForMessage(10);
 		response = cbk.response;
 		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		assertEquals("appErrorCode is not set",TestConstants.appErrorCode, response.getAppErrorCode());
-		assertEquals("appErrorText is not set",TestConstants.appErrorText, response.getAppErrorText());
+		assertEquals("appErrorCode is not set", TestConstants.appErrorCode, response.getAppErrorCode());
+		assertEquals("appErrorText is not set", TestConstants.appErrorText, response.getAppErrorText());
 		service.deleteSession();
 	}
 
@@ -146,12 +149,11 @@ public class ExecuteAsynchronousTest {
 		response = cbk.response;
 
 		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 
-	
 	/**
 	 * Description: exchange 1MB message<br>
 	 * Expectation: passes
@@ -171,7 +173,7 @@ public class ExecuteAsynchronousTest {
 		response = cbk.response;
 
 		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
@@ -194,7 +196,7 @@ public class ExecuteAsynchronousTest {
 		waitForMessage(10);
 		response = cbk.response;
 		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
@@ -203,7 +205,7 @@ public class ExecuteAsynchronousTest {
 	 * Description: send before create session<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test (expected = SCServiceException.class)
+	@Test(expected = SCServiceException.class)
 	public void t05_send() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		request.setCompressed(false);
@@ -218,7 +220,7 @@ public class ExecuteAsynchronousTest {
 	 * Description: send message after session rejection<br>
 	 * Expectation: throws SCserviceException
 	 */
-	@Test (expected = SCServiceException.class)
+	@Test(expected = SCServiceException.class)
 	public void t06_rejectSession() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
@@ -257,12 +259,10 @@ public class ExecuteAsynchronousTest {
 		response = cbk.response;
 		assertEquals("sessionId is not the same", sessionId, response.getSessionId());
 		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
-
-
 
 	/**
 	 * Description: operation timeout expired during execution<br>
@@ -284,7 +284,7 @@ public class ExecuteAsynchronousTest {
 		response = cbk.response;
 
 	}
-	
+
 	/**
 	 * Description: operation timeout expired during execution, catch exception and continue after a while<br>
 	 * Expectation: passes
@@ -297,27 +297,27 @@ public class ExecuteAsynchronousTest {
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
 		request.setMessageInfo("sleep");
-		request.setData("5000"); 		// server will sleep 5000ms
+		request.setData("5000"); // server will sleep 5000ms
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(2, request, cbk);	// SC oti = 2*0.8*1000 = 1600ms
-		waitForMessage(10);				// will wait max 10 seconds for response
+		service.send(2, request, cbk); // SC oti = 2*0.8*1000 = 1600ms
+		waitForMessage(10); // will wait max 10 seconds for response
 		response = cbk.response;
-		Thread.sleep(5000);				// wait for the server
-		
+		Thread.sleep(5000); // wait for the server
+
 		// second message
 		messageReceived = false;
 		request.setMessageInfo("echo");
-		request.setData("hallo");		// send second message
-		service.send(2,request, cbk);
-		waitForMessage(10);				// will wait max 10 seconds for the second response
+		request.setData("hallo"); // send second message
+		service.send(2, request, cbk);
+		waitForMessage(10); // will wait max 10 seconds for the second response
 		response = cbk.response;
 		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
-	
+
 	/**
 	 * Description: operation timeout expired during execution, catch exception and continue immediately<br>
 	 * Expectation: passes
@@ -330,37 +330,35 @@ public class ExecuteAsynchronousTest {
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
 		request.setMessageInfo("sleep");
-		request.setData("5000"); 		// server will sleep 5000ms
+		request.setData("5000"); // server will sleep 5000ms
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(2, request, cbk);	// SC oti = 2*0.8*1000 = 1600ms
-		waitForMessage(10);				// will wait max 10 seconds for response
+		service.send(2, request, cbk); // SC oti = 2*0.8*1000 = 1600ms
+		waitForMessage(10); // will wait max 10 seconds for response
 		response = cbk.response;
-		
+
 		// second message
 		messageReceived = false;
 		request.setMessageInfo("echo");
 		request.setData("gaga");
-		service.send(2,request, cbk);
-		waitForMessage(10);				// will wait max 10 seconds for response
+		service.send(2, request, cbk);
+		waitForMessage(10); // will wait max 10 seconds for response
 		response = cbk.response;
 		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 
-		
-		//third message (synchronous)
+		// third message (synchronous)
 		request.setData("abraka-dabra");
 		response = service.execute(request);
 		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());	
+		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
+		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
-	}	
-	
-	
+	}
+
 	private void waitForMessage(int nrSeconds) throws Exception {
-		for (int i = 0; i < (nrSeconds*10); i++) {
+		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (messageReceived) {
 				return;
 			}
@@ -369,7 +367,6 @@ public class ExecuteAsynchronousTest {
 		throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 	}
 
-	
 	private class MsgCallback extends SCMessageCallback {
 		private SCMessage response = null;
 
@@ -385,13 +382,12 @@ public class ExecuteAsynchronousTest {
 
 		@Override
 		public void receive(Exception e) {
-			logger.error("receive error: "+e.getMessage());
-			SCMessage response = new SCMessage();
-			try {
-				response.setAppErrorCode(1000);
-				response.setAppErrorText(e.getMessage());
-			} catch (SCMPValidatorException e1) {
+			logger.error("receive error: " + e.getMessage());
+			if (e instanceof SCServiceException) {
+				SCMPError scError = ((SCServiceException) e).getSCMPError();
+				logger.info("SC error code:" + scError.getErrorCode() + " text:" + scError.getErrorText());
 			}
+			response = null;
 			ExecuteAsynchronousTest.messageReceived = true;
 		}
 	}
