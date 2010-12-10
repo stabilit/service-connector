@@ -24,6 +24,12 @@ if ($handle = opendir('.')) {
 	$i = 0;
     while (false !== ($file = readdir($handle))) {
         if ($file != "." && $file != "..") {
+        	// ignore php exentsions
+        	$pos = strrpos($file,".php");
+        	$len = strlen($file);
+        	if ($pos == $len - 4) {
+        		continue;
+        	}
         	if ( $i++ > 0) {
         		echo "|";
         	}
