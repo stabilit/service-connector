@@ -123,7 +123,7 @@ public class ExecuteTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t02_executeCompressedMsg() throws Exception {
+	public void t02_executeCompressed() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(true);
 		SCMessage response = null;
@@ -143,7 +143,7 @@ public class ExecuteTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t03_executeLargeMsg() throws Exception {
+	public void t03_executeLarge() throws Exception {
 		SCMessage request = new SCMessage(new byte[TestConstants.dataLength1MB]);
 		request.setCompressed(false);
 		SCMessage response = null;
@@ -162,7 +162,7 @@ public class ExecuteTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t04_executeLargeCompressedMsg() throws Exception { // TODO JOT this test does not work
+	public void t04_executeLargeCompressed() throws Exception { // TODO JOT this test does not work
 		SCMessage request = new SCMessage(new byte[TestConstants.dataLength1MB]);
 		request.setCompressed(true);
 		SCMessage response = null;
