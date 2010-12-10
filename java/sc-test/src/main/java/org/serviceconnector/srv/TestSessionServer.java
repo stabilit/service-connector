@@ -179,6 +179,17 @@ public class TestSessionServer extends TestStatefulServer {
 			return request;
 		}
 
+		// methods invoked by name (passed in messageInfo)
+		public SCMessage echoAppError(SCMessage request, int operationTimeoutInMillis) {
+			try {
+				request.setAppErrorCode(TestConstants.appErrorCode);
+				request.setAppErrorText(TestConstants.appErrorText);
+			} catch (SCMPValidatorException e) {
+				logger.error("cannot set appError ", e);
+			}
+			return request;
+		}
+		
 		public SCMessage sleep(SCMessage request, int operationTimeoutInMillis) {
 			String dataString = (String) request.getData();
 			int millis = Integer.parseInt(dataString);

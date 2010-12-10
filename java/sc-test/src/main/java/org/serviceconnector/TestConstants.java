@@ -55,8 +55,9 @@ public class TestConstants {
 	
 	public static final int dataLength60kB = 61440;
 	public static final int dataLength1MB = 1048576;
-	
 	public static final String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
+	public static final String appErrorText = "application error text";
+	public static final int appErrorCode = 45234;
 
 	public static final String logDirectoryToken = "log-path";
 	public static final String configPortToken = "sc-tcp.port";

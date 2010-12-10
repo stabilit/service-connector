@@ -212,7 +212,7 @@ public class CreateSessionTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t09_createSession60kB() throws Exception {	
+	public void t09_createSession60kBmsg() throws Exception {	
 		SCMessage request = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
@@ -225,7 +225,7 @@ public class CreateSessionTest {
 	 * Expectation: throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class )
-	public void t10_createSession1MB() throws Exception {	
+	public void t10_createSession1MBmsg() throws Exception {	
 		SCMessage request = new SCMessage(new byte[TestConstants.dataLength1MB]);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
@@ -283,6 +283,7 @@ public class CreateSessionTest {
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.sesServiceName1);
 		clientMgmt.detach();
+		
 		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
