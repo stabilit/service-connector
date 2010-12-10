@@ -24,22 +24,30 @@
 #		to store the files.
 # - A declared file service on SC need to define the script in SC configuration
 #	 	(sc.properties). file-1.uploadScript=scupload.php 
-# - A notification mail is sent to all registered recipients in this script
+# - A notification mail is sent to all registerred recipients in this script
 # ------------------------------------------------------------------------------
 */
 /* PUT data in stdin Stream */
 $putdata = fopen("php://input","r");
-$fileName = "";	// no default
-$service = "";	// no default
+$fileName = null;  // no default
+$service = null;   // no default
 if ($_REQUEST['name']) {
 	$fileName = $_REQUEST['name']; 
-} else {
-	// ???
 }
 if ($_REQUEST['service']) {
 	$service = $_REQUEST['service']; 
-} else {
-	// ???
+}
+
+if ($fileName == null || $service == null || $fileName == "" || $service == "") {
+	header($_SERVER["SERVER_PROTOCOL"]." 400 Bad Request");
+	echo '400 bad request<br/>';
+	if ($fileName == null || $fileName == "") {
+	   echo 'parameter name is missing<br/>';
+	}
+	if ($service == null || $service == "") {
+	   echo 'parameter service is missing<br/>';
+	}
+	exit;
 }
 
 /* Open file to write */
