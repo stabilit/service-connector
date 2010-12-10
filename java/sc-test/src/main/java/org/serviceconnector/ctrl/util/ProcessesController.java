@@ -18,6 +18,9 @@ package org.serviceconnector.ctrl.util;
 import java.io.FileInputStream;
 import java.util.Properties;
 
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.EnvironmentConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
@@ -50,10 +53,11 @@ public class ProcessesController {
 	 * get path of the log directory configured in the log4j file
 	 */
 	private String getLogDirPath(String log4jProperties) throws Exception {
+		CompositeConfiguration compositeConfig = new CompositeConfiguration();
+		compositeConfig.addConfiguration(new PropertiesConfiguration(log4jProperties));
+		compositeConfig.addConfiguration(new EnvironmentConfiguration());
 		// Read & parse properties file.
-		Properties properties = new Properties();
-		properties.load(new FileInputStream(log4jProperties));
-		return userDir + fs + properties.getProperty(TestConstants.logDirectoryToken);
+		return userDir + fs + compositeConfig.getString(TestConstants.logDirectoryToken);
 	}
 
 	private String getPortFromConfFile(String scPropertiesFullName) throws Exception {
@@ -90,7 +94,7 @@ public class ProcessesController {
 
 		String pidFileFullName = userDir + fs + "log" + fs + "sc" + fs + Constants.PID_FILE_NAME;
 		proc.setPidFileName(pidFileFullName);
-		
+
 		// set sc port to SC stop at the end
 		proc.setSCPort(Integer.parseInt(this.getPortFromConfFile(scPropertiesFullName)));
 
@@ -102,8 +106,8 @@ public class ProcessesController {
 		 * [3] SC runnable 
 		 * [4] -sc.configuration
 		 */
-		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + scRunableFullName + " -sc.configuration "
-				+ scPropertiesFullName;
+		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + scRunableFullName
+				+ " -sc.configuration " + scPropertiesFullName;
 
 		Process process = Runtime.getRuntime().exec(command);
 		proc.setProcess(process);
@@ -227,8 +231,8 @@ public class ProcessesController {
 		 * [10] connectionType ("netty.tcp" or "netty.http")
 		 * [11] serviceNames (comma delimited list)
 		 */
-		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + srvRunablFullName + " " + serverType + " "
-				+ serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " " + " "
+		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + srvRunablFullName + " " + serverType
+				+ " " + serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " " + " "
 				+ connectionType.getValue() + " " + serviceNames;
 		Process srvProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(srvProcess);
@@ -251,8 +255,8 @@ public class ProcessesController {
 				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
-				clientMgmt.enableService(serviceName);	// service might be disabled during tests
-				if (srvProcess.getServerType()== TestConstants.SERVER_TYPE_SESSION) {
+				clientMgmt.enableService(serviceName); // service might be disabled during tests
+				if (srvProcess.getServerType() == TestConstants.SERVER_TYPE_SESSION) {
 					// Create session with KILL command
 					SCSessionService scSessionService = clientMgmt.newSessionService(serviceName);
 					SCMessage scMessage = new SCMessage();
@@ -292,7 +296,7 @@ public class ProcessesController {
 			}
 		}
 	}
-	
+
 	private class MsgCallback extends SCMessageCallback {
 		public MsgCallback(SCPublishService service) {
 			super(service);
