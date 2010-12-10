@@ -32,6 +32,7 @@ import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.service.SCServiceException;
 
 @SuppressWarnings("unused")
@@ -112,30 +113,13 @@ public class AfterSCAbortSessionTest {
 		
 		response = service.createSession(request);
 	}
-
-	/**
-	 * Description: delete session after SC was aborted<br>
-	 * Expectation: throws SCServiceException
-	 */
-	@Test (expected = SCServiceException.class)
-	public void t02_deleteSession() throws Exception {	
-		SCMessage request = null;
-		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
-		
-		ctrl.stopServer(srvCtx); // stop test server now, it cannot be stopped without SC
-		ctrl.stopSC(scCtx);
-		
-		service.deleteSession();
-	}
 	
 	/**
 	 * Description: exchange message after SC was aborted<br>
 	 * Expectation: throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class)
-	public void t03_execute() throws Exception {
+	public void t02_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
@@ -154,7 +138,7 @@ public class AfterSCAbortSessionTest {
 	 * Expectation: throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class)
-	public void t04_send() throws Exception {
+	public void t03_send() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
@@ -169,6 +153,25 @@ public class AfterSCAbortSessionTest {
 		
 		service.send(request, cbk);
 	}
+	
+
+	/**
+	 * Description: delete session after SC was aborted<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t04_deleteSession() throws Exception {	
+		SCMessage request = null;
+		SCMessage response = null;
+		service = client.newSessionService(TestConstants.sesServiceName1);
+		response = service.createSession(request);
+		
+		ctrl.stopServer(srvCtx); // stop test server now, it cannot be stopped without SC
+		ctrl.stopSC(scCtx);
+		
+		service.deleteSession();
+	}
+	
 	
 	private class MsgCallback extends SCMessageCallback {
 		private SCMessage response = null;
@@ -185,14 +188,12 @@ public class AfterSCAbortSessionTest {
 
 		@Override
 		public void receive(Exception e) {
-			logger.error("receive error: "+e.getMessage());
-			SCMessageFault fault = new SCMessageFault();
-			try {
-				fault.setAppErrorCode(1000);
-				fault.setAppErrorText(e.getMessage());
-			} catch (SCMPValidatorException e1) {
+			logger.error("receive error: " + e.getMessage());
+			if (e instanceof SCServiceException) {
+				SCMPError scError = ((SCServiceException) e).getSCMPError();
+				logger.info("SC error code:" + scError.getErrorCode() + " text:" + scError.getErrorText());
 			}
-			response = fault;
+			response = null;
 			AfterSCAbortSessionTest.messageReceived = true;
 		}
 	}
