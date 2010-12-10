@@ -351,7 +351,7 @@ public class CreateSessionTest {
 
 	/**
 	 * Description: Reject session by server, check error code<br>
-	 * Expectation: passes
+	 * Expectation: passes, exception catched
 	 */
 	@Test
 	public void t16_rejectSession() throws Exception {	
@@ -362,7 +362,7 @@ public class CreateSessionTest {
 		try {
 			response = service.createSession(request);
 		} catch (SCServiceException e) {	
-			Assert.assertEquals("is not appErrorCode", "4000", e.getAppErrorCode());
+			Assert.assertEquals("is not appErrorCode", 4000, e.getAppErrorCode());
 			Assert.assertEquals("is not appErrorText", false, e.getAppErrorText().equals(""));
 		}
 		service.deleteSession();

@@ -125,7 +125,7 @@ public class SubscribeTest {
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
 		service.unsubscribe();
-		Assert.assertNotNull("the session ID is not null", service.getSessionId());
+		Assert.assertNull("the session ID is not null", service.getSessionId());
 	}
 
 	/**
@@ -325,28 +325,50 @@ public class SubscribeTest {
 	}
 
 	/**
-	 * Description: subscribe (regular)<br>
-	 * Expectation: passes
+	 * Description: reject subscription by server <br>
+	 * Expectation: throws SCServiceException
 	 */
-	@Test
+	@Test (expected = SCServiceException.class )
 	public void t13_reject() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
 		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
-		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+	}
+	
+	/**
+	 * Description: reject subscription by server<br>
+	 * Expectation: passes 
+	 */
+	@Test
+	public void t14_reject() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
+		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		MsgCallback cbk = new MsgCallback(service);
 
+		try {
+			subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		} catch (SCServiceException e) {	
+			Assert.assertEquals("is not appErrorCode", 4000, e.getAppErrorCode());
+			Assert.assertEquals("is not appErrorText", false, e.getAppErrorText().equals(""));
+		}
 		service.unsubscribe();
 		Assert.assertNull("the session ID is not null)", service.getSessionId());
 	}
+
+	
 	
 	private void waitForMessage(int nrSeconds) throws Exception {
 		for (int i = 0; i < (nrSeconds * 10); i++) {
