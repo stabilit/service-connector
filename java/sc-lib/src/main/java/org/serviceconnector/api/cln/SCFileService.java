@@ -130,16 +130,16 @@ public class SCFileService extends SCService {
 			ex.setAppErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			throw ex;
 		}
-
-		String[] fileNames = ((String) reply.getBody()).split(",");
+		String fileNameList = new String((byte[]) reply.getBody());
+		String[] fileNames = fileNameList.split(Constants.FILE_LIST_DELIMITER);
 		return Arrays.asList(fileNames);
 	}
 
 	private void createFileSession(int operationTimeoutSeconds) throws SCServiceException {
 		this.requester.getContext().getSCMPMsgSequenceNr().reset();
 		SCServiceCallback callback = new SCServiceCallback(true);
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, this.serviceName);
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
+				.newInstance(this.requester, this.serviceName);
 		createSessionCall.setEchoIntervalSeconds(Constants.DEFAULT_FILE_SESSION_TIMEOUT_SECONDS);
 		try {
 			createSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);

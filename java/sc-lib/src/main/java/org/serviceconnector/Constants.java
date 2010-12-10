@@ -59,16 +59,24 @@ public final class Constants {
 	/** Default timeout after a subscription is marked as dead. */
 	public static final int DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS = 300000;
 
-	/** Default interval used for publishing services if the NO_DATA_INTERVAL was not set by API. */
+	/**
+	 * Default interval used for publishing services if the NO_DATA_INTERVAL was
+	 * not set by API.
+	 */
 	public static final int DEFAULT_NO_DATA_INTERVAL_SECONDS = 300;
 
-	/** Default value used if no DEFAULT_KEEP_ALIVE_TIMEOUT_MILLIS is configured. */
+	/**
+	 * Default value used if no DEFAULT_KEEP_ALIVE_TIMEOUT_MILLIS is configured.
+	 */
 	public static final int DEFAULT_KEEP_ALIVE_TIMEOUT_MILLIS = 2000;
 
 	/** The default keep alive interval, 0 = not active. */
 	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 0;
 
-	/** The default number of subsequent keep alive before the connection is closed. */
+	/**
+	 * The default number of subsequent keep alive before the connection is
+	 * closed.
+	 */
 	public static final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
 
 	/** The default maximal connection pool size */
@@ -85,7 +93,8 @@ public final class Constants {
 	 */
 	/**
 	 * Technical operation timeout. <br>
-	 * It is the time a single WRITE/READ/CLOSE/OPEN can take. Must be reasonably sort.
+	 * It is the time a single WRITE/READ/CLOSE/OPEN can take. Must be
+	 * reasonably sort.
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
 
@@ -122,11 +131,19 @@ public final class Constants {
 	/** Comma or semicolon REGEX. */
 	public static final String COMMA_OR_SEMICOLON = ",|;"; // TODO not used
 
-	/** File containing the Sc process PID. Created at startup and deleted on exit or error. Used to check is sc is running. */
+	/**
+	 * File containing the Sc process PID. Created at startup and deleted on
+	 * exit or error. Used to check is sc is running.
+	 */
 	public static final String PID_FILE_NAME = "sc.pid";
 
 	/** The Constant IPV6_LOOPBACK_NIC. */
 	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
+
+	/**
+	 * FILE_LIST_DELIMITER, separates file names in file list SCFileService.
+	 */
+	public static final String FILE_LIST_DELIMITER = "\\|";
 
 	/*
 	 * console command constants *************************
@@ -206,6 +223,9 @@ public final class Constants {
 	public static final int SCMP_VERSION_LENGTH_IN_HEADLINE = 3;
 	public static final String SCMP_FORMAT_OF_MSG_SIZE = " 0000000";
 	public static final String SCMP_FORMAT_OF_HEADER_SIZE = " 00000";
-	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
+	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1
+	// =>
+	// 2147483647,
+	// 2GB
 
 }

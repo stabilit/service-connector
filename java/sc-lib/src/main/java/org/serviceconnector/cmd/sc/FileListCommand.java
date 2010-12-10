@@ -45,19 +45,19 @@ public class FileListCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response) throws Exception {
 		SCMPMessage message = request.getMessage();
 		FileService fileService = this.validateFileService(message.getServiceName());
+		SCMPMessage reply = null;
 		try {
 			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-
 			FileServer fileServer = fileService.getServer();
-
-			SCMPMessage reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(), oti);
-
+			reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(), message
+					.getServiceName(), oti);
+		} catch (Exception e) {
 			// forward server reply to client
+			reply = new SCMPMessage();
+		} finally {
 			reply.setIsReply(true);
 			reply.setMessageType(getKey());
 			response.setSCMP(reply);
-		} finally {
-
 		}
 	}
 

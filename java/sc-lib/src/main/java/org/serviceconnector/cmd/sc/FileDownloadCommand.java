@@ -47,18 +47,20 @@ public class FileDownloadCommand extends CommandAdapter {
 		FileSession session = (FileSession) this.getSessionById(message.getSessionId());
 		// cancel session timeout
 		this.sessionRegistry.cancelSessionTimeout(session);
+		SCMPMessage reply = null;
 		try {
 			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			String remoteFileName = (String) message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
 
 			FileServer fileServer = session.getFileServer();
-			SCMPMessage reply = fileServer.serverDownloadFile(session, message, remoteFileName, oti);
-
+			reply = fileServer.serverDownloadFile(session, message, remoteFileName, oti);
+		} catch (Exception e) {
 			// forward server reply to client
+			reply = new SCMPMessage();
+		} finally {
 			reply.setIsReply(true);
 			reply.setMessageType(getKey());
 			response.setSCMP(reply);
-		} finally {
 			// schedule session timeout
 			this.sessionRegistry.scheduleSessionTimeout(session);
 		}

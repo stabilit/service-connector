@@ -47,7 +47,8 @@ public class FileServer extends Server {
 
 	public FileServer(String serverKey, InetSocketAddress socketAddress, int portNr, int maxSessions, int maxConnections,
 			String connectionType, int keepAliveInterval) {
-		super(ServerType.FILE_SERVER, socketAddress, null, portNr, maxConnections, connectionType, keepAliveInterval);
+		super(ServerType.FILE_SERVER, socketAddress, ServerType.FILE_SERVER.getValue(), portNr, maxConnections, connectionType,
+				keepAliveInterval);
 		this.sessions = Collections.synchronizedList(new ArrayList<FileSession>());
 		this.maxSessions = maxSessions;
 		this.serverKey = serverKey;
@@ -157,10 +158,11 @@ public class FileServer extends Server {
 		}
 	}
 
-	public SCMPMessage serverGetFileList(String path, String listScriptName, int timeoutInSeconds) throws Exception {
+	public SCMPMessage serverGetFileList(String path, String listScriptName, String serviceName, int timeoutInSeconds)
+			throws Exception {
 		HttpURLConnection httpCon = null;
 
-		URL url = new URL("http://" + this.host + ":" + this.portNr + "/" + path + listScriptName + "?service=" + this.serviceName);
+		URL url = new URL("http://" + this.host + ":" + this.portNr + "/" + path + listScriptName + "?service=" + serviceName);
 		httpCon = (HttpURLConnection) url.openConnection();
 		httpCon.setRequestMethod("GET");
 		httpCon.setDoOutput(true);
@@ -190,7 +192,7 @@ public class FileServer extends Server {
 				return reply;
 			}
 			// set up part request, no poll request
-			reply = new SCMPPart(false);
+			reply = new SCMPMessage();
 			reply.setBody(fullBuffer, 0, readBytes);
 			return reply;
 		} catch (Exception e) {
