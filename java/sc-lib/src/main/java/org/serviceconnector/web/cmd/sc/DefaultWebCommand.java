@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.transform.Source;
+import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -513,34 +514,17 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 */
 		public void transform(InputStream xmlInputStream, OutputStream resultOutputStream) throws Exception {
 			String xslPath = this.getXSLPath(null);
-			// load xsl input stream for given request
-			xslInputStream = WebUtil.loadResource(xslPath);
-			if (xslInputStream == null) {
-				xslPath = this.getXSLPath("");
-				xslInputStream = WebUtil.loadResource(xslPath);
+			Transformer transformer = XSLTTransformerFactory.getInstance().newTransformer(xslPath);
+			if (transformer == null) {
+				transformer = XSLTTransformerFactory.getInstance().newTransformer(this.getXSLPath(""));				
 			}
-			TransformerFactory tFactory = TransformerFactory.newInstance();
-			tFactory.setURIResolver(new XSLURIResolver());
-			StreamSource xslSourceStream = new StreamSource(xslInputStream);
+			if (transformer == null) {
+                throw new NotFoundException("xslt resource " + xslPath + " not found");
+			}
 			StreamSource xmlSourceStream = new StreamSource(xmlInputStream);
 			StreamResult resultStream = new StreamResult(resultOutputStream);
-			Transformer transformer = tFactory.newTransformer(xslSourceStream);
 			transformer.transform(xmlSourceStream, resultStream);
-		}
-
-		/**
-		 * The Class XSLURIResolver.
-		 */
-		private class XSLURIResolver implements URIResolver {
-
-			/*
-			 * (non-Javadoc)
-			 * @see javax.xml.transform.URIResolver#resolve(java.lang.String, java.lang.String)
-			 */
-			public Source resolve(String href, String base) throws TransformerException {
-				InputStream is = WebUtil.loadResource("/org/serviceconnector/web/xsl/" + href);
-				return new StreamSource(is);
-			}
+			transformer = null;
 		}
 	}
 

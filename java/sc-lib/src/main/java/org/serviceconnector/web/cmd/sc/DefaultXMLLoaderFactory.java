@@ -661,6 +661,9 @@ public class DefaultXMLLoaderFactory {
 		@Override
 		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			String name = request.getParameter("name");
+			if (name == null) {
+				return;
+			}
 			String path = name.replace(File.separatorChar, '/');
 			InputStream is = WebUtil.loadResource(path);
 			if (is == null) {
