@@ -34,10 +34,10 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 
-public class PublishClientTest {
+public class ReceivePublicationTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PublishClientTest.class);
+	protected final static Logger logger = Logger.getLogger(ReceivePublicationTest.class);
 	
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 

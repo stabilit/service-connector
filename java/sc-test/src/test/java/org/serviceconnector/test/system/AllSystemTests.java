@@ -17,11 +17,11 @@ package org.serviceconnector.test.system;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.system.publish.ChangeSubscriptionClientTest;
-import org.serviceconnector.test.system.publish.PublishClientTest;
-import org.serviceconnector.test.system.publish.PublishServerTest;
+import org.serviceconnector.test.system.publish.ChangeSubscriptionTest;
+import org.serviceconnector.test.system.publish.ReceivePublicationTest;
+import org.serviceconnector.test.system.publish.PublishTest;
 import org.serviceconnector.test.system.publish.SubscribeTest;
-import org.serviceconnector.test.system.publish.SubscribeUnsubscribeClientTest;
+import org.serviceconnector.test.system.publish.UnsubscribeTest;
 import org.serviceconnector.test.system.session.AfterSCAbortSessionTest;
 import org.serviceconnector.test.system.session.AfterServerAbortSessionTest;
 import org.serviceconnector.test.system.session.CreateSessionTest;
@@ -41,9 +41,9 @@ import org.serviceconnector.test.system.session.ExecuteTest;
 
 		// publish tests
 		SubscribeTest.class, 
-		SubscribeUnsubscribeClientTest.class,
-		ChangeSubscriptionClientTest.class, 
-		PublishClientTest.class,
-		PublishServerTest.class})
+		UnsubscribeTest.class, 
+		ChangeSubscriptionTest.class, 
+		ReceivePublicationTest.class,
+		PublishTest.class})
 public class AllSystemTests {
 }

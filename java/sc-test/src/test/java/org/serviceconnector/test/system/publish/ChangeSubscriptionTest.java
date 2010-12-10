@@ -36,54 +36,66 @@ import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
-//TODO FJU missing method to get current subscription to verify correct changes
-
-public class ChangeSubscriptionClientTest {
+@SuppressWarnings("unused")
+public class ChangeSubscriptionTest {
+	
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ChangeSubscriptionClientTest.class);
+	protected final static Logger logger = Logger.getLogger(ChangeSubscriptionTest.class);
 
+	/** The Constant logger. */
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
-	private static ProcessCtx scCtx;
-	private static ProcessCtx srvCtx;
-
-	private SCClient client;
-
-	private Exception ex;
-
+	private static boolean messageReceived = false;
 	private static ProcessesController ctrl;
+	private ProcessCtx scCtx;
+	private ProcessCtx srvCtx;
+	private SCClient client;
+	private SCPublishService service;
+	private int threadCount = 0;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
-					TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
-					TestConstants.pubServiceName1 );
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
+		threadCount = Thread.activeCount();
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
+				TestConstants.pubServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.pubServiceName1);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		client.attach(5);
+		client.attach();
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		client.detach();
+		try {
+			service.unsubscribe();
+		} catch (Exception e1) {
+		}
+		service = null;
+		try {
+			client.detach();
+		} catch (Exception e) {
+		}
 		client = null;
+		try {
+			ctrl.stopServer(srvCtx);
+		} catch (Exception e) {
+		}
+		srvCtx = null;
+		try {
+			ctrl.stopSC(scCtx);
+		} catch (Exception e) {
+		}
+		scCtx = null;
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass
 	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopServer(srvCtx);
-		} catch (Exception e) {	}
-		try {
-			ctrl.stopSC(scCtx);
-		} catch (Exception e) {	}
-		srvCtx = null;
-		scCtx = null;
 		ctrl = null;
 	}
 

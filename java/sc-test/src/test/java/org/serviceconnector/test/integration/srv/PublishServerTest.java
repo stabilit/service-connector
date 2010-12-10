@@ -297,7 +297,6 @@ public class PublishServerTest {
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
-		StringBuilder sb = new StringBuilder();
 		publishMessage.setData(new byte[TestConstants.dataLength60kB]);
 		publishServer.publish(publishMessage);
 	}
@@ -317,7 +316,6 @@ public class PublishServerTest {
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
-		StringBuilder sb = new StringBuilder();
 		publishMessage.setData(new byte[TestConstants.dataLength1MB]);
 		publishServer.publish(publishMessage);
 	}
@@ -337,7 +335,6 @@ public class PublishServerTest {
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
-		StringBuilder sb = new StringBuilder();
 		publishMessage.setData(new byte[128]);
 		int count = 10000;
 		for (int i= 0; i < count; i++) {

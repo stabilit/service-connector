@@ -123,6 +123,7 @@ public class SubscribeTest {
 		Assert.assertNotNull("the session ID is null", service.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+		Assert.assertTrue("is not subscribed", service.isSubscribed());
 
 		service.unsubscribe();
 		Assert.assertNull("the session ID is not null", service.getSessionId());
@@ -248,13 +249,29 @@ public class SubscribeTest {
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
 	}
 
+	/**
+	 * Description: subscribe with callback = null<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t10_subscribe() throws Exception {
+		service = client.newPublishService(TestConstants.filServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(" ");
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		subMsgResponse = service.subscribe(subMsgRequest, null);
+	}
+
 
 	/**
 	 * Description: subscribe to disabed service<br>
 	 * Expectation: throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class )
-	public void t10_disabledService() throws Exception {
+	public void t20_disabledService() throws Exception {
 		// disable service
 		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
 		clientMgmt.attach();
@@ -273,27 +290,34 @@ public class SubscribeTest {
 	}
 
 	/**
-	 * Description: subscribe service with no callack<br>
-	 * Expectation: throws InvalidParameterException
+	 * Description: subscribe service with default noDataInterval <br>
+	 * Expectation: passes
 	 */
-	@Test (expected = InvalidParameterException.class )
-	public void t11_noDataInterval() throws Exception {
+	@Test 
+	public void t30_noDataInterval() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
 		subMsgRequest.setSessionInfo("doNothing");
 		subMsgRequest.setData("certificate or what so ever");
-		subMsgRequest.setNoDataIntervalInSeconds(100);
-		subMsgResponse = service.subscribe(subMsgRequest, null);
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+		Assert.assertTrue("is not subscribed", service.isSubscribed());
+
+		service.unsubscribe();
+		Assert.assertNull("the session ID is not null", service.getSessionId());
 	}
 
 	/**
-	 * Description: subscribe twice<br>
+	 * Description: two subscriptions from the same client<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t12_twoSubscriptions() throws Exception {
+	public void t40_twoSubscriptions() throws Exception {
 		SCPublishService service1 = client.newPublishService(TestConstants.pubServiceName1);
 		SCPublishService service2 = client.newPublishService(TestConstants.pubServiceName1);
 		
@@ -311,25 +335,46 @@ public class SubscribeTest {
 		Assert.assertNotNull("the session ID is null", service1.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+		Assert.assertTrue("is not subscribed", service1.isSubscribed());
 		
 		subMsgResponse = service2.subscribe(subMsgRequest, cbk2);
 		Assert.assertNotNull("the session ID is null", service2.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+		Assert.assertTrue("is not subscribed", service2.isSubscribed());
 		
 		service1.unsubscribe();
 		Assert.assertNull("the session ID is not null)", service1.getSessionId());
 		service2.unsubscribe();
 		Assert.assertNull("the session ID is not null)", service2.getSessionId());
-
 	}
 
+	/**
+	 * Description: subscribe twice<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t41_subscribeTwice() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(null);
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+	}
+
+	
 	/**
 	 * Description: reject subscription by server <br>
 	 * Expectation: throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class )
-	public void t13_reject() throws Exception {
+	public void t50_reject() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
 		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
@@ -347,7 +392,7 @@ public class SubscribeTest {
 	 * Expectation: passes 
 	 */
 	@Test
-	public void t14_reject() throws Exception {
+	public void t51_reject() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
 		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
@@ -364,22 +409,10 @@ public class SubscribeTest {
 			Assert.assertEquals("is not appErrorCode", 4000, e.getAppErrorCode());
 			Assert.assertEquals("is not appErrorText", false, e.getAppErrorText().equals(""));
 		}
+		Assert.assertFalse("is subscribed", service.isSubscribed());
 		service.unsubscribe();
 		Assert.assertNull("the session ID is not null)", service.getSessionId());
 	}
-
-	
-	
-	private void waitForMessage(int nrSeconds) throws Exception {
-		for (int i = 0; i < (nrSeconds * 10); i++) {
-			if (messageReceived) {
-				return;
-			}
-			Thread.sleep(100);
-		}
-		throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
-	}
-	
 
 	private class MsgCallback extends SCMessageCallback {
 		private SCMessage response = null;
