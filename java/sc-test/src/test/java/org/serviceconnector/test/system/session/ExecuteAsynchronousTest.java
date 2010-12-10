@@ -15,13 +15,12 @@
  */
 package org.serviceconnector.test.system.session;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -30,10 +29,7 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.api.cln.SCServiceCallback;
 import org.serviceconnector.api.cln.SCSessionService;
-import org.serviceconnector.call.SCMPEchoCall;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
@@ -122,11 +118,11 @@ public class ExecuteAsynchronousTest {
 		service.send(request, cbk);
 		waitForMessage(10);
 		response = cbk.response;
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		assertEquals("appErrorCode is not set", TestConstants.appErrorCode, response.getAppErrorCode());
-		assertEquals("appErrorText is not set", TestConstants.appErrorText, response.getAppErrorText());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("appErrorCode is not set", TestConstants.appErrorCode, response.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not set", TestConstants.appErrorText, response.getAppErrorText());
 		service.deleteSession();
 	}
 
@@ -148,9 +144,9 @@ public class ExecuteAsynchronousTest {
 		waitForMessage(10);
 		response = cbk.response;
 
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 
@@ -172,9 +168,9 @@ public class ExecuteAsynchronousTest {
 		waitForMessage(10);
 		response = cbk.response;
 
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 
@@ -195,9 +191,9 @@ public class ExecuteAsynchronousTest {
 		service.send(request, cbk);
 		waitForMessage(10);
 		response = cbk.response;
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 
@@ -257,10 +253,10 @@ public class ExecuteAsynchronousTest {
 		service.send(request, cbk);
 		waitForMessage(10);
 		response = cbk.response;
-		assertEquals("sessionId is not the same", sessionId, response.getSessionId());
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("sessionId is not the same", sessionId, response.getSessionId());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 
@@ -312,9 +308,9 @@ public class ExecuteAsynchronousTest {
 		service.send(2, request, cbk);
 		waitForMessage(10); // will wait max 10 seconds for the second response
 		response = cbk.response;
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 
@@ -344,16 +340,16 @@ public class ExecuteAsynchronousTest {
 		service.send(2, request, cbk);
 		waitForMessage(10); // will wait max 10 seconds for response
 		response = cbk.response;
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 
 		// third message (synchronous)
 		request.setData("abraka-dabra");
 		response = service.execute(request);
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 

@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.integration.srv;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -76,7 +75,7 @@ public class PublishServerTest {
 		} catch (Exception e) {}
 
 		server = null;
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
+//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
@@ -100,7 +99,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -119,7 +118,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(null);
@@ -138,7 +137,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask("");
@@ -157,7 +156,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(" ");
@@ -176,7 +175,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.stringLength257);
@@ -195,7 +194,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
@@ -214,7 +213,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -233,7 +232,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -252,7 +251,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -271,7 +270,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -294,7 +293,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -314,7 +313,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -334,7 +333,7 @@ public class PublishServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new CallBack(publishServer);
 		publishServer.register(10, 2, cbk);
-		assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);

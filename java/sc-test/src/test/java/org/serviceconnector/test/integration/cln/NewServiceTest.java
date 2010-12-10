@@ -15,13 +15,12 @@
  */
 package org.serviceconnector.test.integration.cln;
 
-import static org.junit.Assert.assertEquals;
-
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -68,7 +67,7 @@ public class NewServiceTest {
 			client.detach();
 		} catch (Exception e) {}
 		client = null;
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
+//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
@@ -135,7 +134,7 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t106_newSessionService() throws Exception {
-		assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
+		Assert.assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
 	}
 
 	/**
@@ -144,8 +143,8 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t107_newSessionService() throws Exception {
-		assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
-		assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
+		Assert.assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
+		Assert.assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
 	}
 
 	/**
@@ -154,8 +153,8 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t108_newSessionService() throws Exception {
-		assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
-		assertEquals("create", true, client.newSessionService(TestConstants.pubServiceName1) instanceof SCSessionService);
+		Assert.assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
+		Assert.assertEquals("create", true, client.newSessionService(TestConstants.pubServiceName1) instanceof SCSessionService);
 	}
 	
 	/**
@@ -168,7 +167,7 @@ public class NewServiceTest {
 		SCSessionService[] services = new SCSessionService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {
 			services[i] = client.newSessionService(TestConstants.sesServiceName1);
-			assertEquals(true, services[i] instanceof SCSessionService);
+			Assert.assertEquals(true, services[i] instanceof SCSessionService);
 		}
 	}
 
@@ -192,7 +191,7 @@ public class NewServiceTest {
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t202_newPublisService() throws Exception {
-		assertEquals("create", true, client.newPublishService("") instanceof SCPublishService);
+		Assert.assertEquals("create", true, client.newPublishService("") instanceof SCPublishService);
 	}
 
 	/**
@@ -219,7 +218,7 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t205_newPublisService() throws Exception {
-		assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
+		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
 
 	/**
@@ -228,8 +227,8 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t206_newPublisService() throws Exception {
-		assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
-		assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
+		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
+		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
 
 	/**
@@ -238,8 +237,8 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t207_newPublisService() throws Exception {
-		assertEquals("create", true, client.newPublishService(TestConstants.sesServiceName1) instanceof SCPublishService);
-		assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
+		Assert.assertEquals("create", true, client.newPublishService(TestConstants.sesServiceName1) instanceof SCPublishService);
+		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
 	
 	/**
@@ -252,7 +251,7 @@ public class NewServiceTest {
 		SCPublishService[] services = new SCPublishService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {
 			services[i] = client.newPublishService(TestConstants.pubServiceName1);
-			assertEquals(true, services[i] instanceof SCPublishService);
+			Assert.assertEquals(true, services[i] instanceof SCPublishService);
 		}
 	}
 
@@ -274,7 +273,7 @@ public class NewServiceTest {
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t302_newFileService() throws Exception {
-		assertEquals("create", true, client.newFileService("") instanceof SCFileService);
+		Assert.assertEquals("create", true, client.newFileService("") instanceof SCFileService);
 	}
 
 	/**
@@ -301,7 +300,7 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t305_newFileService() throws Exception {
-		assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
+		Assert.assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
 	}
 
 	/**
@@ -310,8 +309,8 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t306_newFileService() throws Exception {
-		assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
-		assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
+		Assert.assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
+		Assert.assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
 	}
 
 	/**
@@ -320,8 +319,8 @@ public class NewServiceTest {
 	 */
 	@Test
 	public void t307_newFileService() throws Exception {
-		assertEquals("create", true, client.newFileService(TestConstants.sesServiceName1) instanceof SCFileService);
-		assertEquals("create", true, client.newFileService(TestConstants.pubServiceName1) instanceof SCFileService);
+		Assert.assertEquals("create", true, client.newFileService(TestConstants.sesServiceName1) instanceof SCFileService);
+		Assert.assertEquals("create", true, client.newFileService(TestConstants.pubServiceName1) instanceof SCFileService);
 	}
 	
 	/**
@@ -334,7 +333,7 @@ public class NewServiceTest {
 		SCFileService[] services = new SCFileService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {
 			services[i] = client.newFileService(TestConstants.filServiceName1);
-			assertEquals(true, services[i] instanceof SCFileService);
+			Assert.assertEquals(true, services[i] instanceof SCFileService);
 		}
 	}
 }

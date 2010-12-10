@@ -1,10 +1,9 @@
 package org.serviceconnector.test.system.perf;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -107,7 +106,7 @@ public class ExecuteBenchmark {
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
 		testLogger.info(nr + "msg à 128 byte performance : " + perf + " msg/sec.");
-		assertEquals("Performence not fast, only"+ perf + " msg/sec.", true, perf > 400);
+		Assert.assertEquals("Performence not fast, only"+ perf + " msg/sec.", true, perf > 400);
 	}
 
 	/**
@@ -134,7 +133,7 @@ public class ExecuteBenchmark {
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
 		testLogger.info(nr + "msg à 128 byte performance : " + perf + " msg/sec.");
-		assertEquals(true, perf > 600);
+		Assert.assertEquals(true, perf > 600);
 	}
 
 
@@ -164,7 +163,7 @@ public class ExecuteBenchmark {
 //
 //		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
 //				+ --messages + " messages of " + dataLength / messages + "B data each.");
-//		assertEquals(true, previousResult < 25000);
+//		Assert.assertEquals(true, previousResult < 25000);
 //	}
 //
 //	@Test
@@ -188,7 +187,7 @@ public class ExecuteBenchmark {
 //
 //		testLogger.info("Best performance to execute roughly 10MB of data messages was " + previousResult + "ms using "
 //				+ ++messages + " messages of " + dataLength / messages + "B data each.");
-//		assertEquals(true, previousResult < 25000);
+//		Assert.assertEquals(true, previousResult < 25000);
 //	}
 
 }

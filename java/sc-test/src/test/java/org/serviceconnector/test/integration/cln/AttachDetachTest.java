@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.integration.cln;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -61,7 +60,7 @@ public class AttachDetachTest {
 			client.detach();
 		} catch (Exception e) {}
 		client = null;
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
+//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
@@ -82,11 +81,11 @@ public class AttachDetachTest {
 	@Test
 	public void t01_attachDetach() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
-		assertEquals("Client is attached", false, client.isAttached());
+		Assert.assertEquals("Client is attached", false, client.isAttached());
 		client.attach();
-		assertEquals("Client is not attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		client.detach();
-		assertEquals("Client is attached", false, client.isAttached());
+		Assert.assertEquals("Client is attached", false, client.isAttached());
 	}
 
 	
@@ -98,7 +97,7 @@ public class AttachDetachTest {
 	public void t02_attachDetach() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		assertEquals("Client is not attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		client.attach();
 	}
 
@@ -109,9 +108,9 @@ public class AttachDetachTest {
 	@Test
 	public void t03_attachDetach() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
-		assertEquals("Client is attached", false, client.isAttached());
+		Assert.assertEquals("Client is attached", false, client.isAttached());
 		client.detach();
-		assertEquals("Client is attached", false, client.isAttached());
+		Assert.assertEquals("Client is attached", false, client.isAttached());
 	}
 
 	/**
@@ -122,11 +121,11 @@ public class AttachDetachTest {
 	public void t04_attachDetach() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		assertEquals("Client is not attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		int nr = 100;
 		for (int i = 0; i < nr; i++) {
 			client.detach();
 		}
-		assertEquals("Client is attached", false, client.isAttached());
+		Assert.assertEquals("Client is attached", false, client.isAttached());
 	}	
 }

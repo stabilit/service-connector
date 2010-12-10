@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.system.session;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -109,11 +108,11 @@ public class ExecuteTest {
 		response = service.createSession(request);
 		request.setMessageInfo("echoAppError");
 		response = service.execute(request);
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		assertEquals("appErrorCode is not set",TestConstants.appErrorCode, response.getAppErrorCode());
-		assertEquals("appErrorText is not set",TestConstants.appErrorText, response.getAppErrorText());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("appErrorCode is not set",TestConstants.appErrorCode, response.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not set",TestConstants.appErrorText, response.getAppErrorText());
 		service.deleteSession();
 	}
 
@@ -130,9 +129,9 @@ public class ExecuteTest {
 		response = service.createSession(request);
 		request.setMessageInfo("echo");
 		response = service.execute(request);
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 
@@ -150,9 +149,9 @@ public class ExecuteTest {
 		response = service.createSession(new SCMessage());
 		request.setMessageInfo("echo");
 		response = service.execute(request);
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 
@@ -169,9 +168,9 @@ public class ExecuteTest {
 		response = service.createSession(new SCMessage());
 		request.setMessageInfo("echo");
 		response = service.execute(request);
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 	
@@ -224,13 +223,13 @@ public class ExecuteTest {
 		String sessionId = "aaaa0000-bb11-cc22-dd33-eeeeee444444";
 		request.setSessionId(sessionId);
 		response = service.createSession(request);
-		assertEquals("sessionId is the same", false ,sessionId == response.getSessionId());
+		Assert.assertEquals("sessionId is the same", false ,sessionId == response.getSessionId());
 
 		request.setMessageInfo("echo");
 		response = service.execute(request);
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 
@@ -249,10 +248,10 @@ public class ExecuteTest {
 		request.setMessageInfo("echo");
 		request.setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
 		response = service.execute(request);
-		assertEquals("sessionId is not the same", sessionId, response.getSessionId());
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("sessionId is not the same", sessionId, response.getSessionId());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 
@@ -316,9 +315,9 @@ public class ExecuteTest {
 		request.setMessageInfo("echo");
 		request.setData("hallo");
 		response = service.execute(request);
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 	
@@ -344,9 +343,9 @@ public class ExecuteTest {
 		request.setMessageInfo("echo");
 		request.setData("hallo");
 		response = service.execute(request);
-		assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
-		assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
 }

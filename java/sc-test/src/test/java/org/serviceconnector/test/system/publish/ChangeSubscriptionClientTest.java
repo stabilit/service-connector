@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.system.publish;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -100,9 +99,9 @@ public class ChangeSubscriptionClientTest {
 		} catch (Exception e) {
 			ex = e;
 		} finally {
-			assertEquals(SCServiceException.class, ex.getClass());
-			assertEquals(null, service.getSessionId());
-			assertEquals(false, service.isSubscribed());
+			Assert.assertEquals(SCServiceException.class, ex.getClass());
+			Assert.assertEquals(null, service.getSessionId());
+			Assert.assertEquals(false, service.isSubscribed());
 		}
 	}
 
@@ -117,9 +116,9 @@ public class ChangeSubscriptionClientTest {
 		} catch (Exception e) {
 			ex = e;
 		} finally {
-			assertEquals(SCServiceException.class, ex.getClass());
-			assertEquals(null, service.getSessionId());
-			assertEquals(false, service.isSubscribed());
+			Assert.assertEquals(SCServiceException.class, ex.getClass());
+			Assert.assertEquals(null, service.getSessionId());
+			Assert.assertEquals(false, service.isSubscribed());
 		}
 	}
 
@@ -136,9 +135,9 @@ public class ChangeSubscriptionClientTest {
 		} catch (Exception e) {
 			ex = e;
 		} finally {
-			assertEquals(SCServiceException.class, ex.getClass());
-			assertEquals(null, service.getSessionId());
-			assertEquals(false, service.isSubscribed());
+			Assert.assertEquals(SCServiceException.class, ex.getClass());
+			Assert.assertEquals(null, service.getSessionId());
+			Assert.assertEquals(false, service.isSubscribed());
 		}
 	}
 
@@ -150,11 +149,11 @@ public class ChangeSubscriptionClientTest {
 		subscibeMessage.setSessionInfo("sessionInfo");
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		service.changeSubscription(subscibeMessage);
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
-		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(false, service.isSubscribed());
 	}
 
 	@Test
@@ -169,9 +168,9 @@ public class ChangeSubscriptionClientTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(SCMPValidatorException.class, ex.getClass());
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(SCMPValidatorException.class, ex.getClass());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
 	}
 
@@ -188,9 +187,9 @@ public class ChangeSubscriptionClientTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(SCMPValidatorException.class, ex.getClass());
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(SCMPValidatorException.class, ex.getClass());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
 	}
 
@@ -203,8 +202,8 @@ public class ChangeSubscriptionClientTest {
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		subscibeMessage.setMask(" ");
 		service.changeSubscription(subscibeMessage);
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
 	}
 
@@ -217,8 +216,8 @@ public class ChangeSubscriptionClientTest {
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		subscibeMessage.setMask("a");
 		service.changeSubscription(subscibeMessage);
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
 	}
 
@@ -232,8 +231,8 @@ public class ChangeSubscriptionClientTest {
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		subscibeMessage.setMask(TestConstants.pangram);
 		service.changeSubscription(subscibeMessage);
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
 	}
 
@@ -246,8 +245,8 @@ public class ChangeSubscriptionClientTest {
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		subscibeMessage.setMask(TestConstants.stringLength256);
 		service.changeSubscription(subscibeMessage);
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
 	}
 
@@ -264,9 +263,9 @@ public class ChangeSubscriptionClientTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(SCMPValidatorException.class, ex.getClass());
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(SCMPValidatorException.class, ex.getClass());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
 	}
 
@@ -281,8 +280,8 @@ public class ChangeSubscriptionClientTest {
 		service.changeSubscription(subscibeMessage);
 		service.changeSubscription(subscibeMessage);
 
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
 	}
 
@@ -301,8 +300,8 @@ public class ChangeSubscriptionClientTest {
 			Thread.sleep(5); // TODO little sleep required in this Netty version. Known bug, will be fixed soon
 
 		}
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
 	}
 
@@ -320,8 +319,8 @@ public class ChangeSubscriptionClientTest {
 			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 			service.changeSubscription(subscibeMessage);
 			Thread.sleep(5); // TODO little sleep required in this Netty version. Known bug, will be fixed soon
-			assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-			assertEquals(true, service.isSubscribed());
+			Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+			Assert.assertEquals(true, service.isSubscribed());
 			service.unsubscribe();
 		}
 	}

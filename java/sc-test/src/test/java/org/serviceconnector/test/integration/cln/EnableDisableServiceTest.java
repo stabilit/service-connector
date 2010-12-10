@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.integration.cln;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -61,7 +60,7 @@ public class EnableDisableServiceTest {
 			client.detach();
 		} catch (Exception e) {}
 		client = null;
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
+//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
@@ -84,7 +83,7 @@ public class EnableDisableServiceTest {
 	public void t01_disable_enable() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
 		client.attach(2);
-		assertEquals("Enabled ", true, client.isServiceEnabled("notExistingService"));
+		Assert.assertEquals("Enabled ", true, client.isServiceEnabled("notExistingService"));
 	}
 
 	/**
@@ -116,7 +115,7 @@ public class EnableDisableServiceTest {
 	@Test(expected = SCServiceException.class)
 	public void t04_disable_enable() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
-		assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 	
 	/**
@@ -127,7 +126,7 @@ public class EnableDisableServiceTest {
 	public void t05_default() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
 		client.attach(2);
-		assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 	
 	/**
@@ -148,11 +147,11 @@ public class EnableDisableServiceTest {
 	public void t07_disable_enable() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
 		client.attach(2);
-		assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		client.disableService(TestConstants.sesServiceName1);
-		assertEquals("Disabled ", false, client.isServiceEnabled(TestConstants.sesServiceName1));
+		Assert.assertEquals("Disabled ", false, client.isServiceEnabled(TestConstants.sesServiceName1));
 		client.enableService(TestConstants.sesServiceName1);
-		assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 	
 	/**
@@ -163,13 +162,13 @@ public class EnableDisableServiceTest {
 	public void t08_disable_enable() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
 		client.attach(2);
-		assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		client.disableService(TestConstants.sesServiceName1);
 		client.disableService(TestConstants.sesServiceName1);
-		assertEquals("Disabled ", false, client.isServiceEnabled(TestConstants.sesServiceName1));
+		Assert.assertEquals("Disabled ", false, client.isServiceEnabled(TestConstants.sesServiceName1));
 		client.enableService(TestConstants.sesServiceName1);
 		client.enableService(TestConstants.sesServiceName1);
-		assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 
 	/**
@@ -184,9 +183,9 @@ public class EnableDisableServiceTest {
 		for (int i = 0; i < nr; i++) {
 			if (((i+1) % 100) == 0) testLogger.info("Enable/disable nr. " + (i+1) + "...");
 			client.disableService(TestConstants.sesServiceName1);
-			assertEquals("Disabled ", false, client.isServiceEnabled(TestConstants.sesServiceName1));
+			Assert.assertEquals("Disabled ", false, client.isServiceEnabled(TestConstants.sesServiceName1));
 			client.enableService(TestConstants.sesServiceName1);
-			assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
+			Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		}
 	}
 }

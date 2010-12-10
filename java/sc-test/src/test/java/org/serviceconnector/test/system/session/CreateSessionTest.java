@@ -15,9 +15,7 @@
  */
 package org.serviceconnector.test.system.session;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -109,9 +107,9 @@ public class CreateSessionTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
 		service.deleteSession();
-		assertNull("the session ID is NOT null after deleteSession()", service.getSessionId());
+		Assert.assertNull("the session ID is NOT null after deleteSession()", service.getSessionId());
 	}
 	
 	/**
@@ -243,10 +241,10 @@ public class CreateSessionTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
 		response = service.createSession(request);
 		service.deleteSession();
-		assertNull("the session ID is NOT null after deleteSession()", service.getSessionId());
+		Assert.assertNull("the session ID is NOT null after deleteSession()", service.getSessionId());
 	}
 
 	/**
@@ -261,14 +259,14 @@ public class CreateSessionTest {
 		SCSessionService service2 = client.newSessionService(TestConstants.sesServiceName1);
 		
 		response = service1.createSession(request);
-		assertNotNull("the session ID is null", service1.getSessionId());
+		Assert.assertNotNull("the session ID is null", service1.getSessionId());
 		response = service2.createSession(request);
-		assertNotNull("the session ID is null", service2.getSessionId());
+		Assert.assertNotNull("the session ID is null", service2.getSessionId());
 
 		service1.deleteSession();
-		assertNull("the session ID is NOT null after deleteSession()", service1.getSessionId());
+		Assert.assertNull("the session ID is NOT null after deleteSession()", service1.getSessionId());
 		service2.deleteSession();
-		assertNull("the session ID is NOT null after deleteSession()", service2.getSessionId());
+		Assert.assertNull("the session ID is NOT null after deleteSession()", service2.getSessionId());
 	}
 
 	
@@ -299,7 +297,7 @@ public class CreateSessionTest {
 	public void t30_deleteSession() throws Exception {	
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		service.deleteSession();
-		assertNull("the session ID is NOT null after deleteSession()", service.getSessionId());
+		Assert.assertNull("the session ID is NOT null after deleteSession()", service.getSessionId());
 	}
 	
 	/**
@@ -336,11 +334,18 @@ public class CreateSessionTest {
 	 */
 	@Test (expected = SCServiceException.class )
 	public void t15_rejectSession() throws Exception {	
-		SCMessage request = new SCMessage();
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo(TestConstants.rejectSessionCmd);
 		response = service.createSession(request);
+		Assert.assertTrue("reject flag not seth", response.isReject());
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("appErrorCode is not set",TestConstants.appErrorCode, response.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not set",TestConstants.appErrorText, response.getAppErrorText());
 		service.deleteSession();
 	}	
 
@@ -357,8 +362,8 @@ public class CreateSessionTest {
 		try {
 			response = service.createSession(request);
 		} catch (SCServiceException e) {	
-			assertEquals("is not appErrorCode", "4000", e.getAppErrorCode());
-			assertEquals("is not appErrorText", false, e.getAppErrorText().equals(""));
+			Assert.assertEquals("is not appErrorCode", "4000", e.getAppErrorCode());
+			Assert.assertEquals("is not appErrorText", false, e.getAppErrorText().equals(""));
 		}
 		service.deleteSession();
 	}

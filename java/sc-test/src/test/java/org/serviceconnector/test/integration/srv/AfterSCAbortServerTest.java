@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.integration.srv;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -76,7 +75,7 @@ public class AfterSCAbortServerTest {
 			ctrl.stopSC(scCtx);
 		} catch (Exception e) {}
 		scCtx = null;
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
+//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
@@ -95,7 +94,7 @@ public class AfterSCAbortServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		ctrl.stopSC(scCtx);
 		server.startListener();
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 	}
 
 	/**
@@ -106,10 +105,10 @@ public class AfterSCAbortServerTest {
 	public void t102_stopListener() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		ctrl.stopSC(scCtx);
 		server.stopListener();
-		assertEquals("SessionServer is registered", false, server.isListening());
+		Assert.assertEquals("SessionServer is registered", false, server.isListening());
 	}
 
 	/**
@@ -123,11 +122,11 @@ public class AfterSCAbortServerTest {
 		server.startListener();
 		server.setImmediateConnect(true);
 		//server.setImmediateConnect(false);
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -140,11 +139,11 @@ public class AfterSCAbortServerTest {
 		ctrl.stopSC(scCtx);
 		server.startListener();
 		server.setImmediateConnect(false);
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -155,14 +154,14 @@ public class AfterSCAbortServerTest {
 	public void t105_deregister() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 		ctrl.stopSC(scCtx);
 		sessionServer.deregister();
-		assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
 	}
 
 
@@ -175,7 +174,7 @@ public class AfterSCAbortServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		ctrl.stopSC(scCtx);
 		server.startListener();
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 	}
 
 	/**
@@ -186,10 +185,10 @@ public class AfterSCAbortServerTest {
 	public void t202_stopListener() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		ctrl.stopSC(scCtx);
 		server.stopListener();
-		assertEquals("SessionServer is registered", false, server.isListening());
+		Assert.assertEquals("SessionServer is registered", false, server.isListening());
 	}
 
 	/**
@@ -203,11 +202,11 @@ public class AfterSCAbortServerTest {
 		server.startListener();
 		server.setImmediateConnect(true);
 		//server.setImmediateConnect(false);
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -220,11 +219,11 @@ public class AfterSCAbortServerTest {
 		ctrl.stopSC(scCtx);
 		server.startListener();
 		server.setImmediateConnect(false);
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -235,14 +234,14 @@ public class AfterSCAbortServerTest {
 	public void t205_deregister() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 		ctrl.stopSC(scCtx);
 		sessionServer.deregister();
-		assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
 	}
 
 	

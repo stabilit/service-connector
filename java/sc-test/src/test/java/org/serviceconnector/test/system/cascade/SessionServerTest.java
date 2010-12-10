@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.system.cascade;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -93,7 +92,7 @@ public class SessionServerTest {
 		sessionServer.deregister();
 		server.destroy();
 		srvCallback = null;
-		assertEquals("number of threads", threadCount, Thread.activeCount());
+		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	
@@ -103,14 +102,14 @@ public class SessionServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(2, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
+		Assert.assertEquals(2, srvCallback.messagesExchanged);
+		Assert.assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
 				|| srvCallback.createSessionMsg.getSessionId().isEmpty());
-		assertEquals(false, srvCallback.createSessionMsg.isFault());
-		assertEquals(null, srvCallback.createSessionMsg.getData());
-		assertEquals(true, srvCallback.createSessionMsg.isCompressed());
-		assertEquals(" ", srvCallback.createSessionMsg.getMessageInfo());
+		Assert.assertEquals(false, srvCallback.createSessionMsg.isFault());
+		Assert.assertEquals(null, srvCallback.createSessionMsg.getData());
+		Assert.assertEquals(true, srvCallback.createSessionMsg.isCompressed());
+		Assert.assertEquals(" ", srvCallback.createSessionMsg.getMessageInfo());
 	}
 
 	@Test
@@ -119,14 +118,14 @@ public class SessionServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(2, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
+		Assert.assertEquals(2, srvCallback.messagesExchanged);
+		Assert.assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
 				|| srvCallback.createSessionMsg.getSessionId().isEmpty());
-		assertEquals(false, srvCallback.createSessionMsg.isFault());
-		assertEquals(null, srvCallback.createSessionMsg.getData());
-		assertEquals(true, srvCallback.createSessionMsg.isCompressed());
-		assertEquals(TestConstants.pangram, srvCallback.createSessionMsg.getMessageInfo());
+		Assert.assertEquals(false, srvCallback.createSessionMsg.isFault());
+		Assert.assertEquals(null, srvCallback.createSessionMsg.getData());
+		Assert.assertEquals(true, srvCallback.createSessionMsg.isCompressed());
+		Assert.assertEquals(TestConstants.pangram, srvCallback.createSessionMsg.getMessageInfo());
 	}
 
 	@Test
@@ -136,14 +135,14 @@ public class SessionServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(2, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
+		Assert.assertEquals(2, srvCallback.messagesExchanged);
+		Assert.assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
 				|| srvCallback.createSessionMsg.getSessionId().isEmpty());
-		assertEquals("a", srvCallback.createSessionMsg.getData().toString());
-		assertEquals(false, srvCallback.createSessionMsg.isFault());
-		assertEquals(true, srvCallback.createSessionMsg.isCompressed());
-		assertEquals(TestConstants.pangram, srvCallback.createSessionMsg.getMessageInfo());
+		Assert.assertEquals("a", srvCallback.createSessionMsg.getData().toString());
+		Assert.assertEquals(false, srvCallback.createSessionMsg.isFault());
+		Assert.assertEquals(true, srvCallback.createSessionMsg.isCompressed());
+		Assert.assertEquals(TestConstants.pangram, srvCallback.createSessionMsg.getMessageInfo());
 	}
 
 	@Test
@@ -153,15 +152,15 @@ public class SessionServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(2, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
+		Assert.assertEquals(2, srvCallback.messagesExchanged);
+		Assert.assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
 				|| srvCallback.createSessionMsg.getSessionId().isEmpty());
-		assertEquals(byte[].class, srvCallback.createSessionMsg.getData().getClass());
-		assertEquals(TestConstants.dataLength60kB, ((byte[]) srvCallback.createSessionMsg.getData()).length);
-		assertEquals(false, srvCallback.createSessionMsg.isFault());
-		assertEquals(true, srvCallback.createSessionMsg.isCompressed());
-		assertEquals(TestConstants.stringLength256, srvCallback.createSessionMsg.getMessageInfo());
+		Assert.assertEquals(byte[].class, srvCallback.createSessionMsg.getData().getClass());
+		Assert.assertEquals(TestConstants.dataLength60kB, ((byte[]) srvCallback.createSessionMsg.getData()).length);
+		Assert.assertEquals(false, srvCallback.createSessionMsg.isFault());
+		Assert.assertEquals(true, srvCallback.createSessionMsg.isCompressed());
+		Assert.assertEquals(TestConstants.stringLength256, srvCallback.createSessionMsg.getMessageInfo());
 	}
 
 	@Test
@@ -170,8 +169,8 @@ public class SessionServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(0, srvCallback.messagesExchanged);
-		assertEquals(null, srvCallback.createSessionMsg);
+		Assert.assertEquals(0, srvCallback.messagesExchanged);
+		Assert.assertEquals(null, srvCallback.createSessionMsg);
 	}
 
 	@Test
@@ -180,14 +179,14 @@ public class SessionServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(2, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.deleteSessionMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.deleteSessionMsg.getSessionId() == null
+		Assert.assertEquals(2, srvCallback.messagesExchanged);
+		Assert.assertEquals(true, srvCallback.deleteSessionMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.deleteSessionMsg.getSessionId() == null
 				|| srvCallback.deleteSessionMsg.getSessionId().isEmpty());
-		assertEquals(null, srvCallback.deleteSessionMsg.getData());
-		assertEquals(false, srvCallback.deleteSessionMsg.isFault());
-		assertEquals(null, srvCallback.deleteSessionMsg.getMessageInfo());
-		assertEquals(true, srvCallback.deleteSessionMsg.isCompressed());
+		Assert.assertEquals(null, srvCallback.deleteSessionMsg.getData());
+		Assert.assertEquals(false, srvCallback.deleteSessionMsg.isFault());
+		Assert.assertEquals(null, srvCallback.deleteSessionMsg.getMessageInfo());
+		Assert.assertEquals(true, srvCallback.deleteSessionMsg.isCompressed());
 	}
 
 	// TODO FJU Should exchange 4 messages in total
@@ -199,27 +198,27 @@ public class SessionServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(4, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
+		Assert.assertEquals(4, srvCallback.messagesExchanged);
+		Assert.assertEquals(true, srvCallback.createSessionMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.createSessionMsg.getSessionId() == null
 				|| srvCallback.createSessionMsg.getSessionId().isEmpty());
-		assertEquals(null, srvCallback.createSessionMsg.getData());
-		assertEquals(null, srvCallback.createSessionMsg.getMessageInfo());
-		assertEquals(false, srvCallback.createSessionMsg.isFault());
-		assertEquals(true, srvCallback.createSessionMsg.isCompressed());
-		assertEquals(true, srvCallback.executeMsg instanceof SCMessage);
-		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg.getSessionId());
-		assertEquals(null, srvCallback.executeMsg.getData());
-		assertEquals(null, srvCallback.executeMsg.getMessageInfo());
-		assertEquals(false, srvCallback.executeMsg.isFault());
-		assertEquals(true, srvCallback.executeMsg.isCompressed());
-		assertEquals(true, srvCallback.deleteSessionMsg instanceof SCMessage);
-		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.deleteSessionMsg.getSessionId());
-		assertEquals(null, srvCallback.deleteSessionMsg.getData());
-		assertEquals(null, srvCallback.deleteSessionMsg.getMessageInfo());
-		assertEquals(false, srvCallback.deleteSessionMsg.isFault());
-		assertEquals(true, srvCallback.deleteSessionMsg.isCompressed());
-		assertEquals(null, srvCallback.abortSessionMsg);
+		Assert.assertEquals(null, srvCallback.createSessionMsg.getData());
+		Assert.assertEquals(null, srvCallback.createSessionMsg.getMessageInfo());
+		Assert.assertEquals(false, srvCallback.createSessionMsg.isFault());
+		Assert.assertEquals(true, srvCallback.createSessionMsg.isCompressed());
+		Assert.assertEquals(true, srvCallback.executeMsg instanceof SCMessage);
+		Assert.assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg.getSessionId());
+		Assert.assertEquals(null, srvCallback.executeMsg.getData());
+		Assert.assertEquals(null, srvCallback.executeMsg.getMessageInfo());
+		Assert.assertEquals(false, srvCallback.executeMsg.isFault());
+		Assert.assertEquals(true, srvCallback.executeMsg.isCompressed());
+		Assert.assertEquals(true, srvCallback.deleteSessionMsg instanceof SCMessage);
+		Assert.assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.deleteSessionMsg.getSessionId());
+		Assert.assertEquals(null, srvCallback.deleteSessionMsg.getData());
+		Assert.assertEquals(null, srvCallback.deleteSessionMsg.getMessageInfo());
+		Assert.assertEquals(false, srvCallback.deleteSessionMsg.isFault());
+		Assert.assertEquals(true, srvCallback.deleteSessionMsg.isCompressed());
+		Assert.assertEquals(null, srvCallback.abortSessionMsg);
 	}
 
 	@Test
@@ -228,13 +227,13 @@ public class SessionServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(3, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.executeMsg instanceof SCMessage);
-		assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg.getSessionId());
-		assertEquals(TestConstants.dataLength1MB, ((byte[]) srvCallback.executeMsg.getData()).length);
-		assertEquals(null, srvCallback.executeMsg.getMessageInfo());
-		assertEquals(false, srvCallback.executeMsg.isFault());
-		assertEquals(false, srvCallback.executeMsg.isCompressed());
+		Assert.assertEquals(3, srvCallback.messagesExchanged);
+		Assert.assertEquals(true, srvCallback.executeMsg instanceof SCMessage);
+		Assert.assertEquals(srvCallback.createSessionMsg.getSessionId(), srvCallback.executeMsg.getSessionId());
+		Assert.assertEquals(TestConstants.dataLength1MB, ((byte[]) srvCallback.executeMsg.getData()).length);
+		Assert.assertEquals(null, srvCallback.executeMsg.getMessageInfo());
+		Assert.assertEquals(false, srvCallback.executeMsg.isFault());
+		Assert.assertEquals(false, srvCallback.executeMsg.isCompressed());
 	}
 
 	@Test
@@ -243,7 +242,7 @@ public class SessionServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(6, srvCallback.messagesExchanged);
+		Assert.assertEquals(6, srvCallback.messagesExchanged);
 	}
 
 	// TODO FJU how can I access echo messages from the API? probably not...
@@ -253,7 +252,7 @@ public class SessionServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(5, srvCallback.messagesExchanged);
+		Assert.assertEquals(5, srvCallback.messagesExchanged);
 	}
 
 	private class SrvCallback extends SCSessionServerCallback {

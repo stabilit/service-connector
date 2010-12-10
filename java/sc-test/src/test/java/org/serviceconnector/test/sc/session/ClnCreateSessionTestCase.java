@@ -115,7 +115,7 @@ public class ClnCreateSessionTestCase extends SuperAttachTestCase {
 		} else {
 			expectedScEntry = sessId + ":" + sessId + ":session-1_localhost/:" + 41000 + " : 1|";
 		}
-		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
+		SCTest.Assert.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());

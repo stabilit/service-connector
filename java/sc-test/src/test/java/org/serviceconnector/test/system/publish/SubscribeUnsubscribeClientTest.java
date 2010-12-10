@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.system.publish;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -89,48 +88,48 @@ public class SubscribeUnsubscribeClientTest {
 	public void unsubscribe_serviceNameEmpty_notSubscribedEmptySessionId() throws Exception {
 		SCPublishService service = client.newPublishService("");
 		service.unsubscribe();
-		assertEquals(null, service.getSessionId());
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(null, service.getSessionId());
+		Assert.assertEquals(false, service.isSubscribed());
 	}
 
 	@Test
 	public void unsubscribe_serviceNameWhiteSpace_notSubscribedEmptySessionId() throws Exception {
 		SCPublishService service = client.newPublishService(" ");
 		service.unsubscribe();
-		assertEquals(null, service.getSessionId());
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(null, service.getSessionId());
+		Assert.assertEquals(false, service.isSubscribed());
 	}
 
 	@Test
 	public void unsubscribe_serviceNameOneChar_notSubscribedEmptySessionId() throws Exception {
 		SCPublishService service = client.newPublishService("a");
 		service.unsubscribe();
-		assertEquals(null, service.getSessionId());
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(null, service.getSessionId());
+		Assert.assertEquals(false, service.isSubscribed());
 	}
 
 	@Test
 	public void unsubscribe_serviceNameWhitePangram_notSubscribedEmptySessionId() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.pangram);
 		service.unsubscribe();
-		assertEquals(null, service.getSessionId());
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(null, service.getSessionId());
+		Assert.assertEquals(false, service.isSubscribed());
 	}
 
 	@Test
 	public void unsubscribe_serviceNameDisabledService_notSubscribedEmptySessionId() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		service.unsubscribe();
-		assertEquals(null, service.getSessionId());
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(null, service.getSessionId());
+		Assert.assertEquals(false, service.isSubscribed());
 	}
 
 	@Test
 	public void unsubscribe_serviceNameValid_notSubscribedEmptySessionId() throws Exception {
 		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
 		service.unsubscribe();
-		assertEquals(null, service.getSessionId());
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(null, service.getSessionId());
+		Assert.assertEquals(false, service.isSubscribed());
 	}
 
 	@Test
@@ -141,8 +140,8 @@ public class SubscribeUnsubscribeClientTest {
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
 	}
 
@@ -153,11 +152,11 @@ public class SubscribeUnsubscribeClientTest {
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
-		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(false, service.isSubscribed());
 	}
 
 	@Test
@@ -170,11 +169,11 @@ public class SubscribeUnsubscribeClientTest {
 			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (SCMPValidatorException e) {
 		}
-		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(false, service.isSubscribed());
 		service.unsubscribe();
-		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(false, service.isSubscribed());
 	}
 
 	@Test
@@ -187,11 +186,11 @@ public class SubscribeUnsubscribeClientTest {
 			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 		} catch (SCServiceException e) {
 		}
-		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(false, service.isSubscribed());
 		service.unsubscribe();
-		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(false, service.isSubscribed());
 	}
 
 	// TODO FJU after subscribe -> unsubscribe -> subscribe, NullPointer is thrown
@@ -203,18 +202,18 @@ public class SubscribeUnsubscribeClientTest {
 		subscibeMessage.setMask(TestConstants.mask);
 		subscibeMessage.setSessionInfo("sessionInfo");
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
-		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(false, service.isSubscribed());
 
 		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(true, service.isSubscribed());
+		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(true, service.isSubscribed());
 		service.unsubscribe();
-		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-		assertEquals(false, service.isSubscribed());
+		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+		Assert.assertEquals(false, service.isSubscribed());
 	}
 
 	@Test
@@ -229,12 +228,12 @@ public class SubscribeUnsubscribeClientTest {
 			subscibeMessage.setMask(TestConstants.mask);
 			subscibeMessage.setSessionInfo("sessionInfo");
 			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-			assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-			assertEquals(true, service.isSubscribed());
+			Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+			Assert.assertEquals(true, service.isSubscribed());
 			service.unsubscribe();
 			Thread.sleep(5); // TODO little sleep, Netty has problems sending very fast! must be fixed
-			assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-			assertEquals(false, service.isSubscribed());
+			Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+			Assert.assertEquals(false, service.isSubscribed());
 		}
 	}
 

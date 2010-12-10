@@ -1,9 +1,8 @@
 package org.serviceconnector.test.unit;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.Constants;
@@ -34,11 +33,11 @@ public class SCSubscribeMessageTest {
 	 */
 	@Test
 	public void t01_constructor() {
-		assertEquals("messageInfo is not null",null, message.getMessageInfo());
-		assertEquals("data is not null",null, message.getData());
-		assertEquals("sessionId is not null",null, message.getSessionId());
-		assertEquals("mask is not null",null, message.getMask());
-		assertEquals("compressed flag is not default",Constants.DEFAULT_COMPRESSION_FLAG, message.isCompressed());
+		Assert.assertEquals("messageInfo is not null",null, message.getMessageInfo());
+		Assert.assertEquals("data is not null",null, message.getData());
+		Assert.assertEquals("sessionId is not null",null, message.getSessionId());
+		Assert.assertEquals("mask is not null",null, message.getMask());
+		Assert.assertEquals("compressed flag is not default",Constants.DEFAULT_COMPRESSION_FLAG, message.isCompressed());
 	}
 
 	/**
@@ -48,7 +47,7 @@ public class SCSubscribeMessageTest {
 	@Test 
 	public void t10_mask() throws Exception {
 		message.setMask(null);
-		assertEquals("mask is not null", null, message.getMask());
+		Assert.assertEquals("mask is not null", null, message.getMask());
 	}
 
 	/**
@@ -85,7 +84,7 @@ public class SCSubscribeMessageTest {
 	@Test (expected = SCMPValidatorException.class)
 	public void t14_mask() throws Exception {
 		message.setMask(TestConstants.stringLength257);
-		assertEquals("mask is different", TestConstants.stringLength256, message.getMask());
+		Assert.assertEquals("mask is different", TestConstants.stringLength256, message.getMask());
 	}
 
 	/**

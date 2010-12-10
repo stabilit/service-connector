@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.integration.cln;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -66,7 +65,7 @@ public class AfterSCRestartClientTest {
 			ctrl.stopSC(scCtx);
 		} catch (Exception e) {}
 		scCtx = null;
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
+//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
@@ -86,7 +85,7 @@ public class AfterSCRestartClientTest {
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
 
 	/**
@@ -97,12 +96,12 @@ public class AfterSCRestartClientTest {
 	public void t102_attach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 		client.detach();
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
 
 	/**
@@ -113,10 +112,10 @@ public class AfterSCRestartClientTest {
 	public void t103_attach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
 
 	/**
@@ -181,7 +180,7 @@ public class AfterSCRestartClientTest {
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
 
 	/**
@@ -192,12 +191,12 @@ public class AfterSCRestartClientTest {
 	public void t202_attach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 		client.detach();
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
 
 	/**
@@ -208,10 +207,10 @@ public class AfterSCRestartClientTest {
 	public void t203_attach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
 
 	/**

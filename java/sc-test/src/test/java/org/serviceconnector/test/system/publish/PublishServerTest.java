@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.system.publish;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,7 +27,6 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
-import org.serviceconnector.cln.TestPublishClient;
 import org.serviceconnector.ctrl.util.ProcessesController;
 
 public class PublishServerTest {
@@ -85,26 +83,26 @@ public class PublishServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(2, srvCallback.messagesExchanged);
-		assertEquals(true, srvCallback.subscribeMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.subscribeMsg.getSessionId() == null
+		Assert.assertEquals(2, srvCallback.messagesExchanged);
+		Assert.assertEquals(true, srvCallback.subscribeMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.subscribeMsg.getSessionId() == null
 				|| srvCallback.subscribeMsg.getSessionId().isEmpty());
-		assertEquals(false, srvCallback.subscribeMsg.isFault());
-		assertEquals(null, srvCallback.subscribeMsg.getData());
-		assertEquals(true, srvCallback.subscribeMsg.isCompressed());
-		assertEquals("sessionInfo", srvCallback.subscribeMsg.getSessionInfo());
+		Assert.assertEquals(false, srvCallback.subscribeMsg.isFault());
+		Assert.assertEquals(null, srvCallback.subscribeMsg.getData());
+		Assert.assertEquals(true, srvCallback.subscribeMsg.isCompressed());
+		Assert.assertEquals("sessionInfo", srvCallback.subscribeMsg.getSessionInfo());
 		// TODO JOT
-		// assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.subscribeMsg.getOperationTimeout());
+		// Assert.assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.subscribeMsg.getOperationTimeout());
 
-		assertEquals(true, srvCallback.unsubscribeMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.unsubscribeMsg.getSessionId() == null
+		Assert.assertEquals(true, srvCallback.unsubscribeMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.unsubscribeMsg.getSessionId() == null
 				|| srvCallback.unsubscribeMsg.getSessionId().isEmpty());
-		assertEquals(false, srvCallback.unsubscribeMsg.isFault());
-		assertEquals(null, srvCallback.unsubscribeMsg.getData());
-		assertEquals(true, srvCallback.unsubscribeMsg.isCompressed());
-		assertEquals(null, srvCallback.unsubscribeMsg.getMessageInfo());
+		Assert.assertEquals(false, srvCallback.unsubscribeMsg.isFault());
+		Assert.assertEquals(null, srvCallback.unsubscribeMsg.getData());
+		Assert.assertEquals(true, srvCallback.unsubscribeMsg.isCompressed());
+		Assert.assertEquals(null, srvCallback.unsubscribeMsg.getMessageInfo());
 		// TODO JOT
-		// assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.unsubscribeMsg.getOperationTimeout());
+		// Assert.assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.unsubscribeMsg.getOperationTimeout());
 	}
 
 	@Test
@@ -113,27 +111,27 @@ public class PublishServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(2, srvCallback.messagesExchanged);
+		Assert.assertEquals(2, srvCallback.messagesExchanged);
 
-		assertEquals(true, srvCallback.subscribeMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.subscribeMsg.getSessionId() == null
+		Assert.assertEquals(true, srvCallback.subscribeMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.subscribeMsg.getSessionId() == null
 				|| srvCallback.subscribeMsg.getSessionId().isEmpty());
-		assertEquals(false, srvCallback.subscribeMsg.isFault());
-		assertEquals(null, srvCallback.subscribeMsg.getData());
-		assertEquals(true, srvCallback.subscribeMsg.isCompressed());
-		assertEquals("sessionInfo", srvCallback.subscribeMsg.getSessionInfo());
+		Assert.assertEquals(false, srvCallback.subscribeMsg.isFault());
+		Assert.assertEquals(null, srvCallback.subscribeMsg.getData());
+		Assert.assertEquals(true, srvCallback.subscribeMsg.isCompressed());
+		Assert.assertEquals("sessionInfo", srvCallback.subscribeMsg.getSessionInfo());
 		// TODO JOT
-		// assertEquals("operation timeout", true, 0.8 * 3600000 <= srvCallback.subscribeMsg.getOperationTimeout());
+		// Assert.assertEquals("operation timeout", true, 0.8 * 3600000 <= srvCallback.subscribeMsg.getOperationTimeout());
 
-		assertEquals(true, srvCallback.unsubscribeMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.unsubscribeMsg.getSessionId() == null
+		Assert.assertEquals(true, srvCallback.unsubscribeMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.unsubscribeMsg.getSessionId() == null
 				|| srvCallback.unsubscribeMsg.getSessionId().isEmpty());
-		assertEquals(false, srvCallback.unsubscribeMsg.isFault());
-		assertEquals(null, srvCallback.unsubscribeMsg.getData());
-		assertEquals(true, srvCallback.unsubscribeMsg.isCompressed());
-		assertEquals(null, srvCallback.unsubscribeMsg.getMessageInfo());
+		Assert.assertEquals(false, srvCallback.unsubscribeMsg.isFault());
+		Assert.assertEquals(null, srvCallback.unsubscribeMsg.getData());
+		Assert.assertEquals(true, srvCallback.unsubscribeMsg.isCompressed());
+		Assert.assertEquals(null, srvCallback.unsubscribeMsg.getMessageInfo());
 		// TODO JOT
-		// assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.unsubscribeMsg.getOperationTimeout());
+		// Assert.assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.unsubscribeMsg.getOperationTimeout());
 	}
 
 	@Test
@@ -142,37 +140,37 @@ public class PublishServerTest {
 		client.start();
 		client.join();
 
-		assertEquals(3, srvCallback.messagesExchanged);
+		Assert.assertEquals(3, srvCallback.messagesExchanged);
 
-		assertEquals(true, srvCallback.subscribeMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.subscribeMsg.getSessionId() == null
+		Assert.assertEquals(true, srvCallback.subscribeMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.subscribeMsg.getSessionId() == null
 				|| srvCallback.subscribeMsg.getSessionId().isEmpty());
-		assertEquals(false, srvCallback.subscribeMsg.isFault());
-		assertEquals(null, srvCallback.subscribeMsg.getData());
-		assertEquals(true, srvCallback.subscribeMsg.isCompressed());
-		assertEquals("sessionInfo", srvCallback.subscribeMsg.getSessionInfo());
+		Assert.assertEquals(false, srvCallback.subscribeMsg.isFault());
+		Assert.assertEquals(null, srvCallback.subscribeMsg.getData());
+		Assert.assertEquals(true, srvCallback.subscribeMsg.isCompressed());
+		Assert.assertEquals("sessionInfo", srvCallback.subscribeMsg.getSessionInfo());
 		// TODO JOT
-		// assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.subscribeMsg.getOperationTimeout());
+		// Assert.assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.subscribeMsg.getOperationTimeout());
 
-		assertEquals(true, srvCallback.changeSubMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.changeSubMsg.getSessionId() == null
+		Assert.assertEquals(true, srvCallback.changeSubMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.changeSubMsg.getSessionId() == null
 				|| srvCallback.changeSubMsg.getSessionId().isEmpty());
-		assertEquals(false, srvCallback.changeSubMsg.isFault());
-		assertEquals(null, srvCallback.changeSubMsg.getData());
-		assertEquals(true, srvCallback.changeSubMsg.isCompressed());
-		assertEquals(null, srvCallback.changeSubMsg.getMessageInfo());
+		Assert.assertEquals(false, srvCallback.changeSubMsg.isFault());
+		Assert.assertEquals(null, srvCallback.changeSubMsg.getData());
+		Assert.assertEquals(true, srvCallback.changeSubMsg.isCompressed());
+		Assert.assertEquals(null, srvCallback.changeSubMsg.getMessageInfo());
 		// TODO JOT
-		// assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.changeSubMsg.getOperationTimeout());
+		// Assert.assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.changeSubMsg.getOperationTimeout());
 
-		assertEquals(true, srvCallback.unsubscribeMsg instanceof SCMessage);
-		assertEquals(false, srvCallback.unsubscribeMsg.getSessionId() == null
+		Assert.assertEquals(true, srvCallback.unsubscribeMsg instanceof SCMessage);
+		Assert.assertEquals(false, srvCallback.unsubscribeMsg.getSessionId() == null
 				|| srvCallback.unsubscribeMsg.getSessionId().isEmpty());
-		assertEquals(false, srvCallback.unsubscribeMsg.isFault());
-		assertEquals(null, srvCallback.unsubscribeMsg.getData());
-		assertEquals(true, srvCallback.unsubscribeMsg.isCompressed());
-		assertEquals(null, srvCallback.unsubscribeMsg.getMessageInfo());
+		Assert.assertEquals(false, srvCallback.unsubscribeMsg.isFault());
+		Assert.assertEquals(null, srvCallback.unsubscribeMsg.getData());
+		Assert.assertEquals(true, srvCallback.unsubscribeMsg.isCompressed());
+		Assert.assertEquals(null, srvCallback.unsubscribeMsg.getMessageInfo());
 		// TODO JOT
-		// assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.unsubscribeMsg.getOperationTimeout());
+		// Assert.assertEquals("operation timeout", true, 0.8 * 60000 <= srvCallback.unsubscribeMsg.getOperationTimeout());
 	}
 
 	// @Test
@@ -180,7 +178,7 @@ public class PublishServerTest {
 	// StartPublishClient client = new StartPublishClient("subscribeUnsubscribe_twice_isSubscribedThenNot");
 	// client.start();
 	// client.join();
-	// assertEquals(4, srvCallback.messagesExchanged);
+	// Assert.assertEquals(4, srvCallback.messagesExchanged);
 	// }
 
 	// @Test
@@ -188,7 +186,7 @@ public class PublishServerTest {
 	// StartPublishClient client = new StartPublishClient("changeSubscription_twice_passes");
 	// client.start();
 	// client.join();
-	// assertEquals(4, srvCallback.messagesExchanged);
+	// Assert.assertEquals(4, srvCallback.messagesExchanged);
 	// }
 
 	@Test
@@ -196,7 +194,7 @@ public class PublishServerTest {
 		TestPublishClient client = new TestPublishClient("unsubscribe_serviceNameValid_notSubscribedEmptySessionId");
 		client.start();
 		client.join();
-		assertEquals(0, srvCallback.messagesExchanged);
+		Assert.assertEquals(0, srvCallback.messagesExchanged);
 	}
 
 	private class SrvCallback extends SCPublishServerCallback {

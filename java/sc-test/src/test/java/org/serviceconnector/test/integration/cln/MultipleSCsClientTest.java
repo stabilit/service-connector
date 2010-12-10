@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.integration.cln;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -64,7 +63,7 @@ public class MultipleSCsClientTest {
 	public void afterOneTest() throws Exception {
 		client1 = null;
 		client2 = null;
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
+//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
@@ -97,19 +96,19 @@ public class MultipleSCsClientTest {
 	@Test
 	public void t01_attachDetach() throws Exception {
 		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
-		assertEquals("Client1 is detached", false, client1.isAttached());
+		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
 		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
-		assertEquals("Client2 is detached", false, client2.isAttached());
+		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 
 		client1.attach();
-		assertEquals("Client1 is attached", true, client1.isAttached());
+		Assert.assertEquals("Client1 is attached", true, client1.isAttached());
 		client2.attach();
-		assertEquals("Client2 is attached", true, client2.isAttached());
+		Assert.assertEquals("Client2 is attached", true, client2.isAttached());
 		
 		client1.detach();
-		assertEquals("Client1 is detached", false, client1.isAttached());
+		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
 		client2.detach();
-		assertEquals("Client2 is detached", false, client2.isAttached());
+		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 	}
 
 
@@ -127,19 +126,19 @@ public class MultipleSCsClientTest {
 	@Test
 	public void t02_attachDetach() throws Exception {
 		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		assertEquals("Client1 is detached", false, client1.isAttached());
+		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
 		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		assertEquals("Client2 is detached", false, client2.isAttached());
+		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 
 		client1.attach();
-		assertEquals("Client1 is attached", true, client1.isAttached());
+		Assert.assertEquals("Client1 is attached", true, client1.isAttached());
 		client2.attach();
-		assertEquals("Client2 is attached", true, client2.isAttached());
+		Assert.assertEquals("Client2 is attached", true, client2.isAttached());
 		
 		client1.detach();
-		assertEquals("Client1 is detached", false, client1.isAttached());
+		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
 		client2.detach();
-		assertEquals("Client2 is detached", false, client2.isAttached());
+		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 	}
 
 	/**
@@ -156,19 +155,19 @@ public class MultipleSCsClientTest {
 	@Test
 	public void t03_attachDetach() throws Exception {
 		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
-		assertEquals("Client1 is detached", false, client1.isAttached());
+		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
 		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		assertEquals("Client2 is detached", false, client2.isAttached());
+		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 
 		client1.attach();
-		assertEquals("Client1 is attached", true, client1.isAttached());
+		Assert.assertEquals("Client1 is attached", true, client1.isAttached());
 		client2.attach();
-		assertEquals("Client2 is attached", true, client2.isAttached());
+		Assert.assertEquals("Client2 is attached", true, client2.isAttached());
 		
 		client1.detach();
-		assertEquals("Client1 is detached", false, client1.isAttached());
+		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
 		client2.detach();
-		assertEquals("Client2 is detached", false, client2.isAttached());
+		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 	}
 
 	/**
@@ -185,23 +184,23 @@ public class MultipleSCsClientTest {
 	@Test
 	public void t05_attachDetach() throws Exception {
 		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
-		assertEquals("Client1 is detached", false, client1.isAttached());
+		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
 		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
-		assertEquals("Client2 is detached", false, client2.isAttached());
+		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 
 		int nr = 500;
 		for (int i= 0; i < nr; i++) {
 			if (((i+1) % 100) == 0)
 				testLogger.info("Attach/detach. " + (i+1) + "...");
 			client1.attach();
-			assertEquals("Client1 is attached", true, client1.isAttached());
+			Assert.assertEquals("Client1 is attached", true, client1.isAttached());
 			client2.attach();
-			assertEquals("Client2 is attached", true, client2.isAttached());
+			Assert.assertEquals("Client2 is attached", true, client2.isAttached());
 			
 			client1.detach();
-			assertEquals("Client1 is detached", false, client1.isAttached());
+			Assert.assertEquals("Client1 is detached", false, client1.isAttached());
 			client2.detach();
-			assertEquals("Client2 is detached", false, client2.isAttached());
+			Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 		}
 	}
 
@@ -219,23 +218,23 @@ public class MultipleSCsClientTest {
 	@Test
 	public void t06_attachDetach() throws Exception {
 		client1 = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		assertEquals("Client1 is detached", false, client1.isAttached());
+		Assert.assertEquals("Client1 is detached", false, client1.isAttached());
 		client2 = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		assertEquals("Client2 is detached", false, client2.isAttached());
+		Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 
 		int nr = 500;
 		for (int i= 0; i < nr; i++) {
 			if (((i+1) % 100) == 0)
 				testLogger.info("Attach/detach. " + (i+1) + "...");
 			client1.attach();
-			assertEquals("Client1 is attached", true, client1.isAttached());
+			Assert.assertEquals("Client1 is attached", true, client1.isAttached());
 			client2.attach();
-			assertEquals("Client2 is attached", true, client2.isAttached());
+			Assert.assertEquals("Client2 is attached", true, client2.isAttached());
 			
 			client1.detach();
-			assertEquals("Client1 is detached", false, client1.isAttached());
+			Assert.assertEquals("Client1 is detached", false, client1.isAttached());
 			client2.detach();
-			assertEquals("Client2 is detached", false, client2.isAttached());
+			Assert.assertEquals("Client2 is detached", false, client2.isAttached());
 		}
 
 	}

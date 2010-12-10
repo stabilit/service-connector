@@ -15,8 +15,6 @@
  */
 package org.serviceconnector.test.unit;
 
-import static org.junit.Assert.assertEquals;
-
 import java.security.InvalidParameterException;
 
 import junit.framework.Assert;
@@ -60,10 +58,10 @@ public class SCMessageTest {
 	 */
 	@Test
 	public void t01_constructor() {
-		assertEquals("messageInfo is not null", null, message.getMessageInfo());
-		assertEquals("data is not null", null, message.getData());
-		assertEquals("sessionId is not null", null, message.getSessionId());
-		assertEquals("compressed flag is not default", Constants.DEFAULT_COMPRESSION_FLAG, message.isCompressed());
+		Assert.assertEquals("messageInfo is not null", null, message.getMessageInfo());
+		Assert.assertEquals("data is not null", null, message.getData());
+		Assert.assertEquals("sessionId is not null", null, message.getSessionId());
+		Assert.assertEquals("compressed flag is not default", Constants.DEFAULT_COMPRESSION_FLAG, message.isCompressed());
 	}
 
 	/**
@@ -73,7 +71,7 @@ public class SCMessageTest {
 	@Test
 	public void t10_Compressed() {
 		message.setCompressed(true);
-		assertEquals("Compressed", true, message.isCompressed());
+		Assert.assertEquals("Compressed", true, message.isCompressed());
 	}
 
 	/**
@@ -83,7 +81,7 @@ public class SCMessageTest {
 	@Test
 	public void t11_Compressed() {
 		message.setCompressed(false);
-		assertEquals("Compressed", false, message.isCompressed());
+		Assert.assertEquals("Compressed", false, message.isCompressed());
 	}
 
 	/**
@@ -103,7 +101,7 @@ public class SCMessageTest {
 	@Test
 	public void t21_Data() {
 		message.setData(TestConstants.pangram);
-		assertEquals("DataParameter ", TestConstants.pangram, message.getData());
+		Assert.assertEquals("DataParameter ", TestConstants.pangram, message.getData());
 	}
 
 	/**
@@ -113,7 +111,7 @@ public class SCMessageTest {
 	@Test
 	public void t22_Data() {
 		message.setData(new byte[1048576]);
-		assertEquals("DataParameter ", 1048576, ((byte[]) message.getData()).length);
+		Assert.assertEquals("DataParameter ", 1048576, ((byte[]) message.getData()).length);
 	}
 
 	/**
@@ -123,7 +121,7 @@ public class SCMessageTest {
 	@Test
 	public void t30_MessageInfo() throws Exception {
 		message.setMessageInfo(null);
-		assertEquals(null, message.getMessageInfo());
+		Assert.assertEquals(null, message.getMessageInfo());
 	}
 
 	/**
@@ -142,7 +140,7 @@ public class SCMessageTest {
 	@Test(expected = SCMPValidatorException.class)
 	public void t32_MessageInfo() throws Exception {
 		message.setMessageInfo(" ");
-		assertEquals(" ", message.getMessageInfo());
+		Assert.assertEquals(" ", message.getMessageInfo());
 	}
 
 	/**
@@ -152,8 +150,8 @@ public class SCMessageTest {
 	@Test
 	public void t33_MessageInfo() throws Exception {
 		message.setMessageInfo("a");
-		assertEquals("a", message.getMessageInfo());
-		assertEquals(1, message.getMessageInfo().length());
+		Assert.assertEquals("a", message.getMessageInfo());
+		Assert.assertEquals(1, message.getMessageInfo().length());
 	}
 
 	/**
@@ -167,8 +165,8 @@ public class SCMessageTest {
 			sb.append('a');
 		}
 		message.setMessageInfo(sb.toString());
-		assertEquals(sb.toString(), message.getMessageInfo());
-		assertEquals(256, message.getMessageInfo().length());
+		Assert.assertEquals(sb.toString(), message.getMessageInfo());
+		Assert.assertEquals(256, message.getMessageInfo().length());
 	}
 
 	/**
@@ -204,7 +202,7 @@ public class SCMessageTest {
 	@Test
 	public void t40_SessionId() {
 		((SCMessage) message).setSessionId(null);
-		assertEquals(null, message.getSessionId());
+		Assert.assertEquals(null, message.getSessionId());
 	}
 
 	/**
@@ -214,7 +212,7 @@ public class SCMessageTest {
 	@Test
 	public void t41_SessionId() {
 		((SCMessage) message).setSessionId("");
-		assertEquals("", message.getSessionId());
+		Assert.assertEquals("", message.getSessionId());
 	}
 
 	/**
@@ -224,7 +222,7 @@ public class SCMessageTest {
 	@Test
 	public void t42_SessionId() {
 		((SCMessage) message).setSessionId("a");
-		assertEquals("a", message.getSessionId());
+		Assert.assertEquals("a", message.getSessionId());
 	}
 
 	/**
@@ -238,7 +236,7 @@ public class SCMessageTest {
 			sb.append('a');
 		}
 		((SCMessage) message).setSessionId(sb.toString());
-		assertEquals(sb.toString(), message.getSessionId());
+		Assert.assertEquals(sb.toString(), message.getSessionId());
 	}
 
 	/**
@@ -248,7 +246,7 @@ public class SCMessageTest {
 	@Test
 	public void t50_SessionInfo() throws Exception {
 		message.setSessionInfo(null);
-		assertEquals("is not null", null, message.getSessionInfo());
+		Assert.assertEquals("is not null", null, message.getSessionInfo());
 	}
 
 	/**
@@ -267,7 +265,7 @@ public class SCMessageTest {
 	@Test(expected = SCMPValidatorException.class)
 	public void t52_SessionInfo() throws Exception {
 		message.setSessionInfo(" ");
-		assertEquals(" ", message.getSessionInfo());
+		Assert.assertEquals(" ", message.getSessionInfo());
 	}
 
 	/**
@@ -277,8 +275,8 @@ public class SCMessageTest {
 	@Test
 	public void t53_SessionInfo() throws Exception {
 		message.setSessionInfo("a");
-		assertEquals("a", message.getSessionInfo());
-		assertEquals(1, message.getSessionInfo().length());
+		Assert.assertEquals("a", message.getSessionInfo());
+		Assert.assertEquals(1, message.getSessionInfo().length());
 	}
 
 	/**
@@ -292,8 +290,8 @@ public class SCMessageTest {
 			sb.append('a');
 		}
 		message.setSessionInfo(sb.toString());
-		assertEquals(sb.toString(), message.getSessionInfo());
-		assertEquals(256, message.getSessionInfo().length());
+		Assert.assertEquals(sb.toString(), message.getSessionInfo());
+		Assert.assertEquals(256, message.getSessionInfo().length());
 	}
 
 	/**
@@ -329,7 +327,7 @@ public class SCMessageTest {
 	@Test
 	public void t60_CacheId() throws Exception {
 		message.setCacheId(null);
-		assertEquals("is not null", null, message.getCacheId());
+		Assert.assertEquals("is not null", null, message.getCacheId());
 	}
 
 	/**
@@ -348,7 +346,7 @@ public class SCMessageTest {
 	@Test(expected = SCMPValidatorException.class)
 	public void t62_CacheId() throws Exception {
 		message.setCacheId(" ");
-		assertEquals(" ", message.getCacheId());
+		Assert.assertEquals(" ", message.getCacheId());
 	}
 
 	/**
@@ -358,8 +356,8 @@ public class SCMessageTest {
 	@Test
 	public void t63_CacheId() throws Exception {
 		message.setCacheId("a");
-		assertEquals("a", message.getCacheId());
-		assertEquals(1, message.getCacheId().length());
+		Assert.assertEquals("a", message.getCacheId());
+		Assert.assertEquals(1, message.getCacheId().length());
 	}
 
 	/**
@@ -373,8 +371,8 @@ public class SCMessageTest {
 			sb.append('a');
 		}
 		message.setCacheId(sb.toString());
-		assertEquals(sb.toString(), message.getCacheId());
-		assertEquals(256, message.getCacheId().length());
+		Assert.assertEquals(sb.toString(), message.getCacheId());
+		Assert.assertEquals(256, message.getCacheId().length());
 	}
 
 	/**
@@ -419,7 +417,7 @@ public class SCMessageTest {
 	@Test
 	public void t68_AppErrorText() throws Exception {
 		message.setAppErrorText(null);
-		assertEquals("is not null", null, message.getAppErrorText());
+		Assert.assertEquals("is not null", null, message.getAppErrorText());
 	}
 
 	/**
@@ -438,7 +436,7 @@ public class SCMessageTest {
 	@Test(expected = SCMPValidatorException.class)
 	public void t70_AppErrorText() throws Exception {
 		message.setAppErrorText(" ");
-		assertEquals(" ", message.getAppErrorText());
+		Assert.assertEquals(" ", message.getAppErrorText());
 	}
 
 	/**
@@ -448,8 +446,8 @@ public class SCMessageTest {
 	@Test
 	public void t71_AppErrorText() throws Exception {
 		message.setAppErrorText("a");
-		assertEquals("a", message.getAppErrorText());
-		assertEquals(1, message.getAppErrorText().length());
+		Assert.assertEquals("a", message.getAppErrorText());
+		Assert.assertEquals(1, message.getAppErrorText().length());
 	}
 
 	/**
@@ -463,8 +461,8 @@ public class SCMessageTest {
 			sb.append('a');
 		}
 		message.setAppErrorText(sb.toString());
-		assertEquals(sb.toString(), message.getAppErrorText());
-		assertEquals(256, message.getAppErrorText().length());
+		Assert.assertEquals(sb.toString(), message.getAppErrorText());
+		Assert.assertEquals(256, message.getAppErrorText().length());
 	}
 
 	/**

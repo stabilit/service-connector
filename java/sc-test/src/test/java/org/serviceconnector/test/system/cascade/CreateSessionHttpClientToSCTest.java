@@ -15,13 +15,12 @@
  */
 package org.serviceconnector.test.system.cascade;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Arrays;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -72,7 +71,7 @@ public class CreateSessionHttpClientToSCTest {
 		client.detach();
 		client = null;
 		ex = null;
-		assertEquals("number of threads", threadCount, Thread.activeCount());
+		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@AfterClass
@@ -97,7 +96,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void t01_deleteSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService("");
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	/**
@@ -108,7 +107,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void t02_deleteSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(" ");
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	/**
@@ -119,7 +118,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void t03_deleteSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService("a");
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	/**
@@ -130,7 +129,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void t04_deleteSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.pangram);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	/**
@@ -141,7 +140,7 @@ public class CreateSessionHttpClientToSCTest {
 	public void t05_deleteSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		sessionService.deleteSession();
-		assertEquals("Session is not deleted ", true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals("Session is not deleted ", true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 	
 	/**
@@ -163,8 +162,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -188,8 +187,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 	
@@ -211,8 +210,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 	
@@ -234,8 +233,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 	
@@ -258,8 +257,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -282,8 +281,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -305,8 +304,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals("Expected SCServiceException", true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals("Expected SCServiceException", true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -328,8 +327,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -349,7 +348,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -367,7 +366,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -390,7 +389,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -416,8 +415,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -440,8 +439,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -459,7 +458,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -478,7 +477,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -501,7 +500,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -520,7 +519,7 @@ public class CreateSessionHttpClientToSCTest {
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( 10, scMessage);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());	
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());	
 	}
 
 	/**
@@ -537,7 +536,7 @@ public class CreateSessionHttpClientToSCTest {
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( 10, scMessage);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());	
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());	
 	}
 
 	/**
@@ -554,7 +553,7 @@ public class CreateSessionHttpClientToSCTest {
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( 10, scMessage);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());	
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());	
 	}
 
 	/**
@@ -571,7 +570,7 @@ public class CreateSessionHttpClientToSCTest {
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( 10, scMessage);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());	
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());	
 	}
 
 	/**
@@ -589,8 +588,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -611,8 +610,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -626,24 +625,24 @@ public class CreateSessionHttpClientToSCTest {
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.sesServiceName1);
 		SCSessionService sessionService1 = client.newSessionService(TestConstants.pubServiceName1);
 
-		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
 
 		SCMessage scMessage0 = new SCMessage();
 		scMessage0.setSessionInfo("sessionInfo");
 		sessionService0.createSession( 10, scMessage0);
 
-		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
 
 		SCMessage scMessage1 = new SCMessage();
 		scMessage1.setSessionInfo("sessionInfo");
 		sessionService1.createSession( 10, scMessage1);
 
-		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(false, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
 
-		assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
+		Assert.assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
 
 		sessionService0.deleteSession();
 		sessionService1.deleteSession();
@@ -658,24 +657,24 @@ public class CreateSessionHttpClientToSCTest {
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.sesServiceName1);
 		SCSessionService sessionService1 = client.newSessionService(TestConstants.pubServiceName1);
 
-		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
 
 		SCMessage scMessage0 = new SCMessage(" ");
 		scMessage0.setSessionInfo("sessionInfo");
 		sessionService0.createSession( 10, scMessage0);
 
-		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
 
 		SCMessage scMessage1 = new SCMessage(" ");
 		scMessage1.setSessionInfo("sessionInfo");
 		sessionService1.createSession( 10, scMessage1);
 
-		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(false, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
 
-		assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
+		Assert.assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
 
 		sessionService0.deleteSession();
 		sessionService1.deleteSession();
@@ -695,9 +694,9 @@ public class CreateSessionHttpClientToSCTest {
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
 			sessionService.createSession( 10, scMessage);
-			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 			sessionService.deleteSession();
-			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
 	}
 
@@ -719,8 +718,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -744,8 +743,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -767,8 +766,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -791,8 +790,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -817,8 +816,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -837,7 +836,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -862,8 +861,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -888,8 +887,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -914,8 +913,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -935,7 +934,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -960,8 +959,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -987,8 +986,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -1007,7 +1006,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
 		sessionService.createSession( timeoutInSeconds, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 
 	}
@@ -1032,8 +1031,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1080,9 +1079,9 @@ public class CreateSessionHttpClientToSCTest {
 			SCMessage scMessage = new SCMessage(" ");
 			scMessage.setSessionInfo("sessionInfo");
 			sessionService.createSession( 10, scMessage);
-			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 			sessionService.deleteSession();
-			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
 	}
 
@@ -1113,8 +1112,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1132,8 +1131,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1147,7 +1146,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo("");
 		sessionService.createSession( 10, scMessage);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1161,7 +1160,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(" ");
 		sessionService.createSession( 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1175,7 +1174,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(TestConstants.pangram);
 		sessionService.createSession( 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1193,7 +1192,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(sb.toString());
 		sessionService.createSession( 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1215,8 +1214,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCMPValidatorException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	/**
@@ -1230,7 +1229,7 @@ public class CreateSessionHttpClientToSCTest {
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 10, scMessage);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	@Test
@@ -1240,7 +1239,7 @@ public class CreateSessionHttpClientToSCTest {
 		scMessage.setSessionInfo(" ");
 		sessionService.createSession( 10, scMessage);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	@Test
@@ -1256,8 +1255,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1266,24 +1265,24 @@ public class CreateSessionHttpClientToSCTest {
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.sesServiceName1);
 		SCSessionService sessionService1 = client.newSessionService(TestConstants.pubServiceName1);
 
-		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
 
 		SCMessage scMessage0 = new SCMessage("a");
 		scMessage0.setSessionInfo("sessionInfo");
 		sessionService0.createSession( 10, scMessage0);
 
-		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
 
 		SCMessage scMessage1 = new SCMessage("a");
 		scMessage1.setSessionInfo("sessionInfo");
 		sessionService1.createSession( 10, scMessage1);
 
-		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(false, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
 
-		assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
+		Assert.assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
 
 		sessionService0.deleteSession();
 		sessionService1.deleteSession();
@@ -1298,9 +1297,9 @@ public class CreateSessionHttpClientToSCTest {
 			SCMessage scMessage = new SCMessage("a");
 			scMessage.setSessionInfo("sessionInfo");
 			sessionService.createSession( 10, scMessage);
-			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 			sessionService.deleteSession();
-			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
 	}
 
@@ -1314,8 +1313,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1329,8 +1328,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1345,8 +1344,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1356,7 +1355,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo("");
 		sessionService.createSession( 10, scMessage);
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1366,7 +1365,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo(" ");
 		sessionService.createSession( 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1376,7 +1375,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo(TestConstants.pangram);
 		sessionService.createSession( 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1386,7 +1385,7 @@ public class CreateSessionHttpClientToSCTest {
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo(TestConstants.stringLength256);
 		sessionService.createSession( 10, scMessage);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1397,7 +1396,7 @@ public class CreateSessionHttpClientToSCTest {
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService.createSession( 10, scMessage);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	@Test
@@ -1407,7 +1406,7 @@ public class CreateSessionHttpClientToSCTest {
 		scMessage.setSessionInfo(" ");
 		sessionService.createSession( 10, scMessage);
 		sessionService.deleteSession();
-		assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 	}
 
 	@Test
@@ -1421,8 +1420,8 @@ public class CreateSessionHttpClientToSCTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
 	}
 
@@ -1431,24 +1430,24 @@ public class CreateSessionHttpClientToSCTest {
 		SCSessionService sessionService0 = client.newSessionService(TestConstants.sesServiceName1);
 		SCSessionService sessionService1 = client.newSessionService(TestConstants.pubServiceName1);
 
-		assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
 
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo("sessionInfo");
 		sessionService0.createSession( 10, scMessage);
 
-		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		Assert.assertEquals(true, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
 
 		SCMessage scMessage1 = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage1.setSessionInfo("sessionInfo");
 		sessionService1.createSession( 10, scMessage1);
 
-		assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
-		assertEquals(false, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
+		Assert.assertEquals(false, sessionService1.getSessionId() == null || sessionService1.getSessionId().isEmpty());
 
-		assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
+		Assert.assertEquals(false, sessionService0.getSessionId().equals(sessionService1.getSessionId()));
 
 		sessionService0.deleteSession();
 		sessionService1.deleteSession();
@@ -1463,9 +1462,9 @@ public class CreateSessionHttpClientToSCTest {
 			SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 			scMessage.setSessionInfo("sessionInfo");
 			sessionService.createSession( 10, scMessage);
-			assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 			sessionService.deleteSession();
-			assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
+			Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		}
 	}
 
@@ -1496,7 +1495,7 @@ public class CreateSessionHttpClientToSCTest {
 				break;
 			}
 		}
-		assertEquals(false, duplicates);
+		Assert.assertEquals(false, duplicates);
 	}
 
 	@Test
@@ -1536,9 +1535,9 @@ public class CreateSessionHttpClientToSCTest {
 				break;
 			}
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(sessionsCount - 1, ctr);
-		assertEquals(false, duplicates);
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(sessionsCount - 1, ctr);
+		Assert.assertEquals(false, duplicates);
 	}
 
 //	@Test
@@ -1553,12 +1552,12 @@ public class CreateSessionHttpClientToSCTest {
 //		session1.createSession( 10, new SCMessage());
 //		session2.createSession( 10, new SCMessage());
 //
-//		assertEquals(false, session1.getSessionId().equals(session2.getSessionId()));
+//		Assert.assertEquals(false, session1.getSessionId().equals(session2.getSessionId()));
 //
 //		session1.deleteSession();
 //		session2.deleteSession();
 //
-//		assertEquals(session1.getSessionId(), session2.getSessionId());
+//		Assert.assertEquals(session1.getSessionId(), session2.getSessionId());
 //		client2.detach();
 //		client2 = null;
 //	}
@@ -1575,12 +1574,12 @@ public class CreateSessionHttpClientToSCTest {
 //		session1.createSession( 10, new SCMessage());
 //		session2.createSession( 10, new SCMessage());
 //
-//		assertEquals(false, session1.getSessionId().equals(session2.getSessionId()));
+//		Assert.assertEquals(false, session1.getSessionId().equals(session2.getSessionId()));
 //
 //		session1.deleteSession();
 //		session2.deleteSession();
 //
-//		assertEquals(session1.getSessionId(), session2.getSessionId());
+//		Assert.assertEquals(session1.getSessionId(), session2.getSessionId());
 //		client2.detach();
 //		client2 = null;
 //	}
@@ -1609,6 +1608,6 @@ public class CreateSessionHttpClientToSCTest {
 				break;
 			}
 		}
-		assertEquals(false, duplicates);
+		Assert.assertEquals(false, duplicates);
 	}
 }

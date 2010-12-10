@@ -15,12 +15,10 @@
  */
 package org.serviceconnector.test.integration.cln;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -86,13 +84,13 @@ public class AttachTest {
 	 */
 	private SCClient newSCClient(String host, int port, ConnectionType connectionType) {
 		SCClient client = new SCClient(host, port, connectionType);
-		assertEquals("Host ", host, client.getHost());
-		assertEquals("port ", port, client.getPort());
-		assertEquals("Keep Alive Interval ", Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS, client.getKeepAliveIntervalSeconds());
-		assertEquals("Attached ", false, client.isAttached());
-		assertEquals("max Connections ", Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE, client.getMaxConnections());
-		assertEquals("Connection Type ", connectionType, client.getConnectionType());
-		assertNotNull("Client not created:", client);
+		Assert.assertEquals("Host ", host, client.getHost());
+		Assert.assertEquals("port ", port, client.getPort());
+		Assert.assertEquals("Keep Alive Interval ", Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS, client.getKeepAliveIntervalSeconds());
+		Assert.assertEquals("Attached ", false, client.isAttached());
+		Assert.assertEquals("max Connections ", Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE, client.getMaxConnections());
+		Assert.assertEquals("Connection Type ", connectionType, client.getConnectionType());
+		Assert.assertNotNull("Client not created:", client);
 		return client;
 	}
 	
@@ -104,7 +102,7 @@ public class AttachTest {
 	public void t010_attach() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
 
 	/**
@@ -115,7 +113,7 @@ public class AttachTest {
 	public void t020_attach() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
 
 	
@@ -127,7 +125,7 @@ public class AttachTest {
 	public void t030_attach() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
 
 	/**
@@ -208,7 +206,7 @@ public class AttachTest {
 	public void t110_attach() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach(10);
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
 	
 	
@@ -220,7 +218,7 @@ public class AttachTest {
 	public void t120_attach() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 		client.attach();	// second attach throws SCServiceException			
 	}
 
@@ -232,7 +230,7 @@ public class AttachTest {
 	public void t130_setKeepAliveIntervalInSeconds() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 		client.setKeepAliveIntervalSeconds(10);	// too late => throws SCServiceException			
 	}
 	
@@ -244,7 +242,7 @@ public class AttachTest {
 	public void t140_setMaxConnections() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is attached", true, client.isAttached());
 		client.setMaxConnections(10);	// too late => throws SCServiceException			
 	}
 }

@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.console;
 
-import static org.junit.Assert.assertEquals;
-
 import java.security.Permission;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.Constants;
@@ -76,7 +75,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(null);
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -90,7 +89,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] {});
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -104,7 +103,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -118,7 +117,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "", "", "", "", "" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -132,7 +131,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { " " });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -146,7 +145,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { " ", " ", " ", " ", " " });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -160,7 +159,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "h" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -174,7 +173,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -188,7 +187,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", "" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -202,7 +201,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", " " });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -216,7 +215,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", "h" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -230,7 +229,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", "-p" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -244,7 +243,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", "-p", "" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -258,7 +257,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", "-p", " " });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -272,7 +271,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", "-p", "h" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -286,7 +285,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-p", "-h", "h" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -300,7 +299,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", "h", "-p", "something" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -314,7 +313,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", "-p", "h", "something" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -327,7 +326,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", "-p", "h", "key=something" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -341,7 +340,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", "h", "-p", "key=something" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -355,7 +354,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", "-h", "h", "-p", "p", "key=something" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -370,7 +369,7 @@ public class SCConsoleTest {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_HTTP,
 					Constants.STATE + "=something", Constants.STATE + "=something" });
 		} catch (ExitException e) {
-			assertEquals(1, e.status);
+			Assert.assertEquals(1, e.status);
 		}
 	}
 
@@ -386,7 +385,7 @@ public class SCConsoleTest {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_HTTP,
 					Constants.STATE + "=something" });
 		} catch (ExitException e) {
-			assertEquals(5, e.status);
+			Assert.assertEquals(5, e.status);
 		}
 	}
 
@@ -402,7 +401,7 @@ public class SCConsoleTest {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_MGMT,
 					Constants.STATE + "=something" });
 		} catch (ExitException e) {
-			assertEquals(5, e.status);
+			Assert.assertEquals(5, e.status);
 		}
 	}
 
@@ -417,7 +416,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, Constants.STATE + "=gaga" });
 		} catch (ExitException e) {
-			assertEquals(4, e.status);
+			Assert.assertEquals(4, e.status);
 		}
 	}
 
@@ -431,7 +430,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", TestConstants.PORT_SC_TCP, Constants.STATE + "=session-1" });
 		} catch (ExitException e) {
-			assertEquals(0, e.status);
+			Assert.assertEquals(0, e.status);
 		}
 	}
 
@@ -450,16 +449,16 @@ public class SCConsoleTest {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.DISABLE + "=session-1" });
 		} catch (ExitException e) {
-			assertEquals(0, e.status);
+			Assert.assertEquals(0, e.status);
 		}
-		assertEquals(false, client.isServiceEnabled("session-1"));
+		Assert.assertEquals(false, client.isServiceEnabled("session-1"));
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.ENABLE + "=session-1" });
 		} catch (ExitException e) {
-			assertEquals(0, e.status);
+			Assert.assertEquals(0, e.status);
 		}
-		assertEquals(true, client.isServiceEnabled("session-1"));
+		Assert.assertEquals(true, client.isServiceEnabled("session-1"));
 		client.detach();
 	}
 
@@ -474,7 +473,7 @@ public class SCConsoleTest {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.SESSIONS + "=session-1" });
 		} catch (ExitException e) {
-			assertEquals(0, e.status);
+			Assert.assertEquals(0, e.status);
 		}
 	}
 
@@ -489,7 +488,7 @@ public class SCConsoleTest {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.SESSIONS + "=publish-1" });
 		} catch (ExitException e) {
-			assertEquals(0, e.status);
+			Assert.assertEquals(0, e.status);
 		}
 	}
 
@@ -505,7 +504,7 @@ public class SCConsoleTest {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
 					Constants.SESSIONS + "=notExistingService" });
 		} catch (ExitException e) {
-			assertEquals(4, e.status);
+			Assert.assertEquals(4, e.status);
 		}
 	}
 
@@ -520,7 +519,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, "gaga=notExistingService" });
 		} catch (ExitException e) {
-			assertEquals(3, e.status);
+			Assert.assertEquals(3, e.status);
 		}
 	}
 
@@ -535,7 +534,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, "gaga=session-1" });
 		} catch (ExitException e) {
-			assertEquals(3, e.status);
+			Assert.assertEquals(3, e.status);
 		}
 	}
 
@@ -550,7 +549,7 @@ public class SCConsoleTest {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, Constants.KILL });
 		} catch (ExitException e) {
-			assertEquals(0, e.status);
+			Assert.assertEquals(0, e.status);
 		}
 	}
 }

@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.system.publish;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -85,7 +84,7 @@ public class PrematureDestroyOfServerProcessClientTest {
 		scCtx = null;
 		client = null;
 
-		assertEquals("number of threads", threadCount, Thread.activeCount());
+		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 	}
 
 	@AfterClass
@@ -105,8 +104,8 @@ public class PrematureDestroyOfServerProcessClientTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
-		assertEquals(null, service.getSessionId());
+		Assert.assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(null, service.getSessionId());
 	}
 
 	@Test
@@ -124,7 +123,7 @@ public class PrematureDestroyOfServerProcessClientTest {
 		} catch (Exception e) {
 			ex = e;
 		}
-		assertEquals(true, ex instanceof SCServiceException);
+		Assert.assertEquals(true, ex instanceof SCServiceException);
 	}
 
 	@Test
@@ -148,7 +147,7 @@ public class PrematureDestroyOfServerProcessClientTest {
 			}
 		} catch (Exception e) {
 		}
-		assertEquals(null, callback.lastMessage);
+		Assert.assertEquals(null, callback.lastMessage);
 	}
 
 	@Test
@@ -169,7 +168,7 @@ public class PrematureDestroyOfServerProcessClientTest {
 					i = 30;
 				}
 			}
-			assertEquals(true, callback.lastMessage != null);
+			Assert.assertEquals(true, callback.lastMessage != null);
 			callback.lastMessage = null;
 			for (int i = 0; i < 30; i++) {
 				if (callback.lastMessage == null) {
@@ -180,7 +179,7 @@ public class PrematureDestroyOfServerProcessClientTest {
 			}
 		} catch (Exception e) {
 		}
-		assertEquals(null, callback.lastMessage);
+		Assert.assertEquals(null, callback.lastMessage);
 	}
 
 	private class DemoPublishClientCallback extends SCMessageCallback {

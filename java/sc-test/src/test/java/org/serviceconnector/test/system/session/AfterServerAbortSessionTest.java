@@ -15,13 +15,12 @@
  */
 package org.serviceconnector.test.system.session;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -31,7 +30,6 @@ import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
@@ -173,7 +171,7 @@ public class AfterServerAbortSessionTest {
 		service.send(request, cbk);
 		waitForMessage(10); // will wait max 10 seconds for response
 		response = cbk.response;
-		assertEquals("response is not null", null, response);	//is null because exception was received 
+		Assert.assertEquals("response is not null", null, response);	//is null because exception was received 
 	}
 
 	/**

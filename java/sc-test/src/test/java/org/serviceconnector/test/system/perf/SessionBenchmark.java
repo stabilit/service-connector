@@ -15,13 +15,12 @@
  */
 package org.serviceconnector.test.system.perf;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Arrays;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -118,7 +117,7 @@ public class SessionBenchmark {
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
 		testLogger.info(nr + " Sessions created and deleted performance : " + perf + " sessions/sec.");
-		assertEquals(true, perf > 100);
+		Assert.assertEquals(true, perf > 100);
 	}
 
 	
@@ -153,7 +152,7 @@ public class SessionBenchmark {
 				break;
 			}
 		}
-		assertEquals("sessions not unique", false, duplicates);
+		Assert.assertEquals("sessions not unique", false, duplicates);
 		//delete sessions
 		start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
@@ -165,8 +164,8 @@ public class SessionBenchmark {
 		long perf2 = nr * 1000 / (stop - start);
 		testLogger.info(nr + " Session creation performance : " + perf1 + " sessions/sec.");
 		testLogger.info(nr + " Session deletion performance : " + perf2 + " sessions/sec.");
-		assertEquals(true, perf1 > 100);
-		assertEquals(true, perf2 > 500);
+		Assert.assertEquals(true, perf1 > 100);
+		Assert.assertEquals(true, perf2 > 500);
 		
 	}
 
@@ -180,7 +179,7 @@ public class SessionBenchmark {
 //
 //		testLogger.info("Threads before initializing clients:\t" + threadCount);
 //		testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
-//		assertEquals(true, result < 25000);
+//		Assert.assertEquals(true, result < 25000);
 //	}
 //
 }

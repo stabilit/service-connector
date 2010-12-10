@@ -15,20 +15,16 @@
  */
 package org.serviceconnector.test.system.publish;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.SCMessageFault;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
@@ -116,11 +112,11 @@ public class SubscribeClientTest {
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		assertNotNull("the session ID is null", service.getSessionId());
-		//assertEquals("message is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-		assertEquals("messageInfo is not the same", subMsgRequest.getSessionInfo(), subMsgResponse.getSessionInfo());
-//		assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-		assertEquals("fault is not the same", subMsgRequest.isFault(), subMsgResponse.isFault());
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		//Assert.assertEquals("message is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("messageInfo is not the same", subMsgRequest.getSessionInfo(), subMsgResponse.getSessionInfo());
+//		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+		Assert.assertEquals("fault is not the same", subMsgRequest.isFault(), subMsgResponse.isFault());
 
 		service.unsubscribe();
 		assertNull("the session ID is NOT null after deleteSession()", service.getSessionId());
@@ -129,49 +125,49 @@ public class SubscribeClientTest {
 //	@Test
 //	public void getSessionId_fromNewlyCreatedPublishService_emptySessionId() throws Exception {
 //		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		assertEquals(null, service.getSessionId());
+//		Assert.assertEquals(null, service.getSessionId());
 //	}
 //
 //	@Test
 //	public void isSubscribed_serviceNameEmpty_false() throws Exception {
 //		SCPublishService service = client.newPublishService("");
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
 //	public void isSubscribed_serviceNameWhiteSpace_false() throws Exception {
 //		SCPublishService service = client.newPublishService(" ");
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
 //	public void isSubscribed_serviceNameSingleChar_false() throws Exception {
 //		SCPublishService service = client.newPublishService("a");
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
 //	public void isSubscribed_serviceNameNotExisting_false() throws Exception {
 //		SCPublishService service = client.newPublishService("notExistingService");
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
 //	public void isSubscribed_serviceNameSessionService_false() throws Exception {
 //		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
 //	public void isSubscribed_serviceNameDisabled_false() throws Exception {
 //		SCPublishService service = client.newPublishService(TestConstants.sesServiceName1);
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
 //	public void isSubscribed_fromNewlyCreatedPublishService_false() throws Exception {
 //		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -185,8 +181,8 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -200,8 +196,8 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -215,8 +211,8 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -230,8 +226,8 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -245,8 +241,8 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -260,8 +256,8 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	// TODO FJU why returns % sign in mask InvalidParameterException instead of
@@ -277,8 +273,8 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -292,8 +288,8 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -307,9 +303,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -323,9 +319,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -339,9 +335,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -355,9 +351,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -371,9 +367,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -387,9 +383,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -404,9 +400,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -420,9 +416,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -436,9 +432,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -452,9 +448,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -468,9 +464,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -484,9 +480,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -500,9 +496,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -516,9 +512,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -533,9 +529,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -549,9 +545,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -565,9 +561,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -581,9 +577,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -597,9 +593,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -613,9 +609,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -629,9 +625,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -645,9 +641,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -661,9 +657,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -677,9 +673,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCServiceException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCServiceException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -693,9 +689,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -709,9 +705,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -721,8 +717,8 @@ public class SubscribeClientTest {
 //		subscibeMessage.setMask("a");
 //		subscibeMessage.setSessionInfo("sessionInfo");
 //		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(true, service.isSubscribed());
+//		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 //		service.unsubscribe();
 //	}
 //
@@ -733,8 +729,8 @@ public class SubscribeClientTest {
 //		subscibeMessage.setMask(TestConstants.mask);
 //		subscibeMessage.setSessionInfo(" ");
 //		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(true, service.isSubscribed());
+//		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 //		service.unsubscribe();
 //	}
 //
@@ -745,8 +741,8 @@ public class SubscribeClientTest {
 //		subscibeMessage.setMask(TestConstants.stringLength256);
 //		subscibeMessage.setSessionInfo("sessionInfo");
 //		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(true, service.isSubscribed());
+//		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 //		service.unsubscribe();
 //	}
 //
@@ -761,9 +757,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -777,9 +773,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -789,8 +785,8 @@ public class SubscribeClientTest {
 //		subscibeMessage.setMask(TestConstants.mask);
 //		subscibeMessage.setSessionInfo("sessionInfo");
 //		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(true, service.isSubscribed());
+//		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 //		service.unsubscribe();
 //	}
 //
@@ -801,8 +797,8 @@ public class SubscribeClientTest {
 //		subscibeMessage.setMask(TestConstants.mask);
 //		subscibeMessage.setSessionInfo("a");
 //		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(true, service.isSubscribed());
+//		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 //		service.unsubscribe();
 //	}
 //
@@ -813,8 +809,8 @@ public class SubscribeClientTest {
 //		subscibeMessage.setMask(TestConstants.mask);
 //		subscibeMessage.setSessionInfo(TestConstants.pangram);
 //		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(true, service.isSubscribed());
+//		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 //		service.unsubscribe();
 //	}
 //
@@ -825,8 +821,8 @@ public class SubscribeClientTest {
 //		subscibeMessage.setMask(TestConstants.stringLength256);
 //		subscibeMessage.setSessionInfo("sessionInfo");
 //		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(true, service.isSubscribed());
+//		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 //		service.unsubscribe();
 //	}
 //
@@ -841,9 +837,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -858,9 +854,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -875,9 +871,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -888,8 +884,8 @@ public class SubscribeClientTest {
 //		subscibeMessage.setSessionInfo("sessionInfo");
 //		subscibeMessage.setNoDataIntervalInSeconds(1);
 //		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(true, service.isSubscribed());
+//		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 //		service.unsubscribe();
 //	}
 //
@@ -901,8 +897,8 @@ public class SubscribeClientTest {
 //		subscibeMessage.setSessionInfo("sessionInfo");
 //		subscibeMessage.setNoDataIntervalInSeconds(3600);
 //		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(true, service.isSubscribed());
+//		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 //		service.unsubscribe();
 //	}
 //
@@ -918,9 +914,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -935,9 +931,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -951,9 +947,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof InvalidParameterException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof InvalidParameterException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -967,9 +963,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -983,9 +979,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	// this might sometimes fail with timeout
@@ -998,13 +994,13 @@ public class SubscribeClientTest {
 //			subscibeMessage.setSessionInfo("sessionInfo");
 //			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
 //		} catch (Exception e) {
-//			assertEquals(true, e.getMessage().toLowerCase().contains("timeout"));
-//			assertEquals(false, service.isSubscribed());
-//			assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//			Assert.assertEquals(true, e.getMessage().toLowerCase().contains("timeout"));
+//			Assert.assertEquals(false, service.isSubscribed());
+//			Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
 //			return;
 //		}
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(true, service.isSubscribed());
+//		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 //		service.unsubscribe();
 //	}
 //
@@ -1015,8 +1011,8 @@ public class SubscribeClientTest {
 //		subscibeMessage.setMask(TestConstants.mask);
 //		subscibeMessage.setSessionInfo("sessionInfo");
 //		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-//		assertEquals(true, service.isSubscribed());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(true, service.isSubscribed());
+//		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
 //		service.unsubscribe();
 //	}
 //
@@ -1031,9 +1027,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -1047,9 +1043,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -1063,9 +1059,9 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex instanceof SCMPValidatorException);
-//		assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(false, service.isSubscribed());
+//		Assert.assertEquals(true, ex instanceof SCMPValidatorException);
+//		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(false, service.isSubscribed());
 //	}
 //
 //	@Test
@@ -1080,10 +1076,10 @@ public class SubscribeClientTest {
 //		} catch (Exception e) {
 //			ex = e;
 //		}
-//		assertEquals(true, ex.getMessage().equals("already subscribed"));
-//		assertEquals(SCServiceException.class, ex.getClass());
-//		assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-//		assertEquals(true, service.isSubscribed());
+//		Assert.assertEquals(true, ex.getMessage().equals("already subscribed"));
+//		Assert.assertEquals(SCServiceException.class, ex.getClass());
+//		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
+//		Assert.assertEquals(true, service.isSubscribed());
 //	}
 
 	private class MsgCallback extends SCMessageCallback {

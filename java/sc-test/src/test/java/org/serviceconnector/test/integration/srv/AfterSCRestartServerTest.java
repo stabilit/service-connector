@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.integration.srv;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -76,7 +75,7 @@ public class AfterSCRestartServerTest {
 			ctrl.stopSC(scCtx);
 		} catch (Exception e) {}
 		scCtx = null;
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
+//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
@@ -95,7 +94,7 @@ public class AfterSCRestartServerTest {
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.startListener();
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 	}
 
 	/**
@@ -106,11 +105,11 @@ public class AfterSCRestartServerTest {
 	public void t102_stopListener() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.stopListener();
-		assertEquals("SessionServer is registered", false, server.isListening());
+		Assert.assertEquals("SessionServer is registered", false, server.isListening());
 	}
 
 	/**
@@ -124,11 +123,11 @@ public class AfterSCRestartServerTest {
 		server.setImmediateConnect(true);
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -142,11 +141,11 @@ public class AfterSCRestartServerTest {
 		server.setImmediateConnect(false);
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -157,15 +156,15 @@ public class AfterSCRestartServerTest {
 	public void t105_deregister() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		sessionServer.deregister();
-		assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
 	}
 
 	/**
@@ -178,7 +177,7 @@ public class AfterSCRestartServerTest {
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.startListener();
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 	}
 
 	/**
@@ -189,11 +188,11 @@ public class AfterSCRestartServerTest {
 	public void t202_stopListener() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.stopListener();
-		assertEquals("SessionServer is registered", false, server.isListening());
+		Assert.assertEquals("SessionServer is registered", false, server.isListening());
 	}
 
 	/**
@@ -207,11 +206,11 @@ public class AfterSCRestartServerTest {
 		server.setImmediateConnect(true);
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -225,11 +224,11 @@ public class AfterSCRestartServerTest {
 		server.setImmediateConnect(false);
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -240,15 +239,15 @@ public class AfterSCRestartServerTest {
 	public void t205_deregister() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		assertEquals("SessionServer is not registered", true, server.isListening());
+		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		sessionServer.deregister();
-		assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
 	}
 	
 	private class CallBack extends SCSessionServerCallback {

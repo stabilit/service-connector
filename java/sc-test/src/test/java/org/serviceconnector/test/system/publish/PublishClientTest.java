@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.system.publish;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -103,10 +102,10 @@ public class PublishClientTest {
 
 		service.unsubscribe();
 
-		assertEquals(1, callback.getMessageCounter());
-		assertEquals(true, callback.getLastMessage().getData().toString().startsWith("publish message nr "));
-		assertEquals(null, callback.getLastMessage().getMessageInfo());
-		assertEquals(false, callback.getLastMessage().getSessionId() == null
+		Assert.assertEquals(1, callback.getMessageCounter());
+		Assert.assertEquals(true, callback.getLastMessage().getData().toString().startsWith("publish message nr "));
+		Assert.assertEquals(null, callback.getLastMessage().getMessageInfo());
+		Assert.assertEquals(false, callback.getLastMessage().getSessionId() == null
 				|| callback.getLastMessage().getSessionId().equals(""));
 	}
 
@@ -137,15 +136,15 @@ public class PublishClientTest {
 
 		service.unsubscribe();
 
-		assertEquals(2, callback.getMessageCounter());
-		assertEquals(true, firstMessage.getData().toString().startsWith("publish message nr "));
-		assertEquals(true, callback.getLastMessage().getData().toString().startsWith("publish message nr "));
-		assertEquals(Integer.parseInt(firstMessage.getData().toString().split(" ")[3]) + 1, Integer.parseInt(callback
+		Assert.assertEquals(2, callback.getMessageCounter());
+		Assert.assertEquals(true, firstMessage.getData().toString().startsWith("publish message nr "));
+		Assert.assertEquals(true, callback.getLastMessage().getData().toString().startsWith("publish message nr "));
+		Assert.assertEquals(Integer.parseInt(firstMessage.getData().toString().split(" ")[3]) + 1, Integer.parseInt(callback
 				.getLastMessage().getData().toString().split(" ")[3]));
-		assertEquals(null, firstMessage.getMessageInfo());
-		assertEquals(null, callback.getLastMessage().getMessageInfo());
-		assertEquals(false, firstMessage.getSessionId() == null || callback.getLastMessage().getSessionId().equals(""));
-		assertEquals(false, firstMessage.getSessionId() == null || callback.getLastMessage().getSessionId().equals(""));
+		Assert.assertEquals(null, firstMessage.getMessageInfo());
+		Assert.assertEquals(null, callback.getLastMessage().getMessageInfo());
+		Assert.assertEquals(false, firstMessage.getSessionId() == null || callback.getLastMessage().getSessionId().equals(""));
+		Assert.assertEquals(false, firstMessage.getSessionId() == null || callback.getLastMessage().getSessionId().equals(""));
 	}
 
 	@Test
@@ -171,12 +170,12 @@ public class PublishClientTest {
 				newMessage = callback.getLastMessage();
 				counter++;
 				if (counter > 1) {
-					assertEquals(Integer.parseInt(previousMessage.getData().toString().split(" ")[3]) + 1, Integer
+					Assert.assertEquals(Integer.parseInt(previousMessage.getData().toString().split(" ")[3]) + 1, Integer
 							.parseInt(newMessage.getData().toString().split(" ")[3]));
 				}
 			}
 		}
-		assertEquals("recieved messages", 20, counter);
+		Assert.assertEquals("recieved messages", 20, counter);
 	}
 
 	private class DemoPublishClientCallback extends SCMessageCallback {

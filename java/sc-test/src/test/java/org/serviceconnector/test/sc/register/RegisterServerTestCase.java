@@ -157,11 +157,11 @@ public class RegisterServerTestCase extends SuperTestCase {
 		// TODO this will not work if configuration is changed
 		String expectedScEntry = "sc2-session-2:0|sc1-session-1:0|session-1:0 - session-1_localhost/:30000 : 10 - session-1_localhost/:41000 : 10 - session-1_localhost/:42000 : 1|sc1-publish-1:0|publish-2:0|sc2-publish-2:0|file-1:file-1:ENABLED:file|session-2:0|publish-1:0 - publish-1_localhost/:51000 : 1 - publish-1_localhost/:51000 : 10|";
 		String scEntry = inspectMap.get("serviceRegistry");
-		//SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
+		//SCTest.Assert.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 		// TODO this will not work if configuration is changed
 		expectedScEntry = "session-1_localhost/:session-1_localhost/:42000 : 1|session-1_localhost/:session-1_localhost/:41000 : 10|session-1_localhost/:session-1_localhost/:30000 : 10|publish-1_localhost/:publish-1_localhost/:51000 : 1|fileServer:fileServer:80|publish-1_localhost/:publish-1_localhost/:51000 : 10|";
 		scEntry = (String) inspectMap.get("serverRegistry");
-//		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
+//		SCTest.Assert.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 				.newInstance(req, "publish-1");
@@ -176,7 +176,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		inspectMap = SCTest.convertInspectStringToMap(inspectMsg);
 		expectedScEntry = "session-1_localhost/:session-1_localhost/:30000 : 10|publish-1_localhost/:publish-1_localhost/:51000 : 1|fileServer:fileServer:80|";
 		scEntry = (String) inspectMap.get("serverRegistry");
-//		SCTest.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
+//		SCTest.Assert.assertEqualsUnorderedStringIgnorePorts(expectedScEntry, scEntry);
 	}
 
 	protected class TestRegisterServerCallback extends SynchronousCallback {

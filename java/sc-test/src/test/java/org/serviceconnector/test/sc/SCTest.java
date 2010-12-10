@@ -131,7 +131,7 @@ public class SCTest {
 		return map;
 	}
 
-	public static void assertEqualsUnorderedStringIgnorePorts(String expected, String actual) {
+	public static void Assert.assertEqualsUnorderedStringIgnorePorts(String expected, String actual) {
 		// actual = actual.replaceAll("127.0.0.1/", "localhost/");
 		actual = actual.replaceAll("localhost/\\d*:", "localhost/:");
 

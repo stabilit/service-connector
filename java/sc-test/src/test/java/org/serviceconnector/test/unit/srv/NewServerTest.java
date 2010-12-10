@@ -15,11 +15,9 @@
  */
 package org.serviceconnector.test.unit.srv;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
@@ -61,7 +59,7 @@ public class NewServerTest {
 	@Test
 	public void t01_SessionServer() throws Exception {
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		assertNotNull("Can not create SessionServer!", sessionServer);
+		Assert.assertNotNull("Can not create SessionServer!", sessionServer);
 	}
 
 	/**
@@ -71,7 +69,7 @@ public class NewServerTest {
 	@Test
 	public void t02_SessionServer() throws Exception {
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		assertNotNull("No SessionServer", sessionServer);
+		Assert.assertNotNull("No SessionServer", sessionServer);
 	}
 
 	/**
@@ -81,9 +79,9 @@ public class NewServerTest {
 	@Test
 	public void t03_ServerHostPort() throws Exception {
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		assertNotNull("Can not create SessionServer!", sessionServer);
-		assertEquals("SessionServer Host", TestConstants.HOST, sessionServer.getListenerInterfaces());
-		assertEquals("SessionServer Port", TestConstants.PORT_LISTENER, sessionServer.getListenerPort());
+		Assert.assertNotNull("Can not create SessionServer!", sessionServer);
+		Assert.assertEquals("SessionServer Host", TestConstants.HOST, sessionServer.getListenerInterfaces());
+		Assert.assertEquals("SessionServer Port", TestConstants.PORT_LISTENER, sessionServer.getListenerPort());
 	}	
 
 	/**
@@ -93,9 +91,9 @@ public class NewServerTest {
 	@Test
 	public void t04_SCHostPort() throws Exception  {
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		assertNotNull("Can not create SessionServer!", sessionServer);
-		assertEquals("SC Host", TestConstants.HOST, sessionServer.getSCHost());
-		assertEquals("SC Port", TestConstants.PORT_TCP, sessionServer.getSCPort());
+		Assert.assertNotNull("Can not create SessionServer!", sessionServer);
+		Assert.assertEquals("SC Host", TestConstants.HOST, sessionServer.getSCHost());
+		Assert.assertEquals("SC Port", TestConstants.PORT_TCP, sessionServer.getSCPort());
 	}
 	
 	/**
@@ -105,7 +103,7 @@ public class NewServerTest {
 	@Test
 	public void t21_PublishServer() throws Exception {
 		SCPublishServer publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		assertNotNull("Can not create PublishServer!", publishServer);
+		Assert.assertNotNull("Can not create PublishServer!", publishServer);
 	}
 
 	/**
@@ -115,7 +113,7 @@ public class NewServerTest {
 	@Test
 	public void t22_PublishServer() throws Exception {
 		SCPublishServer publishServer = server.newPublishServer(TestConstants.sesServiceName1);
-		assertNotNull("No PublishServer", publishServer);
+		Assert.assertNotNull("No PublishServer", publishServer);
 	}
 
 	/**
@@ -125,9 +123,9 @@ public class NewServerTest {
 	@Test
 	public void t23_ServerHostPort() throws Exception {
 		SCPublishServer publishServer = server.newPublishServer(TestConstants.sesServiceName1);
-		assertNotNull("Can not create PublishServer!", publishServer);
-		assertEquals("PublishServer Host", TestConstants.HOST, publishServer.getListenerInterfaces());
-		assertEquals("PublishServer Port", TestConstants.PORT_LISTENER, publishServer.getListenerPort());
+		Assert.assertNotNull("Can not create PublishServer!", publishServer);
+		Assert.assertEquals("PublishServer Host", TestConstants.HOST, publishServer.getListenerInterfaces());
+		Assert.assertEquals("PublishServer Port", TestConstants.PORT_LISTENER, publishServer.getListenerPort());
 	}	
 
 	/**
@@ -137,9 +135,9 @@ public class NewServerTest {
 	@Test
 	public void t24_SCHostPort() throws Exception  {
 		SCPublishServer publishServer = server.newPublishServer(TestConstants.sesServiceName1);
-		assertNotNull("Can not create PublishServer!", publishServer);
-		assertEquals("SC Host", TestConstants.HOST, publishServer.getSCHost());
-		assertEquals("SC Port", TestConstants.PORT_TCP, publishServer.getSCPort());
+		Assert.assertNotNull("Can not create PublishServer!", publishServer);
+		Assert.assertEquals("SC Host", TestConstants.HOST, publishServer.getSCHost());
+		Assert.assertEquals("SC Port", TestConstants.PORT_TCP, publishServer.getSCPort());
 	}		
 
 	

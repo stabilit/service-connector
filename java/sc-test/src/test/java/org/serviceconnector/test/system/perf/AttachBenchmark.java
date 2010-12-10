@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.system.perf;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -85,16 +84,16 @@ public class AttachBenchmark {
 			if (((i + 1) % 200) == 0)
 				testLogger.info("Attach/detach nr. " + (i + 1) + "...");
 			client.attach();
-			assertEquals("Client is attached", true, client.isAttached());
+			Assert.assertEquals("Client is attached", true, client.isAttached());
 			if (sleep > 0)
 				Thread.sleep(sleep);
 			client.detach();
-			assertEquals("Client is detached", false, client.isAttached());
+			Assert.assertEquals("Client is detached", false, client.isAttached());
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
 		testLogger.info(nr + "attach/detach performance : " + perf + " cycles/sec.");
-		assertEquals(true, perf > 50);
+		Assert.assertEquals(true, perf > 50);
 	}
 
 	/**
@@ -111,16 +110,16 @@ public class AttachBenchmark {
 			if (((i + 1) % 200) == 0)
 				testLogger.info("Attach/detach nr. " + (i + 1) + "...");
 			client.attach();
-			assertEquals("Client is attached", true, client.isAttached());
+			Assert.assertEquals("Client is attached", true, client.isAttached());
 			if (sleep > 0)
 				Thread.sleep(sleep);
 			client.detach();
-			assertEquals("Client is detached", false, client.isAttached());
+			Assert.assertEquals("Client is detached", false, client.isAttached());
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
 		testLogger.info(nr + "attach/detach performance : " + perf + " cycles/sec.");
-		assertEquals(true, perf > 50);
+		Assert.assertEquals(true, perf > 50);
 	}
 
 
@@ -141,18 +140,18 @@ public class AttachBenchmark {
 		for (int i= 0; i < nr; i++) {
 			if (((i+1) % 200) == 0) testLogger.info("Attaching client nr. " + (i+1) );
 			clients[i].attach();
-			assertEquals("Client is not attached", true, clients[i].isAttached());
+			Assert.assertEquals("Client is not attached", true, clients[i].isAttached());
 		}
 		//detach
 		for (int i = 0; i < nr; i++) {
 			if (((i+1) % 200) == 0) testLogger.info("Detaching client nr. " + (i+1) + "...");
 			clients[i].detach();
-			assertEquals("Client is attached", false, clients[i].isAttached());
+			Assert.assertEquals("Client is attached", false, clients[i].isAttached());
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
 		testLogger.info(nr + "attach/detach performance : " + perf + " cycles/sec.");
-		assertEquals(true, perf > 100);
+		Assert.assertEquals(true, perf > 100);
 		clients = null;
 	}
 
@@ -173,18 +172,18 @@ public class AttachBenchmark {
 		for (int i= 0; i < nr; i++) {
 			if (((i+1) % 200) == 0) testLogger.info("Attaching client nr. " + (i+1) );
 			clients[i].attach();
-			assertEquals("Client is not attached", true, clients[i].isAttached());
+			Assert.assertEquals("Client is not attached", true, clients[i].isAttached());
 		}
 		//detach
 		for (int i = 0; i < nr; i++) {
 			if (((i+1) % 200) == 0) testLogger.info("Detaching client nr. " + (i+1) + "...");
 			clients[i].detach();
-			assertEquals("Client is attached", false, clients[i].isAttached());
+			Assert.assertEquals("Client is attached", false, clients[i].isAttached());
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
 		testLogger.info(nr + "attach/detach performance : " + perf + " cycles/sec.");
-		assertEquals(true, perf > 100);
+		Assert.assertEquals(true, perf > 100);
 		clients = null;
 	}
 }

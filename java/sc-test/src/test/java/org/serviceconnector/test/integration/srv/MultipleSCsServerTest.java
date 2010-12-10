@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.integration.srv;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -82,7 +81,7 @@ public class MultipleSCsServerTest {
 		} catch (Exception e) {
 		}
 		server2 = null;
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
+//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
@@ -116,30 +115,30 @@ public class MultipleSCsServerTest {
 	public void t01_registerDeregister() throws Exception {
 		server1 = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server1.startListener();
-		assertEquals("SessionServer is not listening", true, server1.isListening());
+		Assert.assertEquals("SessionServer is not listening", true, server1.isListening());
 		sessionServer1 = server1.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk1 = new CallBack(sessionServer1);
 		sessionServer1.register(1, 1, cbk1);
-		assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
 		server2 = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER+1, ConnectionType.NETTY_TCP); 
 		server2.startListener();
-		assertEquals("SessionServer is not listening", true, server2.isListening());
+		Assert.assertEquals("SessionServer is not listening", true, server2.isListening());
 		sessionServer2 = server2.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk2 = new CallBack(sessionServer2);
 		sessionServer2.register(1, 1, cbk2);
-		assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
 		sessionServer1.deregister();
-		assertEquals("SessionServer is registered", false, sessionServer1.isRegistered());
+		Assert.assertEquals("SessionServer is registered", false, sessionServer1.isRegistered());
 		server1.stopListener();
-		assertEquals("SessionServer is listening", false, server1.isListening());
+		Assert.assertEquals("SessionServer is listening", false, server1.isListening());
 		server1.destroy();
 		
 		sessionServer2.deregister();
-		assertEquals("SessionServer is registered", false, sessionServer2.isRegistered());
+		Assert.assertEquals("SessionServer is registered", false, sessionServer2.isRegistered());
 		server2.stopListener();
-		assertEquals("SessionServer is listening", false, server2.isListening());
+		Assert.assertEquals("SessionServer is listening", false, server2.isListening());
 		server2.destroy();
 	}
 
@@ -159,30 +158,30 @@ public class MultipleSCsServerTest {
 	public void t02_registerDeregister() throws Exception {
 		server1 = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server1.startListener();
-		assertEquals("SessionServer is not listening", true, server1.isListening());
+		Assert.assertEquals("SessionServer is not listening", true, server1.isListening());
 		sessionServer1 = server1.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk1 = new CallBack(sessionServer1);
 		sessionServer1.register(1, 1, cbk1);
-		assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
 		server2 = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER+1, ConnectionType.NETTY_HTTP); 
 		server2.startListener();
-		assertEquals("SessionServer is not listening", true, server2.isListening());
+		Assert.assertEquals("SessionServer is not listening", true, server2.isListening());
 		sessionServer2 = server2.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk2 = new CallBack(sessionServer2);
 		sessionServer2.register(1, 1, cbk2);
-		assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
 		sessionServer1.deregister();
-		assertEquals("SessionServer is registered", false, sessionServer1.isRegistered());
+		Assert.assertEquals("SessionServer is registered", false, sessionServer1.isRegistered());
 		server1.stopListener();
-		assertEquals("SessionServer is listening", false, server1.isListening());
+		Assert.assertEquals("SessionServer is listening", false, server1.isListening());
 		server1.destroy();
 		
 		sessionServer2.deregister();
-		assertEquals("SessionServer is registered", false, sessionServer2.isRegistered());
+		Assert.assertEquals("SessionServer is registered", false, sessionServer2.isRegistered());
 		server2.stopListener();
-		assertEquals("SessionServer is listening", false, server2.isListening());
+		Assert.assertEquals("SessionServer is listening", false, server2.isListening());
 		server2.destroy();
 	}
 
@@ -202,30 +201,30 @@ public class MultipleSCsServerTest {
 	public void t03_registerDeregister() throws Exception {
 		server1 = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server1.startListener();
-		assertEquals("SessionServer is not listening", true, server1.isListening());
+		Assert.assertEquals("SessionServer is not listening", true, server1.isListening());
 		sessionServer1 = server1.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk1 = new CallBack(sessionServer1);
 		sessionServer1.register(1, 1, cbk1);
-		assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
 		server2 = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER+1, ConnectionType.NETTY_HTTP); 
 		server2.startListener();
-		assertEquals("SessionServer is not listening", true, server2.isListening());
+		Assert.assertEquals("SessionServer is not listening", true, server2.isListening());
 		sessionServer2 = server2.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk2 = new CallBack(sessionServer2);
 		sessionServer2.register(1, 1, cbk2);
-		assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
 		sessionServer1.deregister();
-		assertEquals("SessionServer is registered", false, sessionServer1.isRegistered());
+		Assert.assertEquals("SessionServer is registered", false, sessionServer1.isRegistered());
 		server1.stopListener();
-		assertEquals("SessionServer is listening", false, server1.isListening());
+		Assert.assertEquals("SessionServer is listening", false, server1.isListening());
 		server1.destroy();
 		
 		sessionServer2.deregister();
-		assertEquals("SessionServer is registered", false, sessionServer2.isRegistered());
+		Assert.assertEquals("SessionServer is registered", false, sessionServer2.isRegistered());
 		server2.stopListener();
-		assertEquals("SessionServer is listening", false, server2.isListening());
+		Assert.assertEquals("SessionServer is listening", false, server2.isListening());
 		server2.destroy();
 	}
 

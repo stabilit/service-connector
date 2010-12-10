@@ -15,8 +15,6 @@
  */
 package org.serviceconnector.test.integration.srv;
 
-import static org.junit.Assert.assertEquals;
-
 import java.security.InvalidParameterException;
 
 import javax.activity.InvalidActivityException;
@@ -24,6 +22,7 @@ import javax.activity.InvalidActivityException;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -78,7 +77,7 @@ public class RegisterSessionServerTest {
 		} catch (Exception e) {}
 
 		server = null;
-//		assertEquals("number of threads", threadCount, Thread.activeCount());
+//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
 	}
 
@@ -102,7 +101,7 @@ public class RegisterSessionServerTest {
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -175,7 +174,7 @@ public class RegisterSessionServerTest {
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 
@@ -190,7 +189,7 @@ public class RegisterSessionServerTest {
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(10, 10, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -300,11 +299,11 @@ public class RegisterSessionServerTest {
 		for (int i = 0; i < nr; i++) {
 			if (((i+1) % 100) == 0) testLogger.info("Register/deregister nr. " + (i+1) + "...");
 			sessionServer.register(1, 1, cbk);
-			assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+			Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 			if (sleep > 0) 
 				Thread.sleep(sleep);
 			sessionServer.deregister();
-			assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
+			Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
 		}
 	}
 
@@ -319,12 +318,12 @@ public class RegisterSessionServerTest {
 		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk1 = new CallBack(sessionServer1);
 		sessionServer1.register(1, 1, cbk1);
-		assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
 		SCSessionServer sessionServer2 = server.newSessionServer(TestConstants.sesServiceName2);
 		SCSessionServerCallback cbk2 = new CallBack(sessionServer2);
 		sessionServer2.register(1, 1, cbk2);
-		assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
 		sessionServer1.deregister();
 		sessionServer2.deregister();
@@ -341,11 +340,11 @@ public class RegisterSessionServerTest {
 		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer1);
 		sessionServer1.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
 		SCSessionServer sessionServer2 = server.newSessionServer(TestConstants.sesServiceName2);
 		sessionServer2.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
 		sessionServer1.deregister();
 		sessionServer2.deregister();
@@ -363,7 +362,7 @@ public class RegisterSessionServerTest {
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -436,7 +435,7 @@ public class RegisterSessionServerTest {
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 
@@ -451,7 +450,7 @@ public class RegisterSessionServerTest {
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
 		sessionServer.register(10, 10, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -562,11 +561,11 @@ public class RegisterSessionServerTest {
 		for (int i = 0; i < nr; i++) {
 			if (((i+1) % 100) == 0) testLogger.info("Register/deregister nr. " + (i+1) + "...");
 			sessionServer.register(1, 1, cbk);
-			assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+			Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 			if (sleep > 0) 
 				Thread.sleep(sleep);
 			sessionServer.deregister();
-			assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
+			Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
 		}
 	}
 
@@ -581,12 +580,12 @@ public class RegisterSessionServerTest {
 		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk1 = new CallBack(sessionServer1);
 		sessionServer1.register(1, 1, cbk1);
-		assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
 		SCSessionServer sessionServer2 = server.newSessionServer(TestConstants.sesServiceName2);
 		SCSessionServerCallback cbk2 = new CallBack(sessionServer2);
 		sessionServer2.register(1, 1, cbk2);
-		assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
 		sessionServer1.deregister();
 		sessionServer2.deregister();
@@ -603,11 +602,11 @@ public class RegisterSessionServerTest {
 		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer1);
 		sessionServer1.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
 		SCSessionServer sessionServer2 = server.newSessionServer(TestConstants.sesServiceName2);
 		sessionServer2.register(1, 1, cbk);
-		assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
 		sessionServer1.deregister();
 		sessionServer2.deregister();

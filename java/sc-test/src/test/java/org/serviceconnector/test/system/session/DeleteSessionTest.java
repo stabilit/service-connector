@@ -15,11 +15,10 @@
  */
 package org.serviceconnector.test.system.session;
 
-import static org.junit.Assert.assertNotNull;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -139,7 +138,7 @@ public class DeleteSessionTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
 		service.deleteSession();
 		service.deleteSession();
 	}
