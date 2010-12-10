@@ -29,13 +29,17 @@
 */
 /* PUT data in stdin Stream */
 $putdata = fopen("php://input","r");
-$fileName = "myputfile.txt";
-$service = "anonymous";
+$fileName = "";	// no default
+$service = "";	// no default
 if ($_REQUEST['name']) {
 	$fileName = $_REQUEST['name']; 
+} else {
+	// ???
 }
 if ($_REQUEST['service']) {
 	$service = $_REQUEST['service']; 
+} else {
+	// ???
 }
 
 /* Open file to write */
