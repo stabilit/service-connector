@@ -28,12 +28,13 @@ import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCPublishService;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.service.SCServiceException;
 
 @SuppressWarnings("unused")
@@ -99,258 +100,240 @@ public class ChangeSubscriptionTest {
 		ctrl = null;
 	}
 
-	// TODO FJU in most of these tests is needed assertion of the changed mask
+	/**
+	 * Description: change subscription (regular)<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void changeSubscription_serviceNameEmptyNotEstablishedPreviousSubscription_throwsSCException()
-			throws Exception {
-		SCPublishService service = client.newPublishService("");
+	public void t01_changeSubscription() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+
+		subMsgRequest.setMask(TestConstants.mask1);
+		subMsgResponse = service.changeSubscription(subMsgRequest);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+
+		service.unsubscribe();
+		Assert.assertNull("the session ID is not null", service.getSessionId());
+	}
+
+	/**
+	 * Description: change subscription with mask = null<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t02_changeSubscription() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+
+		subMsgRequest.setMask(null);
+		subMsgResponse = service.changeSubscription(subMsgRequest);
+	}
+
+	/**
+	 * Description: change subscription without subscribing<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t03_changeSubscription() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		subMsgResponse = service.changeSubscription(subMsgRequest);
+	}
+	
+
+	/**
+	 * Description: change subscription after unsubscribe<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t04_changeSubscription() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+
+		service.unsubscribe();
+		Assert.assertNull("the session ID is not null", service.getSessionId());
+		
+		subMsgRequest.setMask(TestConstants.mask1);
+		subMsgResponse = service.changeSubscription(subMsgRequest);
+	}
+
+	/**
+	 * Description: change subscription with the same mask<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t05_changeSubscription() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgResponse = service.changeSubscription(subMsgRequest);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+
+		service.unsubscribe();
+		Assert.assertNull("the session ID is not null", service.getSessionId());
+	}
+
+	
+	/**
+	 * Description: change subscription to disabed service<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t20_disabledService() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+
+		// disable service
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		clientMgmt.attach();
+		clientMgmt.disableService(TestConstants.pubServiceName1);
+		clientMgmt.detach();
+		
+		subMsgRequest.setMask(TestConstants.mask1);
+		subMsgResponse = service.changeSubscription(subMsgRequest);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+
+		service.unsubscribe();
+		Assert.assertNull("the session ID is not null", service.getSessionId());
+	}
+
+	/**
+	 * Description: reject subscription by server <br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class )
+	public void t50_reject() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+
+		subMsgRequest.setMask(TestConstants.mask1);
+		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
+		subMsgResponse = service.changeSubscription(subMsgRequest);
+	}
+	
+	/**
+	 * Description: reject subscription by server<br>
+	 * Expectation: passes 
+	 */
+	@Test
+	public void t51_reject() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+
+		subMsgRequest.setMask(TestConstants.mask1);
+		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
+
+		Boolean passed = false;
 		try {
-			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-			subscibeMessage.setMask(TestConstants.mask);
-			service.changeSubscription(subscibeMessage);
-		} catch (Exception e) {
-			ex = e;
-		} finally {
-			Assert.assertEquals(SCServiceException.class, ex.getClass());
-			Assert.assertEquals(null, service.getSessionId());
-			Assert.assertEquals(false, service.isSubscribed());
+			subMsgResponse = service.changeSubscription(subMsgRequest);
+		} catch (SCServiceException e) {
+			passed = true;
+			Assert.assertEquals("is not appErrorCode", 4000, e.getAppErrorCode());
+			Assert.assertEquals("is not appErrorText", false, e.getAppErrorText().equals(""));
 		}
-	}
-
-	@Test
-	public void changeSubscription_serviceNameValidNotEstablishedPreviousSubscription_throwsSCException()
-			throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-		try {
-			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-			subscibeMessage.setMask(TestConstants.mask);
-			service.changeSubscription(subscibeMessage);
-		} catch (Exception e) {
-			ex = e;
-		} finally {
-			Assert.assertEquals(SCServiceException.class, ex.getClass());
-			Assert.assertEquals(null, service.getSessionId());
-			Assert.assertEquals(false, service.isSubscribed());
-		}
-	}
-
-	@Test
-	public void changeSubscription_afterUnsubscribed_throwsSCException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-		subscibeMessage.setMask(TestConstants.mask);
-		subscibeMessage.setSessionInfo("sessionInfo");
-		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
+		Assert.assertTrue("did not throw exception", passed);
+		Assert.assertFalse("is subscribed", service.isSubscribed());
 		service.unsubscribe();
-		try {
-			service.changeSubscription(subscibeMessage);
-		} catch (Exception e) {
-			ex = e;
-		} finally {
-			Assert.assertEquals(SCServiceException.class, ex.getClass());
-			Assert.assertEquals(null, service.getSessionId());
-			Assert.assertEquals(false, service.isSubscribed());
-		}
+		Assert.assertNull("the session ID is not null)", service.getSessionId());
 	}
 
-	@Test
-	public void changeSubscription_toTheSameMask_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-		subscibeMessage.setMask(TestConstants.mask);
-		subscibeMessage.setSessionInfo("sessionInfo");
-		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		service.changeSubscription(subscibeMessage);
-		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		Assert.assertEquals(true, service.isSubscribed());
-		service.unsubscribe();
-		Assert.assertEquals(true, service.getSessionId() == null || service.getSessionId().equals(""));
-		Assert.assertEquals(false, service.isSubscribed());
-	}
+	private class MsgCallback extends SCMessageCallback {
+		private SCMessage response = null;
 
-	@Test
-	public void changeSubscription_toMaskNull_throwsValidatorException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-		subscibeMessage.setMask(TestConstants.mask);
-		subscibeMessage.setSessionInfo("sessionInfo");
-		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		try {
-			service.changeSubscription(null);
-		} catch (Exception e) {
-			ex = e;
-		}
-		Assert.assertEquals(SCMPValidatorException.class, ex.getClass());
-		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		Assert.assertEquals(true, service.isSubscribed());
-		service.unsubscribe();
-	}
-
-	@Test
-	public void changeSubscription_toMaskEmpty_throwsValidatorException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-		subscibeMessage.setMask(TestConstants.mask);
-		subscibeMessage.setSessionInfo("sessionInfo");
-		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		try {
-			subscibeMessage.setMask("");
-			service.changeSubscription(subscibeMessage);
-		} catch (Exception e) {
-			ex = e;
-		}
-		Assert.assertEquals(SCMPValidatorException.class, ex.getClass());
-		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		Assert.assertEquals(true, service.isSubscribed());
-		service.unsubscribe();
-	}
-
-	@Test
-	public void changeSubscription_toMaskWhiteSpace_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-		subscibeMessage.setMask(TestConstants.mask);
-		subscibeMessage.setSessionInfo("sessionInfo");
-		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		subscibeMessage.setMask(" ");
-		service.changeSubscription(subscibeMessage);
-		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		Assert.assertEquals(true, service.isSubscribed());
-		service.unsubscribe();
-	}
-
-	@Test
-	public void changeSubscription_toMaskOneChar_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-		subscibeMessage.setMask(TestConstants.mask);
-		subscibeMessage.setSessionInfo("sessionInfo");
-		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		subscibeMessage.setMask("a");
-		service.changeSubscription(subscibeMessage);
-		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		Assert.assertEquals(true, service.isSubscribed());
-		service.unsubscribe();
-	}
-
-	// TODO JOT knows about
-	@Test
-	public void changeSubscription_toMaskPangram_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-		subscibeMessage.setMask(TestConstants.mask);
-		subscibeMessage.setSessionInfo("sessionInfo");
-		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		subscibeMessage.setMask(TestConstants.pangram);
-		service.changeSubscription(subscibeMessage);
-		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		Assert.assertEquals(true, service.isSubscribed());
-		service.unsubscribe();
-	}
-
-	@Test
-	public void changeSubscription_toMask256LongString_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-		subscibeMessage.setMask(TestConstants.mask);
-		subscibeMessage.setSessionInfo("sessionInfo");
-		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		subscibeMessage.setMask(TestConstants.stringLength256);
-		service.changeSubscription(subscibeMessage);
-		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		Assert.assertEquals(true, service.isSubscribed());
-		service.unsubscribe();
-	}
-
-	@Test
-	public void changeSubscription_toMask257LongString_throwsValidatorException() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-		subscibeMessage.setMask(TestConstants.mask);
-		subscibeMessage.setSessionInfo("sessionInfo");
-		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		try {
-			subscibeMessage.setMask(TestConstants.stringLength257);
-			service.changeSubscription(subscibeMessage);
-		} catch (Exception e) {
-			ex = e;
-		}
-		Assert.assertEquals(SCMPValidatorException.class, ex.getClass());
-		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		Assert.assertEquals(true, service.isSubscribed());
-		service.unsubscribe();
-	}
-
-	@Test
-	public void changeSubscription_twice_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-		subscibeMessage.setMask(TestConstants.mask);
-		subscibeMessage.setSessionInfo("sessionInfo");
-		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-
-		service.changeSubscription(subscibeMessage);
-		service.changeSubscription(subscibeMessage);
-
-		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		Assert.assertEquals(true, service.isSubscribed());
-		service.unsubscribe();
-	}
-
-	@Test
-	public void changeSubscription_10000Times_passes() throws Exception {
-		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-		subscibeMessage.setMask(TestConstants.mask);
-		subscibeMessage.setSessionInfo("sessionInfo");
-		service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-		int loop = 10000;
-		for (int i = 0; i < loop; i++) {
-			if ((i % 500) == 0)
-				testLogger.info("changeSubscription_10000Times cycle:\t" + i + " ...");
-			service.changeSubscription(subscibeMessage);
-			Thread.sleep(5); // TODO little sleep required in this Netty version. Known bug, will be fixed soon
-
-		}
-		Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-		Assert.assertEquals(true, service.isSubscribed());
-		service.unsubscribe();
-	}
-
-	// TODO JOT knows about
-	@Test
-	public void subscribeChangeSubscriptionUnsubscribe_10000Times_passes() throws Exception {
-		int loop = 10000;
-		for (int i = 0; i < loop; i++) {
-			if ((i % 500) == 0)
-				testLogger.info("ubscribeChangeSubscriptionUnsubscribe_10000Times cycle:\t" + i + " ...");
-			SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-			SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-			subscibeMessage.setMask(TestConstants.mask);
-			subscibeMessage.setSessionInfo("sessionInfo");
-			service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
-			service.changeSubscription(subscibeMessage);
-			Thread.sleep(5); // TODO little sleep required in this Netty version. Known bug, will be fixed soon
-			Assert.assertEquals(false, service.getSessionId() == null || service.getSessionId().equals(""));
-			Assert.assertEquals(true, service.isSubscribed());
-			service.unsubscribe();
-		}
-	}
-
-	private class DemoPublishClientCallback extends SCMessageCallback {
-
-		public DemoPublishClientCallback(SCService service) {
+		public MsgCallback(SCService service) {
 			super(service);
 		}
 
 		@Override
-		public void receive(SCMessage reply) {
-			logger.info("Publish client received: " + reply.getData());
+		public void receive(SCMessage msg) {
+			response = msg;
+			ChangeSubscriptionTest.messageReceived = true;
 		}
 
 		@Override
 		public void receive(Exception e) {
-			System.err.println(e);
+			logger.error("receive error: " + e.getMessage());
+			if (e instanceof SCServiceException) {
+				SCMPError scError = ((SCServiceException) e).getSCMPError();
+				logger.info("SC error code:" + scError.getErrorCode() + " text:" + scError.getErrorText());
+			}
+			response = null;
+			ChangeSubscriptionTest.messageReceived = true;
 		}
 	}
 }

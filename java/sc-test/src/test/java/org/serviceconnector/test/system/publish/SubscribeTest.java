@@ -111,10 +111,9 @@ public class SubscribeTest {
 	@Test
 	public void t01_subscribe() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
-		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("doNothing");
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
@@ -136,7 +135,6 @@ public class SubscribeTest {
 	@Test (expected = SCServiceException.class)
 	public void t02_subscribe() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
-		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(null);
@@ -281,7 +279,7 @@ public class SubscribeTest {
 		service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("doNothing");
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
@@ -298,7 +296,7 @@ public class SubscribeTest {
 		service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("doNothing");
 		subMsgRequest.setData("certificate or what so ever");
 		MsgCallback cbk = new MsgCallback(service);
@@ -323,7 +321,7 @@ public class SubscribeTest {
 		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("doNothing");
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
@@ -356,7 +354,6 @@ public class SubscribeTest {
 	@Test (expected = SCServiceException.class)
 	public void t41_subscribeTwice() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
-		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(null);
@@ -376,10 +373,9 @@ public class SubscribeTest {
 	@Test (expected = SCServiceException.class )
 	public void t50_reject() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
-		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
@@ -394,21 +390,23 @@ public class SubscribeTest {
 	@Test
 	public void t51_reject() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
-		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
 
+		Boolean passed = false;
 		try {
 			subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		} catch (SCServiceException e) {	
+		} catch (SCServiceException e) {
+			passed = true;
 			Assert.assertEquals("is not appErrorCode", 4000, e.getAppErrorCode());
 			Assert.assertEquals("is not appErrorText", false, e.getAppErrorText().equals(""));
 		}
+		Assert.assertTrue("did not throw exception", passed);
 		Assert.assertFalse("is subscribed", service.isSubscribed());
 		service.unsubscribe();
 		Assert.assertNull("the session ID is not null)", service.getSessionId());

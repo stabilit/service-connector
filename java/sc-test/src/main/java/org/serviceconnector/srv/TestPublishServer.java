@@ -52,8 +52,8 @@ public class TestPublishServer extends TestStatefulServer {
 	 *            [2] SC port<br>
 	 *            [3] maxSessions<br>
 	 *            [4] maxConnections<br>
-	 *            [5] connectionType<br>
-	 *            ("netty.tcp" or "netty.http") [6] serviceNames (comma delimited list)<br>
+	 *            [5] connectionType ("netty.tcp" or "netty.http")<br> 
+	 *            [6] serviceNames (comma delimited list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
 		logger.log(Level.OFF, "TestPublishServer is starting ...");
@@ -127,18 +127,15 @@ public class TestPublishServer extends TestStatefulServer {
 				// watch out for kill server message
 				if (sessionInfo.equals(TestConstants.killServerCmd)) {
 					logger.log(Level.OFF, "Kill request received, exiting ...");
-					response = new SCMessage();
 					try {
 						response.setAppErrorCode(1050);
-						response.setAppErrorText("session rejected - kill server requested!");
+						response.setAppErrorText("kill server requested!");
 					} catch (SCMPValidatorException e) {
 					}
 					KillThread<SCPublishServer> kill = new KillThread<SCPublishServer>(this.scPublishServer);
 					kill.start();
-				}
 				// watch out for reject request
-				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
-					response = new SCMessage();
+				} else if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
 					try {
 						response.setReject(true);
 						response.setAppErrorCode(4000);
@@ -159,20 +156,20 @@ public class TestPublishServer extends TestStatefulServer {
 
 		@Override
 		public SCMessage changeSubscription(SCSubscribeMessage request, int operationTimeoutInMillis) {
-			subscriptionLogger.logChangeSubscribe("publish-1", request.getSessionId(), request.getMask());
 			SCMessage response = request;
 			String sessionInfo = request.getSessionInfo();
 			if (sessionInfo != null) {
 				// watch out for reject request
 				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
-					response = new SCMessage();
 					try {
+						response.setReject(true);
 						response.setAppErrorCode(4000);
 						response.setAppErrorText("session rejected intentionaly!");
 					} catch (SCMPValidatorException e) {
 					}
 				}
 			}
+			subscriptionLogger.logChangeSubscribe("publish-1", request.getSessionId(), request.getMask());
 			return response;
 		}
 

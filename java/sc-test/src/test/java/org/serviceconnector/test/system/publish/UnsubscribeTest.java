@@ -111,10 +111,9 @@ public class UnsubscribeTest {
 	@Test
 	public void t01_unsubscribe() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
-		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("doNothing");
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
@@ -137,7 +136,7 @@ public class UnsubscribeTest {
 		service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("doNothing");
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
@@ -164,7 +163,7 @@ public class UnsubscribeTest {
 		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setMask("0000121ABCDEFGHIJKLMNO-----------X-----------");
+		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("doNothing");
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);

@@ -118,18 +118,15 @@ public class TestSessionServer extends TestStatefulServer {
 				// watch out for kill server message
 				if (sessionInfo.equals(TestConstants.killServerCmd)) {
 					logger.log(Level.OFF, "Kill request received, exiting ...");
-					response = new SCMessage();
 					try {
 						response.setAppErrorCode(1050);
-						response.setAppErrorText("session rejected - kill server requested!");
+						response.setAppErrorText("kill server requested!");
 					} catch (SCMPValidatorException e) {
 					}
 					KillThread<SCSessionServer> kill = new KillThread<SCSessionServer>(this.scSessionServer);
 					kill.start();
-				}
 				// watch out for reject request
-				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
-					response = new SCMessage();
+				} else if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
 					try {
 						response.setReject(true);
 						response.setAppErrorCode(4000);

@@ -10,6 +10,7 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.util.FileUtility;
 
 public abstract class TestStatefulServer extends Thread {
+	
 	/** The Constant logger, must be initialized in subclass. */
 	protected static Logger logger = null;
 	/** The Constant sessionLogger. */
