@@ -146,6 +146,21 @@ public class SubscribeTest {
 	}
 
 	/**
+	 * Description: subscribe with no mask<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t03_subscribe() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+	}
+	/**
 	 * Description: subscribe with service name = null<br>
 	 * Expectation: throws InvalidParameterException
 	 */

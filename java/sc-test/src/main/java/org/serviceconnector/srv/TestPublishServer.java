@@ -34,11 +34,16 @@ import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
+import org.serviceconnector.log.Loggers;
+import org.serviceconnector.test.system.publish.ReceivePublicationTest;
 import org.serviceconnector.util.FileUtility;
 
 @SuppressWarnings("unused")
 public class TestPublishServer extends TestStatefulServer {
 
+	/** The Constant testLogger. */
+	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	
 	static {
 		TestStatefulServer.logger = Logger.getLogger(TestPublishServer.class);
 	}
@@ -188,6 +193,7 @@ public class TestPublishServer extends TestStatefulServer {
 		public PublishThread(SCPublishServer publishSrv, String methodName, SCMessage request, int operationTimeoutInMillis) {
 			this.publishSrv = publishSrv;
 			this.methodName = methodName;
+			this.request = request;
 		}
 
 		/** {@inheritDoc} */
@@ -195,11 +201,9 @@ public class TestPublishServer extends TestStatefulServer {
 		public void run() {
 			try {
 				Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
-				// first sleep 1 second to give test client time to stay ready
-				Thread.sleep(1000);
 				method.invoke(this, request, operationTimeoutInMillis);
 			} catch (Exception e1) {
-				logger.warn("cannot not invoke " + methodName);
+				logger.error("cannot not invoke method:" + methodName, e1);
 				return;
 			}
 		}
@@ -213,20 +217,23 @@ public class TestPublishServer extends TestStatefulServer {
 		public void doNothing(SCMessage request, int operationTimeoutInMillis) {
 		}
 
-		public void publish100Message(SCMessage request, int operationTimeoutInMillis) {
+		public void publishMessages(SCMessage request, int operationTimeoutInMillis) {
 			SCPublishMessage pubMessage = new SCPublishMessage();
-			for (int i = 0; i < 100; i++) {
+			String dataString = (String) request.getData();
+			int count = Integer.parseInt(dataString);
+			for (int i = 0; i < count; i++) {
 				try {
-					pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
-					pubMessage.setData("publish message nr : " + i);
-					this.publishSrv.publish(pubMessage); // regular
-					Thread.sleep(1000);
+					pubMessage.setMask(TestConstants.maskSrv);
+					pubMessage.setData("publish message nr:" + i);
+					this.publishSrv.publish(pubMessage);
+					if (((i+1) % 100) == 0) {
+						TestPublishServer.testLogger.info("Publishing message nr. " + (i+1));
+					}
 				} catch (Exception e) {
-					// quit loop in case of a publish error
+					logger.error("cannot publish",e);
 					break;
 				}
 			}
 		}
-
 	}
 }

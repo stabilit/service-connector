@@ -43,8 +43,8 @@ public class TestSessionServer extends TestStatefulServer {
 	 *            [2] SC port<br>
 	 *            [3] maxSessions<br>
 	 *            [4] maxConnections<br>
-	 *            [5] connectionType<br>
-	 *            ("netty.tcp" or "netty.http") [6] serviceNames (comma delimited list)<br>
+	 *            [5] connectionType ("netty.tcp" or "netty.http")<br> 
+	 *            [6] serviceNames (comma delimited list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
 		logger.log(Level.OFF, "TestSessionServer is starting ...");
@@ -202,90 +202,3 @@ public class TestSessionServer extends TestStatefulServer {
 		}
 	}
 }
-
-// class SrvCallback extends SCSessionServerCallback {
-// private SessionServerContext outerContext;
-//
-// public SrvCallback(SessionServerContext context) {
-// this.outerContext = context;
-// }
-//
-// @Override
-// public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
-// ctr.increment();
-//
-// Object data = request.getData();
-//
-// if (data != null) {
-// // watch out for kill server message
-// if (data.getClass() == String.class) {
-// String dataString = (String) data;
-// if (dataString.equals("kill server")) {
-// try {
-// KillThread kill = new KillThread(this.outerContext.getServer());
-// kill.start();
-// } catch (Exception e) {
-// logger.error("execute", e);
-// }
-// } else if (dataString.equals("executed")) {
-// ctr.decrement();
-// return new SCMessage(String.valueOf(ctr.value()));
-// } else if (dataString.startsWith("timeout")) {
-// int millis = Integer.parseInt(dataString.split(" ")[1]);
-// try {
-// logger.info("Sleeping " + dataString.split(" ")[1] + "ms in order to timeout.");
-// Thread.sleep(millis);
-// } catch (InterruptedException e) {
-// logger.error("sleep in execute", e);
-// }
-// } else if (dataString.startsWith("register")) {
-// String serviceName = dataString.split(" ")[1];
-// boolean alreadyPresentService = false;
-// for (int i = 0; i < serviceNames.length; i++) {
-// if (serviceName.equals(serviceNames[i])) {
-// alreadyPresentService = true;
-// break;
-// }
-// }
-// if (!alreadyPresentService) {
-// if (!scSrv.isRegistered(serviceName)) {
-// try {
-// scSrv.registerServer(TestConstants.HOST, port, serviceName, 1000, maxConnections, new SrvCallback(
-// new SessionServerContext()));
-// String[] services = new String[serviceNames.length + 1];
-// System.arraycopy(serviceNames, 0, services, 0, serviceNames.length);
-// services[serviceNames.length] = serviceName;
-// serviceNames = services;
-// } catch (Exception e) {
-// logger.error("register server " + serviceName, e);
-// }
-// }
-// }
-// } else if (dataString.startsWith("deregister")) {
-// String serviceName = dataString.split(" ")[1];
-//
-// if (scSrv.isRegistered(serviceName)) {
-// try {
-// scSrv.deregisterServer(serviceName);
-// String[] services = new String[serviceNames.length - 1];
-// boolean alreadyDeleted = false;
-// for (int i = 0; i < serviceNames.length; i++) {
-// if (serviceName.equals(serviceNames[i])) {
-// alreadyDeleted = true;
-// } else if (alreadyDeleted) {
-// services[i - 1] = serviceNames[i];
-// } else {
-// services[i] = serviceNames[i];
-// }
-// }
-// serviceNames = services;
-// } catch (Exception e) {
-// logger.error("deregister server " + serviceName, e);
-// }
-// }
-// }
-// }
-// }
-// return request;
-// }
-// }

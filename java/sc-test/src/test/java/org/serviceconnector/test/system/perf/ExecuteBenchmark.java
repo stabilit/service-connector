@@ -16,6 +16,7 @@ import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 
+@SuppressWarnings("unused")
 public class ExecuteBenchmark {
 
 	/** The Constant testLogger. */
