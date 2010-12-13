@@ -34,20 +34,12 @@ import org.serviceconnector.test.sc.attach.DetachTestCase;
 import org.serviceconnector.test.sc.connectionPool.ConnectionPoolTestCase;
 import org.serviceconnector.test.sc.group.GroupCallTestCase;
 import org.serviceconnector.test.sc.manage.ManageTestCase;
-import org.serviceconnector.test.sc.net.DefaultEncoderDecoderTestCase;
-import org.serviceconnector.test.sc.net.DefaultFrameDecoderTestCase;
-import org.serviceconnector.test.sc.net.HttpFrameDecoderTestCase;
-import org.serviceconnector.test.sc.net.KeepAliveMessageEncoderDecoderTestCase;
-import org.serviceconnector.test.sc.net.LargeMessageEncoderDecoderTestCase;
 import org.serviceconnector.test.sc.operationTimeout.SrvExecuteOTITestCase;
 import org.serviceconnector.test.sc.publish.PublishLargeMessagesTestCase;
 import org.serviceconnector.test.sc.register.DeRegisterServerTestCase;
 import org.serviceconnector.test.sc.register.RegisterServerTestCase;
 import org.serviceconnector.test.sc.scVersion.SCVersionToSCTestCase;
 import org.serviceconnector.test.sc.scmp.SCMPVersionTestCase;
-import org.serviceconnector.test.sc.scmp.internal.SCMPCompositeTestCase;
-import org.serviceconnector.test.sc.scmp.internal.SCMPLargeRequestTestCase;
-import org.serviceconnector.test.sc.scmp.internal.SCMPLargeResponseTestCase;
 import org.serviceconnector.test.sc.scmpVersion.DecodeSCMPVersionTestCase;
 import org.serviceconnector.test.sc.session.ClnCreateSessionTestCase;
 import org.serviceconnector.test.sc.session.ClnCreateSessionWaitMechanismTestCase;
@@ -62,7 +54,15 @@ import org.serviceconnector.test.sc.subscribe.ClnSubscribeWaitMechanismTestCase;
 import org.serviceconnector.test.sc.subscriptionChange.ClnChangeSubscriptionTestCase;
 import org.serviceconnector.test.sc.util.LinkedQueueTestCase;
 import org.serviceconnector.test.sc.util.SCVersionTestCase;
-import org.serviceconnector.test.sc.util.ValidatorUtilityTestCase;
+import org.serviceconnector.test.unit.DefaultEncoderDecoderTest;
+import org.serviceconnector.test.unit.DefaultFrameDecoderTest;
+import org.serviceconnector.test.unit.HttpFrameDecoderTest;
+import org.serviceconnector.test.unit.KeepAliveMessageEncoderDecoderTest;
+import org.serviceconnector.test.unit.LargeMessageEncoderDecoderTest;
+import org.serviceconnector.test.unit.SCMPCompositeTest;
+import org.serviceconnector.test.unit.SCMPLargeRequestTest;
+import org.serviceconnector.test.unit.SCMPLargeResponseTest;
+import org.serviceconnector.test.unit.ValidatorUtilityTest;
 
 /**
  * @author JTraber
@@ -91,15 +91,15 @@ import org.serviceconnector.test.sc.util.ValidatorUtilityTestCase;
 		SessionTimeoutTestCase.class, //
 		GroupCallTestCase.class, //
 		// SCImplTestCases
-		DefaultFrameDecoderTestCase.class,//
-		HttpFrameDecoderTestCase.class, //
-		SCMPCompositeTestCase.class,//
-		SCMPLargeRequestTestCase.class, //
-		SCMPLargeResponseTestCase.class,//
-		LargeMessageEncoderDecoderTestCase.class, //
-		KeepAliveMessageEncoderDecoderTestCase.class,//
-		DefaultEncoderDecoderTestCase.class,//
-		ValidatorUtilityTestCase.class, //
+		DefaultFrameDecoderTest.class,//
+		HttpFrameDecoderTest.class, //
+		SCMPCompositeTest.class,//
+		SCMPLargeRequestTest.class, //
+		SCMPLargeResponseTest.class,//
+		LargeMessageEncoderDecoderTest.class, //
+		KeepAliveMessageEncoderDecoderTest.class,//
+		DefaultEncoderDecoderTest.class,//
+		ValidatorUtilityTest.class, //
 		LinkedQueueTestCase.class, //
 		// SCAPITestCases
 		SCVersionTestCase.class, //
