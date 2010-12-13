@@ -42,7 +42,11 @@ import org.serviceconnector.test.unit.api.srv.SCServerTest;
 		KeepAliveMessageEncoderDecoderTest.class,//
 		DefaultEncoderDecoderTest.class,//
 		ValidatorUtilityTest.class, //
-		SCMPMessageMaskTest.class })
+		SCMPMessageMaskTest.class, //
+		DecodeSCMPVersionTest.class, //
+		LinkedQueueTest.class, //
+		SCVersionTest.class, //
+		SCMPVersionTest.class })
 public class AllUnitTests {
 
 	private static DecimalFormat dfMsg = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);

@@ -34,9 +34,9 @@ import org.serviceconnector.util.SynchronousCallback;
 
 
 
-public class SCVersionToSCTestCase extends SuperTestCase {
+public class SCVersionToSCTest extends SuperTestCase {
 
-	public SCVersionToSCTestCase(String fileName) {
+	public SCVersionToSCTest(String fileName) {
 		super(fileName);
 	}
 

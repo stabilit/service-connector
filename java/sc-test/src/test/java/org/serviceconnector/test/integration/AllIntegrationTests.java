@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.integration.api;
+package org.serviceconnector.test.integration;
 
 
 import org.junit.runner.RunWith;

@@ -19,7 +19,7 @@
 /**
  * 
  */
-package org.serviceconnector.test.sc.util;
+package org.serviceconnector.test.unit;
 
 import junit.framework.Assert;
 
@@ -33,7 +33,7 @@ import org.serviceconnector.util.LinkedQueue;
 /**
  * @author JTraber
  */
-public class LinkedQueueTestCase {
+public class LinkedQueueTest {
 
 	private LinkedQueue<SCMPMessage> queue;
 	public boolean killThreads = false;
@@ -175,7 +175,7 @@ public class LinkedQueueTestCase {
 		@Override
 		public void run() {
 
-			while (!LinkedQueueTestCase.this.killThreads) {
+			while (!LinkedQueueTest.this.killThreads) {
 				SCMPMessage message = queue.extract();
 				if (message == null) {
 					try {
@@ -198,7 +198,7 @@ public class LinkedQueueTestCase {
 		@Override
 		public void run() {
 			int i = 0;
-			while (!LinkedQueueTestCase.this.killThreads) {
+			while (!LinkedQueueTest.this.killThreads) {
 				SCMPMessage message = new SCMPMessage();
 				message.setBody(i++);
 				queue.insert(message);

@@ -38,7 +38,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.SuperTestCase;
-import org.serviceconnector.test.sc.connectionPool.TestContext;
+import org.serviceconnector.test.sc.TestContext;
 import org.serviceconnector.util.SynchronousCallback;
 
 public class RegisterServerTestCase extends SuperTestCase {

@@ -17,7 +17,7 @@ package org.serviceconnector.test;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.integration.api.AllIntegrationTests;
+import org.serviceconnector.test.integration.AllIntegrationTests;
 import org.serviceconnector.test.system.api.AllSystemTests;
 import org.serviceconnector.test.unit.AllUnitTests;
 

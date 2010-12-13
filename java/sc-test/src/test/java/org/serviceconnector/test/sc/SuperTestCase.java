@@ -29,7 +29,6 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.test.sc.connectionPool.TestContext;
 
 /**
  * @author JTraber

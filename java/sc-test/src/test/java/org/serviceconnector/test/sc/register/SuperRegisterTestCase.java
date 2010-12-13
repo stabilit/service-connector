@@ -29,8 +29,8 @@ import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.test.sc.SCTest;
+import org.serviceconnector.test.sc.TestContext;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
-import org.serviceconnector.test.sc.connectionPool.TestContext;
 
 /**
  * @author JTraber

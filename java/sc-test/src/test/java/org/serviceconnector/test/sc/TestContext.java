@@ -19,7 +19,7 @@
 /**
  * 
  */
-package org.serviceconnector.test.sc.connectionPool;
+package org.serviceconnector.test.sc;
 
 import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.net.req.RequesterContext;
