@@ -93,6 +93,7 @@ public class SCPublishService extends SCService {
 		changeSubscriptionCall.setMask(scSubscribeMessage.getMask());
 		changeSubscriptionCall.setCompressed(scSubscribeMessage.isCompressed());
 		changeSubscriptionCall.setRequestBody(scSubscribeMessage.getData());
+		changeSubscriptionCall.setSessionInfo(scSubscribeMessage.getSessionInfo());
 		SCServiceCallback callback = new SCServiceCallback(true);
 
 		try {
