@@ -40,8 +40,6 @@ public class SessionRegistry extends Registry<String, Session> {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SessionRegistry.class);
 
-	/** The Constant sessionLogger. */
-	private final static SessionLogger sessionLogger = SessionLogger.getInstance();
 	/** The timer. Timer instance is responsible to observe session timeouts. */
 	private Timer timer;
 
@@ -61,7 +59,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 *            the session
 	 */
 	public void addSession(String key, Session session) {
-		sessionLogger.logCreateSession(this.getClass().getName(), session.getId());
+		SessionLogger.logCreateSession(this.getClass().getName(), session.getId());
 		this.put(key, session);
 		if (session.getSessionTimeoutSeconds() != 0) {
 			this.scheduleSessionTimeout(session);
@@ -91,7 +89,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		}
 		this.cancelSessionTimeout(session);
 		super.remove(key);
-		sessionLogger.logDeleteSession(this.getClass().getName(), session.getId());
+		SessionLogger.logDeleteSession(this.getClass().getName(), session.getId());
 	}
 
 	/**
@@ -203,7 +201,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			Server server = session.getServer();
 			// aborts session on server
 			server.abortSession(session);
-			sessionLogger.logTimeoutSession(this.getClass().getName(), session.getId());
+			SessionLogger.logTimeoutSession(this.getClass().getName(), session.getId());
 		}
 
 		/** {@inheritDoc} */

@@ -214,7 +214,7 @@ public final class SC {
 			String fs = System.getProperty("file.separator");
 			AppContext.getCacheManager().destroy();
 			try {
-				FileUtility.deletePIDfile(FileUtility.getPath() + System.getProperty("file.separator") + Constants.PID_FILE_NAME);
+				FileUtility.deletePIDfile(FileUtility.getPath() + fs + Constants.PID_FILE_NAME);
 			} catch (Exception e) {
 			}
 			logger.log(Level.OFF, "Service Connector exit");

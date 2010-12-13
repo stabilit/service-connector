@@ -23,7 +23,6 @@ import org.serviceconnector.cache.CacheException;
 public class CacheLogger {
 
 	private static final Logger cacheLogger = Logger.getLogger(Loggers.CACHE.getValue());
-	private static final CacheLogger instance = new CacheLogger();
 
 	/**
 	 * Private constructor for singleton use.
@@ -31,49 +30,32 @@ public class CacheLogger {
 	private CacheLogger() {
 	}
 
-	public static CacheLogger getInstance() {
-		return CacheLogger.instance;
-	}
-
-	// /**
-	// * @param className
-	// * @param sessionId
-	// */
-	// public synchronized void logCache(String className, String sessionId) {
-	// if (cacheLogger.isTraceEnabled()) {
-	// Formatter format = new Formatter();
-	// format.format("", sessionId);
-	// cacheLogger.debug(format.toString());
-	// format.close();
-	// }
-	// }
-
 	/**
 	 * @return
 	 */
-	public boolean isEnabled() {
+	public static boolean isEnabled() {
 		return cacheLogger.isTraceEnabled();
 	}
 
-	public void debug(String message) {
+	public static void debug(String message) {
 		if (cacheLogger.isDebugEnabled()) {
 			cacheLogger.debug(message);
 		}
 	}
 
-	public void warn(String message) {
+	public static void warn(String message) {
 		if (cacheLogger.isEnabledFor(Level.WARN)) {
 			cacheLogger.warn(message);
 		}
 	}
 
-	public void info(String message) {
+	public static void info(String message) {
 		if (cacheLogger.isEnabledFor(Level.INFO)) {
 			cacheLogger.info(message);
 		}
 	}
 
-	public void error(String message, CacheException e) {
+	public static void error(String message, CacheException e) {
 		if (cacheLogger.isEnabledFor(Level.ERROR)) {
 			cacheLogger.error(message, e);
 		}

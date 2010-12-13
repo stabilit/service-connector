@@ -4,8 +4,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
-import org.serviceconnector.log.SessionLogger;
-import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.util.FileUtility;
 
@@ -14,8 +12,6 @@ public abstract class TestStatefulServer extends Thread {
 	/** The Constant logger, must be initialized in subclass. */
 	protected static Logger logger = null;
 	/** The Constant sessionLogger. */
-	protected final static SessionLogger sessionLogger = SessionLogger.getInstance();
-	protected final static SubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
 	protected static final String fs = System.getProperty("file.separator");
 	protected ThreadSafeCounter ctr;
 

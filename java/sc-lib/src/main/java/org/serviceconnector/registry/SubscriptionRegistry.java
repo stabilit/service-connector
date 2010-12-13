@@ -38,8 +38,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SubscriptionRegistry.class);
-	/** The Constant sessionLogger. */
-	private final static SubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
+
 	/** The timer. Timer instance is responsible to observe subscription timeouts. */
 	private Timer timer;
 
@@ -56,7 +55,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 *            the subscription
 	 */
 	public void addSubscription(String key, Subscription subscription) {
-		subscriptionLogger.logCreateSubscription(subscription.getId());
+		SubscriptionLogger.logCreateSubscription(subscription.getId());
 		this.put(key, subscription);
 		this.scheduleSubscriptionTimeout(subscription);
 	}
@@ -83,7 +82,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		}
 		super.remove(key);
 		this.cancelSubscriptionTimeout(key);
-		subscriptionLogger.logDeleteSubscription(key);
+		SubscriptionLogger.logDeleteSubscription(key);
 	}
 
 	/**
@@ -181,7 +180,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 			StatefulServer server = subscription.getServer();
 			server.abortSession(subscription);
-			SubscriptionRegistry.this.subscriptionLogger.logAbortSubscription(subscription.getId());
+			SubscriptionLogger.logAbortSubscription(subscription.getId());
 		}
 
 		/** {@inheritDoc} */

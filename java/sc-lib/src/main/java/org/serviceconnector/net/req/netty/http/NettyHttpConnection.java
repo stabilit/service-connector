@@ -34,6 +34,7 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.util.Timer;
 import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.CommunicationException;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.req.netty.NettyConnectionAdpater;
@@ -85,8 +86,8 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect failed to "
 					+ this.localSocketAddress.toString());
 		}
-		if (connectionLogger.isEnabled()) {
-			connectionLogger.logConnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
+		if (ConnectionLogger.isEnabled()) {
+			ConnectionLogger.logConnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
 					this.localSocketAddress.getPort());
 		}
 	}
@@ -122,8 +123,8 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 			logger.error("send", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on " + this.localSocketAddress);
 		}
-		if (connectionLogger.isEnabledFull()) {
-			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
+		if (ConnectionLogger.isEnabledFull()) {
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
 					this.localSocketAddress.getPort(), buffer, 0, buffer.length);
 		}
 		return;

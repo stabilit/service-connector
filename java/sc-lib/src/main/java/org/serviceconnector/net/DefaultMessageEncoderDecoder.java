@@ -39,9 +39,6 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DefaultMessageEncoderDecoder.class);
 
-	/** The Constant messageLogger. */
-	private final static MessageLogger messageLogger = MessageLogger.getInstance();
-
 	/**
 	 * Instantiates a new default encoder decoder.
 	 */
@@ -92,8 +89,8 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					os.write(ba);
 					os.flush();
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (messageLogger.isEnabled()) {
-						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+					if (MessageLogger.isEnabled()) {
+						MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 					}
 					return;
 				}
@@ -116,8 +113,8 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						bw.flush();
 					}
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (messageLogger.isEnabled()) {
-						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+					if (MessageLogger.isEnabled()) {
+						MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 					}
 					return;
 				}
@@ -134,8 +131,8 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 			throw new EncodingDecodingException("io error when decoding message", ex);
 		}
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-		if (messageLogger.isEnabled()) {
-			messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+		if (MessageLogger.isEnabled()) {
+			MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 		}
 		return;
 	}

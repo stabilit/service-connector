@@ -46,9 +46,6 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnChangeSubscriptionCommand.class);
 
-	/** The Constant subscriptionLogger. */
-	private final static SubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
-
 	/**
 	 * Instantiates a new ClnChangeSubscriptionCommand.
 	 */
@@ -110,7 +107,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 				String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
 				SubscriptionQueue<SCMPMessage> queue = this.getSubscriptionQueueById(subscriptionId);
 				SubscriptionMask mask = new SubscriptionMask(newMask);
-				subscriptionLogger.logChangeSubscribe(serviceName, subscriptionId, newMask);
+				SubscriptionLogger.logChangeSubscribe(serviceName, subscriptionId, newMask);
 				queue.changeSubscription(subscriptionId, mask);
 				subscription.setMask(mask);
 			} else {

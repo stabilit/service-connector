@@ -53,9 +53,6 @@ public class ClnSubscribeCommand extends CommandAdapter {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnSubscribeCommand.class);
 
-	/** The Constant subscriptionLogger. */
-	private final static SubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
-
 	/**
 	 * Instantiates a ClnSubscribeCommand.
 	 */
@@ -137,7 +134,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 
 					IPublishTimerRun timerRun = new PublishTimerRun(subscriptionQueue, noDataIntervalSeconds
 							* Constants.SEC_TO_MILLISEC_FACTOR);
-					subscriptionLogger.logSubscribe(serviceName, subscription.getId(), mask);
+					SubscriptionLogger.logSubscribe(serviceName, subscription.getId(), mask);
 					subscriptionQueue.subscribe(subscription.getId(), subscriptionMask, timerRun);
 				} else {
 					// subscription has been rejected - remove subscription id from header

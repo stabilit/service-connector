@@ -42,8 +42,6 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnUnsubscribeCommand.class);
-	/** The Constant subscriptionLogger. */
-	private final static SubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
 
 	/** {@inheritDoc} */
 	@Override
@@ -67,7 +65,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		this.subscriptionRegistry.removeSubscription(subscription);
 		subscriptionQueue.unsubscribe(subscriptionId);
 		String serviceName = reqMessage.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
-		subscriptionLogger.logUnsubscribe(serviceName, subscriptionId);
+		SubscriptionLogger.logUnsubscribe(serviceName, subscriptionId);
 
 		// unsubscribe on backend server
 		StatefulServer server = subscription.getServer();

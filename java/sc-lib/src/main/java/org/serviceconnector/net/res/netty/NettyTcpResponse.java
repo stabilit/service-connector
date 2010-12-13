@@ -21,6 +21,7 @@ import java.net.InetSocketAddress;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelEvent;
+import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.scmp.ResponseAdapter;
 
 /**
@@ -48,8 +49,8 @@ public class NettyTcpResponse extends ResponseAdapter {
 		ChannelBuffer buffer = this.getBuffer();
 		// Write the response.
 		event.getChannel().write(buffer);
-		if (connectionLogger.isEnabledFull()) {
-			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.event.getChannel()
+		if (ConnectionLogger.isEnabledFull()) {
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.event.getChannel()
 					.getLocalAddress()).getHostName(), ((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(),
 					buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
 		}

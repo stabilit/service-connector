@@ -26,6 +26,7 @@ import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
+import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.scmp.ResponseAdapter;
 
 /**
@@ -57,8 +58,8 @@ public class NettyHttpResponse extends ResponseAdapter {
 		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
 		// Write the response.
 		event.getChannel().write(httpResponse);
-		if (connectionLogger.isEnabledFull()) {
-			connectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.event.getChannel()
+		if (ConnectionLogger.isEnabledFull()) {
+			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), ((InetSocketAddress) this.event.getChannel()
 					.getLocalAddress()).getHostName(), ((InetSocketAddress) this.event.getChannel().getLocalAddress()).getPort(),
 					buffer.toByteBuffer().array(), 0, buffer.toByteBuffer().array().length);
 		}

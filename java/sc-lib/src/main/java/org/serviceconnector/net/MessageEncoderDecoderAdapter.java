@@ -53,9 +53,6 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(MessageEncoderDecoderAdapter.class);
 
-	/** The Constant messageLogger. */
-	private final static MessageLogger messageLogger = MessageLogger.getInstance();
-
 	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
 	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.SCMP_FORMAT_OF_HEADER_SIZE);
 	protected IFrameDecoder defaultFrameDecoder = AppContext.getFrameDecoderFactory().getFrameDecoder(Constants.TCP);
@@ -141,8 +138,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		scmpMsg.setHeader(metaMap);
 		if (scmpBodySize <= 0) {
 			// no body found stop decoding
-			if (messageLogger.isEnabled()) {
-				messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+			if (MessageLogger.isEnabled()) {
+				MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 			}
 			return scmpMsg;
 		}
@@ -188,8 +185,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		} catch (Exception ex) {
 			logger.error("decode", ex);
 		}
-		if (messageLogger.isEnabled()) {
-			messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+		if (MessageLogger.isEnabled()) {
+			MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 		}
 		return scmpMsg;
 	}

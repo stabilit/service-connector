@@ -39,9 +39,6 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(LargeMessageEncoderDecoder.class);
 
-	/** The Constant messageLogger. */
-	private final static MessageLogger messageLogger = MessageLogger.getInstance();
-
 	/**
 	 * Instantiates a new large message encoder decoder.
 	 */
@@ -115,8 +112,8 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					os.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (messageLogger.isEnabled()) {
-						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+					if (MessageLogger.isEnabled()) {
+						MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 					}
 					return;
 				}
@@ -142,8 +139,8 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					}
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (messageLogger.isEnabled()) {
-						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+					if (MessageLogger.isEnabled()) {
+						MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 					}
 					return;
 				}
@@ -158,8 +155,8 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					os.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (messageLogger.isEnabled()) {
-						messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+					if (MessageLogger.isEnabled()) {
+						MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 					}
 					return;
 				}
@@ -178,8 +175,8 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		}
 		// set internal status to save communication state
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-		if (messageLogger.isEnabled()) {
-			messageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+		if (MessageLogger.isEnabled()) {
+			MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
 		}
 		return;
 	}

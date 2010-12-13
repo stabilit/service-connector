@@ -49,7 +49,6 @@ import org.serviceconnector.service.Subscription;
 
 public class StatefulServer extends Server {
 
-	private SessionLogger sessionLogger = SessionLogger.getInstance();
 	private static SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 	/** The sessions, list of sessions allocated to the server. */
@@ -337,7 +336,7 @@ public class StatefulServer extends Server {
 			abortMessage.setServiceName(this.getServiceName());
 			this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 					.getSrvAbortTimeout());
-			sessionLogger.logAbortSession(this.getClass().getName(), abortMessage.getSessionId());
+			SessionLogger.logAbortSession(this.getClass().getName(), abortMessage.getSessionId());
 		}
 		super.destroy();
 		this.sessions = null;

@@ -20,16 +20,15 @@ import java.util.Formatter;
 
 import org.apache.log4j.Logger;
 
-
 public class SessionLogger {
 
 	private static final Logger sessionLogger = Logger.getLogger(Loggers.SESSION.getValue());
 	private static final SessionLogger instance = new SessionLogger();
 
-	private String CREATE_SESSION_STR = "create session:%s";
-	private String DELETE_SESSION_STR = "delete session:%s";
-	private String ABORT_SESSION_STR = "abort session:%s";
-	private String TIMEOUT_SESSION_STR = "timeout session:%s";
+	private static String CREATE_SESSION_STR = "create session:%s";
+	private static String DELETE_SESSION_STR = "delete session:%s";
+	private static String ABORT_SESSION_STR = "abort session:%s";
+	private static String TIMEOUT_SESSION_STR = "timeout session:%s";
 
 	/**
 	 * Private constructor for singleton use.
@@ -37,15 +36,11 @@ public class SessionLogger {
 	private SessionLogger() {
 	}
 
-	public static SessionLogger getInstance() {
-		return SessionLogger.instance;
-	}
-
 	/**
 	 * @param className
 	 * @param sessionId
 	 */
-	public synchronized void logCreateSession(String className, String sessionId) {
+	public static synchronized void logCreateSession(String className, String sessionId) {
 		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(CREATE_SESSION_STR, sessionId);
@@ -58,7 +53,7 @@ public class SessionLogger {
 	 * @param className
 	 * @param sessionId
 	 */
-	public synchronized void logDeleteSession(String className, String sessionId) {
+	public static synchronized void logDeleteSession(String className, String sessionId) {
 		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(DELETE_SESSION_STR, sessionId);
@@ -66,12 +61,12 @@ public class SessionLogger {
 			format.close();
 		}
 	}
-	
+
 	/**
 	 * @param className
 	 * @param sessionId
 	 */
-	public synchronized void logTimeoutSession(String className, String sessionId) {
+	public static synchronized void logTimeoutSession(String className, String sessionId) {
 		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(TIMEOUT_SESSION_STR, sessionId);
@@ -84,7 +79,7 @@ public class SessionLogger {
 	 * @param className
 	 * @param sessionId
 	 */
-	public synchronized void logAbortSession(String className, String sessionId) {
+	public static synchronized void logAbortSession(String className, String sessionId) {
 		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(ABORT_SESSION_STR, sessionId);
@@ -96,7 +91,7 @@ public class SessionLogger {
 	/**
 	 * @return
 	 */
-	public boolean isEnabled() {
+	public static boolean isEnabled() {
 		return sessionLogger.isTraceEnabled();
 	}
 }

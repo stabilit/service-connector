@@ -35,8 +35,6 @@ public abstract class ResponseAdapter implements IResponse {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(ResponseAdapter.class);
-	/** The Constant connectionLogger. */
-	protected final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 	
 	/** The encoder decoder. */
 	protected IEncoderDecoder encoderDecoder;

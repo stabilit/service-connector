@@ -35,6 +35,7 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.Loggers;
+import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.test.system.publish.ReceivePublicationTest;
 import org.serviceconnector.util.FileUtility;
 
@@ -155,7 +156,7 @@ public class TestPublishServer extends TestStatefulServer {
 					return response;
 				}
 			}
-			subscriptionLogger.logSubscribe("publish-1", request.getSessionId(), request.getMask());
+			SubscriptionLogger.logSubscribe("publish-1", request.getSessionId(), request.getMask());
 			return response;
 		}
 
@@ -174,13 +175,13 @@ public class TestPublishServer extends TestStatefulServer {
 					}
 				}
 			}
-			subscriptionLogger.logChangeSubscribe("publish-1", request.getSessionId(), request.getMask());
+			SubscriptionLogger.logChangeSubscribe("publish-1", request.getSessionId(), request.getMask());
 			return response;
 		}
 
 		@Override
 		public void unsubscribe(SCSubscribeMessage request, int operationTimeoutInMillis) {
-			subscriptionLogger.logUnsubscribe("publish-1", request.getSessionId());
+			SubscriptionLogger.logUnsubscribe("publish-1", request.getSessionId());
 		}
 	}
 

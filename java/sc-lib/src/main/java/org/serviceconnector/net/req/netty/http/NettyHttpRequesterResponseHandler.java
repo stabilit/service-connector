@@ -42,8 +42,6 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpRequesterResponseHandler.class);
-	/** The Constant connectionLogger. */
-	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 	/** The scmp callback. */
 	private ISCMPCallback scmpCallback;
 	/** The pending request. */
@@ -121,8 +119,8 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			byte[] buffer = new byte[content.readableBytes()];
 			content.readBytes(buffer);
 			Statistics.getInstance().incrementTotalMessages(buffer.length);
-			if (connectionLogger.isEnabledFull()) {
-				connectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
+			if (ConnectionLogger.isEnabledFull()) {
+				ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
 			}
 
 			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);

@@ -26,6 +26,7 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
+import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.util.FileUtility;
 
 public class TestSessionServer extends TestStatefulServer {
@@ -135,18 +136,18 @@ public class TestSessionServer extends TestStatefulServer {
 					}
 				}
 			}
-			sessionLogger.logCreateSession(this.getClass().getName(), request.getSessionId());
+			SessionLogger.logCreateSession(this.getClass().getName(), request.getSessionId());
 			return response;
 		}
 
 		@Override
 		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
-			sessionLogger.logDeleteSession(this.getClass().getName(), request.getSessionId());
+			SessionLogger.logDeleteSession(this.getClass().getName(), request.getSessionId());
 		}
 
 		@Override
 		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
-			sessionLogger.logAbortSession(this.getClass().getName(), request.getSessionId());
+			SessionLogger.logAbortSession(this.getClass().getName(), request.getSessionId());
 		}
 
 		@Override

@@ -26,8 +26,6 @@ public abstract class NettyConnectionAdpater implements IConnection {
 
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(NettyConnectionAdpater.class);
-	/** The Constant connectionLogger. */
-	protected final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
 	/** The base conf. */
 	protected final BasicConfiguration baseConf = AppContext.getBasicConfiguration();
 
@@ -108,8 +106,8 @@ public abstract class NettyConnectionAdpater implements IConnection {
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
 					+ this.localSocketAddress.toString());
 		}
-		if (connectionLogger.isEnabled()) {
-			connectionLogger.logDisconnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
+		if (ConnectionLogger.isEnabled()) {
+			ConnectionLogger.logDisconnect(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
 					this.localSocketAddress.getPort());
 		}
 	}

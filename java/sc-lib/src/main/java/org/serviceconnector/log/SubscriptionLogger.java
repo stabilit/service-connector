@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 public class SubscriptionLogger {
 
 	private static final Logger subscriptionLogger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
-	private static final SubscriptionLogger instance = new SubscriptionLogger();
 
 	private static String SUBSCRIBE_STR = "subscription:%s - subscribing to:%s - with mask:%s";
 	private static String CHANGE_SUBSCRIBE_STR = "subscription:%s - subscribed to:%s - new mask:%s";
@@ -38,16 +37,12 @@ public class SubscriptionLogger {
 	private SubscriptionLogger() {
 	}
 
-	public static SubscriptionLogger getInstance() {
-		return SubscriptionLogger.instance;
-	}
-
 	/**
 	 * @param serviceName
 	 * @param sessionId
 	 * @param mask
 	 */
-	public synchronized void logSubscribe(String serviceName, String sessionId, String mask) {
+	public static synchronized void logSubscribe(String serviceName, String sessionId, String mask) {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(SUBSCRIBE_STR, sessionId, serviceName, mask);
@@ -61,7 +56,7 @@ public class SubscriptionLogger {
 	 * @param sessionId
 	 * @param mask
 	 */
-	public synchronized void logChangeSubscribe(String serviceName, String sessionId, String mask) {
+	public static synchronized void logChangeSubscribe(String serviceName, String sessionId, String mask) {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(CHANGE_SUBSCRIBE_STR, sessionId, serviceName, mask);
@@ -74,7 +69,7 @@ public class SubscriptionLogger {
 	 * @param serviceName
 	 * @param sessionId
 	 */
-	public synchronized void logUnsubscribe(String serviceName, String sessionId) {
+	public static synchronized void logUnsubscribe(String serviceName, String sessionId) {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(UNSUBSCRIBE_STR, sessionId, serviceName);
@@ -86,11 +81,11 @@ public class SubscriptionLogger {
 	/**
 	 * @return
 	 */
-	public boolean isEnabled() {
+	public static boolean isEnabled() {
 		return subscriptionLogger.isTraceEnabled();
 	}
 
-	public void logCreateSubscription(String id) {
+	public static void logCreateSubscription(String id) {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(CREATE_SUBSCRIPTION_STR, id);
@@ -99,7 +94,7 @@ public class SubscriptionLogger {
 		}
 	}
 
-	public void logDeleteSubscription(String id) {
+	public static void logDeleteSubscription(String id) {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(DELETE_SUBSCRIPTION_STR, id);
@@ -108,7 +103,7 @@ public class SubscriptionLogger {
 		}
 	}
 
-	public void logAbortSubscription(String id) {
+	public static void logAbortSubscription(String id) {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(ABORT_SUBSCRIPTION_STR, id);

@@ -39,9 +39,6 @@ public class NettyIdleHandler extends IdleStateHandler {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyIdleHandler.class);
 
-	/** The Constant connectionLogger. */
-	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-
 	private ConnectionContext connectionContext;
 
 	/**
@@ -62,8 +59,8 @@ public class NettyIdleHandler extends IdleStateHandler {
 			throws Exception {
 		super.channelIdle(ctx, state, lastActivityTimeMillis);
 		IConnection connection = this.connectionContext.getConnection();
-		if (connectionLogger.isEnabledFull()) {
-			connectionLogger.logKeepAlive(this.getClass().getSimpleName(), "", 0, this.connectionContext
+		if (ConnectionLogger.isEnabledFull()) {
+			ConnectionLogger.logKeepAlive(this.getClass().getSimpleName(), "", 0, this.connectionContext
 					.getConnection().getNrOfIdlesInSequence());
 		}
 		IIdleConnectionCallback callback = this.connectionContext.getIdleCallback();

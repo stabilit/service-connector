@@ -38,9 +38,6 @@ public class NettyHttpRequest extends RequestAdapter {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyHttpRequest.class);
 
-	/** The Constant connectionLogger. */
-	private final static ConnectionLogger connectionLogger = ConnectionLogger.getInstance();
-
 	/** The request. */
 	private HttpRequest request;
 
@@ -64,8 +61,8 @@ public class NettyHttpRequest extends RequestAdapter {
 		byte[] buffer = new byte[channelBuffer.readableBytes()];
 		channelBuffer.readBytes(buffer);
 		Statistics.getInstance().incrementTotalMessages(buffer.length);
-		if (connectionLogger.isEnabledFull()) {
-			connectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getLocalSocketAddress().getHostName(), this
+		if (ConnectionLogger.isEnabledFull()) {
+			ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), this.getLocalSocketAddress().getHostName(), this
 					.getLocalSocketAddress().getPort(), buffer, 0, buffer.length);
 		}
 		IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);

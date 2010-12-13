@@ -31,9 +31,6 @@ import org.serviceconnector.util.Statistics;
  * The Class Cache.
  */
 public class Cache {
-
-	protected static final CacheLogger cacheLogger = CacheLogger.getInstance();
-
 	/** The manager. */
 	private CacheManager manager;
 
@@ -245,11 +242,11 @@ public class Cache {
 			// update last modification time
 			cacheComposite.setLastModified();
 			if (message.isPart() == false) {
-				cacheLogger.debug("cache has been loaded, cacheId = " + cacheId);
+				CacheLogger.debug("cache has been loaded, cacheId = " + cacheId);
 				cacheComposite.setCacheState(CACHE_STATE.LOADED);
 			}
 			this.cacheImpl.put(cacheKey, cacheComposite);
-			cacheLogger.info("Put message (" + scmpCacheId + ") in cache, expiration time " + cacheExpirationDateTime);
+			CacheLogger.info("Put message (" + scmpCacheId + ") in cache, expiration time " + cacheExpirationDateTime);
 			return msgCacheId;
 		} catch (CacheException e) {
 			throw e;
@@ -331,7 +328,7 @@ public class Cache {
 				return;
 			}
 		}
-		cacheLogger.info("Cache message (" + cacheKey + ") got removed because of expiration time");
+		CacheLogger.info("Cache message (" + cacheKey + ") got removed because of expiration time");
 		return;
 	}
 
@@ -549,14 +546,14 @@ public class Cache {
 				if (cacheComposite.isModificationExpired()) {
 					// modification timeout expired, remove this composite from cache
 					this.removeComposite(new CacheKey(cacheId));
-					cacheLogger.warn("cache has been removed, reason: cache is loading but response timeout exceeded, cacheId = "
+					CacheLogger.warn("cache has been removed, reason: cache is loading but response timeout exceeded, cacheId = "
 							+ cacheId);
 				}
 				return true;
 			}
 			return false;
 		} catch (CacheException e) {
-			cacheLogger.error("isLoading", e);
+			CacheLogger.error("isLoading", e);
 		}
 		return false;
 	}
@@ -579,7 +576,7 @@ public class Cache {
 			}
 			return false;
 		} catch (CacheException e) {
-			cacheLogger.error("isLoaded", e);
+			CacheLogger.error("isLoaded", e);
 		}
 		return false;
 	}
@@ -603,9 +600,9 @@ public class Cache {
 			this.putRegistry(cacheKey);
 			Statistics.getInstance().incrementCachedMessages(0);
 			this.cacheImpl.put(cacheKey, cacheComposite);
-			cacheLogger.debug("start loading cache, cacheId = " + cacheId);
+			CacheLogger.debug("start loading cache, cacheId = " + cacheId);
 		} catch (CacheException e) {
-			cacheLogger.error("startLoading", e);
+			CacheLogger.error("startLoading", e);
 		}
 		return;
 	}
