@@ -70,34 +70,34 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 		// looks up subscription queue
 		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(subscriptionId);
 		// tries polling message
-		SCMPMessage message = subscriptionQueue.getMessage(subscriptionId);
-		if (message != null) {
-			// message found in subscription queue set up reply
-			SCMPMessage reply = new SCMPMessage();
-			if (message.isPart()) {
-				// message from queue is of type part - outgoing must be part too, no poll request
-				reply = new SCMPPart(false);
-			}
-			reply.setServiceName(reqMessage.getServiceName());
-			reply.setSessionId(reqMessage.getSessionId());
-			reply.setMessageType(reqMessage.getMessageType());
-			reply.setIsReply(true);
-			reply.setBody(message.getBody());
-			reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
-			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-			if (messageInfo != null) {
-				reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
-			}
-			reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
-			response.setSCMP(reply);
-			// message already gotten from queue no asynchronous process necessary call callback right away
-			communicatorCallback.responseCallback(request, response);
-			// set up subscription timeout again
-			this.subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
+		SCMPMessage message = subscriptionQueue.getMessageOrListen(subscriptionId, request, response);
+		if (message == null) {
+			// no message available, switched to listening mode for new message
 			return;
 		}
-		// no message available, start listening for new message
-		subscriptionQueue.listen(subscriptionId, request, response);
+		logger.debug("CRP message found in queue subscriptionId " + subscriptionId);
+		// message found in subscription queue set up reply
+		SCMPMessage reply = new SCMPMessage();
+		if (message.isPart()) {
+			// message from queue is of type part - outgoing must be part too, no poll request
+			reply = new SCMPPart(false);
+		}
+		reply.setServiceName(reqMessage.getServiceName());
+		reply.setSessionId(reqMessage.getSessionId());
+		reply.setMessageType(reqMessage.getMessageType());
+		reply.setIsReply(true);
+		reply.setBody(message.getBody());
+		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
+		String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+		if (messageInfo != null) {
+			reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+		}
+		reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
+		response.setSCMP(reply);
+		// message already gotten from queue no asynchronous process necessary call callback right away
+		communicatorCallback.responseCallback(request, response);
+		// set up subscription timeout again
+		this.subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
 	}
 
 	/** {@inheritDoc} */

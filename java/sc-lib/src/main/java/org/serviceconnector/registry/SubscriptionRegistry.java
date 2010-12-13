@@ -21,7 +21,7 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.log.SessionLogger;
+import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.PublishService;
@@ -39,7 +39,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SubscriptionRegistry.class);
 	/** The Constant sessionLogger. */
-	private final static SessionLogger sessionLogger = SessionLogger.getInstance();
+	private final static SubscriptionLogger subscriptionLogger = SubscriptionLogger.getInstance();
 	/** The timer. Timer instance is responsible to observe subscription timeouts. */
 	private Timer timer;
 
@@ -56,7 +56,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 *            the subscription
 	 */
 	public void addSubscription(String key, Subscription subscription) {
-		sessionLogger.logCreateSession(this.getClass().getName(), subscription.getId());
+		subscriptionLogger.logCreateSubscription(subscription.getId());
 		this.put(key, subscription);
 		this.scheduleSubscriptionTimeout(subscription);
 	}
@@ -83,7 +83,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		}
 		super.remove(key);
 		this.cancelSubscriptionTimeout(key);
-		sessionLogger.logDeleteSession(this.getClass().getName(), key);
+		subscriptionLogger.logDeleteSubscription(key);
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 			StatefulServer server = subscription.getServer();
 			server.abortSession(subscription);
-			// TODO for jan.. log session timeout
+			SubscriptionRegistry.this.subscriptionLogger.logAbortSubscription(subscription.getId());
 		}
 
 		/** {@inheritDoc} */

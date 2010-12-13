@@ -87,13 +87,13 @@ public class SubscriptionQueue<E> {
 	 * @param message
 	 *            the message
 	 */
-	public void insert(E message) {
+	public synchronized void insert(E message) {
 		if (message == null) {
 			// inserting null value not allowed
 			return;
 		}
 		this.dataQueue.insert(message);
-		logger.trace("insert - queue size:" + this.dataQueue.getSize());
+		logger.trace("insert - queue size: " + this.dataQueue.getSize());
 		// inform new message arrived
 		this.fireNewDataArrived();
 		// delete unreferenced nodes in queue
@@ -119,11 +119,8 @@ public class SubscriptionQueue<E> {
 	 *            the session id
 	 * @return the e
 	 */
-	public E getMessage(String sessionId) {
+	public synchronized E getMessage(String sessionId) {
 		TimeAwareDataPointer ptr = this.pointerMap.get(sessionId);
-		if (ptr == null) {
-			return null;
-		}
 		LinkedNode<E> node = ptr.getNode();
 		if (node == null) {
 			// nothing to poll data pointer points to null - return null
@@ -141,10 +138,28 @@ public class SubscriptionQueue<E> {
 	}
 
 	/**
+	 * Return message if any. If no message is available null will be returned.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 * @return the e
+	 */
+	public synchronized E getMessageOrListen(String sessionId, IRequest request, IResponse response) {
+		E message = this.getMessage(sessionId);
+		if (message == null) {
+			// message null - switch to listen mode
+			this.listen(sessionId, request, response);
+			return null;
+		}
+		return message;
+	}
+
+	/**
 	 * Fire new data arrived. Indicates that a new message has been added. Sets data pointer pointing on null elements to new element
 	 * if necessary (mask matches & listening mode).
 	 */
-	private void fireNewDataArrived() {
+	private synchronized void fireNewDataArrived() {
+		logger.debug("fireNewDataArrived");
 		Object[] nodeArray = null;
 		// TODO, can be improved, separate set of null pointer nodes
 		synchronized (this.pointerMap) {
@@ -157,6 +172,7 @@ public class SubscriptionQueue<E> {
 			if (ptr.getNode() == null) {
 				// data pointer points to null - try pointing to new element
 				if (ptr.setNode(newNode) == true) {
+					logger.debug("data pointer points to null,setNode successful - data pointer interested in new node");
 					// setNode successful - data pointer interested in new node
 					if (ptr.listening()) {
 						// data pointer in listen mode needs to be informed about new data
@@ -171,7 +187,7 @@ public class SubscriptionQueue<E> {
 	 * Removes the non referenced nodes. Starts removing nodes in first position of queue - stops at the position a node is
 	 * referenced.
 	 */
-	private void removeNonreferencedNodes() {
+	private synchronized void removeNonreferencedNodes() {
 		LinkedNode<E> node = this.dataQueue.getFirst();
 		while (node != null) {
 			if (node.isReferenced()) {
@@ -196,13 +212,14 @@ public class SubscriptionQueue<E> {
 	 * @param response
 	 *            the response
 	 */
-	public void listen(String sessionId, IRequest request, IResponse response) {
+	private synchronized void listen(String sessionId, IRequest request, IResponse response) {
 		TimeAwareDataPointer dataPointer = pointerMap.get(sessionId);
 		// stores request/response in timer run - to answer client correctly at timeout
 		dataPointer.timerRun.setRequest(request);
 		dataPointer.timerRun.setResponse(response);
 		// starts listening and schedules subscription timeout
 		dataPointer.startListen();
+		logger.debug("Subscriptionqueue listen " + sessionId + " listen: " + dataPointer.listening);
 		dataPointer.schedule();
 	}
 
@@ -401,7 +418,8 @@ public class SubscriptionQueue<E> {
 		 * @param timeoutMillis
 		 *            the timeout
 		 */
-		public void schedule(double timeoutMillis) {
+		public synchronized void schedule(double timeoutMillis) {
+			logger.debug("schedule datapointer " + timeoutMillis);
 			// always cancel old timeouter when schedule of an new timeout is necessary
 			this.cancel();
 			this.subscriptionTimeouter = new SubscriptionTaskWrapper(this, this.timerRun);
@@ -431,7 +449,7 @@ public class SubscriptionQueue<E> {
 		/**
 		 * Cancel. Deactivate subscription timeout.
 		 */
-		public void cancel() {
+		public synchronized void cancel() {
 			if (this.subscriptionTimeouter != null) {
 				this.subscriptionTimeouter.cancel();
 				// important to set timeouter null - rescheduling of same instance not possible

@@ -24,10 +24,13 @@ public class SubscriptionLogger {
 
 	private static final Logger subscriptionLogger = Logger.getLogger(Loggers.SUBSCRIPTION.getValue());
 	private static final SubscriptionLogger instance = new SubscriptionLogger();
-	
-	private static String SUBSCRIBE_STR = "session:%s - subscribing to:%s - with mask:%s";
-	private static String CHANGE_SUBSCRIBE_STR = "session:%s - subscribed to:%s - new mask:%s";
-	private static String UNSUBSCRIBE_STR = "session:%s - unsubscribing from:%s";
+
+	private static String SUBSCRIBE_STR = "subscription:%s - subscribing to:%s - with mask:%s";
+	private static String CHANGE_SUBSCRIBE_STR = "subscription:%s - subscribed to:%s - new mask:%s";
+	private static String UNSUBSCRIBE_STR = "subscription:%s - unsubscribing from:%s";
+	private static String CREATE_SUBSCRIPTION_STR = "create subscription:%s";
+	private static String DELETE_SUBSCRIPTION_STR = "delete subscription:%s";
+	private static String ABORT_SUBSCRIPTION_STR = "abort subscription:%s";
 
 	/**
 	 * Private constructor for singleton use.
@@ -85,5 +88,32 @@ public class SubscriptionLogger {
 	 */
 	public boolean isEnabled() {
 		return subscriptionLogger.isTraceEnabled();
+	}
+
+	public void logCreateSubscription(String id) {
+		if (subscriptionLogger.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(CREATE_SUBSCRIPTION_STR, id);
+			subscriptionLogger.debug(format.toString());
+			format.close();
+		}
+	}
+
+	public void logDeleteSubscription(String id) {
+		if (subscriptionLogger.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(DELETE_SUBSCRIPTION_STR, id);
+			subscriptionLogger.debug(format.toString());
+			format.close();
+		}
+	}
+
+	public void logAbortSubscription(String id) {
+		if (subscriptionLogger.isTraceEnabled()) {
+			Formatter format = new Formatter();
+			format.format(ABORT_SUBSCRIPTION_STR, id);
+			subscriptionLogger.debug(format.toString());
+			format.close();
+		}
 	}
 }

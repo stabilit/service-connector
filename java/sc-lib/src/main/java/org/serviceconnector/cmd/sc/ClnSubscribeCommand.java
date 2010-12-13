@@ -258,11 +258,13 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		/** {@inheritDoc} */
 		@Override
 		public void timeout() {
+			logger.debug("timeout publishTimer");
 			// extracting subscriptionId from request message
 			SCMPMessage reqMsg;
 			try {
 				reqMsg = request.getMessage();
 			} catch (Exception e1) {
+				logger.warn("timeout expired request.getMessage() failed: " + e1.getMessage());
 				SCMPMessageFault fault = new SCMPMessageFault(e1);
 				response.setSCMP(fault);
 				try {
@@ -277,8 +279,10 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 			String subscriptionId = reqMsg.getSessionId();
 
+			logger.debug("timeout publishTimer datapointer subscriptionId " + subscriptionId);
 			Subscription subscription = subscriptionRegistry.getSubscription(subscriptionId);
 			if (subscription == null) {
+				logger.debug("subscription not found - subscription has already been deleted subscriptionId " + subscriptionId);
 				// subscription has already been deleted
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.NOT_FOUND, "subscription not found");
 				response.setSCMP(fault);
@@ -294,11 +298,14 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			// tries polling from queue
 			SCMPMessage message = this.subscriptionQueue.getMessage(subscriptionId);
 			if (message == null) {
+				logger.debug("no message found on queue - subscription timeout set up no data message subscriptionId "
+						+ subscriptionId);
 				// no message found on queue - subscription timeout set up no data message
 				reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 				reqMsg.setIsReply(true);
 				this.response.setSCMP(reqMsg);
 			} else {
+				logger.debug("message found on queue - subscription timeout set up reply message subscriptionId " + subscriptionId);
 				// set up reply
 				SCMPMessage reply = null;
 				if (message.isPart()) {
