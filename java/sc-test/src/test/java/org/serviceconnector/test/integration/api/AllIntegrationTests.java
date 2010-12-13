@@ -13,24 +13,24 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.integration;
+package org.serviceconnector.test.integration.api;
 
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.integration.cln.AfterSCAbortClientTest;
-import org.serviceconnector.test.integration.cln.AfterSCRestartClientTest;
-import org.serviceconnector.test.integration.cln.AttachDetachTest;
-import org.serviceconnector.test.integration.cln.AttachTest;
-import org.serviceconnector.test.integration.cln.EnableDisableServiceTest;
-import org.serviceconnector.test.integration.cln.MultipleSCsClientTest;
-import org.serviceconnector.test.integration.cln.NewServiceTest;
-import org.serviceconnector.test.integration.srv.AfterSCAbortServerTest;
-import org.serviceconnector.test.integration.srv.AfterSCRestartServerTest;
-import org.serviceconnector.test.integration.srv.MultipleSCsServerTest;
-import org.serviceconnector.test.integration.srv.PublishServerTest;
-import org.serviceconnector.test.integration.srv.RegisterPublishServerTest;
-import org.serviceconnector.test.integration.srv.RegisterSessionServerTest;
+import org.serviceconnector.test.integration.api.cln.AfterSCAbortClientTest;
+import org.serviceconnector.test.integration.api.cln.AfterSCRestartClientTest;
+import org.serviceconnector.test.integration.api.cln.AttachDetachTest;
+import org.serviceconnector.test.integration.api.cln.AttachTest;
+import org.serviceconnector.test.integration.api.cln.EnableDisableServiceTest;
+import org.serviceconnector.test.integration.api.cln.MultipleSCsClientTest;
+import org.serviceconnector.test.integration.api.cln.NewServiceTest;
+import org.serviceconnector.test.integration.api.srv.AfterSCAbortServerTest;
+import org.serviceconnector.test.integration.api.srv.AfterSCRestartServerTest;
+import org.serviceconnector.test.integration.api.srv.MultipleSCsServerTest;
+import org.serviceconnector.test.integration.api.srv.PublishServerTest;
+import org.serviceconnector.test.integration.api.srv.RegisterPublishServerTest;
+import org.serviceconnector.test.integration.api.srv.RegisterSessionServerTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { 

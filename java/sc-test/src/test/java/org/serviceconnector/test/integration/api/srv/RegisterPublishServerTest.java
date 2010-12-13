@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.integration.srv;
+package org.serviceconnector.test.integration.api.srv;
 
 import java.security.InvalidParameterException;
 
@@ -28,9 +28,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCSubscribeMessage;
+import org.serviceconnector.api.srv.SCPublishServer;
+import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
-import org.serviceconnector.api.srv.SCSessionServer;
-import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -38,18 +39,18 @@ import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
-public class RegisterSessionServerTest {
+public class RegisterPublishServerTest {
 
 	/** The Constant testLogger. */
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(RegisterSessionServerTest.class);
+	protected final static Logger logger = Logger.getLogger(RegisterPublishServerTest.class);
 
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;
 	private SCServer server;
-	private SCSessionServer sessionServer;
+	private SCPublishServer publishServer;
 	private int threadCount = 0;
 
 	@BeforeClass
@@ -66,9 +67,9 @@ public class RegisterSessionServerTest {
 	@After
 	public void afterOneTest() throws Exception {
 		try {
-			sessionServer.deregister();
+			publishServer.deregister();
 		} catch (Exception e) {}
-		sessionServer = null;
+		publishServer = null;
 		try {
 			server.stopListener();
 		} catch (Exception e) {}
@@ -98,10 +99,10 @@ public class RegisterSessionServerTest {
 	public void t101_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, 9002, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 1, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 1, cbk);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class RegisterSessionServerTest {
 	public void t102_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(null);
+		publishServer = server.newPublishServer(null);
 	}
 
 	/**
@@ -123,7 +124,7 @@ public class RegisterSessionServerTest {
 	public void t103_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer("");
+		publishServer = server.newPublishServer("");
 	}
 	
 	/**
@@ -134,7 +135,7 @@ public class RegisterSessionServerTest {
 	public void t104_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(" ");
+		publishServer = server.newPublishServer(" ");
 	}
 
 	/**
@@ -145,9 +146,9 @@ public class RegisterSessionServerTest {
 	public void t105_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer("gaga");
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 1, cbk);
+		publishServer = server.newPublishServer("gaga");
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 1, cbk);
 	}
 	
 	/**
@@ -158,9 +159,9 @@ public class RegisterSessionServerTest {
 	public void t106_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = null;
-		sessionServer.register(1, 1, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = null;
+		publishServer.register(1, 1, cbk);
 	}
 
 	/**
@@ -171,10 +172,10 @@ public class RegisterSessionServerTest {
 	public void t107_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 1, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 1, cbk);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 	}
 
 
@@ -186,10 +187,10 @@ public class RegisterSessionServerTest {
 	public void t108_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(10, 10, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(10, 10, cbk);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 	}
 
 	/**
@@ -200,9 +201,9 @@ public class RegisterSessionServerTest {
 	public void t109_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 10, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 10, cbk);
 	}
 
 	/**
@@ -213,9 +214,9 @@ public class RegisterSessionServerTest {
 	public void t110_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(10, 20, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(10, 20, cbk);
 	}
 
 	/**
@@ -226,9 +227,9 @@ public class RegisterSessionServerTest {
 	public void t111_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(0, 1, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(0, 1, cbk);
 	}
 	
 	/**
@@ -239,9 +240,9 @@ public class RegisterSessionServerTest {
 	public void t112_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 0, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 0, cbk);
 	}
 
 	/**
@@ -252,9 +253,9 @@ public class RegisterSessionServerTest {
 	public void t113_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(0, 0, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(0, 0, cbk);
 	}
 
 	/**
@@ -265,10 +266,10 @@ public class RegisterSessionServerTest {
 	public void t114_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 1, cbk);
-		sessionServer.register(1, 1, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 1, cbk);
+		publishServer.register(1, 1, cbk);
 	}
 
 	/**
@@ -278,35 +279,13 @@ public class RegisterSessionServerTest {
 	@Test (expected = SCServiceException.class)
 	public void t115_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 1, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 1, cbk);
 		server.startListener();
 	}
 	
-	/**
-	 * Description:	register /de-register session server with 1 session and 1 connection 1000 times<br>
-	 * Expectation:	passes
-	 */
-	@Test
-	public void t116_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
-		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		int nr = 1000;
-		int sleep = 0;
-		for (int i = 0; i < nr; i++) {
-			if (((i+1) % 100) == 0) testLogger.info("Register/deregister nr. " + (i+1) + "...");
-			sessionServer.register(1, 1, cbk);
-			Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
-			if (sleep > 0) 
-				Thread.sleep(sleep);
-			sessionServer.deregister();
-			Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
-		}
-	}
-
+	
 	/**
 	 * Description:	register two session servers to two services with two callbacks<br>
 	 * Expectation:	passes
@@ -315,18 +294,18 @@ public class RegisterSessionServerTest {
 	public void t198_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk1 = new CallBack(sessionServer1);
-		sessionServer1.register(1, 1, cbk1);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		SCPublishServer publishServer1 = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk1 = new CallBack(publishServer1);
+		publishServer1.register(1, 1, cbk1);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer1.isRegistered());
 		
-		SCSessionServer sessionServer2 = server.newSessionServer(TestConstants.sesServiceName2);
-		SCSessionServerCallback cbk2 = new CallBack(sessionServer2);
-		sessionServer2.register(1, 1, cbk2);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		SCPublishServer publishServer2 = server.newPublishServer(TestConstants.sesServiceName2);
+		SCPublishServerCallback cbk2 = new CallBack(publishServer2);
+		publishServer2.register(1, 1, cbk2);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer2.isRegistered());
 		
-		sessionServer1.deregister();
-		sessionServer2.deregister();
+		publishServer1.deregister();
+		publishServer2.deregister();
 	}
 	
 	/**
@@ -337,17 +316,17 @@ public class RegisterSessionServerTest {
 	public void t199_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
-		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer1);
-		sessionServer1.register(1, 1, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		SCPublishServer publishServer1 = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer1);
+		publishServer1.register(1, 1, cbk);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer1.isRegistered());
 		
-		SCSessionServer sessionServer2 = server.newSessionServer(TestConstants.sesServiceName2);
-		sessionServer2.register(1, 1, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		SCPublishServer publishServer2 = server.newPublishServer(TestConstants.sesServiceName2);
+		publishServer2.register(1, 1, cbk);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer2.isRegistered());
 		
-		sessionServer1.deregister();
-		sessionServer2.deregister();
+		publishServer1.deregister();
+		publishServer2.deregister();
 	}
 
 	
@@ -359,10 +338,10 @@ public class RegisterSessionServerTest {
 	public void t201_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, 9002, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 1, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 1, cbk);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 	}
 
 	/**
@@ -373,7 +352,7 @@ public class RegisterSessionServerTest {
 	public void t202_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(null);
+		publishServer = server.newPublishServer(null);
 	}
 
 	/**
@@ -384,7 +363,7 @@ public class RegisterSessionServerTest {
 	public void t203_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer("");
+		publishServer = server.newPublishServer("");
 	}
 	
 	/**
@@ -395,7 +374,7 @@ public class RegisterSessionServerTest {
 	public void t204_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(" ");
+		publishServer = server.newPublishServer(" ");
 	}
 
 	/**
@@ -406,9 +385,9 @@ public class RegisterSessionServerTest {
 	public void t205_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer("gaga");
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 1, cbk);
+		publishServer = server.newPublishServer("gaga");
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 1, cbk);
 	}
 	
 	/**
@@ -419,9 +398,9 @@ public class RegisterSessionServerTest {
 	public void t206_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = null;
-		sessionServer.register(1, 1, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = null;
+		publishServer.register(1, 1, cbk);
 	}
 
 	/**
@@ -432,10 +411,10 @@ public class RegisterSessionServerTest {
 	public void t207_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 1, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 1, cbk);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 	}
 
 
@@ -447,10 +426,10 @@ public class RegisterSessionServerTest {
 	public void t208_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(10, 10, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(10, 10, cbk);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 	}
 
 	/**
@@ -461,9 +440,9 @@ public class RegisterSessionServerTest {
 	public void t209_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 10, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 10, cbk);
 	}
 
 	/**
@@ -474,9 +453,9 @@ public class RegisterSessionServerTest {
 	public void t210_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(10, 20, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(10, 20, cbk);
 	}
 
 	/**
@@ -487,9 +466,9 @@ public class RegisterSessionServerTest {
 	public void t211_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(0, 1, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(0, 1, cbk);
 	}
 	
 	/**
@@ -500,9 +479,9 @@ public class RegisterSessionServerTest {
 	public void t212_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 0, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 0, cbk);
 	}
 
 	/**
@@ -513,9 +492,9 @@ public class RegisterSessionServerTest {
 	public void t213_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(0, 0, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(0, 0, cbk);
 	}
 
 	/**
@@ -526,10 +505,10 @@ public class RegisterSessionServerTest {
 	public void t214_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 1, cbk);
-		sessionServer.register(1, 1, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 1, cbk);
+		publishServer.register(1, 1, cbk);
 	}
 
 	/**
@@ -539,36 +518,13 @@ public class RegisterSessionServerTest {
 	@Test (expected = SCServiceException.class)
 	public void t215_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		sessionServer.register(1, 1, cbk);
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer);
+		publishServer.register(1, 1, cbk);
 		server.startListener();
 	}
 	
 	
-	/**
-	 * Description:	register /de-register session server with 1 session and 1 connection 1000 times<br>
-	 * Expectation:	passes
-	 */
-	@Test
-	public void t216_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
-		server.startListener();
-		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
-		int nr = 1000;
-		int sleep = 0;
-		for (int i = 0; i < nr; i++) {
-			if (((i+1) % 100) == 0) testLogger.info("Register/deregister nr. " + (i+1) + "...");
-			sessionServer.register(1, 1, cbk);
-			Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
-			if (sleep > 0) 
-				Thread.sleep(sleep);
-			sessionServer.deregister();
-			Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
-		}
-	}
-
 	/**
 	 * Description:	register two session servers to two services with two callbacks<br>
 	 * Expectation:	passes
@@ -577,18 +533,18 @@ public class RegisterSessionServerTest {
 	public void t298_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk1 = new CallBack(sessionServer1);
-		sessionServer1.register(1, 1, cbk1);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		SCPublishServer publishServer1 = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk1 = new CallBack(publishServer1);
+		publishServer1.register(1, 1, cbk1);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer1.isRegistered());
 		
-		SCSessionServer sessionServer2 = server.newSessionServer(TestConstants.sesServiceName2);
-		SCSessionServerCallback cbk2 = new CallBack(sessionServer2);
-		sessionServer2.register(1, 1, cbk2);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		SCPublishServer publishServer2 = server.newPublishServer(TestConstants.pubServiceName2);
+		SCPublishServerCallback cbk2 = new CallBack(publishServer2);
+		publishServer2.register(1, 1, cbk2);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer2.isRegistered());
 		
-		sessionServer1.deregister();
-		sessionServer2.deregister();
+		publishServer1.deregister();
+		publishServer2.deregister();
 	}
 	
 	/**
@@ -599,42 +555,38 @@ public class RegisterSessionServerTest {
 	public void t299_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
-		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer1);
-		sessionServer1.register(1, 1, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
+		SCPublishServer publishServer1 = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new CallBack(publishServer1);
+		publishServer1.register(1, 1, cbk);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer1.isRegistered());
 		
-		SCSessionServer sessionServer2 = server.newSessionServer(TestConstants.sesServiceName2);
-		sessionServer2.register(1, 1, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
+		SCPublishServer publishServer2 = server.newPublishServer(TestConstants.pubServiceName2);
+		publishServer2.register(1, 1, cbk);
+		Assert.assertEquals("SessionServer is not registered", true, publishServer2.isRegistered());
 		
-		sessionServer1.deregister();
-		sessionServer2.deregister();
+		publishServer1.deregister();
+		publishServer2.deregister();
 	}
 
 	
 	
-	private class CallBack extends SCSessionServerCallback {
+	private class CallBack extends SCPublishServerCallback {
 
-		public CallBack(SCSessionServer server) {
+		public CallBack(SCPublishServer server) {
 			super(server);
 		}
 		@Override
-		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
-			return request;
+		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutInMillis) {
+			return message;
 		}
 
 		@Override
-		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
+			return message;
 		}
 
 		@Override
-		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
-		}
-
-		@Override
-		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
-			return request;
+		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
 		}
 	}
 }

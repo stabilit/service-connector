@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.integration.srv;
+package org.serviceconnector.test.integration.api.srv;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -33,13 +33,13 @@ import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
-public class AfterSCAbortServerTest {
+public class AfterSCRestartServerTest {
 
 	/** The Constant testLogger. */
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AfterSCAbortServerTest.class);
+	protected final static Logger logger = Logger.getLogger(AfterSCRestartServerTest.class);
 
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;
@@ -84,21 +84,21 @@ public class AfterSCAbortServerTest {
 		ctrl = null;
 	}
 
-
 	/**
-	 * Description: start listener after SC was aborted<br> 
+	 * Description: start listener after SC was restarted<br> 
 	 * Expectation:	passes because SC is not involved
 	 */
 	@Test
 	public void t101_startListener() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 	}
 
 	/**
-	 * Description: stop listener after SC was aborted<br> 
+	 * Description: stop listener after SC was restarted<br> 
 	 * Expectation:	passes because SC is not involved
 	 */
 	@Test
@@ -107,21 +107,22 @@ public class AfterSCAbortServerTest {
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.stopListener();
 		Assert.assertEquals("SessionServer is registered", false, server.isListening());
 	}
 
 	/**
-	 * Description: register after SC was aborted<br> 
-	 * Expectation:	throws SCServiceException
+	 * Description: register after SC was restarted<br> 
+	 * Expectation:	passes because SC is not involved
 	 */
-	@Test (expected = SCServiceException.class)
+	@Test
 	public void t103_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
-		ctrl.stopSC(scCtx);
 		server.startListener();
 		server.setImmediateConnect(true);
-		//server.setImmediateConnect(false);
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
@@ -130,15 +131,16 @@ public class AfterSCAbortServerTest {
 	}
 
 	/**
-	 * Description: register after SC was aborted and ImmediateConnect = false<br> 
-	 * Expectation:	throws SCServiceException 
+	 * Description: register after SC was restarted and ImmediateConnect = false<br> 
+	 * Expectation:	passes because SC is not involved
 	 */
-	@Test (expected = SCServiceException.class)
+	@Test
 	public void t104_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
-		ctrl.stopSC(scCtx);
 		server.startListener();
 		server.setImmediateConnect(false);
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
@@ -147,7 +149,7 @@ public class AfterSCAbortServerTest {
 	}
 
 	/**
-	 * Description: de-register after SC was aborted<br> 
+	 * Description: de-register after SC was restarted<br> 
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class)
@@ -160,25 +162,26 @@ public class AfterSCAbortServerTest {
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		sessionServer.deregister();
 		Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
 	}
 
-
 	/**
-	 * Description: start listener after SC was aborted<br> 
+	 * Description: start listener after SC was restarted<br> 
 	 * Expectation:	passes because SC is not involved
 	 */
 	@Test
 	public void t201_startListener() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 	}
 
 	/**
-	 * Description: stop listener after SC was aborted<br> 
+	 * Description: stop listener after SC was restarted<br> 
 	 * Expectation:	passes because SC is not involved
 	 */
 	@Test
@@ -187,21 +190,22 @@ public class AfterSCAbortServerTest {
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		server.stopListener();
 		Assert.assertEquals("SessionServer is registered", false, server.isListening());
 	}
 
 	/**
-	 * Description: register after SC was aborted<br> 
-	 * Expectation:	throws SCServiceException
+	 * Description: register after SC was restarted<br> 
+	 * Expectation:	passes because SC is not involved
 	 */
-	@Test (expected = SCServiceException.class)
+	@Test
 	public void t203_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
-		ctrl.stopSC(scCtx);
 		server.startListener();
 		server.setImmediateConnect(true);
-		//server.setImmediateConnect(false);
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
@@ -210,15 +214,16 @@ public class AfterSCAbortServerTest {
 	}
 
 	/**
-	 * Description: register after SC was aborted and ImmediateConnect = false<br> 
-	 * Expectation:	throws SCServiceException 
+	 * Description: register after SC was restarted and ImmediateConnect = false<br> 
+	 * Expectation:	passes because SC is not involved
 	 */
-	@Test (expected = SCServiceException.class)
+	@Test
 	public void t204_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
-		ctrl.stopSC(scCtx);
 		server.startListener();
 		server.setImmediateConnect(false);
+		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new CallBack(sessionServer);
@@ -227,7 +232,7 @@ public class AfterSCAbortServerTest {
 	}
 
 	/**
-	 * Description: de-register after SC was aborted<br> 
+	 * Description: de-register after SC was restarted<br> 
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class)
@@ -240,13 +245,13 @@ public class AfterSCAbortServerTest {
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 		ctrl.stopSC(scCtx);
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		sessionServer.deregister();
 		Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
 	}
-
-	
 	
 	private class CallBack extends SCSessionServerCallback {
+
 		public CallBack(SCSessionServer server) {
 			super(server);
 		}

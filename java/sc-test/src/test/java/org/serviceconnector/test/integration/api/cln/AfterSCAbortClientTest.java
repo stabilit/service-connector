@@ -1,4 +1,4 @@
-package org.serviceconnector.test.integration.cln;
+package org.serviceconnector.test.integration.api.cln;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
