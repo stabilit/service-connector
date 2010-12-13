@@ -200,6 +200,8 @@ public class TestPublishServer extends TestStatefulServer {
 		@Override
 		public void run() {
 			try {
+				// sleep for 1/2 seconds giving time to pass back the original response
+				Thread.sleep(500);
 				Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
 				method.invoke(this, request, operationTimeoutInMillis);
 			} catch (Exception e1) {

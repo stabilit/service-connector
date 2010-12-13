@@ -307,7 +307,7 @@ public class ChangeSubscriptionTest {
 			Assert.assertEquals("is not appErrorText", false, e.getAppErrorText().equals(""));
 		}
 		Assert.assertTrue("did not throw exception", passed);
-		Assert.assertFalse("is subscribed", service.isSubscribed());
+		Assert.assertTrue("is nor subscribed", service.isSubscribed());
 		service.unsubscribe();
 		Assert.assertNull("the session ID is not null)", service.getSessionId());
 	}

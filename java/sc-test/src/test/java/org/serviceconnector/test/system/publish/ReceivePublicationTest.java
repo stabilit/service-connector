@@ -112,8 +112,9 @@ public class ReceivePublicationTest {
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("publishMessages");
-		subMsgRequest.setData("1");
-		cbk.expectedMessages = 1;
+		int nrMessages = 1;
+		subMsgRequest.setData(Integer.toString(nrMessages));
+		cbk.expectedMessages = nrMessages;
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
 		Assert.assertNotNull("the session ID is null", service.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
@@ -121,7 +122,7 @@ public class ReceivePublicationTest {
 		Assert.assertTrue("is not subscribed", service.isSubscribed());
 		
 		waitForMessage(10);
-		Assert.assertEquals("Nr messages does not match", 1, cbk.messageCounter);
+		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.messageCounter);
 		SCMessage response = cbk.response;
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
 		
@@ -141,8 +142,9 @@ public class ReceivePublicationTest {
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("publishMessages");
-		subMsgRequest.setData("1000");
-		cbk.expectedMessages = 1000;
+		int nrMessages = 1000;
+		subMsgRequest.setData(Integer.toString(nrMessages));
+		cbk.expectedMessages = nrMessages;
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
 		Assert.assertNotNull("the session ID is null", service.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
@@ -150,7 +152,7 @@ public class ReceivePublicationTest {
 		Assert.assertTrue("is not subscribed", service.isSubscribed());
 
 		waitForMessage(10);
-		Assert.assertEquals("Nr messages does not match", 1000, cbk.messageCounter);
+		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.messageCounter);
 		SCMessage response = cbk.response;
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
 		
