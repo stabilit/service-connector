@@ -19,7 +19,7 @@
 /**
  * 
  */
-package org.serviceconnector.test.sc.sc.service;
+package org.serviceconnector.test.unit;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,7 +28,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SubscriptionMask;
 
 
-public class SCMPMessageFilterMaskTest {
+public class SCMPMessageMaskTest {
 
 	@Test
 	public void maskDoesntMatchTest() {
