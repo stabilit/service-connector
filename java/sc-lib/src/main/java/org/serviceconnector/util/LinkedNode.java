@@ -82,21 +82,21 @@ public class LinkedNode<T> {
 	 * 
 	 * @return true, if is referenced
 	 */
-	public boolean isReferenced() {
+	public synchronized boolean isReferenced() {
 		return referenced > 0;
 	}
 
 	/**
 	 * Increment reference counter.
 	 */
-	public void reference() {
+	public synchronized void reference() {
 		this.referenced++;
 	}
 
 	/**
 	 * Decrement reference counter.
 	 */
-	public void dereference() {
+	public synchronized void dereference() {
 		this.referenced--;
 	}
 }

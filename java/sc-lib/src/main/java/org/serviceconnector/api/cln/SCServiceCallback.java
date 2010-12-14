@@ -43,9 +43,9 @@ public class SCServiceCallback extends SynchronousCallback {
 	protected final static Logger logger = Logger.getLogger(SCServiceCallback.class);
 
 	/** The message callback. */
-	private SCMessageCallback messageCallback;
+	protected SCMessageCallback messageCallback;
 	/** The service which is using the callback. */
-	private SCService service;
+	protected SCService service;
 
 	/**
 	 * Instantiates a new ServiceCallback.
@@ -87,8 +87,8 @@ public class SCServiceCallback extends SynchronousCallback {
 			SCMPMessageFault fault = (SCMPMessageFault) scmpReply;
 			SCServiceException e = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			e.setSCMPError(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			this.service.setRequestComplete();
 			this.messageCallback.receive(e);
+			this.service.setRequestComplete();
 			return;
 		}
 		SCMessage messageReply = new SCMessage();
@@ -104,9 +104,9 @@ public class SCServiceCallback extends SynchronousCallback {
 		} catch (SCMPValidatorException ex) {
 			logger.warn("attributes invalid when setting in scmessage");
 		}
+		this.messageCallback.receive(messageReply);
 		// inform service request is completed
 		this.service.setRequestComplete();
-		this.messageCallback.receive(messageReply);
 	}
 
 	/** {@inheritDoc} */
@@ -117,8 +117,8 @@ public class SCServiceCallback extends SynchronousCallback {
 			super.callback(ex);
 			return;
 		}
+		this.messageCallback.receive(ex);
 		// inform service request is completed
 		this.service.setRequestComplete();
-		this.messageCallback.receive(ex);
 	}
 }

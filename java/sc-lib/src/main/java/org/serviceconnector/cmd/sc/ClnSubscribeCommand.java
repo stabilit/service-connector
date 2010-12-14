@@ -210,8 +210,8 @@ public class ClnSubscribeCommand extends CommandAdapter {
 	 */
 	private class PublishTimerRun implements IPublishTimerRun {
 
-		/** The timeout. */
-		private int timeoutMillis;
+		/** The noDataIntervalInMillis. */
+		private int noDataIntervalInMillis;
 		/** The subscription queue. */
 		private SubscriptionQueue<SCMPMessage> subscriptionQueue;
 		/** The request. */
@@ -224,20 +224,20 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		 * 
 		 * @param subscriptionQueue
 		 *            the subscription place
-		 * @param timeoutMillis
+		 * @param noDataIntervalInMillis
 		 *            the timeout
 		 */
-		public PublishTimerRun(SubscriptionQueue<SCMPMessage> subscriptionQueue, int timeoutMillis) {
+		public PublishTimerRun(SubscriptionQueue<SCMPMessage> subscriptionQueue, int noDataIntervalInMillis) {
 			this.request = null;
 			this.response = null;
-			this.timeoutMillis = timeoutMillis;
+			this.noDataIntervalInMillis = noDataIntervalInMillis;
 			this.subscriptionQueue = subscriptionQueue;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
-			return this.timeoutMillis;
+			return this.noDataIntervalInMillis;
 		}
 
 		/** {@inheritDoc} */

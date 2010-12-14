@@ -21,6 +21,7 @@ import java.security.InvalidParameterException;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.call.SCMPCallFactory;
@@ -80,7 +81,7 @@ public class SCPublishService extends SCService {
 	 */
 	public synchronized SCSubscribeMessage changeSubscription(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage)
 			throws Exception {
-		if (this.sessionActive == false) {
+		if (this.subscriptionActive == false) {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
 		}
 		if (scSubscribeMessage == null) {
@@ -99,12 +100,12 @@ public class SCPublishService extends SCService {
 		try {
 			changeSubscriptionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			this.sessionActive = false;
+			this.subscriptionActive = false;
 			throw new SCServiceException("change subscription failed", e);
 		}
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
-			this.sessionActive = false;
+			this.subscriptionActive = false;
 			SCServiceException ex = new SCServiceException("change subscription failed");
 			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			throw ex;
@@ -159,7 +160,7 @@ public class SCPublishService extends SCService {
 	 */
 	public SCSubscribeMessage subscribe(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage,
 			SCMessageCallback scMessageCallback) throws Exception {
-		if (this.sessionActive) {
+		if (this.subscriptionActive) {
 			throw new SCServiceException("already subscribed");
 		}
 		if (scSubscribeMessage == null) {
@@ -186,12 +187,12 @@ public class SCPublishService extends SCService {
 		try {
 			subscribeCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			this.sessionActive = false;
+			this.subscriptionActive = false;
 			throw new SCServiceException("subscribe failed", e);
 		}
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
-			this.sessionActive = false;
+			this.subscriptionActive = false;
 			SCServiceException ex = new SCServiceException("subscribe failed");
 			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			throw ex;
@@ -205,7 +206,7 @@ public class SCPublishService extends SCService {
 			throw ex;
 		}
 		this.sessionId = reply.getSessionId();
-		this.sessionActive = true;
+		this.subscriptionActive = true;
 		this.receivePublication();
 		SCSubscribeMessage replyToClient = new SCSubscribeMessage();
 		replyToClient.setData(reply.getBody());
@@ -224,7 +225,7 @@ public class SCPublishService extends SCService {
 	 * @return true, if is subscribed
 	 */
 	public boolean isSubscribed() {
-		return this.sessionActive;
+		return this.subscriptionActive;
 	}
 
 	/**
@@ -234,7 +235,7 @@ public class SCPublishService extends SCService {
 	 *             the exception
 	 */
 	private synchronized void receivePublication() throws Exception {
-		if (this.sessionActive == false || this.sessionId == null) {
+		if (this.subscriptionActive == false || this.sessionId == null) {
 			return;
 		}
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
@@ -288,11 +289,11 @@ public class SCPublishService extends SCService {
 	 *             the exception
 	 */
 	public synchronized void unsubscribe(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage) throws Exception {
-		if (this.sessionActive == false) {
+		if (this.subscriptionActive == false) {
 			// unsubscribe not possible - not subscribed on this service just ignore
 			return;
 		}
-		this.sessionActive = false;
+		this.subscriptionActive = false;
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		try {
 			this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
@@ -336,7 +337,7 @@ public class SCPublishService extends SCService {
 		/** {@inheritDoc} */
 		@Override
 		public void callback(SCMPMessage reply) {
-			if (SCPublishService.this.sessionActive == false) {
+			if (SCPublishService.this.subscriptionActive == false) {
 				// client is not subscribed anymore - stop continuing
 				return;
 			}
@@ -345,14 +346,36 @@ public class SCPublishService extends SCService {
 				SCMPMessageFault fault = (SCMPMessageFault) reply;
 				if (fault.getCause() != null) {
 					super.callback(fault.getCause());
-				} else {
+				} else { // EXC received
 					SCServiceException ex = new SCServiceException("SCPublishService operation failed");
 					ex.setSCMPError(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-					this.callback(ex);
+					super.callback(ex);
 				}
 				return;
 			}
-			if (SCPublishService.this.sessionActive) {
+			// check if reply is real answer
+			boolean noData = reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
+			if (noData == false) {
+				// data reply received - give to application
+				SCPublishMessage messageReply = new SCPublishMessage();
+				messageReply.setData(reply.getBody());
+				messageReply.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+				messageReply.setSessionId(reply.getSessionId());
+				try {
+					messageReply.setMask(reply.getHeader(SCMPHeaderAttributeKey.MASK));
+					messageReply.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+					if (reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE) != null) {
+						messageReply.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+						messageReply.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
+					}
+				} catch (SCMPValidatorException ex) {
+					logger.warn("attributes invalid when setting in scmessage");
+				}
+				this.messageCallback.receive(messageReply);
+				// inform service request is completed
+				this.service.setRequestComplete();
+			}
+			if (SCPublishService.this.subscriptionActive) {
 				// client is still subscribed - CRP again
 				try {
 					SCPublishService.this.receivePublication();
@@ -362,12 +385,6 @@ public class SCPublishService extends SCService {
 					super.callback(fault);
 					return;
 				}
-			}
-			// check if reply is real answer
-			boolean noData = reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
-			if (noData == false) {
-				// data reply received - give to application
-				super.callback(reply);
 			}
 		}
 	}
