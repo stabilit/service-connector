@@ -61,6 +61,7 @@ public class SubscriptionQueue<E> {
 		this.dataQueue = new LinkedQueue<E>();
 		this.pointerMap = new ConcurrentHashMap<String, TimeAwareDataPointer>();
 		this.timer = new Timer("SubscriptionQueueTimer");
+		this.timer.schedule(new TimerRefresher(), 60000);
 	}
 
 	/**
@@ -135,6 +136,7 @@ public class SubscriptionQueue<E> {
 		ptr.moveNext();
 		logger.trace("getMessage - queue size:" + this.dataQueue.getSize());
 		return message;
+
 	}
 
 	/**
@@ -162,9 +164,7 @@ public class SubscriptionQueue<E> {
 		logger.debug("fireNewDataArrived");
 		Object[] nodeArray = null;
 		// TODO, can be improved, separate set of null pointer nodes
-		synchronized (this.pointerMap) {
-			nodeArray = this.pointerMap.values().toArray();
-		}
+		nodeArray = this.pointerMap.values().toArray();
 		// looping through every data pointer - looking for null pointing elements
 		LinkedNode<E> newNode = dataQueue.getLast();
 		for (int i = 0; i < nodeArray.length; i++) {
@@ -213,7 +213,7 @@ public class SubscriptionQueue<E> {
 	 *            the response
 	 */
 	private synchronized void listen(String sessionId, IRequest request, IResponse response) {
-		TimeAwareDataPointer dataPointer = pointerMap.get(sessionId);
+		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		// stores request/response in timer run - to answer client correctly at timeout
 		dataPointer.timerRun.setRequest(request);
 		dataPointer.timerRun.setResponse(response);
@@ -233,7 +233,7 @@ public class SubscriptionQueue<E> {
 	 * @param timerRun
 	 *            the timer run
 	 */
-	public void subscribe(String sessionId, SubscriptionMask mask, IPublishTimerRun timerRun) {
+	public synchronized void subscribe(String sessionId, SubscriptionMask mask, IPublishTimerRun timerRun) {
 		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(mask, timerRun);
 		// Stores sessionId and dataPointer in map
 		this.pointerMap.put(sessionId, dataPointer);
@@ -247,7 +247,7 @@ public class SubscriptionQueue<E> {
 	 * @param filterMask
 	 *            the filter mask
 	 */
-	public void changeSubscription(String sessionId, SubscriptionMask mask) {
+	public synchronized void changeSubscription(String sessionId, SubscriptionMask mask) {
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		if (dataPointer != null) {
 			dataPointer.changeMask(mask);
@@ -260,7 +260,7 @@ public class SubscriptionQueue<E> {
 	 * @param sessionId
 	 *            the session id
 	 */
-	public void unsubscribe(String sessionId) {
+	public synchronized void unsubscribe(String sessionId) {
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		if (dataPointer.listening) {
 			// unsubscribe & pointer is in listen mode - run a timeout
@@ -306,7 +306,7 @@ public class SubscriptionQueue<E> {
 		/**
 		 * Move next. Moves data pointer to the next node in queue.
 		 */
-		public void moveNext() {
+		private void moveNext() {
 			if (this.node == null) {
 				// current node is already null - no move possible
 				return;
@@ -430,7 +430,8 @@ public class SubscriptionQueue<E> {
 		/**
 		 * Destroys data pointer and dereferences node in queue.
 		 */
-		public synchronized void destroy() {
+		private synchronized void destroy() {
+			logger.debug("destroy TimeAwareDataPointer");
 			this.cancel();
 			if (node != null) {
 				this.node.dereference();
@@ -451,6 +452,7 @@ public class SubscriptionQueue<E> {
 		 */
 		public synchronized void cancel() {
 			if (this.subscriptionTimeouter != null) {
+				logger.debug("cancel TimeAwareDataPointer");
 				this.subscriptionTimeouter.cancel();
 				// important to set timeouter null - rescheduling of same instance not possible
 				this.subscriptionTimeouter = null;
@@ -486,6 +488,13 @@ public class SubscriptionQueue<E> {
 			// stops listening - ITimerRun gets executed
 			this.dataPointer.stopListen();
 			super.run();
+		}
+	}
+
+	private class TimerRefresher extends TimerTask {
+		@Override
+		public void run() {
+			SubscriptionQueue.this.timer.schedule(new TimerRefresher(), 60000);
 		}
 	}
 }
