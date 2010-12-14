@@ -28,14 +28,13 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPBodyType;
-import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
-
-
+import org.serviceconnector.test.TestUtil;
 
 /**
  * The Class LargeMessageEncoderDecoderTest.
@@ -79,14 +78,14 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Decode REQ test.
+	 * Description: Decode REQ test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void decodeREQTest() {
-		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue()
-				+ "\n";
+	public void t01_DecodeREQTest() {
+		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		String requestString = AllUnitTests.getSCMPString(headKey, header, body);
+		String requestString = TestUtil.getSCMPString(headKey, header, body);
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -102,15 +101,15 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Decode RES test.
+	 * Description: Decode RES test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void decodeRESTest() {
+	public void t02_DecodeRESTest() {
 		headKey = SCMPHeadlineKey.RES;
-		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue()
-				+ "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		String requestString = AllUnitTests.getSCMPString(headKey, header, body);
+		String requestString = TestUtil.getSCMPString(headKey, header, body);
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -126,16 +125,16 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Decode EXC test.
+	 * Description: Decode EXC test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void decodeEXCTest() {
+	public void t03_DecodeEXCTest() {
 		headKey = SCMPHeadlineKey.EXC;
 
-		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue()
-				+ "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		String requestString = AllUnitTests.getSCMPString(headKey, header, body);
+		String requestString = TestUtil.getSCMPString(headKey, header, body);
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -154,12 +153,13 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Decode undef test.
+	 * Description: Decode UNDEF test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void decodeUNDEFTest() {
-		String requestString = "garbe /s=69& SCMP/1.0\n" + "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr
-				+ "\n" + "mty=" + msgType.getValue() + "\n" + body;
+	public void t04_decodeUNDEFTest() {
+		String requestString = "garbe /s=69& SCMP/1.0\n" + "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n"
+				+ "mty=" + msgType.getValue() + "\n" + body;
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -174,15 +174,15 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Decode prq test.
+	 * Description: Decode PRQ test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void decodePRQTest() {
+	public void t05_DecodePRQTest() {
 		headKey = SCMPHeadlineKey.PRQ;
-		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue()
-				+ "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		String requestString = AllUnitTests.getSCMPString(headKey, header, body);
+		String requestString = TestUtil.getSCMPString(headKey, header, body);
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -201,16 +201,16 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Decode prs test.
+	 * Description: Decode PRS test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void decodePRSTest() {
+	public void t06_DecodePRSTest() {
 		headKey = SCMPHeadlineKey.PRS;
 
-		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue()
-				+ "\n";
+		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		String requestString = AllUnitTests.getSCMPString(headKey, header, body);
+		String requestString = TestUtil.getSCMPString(headKey, header, body);
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -229,14 +229,14 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Decode body types test.
+	 * Description: Decode body types test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void decodeBodyTypesTest() {
-		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue()
-				+ "\n";
+	public void t07_DecodeBodyTypesTest() {
+		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		String requestString = AllUnitTests.getSCMPString(headKey, header, body);
+		String requestString = TestUtil.getSCMPString(headKey, header, body);
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -253,7 +253,7 @@ public class LargeMessageEncoderDecoderTest {
 		bodyType = SCMPBodyType.TEXT;
 		header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		requestString = AllUnitTests.getSCMPString(headKey, header, body);
+		requestString = TestUtil.getSCMPString(headKey, header, body);
 
 		buffer = requestString.getBytes();
 		is = new ByteArrayInputStream(buffer);
@@ -269,16 +269,16 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Encode req test.
+	 * Description: Encode REQ test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void encodeREQTest() {
+	public void t20_EncodeREQTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
-		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
-				+ "\n";
+		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		String expectedString = AllUnitTests.getSCMPString(headKey, header, body);
+		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
 		OutputStream os = new ByteArrayOutputStream();
 		try {
@@ -290,17 +290,17 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Encode res test.
+	 * Description: Encode RES test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void encodeRESTest() {
+	public void t21_EncodeRESTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
 		this.headKey = SCMPHeadlineKey.RES;
-		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
-				+ "\n";
+		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		String expectedString = AllUnitTests.getSCMPString(headKey, header, body);
+		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
 		SCMPMessage encodeRes = new SCMPMessage();
 		encodeRes.setIsReply(true);
@@ -317,17 +317,17 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Encode exc test.
+	 * Description: Encode EXC test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void encodeEXCTest() {
+	public void t22_encodeEXCTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
 		this.headKey = SCMPHeadlineKey.EXC;
-		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
-				+ "\n";
+		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		String expectedString = AllUnitTests.getSCMPString(headKey, header, body);
+		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
 		SCMPMessage encodeExc = new SCMPMessageFault();
 		encodeExc.setHeader(encodeScmp);
@@ -343,17 +343,17 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Encode prq test.
+	 * Description: Encode PRQ test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void encodePRQTest() {
+	public void t23_EncodePRQTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
 		this.headKey = SCMPHeadlineKey.PRQ;
-		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
-				+ "\n";
+		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		String expectedString = AllUnitTests.getSCMPString(headKey, header, body);
+		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
 		SCMPMessage encodeRes = new SCMPPart();
 		encodeRes.setHeader(encodeScmp);
@@ -369,17 +369,17 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Encode prs test.
+	 * Description: Encode PRS test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void encodePRSTest() {
+	public void t24_EncodePRSTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
 		this.headKey = SCMPHeadlineKey.PRS;
-		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
-				+ "\n";
+		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		String expectedString = AllUnitTests.getSCMPString(headKey, header, body);
+		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
 		SCMPMessage encodeRes = new SCMPPart();
 		encodeRes.setIsReply(true);
@@ -396,16 +396,16 @@ public class LargeMessageEncoderDecoderTest {
 	}
 
 	/**
-	 * Encode body types test.
+	 * Description: Encode body types test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void encodeBodyTypesTest() {
+	public void t25_EncodeBodyTypesTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
-		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue()
-				+ "\n";
+		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		String expectedString = AllUnitTests.getSCMPString(headKey, header, body);
+		String expectedString = TestUtil.getSCMPString(headKey, header, body);
 
 		OutputStream os = new ByteArrayOutputStream();
 		try {
@@ -419,10 +419,9 @@ public class LargeMessageEncoderDecoderTest {
 		bodyType = SCMPBodyType.TEXT;
 		encodeScmp.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, bodyType.getValue());
 
-		header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n"
-				+ "mty=" + msgType.getValue() + "\n";
+		header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
-		expectedString = AllUnitTests.getSCMPString(headKey, header, body);
+		expectedString = TestUtil.getSCMPString(headKey, header, body);
 
 		os = new ByteArrayOutputStream();
 		try {

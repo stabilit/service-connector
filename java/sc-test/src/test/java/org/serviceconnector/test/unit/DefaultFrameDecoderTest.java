@@ -31,17 +31,14 @@ import org.serviceconnector.net.IFrameDecoder;
 public class DefaultFrameDecoderTest {
 
 	/** The decoder. */
-	private IFrameDecoder decoder = AppContext.getFrameDecoderFactory().getFrameDecoder(
-			Constants.TCP);
+	private IFrameDecoder decoder = AppContext.getFrameDecoderFactory().getFrameDecoder(Constants.TCP);
 
 	/**
-	 * Parses the frame size fail test.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 * Description: Parses frame size fail test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void parseFrameSizeFailTest() throws Exception {
+	public void t01_ParseFrameSizeFailTest() throws Exception {
 		try {
 			int frameSize = decoder.parseFrameSize(null);
 			Assert.assertEquals("0", frameSize + "");
@@ -53,10 +50,11 @@ public class DefaultFrameDecoderTest {
 	}
 
 	/**
-	 * Parses the frame size test.
+	 * Description: Parses frame size<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void parseFrameSizeTest() {
+	public void t02_ParseFrameSizeTest() {
 		byte[] b = null;
 		int frameSize = 0;
 		String headline = "REQ 0000078 00043 1.0\n";
@@ -79,10 +77,11 @@ public class DefaultFrameDecoderTest {
 	}
 
 	/**
-	 * Read int fail test.
+	 * Description: Read integer fail test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void readIntFailTest() {
+	public void t10_ReadIntFailTest() {
 		byte[] b = null;
 		String headline = "REQ  008700 00000 1.0\n";
 		try {

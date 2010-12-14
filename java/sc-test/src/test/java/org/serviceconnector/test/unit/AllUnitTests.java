@@ -15,12 +15,8 @@
  */
 package org.serviceconnector.test.unit;
 
-import java.text.DecimalFormat;
-
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.Constants;
-import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.test.unit.api.SCMessageTest;
 import org.serviceconnector.test.unit.api.SCSubscribeMessageTest;
 import org.serviceconnector.test.unit.api.cln.SCClientTest;
@@ -35,9 +31,8 @@ import org.serviceconnector.test.unit.api.srv.SCServerTest;
 		NewServerTest.class, //
 		DefaultFrameDecoderTest.class, //
 		HttpFrameDecoderTest.class, //
-		SCMPCompositeTest.class, //
-		SCMPLargeRequestTest.class, //
 		SCMPLargeResponseTest.class, //
+		SCMPLargeRequestTest.class, //
 		LargeMessageEncoderDecoderTest.class, //
 		KeepAliveMessageEncoderDecoderTest.class,//
 		DefaultEncoderDecoderTest.class,//
@@ -46,29 +41,11 @@ import org.serviceconnector.test.unit.api.srv.SCServerTest;
 		DecodeSCMPVersionTest.class, //
 		LinkedQueueTest.class, //
 		SCVersionTest.class, //
-		SCMPVersionTest.class })
+		SCMPVersionTest.class, //
+		CacheExpirationTestCase.class, // 
+		CacheExpirationThreadRunTestCase.class, // 
+		CacheStatisticsTestCase.class, //
+		CacheTestCase.class, //
+		CacheThreadRunTestCase.class })
 public class AllUnitTests {
-
-	private static DecimalFormat dfMsg = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
-	private static DecimalFormat dfHeader = new DecimalFormat(Constants.SCMP_FORMAT_OF_HEADER_SIZE);
-
-	public static String getSCMPString(SCMPHeadlineKey headKey, String header, String body) {
-		int headerSize = 0;
-		int bodySize = 0;
-		String msgString = "";
-
-		if (header != null) {
-			headerSize = header.length();
-			msgString += header;
-		}
-		if (body != null) {
-			bodySize = body.length();
-			msgString += body;
-		}
-		int messageSize = headerSize + bodySize;
-
-		String scmpString = headKey.name() + AllUnitTests.dfMsg.format(messageSize) + AllUnitTests.dfHeader.format(headerSize)
-				+ " 1.0\n" + msgString;
-		return scmpString;
-	}
 }

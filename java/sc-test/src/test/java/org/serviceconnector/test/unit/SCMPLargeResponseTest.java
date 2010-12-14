@@ -19,55 +19,59 @@ package org.serviceconnector.test.unit;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.serviceconnector.scmp.SCMPLargeRequest;
+import org.serviceconnector.scmp.SCMPBodyType;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPLargeResponse;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPOffsetPart;
+import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPPart;
 
 /**
- * The Class SCMPLargeResponseTest.
+ * The Class SCMPCompositeTest.
  * 
  * @author JTraber
  */
-public class SCMPLargeResponseTest extends SCMPMessage {
-
-	/** The MAX_ANZ. */
-	private static final int MAX_ANZ = 100000;
+public class SCMPLargeResponseTest {
 
 	/**
-	 * Scmp large response test.
+	 * Description: SCMP large response test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public final void scmpLargeResponseTest() {
-		StringBuilder sb = new StringBuilder();
+	public void t01_SCMPLargeResponseTest() {
+		int bodyLength = 0;
+		StringBuilder body = new StringBuilder();
 
-		for (int i = 0; i < MAX_ANZ; i++) {
-			sb.append(i);
+		SCMPMessage request = new SCMPMessage();
+		request.setBody("request");
+		request.setMessageType(SCMPMsgType.CLN_EXECUTE);
+
+		SCMPPart firstPart = new SCMPPart(false);
+		String bodyString = "first part request";
+		firstPart.setBody(bodyString);
+		SCMPLargeResponse largeResponse = new SCMPLargeResponse(request, firstPart);
+
+		bodyLength += bodyString.length();
+		body.append(bodyString);
+		Assert.assertEquals(bodyLength, largeResponse.getOffset());
+
+		for (int i = 0; i < 10; i++) {
+			SCMPPart part = new SCMPPart();
+			bodyString = "part nr: " + i;
+			part.setBody(bodyString);
+			largeResponse.add(part);
+			bodyLength += bodyString.length();
+			body.append(bodyString);
+			Assert.assertEquals(bodyLength, largeResponse.getOffset());
 		}
+		// needed to compare to requestPart of the composite
+		// body of the requestPart is null because body is split into several parts
+		// bodyType is text because split parts hold text bodies
+		request.setBody(null);
+		request.setHeader(SCMPHeaderAttributeKey.BODY_TYPE, SCMPBodyType.TEXT.getValue());
 
-		SCMPMessage largeScmp = new SCMPMessage();
-		largeScmp.setBody(sb.toString());
-		largeScmp.setIsReply(true);
-
-		SCMPLargeRequest largeResponse = new SCMPLargeRequest(largeScmp);
-
-		int offset = 0;
-		while (largeResponse.hasNext()) {
-
-			SCMPOffsetPart responsePart = new SCMPOffsetPart(largeScmp, offset, sb.length());
-			offset += responsePart.getBodyLength();
-
-			SCMPMessage message = largeResponse.getNext();
-			Assert.assertEquals(responsePart.getBody().toString(), message.getBody().toString());
-			Assert.assertEquals(responsePart.getBodyLength(), message.getBodyLength());
-			Assert.assertEquals(responsePart.getBodyOffset(), message.getBodyOffset());
-			Assert.assertEquals(responsePart.getBodyType(), message.getBodyType());
-		}
-
-		SCMPOffsetPart firstPart = new SCMPOffsetPart(largeScmp, 0, sb.length());
-		SCMPMessage message = largeResponse.getFirst();
-		Assert.assertEquals(firstPart.getBody().toString(), message.getBody().toString());
-		Assert.assertEquals(firstPart.getBodyLength(), message.getBodyLength());
-		Assert.assertEquals(firstPart.getBodyOffset(), message.getBodyOffset());
-		Assert.assertEquals(firstPart.getBodyType(), message.getBodyType());
+		Assert.assertEquals(bodyLength, largeResponse.getBodyLength());
+		Assert.assertEquals(body.toString(), largeResponse.getBody() + "");
+		Assert.assertEquals(request.toString(), largeResponse.getPart().toString());
 	}
 }

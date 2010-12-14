@@ -31,17 +31,14 @@ import org.serviceconnector.net.IFrameDecoder;
 public class HttpFrameDecoderTest {
 
 	/** The decoder. */
-	private IFrameDecoder decoder = AppContext.getFrameDecoderFactory().getFrameDecoder(
-			Constants.HTTP);
+	private IFrameDecoder decoder = AppContext.getFrameDecoderFactory().getFrameDecoder(Constants.HTTP);
 
 	/**
-	 * Parses the frame size test.
-	 * 
-	 * @throws Exception
-	 *             the exception
+	 * Description: Parses the frame size test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void parseFrameSizeTest() throws Exception {
+	public void t01_ParseFrameSizeTest() throws Exception {
 		String httpHeader = "POST / HTTP/1.1\r\n" + "Host: www.google.com\r\n" + "Connection: close\r\n"
 				+ "User-Agent: Web-sniffer/1.0.31 (+http://web-sniffer.net/)\r\n"
 				+ "Accept-Charset: ISO-8859-1,UTF-8;q=0.7,*;q=0.7\r\n" + "Cache-Control: no\r\n"

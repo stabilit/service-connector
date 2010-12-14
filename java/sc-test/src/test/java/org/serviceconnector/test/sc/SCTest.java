@@ -57,7 +57,7 @@ import org.serviceconnector.test.unit.HttpFrameDecoderTest;
 import org.serviceconnector.test.unit.KeepAliveMessageEncoderDecoderTest;
 import org.serviceconnector.test.unit.LargeMessageEncoderDecoderTest;
 import org.serviceconnector.test.unit.LinkedQueueTest;
-import org.serviceconnector.test.unit.SCMPCompositeTest;
+import org.serviceconnector.test.unit.SCMPLargeResponseTest;
 import org.serviceconnector.test.unit.SCMPLargeRequestTest;
 import org.serviceconnector.test.unit.SCMPLargeResponseTest;
 import org.serviceconnector.test.unit.SCMPVersionTest;
@@ -93,7 +93,7 @@ import org.serviceconnector.test.unit.ValidatorUtilityTest;
 		// SCImplTestCases
 		DefaultFrameDecoderTest.class,//
 		HttpFrameDecoderTest.class, //
-		SCMPCompositeTest.class,//
+		SCMPLargeResponseTest.class,//
 		SCMPLargeRequestTest.class, //
 		SCMPLargeResponseTest.class,//
 		LargeMessageEncoderDecoderTest.class, //

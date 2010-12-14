@@ -27,11 +27,14 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SubscriptionMask;
 
-
 public class SCMPMessageMaskTest {
 
+	/**
+	 * Description: Invalid mask test<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void maskDoesntMatchTest() {
+	public void t01_maskDoesntMatchTest() {
 		String clientMask = "000012100012832102FADF-----------X-----------";
 		SubscriptionMask clnMask = new SubscriptionMask(clientMask);
 		SCMPMessage publishMsg = new SCMPMessage();
@@ -45,8 +48,12 @@ public class SCMPMessageMaskTest {
 		Assert.assertFalse(clnMask.matches(publishMsg));
 	}
 
+	/**
+	 * Description: Valid mask test<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void maskDoesMatchTest() {
+	public void t10_maskDoesMatchTest() {
 		String clientMask = "000012100012832102FADF-----------X-----------";
 		SubscriptionMask clnMask = new SubscriptionMask(clientMask);
 		SCMPMessage publishMsg = new SCMPMessage();

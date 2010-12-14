@@ -28,7 +28,6 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.ValidatorUtility;
 
-
 /**
  * The Class ValidatorUtilityTest. Tests the validator utility.
  * 
@@ -38,18 +37,18 @@ public class ValidatorUtilityTest {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ValidatorUtilityTest.class);
-	
 	/** The FOUR. */
 	private static final int FOUR = 4;
 	/** The SDF. */
 	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
 	/**
-	 * Validate local date time test.
+	 * Description: Validate local date time test<br>
+	 * Expectation: passes
 	 */
 	@Test
 	@SuppressWarnings("deprecation")
-	public final void validateLocalDateTimeTest() {
+	public final void t01_validateLocalDateTimeTest() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(System.currentTimeMillis());
 		java.util.Date date = cal.getTime();
@@ -64,10 +63,11 @@ public class ValidatorUtilityTest {
 	}
 
 	/**
-	 * Validate ip address list.
+	 * Description: Validate ip address list<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void validateIpAddressList() {
+	public void t10_validateIpAddressList() {
 		try {
 			// simply one ip address
 			ValidatorUtility.validateIpAddressList("127.0.0.1");
@@ -105,10 +105,11 @@ public class ValidatorUtilityTest {
 	}
 
 	/**
-	 * Validate int test.
+	 * Description: Validate integer test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void validateIntTest() {
+	public void t20_validateIntTest() {
 		// validate int value with lower limit
 		try {
 			// greater than lowerLimit
@@ -122,8 +123,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateInt(0, "-1", SCMPError.HV_WRONG_MAX_SESSIONS);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_MAX_SESSIONS.getErrorText() + " [IntValue -1 too low]", e
-					.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_MAX_SESSIONS.getErrorText() + " [IntValue -1 too low]", e.getMessage());
 		}
 
 		try {
@@ -131,8 +131,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateInt(0, "", SCMPError.HV_WRONG_MAX_SESSIONS);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_MAX_SESSIONS.getErrorText() + " [IntValue  must be numeric]", e
-					.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_MAX_SESSIONS.getErrorText() + " [IntValue  must be numeric]", e.getMessage());
 		}
 
 		// validate int value with lower & upper limit
@@ -148,8 +147,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateInt(0, "-1", 2, SCMPError.HV_WRONG_PORTNR);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue -1 not within limits]", e
-					.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue -1 not within limits]", e.getMessage());
 		}
 
 		try {
@@ -157,8 +155,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateInt(0, "3", 2, SCMPError.HV_WRONG_PORTNR);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue 3 not within limits]", e
-					.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue 3 not within limits]", e.getMessage());
 		}
 
 		try {
@@ -166,16 +163,16 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateInt(0, "", 1, SCMPError.HV_WRONG_PORTNR);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue  must be numeric]", e
-					.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue  must be numeric]", e.getMessage());
 		}
 	}
 
 	/**
-	 * Validate string test.
+	 * Description: Validate string test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void validateStringTest() {
+	public void t30_validateStringTest() {
 
 		try {
 			// length is between 1 and 4

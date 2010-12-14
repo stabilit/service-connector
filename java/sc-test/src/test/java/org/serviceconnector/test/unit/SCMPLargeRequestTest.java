@@ -23,22 +23,22 @@ import org.serviceconnector.scmp.SCMPLargeRequest;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPOffsetPart;
 
-
 /**
  * The Class SCMPLargeRequestTest.
  * 
  * @author JTraber
  */
-public class SCMPLargeRequestTest extends SCMPMessage {
+public class SCMPLargeRequestTest {
 
 	/** The MAX_ANZ. */
 	private static final int MAX_ANZ = 100000;
 
 	/**
-	 * Scmp large request test.
+	 * Description: SCMP large request test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void scmpLargeRequestTest() {
+	public void t01_SCMPLargeRequestTest() {
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < MAX_ANZ; i++) {
@@ -52,11 +52,10 @@ public class SCMPLargeRequestTest extends SCMPMessage {
 
 		int offset = 0;
 		while (largeRequest.hasNext()) {
+			SCMPMessage message = largeRequest.getNext();
 
 			SCMPOffsetPart responsePart = new SCMPOffsetPart(largeScmp, offset, sb.length());
 			offset += responsePart.getBodyLength();
-
-			SCMPMessage message = largeRequest.getNext();
 			Assert.assertEquals(responsePart.getBody().toString(), message.getBody().toString());
 			Assert.assertEquals(responsePart.getBodyLength(), message.getBodyLength());
 			Assert.assertEquals(responsePart.getBodyOffset(), message.getBodyOffset());

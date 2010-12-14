@@ -20,7 +20,6 @@ import org.junit.Test;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPVersion;
 
-
 /**
  * The Class SCMPVersionTest.
  * 
@@ -29,96 +28,80 @@ import org.serviceconnector.scmp.SCMPVersion;
 public class SCMPVersionTest {
 
 	/**
-	 * version compatibility tests.
-	 * 
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 * Description: Version compatibility test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void versionCompatibilityTest0() throws SCMPValidatorException {
+	public void t01_versionCompatibilityTest0() throws SCMPValidatorException {
 		SCMPVersion.TEST.isSupported(SCMPVersion.TEST.toString().getBytes());
 	}
 
 	/**
-	 * Version compatibility test1.
-	 * 
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 * Description: Version compatibility test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void versionCompatibilityTest1() throws SCMPValidatorException {
+	public void t02_versionCompatibilityTest1() throws SCMPValidatorException {
 		String version = "3.2";
 		SCMPVersion.TEST.isSupported(version.getBytes()); // TEST = 3.2
 	}
 
 	/**
-	 * Version compatibility test2.
-	 * 
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 * Description: Version compatibility test<br>
+	 * Expectation: passes
 	 */
 	@Test
-	public void versionCompatibilityTest2() throws SCMPValidatorException {
+	public void t03_versionCompatibilityTest2() throws SCMPValidatorException {
 		String version = "3.1";
 		SCMPVersion.TEST.isSupported(version.getBytes());
 	}
 
 	/**
-	 * Version compatibility test3.
-	 * 
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 * Description: Version compatibility test<br>
+	 * Expectation: throws SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void versionCompatibilityTest3() throws SCMPValidatorException {
+	public void t04_versionCompatibilityTest3() throws SCMPValidatorException {
 		String version = "3.3";
 		SCMPVersion.TEST.isSupported(version.getBytes());
 	}
 
 	/**
-	 * Version compatibility test4.
-	 * 
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 * Description: Version compatibility test<br>
+	 * Expectation: throws SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void versionCompatibilityTest4() throws SCMPValidatorException {
+	public void t05_versionCompatibilityTest4() throws SCMPValidatorException {
 		String version = "2.0";
 		SCMPVersion.TEST.isSupported(version.getBytes());
 	}
 
 	/**
-	 * Version compatibility test5.
-	 * 
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 * Description: Version compatibility test<br>
+	 * Expectation: throws SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void versionCompatibilityTest5() throws SCMPValidatorException {
+	public void t06_versionCompatibilityTest5() throws SCMPValidatorException {
 		String version = "4.0";
 		SCMPVersion.TEST.isSupported(version.getBytes());
 	}
 
 	/**
-	 * Version compatibility test10.
-	 * 
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 * Description: Version compatibility test<br>
+	 * Expectation: throws SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void versionCompatibilityTest10() throws SCMPValidatorException {
+	public void t07_versionCompatibilityTest10() throws SCMPValidatorException {
 		String version = "A.b";
 		SCMPVersion.TEST.isSupported(version.getBytes());
 	}
 
 	/**
-	 * Version compatibility test11.
-	 * 
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 * Description: Version compatibility test<br>
+	 * Expectation: throws SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void versionCompatibilityTest11() throws SCMPValidatorException {
+	public void t08_versionCompatibilityTest11() throws SCMPValidatorException {
 		String version = "11";
 		SCMPVersion.TEST.isSupported(version.getBytes());
 	}

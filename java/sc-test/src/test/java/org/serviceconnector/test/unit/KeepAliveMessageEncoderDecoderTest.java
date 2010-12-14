@@ -29,8 +29,7 @@ import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.scmp.SCMPMessage;
-
-
+import org.serviceconnector.test.TestUtil;
 
 /**
  * The Class LargeMessageEncoderDecoderTest.
@@ -44,12 +43,16 @@ public class KeepAliveMessageEncoderDecoderTest {
 	/** The encode scmp. */
 	private SCMPMessage encodeScmp;
 
+	/**
+	 * Description: Decode KRQ test<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void decodeKRQTest() {
+	public void t01_DecodeKRQTest() {
 		this.headKey = SCMPHeadlineKey.KRQ;
 
-		String requestString = AllUnitTests.getSCMPString(headKey, null, null);
-		
+		String requestString = TestUtil.getSCMPString(headKey, null, null);
+
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
@@ -63,8 +66,12 @@ public class KeepAliveMessageEncoderDecoderTest {
 		verifySCMP(message);
 	}
 
+	/**
+	 * Description: Decode KRS test<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void decodeKRSTest() {
+	public void t02_DecodeKRSTest() {
 		this.headKey = SCMPHeadlineKey.KRS;
 		String requestString = headKey.name() + " 0000000 00000 1.0\n";
 
@@ -81,8 +88,12 @@ public class KeepAliveMessageEncoderDecoderTest {
 		verifySCMP(message);
 	}
 
+	/**
+	 * Description: Encode KRQ test<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void encodeKRQTest() {
+	public void t10_EncodeKRQTest() {
 		this.headKey = SCMPHeadlineKey.KRQ;
 		this.encodeScmp = new SCMPKeepAlive();
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
@@ -96,10 +107,14 @@ public class KeepAliveMessageEncoderDecoderTest {
 			Assert.fail("Should not throw exception");
 		}
 		Assert.assertEquals(expectedString, os.toString());
-	}	
-	
+	}
+
+	/**
+	 * Description: Encode KRS test<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void encodeKRSTest() {
+	public void t11_EncodeKRSTest() {
 		this.headKey = SCMPHeadlineKey.KRS;
 		this.encodeScmp = new SCMPKeepAlive();
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
@@ -114,7 +129,7 @@ public class KeepAliveMessageEncoderDecoderTest {
 			Assert.fail("Should not throw exception");
 		}
 		Assert.assertEquals(expectedString, os.toString());
-	}	
+	}
 
 	private void verifySCMP(SCMPMessage scmp) {
 		Assert.assertNull(scmp.getBody());

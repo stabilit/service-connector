@@ -29,7 +29,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;
 
-
 /**
  * @author JTraber
  */
@@ -43,8 +42,12 @@ public class LinkedQueueTest {
 		this.queue = new LinkedQueue<SCMPMessage>();
 	}
 
+	/**
+	 * Description: Test sequence in queue is right<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void produceAndConsumeSequenceTest() {
+	public void t01_ProduceAndConsumeSequenceTest() {
 		int numberOfMsg = 10;
 		String bodyString = "body nr: ";
 		this.insertIntoQueue(numberOfMsg, bodyString);
@@ -62,8 +65,12 @@ public class LinkedQueueTest {
 		Assert.assertTrue(this.queue.isEmpty());
 	}
 
+	/**
+	 * Description: Test getFirst & getLast methods, queue filled<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void firstLastNodeManyElementsTest() {
+	public void t02_FirstLastNodeManyElementsTest() {
 		int numberOfMsg = 10;
 		String bodyString = "body nr: ";
 		this.insertIntoQueue(numberOfMsg, bodyString);
@@ -77,8 +84,12 @@ public class LinkedQueueTest {
 		Assert.assertEquals(bodyString + "9", message.getBody());
 	}
 
+	/**
+	 * Description: Test getFirst & getLast methods, queue empty<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void firstLastNodeNoElementsTest() {
+	public void t03_FirstLastNodeNoElementsTest() {
 		LinkedNode<SCMPMessage> node = this.queue.getFirst();
 		Assert.assertNull(node);
 		node = this.queue.getLast();
@@ -87,8 +98,12 @@ public class LinkedQueueTest {
 		Assert.assertEquals("0", this.queue.getSize() + "");
 	}
 
+	/**
+	 * Description: Test getFirst & getLast methods, queue contains one element<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void firstLastNodeOneElementTest() {
+	public void t04_FirstLastNodeOneElementTest() {
 		String body = "body";
 		this.insertIntoQueue(1, body);
 
@@ -101,22 +116,34 @@ public class LinkedQueueTest {
 		Assert.assertEquals("1", this.queue.getSize() + "");
 	}
 
+	/**
+	 * Description: Test empty queue<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void emptyQueueTest() {
+	public void t10_EmptyQueueTest() {
 		Assert.assertTrue(this.queue.isEmpty());
 		SCMPMessage message = this.queue.extract();
 		Assert.assertNull(message);
 	}
 
+	/**
+	 * Description: Insert null value in queue<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void insertNullValueTest() {
+	public void t11_InsertNullValueTest() {
 		this.queue.insert(null);
 		Assert.assertEquals("1", this.queue.getSize() + "");
 		Assert.assertFalse(this.queue.isEmpty());
 	}
 
+	/**
+	 * Description: Many consumer one producer test<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void manyConsumersOneProducerTest() throws Exception {
+	public void t20_ManyConsumersOneProducerTest() throws Exception {
 		QueueProducer producer = new QueueProducer(queue);
 		QueueConsumer consumer1 = new QueueConsumer(queue);
 		QueueConsumer consumer2 = new QueueConsumer(queue);
@@ -130,8 +157,12 @@ public class LinkedQueueTest {
 		this.killThreads = true;
 	}
 
+	/**
+	 * Description: One consumer many producer test<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void oneConsumerManyProducerTest() throws Exception {
+	public void t21_OneConsumerManyProducerTest() throws Exception {
 		QueueConsumer consumer = new QueueConsumer(queue);
 		QueueProducer producer1 = new QueueProducer(queue);
 		QueueProducer producer2 = new QueueProducer(queue);
@@ -145,8 +176,12 @@ public class LinkedQueueTest {
 		this.killThreads = true;
 	}
 
+	/**
+	 * Description: Insert 10000 elements in queue<br>
+	 * Expectation: passes
+	 */
 	@Test
-	public void produce10000Test() throws Exception {
+	public void t30_Produce10000Test() throws Exception {
 
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 128; i++) {
