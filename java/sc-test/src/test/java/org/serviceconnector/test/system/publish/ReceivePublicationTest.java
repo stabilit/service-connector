@@ -151,7 +151,7 @@ public class ReceivePublicationTest {
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 		Assert.assertTrue("is not subscribed", service.isSubscribed());
 
-		waitForMessage(10);
+		waitForMessage(20);
 		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.messageCounter);
 		SCMessage response = cbk.response;
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
@@ -284,14 +284,12 @@ public class ReceivePublicationTest {
 		public void receive(SCMessage msg) {
 			response = msg;
 			messageCounter++;
-			if ( expectedMessages == messageCounter) {
-				ReceivePublicationTest.messageReceived = true;
-			}
 			if (((messageCounter+1) % 100) == 0) {
 				ReceivePublicationTest.testLogger.info("Receiving message nr. " + (messageCounter+1));
 			}
-
-
+			if ( expectedMessages == messageCounter) {
+				ReceivePublicationTest.messageReceived = true;
+			}
 		}
 
 		@Override
