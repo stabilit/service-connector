@@ -408,7 +408,7 @@ public class SubscriptionQueue<E> {
 		/**
 		 * Schedule. Activate timeout for no data message.
 		 */
-		public void schedule() {
+		public synchronized void schedule() {
 			this.schedule(this.timerRun.getTimeoutMillis());
 		}
 
@@ -430,7 +430,7 @@ public class SubscriptionQueue<E> {
 		/**
 		 * Destroys data pointer and dereferences node in queue.
 		 */
-		public void destroy() {
+		public synchronized void destroy() {
 			this.cancel();
 			if (node != null) {
 				this.node.dereference();
