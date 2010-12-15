@@ -5,7 +5,7 @@
 	<artifactId>sc-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>sc-client</name>
-	<description>sc-client</description>
+	<description>demo-client</description>
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
@@ -30,7 +30,7 @@
 					<descriptors>
 						<descriptor>src/main/resources/descriptor.xml</descriptor>
 					</descriptors>
-					<finalName>client</finalName>
+					<finalName>demo-client</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>					
 						<manifest>
