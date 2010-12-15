@@ -256,85 +256,74 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		@Override
 		public void timeout() {
 			logger.debug("timeout publishTimer");
-			// extracting subscriptionId from request message
-			SCMPMessage reqMsg;
+			String subscriptionId = null;
 			try {
-				reqMsg = request.getMessage();
-			} catch (Exception e1) {
-				logger.warn("timeout expired request.getMessage() failed: " + e1.getMessage());
-				SCMPMessageFault fault = new SCMPMessageFault(e1);
-				response.setSCMP(fault);
-				try {
-					// send message back to client
-					this.response.write();
-				} catch (Exception ex) {
-					logger.warn("timeout expired :" + ex.getMessage());
-				}
-				return;
-			}
-			// set up subscription timeout
-			SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
-			String subscriptionId = reqMsg.getSessionId();
+				// extracting subscriptionId from request message
+				SCMPMessage reqMsg = request.getMessage();
+				// set up subscription timeout
+				SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
+				subscriptionId = reqMsg.getSessionId();
 
-			logger.debug("timeout publishTimer datapointer subscriptionId " + subscriptionId);
-			Subscription subscription = subscriptionRegistry.getSubscription(subscriptionId);
-			if (subscription == null) {
-				logger.debug("subscription not found - subscription has already been deleted subscriptionId " + subscriptionId);
-				// subscription has already been deleted
-				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.NOT_FOUND, "subscription not found");
-				response.setSCMP(fault);
-				try {
-					// send message back to client
-					this.response.write();
-				} catch (Exception ex) {
-					logger.warn("timeout expired :" + ex.getMessage());
-				}
-				return;
-			}
-
-			// tries polling from queue
-			SCMPMessage message = this.subscriptionQueue.getMessage(subscriptionId);
-			if (message == null) {
-				logger.debug("no message found on queue - subscription timeout set up no data message subscriptionId "
-						+ subscriptionId);
-				// no message found on queue - subscription timeout set up no data message
-				reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
-				reqMsg.setIsReply(true);
-				this.response.setSCMP(reqMsg);
-			} else {
-				logger.debug("message found on queue - subscription timeout set up reply message subscriptionId " + subscriptionId);
-				// set up reply
-				SCMPMessage reply = null;
-				if (message.isPart()) {
-					// message from queue is of type part - outgoing must be part too, no poll request
-					reply = new SCMPPart(false);
+				logger.debug("timeout publishTimer datapointer subscriptionId " + subscriptionId);
+				Subscription subscription = subscriptionRegistry.getSubscription(subscriptionId);
+				if (subscription == null) {
+					logger.debug("subscription not found - subscription has already been deleted subscriptionId " + subscriptionId);
+					// subscription has already been deleted
+					SCMPMessageFault fault = new SCMPMessageFault(SCMPError.NOT_FOUND, "subscription not found");
+					response.setSCMP(fault);
 				} else {
-					reply = new SCMPMessage();
-				}
-				reply.setServiceName(reqMsg.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
-				reply.setSessionId(subscriptionId);
-				reply.setMessageType(reqMsg.getMessageType());
-				reply.setIsReply(true);
+					// tries polling from queue
+					SCMPMessage message = this.subscriptionQueue.getMessage(subscriptionId);
+					if (message == null) {
+						logger.debug("no message found on queue - subscription timeout set up no data message subscriptionId "
+								+ subscriptionId);
+						// no message found on queue - subscription timeout set up no data message
+						reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
+						reqMsg.setIsReply(true);
+						this.response.setSCMP(reqMsg);
+					} else {
+						logger.debug("message found on queue - subscription timeout set up reply message subscriptionId "
+								+ subscriptionId);
+						// set up reply
+						SCMPMessage reply = null;
+						if (message.isPart()) {
+							// message from queue is of type part - outgoing must be part too, no poll request
+							reply = new SCMPPart(false);
+						} else {
+							reply = new SCMPMessage();
+						}
+						reply.setServiceName(reqMsg.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME));
+						reply.setSessionId(subscriptionId);
+						reply.setMessageType(reqMsg.getMessageType());
+						reply.setIsReply(true);
 
-				// message polling successful
-				reply.setBody(message.getBody());
-				reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
-				String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-				if (messageInfo != null) {
-					reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+						// message polling successful
+						reply.setBody(message.getBody());
+						reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
+						String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+						if (messageInfo != null) {
+							reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+						}
+						reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
+						reply.setBody(message.getBody());
+						this.response.setSCMP(reply);
+					}
 				}
-				reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
-				reply.setBody(message.getBody());
-				this.response.setSCMP(reply);
-			}
-
-			try {
-				// send message back to client
-				this.response.write();
 			} catch (Exception ex) {
-				logger.warn("timeout expired :" + ex.getMessage());
+				logger.warn("timeout expired procedure failed :" + ex.getMessage());
+				SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, ex.getMessage());
+				scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
+				scmpFault.setLocalDateTime();
+				response.setSCMP(scmpFault);
+			} finally {
+				// send message back to client
+				try {
+					this.response.write();
+				} catch (Exception e) {
+					logger.warn("timeout expired procedure failed :" + e.getMessage());
+				}
+				subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
 			}
-			subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
 		}
 	}
 }

@@ -47,7 +47,7 @@ public class SubscriptionQueue<E> {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SubscriptionQueue.class);
 
-	private ScheduledThreadPoolExecutor executers;
+	private ScheduledThreadPoolExecutor timeoutScheduler;
 	/** The data queue. */
 	private LinkedQueue<E> dataQueue;
 	/** The pointer map - maps session id to data pointer and its node in queue. */
@@ -59,8 +59,7 @@ public class SubscriptionQueue<E> {
 	public SubscriptionQueue() {
 		this.dataQueue = new LinkedQueue<E>();
 		this.pointerMap = new ConcurrentHashMap<String, TimeAwareDataPointer>();
-		// this.timer = new Timer("SubscriptionQueueTimer");
-		this.executers = new ScheduledThreadPoolExecutor(20);
+		this.timeoutScheduler = new ScheduledThreadPoolExecutor(5);
 	}
 
 	/**
@@ -288,7 +287,8 @@ public class SubscriptionQueue<E> {
 		private SubscriptionMask mask;
 		/** The listen state. */
 		private boolean listening;
-		private ScheduledFuture<SubscriptionTask> future;
+		/** The timeout. */
+		private ScheduledFuture<TimeoutTask> timeout;
 
 		/**
 		 * Instantiates a new TimeAwareDataPointer.
@@ -422,9 +422,9 @@ public class SubscriptionQueue<E> {
 		public synchronized void schedule(double timeoutMillis) {
 			// always cancel old timeouter when schedule of an new timeout is necessary
 			this.cancel();
-			SubscriptionTask subscriptionTimeouter = new SubscriptionTask(this, this.timerRun);
+			TimeoutTask subscriptionTimeouter = new TimeoutTask(this, this.timerRun);
 			// schedules subscriptionTimeouter on subscription queue executer
-			this.future = (ScheduledFuture<SubscriptionTask>) executers.schedule(subscriptionTimeouter, (long) timeoutMillis,
+			this.timeout = (ScheduledFuture<TimeoutTask>) timeoutScheduler.schedule(subscriptionTimeouter, (long) timeoutMillis,
 					TimeUnit.MILLISECONDS);
 			logger.debug("schedule datapointer " + timeoutMillis);
 		}
@@ -452,20 +452,20 @@ public class SubscriptionQueue<E> {
 		 * Cancel. Deactivate subscription timeout.
 		 */
 		public synchronized void cancel() {
-			if (this.future != null) {
-				this.future.cancel(false);
+			if (this.timeout != null) {
+				this.timeout.cancel(false);
 				logger.debug("cancel TimeAwareDataPointer");
 				// important to set timeouter null - rescheduling of same instance not possible
-				this.future = null;
+				this.timeout = null;
 			}
 		}
 	}
 
 	/**
-	 * The Class SubscriptionTask. SubscriptionTask times out and calls the target ITimerRun. Important to store subscription state
+	 * The Class TimeoutTask. TimeoutTask times out and calls the target ITimerRun. Important to store subscription state
 	 * in data pointer when time runs out listening becomes false.
 	 */
-	private class SubscriptionTask implements Runnable {
+	private class TimeoutTask implements Runnable {
 
 		/** The data pointer. */
 		private TimeAwareDataPointer dataPointer;
@@ -480,7 +480,7 @@ public class SubscriptionQueue<E> {
 		 * @param target
 		 *            the target
 		 */
-		public SubscriptionTask(TimeAwareDataPointer dataPointer, ITimerRun target) {
+		public TimeoutTask(TimeAwareDataPointer dataPointer, ITimerRun target) {
 			this.dataPointer = dataPointer;
 			this.target = target;
 		}

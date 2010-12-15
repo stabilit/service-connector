@@ -51,7 +51,7 @@ public class SCSessionService extends SCService {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(SCSessionService.class);
 	/** The timer run, runs when session need to be refreshed on SC. */
-	private ITimerRun timerRun;
+	private SessionTimeouter sessionTimeouter;
 	/** The timer task. */
 	private TimerTask timerTask;
 	/** The echo timeout in seconds. */
@@ -69,7 +69,7 @@ public class SCSessionService extends SCService {
 	 */
 	public SCSessionService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);
-		this.timerRun = null;
+		this.sessionTimeouter = null;
 		this.echoTimeoutInSeconds = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
 		this.echoIntervalInSeconds = Constants.DEFAULT_ECHO_INTERVAL_SECONDS;
 	}
@@ -130,8 +130,8 @@ public class SCSessionService extends SCService {
 		this.sessionId = reply.getSessionId();
 		this.subscriptionActive = true;
 		// trigger session timeout
-		this.timerRun = new SessionTimeouter((int) echoIntervalInSeconds);
-		this.timerTask = new TimerTaskWrapper(this.timerRun);
+		this.sessionTimeouter = new SessionTimeouter((int) echoIntervalInSeconds);
+		this.timerTask = new TimerTaskWrapper(this.sessionTimeouter);
 		AppContext.eciTimer.schedule(timerTask, (int) (echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR));
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
@@ -283,8 +283,8 @@ public class SCSessionService extends SCService {
 			throw scEx;
 		}
 		// trigger session timeout
-		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		AppContext.eciTimer.schedule(this.timerTask, (long) this.timerRun.getTimeoutMillis());
+		this.timerTask = new TimerTaskWrapper(this.sessionTimeouter);
+		AppContext.eciTimer.schedule(this.timerTask, (long) this.sessionTimeouter.getTimeoutMillis());
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
@@ -346,8 +346,8 @@ public class SCSessionService extends SCService {
 	public void setRequestComplete() {
 		super.setRequestComplete();
 		// trigger session timeout
-		this.timerTask = new TimerTaskWrapper(this.timerRun);
-		AppContext.eciTimer.schedule(this.timerTask, (long) this.timerRun.getTimeoutMillis());
+		this.timerTask = new TimerTaskWrapper(this.sessionTimeouter);
+		AppContext.eciTimer.schedule(this.timerTask, (long) this.sessionTimeouter.getTimeoutMillis());
 	}
 
 	/**
@@ -435,7 +435,7 @@ public class SCSessionService extends SCService {
 				// send echo to SC
 				SCSessionService.this.echo();
 				// trigger session timeout
-				SCSessionService.this.timerTask = new TimerTaskWrapper(SCSessionService.this.timerRun);
+				SCSessionService.this.timerTask = new TimerTaskWrapper(SCSessionService.this.sessionTimeouter);
 				AppContext.eciTimer.schedule(SCSessionService.this.timerTask, (long) this.getTimeoutMillis());
 			} catch (Exception e) {
 				// echo failed - mark session as dead

@@ -208,11 +208,9 @@ public class ReceivePublicationTest {
 			if ( expectedMessages == messageCounter) {
 				ReceivePublicationTest.messageReceived = true;
 			}
-			if (((messageCounter+1) % 10) == 0) {
+			if (((messageCounter+1) % 1000) == 0) {
 				ReceivePublicationTest.testLogger.info("Receiving message nr. " + (messageCounter+1));
 			}
-
-
 		}
 
 		@Override
