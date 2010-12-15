@@ -70,7 +70,7 @@ public class ServerLoader {
 				maxConnections = Integer.parseInt(maxConnectionsValue);
 			}
 
-			String keepAliveIntervalValue = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL);
+			String keepAliveIntervalValue = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS);
 			int keepAliveInterval = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
 			if (keepAliveIntervalValue != null) {
 				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);

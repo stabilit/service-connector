@@ -101,7 +101,7 @@ public class RequesterConfiguration {
 						+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE));
 				// get keep alive interval
 				commConfig.setKeepAliveIntervalSeconds(apacheCompositeConfig.getInt(requesterName
-						+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL));
+						+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS));
 			} catch (Exception e) {
 				logger.error(e.toString());
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.getMessage());

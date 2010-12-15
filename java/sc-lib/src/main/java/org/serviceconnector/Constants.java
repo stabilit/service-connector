@@ -182,7 +182,7 @@ public final class Constants {
 	public static final String PROPERTY_QUALIFIER_ENABLED = ".enabled";
 	public static final String PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE = ".maxConnectionPoolSize";
 	public static final String PROPERTY_QALIFIER_MAX_SESSIONS = ".maxSessions";
-	public static final String PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL = ".keepAliveInterval";
+	public static final String PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS = ".keepAliveIntervalSeconds";
 	public static final String PROPERTY_QUALIFIER_PATH = ".path";
 	public static final String PROPERTY_QUALIFIER_LIST_SCRIPT = ".listScript";
 	public static final String PROPERTY_QUALIFIER_UPLOAD_SCRIPT = ".uploadScript";

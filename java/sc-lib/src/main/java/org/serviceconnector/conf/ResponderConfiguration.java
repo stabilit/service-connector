@@ -117,7 +117,7 @@ public class ResponderConfiguration {
 				try {
 					// get keep alive interval
 					remoteHostConfig.setKeepAliveIntervalSeconds(apacheCompositeConfig.getInt(remoteHost
-							+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL));
+							+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS));
 					// get max connection pool size
 					remoteHostConfig.setMaxPoolSize(apacheCompositeConfig.getInt(remoteHost
 							+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE));
