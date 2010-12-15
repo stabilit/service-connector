@@ -159,102 +159,24 @@ public class ReceivePublicationTest {
 		Assert.assertNull("the session ID is not null", service.getSessionId());
 	}
 
+	/**
+	 * Description: receive message after noDataInterval has expired<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t03_receive() throws Exception {
+		// TODO JOT missing test
+	}
 	
+	/**
+	 * Description: do not receive message because subscription does not match<br>
+	 * Expectation: passes (catch exception while waiting for message)
+	 */
+	@Test
+	public void t04_receiveNoMatch() throws Exception {
+		// TODO JOT missing test
+	}
 	
-//	@Test
-//	public void publish_waitForAMessageToBePublished_incomesAMessage() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.mask);
-//		subscibeMessage.setSessionInfo("sessionInfo");
-//		service.subscribe(subscibeMessage, callback);
-//		for (int i = 0; i < 30; i++) {
-//			if (callback.lastMessage == null) {
-//				Thread.sleep(100);
-//			} else {
-//				i = 30;
-//			}
-//		}
-//
-//		service.unsubscribe();
-//
-//		Assert.assertEquals(1, callback.getMessageCounter());
-//		Assert.assertEquals(true, callback.getLastMessage().getData().toString().startsWith("publish message nr "));
-//		Assert.assertEquals(null, callback.getLastMessage().getMessageInfo());
-//		Assert.assertEquals(false, callback.getLastMessage().getSessionId() == null
-//				|| callback.getLastMessage().getSessionId().equals(""));
-//	}
-//
-//	@Test
-//	public void publish_waitFor2MessagesToBePublished_bodyEndsWithConsequentNumbers() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.mask);
-//		subscibeMessage.setSessionInfo("sessionInfo");
-//		service.subscribe(subscibeMessage, callback);
-//
-//		SCMessage firstMessage = null;
-//
-//		for (int i = 0; i < 60; i++) {
-//			if (firstMessage == null && callback.getLastMessage() == null) {
-//				Thread.sleep(100);
-//			} else if (firstMessage == null) {
-//				firstMessage = callback.getLastMessage();
-//				callback.setLastMessage(null);
-//				Thread.sleep(100);
-//			} else if (callback.getLastMessage() == null) {
-//				Thread.sleep(100);
-//			} else {
-//				i = 60;
-//			}
-//		}
-//
-//		service.unsubscribe();
-//
-//		Assert.assertEquals(2, callback.getMessageCounter());
-//		Assert.assertEquals(true, firstMessage.getData().toString().startsWith("publish message nr "));
-//		Assert.assertEquals(true, callback.getLastMessage().getData().toString().startsWith("publish message nr "));
-//		Assert.assertEquals(Integer.parseInt(firstMessage.getData().toString().split(" ")[3]) + 1, Integer.parseInt(callback
-//				.getLastMessage().getData().toString().split(" ")[3]));
-//		Assert.assertEquals(null, firstMessage.getMessageInfo());
-//		Assert.assertEquals(null, callback.getLastMessage().getMessageInfo());
-//		Assert.assertEquals(false, firstMessage.getSessionId() == null || callback.getLastMessage().getSessionId().equals(""));
-//		Assert.assertEquals(false, firstMessage.getSessionId() == null || callback.getLastMessage().getSessionId().equals(""));
-//	}
-//
-//	@Test
-//	public void publish_waitFor20MessagesToBePublished_bodysEndWithConsequentNumbers() throws Exception {
-//		SCPublishService service = client.newPublishService(TestConstants.pubServiceName1);
-//		DemoPublishClientCallback callback = new DemoPublishClientCallback(service);
-//		SCSubscribeMessage subscibeMessage = new SCSubscribeMessage();
-//		subscibeMessage.setMask(TestConstants.mask);
-//		subscibeMessage.setSessionInfo("sessionInfo");
-//		service.subscribe(subscibeMessage, callback);
-//
-//		SCMessage previousMessage = null;
-//		SCMessage newMessage = null;
-//		int counter = 0;
-//
-//		for (int i = 0; i < 600 && counter < 20; i++) {
-//			if ((i % 10) == 0)
-//				testLogger.info("wait for message cycle:\t" + i + " ...");
-//			if (counter == callback.getMessageCounter()) {
-//				Thread.sleep(100);
-//			} else if (counter < callback.getMessageCounter()) {
-//				previousMessage = newMessage;
-//				newMessage = callback.getLastMessage();
-//				counter++;
-//				if (counter > 1) {
-//					Assert.assertEquals(Integer.parseInt(previousMessage.getData().toString().split(" ")[3]) + 1, Integer
-//							.parseInt(newMessage.getData().toString().split(" ")[3]));
-//				}
-//			}
-//		}
-//		Assert.assertEquals("recieved messages", 20, counter);
-//	}
-
 	private void waitForMessage(int nrSeconds) throws Exception {
 		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (messageReceived) {
