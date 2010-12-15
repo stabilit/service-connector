@@ -38,6 +38,8 @@ public class ReceivePublicationBenchmark {
 	private SCClient client;
 	private SCPublishService service;
 	private int threadCount = 0;
+	long start= 0;
+	long stop = 0;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -90,29 +92,23 @@ public class ReceivePublicationBenchmark {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t01_receive() throws Exception {
+	public void benchmark_10000_msg_compressed() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("publishMessages");
-		int nrMessages = 1;
+		int nrMessages = 10000;
 		subMsgRequest.setData(Integer.toString(nrMessages));
 		cbk.expectedMessages = nrMessages;
+		start = System.currentTimeMillis();
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
-		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-		Assert.assertTrue("is not subscribed", service.isSubscribed());
-		
-		waitForMessage(10);
-		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.messageCounter);
-		SCMessage response = cbk.response;
-		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
-		
+		waitForMessage(30);
+		stop = System.currentTimeMillis();
+		long perf = nrMessages * 1000 / (stop - start);
+		testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
 		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
 	}
 	
 	private void waitForMessage(int nrSeconds) throws Exception {
@@ -147,6 +143,7 @@ public class ReceivePublicationBenchmark {
 				ReceivePublicationBenchmark.testLogger.info("Receiving message nr. " + (messageCounter+1));
 			}
 			if ( expectedMessages == messageCounter) {
+				stop = System.currentTimeMillis();
 				ReceivePublicationBenchmark.messageReceived = true;
 			}
 		}

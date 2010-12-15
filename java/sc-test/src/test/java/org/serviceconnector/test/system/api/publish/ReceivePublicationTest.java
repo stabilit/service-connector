@@ -141,7 +141,7 @@ public class ReceivePublicationTest {
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("publishMessages");
-		int nrMessages = 1000000;
+		int nrMessages = 1000;
 		subMsgRequest.setData(Integer.toString(nrMessages));
 		cbk.expectedMessages = nrMessages;
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
@@ -150,7 +150,7 @@ public class ReceivePublicationTest {
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 		Assert.assertTrue("is not subscribed", service.isSubscribed());
 
-		waitForMessage(10000);
+		waitForMessage(10);
 		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.messageCounter);
 		SCMessage response = cbk.response;
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);

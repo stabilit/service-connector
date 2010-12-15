@@ -91,11 +91,11 @@ public class ExecuteBenchmark {
 		request.setSessionInfo("sessionInfo");
 		request.setMessageInfo("echo");
 		response = service.createSession(10, request);
-		int nr = 10000;
+		int nrMessages = 10000;
 		long start = System.currentTimeMillis();
 		long startPart = System.currentTimeMillis();
 		long stopPart = 0;
-		for (int i = 0; i < nr; i++) {
+		for (int i = 0; i < nrMessages; i++) {
 			if (((i+1) % 1000) == 0) {
 				stopPart = System.currentTimeMillis();
 				testLogger.info("Executing message nr. " + (i+1) + "... "+(1000000 / (stopPart - startPart))+ " msg/sec.");
@@ -105,8 +105,8 @@ public class ExecuteBenchmark {
 		}
 		service.deleteSession(10);
 		long stop = System.currentTimeMillis();
-		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr + "msg à 128 byte performance : " + perf + " msg/sec.");
+		long perf = nrMessages * 1000 / (stop - start);
+		testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
 		Assert.assertEquals("Performence not fast, only"+ perf + " msg/sec.", true, perf > 400);
 	}
 
@@ -123,17 +123,17 @@ public class ExecuteBenchmark {
 		request.setMessageInfo("echo");
 		request.setCompressed(false);
 		response = service.createSession(10, request);
-		int nr = 10000;
+		int nrMessages = 10000;
 		long start = System.currentTimeMillis();
-		for (int i = 0; i < nr; i++) {
+		for (int i = 0; i < nrMessages; i++) {
 			if (((i+1) % 1000) == 0)
 				testLogger.info("Executing message nr. " + (i+1) + "...");
 			response = service.execute(10, request);
 		}
 		service.deleteSession(10);
 		long stop = System.currentTimeMillis();
-		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr + "msg à 128 byte performance : " + perf + " msg/sec.");
+		long perf = nrMessages * 1000 / (stop - start);
+		testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
 		Assert.assertEquals(true, perf > 600);
 	}
 
