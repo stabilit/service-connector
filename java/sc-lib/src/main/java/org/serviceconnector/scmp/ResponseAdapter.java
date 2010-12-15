@@ -23,7 +23,6 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelEvent;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.IEncoderDecoder;
 
 /**
