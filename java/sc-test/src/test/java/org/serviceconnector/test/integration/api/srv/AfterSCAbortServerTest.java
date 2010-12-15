@@ -124,7 +124,7 @@ public class AfterSCAbortServerTest {
 		//server.setImmediateConnect(false);
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		SCSessionServerCallback cbk = new SrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
@@ -141,7 +141,7 @@ public class AfterSCAbortServerTest {
 		server.setImmediateConnect(false);
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		SCSessionServerCallback cbk = new SrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
@@ -156,7 +156,7 @@ public class AfterSCAbortServerTest {
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		SCSessionServerCallback cbk = new SrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 		ctrl.stopSC(scCtx);
@@ -204,7 +204,7 @@ public class AfterSCAbortServerTest {
 		//server.setImmediateConnect(false);
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		SCSessionServerCallback cbk = new SrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
@@ -221,7 +221,7 @@ public class AfterSCAbortServerTest {
 		server.setImmediateConnect(false);
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		SCSessionServerCallback cbk = new SrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
@@ -236,7 +236,7 @@ public class AfterSCAbortServerTest {
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		SCSessionServerCallback cbk = new SrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 		ctrl.stopSC(scCtx);
@@ -246,8 +246,8 @@ public class AfterSCAbortServerTest {
 
 	
 	
-	private class CallBack extends SCSessionServerCallback {
-		public CallBack(SCSessionServer server) {
+	private class SrvCallback extends SCSessionServerCallback {
+		public SrvCallback(SCSessionServer server) {
 			super(server);
 		}
 		@Override

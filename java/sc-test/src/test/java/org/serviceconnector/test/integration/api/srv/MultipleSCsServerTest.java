@@ -117,7 +117,7 @@ public class MultipleSCsServerTest {
 		server1.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server1.isListening());
 		sessionServer1 = server1.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk1 = new CallBack(sessionServer1);
+		SCSessionServerCallback cbk1 = new SrvCallback(sessionServer1);
 		sessionServer1.register(1, 1, cbk1);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
@@ -125,7 +125,7 @@ public class MultipleSCsServerTest {
 		server2.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server2.isListening());
 		sessionServer2 = server2.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk2 = new CallBack(sessionServer2);
+		SCSessionServerCallback cbk2 = new SrvCallback(sessionServer2);
 		sessionServer2.register(1, 1, cbk2);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
@@ -160,7 +160,7 @@ public class MultipleSCsServerTest {
 		server1.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server1.isListening());
 		sessionServer1 = server1.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk1 = new CallBack(sessionServer1);
+		SCSessionServerCallback cbk1 = new SrvCallback(sessionServer1);
 		sessionServer1.register(1, 1, cbk1);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
@@ -168,7 +168,7 @@ public class MultipleSCsServerTest {
 		server2.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server2.isListening());
 		sessionServer2 = server2.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk2 = new CallBack(sessionServer2);
+		SCSessionServerCallback cbk2 = new SrvCallback(sessionServer2);
 		sessionServer2.register(1, 1, cbk2);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
@@ -203,7 +203,7 @@ public class MultipleSCsServerTest {
 		server1.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server1.isListening());
 		sessionServer1 = server1.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk1 = new CallBack(sessionServer1);
+		SCSessionServerCallback cbk1 = new SrvCallback(sessionServer1);
 		sessionServer1.register(1, 1, cbk1);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
@@ -211,7 +211,7 @@ public class MultipleSCsServerTest {
 		server2.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server2.isListening());
 		sessionServer2 = server2.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk2 = new CallBack(sessionServer2);
+		SCSessionServerCallback cbk2 = new SrvCallback(sessionServer2);
 		sessionServer2.register(1, 1, cbk2);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
@@ -229,9 +229,9 @@ public class MultipleSCsServerTest {
 	}
 
 	
-	private class CallBack extends SCSessionServerCallback {
+	private class SrvCallback extends SCSessionServerCallback {
 
-		public CallBack(SCSessionServer server) {
+		public SrvCallback(SCSessionServer server) {
 			super(server);
 		}
 		@Override

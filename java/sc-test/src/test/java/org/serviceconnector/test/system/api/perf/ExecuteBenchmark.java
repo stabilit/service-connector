@@ -79,11 +79,11 @@ public class ExecuteBenchmark {
 	}
 
 	/**
-	 * Description: Send x message à 128 bytes to the server. Receive echoed messages. Measure performance <br>
+	 * Description: Send 10000 message à 128 bytes to the server. Receive echoed messages. Measure performance <br>
 	 * Expectation: Performance better than 600 msg/sec.
 	 */
 	@Test
-	public void benchmark_msg_compressed() throws Exception {
+	public void benchmark_10000_msg_compressed() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
@@ -91,7 +91,7 @@ public class ExecuteBenchmark {
 		request.setSessionInfo("sessionInfo");
 		request.setMessageInfo("echo");
 		response = service.createSession(10, request);
-		int nr = 10;
+		int nr = 10000;
 		long start = System.currentTimeMillis();
 		long startPart = System.currentTimeMillis();
 		long stopPart = 0;
@@ -111,11 +111,11 @@ public class ExecuteBenchmark {
 	}
 
 	/**
-	 * Description: Send x message à 128 bytes to the server. Receive echoed messages. Measure performance <br>
+	 * Description: Send 10000 message à 128 bytes to the server. Receive echoed messages. Measure performance <br>
 	 * Expectation: Performance better than 600 msg/sec.
 	 */
 	@Test
-	public void benchmark_msg_uncompressed() throws Exception {
+	public void benchmark_10000_msg_uncompressed() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);

@@ -1,19 +1,4 @@
-/*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
- */
-package org.serviceconnector.test.system.publish;
+package org.serviceconnector.test.system.api.perf;
 
 import java.util.concurrent.TimeoutException;
 
@@ -38,13 +23,13 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.service.SCServiceException;
 
-public class ReceivePublicationTest {
+public class ReceivePublicationBenchmark {
 
 	/** The Constant testLogger. */
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ReceivePublicationTest.class);
+	protected final static Logger logger = Logger.getLogger(ReceivePublicationBenchmark.class);
 
 	private static boolean messageReceived = false;
 	private static ProcessesController ctrl;
@@ -129,55 +114,6 @@ public class ReceivePublicationTest {
 		service.unsubscribe();
 		Assert.assertNull("the session ID is not null", service.getSessionId());
 	}
-
-	/**
-	 * Description: receive 1000 messages<br>
-	 * Expectation: passes
-	 */
-	@Test
-	public void t02_receive() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
-		SCSubscribeMessage subMsgResponse = null;
-		MsgCallback cbk = new MsgCallback(service);
-		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo("publishMessages");
-		int nrMessages = 1000;
-		subMsgRequest.setData(Integer.toString(nrMessages));
-		cbk.expectedMessages = nrMessages;
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
-		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-		Assert.assertTrue("is not subscribed", service.isSubscribed());
-
-		waitForMessage(20);
-		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.messageCounter);
-		SCMessage response = cbk.response;
-		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
-		
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
-	}
-
-	/**
-	 * Description: receive message after noDataInterval has expired<br>
-	 * Expectation: passes
-	 */
-	@Test
-	public void t03_receive() throws Exception {
-		// TODO JOT missing test
-	}
-	
-	/**
-	 * Description: do not receive message because subscription does not match<br>
-	 * Expectation: passes (catch exception while waiting for message)
-	 */
-	@Test
-	public void t04_receiveNoMatch() throws Exception {
-		// TODO JOT missing test
-	}
-	
 	
 	private void waitForMessage(int nrSeconds) throws Exception {
 		for (int i = 0; i < (nrSeconds * 10); i++) {
@@ -188,7 +124,7 @@ public class ReceivePublicationTest {
 		}
 		throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 	}
-	
+
 	private class MsgCallback extends SCMessageCallback {
 		
 		private SCMessage response = null;
@@ -197,7 +133,7 @@ public class ReceivePublicationTest {
 
 		public MsgCallback(SCService service) {
 			super(service);
-			ReceivePublicationTest.messageReceived = false;
+			ReceivePublicationBenchmark.messageReceived = false;
 			response = null;
 			messageCounter = 0;
 			expectedMessages = 0;
@@ -207,11 +143,11 @@ public class ReceivePublicationTest {
 		public void receive(SCMessage msg) {
 			response = msg;
 			messageCounter++;
-			if (((messageCounter+1) % 100) == 0) {
-				ReceivePublicationTest.testLogger.info("Receiving message nr. " + (messageCounter+1));
+			if (((messageCounter+1) % 1000) == 0) {
+				ReceivePublicationBenchmark.testLogger.info("Receiving message nr. " + (messageCounter+1));
 			}
 			if ( expectedMessages == messageCounter) {
-				ReceivePublicationTest.messageReceived = true;
+				ReceivePublicationBenchmark.messageReceived = true;
 			}
 		}
 
@@ -223,7 +159,7 @@ public class ReceivePublicationTest {
 				logger.info("SC error received code:" + scError.getErrorCode() + " text:" + scError.getErrorText());
 			}
 			response = null;
-			ReceivePublicationTest.messageReceived = true;
+			ReceivePublicationBenchmark.messageReceived = true;
 		}
 	}
 }

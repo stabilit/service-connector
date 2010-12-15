@@ -204,10 +204,10 @@ public class PublishTest {
 //		Assert.assertEquals(0, srvCallback.messagesExchanged);
 //	}
 
-	
-	private class CallBack extends SCPublishServerCallback {
+	@SuppressWarnings("unused")
+	private class SrvCallback extends SCPublishServerCallback {
 
-		public CallBack(SCPublishServer server) {
+		public SrvCallback(SCPublishServer server) {
 			super(server);
 		}
 		@Override

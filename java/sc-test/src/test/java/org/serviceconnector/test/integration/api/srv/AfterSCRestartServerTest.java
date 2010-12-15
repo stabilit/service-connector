@@ -125,7 +125,7 @@ public class AfterSCRestartServerTest {
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		SCSessionServerCallback cbk = new SrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
@@ -143,7 +143,7 @@ public class AfterSCRestartServerTest {
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		SCSessionServerCallback cbk = new SrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
@@ -158,7 +158,7 @@ public class AfterSCRestartServerTest {
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		SCSessionServerCallback cbk = new SrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 		ctrl.stopSC(scCtx);
@@ -208,7 +208,7 @@ public class AfterSCRestartServerTest {
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		SCSessionServerCallback cbk = new SrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
@@ -226,7 +226,7 @@ public class AfterSCRestartServerTest {
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		SCSessionServerCallback cbk = new SrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
@@ -241,7 +241,7 @@ public class AfterSCRestartServerTest {
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk = new CallBack(sessionServer);
+		SCSessionServerCallback cbk = new SrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 		ctrl.stopSC(scCtx);
@@ -250,9 +250,9 @@ public class AfterSCRestartServerTest {
 		Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
 	}
 	
-	private class CallBack extends SCSessionServerCallback {
+	private class SrvCallback extends SCSessionServerCallback {
 
-		public CallBack(SCSessionServer server) {
+		public SrvCallback(SCSessionServer server) {
 			super(server);
 		}
 		@Override
