@@ -110,7 +110,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		subscriptionTimeouter = new TimerTaskWrapper(new SubscriptionTimerRun(subscription));
 		subscription.setSessionTimeouter(subscriptionTimeouter);
 		// schedule subscriptionTimeouter in registry timer
-		this.timer.schedule(subscriptionTimeouter, AppContext.getBasicConfiguration().getSubscriptionTimeout());
+		this.timer.schedule(subscriptionTimeouter, AppContext.getBasicConfiguration().getSubscriptionTimeoutMillis());
 	}
 
 	public void scheduleSubscriptionTimeout(String key) {
@@ -186,7 +186,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
-			return AppContext.getBasicConfiguration().getSubscriptionTimeout();
+			return AppContext.getBasicConfiguration().getSubscriptionTimeoutMillis();
 		}
 	}
 }

@@ -79,11 +79,11 @@ public class CacheManager {
 		if (this.expirationThread != null) {
 			return;
 		}
-		if (this.cacheConfiguration.getExpirationThreadIntervalSeconds() > 0) {
-			expirationTimeoutRun = new ExpirationTimeoutRun(this.cacheConfiguration.getExpirationThreadIntervalSeconds());
+		if (this.cacheConfiguration.getExpirationCheckIntervalSeconds() > 0) {
+			expirationTimeoutRun = new ExpirationTimeoutRun(this.cacheConfiguration.getExpirationCheckIntervalSeconds());
 			this.expirationThread = new Thread(expirationTimeoutRun);
 			CacheLogger.debug("start cache expiration thread using timeout (s) = "
-					+ this.cacheConfiguration.getExpirationThreadIntervalSeconds());
+					+ this.cacheConfiguration.getExpirationCheckIntervalSeconds());
 			expirationThread.start();
 		}
 	}

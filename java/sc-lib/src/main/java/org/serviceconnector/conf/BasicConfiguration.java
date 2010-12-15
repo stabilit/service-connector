@@ -43,7 +43,7 @@ public class BasicConfiguration {
 	/** Timeout to prevent stocking in technical connect process. */
 	private int connectionTimeoutMillis = Constants.DEFAULT_CONNECT_TIMEOUT_MILLIS;
 	/** The subscription timeout. */
-	private int subscriptionTimeout = Constants.DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS;
+	private int subscriptionTimeoutMillis = Constants.DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS;
 	/** The command validation. */
 	private boolean commandValidation = Constants.COMMAND_VALIDATION_ENABLED;
 	/**
@@ -104,8 +104,8 @@ public class BasicConfiguration {
 	 * 
 	 * @return the subscription timeout
 	 */
-	public int getSubscriptionTimeout() {
-		return subscriptionTimeout;
+	public int getSubscriptionTimeoutMillis() {
+		return subscriptionTimeoutMillis;
 	}
 
 	/**
@@ -164,16 +164,16 @@ public class BasicConfiguration {
 		}
 
 		// connectionTimeoutMillis
-		Integer localConnectionTimeoutMultiplier = compositeConfiguration.getInteger(Constants.ROOT_CONNECTION_TIMEOUT, null);
+		Integer localConnectionTimeoutMultiplier = compositeConfiguration.getInteger(Constants.ROOT_CONNECTION_TIMEOUT_MILLIS, null);
 		if (localConnectionTimeoutMultiplier != null && this.connectionTimeoutMillis != localConnectionTimeoutMultiplier) {
 			this.connectionTimeoutMillis = localConnectionTimeoutMultiplier;
 			logger.info("connectionTimeoutMillis set to " + localConnectionTimeoutMultiplier);
 		}
 
 		// subscriptionTimeout
-		Integer localSubscriptionTimeout = compositeConfiguration.getInteger(Constants.ROOT_SUBSCRIPTION_TIMEOUT, null);
-		if (localSubscriptionTimeout != null && this.subscriptionTimeout != localSubscriptionTimeout) {
-			this.subscriptionTimeout = localSubscriptionTimeout;
+		Integer localSubscriptionTimeout = compositeConfiguration.getInteger(Constants.ROOT_SUBSCRIPTION_TIMEOUT_MILLIS, null);
+		if (localSubscriptionTimeout != null && this.subscriptionTimeoutMillis != localSubscriptionTimeout) {
+			this.subscriptionTimeoutMillis = localSubscriptionTimeout;
 			logger.info("subscriptionTimeout set to " + localSubscriptionTimeout);
 		}
 

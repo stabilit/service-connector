@@ -40,7 +40,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 	/** The max elements on disk. */
 	private int maxElementsOnDisk;
 	/** The expiration thread interval (timeout) in seconds. */
-	private int expirationThreadIntervalSeconds;
+	private int expirationCheckIntervalSeconds;
 
 	/**
 	 * Instantiates a new sCMP cache configuration.
@@ -52,7 +52,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 		this.diskPersistent = Constants.DEFAULT_CACHE_DISK_PERSISTENT;
 		this.maxElementsInMemory = Constants.DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY;
 		this.maxElementsOnDisk = Constants.DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK;
-		this.expirationThreadIntervalSeconds = Constants.DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS;
+		this.expirationCheckIntervalSeconds = Constants.DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS;
 	}
 
 	/**
@@ -105,9 +105,9 @@ public class CacheConfiguration implements ICacheConfiguration {
 
 		Integer expirationThreadIntervalSeconds = compositeConfiguration.getInteger(
 				Constants.CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS, null);
-		if (expirationThreadIntervalSeconds != null && expirationThreadIntervalSeconds != this.expirationThreadIntervalSeconds) {
-			this.expirationThreadIntervalSeconds = expirationThreadIntervalSeconds;
-			logger.info("expirationThreadIntervalSeconds set to " + this.expirationThreadIntervalSeconds);
+		if (expirationThreadIntervalSeconds != null && expirationThreadIntervalSeconds != this.expirationCheckIntervalSeconds) {
+			this.expirationCheckIntervalSeconds = expirationThreadIntervalSeconds;
+			logger.info("expirationThreadIntervalSeconds set to " + this.expirationCheckIntervalSeconds);
 		}
 	}
 
@@ -148,21 +148,21 @@ public class CacheConfiguration implements ICacheConfiguration {
 	}
 
 	/**
-	 * Gets the expiration thread interval seconds.
+	 * Gets the expiration check interval seconds.
 	 * 
-	 * @return the expiration thread interval seconds
+	 * @return the expiration check interval seconds
 	 */
-	public int getExpirationThreadIntervalSeconds() {
-		return expirationThreadIntervalSeconds;
+	public int getExpirationCheckIntervalSeconds() {
+		return expirationCheckIntervalSeconds;
 	}
 
 	/**
-	 * Sets the expiration thread interval seconds.
+	 * Sets the expiration check interval seconds.
 	 * 
-	 * @param expirationThreadIntervalSeconds
-	 *            the new expiration thread interval seconds
+	 * @param expirationCheckIntervalSeconds
+	 *            the new expiration check interval seconds
 	 */
-	public void setExpirationThreadIntervalSeconds(int expirationThreadIntervalSeconds) {
-		this.expirationThreadIntervalSeconds = expirationThreadIntervalSeconds;
+	public void setExpirationCheckIntervalSeconds(int expirationCheckIntervalSeconds) {
+		this.expirationCheckIntervalSeconds = expirationCheckIntervalSeconds;
 	}
 }

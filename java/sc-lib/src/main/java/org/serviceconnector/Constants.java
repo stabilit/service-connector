@@ -56,8 +56,8 @@ public final class Constants {
 	/** Default timeout for creation of a connection to peer. */
 	public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 5000;
 
-	/** Default timeout after a subscription is marked as dead. */
-	public static final int DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS = 300000;
+	/** Maximal time between subsequent receive publication. After this time subscription is marked as dead. */
+	public static final int DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS = 60000;
 
 	/**
 	 * Default interval used for publishing services if the NO_DATA_INTERVAL was
@@ -162,10 +162,9 @@ public final class Constants {
 	public static final String ROOT_OPERATION_TIMEOUT_MULTIPLIER = "root.operationTimeoutMultiplier";
 	public static final String ROOT_ECHO_INTERVAL_MULTIPLIER = "root.echoIntervalMultiplier";
 	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
-	public static final String ROOT_CONNECTION_TIMEOUT = "root.connectionTimeoutMillis";
-	public static final String ROOT_SUBSCRIPTION_TIMEOUT = "root.subscriptionTimeout";
+	public static final String ROOT_CONNECTION_TIMEOUT_MILLIS = "root.connectionTimeoutMillis";
+	public static final String ROOT_SUBSCRIPTION_TIMEOUT_MILLIS = "root.subscriptionTimeoutMillis";
 	public static final String ROOT_KEEP_ALIVE_TIMEOUT_MILLIS = "root.keepAliveTimeout";
-	public static final String ROOT_SERVER_ABORT_TIMEOUT = "root.serverAbortTimeout";
 
 	public static final String PROPERTY_LISTENERS = "listeners";
 	public static final String PROPERTY_SERVICE_NAMES = "serviceNames";
@@ -204,7 +203,7 @@ public final class Constants {
 	public static final String CACHE_DISK_PATH = "cache.diskPath";
 	public static final String CACHE_MAX_ELEMENTS_IN_MEMORY = "cache.maxElementsInMemory";
 	public static final String CACHE_MAX_ELEMENTS_ON_DISK = "cache.maxElementsOnDisk";
-	public static final String CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = "cache.expirationThreadIntervalSeconds";
+	public static final String CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = "cache.expirationCheckIntervalSeconds";
 	public static final String CED_DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ss.SSSZ";
 
 	/*
