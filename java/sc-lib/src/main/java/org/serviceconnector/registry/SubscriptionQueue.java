@@ -18,9 +18,10 @@ package org.serviceconnector.registry;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.scmp.IRequest;
@@ -31,7 +32,6 @@ import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ITimerRun;
 import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;
-import org.serviceconnector.util.TimerTaskWrapper;
 
 /**
  * The Class SubscriptionQueue. The SubscriptionQueue is responsible for queuing incoming data from server, to inform subscriptions
@@ -47,8 +47,7 @@ public class SubscriptionQueue<E> {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SubscriptionQueue.class);
 
-	/** The timer instance to observe all timeouts in relation to this queue. */
-	private Timer timer;
+	private ScheduledThreadPoolExecutor executers;
 	/** The data queue. */
 	private LinkedQueue<E> dataQueue;
 	/** The pointer map - maps session id to data pointer and its node in queue. */
@@ -60,8 +59,8 @@ public class SubscriptionQueue<E> {
 	public SubscriptionQueue() {
 		this.dataQueue = new LinkedQueue<E>();
 		this.pointerMap = new ConcurrentHashMap<String, TimeAwareDataPointer>();
-		this.timer = new Timer("SubscriptionQueueTimer");
-		this.timer.schedule(new TimerRefresher(), 60000);
+		// this.timer = new Timer("SubscriptionQueueTimer");
+		this.executers = new ScheduledThreadPoolExecutor(20);
 	}
 
 	/**
@@ -147,6 +146,7 @@ public class SubscriptionQueue<E> {
 	 * @return the e
 	 */
 	public synchronized E getMessageOrListen(String sessionId, IRequest request, IResponse response) {
+		logger.debug("getMessageOrListen");
 		E message = this.getMessage(sessionId);
 		if (message == null) {
 			// message null - switch to listen mode
@@ -219,8 +219,8 @@ public class SubscriptionQueue<E> {
 		dataPointer.timerRun.setResponse(response);
 		// starts listening and schedules subscription timeout
 		dataPointer.startListen();
-		logger.debug("Subscriptionqueue listen " + sessionId + " listen: " + dataPointer.listening);
 		dataPointer.schedule();
+		logger.debug("Subscriptionqueue listen " + sessionId + " listen: " + dataPointer.listening);
 	}
 
 	/**
@@ -234,6 +234,7 @@ public class SubscriptionQueue<E> {
 	 *            the timer run
 	 */
 	public synchronized void subscribe(String sessionId, SubscriptionMask mask, IPublishTimerRun timerRun) {
+		logger.debug("subscribe");
 		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(mask, timerRun);
 		// Stores sessionId and dataPointer in map
 		this.pointerMap.put(sessionId, dataPointer);
@@ -248,6 +249,7 @@ public class SubscriptionQueue<E> {
 	 *            the filter mask
 	 */
 	public synchronized void changeSubscription(String sessionId, SubscriptionMask mask) {
+		logger.debug("changeSubscription");
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		if (dataPointer != null) {
 			dataPointer.changeMask(mask);
@@ -261,6 +263,7 @@ public class SubscriptionQueue<E> {
 	 *            the session id
 	 */
 	public synchronized void unsubscribe(String sessionId) {
+		logger.debug("unsubscribe");
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		if (dataPointer.listening) {
 			// unsubscribe & pointer is in listen mode - run a timeout
@@ -285,8 +288,7 @@ public class SubscriptionQueue<E> {
 		private SubscriptionMask mask;
 		/** The listen state. */
 		private boolean listening;
-		/** The subscription timeouter. */
-		private TimerTask subscriptionTimeouter;
+		private ScheduledFuture<SubscriptionTask> future;
 
 		/**
 		 * Instantiates a new TimeAwareDataPointer.
@@ -300,7 +302,6 @@ public class SubscriptionQueue<E> {
 			this.timerRun = timerRun;
 			this.listening = false;
 			this.mask = mask;
-			this.subscriptionTimeouter = null;
 		}
 
 		/**
@@ -419,12 +420,13 @@ public class SubscriptionQueue<E> {
 		 *            the timeout
 		 */
 		public synchronized void schedule(double timeoutMillis) {
-			logger.debug("schedule datapointer " + timeoutMillis);
 			// always cancel old timeouter when schedule of an new timeout is necessary
 			this.cancel();
-			this.subscriptionTimeouter = new SubscriptionTaskWrapper(this, this.timerRun);
-			// schedules subscriptionTimeouter on subscription queue timer
-			SubscriptionQueue.this.timer.schedule(this.subscriptionTimeouter, (long) timeoutMillis);
+			SubscriptionTask subscriptionTimeouter = new SubscriptionTask(this, this.timerRun);
+			// schedules subscriptionTimeouter on subscription queue executer
+			this.future = (ScheduledFuture<SubscriptionTask>) executers.schedule(subscriptionTimeouter, (long) timeoutMillis,
+					TimeUnit.MILLISECONDS);
+			logger.debug("schedule datapointer " + timeoutMillis);
 		}
 
 		/**
@@ -438,36 +440,37 @@ public class SubscriptionQueue<E> {
 			}
 			if (this.listening) {
 				// necessary for responding CRP to client! Very important!
+				this.listening = false;
 				this.timerRun.timeout();
 			}
 			this.node = null;
 			this.timerRun = null;
-			this.listening = false;
 			this.mask = null;
-			this.subscriptionTimeouter = null;
 		}
 
 		/**
 		 * Cancel. Deactivate subscription timeout.
 		 */
 		public synchronized void cancel() {
-			if (this.subscriptionTimeouter != null) {
+			if (this.future != null) {
+				this.future.cancel(false);
 				logger.debug("cancel TimeAwareDataPointer");
-				this.subscriptionTimeouter.cancel();
 				// important to set timeouter null - rescheduling of same instance not possible
-				this.subscriptionTimeouter = null;
+				this.future = null;
 			}
 		}
 	}
 
 	/**
-	 * The Class SubscriptionTaskWrapper. SubscriptionTaskWrapper times out and calls the target ITimerRun which happens in super
-	 * class TimerTaskWrapper. Important to store subscription state in data pointer when time runs out listening becomes false.
+	 * The Class SubscriptionTask. SubscriptionTask times out and calls the target ITimerRun. Important to store subscription state
+	 * in data pointer when time runs out listening becomes false.
 	 */
-	private class SubscriptionTaskWrapper extends TimerTaskWrapper {
+	private class SubscriptionTask implements Runnable {
 
 		/** The data pointer. */
 		private TimeAwareDataPointer dataPointer;
+		/** The target. */
+		private ITimerRun target;
 
 		/**
 		 * Instantiates a SubscriptionTaskWrapper.
@@ -477,9 +480,9 @@ public class SubscriptionQueue<E> {
 		 * @param target
 		 *            the target
 		 */
-		public SubscriptionTaskWrapper(TimeAwareDataPointer dataPointer, ITimerRun target) {
-			super(target);
+		public SubscriptionTask(TimeAwareDataPointer dataPointer, ITimerRun target) {
 			this.dataPointer = dataPointer;
+			this.target = target;
 		}
 
 		/** {@inheritDoc} */
@@ -487,14 +490,8 @@ public class SubscriptionQueue<E> {
 		public void run() {
 			// stops listening - ITimerRun gets executed
 			this.dataPointer.stopListen();
-			super.run();
-		}
-	}
-
-	private class TimerRefresher extends TimerTask {
-		@Override
-		public void run() {
-			SubscriptionQueue.this.timer.schedule(new TimerRefresher(), 60000);
+			// timeout target
+			this.target.timeout();
 		}
 	}
 }
