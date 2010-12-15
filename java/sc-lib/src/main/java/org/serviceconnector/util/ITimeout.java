@@ -14,35 +14,25 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.service;
-
-import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.util.ITimerRun;
-
-
+package org.serviceconnector.util;
 
 /**
- * The Interface IPublishTimerRun. The interfaces allows setting current request/response on a publish timer run. the
- * publish timer run needs to know to handle client response correctly at a timeout.
+ * The Interface ITimeout. Instances of type ITimeout can be hand over to a TimeoutWrapper which takes responsibility of timing
+ * stuff. If time runs out TimeoutWrapper informs ITimeout by calling timeout() method.
  * 
  * @author JTraber
  */
-public interface IPublishTimerRun extends ITimerRun {
+public interface ITimeout {
 
 	/**
-	 * Sets the request.
-	 * 
-	 * @param request
-	 *            the new request
+	 * Timeout. Runs when time is out.
 	 */
-	public abstract void setRequest(IRequest request);
+	public void timeout();
 
 	/**
-	 * Sets the response.
+	 * Gets the timeout.
 	 * 
-	 * @param response
-	 *            the new response
+	 * @return the timeout
 	 */
-	public abstract void setResponse(IResponse response);
+	public abstract int getTimeoutMillis();
 }

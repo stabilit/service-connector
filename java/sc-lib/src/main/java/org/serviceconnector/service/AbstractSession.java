@@ -16,9 +16,10 @@
 package org.serviceconnector.service;
 
 import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
 
 import org.serviceconnector.server.Server;
-import org.serviceconnector.util.TimerTaskWrapper;
+import org.serviceconnector.util.TimeoutWrapper;
 
 public abstract class AbstractSession {
 
@@ -31,8 +32,8 @@ public abstract class AbstractSession {
 	/** The session info. */
 	private String sessionInfo;
 
-	/** The session timeouter - observes session timeout. */
-	private TimerTaskWrapper sessionTimeouter;
+	/** The session timeout. */
+	private ScheduledFuture<TimeoutWrapper> timeout;
 
 	/**
 	 * Instantiates a new session.
@@ -41,7 +42,7 @@ public abstract class AbstractSession {
 		UUID uuid = UUID.randomUUID();
 		this.id = uuid.toString();
 		this.server = null;
-		this.sessionTimeouter = null;
+		this.timeout = null;
 		this.ipAddressList = ipAddressList;
 		this.sessionInfo = sessionInfo;
 	}
@@ -75,27 +76,27 @@ public abstract class AbstractSession {
 	}
 
 	/**
-	 * Gets the session timeouter.
+	 * Gets the session timeout.
 	 * 
-	 * @return the session timeouter
+	 * @return the session timeout
 	 */
-	public TimerTaskWrapper getSessionTimeouter() {
-		return sessionTimeouter;
+	public ScheduledFuture<TimeoutWrapper> getTimeout() {
+		return timeout;
 	}
 
 	/**
-	 * Sets the session timeouter.
+	 * Sets the session timeout
 	 * 
-	 * @param sessionTimeouter
-	 *            the new session timeouter
+	 * @param timeout
+	 *            the new session timeout
 	 */
-	public void setSessionTimeouter(TimerTaskWrapper sessionTimeouter) {
-		this.sessionTimeouter = sessionTimeouter;
+	public void setTimeout(ScheduledFuture<TimeoutWrapper> timeout) {
+		this.timeout = timeout;
 	}
 
 	/**
 	 * Gets the ip address list.
-	 *
+	 * 
 	 * @return the ip address list
 	 */
 	public String getIpAddressList() {
@@ -104,7 +105,7 @@ public abstract class AbstractSession {
 
 	/**
 	 * Gets the session info.
-	 *
+	 * 
 	 * @return the session info
 	 */
 	public String getSessionInfo() {

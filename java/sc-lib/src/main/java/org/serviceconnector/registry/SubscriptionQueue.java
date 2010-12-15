@@ -24,12 +24,12 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.cmd.sc.PublishTimeout;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.IPublishTimerRun;
 import org.serviceconnector.service.SubscriptionMask;
-import org.serviceconnector.util.ITimerRun;
+import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;
 
@@ -214,8 +214,8 @@ public class SubscriptionQueue<E> {
 	private synchronized void listen(String sessionId, IRequest request, IResponse response) {
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		// stores request/response in timer run - to answer client correctly at timeout
-		dataPointer.timerRun.setRequest(request);
-		dataPointer.timerRun.setResponse(response);
+		dataPointer.publishTimeout.setRequest(request);
+		dataPointer.publishTimeout.setResponse(response);
 		// starts listening and schedules subscription timeout
 		dataPointer.startListen();
 		dataPointer.schedule();
@@ -229,12 +229,12 @@ public class SubscriptionQueue<E> {
 	 *            the session id
 	 * @param mask
 	 *            the filter mask
-	 * @param timerRun
+	 * @param publishTimeout
 	 *            the timer run
 	 */
-	public synchronized void subscribe(String sessionId, SubscriptionMask mask, IPublishTimerRun timerRun) {
+	public synchronized void subscribe(String sessionId, SubscriptionMask mask, PublishTimeout publishTimeout) {
 		logger.debug("subscribe");
-		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(mask, timerRun);
+		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(mask, publishTimeout);
 		// Stores sessionId and dataPointer in map
 		this.pointerMap.put(sessionId, dataPointer);
 	}
@@ -267,7 +267,7 @@ public class SubscriptionQueue<E> {
 		if (dataPointer.listening) {
 			// unsubscribe & pointer is in listen mode - run a timeout
 			dataPointer.cancel();
-			dataPointer.timerRun.timeout();
+			dataPointer.publishTimeout.timeout();
 			dataPointer.stopListen();
 		}
 		this.pointerMap.remove(sessionId);
@@ -281,14 +281,14 @@ public class SubscriptionQueue<E> {
 	private class TimeAwareDataPointer {
 		/** The current node in queue. */
 		private LinkedNode<E> node;
-		/** The timer run. */
-		private IPublishTimerRun timerRun;
+		/** The publishTimeout. */
+		private PublishTimeout publishTimeout;
 		/** The subscription mask. */
 		private SubscriptionMask mask;
 		/** The listen state. */
 		private boolean listening;
 		/** The timeout. */
-		private ScheduledFuture<TimeoutTask> timeout;
+		private ScheduledFuture<PublishTimeoutWrapper> timeout;
 
 		/**
 		 * Instantiates a new TimeAwareDataPointer.
@@ -298,8 +298,8 @@ public class SubscriptionQueue<E> {
 		 * @param timerRun
 		 *            the timer run
 		 */
-		public TimeAwareDataPointer(SubscriptionMask mask, IPublishTimerRun timerRun) {
-			this.timerRun = timerRun;
+		public TimeAwareDataPointer(SubscriptionMask mask, PublishTimeout publishTimeout) {
+			this.publishTimeout = publishTimeout;
 			this.listening = false;
 			this.mask = mask;
 		}
@@ -410,7 +410,7 @@ public class SubscriptionQueue<E> {
 		 * Schedule. Activate timeout for no data message.
 		 */
 		public synchronized void schedule() {
-			this.schedule(this.timerRun.getTimeoutMillis());
+			this.schedule(this.publishTimeout.getTimeoutMillis());
 		}
 
 		/**
@@ -422,9 +422,9 @@ public class SubscriptionQueue<E> {
 		public synchronized void schedule(double timeoutMillis) {
 			// always cancel old timeouter when schedule of an new timeout is necessary
 			this.cancel();
-			TimeoutTask subscriptionTimeouter = new TimeoutTask(this, this.timerRun);
-			// schedules subscriptionTimeouter on subscription queue executer
-			this.timeout = (ScheduledFuture<TimeoutTask>) timeoutScheduler.schedule(subscriptionTimeouter, (long) timeoutMillis,
+			PublishTimeoutWrapper timeoutWrapper = new PublishTimeoutWrapper(this, this.publishTimeout);
+			// schedules timeoutTask on subscription queue executer
+			this.timeout = (ScheduledFuture<PublishTimeoutWrapper>) timeoutScheduler.schedule(timeoutWrapper, (long) timeoutMillis,
 					TimeUnit.MILLISECONDS);
 			logger.debug("schedule datapointer " + timeoutMillis);
 		}
@@ -441,10 +441,10 @@ public class SubscriptionQueue<E> {
 			if (this.listening) {
 				// necessary for responding CRP to client! Very important!
 				this.listening = false;
-				this.timerRun.timeout();
+				this.publishTimeout.timeout();
 			}
 			this.node = null;
-			this.timerRun = null;
+			this.publishTimeout = null;
 			this.mask = null;
 		}
 
@@ -462,25 +462,25 @@ public class SubscriptionQueue<E> {
 	}
 
 	/**
-	 * The Class TimeoutTask. TimeoutTask times out and calls the target ITimerRun. Important to store subscription state
-	 * in data pointer when time runs out listening becomes false.
+	 * The Class PublishTimeoutWrapper. PublishTimeoutWrapper times out and calls the target ITimerRun. Important to store
+	 * subscription state in data pointer when time runs out listening becomes false.
 	 */
-	private class TimeoutTask implements Runnable {
+	private class PublishTimeoutWrapper implements Runnable {
 
 		/** The data pointer. */
 		private TimeAwareDataPointer dataPointer;
 		/** The target. */
-		private ITimerRun target;
+		private ITimeout target;
 
 		/**
-		 * Instantiates a SubscriptionTaskWrapper.
+		 * Instantiates a PublishTimeoutWrapper.
 		 * 
 		 * @param dataPointer
 		 *            the data pointer
 		 * @param target
 		 *            the target
 		 */
-		public TimeoutTask(TimeAwareDataPointer dataPointer, ITimerRun target) {
+		public PublishTimeoutWrapper(TimeAwareDataPointer dataPointer, ITimeout target) {
 			this.dataPointer = dataPointer;
 			this.target = target;
 		}

@@ -17,7 +17,8 @@
 package org.serviceconnector.net.req;
 
 import java.nio.channels.ClosedChannelException;
-import java.util.TimerTask;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
@@ -27,14 +28,14 @@ import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPLargeRequest;
 import org.serviceconnector.scmp.SCMPLargeResponse;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
-import org.serviceconnector.util.ITimerRun;
-import org.serviceconnector.util.TimerTaskWrapper;
+import org.serviceconnector.util.ITimeout;
+import org.serviceconnector.util.TimeoutWrapper;
 
 /**
  * The Class Requester. Implements a general behavior of a requester in the context of the Client or the Server. Defines how to
@@ -65,6 +66,7 @@ public class SCRequester implements IRequester {
 	}
 
 	/** {@inheritDoc} */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void send(SCMPMessage message, int timeoutInMillis, ISCMPCallback scmpCallback) throws Exception {
 		// return an already connected live instance
@@ -81,11 +83,12 @@ public class SCRequester implements IRequester {
 				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, largeResponse,
 						msgSequenceNr);
 				// setting up operation timeout after successful send
-				TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
+				TimeoutWrapper timeoutWrapper = new TimeoutWrapper((ITimeout) requesterCallback);
 				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
-				reqCallback.setOperationTimeoutTask(task);
+				ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(
+						timeoutWrapper, (long) timeoutInMillis, TimeUnit.MILLISECONDS);
+				reqCallback.setOperationTimeout(timeout);
 				reqCallback.setTimeoutMillis(timeoutInMillis);
-				AppContext.otiTimer.schedule(task, (long) timeoutInMillis);
 				// extract first part message & send
 				SCMPMessage part = largeResponse.getFirst();
 				// handling msgSequenceNr
@@ -97,11 +100,12 @@ public class SCRequester implements IRequester {
 			} else {
 				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, msgSequenceNr);
 				// setting up operation timeout after successful send
-				TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
+				TimeoutWrapper timeoutWrapper = new TimeoutWrapper((ITimeout) requesterCallback);
 				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
-				reqCallback.setOperationTimeoutTask(task);
+				ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(
+						timeoutWrapper, (long) timeoutInMillis, TimeUnit.MILLISECONDS);
+				reqCallback.setOperationTimeout(timeout);
 				reqCallback.setTimeoutMillis(timeoutInMillis);
-				AppContext.otiTimer.schedule(task, (long) timeoutInMillis);
 				// handling msgSequenceNr
 				if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
 					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
@@ -137,7 +141,7 @@ public class SCRequester implements IRequester {
 	 * The Class RequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a reply is
 	 * received. Handles freeing up earlier requested connections. Provides functionality to deal with large messages.
 	 */
-	private class SCRequesterSCMPCallback implements ISCMPCallback, ITimerRun {
+	private class SCRequesterSCMPCallback implements ISCMPCallback, ITimeout {
 
 		/** The scmp callback, callback to inform next layer. */
 		private ISCMPCallback scmpCallback;
@@ -151,8 +155,8 @@ public class SCRequester implements IRequester {
 		private SCMPLargeRequest largeRequest;
 		/** The msgSequenceNr. */
 		private SCMPMessageSequenceNr msgSequenceNr;
-		/** The operation timeout task. */
-		private TimerTask operationTimeoutTask;
+		/** The operation timeout. */
+		private ScheduledFuture<TimeoutWrapper> operationTimeout;
 		/** The timeout in milliseconds. */
 		private int timeoutInMillis;
 
@@ -169,7 +173,7 @@ public class SCRequester implements IRequester {
 			this.largeRequest = largeRequest;
 			this.msgSequenceNr = msgSequenceNr;
 			this.timeoutInMillis = 0;
-			this.operationTimeoutTask = null;
+			this.operationTimeout = null;
 		}
 
 		/** {@inheritDoc} */
@@ -198,7 +202,7 @@ public class SCRequester implements IRequester {
 					return;
 				}
 				// cancel operation timeout
-				operationTimeoutTask.cancel();
+				operationTimeout.cancel(false);
 				// first handle connection - that user has a connection to work, if he has only 1
 				this.freeConnection();
 				this.scmpCallback.callback(scmpReply);
@@ -213,7 +217,7 @@ public class SCRequester implements IRequester {
 				if (scmpReply.isPart() == false) {
 					// response received
 					// cancel operation timeout
-					operationTimeoutTask.cancel();
+					operationTimeout.cancel(false);
 					// first handle connection - that user has a connection to work, if he has only 1
 					this.freeConnection();
 					this.scmpCallback.callback(this.largeResponse);
@@ -237,7 +241,7 @@ public class SCRequester implements IRequester {
 			if (requestMsg.isPart()) {
 				// incoming message is a part groupCall is made by client - part response can be ignored
 				// cancel operation timeout
-				operationTimeoutTask.cancel();
+				operationTimeout.cancel(false);
 				// first handle connection - that user has a connection to work, if he has only 1
 				this.freeConnection();
 				this.scmpCallback.callback(scmpReply);
@@ -250,7 +254,7 @@ public class SCRequester implements IRequester {
 				return;
 			}
 			// cancel operation timeout
-			operationTimeoutTask.cancel();
+			operationTimeout.cancel(false);
 			// first handle connection - that user has a connection to work, if he has only 1
 			this.freeConnection();
 			this.scmpCallback.callback(scmpReply);
@@ -328,7 +332,7 @@ public class SCRequester implements IRequester {
 		@Override
 		public void callback(Exception ex) {
 			// cancel operation timeout
-			this.operationTimeoutTask.cancel();
+			this.operationTimeout.cancel(false);
 			// delete composites
 			this.largeResponse = null;
 			this.largeRequest = null;
@@ -366,13 +370,13 @@ public class SCRequester implements IRequester {
 		}
 
 		/**
-		 * Sets the operation timeout task.
+		 * Sets the operation timeout.
 		 * 
-		 * @param operationTimeoutTask
-		 *            the new operation timeout task
+		 * @param operationTimeout
+		 *            the new operation timeout
 		 */
-		public void setOperationTimeoutTask(TimerTask operationTimeoutTask) {
-			this.operationTimeoutTask = operationTimeoutTask;
+		public void setOperationTimeout(ScheduledFuture<TimeoutWrapper> operationTimeout) {
+			this.operationTimeout = operationTimeout;
 		}
 
 		/** {@inheritDoc} */

@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.req;
 
-import java.util.TimerTask;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
@@ -26,8 +27,8 @@ import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPCallback;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.util.ITimerRun;
-import org.serviceconnector.util.TimerTaskWrapper;
+import org.serviceconnector.util.ITimeout;
+import org.serviceconnector.util.TimeoutWrapper;
 
 /**
  * The Class SCRequester. Defines behavior of requester in the context of Service Connector.
@@ -66,11 +67,12 @@ public class Requester implements IRequester {
 		try {
 			ISCMPCallback requesterCallback = new RequesterSCMPCallback(callback, connectionContext);
 			// setting up operation timeout after successful send
-			TimerTask task = new TimerTaskWrapper((ITimerRun) requesterCallback);
+			TimeoutWrapper timeoutWrapper = new TimeoutWrapper((ITimeout) requesterCallback);
 			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
-			reqCallback.setOperationTimeoutTask(task);
+			ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(
+					timeoutWrapper, (long) timeoutInMillis, TimeUnit.MILLISECONDS);
+			reqCallback.setOperationTimeout(timeout);
 			reqCallback.setTimeoutMillis(timeoutInMillis);
-			AppContext.otiTimer.schedule(task, (long) timeoutInMillis);
 			connection.send(message, requesterCallback);
 		} catch (Exception ex) {
 			this.connectionPool.freeConnection(connection);
@@ -100,21 +102,21 @@ public class Requester implements IRequester {
 	 * The Class SCRequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a reply is
 	 * received. Handles freeing up earlier requested connections.
 	 */
-	private class RequesterSCMPCallback implements ISCMPCallback, ITimerRun {
+	private class RequesterSCMPCallback implements ISCMPCallback, ITimeout {
 
 		/** The scmp callback, callback to inform next layer. */
 		private ISCMPCallback scmpCallback;
 		/** The connection context. */
 		private ConnectionContext connectionCtx;
-		/** The operation timeout task. */
-		private TimerTask operationTimeoutTask;
+		/** The operation timeout. */
+		private ScheduledFuture<TimeoutWrapper> operationTimeout;
 		/** The timeout in milliseconds. */
 		private int timeoutInMillis;
 
 		public RequesterSCMPCallback(ISCMPCallback scmpCallback, ConnectionContext connectionCtx) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = connectionCtx;
-			this.operationTimeoutTask = null;
+			this.operationTimeout = null;
 			this.timeoutInMillis = 0;
 		}
 
@@ -122,7 +124,7 @@ public class Requester implements IRequester {
 		@Override
 		public void callback(SCMPMessage scmpReply) throws Exception {
 			// cancel operation timeout
-			this.operationTimeoutTask.cancel();
+			this.operationTimeout.cancel(false);
 			// first handle connection - that user has a connection to work, if he has only 1
 			this.freeConnection();
 			this.scmpCallback.callback(scmpReply);
@@ -132,7 +134,7 @@ public class Requester implements IRequester {
 		@Override
 		public void callback(Exception ex) {
 			// cancel operation timeout
-			this.operationTimeoutTask.cancel();
+			this.operationTimeout.cancel(false);
 			// first handle connection - that user has a connection to work, if he has only 1
 			if (ex instanceof IdleTimeoutException) {
 				// operation timed out - delete this specific connection, prevents race conditions
@@ -168,13 +170,12 @@ public class Requester implements IRequester {
 		}
 
 		/**
-		 * Sets the operation timeout task.
-		 * 
-		 * @param operationTimeoutTask
-		 *            the new operation timeout task
+		 * Sets the operation timeout.
+		 *
+		 * @param operationTimeoutTask the new operation timeout
 		 */
-		public void setOperationTimeoutTask(TimerTask operationTimeoutTask) {
-			this.operationTimeoutTask = operationTimeoutTask;
+		public void setOperationTimeout(ScheduledFuture<TimeoutWrapper> operationTimeoutTask) {
+			this.operationTimeout = operationTimeoutTask;
 		}
 
 		/** {@inheritDoc} */

@@ -15,7 +15,7 @@
  */
 package org.serviceconnector.ctx;
 
-import java.util.Timer;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -54,10 +54,10 @@ public final class AppContext {
 	public static Object communicatorsLock = new Object();
 	// current attached communicators
 	public static AtomicInteger attachedCommunicators = new AtomicInteger();
-	/** The timer, triggers all operation timeout for sending. */
-	public static Timer otiTimer = null;
-	/** The timer, which observes the session timeout of service. */
-	public static Timer eciTimer = null;
+	/** The executer, triggers all operation timeout for sending. */
+	public static ScheduledThreadPoolExecutor otiScheduler;
+	/** The executer observes the session timeout of service. */
+	public static ScheduledThreadPoolExecutor eciScheduler;
 
 	// configurations
 	/** The composite configuration. */
@@ -219,11 +219,11 @@ public final class AppContext {
 	public static void init() {
 		synchronized (AppContext.communicatorsLock) {
 			ConnectionFactory.init();
-			if (AppContext.otiTimer == null) {
-				AppContext.otiTimer = new Timer("OperationTimeoutTimer");
+			if (AppContext.otiScheduler == null) {
+				AppContext.otiScheduler = new ScheduledThreadPoolExecutor(1);
 			}
-			if (AppContext.eciTimer == null) {
-				AppContext.eciTimer = new Timer("SessionServiceTimeoutTimer");
+			if (AppContext.eciScheduler == null) {
+				AppContext.eciScheduler = new ScheduledThreadPoolExecutor(1);
 			}
 		}
 	}
@@ -234,14 +234,14 @@ public final class AppContext {
 			if (attachedCommunicators.get() == 0) {
 				// no communicator active shutdown thread pool
 				ConnectionFactory.shutdownConnectionFactory();
-				if (AppContext.otiTimer != null && AppContext.isScEnvironment() == false) {
+				if (AppContext.otiScheduler != null && AppContext.isScEnvironment() == false) {
 					// cancel operation timeout thread
-					AppContext.otiTimer.cancel();
-					AppContext.otiTimer = null;
+					AppContext.otiScheduler.shutdown();
+					AppContext.otiScheduler = null;
 				}
-				if (AppContext.eciTimer != null) {
-					AppContext.eciTimer.cancel();
-					AppContext.eciTimer = null;
+				if (AppContext.eciScheduler != null) {
+					AppContext.eciScheduler.shutdown();
+					AppContext.eciScheduler = null;
 				}
 			}
 		}

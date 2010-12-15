@@ -17,17 +17,18 @@
 package org.serviceconnector.registry;
 
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Map.Entry;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.service.Session;
-import org.serviceconnector.util.ITimerRun;
-import org.serviceconnector.util.TimerTaskWrapper;
+import org.serviceconnector.util.ITimeout;
+import org.serviceconnector.util.TimeoutWrapper;
 
 /**
  * The Class SessionRegistry. Registry stores entries for properly created sessions. Registry is also responsible for observing the
@@ -41,13 +42,13 @@ public class SessionRegistry extends Registry<String, Session> {
 	protected final static Logger logger = Logger.getLogger(SessionRegistry.class);
 
 	/** The timer. Timer instance is responsible to observe session timeouts. */
-	private Timer timer;
+	private ScheduledThreadPoolExecutor sessionScheduler;
 
 	/**
 	 * Instantiates a SessionRegistry.
 	 */
 	public SessionRegistry() {
-		this.timer = new Timer("SessionRegistryTimer");
+		this.sessionScheduler = new ScheduledThreadPoolExecutor(1);
 	}
 
 	/**
@@ -131,6 +132,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 * @param session
 	 *            the session
 	 */
+	@SuppressWarnings("unchecked")
 	public void scheduleSessionTimeout(Session session) {
 		if (session == null || session.getSessionTimeoutSeconds() == 0) {
 			// no scheduling of session timeout
@@ -138,13 +140,12 @@ public class SessionRegistry extends Registry<String, Session> {
 		}
 		// always cancel old timeouter before setting up a new one
 		this.cancelSessionTimeout(session);
-		TimerTaskWrapper sessionTimeouter = session.getSessionTimeouter();
-
 		// sets up session timeout
-		sessionTimeouter = new TimerTaskWrapper(new SessionTimerRun(session));
-		session.setSessionTimeouter(sessionTimeouter);
+		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session));
 		// schedule sessionTimeouter in registry timer
-		this.timer.schedule(sessionTimeouter, (int) session.getSessionTimeoutSeconds() * Constants.SEC_TO_MILLISEC_FACTOR);
+		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(sessionTimeouter,
+				(int) session.getSessionTimeoutSeconds(), TimeUnit.SECONDS);
+		session.setTimeout(timeout);
 	}
 
 	/**
@@ -157,20 +158,20 @@ public class SessionRegistry extends Registry<String, Session> {
 		if (session == null) {
 			return;
 		}
-		TimerTask sessionTimeouter = session.getSessionTimeouter();
-		if (sessionTimeouter == null) {
+		ScheduledFuture<TimeoutWrapper> sessionTimeout = session.getTimeout();
+		if (sessionTimeout == null) {
 			// no session timeout has been set up for this session
 			return;
 		}
-		sessionTimeouter.cancel();
+		sessionTimeout.cancel(false);
 		// important to set timeouter null - rescheduling of same instance not possible
-		session.setSessionTimeouter(null);
+		session.setTimeout(null);
 	}
 
 	/**
-	 * The Class SessionTimerRun. Gets control when a session times out. Responsible for cleaning up when session gets broken.
+	 * The Class SessionTimeout. Gets control when a session times out. Responsible for cleaning up when session gets broken.
 	 */
-	private class SessionTimerRun implements ITimerRun {
+	private class SessionTimeout implements ITimeout {
 		/** The session. */
 		private Session session;
 		/** The timeout. */
@@ -182,7 +183,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		 * @param session
 		 *            the session
 		 */
-		public SessionTimerRun(Session session) {
+		public SessionTimeout(Session session) {
 			this.session = session;
 			this.timeoutSeconds = session.getSessionTimeoutSeconds();
 		}

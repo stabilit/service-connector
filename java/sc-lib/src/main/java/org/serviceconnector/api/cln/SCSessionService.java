@@ -17,7 +17,8 @@
 package org.serviceconnector.api.cln;
 
 import java.security.InvalidParameterException;
-import java.util.TimerTask;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -36,8 +37,8 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.util.ITimerRun;
-import org.serviceconnector.util.TimerTaskWrapper;
+import org.serviceconnector.util.ITimeout;
+import org.serviceconnector.util.TimeoutWrapper;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -50,10 +51,8 @@ public class SCSessionService extends SCService {
 
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(SCSessionService.class);
-	/** The timer run, runs when session need to be refreshed on SC. */
-	private SessionTimeouter sessionTimeouter;
-	/** The timer task. */
-	private TimerTask timerTask;
+	/** The sessionTimeout, timeout runs when session need to be refreshed. */
+	private ScheduledFuture<TimeoutWrapper> sessionTimeout;
 	/** The echo timeout in seconds. */
 	private int echoTimeoutInSeconds;
 	/** The echo interval in seconds. */
@@ -69,7 +68,7 @@ public class SCSessionService extends SCService {
 	 */
 	public SCSessionService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);
-		this.sessionTimeouter = null;
+		this.sessionTimeout = null;
 		this.echoTimeoutInSeconds = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
 		this.echoIntervalInSeconds = Constants.DEFAULT_ECHO_INTERVAL_SECONDS;
 	}
@@ -129,10 +128,7 @@ public class SCSessionService extends SCService {
 		}
 		this.sessionId = reply.getSessionId();
 		this.subscriptionActive = true;
-		// trigger session timeout
-		this.sessionTimeouter = new SessionTimeouter((int) echoIntervalInSeconds);
-		this.timerTask = new TimerTaskWrapper(this.sessionTimeouter);
-		AppContext.eciTimer.schedule(timerTask, (int) (echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR));
+		this.triggerSessionTimeout();
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
@@ -198,7 +194,7 @@ public class SCSessionService extends SCService {
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
 		// cancel session timeout
-		this.timerTask.cancel();
+		this.sessionTimeout.cancel(false);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
@@ -237,6 +233,7 @@ public class SCSessionService extends SCService {
 		return this.execute(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
 	}
 
+	@SuppressWarnings("unchecked")
 	public synchronized SCMessage execute(int operationTimeoutSeconds, SCMessage requestMsg) throws Exception {
 		if (this.subscriptionActive == false) {
 			throw new SCServiceException("execute not possible, no active session.");
@@ -251,7 +248,7 @@ public class SCSessionService extends SCService {
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
 		// cancel session timeout
-		this.timerTask.cancel();
+		this.sessionTimeout.cancel(false);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
@@ -282,9 +279,7 @@ public class SCSessionService extends SCService {
 			scEx.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			throw scEx;
 		}
-		// trigger session timeout
-		this.timerTask = new TimerTaskWrapper(this.sessionTimeouter);
-		AppContext.eciTimer.schedule(this.timerTask, (long) this.sessionTimeouter.getTimeoutMillis());
+		this.triggerSessionTimeout();
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
@@ -319,7 +314,7 @@ public class SCSessionService extends SCService {
 		ValidatorUtility.validateInt(1, operationtTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
 		// cancel session timeout
-		this.timerTask.cancel();
+		this.sessionTimeout.cancel(false);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
@@ -346,8 +341,18 @@ public class SCSessionService extends SCService {
 	public void setRequestComplete() {
 		super.setRequestComplete();
 		// trigger session timeout
-		this.timerTask = new TimerTaskWrapper(this.sessionTimeouter);
-		AppContext.eciTimer.schedule(this.timerTask, (long) this.sessionTimeouter.getTimeoutMillis());
+		this.triggerSessionTimeout();
+	}
+
+	/**
+	 * Trigger session timeout.
+	 */
+	@SuppressWarnings("unchecked")
+	private void triggerSessionTimeout() {
+		SCSessionTimeout sessionTimeout = new SCSessionTimeout();
+		TimeoutWrapper timeoutWrapper = new TimeoutWrapper(sessionTimeout);
+		this.sessionTimeout = (ScheduledFuture<TimeoutWrapper>) AppContext.eciScheduler.schedule(timeoutWrapper,
+				(int) (echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR), TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -404,23 +409,10 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * The Class SessionTimeouter. Get control at the time a session refresh is needed. Takes care of sending an echo to SC which
+	 * The Class SCSessionTimeout. Get control at the time a session refresh is needed. Takes care of sending an echo to SC which
 	 * gets the session refreshed.
 	 */
-	private class SessionTimeouter implements ITimerRun {
-
-		/** The timeout in seconds. */
-		private int timeoutInSeconds;
-
-		/**
-		 * Instantiates a new session timeouter.
-		 * 
-		 * @param timeoutInSeconds
-		 *            the timeout in seconds
-		 */
-		public SessionTimeouter(int timeoutInSeconds) {
-			this.timeoutInSeconds = timeoutInSeconds;
-		}
+	private class SCSessionTimeout implements ITimeout {
 
 		/**
 		 * Time run out, need to send an echo to SC otherwise session gets deleted for session timeout reason.
@@ -435,19 +427,18 @@ public class SCSessionService extends SCService {
 				// send echo to SC
 				SCSessionService.this.echo();
 				// trigger session timeout
-				SCSessionService.this.timerTask = new TimerTaskWrapper(SCSessionService.this.sessionTimeouter);
-				AppContext.eciTimer.schedule(SCSessionService.this.timerTask, (long) this.getTimeoutMillis());
+				SCSessionService.this.triggerSessionTimeout();
 			} catch (Exception e) {
 				// echo failed - mark session as dead
 				SCSessionService.this.subscriptionActive = false;
-				SCSessionService.this.timerTask.cancel();
+				SCSessionService.this.sessionTimeout.cancel(false);
 			}
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
-			return this.timeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR;
+			return SCSessionService.this.echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR;
 		}
 	}
 
@@ -462,5 +453,14 @@ public class SCSessionService extends SCService {
 	public void setEchoIntervalInSeconds(int echoIntervalInSeconds) throws SCMPValidatorException {
 		ValidatorUtility.validateInt(1, echoIntervalInSeconds, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
 		this.echoIntervalInSeconds = echoIntervalInSeconds;
+	}
+
+	/**
+	 * Gets the echo interval in seconds.
+	 * 
+	 * @return the echo interval in seconds
+	 */
+	public int getEchoIntervalInSeconds() {
+		return this.echoIntervalInSeconds;
 	}
 }

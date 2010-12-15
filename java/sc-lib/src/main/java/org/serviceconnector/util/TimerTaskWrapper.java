@@ -31,7 +31,7 @@ public class TimerTaskWrapper extends TimerTask {
 	protected final static Logger logger = Logger.getLogger(TimerTaskWrapper.class);
 	
 	/** The target to run when time is out. */
-	private ITimerRun target;
+	private ITimeout target;
 
 	/**
 	 * Instantiates a TimerTaskWrapper.
@@ -39,7 +39,7 @@ public class TimerTaskWrapper extends TimerTask {
 	 * @param target
 	 *            the target
 	 */
-	public TimerTaskWrapper(ITimerRun target) {
+	public TimerTaskWrapper(ITimeout target) {
 		this.target = target;
 	}
 
