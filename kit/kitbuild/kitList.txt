@@ -1,5 +1,6 @@
 bin\
-kitbuild\
 doc\
 config\
 tst\
+cache\
+log\

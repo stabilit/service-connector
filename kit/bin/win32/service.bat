@@ -18,8 +18,8 @@ REM VERSION, VERSION_MAJOR and VERSION_MINOR are populated
 REM during the build with ant filter.
 REM
 set SVCNAME=ServiceConnector
-set SVCDISP=ServiceConnector
-set SVCDESC=ServiceConnector
+set SVCDISP="Service Connector"
+set SVCDESC="Service Connector Middleware"
 set NOPAUSE=Y
 
 REM Suppress killing service on logoff event
