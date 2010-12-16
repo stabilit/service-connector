@@ -113,10 +113,10 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		// always cancel old timeout before setting up a new one
 		this.cancelSubscriptionTimeout(subscription);
 		// sets up subscription timeout
-		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SubscriptionTimeout(subscription));
+		TimeoutWrapper subscriptionTimeouter = new TimeoutWrapper(new SubscriptionTimeout(subscription));
 		// schedule sessionTimeouter in registry timer
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.subscriptionScheduler.schedule(
-				sessionTimeouter, AppContext.getBasicConfiguration().getSubscriptionTimeoutMillis(), TimeUnit.MILLISECONDS);
+				subscriptionTimeouter, AppContext.getBasicConfiguration().getSubscriptionTimeoutMillis(), TimeUnit.MILLISECONDS);
 		subscription.setTimeout(timeout);
 		logger.debug("schedule subscription timeout millis: " + AppContext.getBasicConfiguration().getSubscriptionTimeoutMillis()
 				+ " id: " + subscription.getId());
@@ -151,6 +151,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		subscriptionTimeout.cancel(false);
 		// important to set timeout null - rescheduling of same instance not possible
 		subscription.setTimeout(null);
+		// tries removing canceled timeouts
+		this.subscriptionScheduler.purge();
 		logger.debug("cancel subscription timeout " + subscription.getId());
 	}
 
