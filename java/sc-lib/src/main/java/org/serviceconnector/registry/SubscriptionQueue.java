@@ -384,7 +384,7 @@ public class SubscriptionQueue<E> {
 		 * @return true, if is listen
 		 */
 		public boolean listening() {
-			return listening;
+			return this.listening;
 		}
 
 		/**

@@ -135,8 +135,7 @@ public class ConnectionPool {
 	 *            the port
 	 */
 	public ConnectionPool(String host, int port) {
-		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE.getValue(),
-				Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS);
+		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE.getValue(), Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS);
 	}
 
 	/**
@@ -180,8 +179,7 @@ public class ConnectionPool {
 		IConnection connection = null;
 		if (usedConnections.size() + freeConnections.size() >= maxConnections) {
 			// we can't create a new one - limit reached
-			throw new ConnectionPoolBusyException("Unable to create new connection - limit of : " + maxConnections
-					+ " reached!");
+			throw new ConnectionPoolBusyException("Unable to create new connection - limit of : " + maxConnections + " reached!");
 		}
 		// we create a new one
 		connection = connectionFactory.createConnection(this.connectionType);
@@ -189,8 +187,7 @@ public class ConnectionPool {
 		connection.setPort(this.port);
 		connection.setIdleTimeoutSeconds(this.keepAliveIntervalSeconds);
 		IIdleConnectionCallback idleCallback = new IdleCallback();
-		ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback,
-				this.keepAliveIntervalSeconds);
+		ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, this.keepAliveIntervalSeconds);
 		connection.setContext(connectionContext);
 		try {
 			connection.connect(); // can throw an exception
@@ -214,9 +211,9 @@ public class ConnectionPool {
 			logger.warn("connection does not exist in pool - not possible to free");
 			return;
 		}
-		if (closeOnFree && (this.freeConnections.size() + this.usedConnections.size()) > this.minConnections) {
-			// do not add the connection to free pool array - just close it immediately!
-			// at least keep one connection alive
+		if (closeOnFree && (this.freeConnections.size() + this.usedConnections.size() >= this.minConnections)) {
+			// do not add the connection to free pool array - just close it immediately! Keep minimum connections alive
+			// don't forget current connection is not included in above size calculation "=>"
 			this.disconnectConnection(connection);
 			return;
 		}
@@ -258,8 +255,8 @@ public class ConnectionPool {
 	}
 
 	/**
-	 * Destroy connection. Careful in use - to be called only if pool gets destroyed. Destroying a single connection may
-	 * affect others because of shared stuff (timer) etc.
+	 * Destroy connection. Careful in use - to be called only if pool gets destroyed. Destroying a single connection may affect
+	 * others because of shared stuff (timer) etc.
 	 * 
 	 * @param connection
 	 *            the connection

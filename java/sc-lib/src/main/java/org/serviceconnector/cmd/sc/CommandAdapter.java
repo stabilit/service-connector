@@ -91,9 +91,9 @@ public abstract class CommandAdapter implements ICommand {
 
 		if (subscription == null) {
 			// incoming session not found
-			logger.warn("command error: no subscription session found for id :" + subscriptionId);
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
-					"subscriptionQueue not found for " + subscriptionId);
+			logger.warn("command error: no subscription found for id :" + subscriptionId);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "no subscription found for "
+					+ subscriptionId);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}

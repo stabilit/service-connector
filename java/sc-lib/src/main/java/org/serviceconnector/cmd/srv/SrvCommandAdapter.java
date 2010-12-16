@@ -86,7 +86,7 @@ public abstract class SrvCommandAdapter implements ICommand {
 
 		if (srvService == null || (srvService instanceof SrvSessionService == false)) {
 			// incoming srvService not found
-			logger.warn("command error: service " + serviceName + " not found in service registry");
+			logger.warn("command error: service " + serviceName + "_" + listenerPort + " not found in service registry");
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, serviceName
 					+ " not found in service registry");
 			scmpCommandException.setMessageType(this.getKey());
