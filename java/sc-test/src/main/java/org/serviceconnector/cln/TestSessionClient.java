@@ -27,6 +27,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.SessionLogger;
 
+
 public class TestSessionClient extends Thread {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(TestSessionClient.class);
