@@ -94,10 +94,10 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 		}
 		reply.setHeader(SCMPHeaderAttributeKey.MASK, message.getHeader(SCMPHeaderAttributeKey.MASK));
 		response.setSCMP(reply);
-		// message already gotten from queue no asynchronous process necessary call callback right away
-		communicatorCallback.responseCallback(request, response);
 		// set up subscription timeout again
 		this.subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
+		// message already gotten from queue no asynchronous process necessary call callback right away
+		communicatorCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */

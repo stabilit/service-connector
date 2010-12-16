@@ -139,13 +139,13 @@ public class PublishTimeout implements ITimeout {
 			scmpFault.setLocalDateTime();
 			response.setSCMP(scmpFault);
 		} finally {
+			subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
 			// send message back to client
 			try {
 				this.response.write();
 			} catch (Exception e) {
 				logger.warn("timeout expired procedure failed :" + e.getMessage());
 			}
-			subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
 		}
 	}
 }
