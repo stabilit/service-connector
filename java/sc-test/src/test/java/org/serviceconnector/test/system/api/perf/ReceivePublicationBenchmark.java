@@ -104,7 +104,7 @@ public class ReceivePublicationBenchmark {
 		MsgCallback cbk = new MsgCallback(service);
 		cbk.expectedMessages = nrMessages;
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		waitForMessage(60);
+		waitForMessage(120);
 		if (cbk.messageCounter == nrMessages) {
 			long perf = nrMessages * 1000 / (cbk.stop - cbk.start);
 			testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
@@ -112,6 +112,32 @@ public class ReceivePublicationBenchmark {
 		}
 		service.unsubscribe();
 	}
+	
+	/**
+	 * Description: receive 100000 compressed messages<br>
+	 * Expectation: performance better than 1000 msg/sec
+	 */
+	@Test
+	public void benchmark_100000_msg_uncompressed() throws Exception {
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo(TestConstants.publishMsgUncompressedCmd);
+		int nrMessages = 100000;
+		subMsgRequest.setData(Integer.toString(nrMessages));
+		MsgCallback cbk = new MsgCallback(service);
+		cbk.expectedMessages = nrMessages;
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		waitForMessage(120);
+		if (cbk.messageCounter == nrMessages) {
+			long perf = nrMessages * 1000 / (cbk.stop - cbk.start);
+			testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
+			Assert.assertEquals("Performence not fast enough, only"+ perf + " msg/sec.", true, perf > 1000);
+		}
+		service.unsubscribe();
+	}
+
 	
 	private void waitForMessage(int nrSeconds) throws Exception {
 		for (int i = 0; i < (nrSeconds * 10); i++) {

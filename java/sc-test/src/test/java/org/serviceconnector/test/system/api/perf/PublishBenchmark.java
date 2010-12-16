@@ -73,11 +73,11 @@ public class PublishBenchmark {
 	}	
 
 	/**
-	 * Description:	publish 10000 compressed messages à 128 bytes to the server.<br>
+	 * Description:	publish 100000 compressed messages à 128 bytes to the server.<br>
 	 * Expectation:	passes
 	 */
 	@Test
-	public void benchmark_10000_msg_compressed() throws Exception {
+	public void benchmark_100000_msg_compressed() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
@@ -86,7 +86,7 @@ public class PublishBenchmark {
 		SCPublishMessage publishMessage = new SCPublishMessage(new byte[128]);
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setCompressed(true);
-		int nrMessages = 10000;
+		int nrMessages = 100000;
 		long start = System.currentTimeMillis();
 		long startPart = System.currentTimeMillis();
 		long stopPart = 0;
@@ -105,11 +105,11 @@ public class PublishBenchmark {
 	}
 
 	/**
-	 * Description:	publish 10000 uncompressed messages à 128 bytes to the server.<br>
+	 * Description:	publish 100000 uncompressed messages à 128 bytes to the server.<br>
 	 * Expectation:	passes
 	 */
 	@Test
-	public void benchmark_10000_msg_uncompressed() throws Exception {
+	public void benchmark_100000_msg_uncompressed() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
@@ -118,7 +118,7 @@ public class PublishBenchmark {
 		SCPublishMessage publishMessage = new SCPublishMessage(new byte[128]);
 		publishMessage.setMask(TestConstants.mask);
 		publishMessage.setCompressed(false);
-		int nrMessages = 10000;
+		int nrMessages = 100000;
 		long start = System.currentTimeMillis();
 		long startPart = System.currentTimeMillis();
 		long stopPart = 0;

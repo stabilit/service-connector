@@ -240,7 +240,7 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 
 		// publish n uncompressed messages 128 byte long. n is defined in the request body 
-		public void publishMessagesUnnompressed(SCMessage request, int operationTimeoutInMillis) {
+		public void publishMessagesUncompressed(SCMessage request, int operationTimeoutInMillis) {
 			String dataString = (String) request.getData();
 			int count = Integer.parseInt(dataString);
 			SCPublishMessage pubMessage = new SCPublishMessage(new byte[128]);
