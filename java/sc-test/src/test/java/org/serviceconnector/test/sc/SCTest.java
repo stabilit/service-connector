@@ -29,9 +29,9 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.test.integration.scmp.ConnectionPoolTest;
 import org.serviceconnector.test.sc.attach.AttachTestCase;
 import org.serviceconnector.test.sc.attach.DetachTestCase;
-import org.serviceconnector.test.sc.connectionPool.ConnectionPoolTestCase;
 import org.serviceconnector.test.sc.group.GroupCallTestCase;
 import org.serviceconnector.test.sc.manage.ManageTestCase;
 import org.serviceconnector.test.sc.operationTimeout.SrvExecuteOTITestCase;
@@ -85,7 +85,7 @@ import org.serviceconnector.test.unit.ValidatorUtilityTest;
 		ClnChangeSubscriptionTestCase.class, //
 		PublishLargeMessagesTestCase.class, //
 		ManageTestCase.class, //
-		ConnectionPoolTestCase.class, //  
+		ConnectionPoolTest.class, //  
 		SCVersionToSCTest.class, // 
 		DecodeSCMPVersionTest.class, // 
 		SessionTimeoutTestCase.class, //

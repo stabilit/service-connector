@@ -15,7 +15,6 @@
  */
 package org.serviceconnector.test.integration;
 
-
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.serviceconnector.test.integration.api.cln.AfterSCAbortClientTest;
@@ -31,24 +30,29 @@ import org.serviceconnector.test.integration.api.srv.MultipleSCsServerTest;
 import org.serviceconnector.test.integration.api.srv.PublishServerTest;
 import org.serviceconnector.test.integration.api.srv.RegisterPublishServerTest;
 import org.serviceconnector.test.integration.api.srv.RegisterSessionServerTest;
+import org.serviceconnector.test.integration.scmp.ConnectionPoolTest;
+import org.serviceconnector.test.integration.scmp.SCMPAttachDetachTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { 
-	// client tests
-		AttachTest.class,
-		AttachDetachTest.class, 
-		MultipleSCsClientTest.class,
-		EnableDisableServiceTest.class,
-		NewServiceTest.class, 
-		AfterSCAbortClientTest.class,
-		AfterSCRestartClientTest.class, 
-	// server tests
-		RegisterSessionServerTest.class, 
-		RegisterPublishServerTest.class,
-		PublishServerTest.class,
-		MultipleSCsServerTest.class,
-		AfterSCAbortServerTest.class,
-		AfterSCRestartServerTest.class,
+@Suite.SuiteClasses( {
+// API client tests
+		AttachTest.class, //
+		AttachDetachTest.class, // 
+		MultipleSCsClientTest.class, //
+		EnableDisableServiceTest.class, //
+		NewServiceTest.class, //
+		AfterSCAbortClientTest.class, //
+		AfterSCRestartClientTest.class, //
+		// API server tests
+		RegisterSessionServerTest.class, // 
+		RegisterPublishServerTest.class, //
+		PublishServerTest.class, //
+		MultipleSCsServerTest.class, //
+		AfterSCAbortServerTest.class, //
+		AfterSCRestartServerTest.class, //
+		// SCMP client test
+		SCMPAttachDetachTest.class, //
+		ConnectionPoolTest.class, //
 })
 public class AllIntegrationTests {
 }

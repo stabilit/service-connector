@@ -47,12 +47,12 @@ import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.util.ValidatorUtility;
 
 @RunWith(Parameterized.class)
-public class AttachTest {
+public class SCMPAttachDetachTest {
 
 	/** The Constant testLogger. */
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AttachTest.class);
+	protected final static Logger logger = Logger.getLogger(SCMPAttachDetachTest.class);
 
 	private int port;
 	private ConnectionType connectionType;
@@ -62,7 +62,7 @@ public class AttachTest {
 	private SCRequester requester;
 	private int threadCount = 0;
 
-	public AttachTest(Integer port, ConnectionType connectionType) {
+	public SCMPAttachDetachTest(Integer port, ConnectionType connectionType) {
 		this.port = port;
 		this.connectionType = connectionType;
 	}
@@ -126,6 +126,10 @@ public class AttachTest {
 
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 		detachCall.invoke(callback, 1000);
-		SCTest.checkReply(callback.getMessageSync(3000));
+		result = callback.getMessageSync(3000);
+		SCTest.checkReply(result);
+		Assert.assertNull(result.getBody());
+		Assert.assertNull(result.getMessageSequenceNr());
+		Assert.assertEquals(SCMPMsgType.DETACH.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 	}
 }
