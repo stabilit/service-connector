@@ -1,10 +1,26 @@
-package org.serviceconnector.test.system.api.perf;
+/*
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ */
+package org.serviceconnector.test.system.api.publish;
 
 import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,14 +38,12 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.service.SCServiceException;
 
-@SuppressWarnings("unused")
-public class ReceivePublicationBenchmark {
+public class AfterSCAbortReceivePublicationTest {
 
 	/** The Constant testLogger. */
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ReceivePublicationBenchmark.class);
+	protected final static Logger logger = Logger.getLogger(AfterSCAbortReceivePublicationTest.class);
 
 	private static boolean messageReceived = false;
 	private static ProcessesController ctrl;
@@ -38,8 +52,6 @@ public class ReceivePublicationBenchmark {
 	private SCClient client;
 	private SCPublishService service;
 	private int threadCount = 0;
-	long start= 0;
-	long stop = 0;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -88,27 +100,27 @@ public class ReceivePublicationBenchmark {
 	}
 
 	/**
-	 * Description: receive one message (regular)<br>
+	 * Description: receive after SC abort <br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void benchmark_10000_msg_compressed() throws Exception {
+	public void t01_receive() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("publishMessages");
-		int nrMessages = 10000;
+		int nrMessages = 1;
 		subMsgRequest.setData(Integer.toString(nrMessages));
 		cbk.expectedMessages = nrMessages;
-		start = System.currentTimeMillis();
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		waitForMessage(30);
-		stop = System.currentTimeMillis();
-		long perf = nrMessages * 1000 / (stop - start);
-		testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
-		service.unsubscribe();
+		
+		ctrl.stopSC(scCtx);
+	
+		waitForMessage(10);
+
+		Assert.assertTrue("Test is not implemented", false);
 	}
 	
 	private void waitForMessage(int nrSeconds) throws Exception {
@@ -120,7 +132,7 @@ public class ReceivePublicationBenchmark {
 		}
 		throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 	}
-
+	
 	private class MsgCallback extends SCMessageCallback {
 		
 		private SCMessage response = null;
@@ -129,7 +141,7 @@ public class ReceivePublicationBenchmark {
 
 		public MsgCallback(SCService service) {
 			super(service);
-			ReceivePublicationBenchmark.messageReceived = false;
+			AfterSCAbortReceivePublicationTest.messageReceived = false;
 			response = null;
 			messageCounter = 0;
 			expectedMessages = 0;
@@ -139,12 +151,11 @@ public class ReceivePublicationBenchmark {
 		public void receive(SCMessage msg) {
 			response = msg;
 			messageCounter++;
-			if (((messageCounter+1) % 1000) == 0) {
-				ReceivePublicationBenchmark.testLogger.info("Receiving message nr. " + (messageCounter+1));
-			}
 			if ( expectedMessages == messageCounter) {
-				stop = System.currentTimeMillis();
-				ReceivePublicationBenchmark.messageReceived = true;
+				AfterSCAbortReceivePublicationTest.messageReceived = true;
+			}
+			if (((messageCounter+1) % 1000) == 0) {
+				AfterSCAbortReceivePublicationTest.testLogger.info("Receiving message nr. " + (messageCounter+1));
 			}
 		}
 
@@ -156,7 +167,7 @@ public class ReceivePublicationBenchmark {
 				logger.info("SC error received code:" + scError.getErrorCode() + " text:" + scError.getErrorText());
 			}
 			response = null;
-			ReceivePublicationBenchmark.messageReceived = true;
+			AfterSCAbortReceivePublicationTest.messageReceived = true;
 		}
 	}
 }

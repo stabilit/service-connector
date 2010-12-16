@@ -90,7 +90,7 @@ public class AfterSCRestartClientTest {
 
 	/**
 	 * Description: attach after detach and SC was restarted<br> 
-	 * Expectation:	will pass because the pool was cleaned up
+	 * Expectation:	will pass because the pool was been cleaned up
 	 */
 	@Test
 	public void t102_attach() throws Exception {

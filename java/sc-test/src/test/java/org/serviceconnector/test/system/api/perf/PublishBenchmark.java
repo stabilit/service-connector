@@ -83,14 +83,59 @@ public class PublishBenchmark {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new SrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
-		
-		SCPublishMessage publishMessage = new SCPublishMessage();
+		SCPublishMessage publishMessage = new SCPublishMessage(new byte[128]);
 		publishMessage.setMask(TestConstants.mask);
-		publishMessage.setData("something");
-		publishServer.publish(publishMessage);
+		publishMessage.setCompressed(true);
+		int nrMessages = 10000;
+		long start = System.currentTimeMillis();
+		long startPart = System.currentTimeMillis();
+		long stopPart = 0;
+		for (int i = 0; i < nrMessages; i++) {
+			if (((i+1) % 1000) == 0) {
+				stopPart = System.currentTimeMillis();
+				testLogger.info("Publishing message nr. " + (i+1) + "... "+(1000000 / (stopPart - startPart))+ " msg/sec.");
+				startPart = System.currentTimeMillis();
+			}
+			publishServer.publish(publishMessage);
+		}
+		long stop = System.currentTimeMillis();
+		long perf = nrMessages * 1000 / (stop - start);
+		testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
+		Assert.assertEquals("Performence not fast enough, only"+ perf + " msg/sec.", true, perf > 1000);
 	}
 
+	/**
+	 * Description:	publish 10000 uncompressed messages à 128 bytes to the server.<br>
+	 * Expectation:	passes
+	 */
+	@Test
+	public void benchmark_10000_msg_uncompressed() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		publishServer.register(10, 2, cbk);
+		SCPublishMessage publishMessage = new SCPublishMessage(new byte[128]);
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setCompressed(false);
+		int nrMessages = 10000;
+		long start = System.currentTimeMillis();
+		long startPart = System.currentTimeMillis();
+		long stopPart = 0;
+		for (int i = 0; i < nrMessages; i++) {
+			if (((i+1) % 1000) == 0) {
+				stopPart = System.currentTimeMillis();
+				testLogger.info("Publishing message nr. " + (i+1) + "... "+(1000000 / (stopPart - startPart))+ " msg/sec.");
+				startPart = System.currentTimeMillis();
+			}
+			publishServer.publish(publishMessage);
+		}
+		long stop = System.currentTimeMillis();
+		long perf = nrMessages * 1000 / (stop - start);
+		testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
+		Assert.assertEquals("Performence not fast enough, only"+ perf + " msg/sec.", true, perf > 1200);
+	}
+	
 	private class SrvCallback extends SCPublishServerCallback {
 
 		public SrvCallback(SCPublishServer server) {

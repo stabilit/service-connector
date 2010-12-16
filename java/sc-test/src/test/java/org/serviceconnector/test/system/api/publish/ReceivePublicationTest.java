@@ -166,6 +166,7 @@ public class ReceivePublicationTest {
 	@Test
 	public void t03_receive() throws Exception {
 		// TODO JOT missing test
+		Assert.assertTrue("Test is not implemented", false);
 	}
 	
 	/**
@@ -175,6 +176,7 @@ public class ReceivePublicationTest {
 	@Test
 	public void t04_receiveNoMatch() throws Exception {
 		// TODO JOT missing test
+		Assert.assertTrue("Test is not implemented", false);
 	}
 	
 	private void waitForMessage(int nrSeconds) throws Exception {

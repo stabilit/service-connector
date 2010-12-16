@@ -17,13 +17,16 @@ package org.serviceconnector.test.system.api;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.serviceconnector.test.system.api.publish.AfterSCAbortReceivePublicationTest;
+import org.serviceconnector.test.system.api.publish.AfterServerAbortReceivePublicationTest;
+import org.serviceconnector.test.system.api.publish.AfterServerRestartReceivePublicationTest;
 import org.serviceconnector.test.system.api.publish.ChangeSubscriptionTest;
-import org.serviceconnector.test.system.api.publish.PublishTest;
 import org.serviceconnector.test.system.api.publish.ReceivePublicationTest;
 import org.serviceconnector.test.system.api.publish.SubscribeTest;
 import org.serviceconnector.test.system.api.publish.UnsubscribeTest;
 import org.serviceconnector.test.system.api.session.AfterSCAbortSessionTest;
 import org.serviceconnector.test.system.api.session.AfterServerAbortSessionTest;
+import org.serviceconnector.test.system.api.session.AfterServerRestartSessionTest;
 import org.serviceconnector.test.system.api.session.CreateSessionTest;
 import org.serviceconnector.test.system.api.session.DeleteSessionTest;
 import org.serviceconnector.test.system.api.session.ExecuteAsynchronousTest;
@@ -38,12 +41,15 @@ import org.serviceconnector.test.system.api.session.ExecuteTest;
 		ExecuteAsynchronousTest.class,
 		AfterSCAbortSessionTest.class,
 		AfterServerAbortSessionTest.class,
+		AfterServerRestartSessionTest.class,
 
 		// publish tests
 		SubscribeTest.class, 
 		UnsubscribeTest.class, 
 		ChangeSubscriptionTest.class, 
 		ReceivePublicationTest.class,
-		PublishTest.class})
+		AfterSCAbortReceivePublicationTest.class,
+		AfterServerAbortReceivePublicationTest.class,
+		AfterServerRestartReceivePublicationTest.class})
 public class AllSystemTests {
 }

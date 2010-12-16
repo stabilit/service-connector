@@ -71,7 +71,7 @@ public class AttachBenchmark {
 	}
 
 	/**
-	 * Description: attach 10000 times to SC on localhost and tcp-connection type. Measure performance <br>
+	 * Description: Attach/detach 10000 times to SC on localhost and tcp-connection type. Measure performance <br>
 	 * Expectation: Performance better than 100 cycles/sec.
 	 */
 	@Test
@@ -97,7 +97,7 @@ public class AttachBenchmark {
 	}
 
 	/**
-	 * Description: attach 10000 times to SC on localhost and http-connection type. Measure performance <br>
+	 * Description: Attach/defach 10000 times to SC on localhost and http-connection type. Measure performance <br>
 	 * Expectation: Performance better than 100 cycles/sec.
 	 */
 	@Test

@@ -20,14 +20,11 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
-		// other benchmarks
 	AttachBenchmark.class,
-		// 
 	SessionBenchmark.class, 
-	ExecuteBenchmark.class, 
-	// publish benchmarks
-		// file benchmarks
-		})
+	ExecuteBenchmark.class,
+	PublishBenchmark.class, 
+	ReceivePublicationBenchmark.class})
 public class AllPerformanceTests {
 }
 
