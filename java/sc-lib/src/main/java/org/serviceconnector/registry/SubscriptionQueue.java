@@ -370,7 +370,7 @@ public class SubscriptionQueue<E> {
 		public void startListen() {
 			this.listening = true;
 		}
-
+		
 		/**
 		 * Stop listen. If subscription is not ready to receive messages listen is false.
 		 */
@@ -457,6 +457,8 @@ public class SubscriptionQueue<E> {
 				logger.debug("cancel TimeAwareDataPointer");
 				// important to set timeouter null - rescheduling of same instance not possible
 				this.timeout = null;
+				// removes canceled timeouts
+				SubscriptionQueue.this.timeoutScheduler.purge();
 			}
 		}
 	}
