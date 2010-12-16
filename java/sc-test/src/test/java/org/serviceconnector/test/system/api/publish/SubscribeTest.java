@@ -138,7 +138,7 @@ public class SubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(null);
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
@@ -154,7 +154,7 @@ public class SubscribeTest {
 		service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
@@ -170,7 +170,7 @@ public class SubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
@@ -187,7 +187,7 @@ public class SubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
@@ -204,7 +204,7 @@ public class SubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
@@ -221,7 +221,7 @@ public class SubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
@@ -238,7 +238,7 @@ public class SubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
@@ -255,7 +255,7 @@ public class SubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
@@ -272,7 +272,7 @@ public class SubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		subMsgResponse = service.subscribe(subMsgRequest, null);
@@ -295,7 +295,7 @@ public class SubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);
@@ -312,7 +312,7 @@ public class SubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
@@ -337,7 +337,7 @@ public class SubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		
@@ -372,7 +372,7 @@ public class SubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(null);
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);

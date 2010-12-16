@@ -89,7 +89,7 @@ public class ExecuteBenchmark {
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setCompressed(true);
 		request.setSessionInfo("sessionInfo");
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.createSession(10, request);
 		int nrMessages = 10000;
 		long start = System.currentTimeMillis();
@@ -120,7 +120,7 @@ public class ExecuteBenchmark {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo("sessionInfo");
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		request.setCompressed(false);
 		response = service.createSession(10, request);
 		int nrMessages = 10000;

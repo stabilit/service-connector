@@ -112,7 +112,7 @@ public class ExecuteAsynchronousTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("echoAppError");
+		request.setMessageInfo(TestConstants.echoAppErrorCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
 		service.send(request, cbk);
@@ -137,7 +137,7 @@ public class ExecuteAsynchronousTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
 		service.send(request, cbk);
@@ -161,7 +161,7 @@ public class ExecuteAsynchronousTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(new SCMessage());
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
 		service.send(request, cbk);
@@ -185,7 +185,7 @@ public class ExecuteAsynchronousTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(new SCMessage());
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
 		service.send(request, cbk);
@@ -228,7 +228,7 @@ public class ExecuteAsynchronousTest {
 		} catch (Exception e) {
 			// ignore rejection
 		}
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
 		service.send(request, cbk);
@@ -246,7 +246,7 @@ public class ExecuteAsynchronousTest {
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
 		String sessionId = service.getSessionId();
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		request.setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
@@ -271,7 +271,7 @@ public class ExecuteAsynchronousTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("sleep");
+		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
@@ -292,7 +292,7 @@ public class ExecuteAsynchronousTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("sleep");
+		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
@@ -303,7 +303,7 @@ public class ExecuteAsynchronousTest {
 
 		// second message
 		messageReceived = false;
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("hallo"); // send second message
 		service.send(2, request, cbk);
 		waitForMessage(10); // will wait max 10 seconds for the second response
@@ -325,7 +325,7 @@ public class ExecuteAsynchronousTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("sleep");
+		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
@@ -335,7 +335,7 @@ public class ExecuteAsynchronousTest {
 
 		// second message
 		messageReceived = false;
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("gaga");
 		service.send(2, request, cbk);
 		waitForMessage(10); // will wait max 10 seconds for response

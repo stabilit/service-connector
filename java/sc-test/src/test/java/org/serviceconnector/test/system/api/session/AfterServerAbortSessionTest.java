@@ -128,7 +128,7 @@ public class AfterServerAbortSessionTest {
 		
 		ctrl.stopServer(srvCtx);
 		
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.execute(request);
 	}
 
@@ -146,7 +146,7 @@ public class AfterServerAbortSessionTest {
 		
 		ctrl.stopServer(srvCtx);
 		
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.execute(30, request);
 	}
 
@@ -162,7 +162,7 @@ public class AfterServerAbortSessionTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
 		

@@ -110,7 +110,7 @@ public class AfterServerAbortReceivePublicationTest {
 		SCSubscribeMessage subMsgResponse = null;
 		MsgCallback cbk = new MsgCallback(service);
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo("publishMessages");
+		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 1;
 		subMsgRequest.setData(Integer.toString(nrMessages));
 		cbk.expectedMessages = nrMessages;

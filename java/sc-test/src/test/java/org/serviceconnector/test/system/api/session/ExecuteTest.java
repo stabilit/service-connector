@@ -106,7 +106,7 @@ public class ExecuteTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("echoAppError");
+		request.setMessageInfo(TestConstants.echoAppErrorCmd);
 		response = service.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
@@ -127,7 +127,7 @@ public class ExecuteTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
@@ -147,7 +147,7 @@ public class ExecuteTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(new SCMessage());
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
@@ -166,7 +166,7 @@ public class ExecuteTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(new SCMessage());
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
@@ -225,7 +225,7 @@ public class ExecuteTest {
 		response = service.createSession(request);
 		Assert.assertEquals("sessionId is the same", false ,sessionId == response.getSessionId());
 
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
@@ -245,7 +245,7 @@ public class ExecuteTest {
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
 		String sessionId = service.getSessionId();
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		request.setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
 		response = service.execute(request);
 		Assert.assertEquals("sessionId is not the same", sessionId, response.getSessionId());
@@ -272,7 +272,7 @@ public class ExecuteTest {
 		} catch (Exception e) {
 			// ignore rejection
 		}
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.execute(request);
 	}
 
@@ -287,7 +287,7 @@ public class ExecuteTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("sleep");
+		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
 		// will get exception here
 		response = service.execute(3,request);	// SC oti = 3*0.8*1000 = 2400ms
@@ -304,7 +304,7 @@ public class ExecuteTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("sleep");
+		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
 		try {
 			response = service.execute(3,request);	// SC oti = 3*0.8*1000 = 2400ms
@@ -312,7 +312,7 @@ public class ExecuteTest {
 			// will get here after 3000 ms, sleep another 4000 to allow SC cleanup
 			Thread.sleep(4000);
 		}
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("hallo");
 		response = service.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
@@ -332,7 +332,7 @@ public class ExecuteTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("sleep");
+		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
 		try {
 			response = service.execute(3,request);	// SC oti = 3*0.8*1000 = 2400ms
@@ -340,7 +340,7 @@ public class ExecuteTest {
 			// will get here after 3000 ms
 			// continue immediatelly
 		}
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("hallo");
 		response = service.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());

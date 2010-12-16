@@ -88,7 +88,7 @@ public class AfterServerRestartSessionTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("echoAppError");
+		request.setMessageInfo(TestConstants.echoAppErrorCmd);
 		
 		ctrl.stopServer(srvCtx);
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,

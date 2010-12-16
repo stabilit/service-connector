@@ -137,7 +137,7 @@ public class UnsubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);	
@@ -164,7 +164,7 @@ public class UnsubscribeTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo("doNothing");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		MsgCallback cbk = new MsgCallback(service);

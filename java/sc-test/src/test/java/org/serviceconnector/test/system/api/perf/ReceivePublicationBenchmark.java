@@ -98,13 +98,13 @@ public class ReceivePublicationBenchmark {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo("publishMessages");
-		int nrMessages = 10000;
+		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
+		int nrMessages = 100000;
 		subMsgRequest.setData(Integer.toString(nrMessages));
 		MsgCallback cbk = new MsgCallback(service);
 		cbk.expectedMessages = nrMessages;
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		waitForMessage(300);
+		waitForMessage(60);
 		if (cbk.messageCounter == nrMessages) {
 			long perf = nrMessages * 1000 / (cbk.stop - cbk.start);
 			testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");

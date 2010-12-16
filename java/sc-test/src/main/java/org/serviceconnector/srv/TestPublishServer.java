@@ -214,25 +214,22 @@ public class TestPublishServer extends TestStatefulServer {
 		// ==================================================================================
 		// methods invoked by name (passed in messageInfo)
 		
-		/**
-		 * This method might get invoked by reflection if client requests it in sessionInfo of a subscribe message
-		 * 
-		 * @param request
-		 * @param operationTimeoutInMillis
-		 */
+		// do nothing
 		public void doNothing(SCMessage request, int operationTimeoutInMillis) {
 		}
 
-		public void publishMessages(SCMessage request, int operationTimeoutInMillis) {
-			SCPublishMessage pubMessage = new SCPublishMessage();
+		// publish n compressed messages 128 byte long. n is defined in the request body 
+		public void publishMessagesCompressed(SCMessage request, int operationTimeoutInMillis) {
 			String dataString = (String) request.getData();
 			int count = Integer.parseInt(dataString);
+			SCPublishMessage pubMessage = new SCPublishMessage(new byte[128]);
+			pubMessage.setCompressed(true);
 			for (int i = 0; i < count; i++) {
 				try {
 					pubMessage.setMask(TestConstants.maskSrv);
 					pubMessage.setData("publish message nr:" + i);
 					this.publishSrv.publish(pubMessage);
-					if (((i+1) % 100) == 0) {
+					if (((i+1) % 1000) == 0) {
 						TestPublishServer.testLogger.info("Publishing message nr. " + (i+1));
 					}
 				} catch (Exception e) {
@@ -241,5 +238,27 @@ public class TestPublishServer extends TestStatefulServer {
 				}
 			}
 		}
+
+		// publish n uncompressed messages 128 byte long. n is defined in the request body 
+		public void publishMessagesUnnompressed(SCMessage request, int operationTimeoutInMillis) {
+			String dataString = (String) request.getData();
+			int count = Integer.parseInt(dataString);
+			SCPublishMessage pubMessage = new SCPublishMessage(new byte[128]);
+			pubMessage.setCompressed(false);
+			for (int i = 0; i < count; i++) {
+				try {
+					pubMessage.setMask(TestConstants.maskSrv);
+					pubMessage.setData("publish message nr:" + i);
+					this.publishSrv.publish(pubMessage);
+					if (((i+1) % 1000) == 0) {
+						TestPublishServer.testLogger.info("Publishing message nr. " + (i+1));
+					}
+				} catch (Exception e) {
+					logger.error("cannot publish",e);
+					break;
+				}
+			}
+		}
+
 	}
 }

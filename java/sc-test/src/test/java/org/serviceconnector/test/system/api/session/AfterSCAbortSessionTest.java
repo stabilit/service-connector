@@ -129,7 +129,7 @@ public class AfterSCAbortSessionTest {
 		ctrl.stopServer(srvCtx); // stop test server now, it cannot be stopped without SC
 		ctrl.stopSC(scCtx);
 		
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.execute(request);
 	}
 
@@ -144,7 +144,7 @@ public class AfterSCAbortSessionTest {
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(request);
-		request.setMessageInfo("echo");
+		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
 		

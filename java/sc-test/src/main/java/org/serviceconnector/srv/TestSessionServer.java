@@ -174,8 +174,8 @@ public class TestSessionServer extends TestStatefulServer {
 		// ==================================================================================
 		// methods invoked by name (passed in messageInfo)
 		
-		// echo the request 
-		public SCMessage echo(SCMessage request, int operationTimeoutInMillis) {
+		// send back the same message  
+		public SCMessage echoMessage(SCMessage request, int operationTimeoutInMillis) {
 			// do not log! it is used for performance benchmarks
 			return request;
 		}
@@ -191,7 +191,7 @@ public class TestSessionServer extends TestStatefulServer {
 			return request;
 		}
 		
-		// sleep for time defined in the body
+		// sleep for time defined in the body and send back the same message 
 		public SCMessage sleep(SCMessage request, int operationTimeoutInMillis) {
 			String dataString = (String) request.getData();
 			int millis = Integer.parseInt(dataString);

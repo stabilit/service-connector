@@ -43,6 +43,12 @@ public class TestConstants {
 	
 	public static final String killServerCmd = "kill";
 	public static final String rejectSessionCmd = "reject";
+	public static final String doNothingCmd = "doNothing";
+	public static final String publishCompressedMsgCmd = "publishMessagesCompressed";
+	public static final String publishMsgUncompressedCmd = "publishMessagesUncompressed";
+	public static final String echoCmd = "echoMessage";
+	public static final String echoAppErrorCmd = "echoAppError";
+	public static final String sleepCmd = "sleep";
 	
 	public static final String pangram = "The quick brown fox jumps over a lazy dog.";
 	public static final String stringLength32 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
