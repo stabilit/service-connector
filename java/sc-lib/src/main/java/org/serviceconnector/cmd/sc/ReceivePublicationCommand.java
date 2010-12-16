@@ -64,16 +64,18 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 	public void run(IRequest request, IResponse response, IResponderCallback communicatorCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String subscriptionId = reqMessage.getSessionId();
-		// cancel subscription timeout
-		this.subscriptionRegistry.cancelSubscriptionTimeout(subscriptionId);
-
+		SCMPMessage message = null;
 		// looks up subscription queue
 		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(subscriptionId);
-		// tries polling message
-		SCMPMessage message = subscriptionQueue.getMessageOrListen(subscriptionId, request, response);
-		if (message == null) {
-			// no message available, switched to listening mode for new message
-			return;
+		synchronized (subscriptionQueue) {
+			// cancel subscription timeout
+			this.subscriptionRegistry.cancelSubscriptionTimeout(subscriptionId);
+			// tries polling message
+			message = subscriptionQueue.getMessageOrListen(subscriptionId, request, response);
+			if (message == null) {
+				// no message available, switched to listening mode for new message
+				return;
+			}
 		}
 		logger.debug("CRP message found in queue subscriptionId " + subscriptionId);
 		// message found in subscription queue set up reply

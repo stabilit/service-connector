@@ -128,6 +128,8 @@ public class Requester implements IRequester {
 			// first handle connection - that user has a connection to work, if he has only 1
 			this.freeConnection();
 			this.scmpCallback.callback(scmpReply);
+			// removes canceled oti timeouts
+			AppContext.otiScheduler.purge();
 		}
 
 		/** {@inheritDoc} */
