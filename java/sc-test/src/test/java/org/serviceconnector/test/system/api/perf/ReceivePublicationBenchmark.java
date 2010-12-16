@@ -5,6 +5,7 @@ import java.util.concurrent.TimeoutException;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -88,26 +89,27 @@ public class ReceivePublicationBenchmark {
 	}
 
 	/**
-	 * Description: receive one message (regular)<br>
-	 * Expectation: passes
+	 * Description: receive 100000 compressed messages<br>
+	 * Expectation: performance better than 1000 msg/sec
 	 */
 	@Test
-	public void benchmark_10000_msg_compressed() throws Exception {
+	public void benchmark_100000_msg_compressed() throws Exception {
 		service = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		MsgCallback cbk = new MsgCallback(service);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("publishMessages");
 		int nrMessages = 10000;
 		subMsgRequest.setData(Integer.toString(nrMessages));
+		MsgCallback cbk = new MsgCallback(service);
 		cbk.expectedMessages = nrMessages;
-		start = System.currentTimeMillis();
 		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		waitForMessage(30);
-		stop = System.currentTimeMillis();
-		long perf = nrMessages * 1000 / (stop - start);
-		testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
+		waitForMessage(300);
+		if (cbk.messageCounter == nrMessages) {
+			long perf = nrMessages * 1000 / (cbk.stop - cbk.start);
+			testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
+			Assert.assertEquals("Performence not fast enough, only"+ perf + " msg/sec.", true, perf > 1000);
+		}
 		service.unsubscribe();
 	}
 	
@@ -126,6 +128,10 @@ public class ReceivePublicationBenchmark {
 		private SCMessage response = null;
 		private int messageCounter = 0;
 		private int expectedMessages = 0;
+		long start = System.currentTimeMillis();
+		long stop = 0;
+		long startPart = System.currentTimeMillis();
+		long stopPart = 0;
 
 		public MsgCallback(SCService service) {
 			super(service);
@@ -139,8 +145,11 @@ public class ReceivePublicationBenchmark {
 		public void receive(SCMessage msg) {
 			response = msg;
 			messageCounter++;
+			
 			if (((messageCounter+1) % 1000) == 0) {
-				ReceivePublicationBenchmark.testLogger.info("Receiving message nr. " + (messageCounter+1));
+				stopPart = System.currentTimeMillis();
+				ReceivePublicationBenchmark.testLogger.info("Receiving message nr. " + (messageCounter+1) + "... "+(1000000 / (stopPart - startPart))+ " msg/sec.");
+				startPart = System.currentTimeMillis();
 			}
 			if ( expectedMessages == messageCounter) {
 				stop = System.currentTimeMillis();

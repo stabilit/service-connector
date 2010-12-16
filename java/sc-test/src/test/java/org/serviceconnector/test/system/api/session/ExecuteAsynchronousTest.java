@@ -102,7 +102,7 @@ public class ExecuteAsynchronousTest {
 	}
 
 	/**
-	 * Description: regular exchange messages<br>
+	 * Description: exchange of 1 uncompressed message<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -127,7 +127,7 @@ public class ExecuteAsynchronousTest {
 	}
 
 	/**
-	 * Description: regular exchange messages<br>
+	 * Description: exchange of 1 compressed message<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -151,7 +151,7 @@ public class ExecuteAsynchronousTest {
 	}
 
 	/**
-	 * Description: exchange 1MB message<br>
+	 * Description: exchange of 1 uncompressed 10MB message<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -175,7 +175,7 @@ public class ExecuteAsynchronousTest {
 	}
 
 	/**
-	 * Description: exchange 1MB message<br>
+	 * Description: exchange of 1 compressed 10MB message<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -198,7 +198,7 @@ public class ExecuteAsynchronousTest {
 	}
 
 	/**
-	 * Description: send before create session<br>
+	 * Description: send message before create session<br>
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)

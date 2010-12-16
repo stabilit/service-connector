@@ -211,6 +211,9 @@ public class TestPublishServer extends TestStatefulServer {
 			}
 		}
 
+		// ==================================================================================
+		// methods invoked by name (passed in messageInfo)
+		
 		/**
 		 * This method might get invoked by reflection if client requests it in sessionInfo of a subscribe message
 		 * 
