@@ -23,6 +23,11 @@ import org.serviceconnector.test.unit.api.APISCMessageTest;
 import org.serviceconnector.test.unit.api.APISCPublishMessageTest;
 import org.serviceconnector.test.unit.api.APISCServerTest;
 import org.serviceconnector.test.unit.api.APISCSubscribeMessageTest;
+import org.serviceconnector.test.unit.cache.CacheExpirationTest;
+import org.serviceconnector.test.unit.cache.CacheExpirationThreadRunTest;
+import org.serviceconnector.test.unit.cache.CacheStatisticsTest;
+import org.serviceconnector.test.unit.cache.CacheTest;
+import org.serviceconnector.test.unit.cache.CacheThreadRunTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { 
