@@ -141,10 +141,10 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 						scmpReply.setBody(cacheMessage.getBody());
 
 						response.setSCMP(scmpReply);
-						responderCallback.responseCallback(request, response);
 						// schedule session timeout
 						Session session = this.sessionRegistry.getSession(sessionId);
 						this.sessionRegistry.scheduleSessionTimeout(session);
+						responderCallback.responseCallback(request, response);
 						CacheLogger.debug("Sent a cache message to the client (" + cacheId + " "
 								+ message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME) + ")");
 						return;
