@@ -28,9 +28,6 @@ public class APIIntegrationSuperTest {
 		/** The Constant testLogger. */
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 	
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(APIIntegrationSuperTest.class);
-	
 	protected static ProcessesController ctrl;
 	protected static ProcessCtx scCtx;
 	protected int threadCount = 0;

@@ -15,16 +15,12 @@
  */
 package org.serviceconnector.test.integration;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.serviceconnector.api.cln.SCClient;
 
 public class APIIntegrationSuperClientTest extends APIIntegrationSuperTest {
 
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(APIIntegrationSuperClientTest.class);
-	
 	protected SCClient client;
 	
 	@Before
