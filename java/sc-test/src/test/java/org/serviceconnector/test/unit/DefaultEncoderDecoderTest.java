@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
@@ -33,7 +34,6 @@ import org.serviceconnector.scmp.SCMPHeadlineKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.TestUtil;
 
 /**
  * The Class DefaultEncoderDecoderTest.

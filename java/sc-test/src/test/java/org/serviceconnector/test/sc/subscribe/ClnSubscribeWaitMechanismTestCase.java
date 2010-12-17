@@ -19,13 +19,13 @@ package org.serviceconnector.test.sc.subscribe;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.SuperTestCase;
 import org.serviceconnector.util.SynchronousCallback;
 
@@ -64,17 +64,16 @@ public class ClnSubscribeWaitMechanismTestCase extends SuperTestCase {
 		SCMPMessage reply = callback.getMessageSync(3000);
 		SCMPMessage reply1 = callback1.getMessageSync(3000);
 
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 		Assert.assertFalse(reply.isFault());
 		Assert.assertTrue(reply1.isFault());
-		SCTest.verifyError(reply1, SCMPError.NO_FREE_SERVER, "[for service publish-1]",
-				SCMPMsgType.CLN_SUBSCRIBE);
+		TestUtil.verifyError(reply1, SCMPError.NO_FREE_SERVER, SCMPMsgType.CLN_SUBSCRIBE);
 
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 				.newInstance(req, "publish-1", reply.getSessionId());
 		unSubscribeCall.invoke(callback, 3000);
 		reply = callback.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 	}
 
 	private class TestSubscribeCallback extends SynchronousCallback {

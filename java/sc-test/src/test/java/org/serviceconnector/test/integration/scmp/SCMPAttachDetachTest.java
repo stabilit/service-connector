@@ -31,6 +31,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
@@ -43,7 +44,6 @@ import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.util.ValidatorUtility;
 
 @RunWith(Parameterized.class)
@@ -117,7 +117,7 @@ public class SCMPAttachDetachTest {
 		TestCallback callback = new TestCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync(3000);
-		SCTest.checkReply(result);
+		TestUtil.checkReply(result);
 
 		Assert.assertNull(result.getBody());
 		Assert.assertNull(result.getMessageSequenceNr());
@@ -127,7 +127,7 @@ public class SCMPAttachDetachTest {
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 		detachCall.invoke(callback, 1000);
 		result = callback.getMessageSync(3000);
-		SCTest.checkReply(result);
+		TestUtil.checkReply(result);
 		Assert.assertNull(result.getBody());
 		Assert.assertNull(result.getMessageSequenceNr());
 		Assert.assertEquals(SCMPMsgType.DETACH.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));

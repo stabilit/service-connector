@@ -19,6 +19,7 @@ package org.serviceconnector.test.sc.subscribe;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
@@ -28,7 +29,6 @@ import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.SuperTestCase;
 import org.serviceconnector.util.SynchronousCallback;
 
@@ -51,7 +51,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		TestSubscribeCallback callback = new TestSubscribeCallback(true);
 		subscribeCall.invoke(callback, 3000);
 		SCMPMessage reply = callback.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
 		// receive publication - no data
@@ -60,7 +60,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		callback = new TestSubscribeCallback(true);
 		receivePublicationCall.invoke(callback, 30000);
 		reply = callback.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
 		// receive publication first message
@@ -69,7 +69,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		callback = new TestSubscribeCallback(true);
 		receivePublicationCall.invoke(callback, 10000);
 		reply = callback.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
 		for (int i = 1; i < 3; i++) {
@@ -79,7 +79,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 			callback = new TestSubscribeCallback(true);
 			receivePublicationCall.invoke(callback, 3000);
 			reply = callback.getMessageSync(3000);
-			SCTest.checkReply(reply);
+			TestUtil.checkReply(reply);
 			Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 		}
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(req,
@@ -87,7 +87,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		callback = new TestSubscribeCallback(true);
 		unSubscribeCall.invoke(callback, 3000);
 		reply = callback.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 	}
 
 	@Test
@@ -101,7 +101,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		subscribeCall.invoke(callback, 3000);
 		SCMPMessage fault = callback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_ERROR, " [IntValue must be set]", SCMPMsgType.CLN_SUBSCRIBE);
+		TestUtil.verifyError((SCMPMessageFault) fault, SCMPError.HV_ERROR, SCMPMsgType.CLN_SUBSCRIBE);
 
 		// noDataInterval wrong
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -111,7 +111,7 @@ public class ClnSubscribeTestCase extends SuperTestCase {
 		subscribeCall.invoke(callback, 3000);
 		fault = callback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_ERROR, " [IntValue must be set]", SCMPMsgType.CLN_SUBSCRIBE);
+		TestUtil.verifyError((SCMPMessageFault) fault, SCMPError.HV_ERROR, SCMPMsgType.CLN_SUBSCRIBE);
 	}
 
 	private class TestSubscribeCallback extends SynchronousCallback {

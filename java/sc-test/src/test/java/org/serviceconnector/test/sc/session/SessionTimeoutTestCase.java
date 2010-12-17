@@ -17,6 +17,7 @@
 package org.serviceconnector.test.sc.session;
 
 import org.junit.Test;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
@@ -25,7 +26,6 @@ import org.serviceconnector.call.SCMPEchoCall;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 
 
@@ -48,7 +48,7 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 		createSessionCall.setEchoIntervalSeconds(1);
 		createSessionCall.invoke(this.attachCallback, 1000);
 		SCMPMessage responseMessage = this.attachCallback.getMessageSync(3000);
-		SCTest.checkReply(responseMessage);
+		TestUtil.checkReply(responseMessage);
 		String sessionId = responseMessage.getSessionId();
 		Thread.sleep(1200);
 		// session should not exist
@@ -58,7 +58,7 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 		clnExecuteCall.setRequestBody("get Data (query)");
 		clnExecuteCall.invoke(this.attachCallback, 1000);
 		SCMPMessage msg = this.attachCallback.getMessageSync(3000);
-		SCTest.verifyError(msg, SCMPError.NOT_FOUND, " [no session found for " + sessionId + "]", SCMPMsgType.CLN_EXECUTE);
+		TestUtil.verifyError(msg, SCMPError.NOT_FOUND, SCMPMsgType.CLN_EXECUTE);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(req, "session-1", sessionId);
@@ -74,14 +74,14 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 		createSessionCall.setEchoIntervalSeconds(1);
 		createSessionCall.invoke(this.attachCallback, 1000);
 		SCMPMessage responseMessage = this.attachCallback.getMessageSync(3000);
-		SCTest.checkReply(responseMessage);
+		TestUtil.checkReply(responseMessage);
 		String sessionId = responseMessage.getSessionId();
 
 		for (int i = 0; i < 5; i++) {
 			SCMPEchoCall clnEchoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(req,
 					"session-1", sessionId);
 			clnEchoCall.invoke(this.attachCallback, 1000);
-			SCTest.checkReply(this.attachCallback.getMessageSync(3000));
+			TestUtil.checkReply(this.attachCallback.getMessageSync(3000));
 			Thread.sleep(400);
 		}
 		// session should still exist
@@ -90,7 +90,7 @@ public class SessionTimeoutTestCase extends SuperAttachTestCase {
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("get Data (query)");
 		clnExecuteCall.invoke(this.attachCallback, 1000);
-		SCTest.checkReply(this.attachCallback.getMessageSync(3000));
+		TestUtil.checkReply(this.attachCallback.getMessageSync(3000));
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 				.newInstance(req, "session-1", sessionId);

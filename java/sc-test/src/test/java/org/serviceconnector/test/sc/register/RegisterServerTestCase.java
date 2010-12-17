@@ -24,6 +24,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPInspectCall;
@@ -70,7 +71,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.invoke(this.registerCallback, 1000);
 		SCMPMessageFault fault = (SCMPMessageFault) this.registerCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.NOT_FOUND, " [service not found]", SCMPMsgType.REGISTER_SERVER);
+		TestUtil.verifyError((SCMPMessageFault) fault, SCMPError.NOT_FOUND, SCMPMsgType.REGISTER_SERVER);
 	}
 
 	@Test
@@ -86,8 +87,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.invoke(this.registerCallback, 1000);
 		SCMPMessage fault = this.registerCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL, " [IntValue must be set]",
-				SCMPMsgType.REGISTER_SERVER);
+		TestUtil.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL, SCMPMsgType.REGISTER_SERVER);
 
 		// maxSessions 0 value
 		registerServerCall.setPortNumber(9100);
@@ -98,7 +98,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.invoke(this.registerCallback, 1000);
 		fault = this.registerCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_MAX_SESSIONS, " [IntValue 0 too low]", SCMPMsgType.REGISTER_SERVER);
+		TestUtil.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_MAX_SESSIONS, SCMPMsgType.REGISTER_SERVER);
 
 		// maxConnections 0 value
 		registerServerCall.setPortNumber(9100);
@@ -109,8 +109,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.invoke(this.registerCallback, 1000);
 		fault = this.registerCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_MAX_CONNECTIONS, " [IntValue 0 too low]",
-				SCMPMsgType.REGISTER_SERVER);
+		TestUtil.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_MAX_CONNECTIONS, SCMPMsgType.REGISTER_SERVER);
 
 		// port too high 10000
 		registerServerCall.setMaxSessions(10);
@@ -121,8 +120,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.invoke(this.registerCallback, 1000);
 		fault = this.registerCallback.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		SCTest.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_PORTNR, " [IntValue 910000 not within limits]",
-				SCMPMsgType.REGISTER_SERVER);
+		TestUtil.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_PORTNR, SCMPMsgType.REGISTER_SERVER);
 	}
 
 	@Test
@@ -144,7 +142,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		registerServerCall.setKeepAliveInterval(360);
 
 		registerServerCall.invoke(this.registerCallback, 2000);
-		SCTest.checkReply(this.registerCallback.getMessageSync(3000));
+		TestUtil.checkReply(this.registerCallback.getMessageSync(3000));
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		inspectCall.invoke(this.registerCallback, 3000);
@@ -166,7 +164,7 @@ public class RegisterServerTestCase extends SuperTestCase {
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 				.newInstance(req, "publish-1");
 		deRegisterServerCall.invoke(this.registerCallback, 1000);
-		SCTest.checkReply(this.registerCallback.getMessageSync(3000));
+		TestUtil.checkReply(this.registerCallback.getMessageSync(3000));
 
 		/*********************************** Verify registry entries in SC ********************************/
 		inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);

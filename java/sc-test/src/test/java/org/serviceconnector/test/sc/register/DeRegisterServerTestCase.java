@@ -21,6 +21,7 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPInspectCall;
@@ -48,7 +49,7 @@ public class DeRegisterServerTestCase extends SuperRegisterTestCase {
 				.newInstance(this.registerRequester, "publish-1");
 
 		deRegisterServerCall.invoke(this.attachCallback, 1000);
-		SCTest.checkReply(this.attachCallback.getMessageSync(3000));
+		TestUtil.checkReply(this.attachCallback.getMessageSync(3000));
 		/*************** scmp inspect ********/
 		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(req);
 		inspectCall.invoke(this.attachCallback, 1000);

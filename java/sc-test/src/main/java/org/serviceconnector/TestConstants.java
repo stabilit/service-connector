@@ -48,7 +48,9 @@ public class TestConstants {
 	public static final String publishMsgUncompressedCmd = "publishMessagesUncompressed";
 	public static final String publishMessagesWithDelayCmd = "publishMessagesWithDelay";
 	public static final String echoCmd = "echoMessage";
+	public static final String raiseExceptionCmd = "raiseException";
 	public static final String echoAppErrorCmd = "echoAppError";
+	public static final String largeResponseCmd = "largeResponse";
 	public static final String sleepCmd = "sleep";
 	
 	public static final String pangram = "The quick brown fox jumps over a lazy dog.";

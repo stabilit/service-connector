@@ -20,6 +20,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.serviceconnector.Constants;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
@@ -31,7 +32,6 @@ import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.SetupTestCases;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 import org.serviceconnector.util.SynchronousCallback;
@@ -54,7 +54,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 		SCMPMessage result = callback.getMessageSync(3000);
 		// try to create a session on service enableService - should fail
 		SCMPMessageFault fault = (SCMPMessageFault) this.createSession();
-		SCTest.verifyError(fault, SCMPError.SERVICE_DISABLED, " [Service is disabled.]", SCMPMsgType.CLN_CREATE_SESSION);
+		TestUtil.verifyError(fault, SCMPError.SERVICE_DISABLED, SCMPMsgType.CLN_CREATE_SESSION);
 
 		// enable enableService by manage call
 		manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(req);
@@ -70,7 +70,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 
 		// try to create a session on service enableService - should work
 		result = (SCMPMessage) this.createSession();
-		SCTest.checkReply(result);
+		TestUtil.checkReply(result);
 		String sessionId = result.getSessionId();
 
 		// disable enableService by manage call
@@ -84,8 +84,7 @@ public class ManageTestCase extends SuperAttachTestCase {
 
 		// try to create another session on service enableService - should fail
 		fault = (SCMPMessageFault) this.createSession();
-		SCTest.verifyError(fault, SCMPError.SERVICE_DISABLED, " [service not found for enableService]",
-				SCMPMsgType.CLN_CREATE_SESSION);
+		TestUtil.verifyError(fault, SCMPError.SERVICE_DISABLED, SCMPMsgType.CLN_CREATE_SESSION);
 
 		// try to send data over first created session - should work
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, this.serviceName,
@@ -94,14 +93,14 @@ public class ManageTestCase extends SuperAttachTestCase {
 		clnExecuteCall.setRequestBody("get Data (query)");
 		clnExecuteCall.invoke(callback, 1000);
 		result = callback.getMessageSync(3000);
-		SCTest.checkReply(result);
+		TestUtil.checkReply(result);
 
 		// delete session one
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				req, this.serviceName, sessionId);
 		deleteSessionCall.invoke(callback, 1000);
 		result = callback.getMessageSync(3000);
-		SCTest.checkReply(result);
+		TestUtil.checkReply(result);
 	}
 
 	@Test

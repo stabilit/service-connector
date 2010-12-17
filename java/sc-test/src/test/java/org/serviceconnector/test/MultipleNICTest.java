@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SC;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
@@ -21,7 +22,6 @@ import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.util.SynchronousCallback;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -47,7 +47,7 @@ public class MultipleNICTest {
 					attachCall.invoke(callback, 1000);
 					SCMPMessage result = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
 							* Constants.SEC_TO_MILLISEC_FACTOR);
-					SCTest.checkReply(result);
+					TestUtil.checkReply(result);
 					/*********************************** Verify attach response msg **********************************/
 					Assert.assertNull(result.getBody());
 					Assert.assertNull(result.getMessageSequenceNr());
@@ -57,7 +57,7 @@ public class MultipleNICTest {
 
 					SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
 					detachCall.invoke(callback, 1000);
-					SCTest.checkReply(callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+					TestUtil.checkReply(callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
 							* Constants.SEC_TO_MILLISEC_FACTOR));
 					req.destroy();
 				} catch (Exception e) {

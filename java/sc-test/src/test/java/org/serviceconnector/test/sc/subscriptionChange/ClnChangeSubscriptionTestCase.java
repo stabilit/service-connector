@@ -19,6 +19,7 @@ package org.serviceconnector.test.sc.subscriptionChange;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
@@ -28,7 +29,6 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.SuperTestCase;
 import org.serviceconnector.util.SynchronousCallback;
 
@@ -52,7 +52,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		TestChangeSubscriptionCallback callback = new TestChangeSubscriptionCallback(true);
 		subscribeCall.invoke(callback, 3000);
 		SCMPMessage reply = callback.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
 		for (int i = 0; i < 2; i++) {
@@ -71,7 +71,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		changeSubscriptionCall.setMask("000012100012832102FADF-----------X-----------");
 		callback = new TestChangeSubscriptionCallback(true);
 		changeSubscriptionCall.invoke(callback, 3000);
-		SCTest.checkReply(callback.getMessageSync(3000));
+		TestUtil.checkReply(callback.getMessageSync(3000));
 
 		// receive publication first message
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
@@ -95,7 +95,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		callback = new TestChangeSubscriptionCallback(true);
 		unSubscribeCall.invoke(callback, 3000);
 		reply = callback.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 	}
 
 	@Test
@@ -109,7 +109,7 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 		TestChangeSubscriptionCallback callback = new TestChangeSubscriptionCallback(true);
 		subscribeCall.invoke(callback, 3000);
 		SCMPMessage reply = callback.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
@@ -127,18 +127,17 @@ public class ClnChangeSubscriptionTestCase extends SuperTestCase {
 
 		reply = callback.getMessageSync(3000);
 		SCMPMessage reply1 = callback1.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 		Assert.assertFalse(reply.isFault());
 		Assert.assertTrue(reply1.isFault());
-		SCTest.verifyError(reply1, SCMPError.SC_ERROR, "[no free connection on server for service publish-1]",
-				SCMPMsgType.CLN_CHANGE_SUBSCRIPTION);
+		TestUtil.verifyError(reply1, SCMPError.SC_ERROR, SCMPMsgType.CLN_CHANGE_SUBSCRIPTION);
 
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL
 				.newInstance(req, "publish-1", sessionId);
 		callback = new TestChangeSubscriptionCallback(true);
 		unSubscribeCall.invoke(callback, 3000);
 		reply = callback.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 	}
 
 	private class TestChangeSubscriptionCallback extends SynchronousCallback {

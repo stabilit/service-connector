@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.system.api;
+package org.serviceconnector.test.system;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -31,25 +31,29 @@ import org.serviceconnector.test.system.api.session.APICreateSessionTest;
 import org.serviceconnector.test.system.api.session.APIDeleteSessionTest;
 import org.serviceconnector.test.system.api.session.APIExecuteAsynchronousTest;
 import org.serviceconnector.test.system.api.session.APIExecuteTest;
+import org.serviceconnector.test.system.scmp.SCMPClnCreateSessionTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
-		// session tests
-		APICreateSessionTest.class,
-		APIDeleteSessionTest.class,
-		APIExecuteTest.class, 
-		APIExecuteAsynchronousTest.class,
-		APIAfterSCAbortSessionTest.class,
-		APIAfterServerAbortSessionTest.class,
-		APIAfterServerRestartSessionTest.class,
+		// API session tests
+		APICreateSessionTest.class, //
+		APIDeleteSessionTest.class, // 
+		APIExecuteTest.class, //
+		APIExecuteAsynchronousTest.class, //
+		APIAfterSCAbortSessionTest.class, //
+		APIAfterServerAbortSessionTest.class, //
+		APIAfterServerRestartSessionTest.class, //
 
-		// publish tests
-		APISubscribeTest.class, 
-		APIUnsubscribeTest.class, 
-		APIChangeSubscriptionTest.class, 
-		APIReceivePublicationTest.class,
-		APIAfterSCAbortReceivePublicationTest.class,
-		APIAfterServerAbortReceivePublicationTest.class,
-		APIAfterServerRestartReceivePublicationTest.class})
+		// API publish tests
+		APISubscribeTest.class, // 
+		APIUnsubscribeTest.class, //
+		APIChangeSubscriptionTest.class, //
+		APIReceivePublicationTest.class, //
+		APIAfterSCAbortReceivePublicationTest.class, //
+		APIAfterServerAbortReceivePublicationTest.class, //
+		APIAfterServerRestartReceivePublicationTest.class, //
+
+		// SCMP session test
+		SCMPClnCreateSessionTest.class })
 public class AllSystemTests {
 }

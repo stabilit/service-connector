@@ -18,11 +18,11 @@ package org.serviceconnector.test.sc.session;
 
 import org.junit.After;
 import org.junit.Before;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 import org.serviceconnector.util.SynchronousCallback;
 
@@ -66,7 +66,7 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 		// create session and keep sessionId
 		createSessionCall.invoke(this.sessionCallback, 1000);
 		SCMPMessage resp = this.sessionCallback.getMessageSync(3000);
-		SCTest.checkReply(resp);
+		TestUtil.checkReply(resp);
 		this.sessionId = resp.getSessionId();
 	}
 
@@ -75,7 +75,7 @@ public abstract class SuperSessionTestCase extends SuperAttachTestCase {
 				this.req, "session-1", this.sessionId);
 		deleteSessionCall.invoke(this.sessionCallback, 2000);
 		SCMPMessage reply = this.sessionCallback.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 	}
 
 	protected class TestSuperSessionCallback extends SynchronousCallback {

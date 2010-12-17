@@ -35,7 +35,7 @@ import org.serviceconnector.test.integration.scmp.SCMPAttachDetachTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
-// API client tests
+		// API client tests
 		APIAttachTest.class, //
 		APIAttachDetachTest.class, // 
 		APIMultipleSCsClientTest.class, //
@@ -43,6 +43,7 @@ import org.serviceconnector.test.integration.scmp.SCMPAttachDetachTest;
 		APINewServiceTest.class, //
 		APIAfterSCAbortClientTest.class, //
 		APIAfterSCRestartClientTest.class, //
+
 		// API server tests
 		APIRegisterSessionServerTest.class, // 
 		APIRegisterPublishServerTest.class, //
@@ -50,6 +51,7 @@ import org.serviceconnector.test.integration.scmp.SCMPAttachDetachTest;
 		APIMultipleSCsServerTest.class, //
 		APIAfterSCAbortServerTest.class, //
 		APIAfterSCRestartServerTest.class, //
+
 		// SCMP client test
 		SCMPAttachDetachTest.class, //
 		ConnectionPoolTest.class, //

@@ -19,6 +19,7 @@ package org.serviceconnector.test.sc.scVersion;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
@@ -27,7 +28,6 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.SuperTestCase;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.SynchronousCallback;
@@ -59,7 +59,7 @@ public class SCVersionToSCTest extends SuperTestCase {
 		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync(3000);
-		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_VERSION_FORMAT, " []", SCMPMsgType.ATTACH);
+		TestUtil.verifyError(result, SCMPError.HV_WRONG_SC_VERSION_FORMAT, SCMPMsgType.ATTACH);
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class SCVersionToSCTest extends SuperTestCase {
 		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync(3000);
-		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_RELEASE_NR, " [2.0-000]", SCMPMsgType.ATTACH);
+		TestUtil.verifyError(result, SCMPError.HV_WRONG_SC_RELEASE_NR, SCMPMsgType.ATTACH);
 	}
 
 	@Test
@@ -103,7 +103,7 @@ public class SCVersionToSCTest extends SuperTestCase {
 		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync(3000);
-		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_VERSION_FORMAT, " [1.1-000]", SCMPMsgType.ATTACH);
+		TestUtil.verifyError(result, SCMPError.HV_WRONG_SC_VERSION_FORMAT, SCMPMsgType.ATTACH);
 	}
 
 	@Test
@@ -125,7 +125,7 @@ public class SCVersionToSCTest extends SuperTestCase {
 		TestSCMPVersionCallback callback = new TestSCMPVersionCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync(3000);
-		SCTest.verifyError(result, SCMPError.HV_WRONG_SC_RELEASE_NR, " [0.9-000]", SCMPMsgType.ATTACH);
+		TestUtil.verifyError(result, SCMPError.HV_WRONG_SC_RELEASE_NR, SCMPMsgType.ATTACH);
 	}
 
 	@Test

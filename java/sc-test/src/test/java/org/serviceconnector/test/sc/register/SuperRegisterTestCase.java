@@ -19,6 +19,7 @@ package org.serviceconnector.test.sc.register;
 import org.junit.After;
 import org.junit.Before;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
@@ -28,7 +29,6 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.TestContext;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 
@@ -80,7 +80,7 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
 		registerServerCall.invoke(this.attachCallback, 1000);
-		SCTest.checkReply(this.attachCallback.getMessageSync(3000));
+		TestUtil.checkReply(this.attachCallback.getMessageSync(3000));
 	}
 
 	public void deRegisterServerAfter() throws Exception {
@@ -91,6 +91,6 @@ public abstract class SuperRegisterTestCase extends SuperAttachTestCase {
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 				.newInstance(registerRequester, serviceName);
 		deRegisterServerCall.invoke(this.attachCallback, 1000);
-		SCTest.checkReply(this.attachCallback.getMessageSync(3000));
+		TestUtil.checkReply(this.attachCallback.getMessageSync(3000));
 	}
 }

@@ -24,11 +24,6 @@ import junit.framework.Assert;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMessageFault;
-import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.integration.scmp.ConnectionPoolTest;
 import org.serviceconnector.test.sc.group.GroupCallTestCase;
 import org.serviceconnector.test.sc.manage.ManageTestCase;
@@ -37,17 +32,15 @@ import org.serviceconnector.test.sc.publish.PublishLargeMessagesTestCase;
 import org.serviceconnector.test.sc.register.DeRegisterServerTestCase;
 import org.serviceconnector.test.sc.register.RegisterServerTestCase;
 import org.serviceconnector.test.sc.scVersion.SCVersionToSCTest;
-import org.serviceconnector.test.sc.session.ClnCreateSessionTestCase;
 import org.serviceconnector.test.sc.session.ClnCreateSessionWaitMechanismTestCase;
-import org.serviceconnector.test.sc.session.ClnDeleteSessionTestCase;
 import org.serviceconnector.test.sc.session.SessionTimeoutTestCase;
 import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteAsyncTestCase;
 import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteLargeAsyncTestCase;
 import org.serviceconnector.test.sc.srvExecute.synch.SrvExecuteLargeSyncTestCase;
-import org.serviceconnector.test.sc.srvExecute.synch.SrvExecuteSyncTestCase;
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeTestCase;
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeWaitMechanismTestCase;
 import org.serviceconnector.test.sc.subscriptionChange.ClnChangeSubscriptionTestCase;
+import org.serviceconnector.test.system.scmp.SCMPClnExecuteSyncTest;
 import org.serviceconnector.test.unit.DecodeSCMPVersionTest;
 import org.serviceconnector.test.unit.DefaultEncoderDecoderTest;
 import org.serviceconnector.test.unit.DefaultFrameDecoderTest;
@@ -65,12 +58,10 @@ import org.serviceconnector.test.unit.ValidatorUtilityTest;
  * @author JTraber
  */
 @RunWith(Suite.class)
-@SuiteClasses( { ClnCreateSessionTestCase.class, // 
-		ClnDeleteSessionTestCase.class, //
-		ClnCreateSessionWaitMechanismTestCase.class, //
+@SuiteClasses( { ClnCreateSessionWaitMechanismTestCase.class, //
 		RegisterServerTestCase.class, // 
 		DeRegisterServerTestCase.class, // 
-		SrvExecuteSyncTestCase.class, // 
+		SCMPClnExecuteSyncTest.class, // 
 		SrvExecuteLargeSyncTestCase.class, // 
 		SrvExecuteAsyncTestCase.class,// 
 		SrvExecuteLargeAsyncTestCase.class, //
@@ -102,16 +93,6 @@ import org.serviceconnector.test.unit.ValidatorUtilityTest;
 public class SCTest {
 
 	private SCTest() {
-	}
-
-	public static void verifyError(SCMPMessage result, SCMPError error, String additionalInfo, SCMPMsgType msgType) {
-		Assert.assertEquals(msgType.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
-		// TODO TRN refine SCMPErrors
-		/*
-		 * text must not be compared! It may be Chinese Assert.assertEquals(error.getErrorText() + additionalInfo,
-		 * result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-		 */
-		Assert.assertEquals(error.getErrorCode(), result.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 	}
 
 	public static Map<String, String> splitStringToMap(String stringToSplit, String entryDelimiter, String keyDelimiter) {
@@ -148,16 +129,5 @@ public class SCTest {
 			map.put(values[i * 2], values[i * 2 + 1]);
 		}
 		return map;
-	}
-
-	public static void checkReply(SCMPMessage message) throws Exception {
-		if (message.isFault()) {
-			SCMPMessageFault fault = (SCMPMessageFault) message;
-			Exception ex = fault.getCause();
-			if (ex != null) {
-				throw ex;
-			}
-			throw new Exception(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-		}
 	}
 }

@@ -19,13 +19,13 @@ package org.serviceconnector.test.sc.session;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.attach.SuperAttachTestCase;
 import org.serviceconnector.util.SynchronousCallback;
 
@@ -66,11 +66,10 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		SCMPMessage responseMessage = callback.getMessageSync(3000);
 		SCMPMessage responseMessage1 = callback1.getMessageSync(3000);
 
-		SCTest.checkReply(responseMessage);
+		TestUtil.checkReply(responseMessage);
 		Assert.assertFalse(responseMessage.isFault());
 		Assert.assertTrue(responseMessage1.isFault());
-		SCTest.verifyError(responseMessage1, SCMPError.SC_ERROR, "[no free connection on server for service session-1]",
-				SCMPMsgType.CLN_CREATE_SESSION);
+		TestUtil.verifyError(responseMessage1, SCMPError.SC_ERROR, SCMPMsgType.CLN_CREATE_SESSION);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
@@ -102,8 +101,8 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		SCMPMessage responseMessage = callback.getMessageSync(3000);
 		SCMPMessage responseMessage1 = callback1.getMessageSync(3000);
 
-		SCTest.checkReply(responseMessage);
-		SCTest.checkReply(responseMessage1);
+		TestUtil.checkReply(responseMessage);
+		TestUtil.checkReply(responseMessage1);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
@@ -140,10 +139,10 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 		SCMPMessage responseMessage = callback.getMessageSync(3000);
 		SCMPMessage responseMessage1 = callback1.getMessageSync(3000);
 
-		SCTest.checkReply(responseMessage);
+		TestUtil.checkReply(responseMessage);
 		Assert.assertFalse(responseMessage.isFault());
 		Assert.assertTrue(responseMessage1.isFault());
-		SCTest.verifyError(responseMessage1, SCMPError.NO_FREE_SERVER, "[for service session-1]", SCMPMsgType.CLN_CREATE_SESSION);
+		TestUtil.verifyError(responseMessage1, SCMPError.NO_FREE_SERVER, SCMPMsgType.CLN_CREATE_SESSION);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.req, responseMessage.getServiceName(), responseMessage.getSessionId());
@@ -180,8 +179,8 @@ public class ClnCreateSessionWaitMechanismTestCase extends SuperAttachTestCase {
 
 		SCMPMessage responseMessage1 = callback1.getMessageSync(3000);
 
-		SCTest.checkReply(responseMessage);
-		SCTest.checkReply(responseMessage1);
+		TestUtil.checkReply(responseMessage);
+		TestUtil.checkReply(responseMessage1);
 
 		deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(this.req,
 				responseMessage1.getServiceName(), responseMessage1.getSessionId());

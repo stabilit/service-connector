@@ -21,35 +21,81 @@ import java.util.Arrays;
 
 import junit.framework.Assert;
 
+import org.apache.log4j.Logger;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnExecuteCall;
+import org.serviceconnector.ctrl.util.ProcessCtx;
+import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.log.Loggers;
+import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPBodyType;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.test.sc.session.SuperSessionTestCase;
 import org.serviceconnector.util.SynchronousCallback;
 
 /**
  * @author JTraber
  */
-public class MsgCompressionTestCase extends SuperSessionTestCase {
+public class MsgCompressionTest {
 
-	/**
-	 * The Constructor.
-	 * 
-	 * @param fileName
-	 *            the file name
-	 */
-	public MsgCompressionTestCase(String fileName) {
-		super(fileName);
+	/** The Constant testLogger. */
+	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(MsgCompressionTest.class);
+
+	private static ProcessesController ctrl;
+	private static ProcessCtx scCtx;
+	private static ProcessCtx srvCtx;
+	private SCRequester requester;
+	private int threadCount = 0;
+
+	@BeforeClass
+	public static void beforeAllTests() throws Exception {
+		ctrl = new ProcessesController();
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_PUBLISH, TestConstants.log4jSrvProperties, TestConstants.pubServerName1,
+				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10, TestConstants.pubServiceName1);
 	}
 
+	@Before
+	public void beforeOneTest() throws Exception {
+		threadCount = Thread.activeCount();
+	}
+
+	@After
+	public void afterOneTest() throws Exception {
+		try {
+			requester.destroy();
+		} catch (Exception e) {
+		}
+		requester = null;
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
+	}
+
+	@AfterClass
+	public static void afterAllTests() throws Exception {
+		try {
+			ctrl.stopSC(scCtx);
+			scCtx = null;
+		} catch (Exception e) {
+		}
+		ctrl = null;
+	}
+
+	/**
+	 * Description: Attach and detach one time to SC on localhost<br>
+	 * Expectation: passes
+	 */
 	@Test
 	public void msgCompressionBodyStringTest() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1",
-				this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+				TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		clnExecuteCall.setRequestBody("reflect " + TestConstants.stringLength257);
 		clnExecuteCall.setCompressed(true);

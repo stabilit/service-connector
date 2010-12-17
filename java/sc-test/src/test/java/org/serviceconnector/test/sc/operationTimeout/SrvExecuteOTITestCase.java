@@ -17,12 +17,12 @@
 package org.serviceconnector.test.sc.operationTimeout;
 
 import org.junit.Test;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.session.SuperSessionTestCase;
 import org.serviceconnector.util.SynchronousCallback;
 
@@ -45,14 +45,14 @@ public class SrvExecuteOTITestCase extends SuperSessionTestCase {
 
 		clnExecuteCall.invoke(callback, 2000);
 		SCMPMessage responseMessage = callback.getMessageSync(2000);
-		SCTest.verifyError(responseMessage, SCMPError.OPERATION_TIMEOUT_EXPIRED, "executing command timed out", SCMPMsgType.CLN_EXECUTE);
+		TestUtil.verifyError(responseMessage, SCMPError.OPERATION_TIMEOUT_EXPIRED, SCMPMsgType.CLN_EXECUTE);
 
 		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1", this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		TestWaitMechanismCallback callback1 = new TestWaitMechanismCallback(true);
 		clnExecuteCall.invoke(callback1, 2000);
 		SCMPMessage responseMessage1 = callback1.getMessageSync(2000);
-		SCTest.checkReply(responseMessage1);
+		TestUtil.checkReply(responseMessage1);
 		// Wait until first execute is over
 		Thread.sleep(3000);
 	}

@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
@@ -44,7 +45,7 @@ public class TestSessionServer extends TestStatefulServer {
 	 *            [2] SC port<br>
 	 *            [3] maxSessions<br>
 	 *            [4] maxConnections<br>
-	 *            [5] connectionType ("netty.tcp" or "netty.http")<br> 
+	 *            [5] connectionType ("netty.tcp" or "netty.http")<br>
 	 *            [6] serviceNames (comma delimited list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
@@ -126,7 +127,7 @@ public class TestSessionServer extends TestStatefulServer {
 					}
 					KillThread<SCSessionServer> kill = new KillThread<SCSessionServer>(this.scSessionServer);
 					kill.start();
-				// watch out for reject request
+					// watch out for reject request
 				} else if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
 					try {
 						response.setReject(true);
@@ -156,8 +157,8 @@ public class TestSessionServer extends TestStatefulServer {
 			SCMessage response = request;
 			String methodName = request.getMessageInfo();
 			if (methodName != null) {
-				if (methodName == null) {
-					return response;
+				if (methodName.equals(TestConstants.raiseExceptionCmd)) {
+					throw new NullPointerException("raised for test purposes");
 				}
 				try {
 					Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
@@ -173,8 +174,8 @@ public class TestSessionServer extends TestStatefulServer {
 
 		// ==================================================================================
 		// methods invoked by name (passed in messageInfo)
-		
-		// send back the same message  
+
+		// send back the same message
 		public SCMessage echoMessage(SCMessage request, int operationTimeoutInMillis) {
 			// do not log! it is used for performance benchmarks
 			return request;
@@ -190,8 +191,8 @@ public class TestSessionServer extends TestStatefulServer {
 			}
 			return request;
 		}
-		
-		// sleep for time defined in the body and send back the same message 
+
+		// sleep for time defined in the body and send back the same message
 		public SCMessage sleep(SCMessage request, int operationTimeoutInMillis) {
 			String dataString = (String) request.getData();
 			int millis = Integer.parseInt(dataString);
@@ -203,6 +204,13 @@ public class TestSessionServer extends TestStatefulServer {
 			} catch (Exception e) {
 				logger.error("sleep error", e);
 			}
+			return request;
+		}
+
+		// send back a large response
+		public SCMessage largeResponse(SCMessage request, int operationTimeoutInMillis) {
+			String largeString = TestUtil.getLargeString();
+			request.setData(largeString);
 			return request;
 		}
 	}

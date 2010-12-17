@@ -21,6 +21,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.Constants;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
@@ -28,7 +29,6 @@ import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.test.sc.SCTest;
 import org.serviceconnector.test.sc.SetupTestCases;
 import org.serviceconnector.test.sc.SuperTestCase;
 import org.serviceconnector.test.sc.TestContext;
@@ -69,7 +69,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 		subscribeCall.setRequestBody("large");
 		subscribeCall.invoke(this.callback, 10000);
 		SCMPMessage reply = this.callback.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
 		StringBuilder sb = new StringBuilder();
@@ -95,7 +95,7 @@ public class PublishLargeMessagesTestCase extends SuperTestCase {
 				.newInstance(req, "publish-1", sessionId);
 		unSubscribeCall.invoke(this.callback, 3000);
 		reply = callback.getMessageSync(3000);
-		SCTest.checkReply(reply);
+		TestUtil.checkReply(reply);
 	}
 
 	private class TestPublishCallback extends SynchronousCallback {
