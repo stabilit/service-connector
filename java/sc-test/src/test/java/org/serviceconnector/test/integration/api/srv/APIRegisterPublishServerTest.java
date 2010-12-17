@@ -20,76 +20,22 @@ import java.security.InvalidParameterException;
 import javax.activity.InvalidActivityException;
 
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
-import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SCPublishServer;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.test.integration.APIIntegrationSuperServerTest;
 
-public class APIRegisterPublishServerTest {
-
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+public class APIRegisterPublishServerTest extends APIIntegrationSuperServerTest {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(APIRegisterPublishServerTest.class);
 
-	private static ProcessesController ctrl;
-	private static ProcessCtx scCtx;
-	private SCServer server;
-	private SCPublishServer publishServer;
-	private int threadCount = 0;
-
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-	}
-
-	@Before
-	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
-	}
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			publishServer.deregister();
-		} catch (Exception e) {}
-		publishServer = null;
-		try {
-			server.stopListener();
-		} catch (Exception e) {}
-		try {
-			server.destroy();
-		} catch (Exception e) {}
-
-		server = null;
-//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopSC(scCtx);
-			scCtx = null;
-		} catch (Exception e) {}
-		ctrl = null;
-	}	
 
 	/**
 	 * Description:	register session server on port  SC is not listening<br>
@@ -100,7 +46,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, 9002, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 	}
@@ -147,7 +93,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer("gaga");
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 1, cbk);
 	}
 	
@@ -173,7 +119,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 	}
@@ -188,7 +134,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 10, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 	}
@@ -202,7 +148,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 10, cbk);
 	}
 
@@ -215,7 +161,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 20, cbk);
 	}
 
@@ -228,7 +174,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(0, 1, cbk);
 	}
 	
@@ -241,7 +187,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 0, cbk);
 	}
 
@@ -254,7 +200,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(0, 0, cbk);
 	}
 
@@ -267,7 +213,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 1, cbk);
 		publishServer.register(1, 1, cbk);
 	}
@@ -280,7 +226,7 @@ public class APIRegisterPublishServerTest {
 	public void t115_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 1, cbk);
 		server.startListener();
 	}
@@ -295,12 +241,12 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		SCPublishServer publishServer1 = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk1 = new SrvCallback(publishServer1);
+		SCPublishServerCallback cbk1 = new PubSrvCallback(publishServer1);
 		publishServer1.register(1, 1, cbk1);
 		Assert.assertEquals("SessionServer is not registered", true, publishServer1.isRegistered());
 		
 		SCPublishServer publishServer2 = server.newPublishServer(TestConstants.sesServiceName2);
-		SCPublishServerCallback cbk2 = new SrvCallback(publishServer2);
+		SCPublishServerCallback cbk2 = new PubSrvCallback(publishServer2);
 		publishServer2.register(1, 1, cbk2);
 		Assert.assertEquals("SessionServer is not registered", true, publishServer2.isRegistered());
 		
@@ -317,7 +263,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		SCPublishServer publishServer1 = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer1);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer1);
 		publishServer1.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, publishServer1.isRegistered());
 		
@@ -339,7 +285,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, 9002, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 	}
@@ -386,7 +332,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		publishServer = server.newPublishServer("gaga");
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 1, cbk);
 	}
 	
@@ -412,7 +358,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 	}
@@ -427,7 +373,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 10, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
 	}
@@ -441,7 +387,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 10, cbk);
 	}
 
@@ -454,7 +400,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 20, cbk);
 	}
 
@@ -467,7 +413,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(0, 1, cbk);
 	}
 	
@@ -480,7 +426,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 0, cbk);
 	}
 
@@ -493,7 +439,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(0, 0, cbk);
 	}
 
@@ -506,7 +452,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 1, cbk);
 		publishServer.register(1, 1, cbk);
 	}
@@ -519,7 +465,7 @@ public class APIRegisterPublishServerTest {
 	public void t215_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(1, 1, cbk);
 		server.startListener();
 	}
@@ -534,12 +480,12 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		SCPublishServer publishServer1 = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk1 = new SrvCallback(publishServer1);
+		SCPublishServerCallback cbk1 = new PubSrvCallback(publishServer1);
 		publishServer1.register(1, 1, cbk1);
 		Assert.assertEquals("SessionServer is not registered", true, publishServer1.isRegistered());
 		
 		SCPublishServer publishServer2 = server.newPublishServer(TestConstants.pubServiceName2);
-		SCPublishServerCallback cbk2 = new SrvCallback(publishServer2);
+		SCPublishServerCallback cbk2 = new PubSrvCallback(publishServer2);
 		publishServer2.register(1, 1, cbk2);
 		Assert.assertEquals("SessionServer is not registered", true, publishServer2.isRegistered());
 		
@@ -556,7 +502,7 @@ public class APIRegisterPublishServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		SCPublishServer publishServer1 = server.newPublishServer(TestConstants.pubServiceName1);
-		SCPublishServerCallback cbk = new SrvCallback(publishServer1);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer1);
 		publishServer1.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, publishServer1.isRegistered());
 		
@@ -566,27 +512,5 @@ public class APIRegisterPublishServerTest {
 		
 		publishServer1.deregister();
 		publishServer2.deregister();
-	}
-
-	
-	
-	private class SrvCallback extends SCPublishServerCallback {
-
-		public SrvCallback(SCPublishServer server) {
-			super(server);
-		}
-		@Override
-		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutInMillis) {
-			return message;
-		}
-
-		@Override
-		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
-			return message;
-		}
-
-		@Override
-		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
-		}
 	}
 }

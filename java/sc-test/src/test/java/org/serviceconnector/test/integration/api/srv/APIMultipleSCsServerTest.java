@@ -23,24 +23,19 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
-import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.test.integration.APIIntegrationSuperServerTest;
 
-public class APIMultipleSCsServerTest {
+public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(APIMultipleSCsServerTest.class);
 	
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	
-	private int threadCount = 0;
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx2;
 	private static ProcessCtx scCtx1;
@@ -58,7 +53,7 @@ public class APIMultipleSCsServerTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
+		super.beforeOneTest();
 	}
 	
 	@After
@@ -81,8 +76,7 @@ public class APIMultipleSCsServerTest {
 		} catch (Exception e) {
 		}
 		server2 = null;
-//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
+		super.afterOneTest();
 	}
 
 	@AfterClass
@@ -117,7 +111,7 @@ public class APIMultipleSCsServerTest {
 		server1.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server1.isListening());
 		sessionServer1 = server1.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk1 = new SrvCallback(sessionServer1);
+		SCSessionServerCallback cbk1 = new SesSrvCallback(sessionServer1);
 		sessionServer1.register(1, 1, cbk1);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
@@ -125,7 +119,7 @@ public class APIMultipleSCsServerTest {
 		server2.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server2.isListening());
 		sessionServer2 = server2.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk2 = new SrvCallback(sessionServer2);
+		SCSessionServerCallback cbk2 = new SesSrvCallback(sessionServer2);
 		sessionServer2.register(1, 1, cbk2);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
@@ -160,7 +154,7 @@ public class APIMultipleSCsServerTest {
 		server1.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server1.isListening());
 		sessionServer1 = server1.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk1 = new SrvCallback(sessionServer1);
+		SCSessionServerCallback cbk1 = new SesSrvCallback(sessionServer1);
 		sessionServer1.register(1, 1, cbk1);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
@@ -168,7 +162,7 @@ public class APIMultipleSCsServerTest {
 		server2.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server2.isListening());
 		sessionServer2 = server2.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk2 = new SrvCallback(sessionServer2);
+		SCSessionServerCallback cbk2 = new SesSrvCallback(sessionServer2);
 		sessionServer2.register(1, 1, cbk2);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
@@ -203,7 +197,7 @@ public class APIMultipleSCsServerTest {
 		server1.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server1.isListening());
 		sessionServer1 = server1.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk1 = new SrvCallback(sessionServer1);
+		SCSessionServerCallback cbk1 = new SesSrvCallback(sessionServer1);
 		sessionServer1.register(1, 1, cbk1);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
@@ -211,7 +205,7 @@ public class APIMultipleSCsServerTest {
 		server2.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server2.isListening());
 		sessionServer2 = server2.newSessionServer(TestConstants.sesServiceName1);
-		SCSessionServerCallback cbk2 = new SrvCallback(sessionServer2);
+		SCSessionServerCallback cbk2 = new SesSrvCallback(sessionServer2);
 		sessionServer2.register(1, 1, cbk2);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer2.isRegistered());
 		
@@ -226,30 +220,5 @@ public class APIMultipleSCsServerTest {
 		server2.stopListener();
 		Assert.assertEquals("SessionServer is listening", false, server2.isListening());
 		server2.destroy();
-	}
-
-	
-	private class SrvCallback extends SCSessionServerCallback {
-
-		public SrvCallback(SCSessionServer server) {
-			super(server);
-		}
-		@Override
-		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
-			return request;
-		}
-
-		@Override
-		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
-		}
-
-		@Override
-		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
-		}
-
-		@Override
-		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
-			return request;
-		}
 	}
 }

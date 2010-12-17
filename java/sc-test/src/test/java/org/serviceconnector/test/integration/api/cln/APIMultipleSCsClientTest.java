@@ -26,19 +26,15 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.test.integration.APIIntegrationSuperClientTest;
 
 
-public class APIMultipleSCsClientTest {
+public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(APIMultipleSCsClientTest.class);
 	
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	
-	private int threadCount = 0;
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx2;
 	private static ProcessCtx scCtx1;
@@ -54,7 +50,7 @@ public class APIMultipleSCsClientTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
+		super.beforeOneTest();
 		client1 = null;
 		client2 = null;		
 	}
@@ -63,8 +59,7 @@ public class APIMultipleSCsClientTest {
 	public void afterOneTest() throws Exception {
 		client1 = null;
 		client2 = null;
-//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
+		super.afterOneTest();
 	}
 
 	@AfterClass

@@ -18,11 +18,8 @@ package org.serviceconnector.test.integration.api.cln;
 import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
@@ -30,57 +27,21 @@ import org.serviceconnector.api.cln.SCFileService;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.test.integration.APIIntegrationSuperClientTest;
 
-public class APINewServiceTest {
-	
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(APINewServiceTest.class);
-
-	private static ProcessesController ctrl;
-	private static ProcessCtx scCtx;
-	private SCClient client;
-	private int threadCount = 0;
-	
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-	}
+public class APINewServiceTest extends APIIntegrationSuperClientTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
+		super.beforeOneTest();
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
-		client.attach(2);
+		client.attach();
 	}
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			client.detach();
-		} catch (Exception e) {}
-		client = null;
-//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopSC(scCtx);
-			scCtx = null;
-		} catch (Exception e) {}
-		ctrl = null;
-	}
-
 	
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(APINewServiceTest.class);
+
 	/**
 	 * Description: create new session service with service name = null<br> 
 	 * Expectation:	throws InvalidParameterException

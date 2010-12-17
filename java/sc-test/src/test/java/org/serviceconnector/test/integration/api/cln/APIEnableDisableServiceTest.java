@@ -17,41 +17,26 @@ package org.serviceconnector.test.integration.api.cln;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCMgmtClient;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.test.integration.APIIntegrationSuperClientTest;
 
 
-public class APIEnableDisableServiceTest {
-	
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(APIEnableDisableServiceTest.class);
 
-	private static ProcessesController ctrl;
-	private static ProcessCtx scCtx;
 	private SCMgmtClient client;
-	private int threadCount = 0;
 	
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-	}
-
 	@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
+		super.beforeOneTest();
 	}
 
 	@After
@@ -59,21 +44,8 @@ public class APIEnableDisableServiceTest {
 		try {
 			client.detach();
 		} catch (Exception e) {}
-		client = null;
-//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
+		super.afterOneTest();
 	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopSC(scCtx);
-			scCtx = null;
-		} catch (Exception e) {}
-		ctrl = null;
-		ctrl = null;
-	}
-
 		
 	/**
 	 * Description: check non-existing service<br> 
@@ -81,8 +53,8 @@ public class APIEnableDisableServiceTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t01_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
-		client.attach(2);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled("notExistingService"));
 	}
 
@@ -92,8 +64,8 @@ public class APIEnableDisableServiceTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t02_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
-		client.attach(2);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
 		client.enableService("notExistingService");
 	}
 	
@@ -103,8 +75,8 @@ public class APIEnableDisableServiceTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t03_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
-		client.attach(2);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
 		client.disableService("notExistingService");
 	}
 
@@ -114,7 +86,7 @@ public class APIEnableDisableServiceTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t04_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 	
@@ -124,8 +96,8 @@ public class APIEnableDisableServiceTest {
 	 */
 	@Test
 	public void t05_default() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
-		client.attach(2);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 	
@@ -135,7 +107,7 @@ public class APIEnableDisableServiceTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t06_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.disableService(TestConstants.sesServiceName1);
 	}
 
@@ -145,8 +117,8 @@ public class APIEnableDisableServiceTest {
 	 */
 	@Test
 	public void t07_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
-		client.attach(2);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		client.disableService(TestConstants.sesServiceName1);
 		Assert.assertEquals("Disabled ", false, client.isServiceEnabled(TestConstants.sesServiceName1));
@@ -160,8 +132,8 @@ public class APIEnableDisableServiceTest {
 	 */
 	@Test
 	public void t08_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
-		client.attach(2);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		client.disableService(TestConstants.sesServiceName1);
 		client.disableService(TestConstants.sesServiceName1);
@@ -177,8 +149,8 @@ public class APIEnableDisableServiceTest {
 	 */
 	@Test
 	public void t09_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
-		client.attach(2);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client.attach();
 		int nr = 1000;
 		for (int i = 0; i < nr; i++) {
 			if (((i+1) % 100) == 0) testLogger.info("Enable/disable nr. " + (i+1) + "...");

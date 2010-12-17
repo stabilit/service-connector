@@ -19,8 +19,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.serviceconnector.test.integration.api.cln.APIAfterSCAbortClientTest;
 import org.serviceconnector.test.integration.api.cln.APIAfterSCRestartClientTest;
-import org.serviceconnector.test.integration.api.cln.APIAttachDetachTest;
-import org.serviceconnector.test.integration.api.cln.APIAttachTest;
+import org.serviceconnector.test.integration.api.cln.APIAttachDetachClientTest;
 import org.serviceconnector.test.integration.api.cln.APIEnableDisableServiceTest;
 import org.serviceconnector.test.integration.api.cln.APIMultipleSCsClientTest;
 import org.serviceconnector.test.integration.api.cln.APINewServiceTest;
@@ -36,25 +35,24 @@ import org.serviceconnector.test.integration.scmp.SCMPAttachDetachTest;
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
 		// API client tests
-		APIAttachTest.class, //
-		APIAttachDetachTest.class, // 
-		APIMultipleSCsClientTest.class, //
-		APIEnableDisableServiceTest.class, //
-		APINewServiceTest.class, //
-		APIAfterSCAbortClientTest.class, //
-		APIAfterSCRestartClientTest.class, //
+		APIAttachDetachClientTest.class,
+		APIMultipleSCsClientTest.class,
+		APIEnableDisableServiceTest.class,
+		APINewServiceTest.class,
+		APIAfterSCAbortClientTest.class,
+		APIAfterSCRestartClientTest.class,
 
 		// API server tests
-		APIRegisterSessionServerTest.class, // 
-		APIRegisterPublishServerTest.class, //
-		APIPublishServerTest.class, //
-		APIMultipleSCsServerTest.class, //
-		APIAfterSCAbortServerTest.class, //
-		APIAfterSCRestartServerTest.class, //
+		APIRegisterSessionServerTest.class,
+		APIRegisterPublishServerTest.class,
+		APIPublishServerTest.class,
+		APIMultipleSCsServerTest.class,
+		APIAfterSCAbortServerTest.class,
+		APIAfterSCRestartServerTest.class,
 
 		// SCMP client test
-		SCMPAttachDetachTest.class, //
-		ConnectionPoolTest.class, //
+		SCMPAttachDetachTest.class,
+		ConnectionPoolTest.class,
 })
 public class AllIntegrationTests {
 }

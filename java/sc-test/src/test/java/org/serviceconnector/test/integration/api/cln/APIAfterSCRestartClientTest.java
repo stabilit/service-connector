@@ -24,25 +24,17 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCMgmtClient;
-import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.test.integration.APIIntegrationSuperClientTest;
 
-public class APIAfterSCRestartClientTest {
-
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
+public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(APIAfterSCRestartClientTest.class);
 
-	private static ProcessesController ctrl;
-	private static ProcessCtx scCtx;
 	private SCMgmtClient client;
-	private int threadCount = 0;
-
 	
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -51,7 +43,7 @@ public class APIAfterSCRestartClientTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
+		super.beforeOneTest();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}
 
@@ -65,8 +57,7 @@ public class APIAfterSCRestartClientTest {
 			ctrl.stopSC(scCtx);
 		} catch (Exception e) {}
 		scCtx = null;
-//		Assert.assertEquals("number of threads", threadCount, Thread.activeCount());
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
+		super.afterOneTest();
 	}
 
 	@AfterClass
