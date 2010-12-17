@@ -45,10 +45,10 @@ import org.serviceconnector.test.unit.api.APISCSubscribeMessageTest;
 		LinkedQueueTest.class,
 		SCVersionTest.class,
 		SCMPVersionTest.class,
-		CacheExpirationTestCase.class, 
-		CacheExpirationThreadRunTestCase.class, 
-		CacheStatisticsTestCase.class,
-		CacheTestCase.class,
-		CacheThreadRunTestCase.class })
+		CacheExpirationTest.class, 
+		CacheExpirationThreadRunTest.class, 
+		CacheStatisticsTest.class,
+		CacheTest.class,
+		CacheThreadRunTest.class })
 public class AllUnitTests {
 }

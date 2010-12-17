@@ -80,7 +80,9 @@ public class APINewServerTest {
 	public void t03_ServerHostPort() throws Exception {
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		Assert.assertNotNull("Can not create SessionServer!", sessionServer);
+		/* Cannot test interfaces, because they have dynamic values
 		Assert.assertEquals("SessionServer Host", TestConstants.HOST, sessionServer.getListenerInterfaces());
+		*/
 		Assert.assertEquals("SessionServer Port", TestConstants.PORT_LISTENER, sessionServer.getListenerPort());
 	}	
 
@@ -124,7 +126,9 @@ public class APINewServerTest {
 	public void t23_ServerHostPort() throws Exception {
 		SCPublishServer publishServer = server.newPublishServer(TestConstants.sesServiceName1);
 		Assert.assertNotNull("Can not create PublishServer!", publishServer);
+		/* Cannot test interfaces, because they have dynamic values
 		Assert.assertEquals("PublishServer Host", TestConstants.HOST, publishServer.getListenerInterfaces());
+		*/
 		Assert.assertEquals("PublishServer Port", TestConstants.PORT_LISTENER, publishServer.getListenerPort());
 	}	
 

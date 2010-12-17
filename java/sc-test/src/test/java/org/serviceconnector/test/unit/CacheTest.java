@@ -41,7 +41,7 @@ import org.serviceconnector.service.SessionService;
  * 
  * @author ds
  */
-public class CacheTestCase {
+public class CacheTest {
 
 	private CacheManager cacheManager;
 

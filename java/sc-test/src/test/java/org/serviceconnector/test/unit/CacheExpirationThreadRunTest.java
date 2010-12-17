@@ -45,7 +45,7 @@ import org.serviceconnector.util.TimeMillis;
  * 
  * @author ds
  */
-public class CacheExpirationThreadRunTestCase {
+public class CacheExpirationThreadRunTest {
 
 	private CacheManager cacheManager;
 

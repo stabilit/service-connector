@@ -23,7 +23,8 @@ import org.serviceconnector.test.unit.AllUnitTests;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { 
-	AllUnitTests.class, 
+	AllCacheTests.class, 
+	AllUnitTests.class,
 	AllIntegrationTests.class, 
 	AllSystemTests.class })
 public class AllTests {
