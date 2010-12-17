@@ -36,7 +36,6 @@ import org.serviceconnector.test.sc.session.ClnCreateSessionWaitMechanismTestCas
 import org.serviceconnector.test.sc.session.SessionTimeoutTestCase;
 import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteAsyncTestCase;
 import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteLargeAsyncTestCase;
-import org.serviceconnector.test.sc.srvExecute.synch.SrvExecuteLargeSyncTestCase;
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeTestCase;
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeWaitMechanismTestCase;
 import org.serviceconnector.test.sc.subscriptionChange.ClnChangeSubscriptionTestCase;
@@ -50,46 +49,41 @@ import org.serviceconnector.test.unit.LargeMessageEncoderDecoderTest;
 import org.serviceconnector.test.unit.LinkedQueueTest;
 import org.serviceconnector.test.unit.SCMPLargeRequestTest;
 import org.serviceconnector.test.unit.SCMPLargeResponseTest;
-import org.serviceconnector.test.unit.SCMPVersionTest;
-import org.serviceconnector.test.unit.SCVersionTest;
 import org.serviceconnector.test.unit.ValidatorUtilityTest;
 
 /**
  * @author JTraber
  */
 @RunWith(Suite.class)
-@SuiteClasses( { ClnCreateSessionWaitMechanismTestCase.class, //
-		RegisterServerTestCase.class, // 
-		DeRegisterServerTestCase.class, // 
-		SCMPClnExecuteSyncTest.class, // 
-		SrvExecuteLargeSyncTestCase.class, // 
-		SrvExecuteAsyncTestCase.class,// 
-		SrvExecuteLargeAsyncTestCase.class, //
-		SrvExecuteOTITestCase.class, //
-		ClnSubscribeTestCase.class, //
-		ClnSubscribeWaitMechanismTestCase.class, //
-		ClnChangeSubscriptionTestCase.class, //
-		PublishLargeMessagesTestCase.class, //
-		ManageTestCase.class, //
-		ConnectionPoolTest.class, //  
-		SCVersionToSCTest.class, // 
-		DecodeSCMPVersionTest.class, // 
-		SessionTimeoutTestCase.class, //
-		GroupCallTestCase.class, //
+@SuiteClasses( { 
+	ClnCreateSessionWaitMechanismTestCase.class,
+		RegisterServerTestCase.class,
+		DeRegisterServerTestCase.class,
+		SCMPClnExecuteSyncTest.class,
+		SrvExecuteAsyncTestCase.class,
+		SrvExecuteLargeAsyncTestCase.class,
+		SrvExecuteOTITestCase.class,
+		ClnSubscribeTestCase.class,
+		ClnSubscribeWaitMechanismTestCase.class,
+		ClnChangeSubscriptionTestCase.class,
+		PublishLargeMessagesTestCase.class,
+		ManageTestCase.class,
+		ConnectionPoolTest.class, 
+		SCVersionToSCTest.class,
+		DecodeSCMPVersionTest.class,
+		SessionTimeoutTestCase.class,
+		GroupCallTestCase.class,
 		// SCImplTestCases
-		DefaultFrameDecoderTest.class,//
-		HttpFrameDecoderTest.class, //
-		SCMPLargeResponseTest.class,//
-		SCMPLargeRequestTest.class, //
-		SCMPLargeResponseTest.class,//
-		LargeMessageEncoderDecoderTest.class, //
-		KeepAliveMessageEncoderDecoderTest.class,//
-		DefaultEncoderDecoderTest.class,//
-		ValidatorUtilityTest.class, //
-		LinkedQueueTest.class, //
-		// SCAPITestCases
-		SCVersionTest.class, //
-		SCMPVersionTest.class })
+		DefaultFrameDecoderTest.class,
+		HttpFrameDecoderTest.class,
+		SCMPLargeResponseTest.class,
+		SCMPLargeRequestTest.class,
+		SCMPLargeResponseTest.class,
+		LargeMessageEncoderDecoderTest.class,
+		KeepAliveMessageEncoderDecoderTest.class,
+		DefaultEncoderDecoderTest.class,
+		ValidatorUtilityTest.class,
+		LinkedQueueTest.class })
 public class SCTest {
 
 	private SCTest() {
