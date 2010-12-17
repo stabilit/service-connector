@@ -49,7 +49,7 @@ public class XSLTTransformerFactory {
 	/**
 	 * Instantiates a new xSLT transformer factory.
 	 */
-	public XSLTTransformerFactory() {
+	private XSLTTransformerFactory() {
 	}
 
 	/**
@@ -62,6 +62,13 @@ public class XSLTTransformerFactory {
 		this.transletMap.put(key, translet);
 	}
 
+	/**
+	 * Clear translet.
+	 */
+	public void clearTranslet() {
+	    this.transletMap.clear();	
+	}
+	
 	/**
 	 * Creates a new transformer instance which is threadsafe.
 	 *

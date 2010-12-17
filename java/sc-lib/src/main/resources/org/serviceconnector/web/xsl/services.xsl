@@ -18,8 +18,8 @@
             <th class="sc_table">Service Type</th>
             <th class="sc_table">Service Name</th>
             <th class="sc_table">Servers</th>
-            <th class="sc_table">Subscriptions</th>
-            <th class="sc_table">Allocated Sessions</th>
+            <th class="sc_table">Message Queue</th>
+            <th class="sc_table">Allocated Sessions / Subscriptions</th>
             <th class="sc_table">Available Sessions</th>
           </tr>          
           <xsl:apply-templates select="$body/services/service"/>
@@ -76,7 +76,12 @@
 	      </xsl:otherwise>
 	    </xsl:choose>
         <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countAllocatedSessions"/></xsl:call-template></td>
-        <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countAvailableSessions"/></xsl:call-template></td>
+        <td class="{$class}">
+          <xsl:choose>
+            <xsl:when test="type = 'PUBLISH_SERVICE'">-</xsl:when>
+            <xsl:otherwise><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countAvailableSessions"/></xsl:call-template></xsl:otherwise>
+          </xsl:choose>          
+        </td>
 	</xsl:template>
 	<xsl:template name="service_details">
 	  <td colspan="7">

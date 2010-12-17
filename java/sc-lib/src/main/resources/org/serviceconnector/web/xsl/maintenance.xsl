@@ -10,6 +10,7 @@
         <div>
            <div id="sc_terminate"><input class="sc_form_button" style="margin:10px;" name="Terminate SC" type="button" value="Terminate SC" onclick="javascript:terminateSC()"></input></div> 
            <div id="sc_cache_reset"><input class="sc_form_button" style="margin:10px;" name="Terminate SC" type="button" value="Reset Cache" onclick="javascript:resetCache()"></input></div> 
+           <div id="sc_translet_reset"><input class="sc_form_button" style="margin:10px;" name="Terminate SC" type="button" value="Reset Translet" onclick="javascript:resetTranslet()"></input></div> 
         </div>
       </div>
     </xsl:template>

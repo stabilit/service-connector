@@ -76,6 +76,15 @@ function resetCache() {
 	ajaxSystem.ajaxCall('ajax/system?action=resetCache');	
 }
 
+function resetTranslet() {
+	var check = window.confirm("Reset Translet! Are you sure?");
+	if (check == false) {
+		return;
+    }
+	var resetTransletDiv = document.getElementById("sc_translet_reset");
+	ajaxSystem.ajaxCall('ajax/system?action=resetTranslet');	
+}
+
 function systemCallback() {
    	setStatusSuccess();
 }

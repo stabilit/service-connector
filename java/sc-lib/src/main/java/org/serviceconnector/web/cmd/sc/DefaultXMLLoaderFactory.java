@@ -816,6 +816,10 @@ public class DefaultXMLLoaderFactory {
 				CacheManager cacheManager = AppContext.getCacheManager();
 				cacheManager.clearAll();
 			}
+			if ("resetTranslet".equals(action)) {
+				logger.info("reset translet by user interface");
+				XSLTTransformerFactory.getInstance().clearTranslet();
+			}
 		}
 	}
 
