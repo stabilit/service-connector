@@ -47,9 +47,9 @@ import org.serviceconnector.test.unit.HttpFrameDecoderTest;
 import org.serviceconnector.test.unit.KeepAliveMessageEncoderDecoderTest;
 import org.serviceconnector.test.unit.LargeMessageEncoderDecoderTest;
 import org.serviceconnector.test.unit.LinkedQueueTest;
-import org.serviceconnector.test.unit.SCMPLargeRequestTest;
-import org.serviceconnector.test.unit.SCMPLargeResponseTest;
 import org.serviceconnector.test.unit.ValidatorUtilityTest;
+import org.serviceconnector.test.unit.scmp.SCMPLargeRequestTest;
+import org.serviceconnector.test.unit.scmp.SCMPLargeResponseTest;
 
 /**
  * @author JTraber
