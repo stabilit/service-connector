@@ -1,3 +1,18 @@
+/*
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ */
 package org.serviceconnector.test.unit.api;
 
 import org.apache.log4j.Logger;
@@ -33,11 +48,8 @@ public class APISCSubscribeMessageTest {
 	 */
 	@Test
 	public void t01_constructor() {
-		Assert.assertEquals("messageInfo is not null",null, message.getMessageInfo());
-		Assert.assertEquals("data is not null",null, message.getData());
-		Assert.assertEquals("sessionId is not null",null, message.getSessionId());
 		Assert.assertEquals("mask is not null",null, message.getMask());
-		Assert.assertEquals("compressed flag is not default",Constants.DEFAULT_COMPRESSION_FLAG, message.isCompressed());
+		Assert.assertEquals("noDataInterval is default",Constants.DEFAULT_NO_DATA_INTERVAL_SECONDS, message.getNoDataIntervalInSeconds());
 	}
 
 	/**

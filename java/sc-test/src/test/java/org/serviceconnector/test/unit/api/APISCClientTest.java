@@ -16,7 +16,7 @@
 /**
  * 
  */
-package org.serviceconnector.test.unit.api.cln;
+package org.serviceconnector.test.unit.api;
 
 import org.apache.log4j.Logger;
 import org.junit.After;

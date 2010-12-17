@@ -230,7 +230,7 @@ public class APISCMessageTest {
 	 * Expectation: The sessionId is set to 2767 Chars
 	 */
 	@Test
-	public void T43_SessionId() {
+	public void t43_SessionId() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Short.MAX_VALUE; i++) {
 			sb.append('a');
@@ -415,7 +415,7 @@ public class APISCMessageTest {
 	 * Expectation: AppErrorText is set to Null
 	 */
 	@Test
-	public void t68_AppErrorText() throws Exception {
+	public void t70_AppErrorText() throws Exception {
 		message.setAppErrorText(null);
 		Assert.assertEquals("is not null", null, message.getAppErrorText());
 	}
@@ -425,7 +425,7 @@ public class APISCMessageTest {
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void t69_AppErrorText() throws Exception {
+	public void t71_AppErrorText() throws Exception {
 		message.setAppErrorText("");
 	}
 
@@ -434,7 +434,7 @@ public class APISCMessageTest {
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void t70_AppErrorText() throws Exception {
+	public void t72_AppErrorText() throws Exception {
 		message.setAppErrorText(" ");
 		Assert.assertEquals(" ", message.getAppErrorText());
 	}
@@ -444,7 +444,7 @@ public class APISCMessageTest {
 	 * Expectation: AppErrorText is set to a single char Char
 	 */
 	@Test
-	public void t71_AppErrorText() throws Exception {
+	public void t73_AppErrorText() throws Exception {
 		message.setAppErrorText("a");
 		Assert.assertEquals("a", message.getAppErrorText());
 		Assert.assertEquals(1, message.getAppErrorText().length());
@@ -455,7 +455,7 @@ public class APISCMessageTest {
 	 * Expectation: AppErrorText is set to a single 256 chars
 	 */
 	@Test
-	public void t72_AppErrorText() throws Exception {
+	public void t74_AppErrorText() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 256; i++) {
 			sb.append('a');
@@ -470,7 +470,7 @@ public class APISCMessageTest {
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void t73_AppErrorText() throws Exception {
+	public void t75_AppErrorText() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 257; i++) {
 			sb.append('a');
@@ -483,7 +483,7 @@ public class APISCMessageTest {
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void t74_AppErrorText() throws Exception {
+	public void t76_AppErrorText() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Short.MAX_VALUE; i++) {
 			sb.append('a');
@@ -493,20 +493,39 @@ public class APISCMessageTest {
 
 	/**
 	 * Description: Set AppErrorCode 100<br>
-	 * Expectation: AppErrorCode should be 100
+	 * Expectation: AppErrorCode is 100
 	 */
 	@Test
-	public void t75_AppErrorCode() throws Exception {
+	public void t80_AppErrorCode() throws Exception {
 		message.setAppErrorCode(100);
-		Assert.assertEquals("is not true", 100, message.getAppErrorCode());
+		Assert.assertEquals("is not 100", 100, message.getAppErrorCode());
+	}
+
+	/**
+	 * Description: Set AppErrorCode -1<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t81_AppErrorCode() throws Exception {
+		message.setAppErrorCode(-1);
+	}
+	
+	/**
+	 * Description: Set AppErrorCode 0<br>
+	 * Expectation: AppErrorCode is 0
+	 */
+	@Test
+	public void t82_AppErrorCode() throws Exception {
+		message.setAppErrorCode(0);
+		Assert.assertEquals("is not 0", 0, message.getAppErrorCode());
 	}
 
 	/**
 	 * Description: Set Empty-Value as CacheExpirationDateTime<br>
-	 * Expectation: SCMPValidatorException
+	 * Expectation: throws SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void t76_CacheExpirationDateTime() throws Exception {
+	public void t90_CacheExpirationDateTime() throws Exception {
 		message.setCacheExpirationDateTime("");
 	}
 
@@ -515,7 +534,7 @@ public class APISCMessageTest {
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void t77_CacheExpirationDateTime() throws Exception {
+	public void t91_CacheExpirationDateTime() throws Exception {
 		message.setCacheExpirationDateTime(" ");
 	}
 
@@ -524,7 +543,7 @@ public class APISCMessageTest {
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void t78_CacheExpirationDateTime() throws Exception {
+	public void t92_CacheExpirationDateTime() throws Exception {
 		message.setCacheExpirationDateTime("a");
 	}
 
@@ -533,7 +552,7 @@ public class APISCMessageTest {
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void t79_CacheExpirationDateTime() throws Exception {
+	public void t93_CacheExpirationDateTime() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 256; i++) {
 			sb.append('a');
@@ -546,7 +565,7 @@ public class APISCMessageTest {
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void t80_CacheExpirationDateTime() throws Exception {
+	public void t94_CacheExpirationDateTime() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 257; i++) {
 			sb.append('a');
@@ -559,11 +578,32 @@ public class APISCMessageTest {
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
-	public void t81_CacheExpirationDateTime() throws Exception {
+	public void t95_CacheExpirationDateTime() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Short.MAX_VALUE; i++) {
 			sb.append('a');
 		}
 		message.setCacheExpirationDateTime(sb.toString());
 	}
+	
+	/**
+	 * Description: Set compress modus to true<br>
+	 * Expectation: Compress is set to true
+	 */
+	@Test
+	public void t100_Reject() {
+		message.setReject(true);
+		Assert.assertEquals("Reject", true, message.isReject());
+	}
+
+	/**
+	 * Description: Set compress modus to false<br>
+	 * Expectation: Compress is set to false
+	 */
+	@Test
+	public void t101_Reject() {
+		message.setReject(false);
+		Assert.assertEquals("Reject", false, message.isReject());
+	}
+
 }

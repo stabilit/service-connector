@@ -17,35 +17,38 @@ package org.serviceconnector.test.unit;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.serviceconnector.test.unit.api.APINewServerTest;
+import org.serviceconnector.test.unit.api.APISCClientTest;
 import org.serviceconnector.test.unit.api.APISCMessageTest;
+import org.serviceconnector.test.unit.api.APISCPublishMessageTest;
+import org.serviceconnector.test.unit.api.APISCServerTest;
 import org.serviceconnector.test.unit.api.APISCSubscribeMessageTest;
-import org.serviceconnector.test.unit.api.cln.APISCClientTest;
-import org.serviceconnector.test.unit.api.srv.APINewServerTest;
-import org.serviceconnector.test.unit.api.srv.APISCServerTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { APISCMessageTest.class, //
-		APISCSubscribeMessageTest.class, //
-		APISCClientTest.class, //
-		APISCServerTest.class, //
-		APINewServerTest.class, //
-		DefaultFrameDecoderTest.class, //
-		HttpFrameDecoderTest.class, //
-		SCMPLargeResponseTest.class, //
-		SCMPLargeRequestTest.class, //
-		LargeMessageEncoderDecoderTest.class, //
-		KeepAliveMessageEncoderDecoderTest.class,//
-		DefaultEncoderDecoderTest.class,//
-		ValidatorUtilityTest.class, //
-		SCMPMessageMaskTest.class, //
-		DecodeSCMPVersionTest.class, //
-		LinkedQueueTest.class, //
-		SCVersionTest.class, //
-		SCMPVersionTest.class, //
-		CacheExpirationTestCase.class, // 
-		CacheExpirationThreadRunTestCase.class, // 
-		CacheStatisticsTestCase.class, //
-		CacheTestCase.class, //
+@Suite.SuiteClasses( { 
+		APISCMessageTest.class,
+		APISCSubscribeMessageTest.class,
+		APISCPublishMessageTest.class,
+		APISCClientTest.class,
+		APISCServerTest.class,
+		APINewServerTest.class,
+		DefaultFrameDecoderTest.class,
+		HttpFrameDecoderTest.class,
+		SCMPLargeResponseTest.class,
+		SCMPLargeRequestTest.class,
+		LargeMessageEncoderDecoderTest.class,
+		KeepAliveMessageEncoderDecoderTest.class,
+		DefaultEncoderDecoderTest.class,
+		ValidatorUtilityTest.class,
+		SCMPMessageMaskTest.class,
+		DecodeSCMPVersionTest.class,
+		LinkedQueueTest.class,
+		SCVersionTest.class,
+		SCMPVersionTest.class,
+		CacheExpirationTestCase.class, 
+		CacheExpirationThreadRunTestCase.class, 
+		CacheStatisticsTestCase.class,
+		CacheTestCase.class,
 		CacheThreadRunTestCase.class })
 public class AllUnitTests {
 }

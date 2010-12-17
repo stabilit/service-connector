@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.unit.api.srv;
+package org.serviceconnector.test.unit.api;
 
 import java.security.InvalidParameterException;
 
