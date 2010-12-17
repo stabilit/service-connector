@@ -64,6 +64,8 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		// first remove subscription than unsubscribe
 		this.subscriptionRegistry.removeSubscription(subscription);
 		subscriptionQueue.unsubscribe(subscriptionId);
+		// cancel subscription timeout
+		this.subscriptionRegistry.cancelSubscriptionTimeout(subscription);
 		String serviceName = reqMessage.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 		SubscriptionLogger.logUnsubscribe(serviceName, subscriptionId);
 

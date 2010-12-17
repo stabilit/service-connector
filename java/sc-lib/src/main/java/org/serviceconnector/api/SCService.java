@@ -34,6 +34,7 @@ public abstract class SCService {
 	protected String sessionId;
 	/** The requester to communicate. */
 	protected SCRequester requester;
+	/** The sc client. */
 	protected SCClient scClient;
 	/** The pending request, marks if a reply is outstanding or if service is ready for next. */
 	protected volatile boolean pendingRequest;
@@ -60,7 +61,7 @@ public abstract class SCService {
 	/**
 	 * Sets the request complete.
 	 */
-	public void setRequestComplete() {
+	public synchronized void setRequestComplete() {
 		this.pendingRequest = false;
 	}
 

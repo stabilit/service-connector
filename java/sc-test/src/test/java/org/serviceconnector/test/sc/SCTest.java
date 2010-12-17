@@ -30,8 +30,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.integration.scmp.ConnectionPoolTest;
-import org.serviceconnector.test.sc.attach.AttachTestCase;
-import org.serviceconnector.test.sc.attach.DetachTestCase;
 import org.serviceconnector.test.sc.group.GroupCallTestCase;
 import org.serviceconnector.test.sc.manage.ManageTestCase;
 import org.serviceconnector.test.sc.operationTimeout.SrvExecuteOTITestCase;
@@ -57,7 +55,6 @@ import org.serviceconnector.test.unit.HttpFrameDecoderTest;
 import org.serviceconnector.test.unit.KeepAliveMessageEncoderDecoderTest;
 import org.serviceconnector.test.unit.LargeMessageEncoderDecoderTest;
 import org.serviceconnector.test.unit.LinkedQueueTest;
-import org.serviceconnector.test.unit.SCMPLargeResponseTest;
 import org.serviceconnector.test.unit.SCMPLargeRequestTest;
 import org.serviceconnector.test.unit.SCMPLargeResponseTest;
 import org.serviceconnector.test.unit.SCMPVersionTest;
@@ -68,9 +65,7 @@ import org.serviceconnector.test.unit.ValidatorUtilityTest;
  * @author JTraber
  */
 @RunWith(Suite.class)
-@SuiteClasses( { AttachTestCase.class, //
-		DetachTestCase.class, // 
-		ClnCreateSessionTestCase.class, // 
+@SuiteClasses( { ClnCreateSessionTestCase.class, // 
 		ClnDeleteSessionTestCase.class, //
 		ClnCreateSessionWaitMechanismTestCase.class, //
 		RegisterServerTestCase.class, // 

@@ -370,7 +370,7 @@ public class SubscriptionQueue<E> {
 		public void startListen() {
 			this.listening = true;
 		}
-		
+
 		/**
 		 * Stop listen. If subscription is not ready to receive messages listen is false.
 		 */
@@ -419,6 +419,7 @@ public class SubscriptionQueue<E> {
 		 * @param timeoutMillis
 		 *            the timeout
 		 */
+		@SuppressWarnings("unchecked")
 		public synchronized void schedule(double timeoutMillis) {
 			// always cancel old timeouter when schedule of an new timeout is necessary
 			this.cancel();
@@ -453,7 +454,8 @@ public class SubscriptionQueue<E> {
 		 */
 		public synchronized void cancel() {
 			if (this.timeout != null) {
-				this.timeout.cancel(false);
+				// cancel timeout even if its already running - timeout synchronize on queue
+				this.timeout.cancel(true);
 				logger.debug("cancel TimeAwareDataPointer");
 				// important to set timeouter null - rescheduling of same instance not possible
 				this.timeout = null;
@@ -490,10 +492,12 @@ public class SubscriptionQueue<E> {
 		/** {@inheritDoc} */
 		@Override
 		public void run() {
-			// stops listening - ITimerRun gets executed
-			this.dataPointer.stopListen();
-			// timeout target
-			this.target.timeout();
+			synchronized (SubscriptionQueue.this) {
+				// stops listening - ITimerRun gets executed
+				this.dataPointer.stopListen();
+				// timeout target
+				this.target.timeout();
+			}
 		}
 	}
 }
