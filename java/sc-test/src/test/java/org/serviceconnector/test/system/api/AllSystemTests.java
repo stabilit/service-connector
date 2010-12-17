@@ -17,39 +17,39 @@ package org.serviceconnector.test.system.api;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.system.api.publish.AfterSCAbortReceivePublicationTest;
-import org.serviceconnector.test.system.api.publish.AfterServerAbortReceivePublicationTest;
-import org.serviceconnector.test.system.api.publish.AfterServerRestartReceivePublicationTest;
-import org.serviceconnector.test.system.api.publish.ChangeSubscriptionTest;
-import org.serviceconnector.test.system.api.publish.ReceivePublicationTest;
-import org.serviceconnector.test.system.api.publish.SubscribeTest;
-import org.serviceconnector.test.system.api.publish.UnsubscribeTest;
-import org.serviceconnector.test.system.api.session.AfterSCAbortSessionTest;
-import org.serviceconnector.test.system.api.session.AfterServerAbortSessionTest;
-import org.serviceconnector.test.system.api.session.AfterServerRestartSessionTest;
-import org.serviceconnector.test.system.api.session.CreateSessionTest;
-import org.serviceconnector.test.system.api.session.DeleteSessionTest;
-import org.serviceconnector.test.system.api.session.ExecuteAsynchronousTest;
-import org.serviceconnector.test.system.api.session.ExecuteTest;
+import org.serviceconnector.test.system.api.publish.APIAfterSCAbortReceivePublicationTest;
+import org.serviceconnector.test.system.api.publish.APIAfterServerAbortReceivePublicationTest;
+import org.serviceconnector.test.system.api.publish.APIAfterServerRestartReceivePublicationTest;
+import org.serviceconnector.test.system.api.publish.APIChangeSubscriptionTest;
+import org.serviceconnector.test.system.api.publish.APIReceivePublicationTest;
+import org.serviceconnector.test.system.api.publish.APISubscribeTest;
+import org.serviceconnector.test.system.api.publish.APIUnsubscribeTest;
+import org.serviceconnector.test.system.api.session.APIAfterSCAbortSessionTest;
+import org.serviceconnector.test.system.api.session.APIAfterServerAbortSessionTest;
+import org.serviceconnector.test.system.api.session.APIAfterServerRestartSessionTest;
+import org.serviceconnector.test.system.api.session.APICreateSessionTest;
+import org.serviceconnector.test.system.api.session.APIDeleteSessionTest;
+import org.serviceconnector.test.system.api.session.APIExecuteAsynchronousTest;
+import org.serviceconnector.test.system.api.session.APIExecuteTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
 		// session tests
-		CreateSessionTest.class,
-		DeleteSessionTest.class,
-		ExecuteTest.class, 
-		ExecuteAsynchronousTest.class,
-		AfterSCAbortSessionTest.class,
-		AfterServerAbortSessionTest.class,
-		AfterServerRestartSessionTest.class,
+		APICreateSessionTest.class,
+		APIDeleteSessionTest.class,
+		APIExecuteTest.class, 
+		APIExecuteAsynchronousTest.class,
+		APIAfterSCAbortSessionTest.class,
+		APIAfterServerAbortSessionTest.class,
+		APIAfterServerRestartSessionTest.class,
 
 		// publish tests
-		SubscribeTest.class, 
-		UnsubscribeTest.class, 
-		ChangeSubscriptionTest.class, 
-		ReceivePublicationTest.class,
-		AfterSCAbortReceivePublicationTest.class,
-		AfterServerAbortReceivePublicationTest.class,
-		AfterServerRestartReceivePublicationTest.class})
+		APISubscribeTest.class, 
+		APIUnsubscribeTest.class, 
+		APIChangeSubscriptionTest.class, 
+		APIReceivePublicationTest.class,
+		APIAfterSCAbortReceivePublicationTest.class,
+		APIAfterServerAbortReceivePublicationTest.class,
+		APIAfterServerRestartReceivePublicationTest.class})
 public class AllSystemTests {
 }

@@ -36,7 +36,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.log.SubscriptionLogger;
-import org.serviceconnector.test.system.api.publish.ReceivePublicationTest;
+import org.serviceconnector.test.system.api.publish.APIReceivePublicationTest;
 import org.serviceconnector.util.FileUtility;
 
 @SuppressWarnings("unused")

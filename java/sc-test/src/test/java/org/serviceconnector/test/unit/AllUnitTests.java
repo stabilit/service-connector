@@ -17,18 +17,18 @@ package org.serviceconnector.test.unit;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.unit.api.SCMessageTest;
-import org.serviceconnector.test.unit.api.SCSubscribeMessageTest;
-import org.serviceconnector.test.unit.api.cln.SCClientTest;
-import org.serviceconnector.test.unit.api.srv.NewServerTest;
-import org.serviceconnector.test.unit.api.srv.SCServerTest;
+import org.serviceconnector.test.unit.api.APISCMessageTest;
+import org.serviceconnector.test.unit.api.APISCSubscribeMessageTest;
+import org.serviceconnector.test.unit.api.cln.APISCClientTest;
+import org.serviceconnector.test.unit.api.srv.APINewServerTest;
+import org.serviceconnector.test.unit.api.srv.APISCServerTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { SCMessageTest.class, //
-		SCSubscribeMessageTest.class, //
-		SCClientTest.class, //
-		SCServerTest.class, //
-		NewServerTest.class, //
+@Suite.SuiteClasses( { APISCMessageTest.class, //
+		APISCSubscribeMessageTest.class, //
+		APISCClientTest.class, //
+		APISCServerTest.class, //
+		APINewServerTest.class, //
 		DefaultFrameDecoderTest.class, //
 		HttpFrameDecoderTest.class, //
 		SCMPLargeResponseTest.class, //

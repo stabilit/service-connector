@@ -17,39 +17,39 @@ package org.serviceconnector.test.integration;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.integration.api.cln.AfterSCAbortClientTest;
-import org.serviceconnector.test.integration.api.cln.AfterSCRestartClientTest;
-import org.serviceconnector.test.integration.api.cln.AttachDetachTest;
-import org.serviceconnector.test.integration.api.cln.AttachTest;
-import org.serviceconnector.test.integration.api.cln.EnableDisableServiceTest;
-import org.serviceconnector.test.integration.api.cln.MultipleSCsClientTest;
-import org.serviceconnector.test.integration.api.cln.NewServiceTest;
-import org.serviceconnector.test.integration.api.srv.AfterSCAbortServerTest;
-import org.serviceconnector.test.integration.api.srv.AfterSCRestartServerTest;
-import org.serviceconnector.test.integration.api.srv.MultipleSCsServerTest;
-import org.serviceconnector.test.integration.api.srv.PublishServerTest;
-import org.serviceconnector.test.integration.api.srv.RegisterPublishServerTest;
-import org.serviceconnector.test.integration.api.srv.RegisterSessionServerTest;
+import org.serviceconnector.test.integration.api.cln.APIAfterSCAbortClientTest;
+import org.serviceconnector.test.integration.api.cln.APIAfterSCRestartClientTest;
+import org.serviceconnector.test.integration.api.cln.APIAttachDetachTest;
+import org.serviceconnector.test.integration.api.cln.APIAttachTest;
+import org.serviceconnector.test.integration.api.cln.APIEnableDisableServiceTest;
+import org.serviceconnector.test.integration.api.cln.APIMultipleSCsClientTest;
+import org.serviceconnector.test.integration.api.cln.APINewServiceTest;
+import org.serviceconnector.test.integration.api.srv.APIAfterSCAbortServerTest;
+import org.serviceconnector.test.integration.api.srv.APIAfterSCRestartServerTest;
+import org.serviceconnector.test.integration.api.srv.APIMultipleSCsServerTest;
+import org.serviceconnector.test.integration.api.srv.APIPublishServerTest;
+import org.serviceconnector.test.integration.api.srv.APIRegisterPublishServerTest;
+import org.serviceconnector.test.integration.api.srv.APIRegisterSessionServerTest;
 import org.serviceconnector.test.integration.scmp.ConnectionPoolTest;
 import org.serviceconnector.test.integration.scmp.SCMPAttachDetachTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
 // API client tests
-		AttachTest.class, //
-		AttachDetachTest.class, // 
-		MultipleSCsClientTest.class, //
-		EnableDisableServiceTest.class, //
-		NewServiceTest.class, //
-		AfterSCAbortClientTest.class, //
-		AfterSCRestartClientTest.class, //
+		APIAttachTest.class, //
+		APIAttachDetachTest.class, // 
+		APIMultipleSCsClientTest.class, //
+		APIEnableDisableServiceTest.class, //
+		APINewServiceTest.class, //
+		APIAfterSCAbortClientTest.class, //
+		APIAfterSCRestartClientTest.class, //
 		// API server tests
-		RegisterSessionServerTest.class, // 
-		RegisterPublishServerTest.class, //
-		PublishServerTest.class, //
-		MultipleSCsServerTest.class, //
-		AfterSCAbortServerTest.class, //
-		AfterSCRestartServerTest.class, //
+		APIRegisterSessionServerTest.class, // 
+		APIRegisterPublishServerTest.class, //
+		APIPublishServerTest.class, //
+		APIMultipleSCsServerTest.class, //
+		APIAfterSCAbortServerTest.class, //
+		APIAfterSCRestartServerTest.class, //
 		// SCMP client test
 		SCMPAttachDetachTest.class, //
 		ConnectionPoolTest.class, //
