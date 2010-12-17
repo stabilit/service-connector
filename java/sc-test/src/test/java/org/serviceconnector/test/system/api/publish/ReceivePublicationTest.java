@@ -62,9 +62,8 @@ public class ReceivePublicationTest {
 	public void beforeOneTest() throws Exception {
 		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
-				TestConstants.pubServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
-				TestConstants.pubServiceName1);
+		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_PUBLISH, TestConstants.log4jSrvProperties, TestConstants.pubServerName1,
+				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10, TestConstants.pubServiceName1);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
@@ -119,12 +118,12 @@ public class ReceivePublicationTest {
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 		Assert.assertTrue("is not subscribed", service.isSubscribed());
-		
+
 		waitForMessage(10);
 		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.messageCounter);
 		SCMessage response = cbk.response;
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
-		
+
 		service.unsubscribe();
 		Assert.assertNull("the session ID is not null", service.getSessionId());
 	}
@@ -154,7 +153,7 @@ public class ReceivePublicationTest {
 		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.messageCounter);
 		SCMessage response = cbk.response;
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
-		
+
 		service.unsubscribe();
 		Assert.assertNull("the session ID is not null", service.getSessionId());
 	}
@@ -165,20 +164,63 @@ public class ReceivePublicationTest {
 	 */
 	@Test
 	public void t03_receive() throws Exception {
-		// TODO JOT missing test
-		Assert.assertTrue("Test is not implemented", false);
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		MsgCallback cbk = new MsgCallback(service);
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo(TestConstants.publishMessagesWithDelayCmd);
+		int nrMessages = 5;
+		String waitInMillis = "1000";
+		subMsgRequest.setData(nrMessages + "|" + waitInMillis);
+		cbk.expectedMessages = nrMessages;
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+		Assert.assertTrue("is not subscribed", service.isSubscribed());
+
+		waitForMessage(5);
+		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.messageCounter);
+		SCMessage response = cbk.response;
+		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
+
+		service.unsubscribe();
+		Assert.assertNull("the session ID is not null", service.getSessionId());
 	}
-	
+
 	/**
 	 * Description: do not receive message because subscription does not match<br>
 	 * Expectation: passes (catch exception while waiting for message)
 	 */
 	@Test
 	public void t04_receiveNoMatch() throws Exception {
-		// TODO JOT missing test
-		Assert.assertTrue("Test is not implemented", false);
+		service = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgResponse = null;
+		MsgCallback cbk = new MsgCallback(service);
+		// wrong mask
+		subMsgRequest.setMask(TestConstants.mask1);
+		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
+		int nrMessages = 200;
+		subMsgRequest.setData(Integer.toString(nrMessages));
+		cbk.expectedMessages = nrMessages;
+		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+		Assert.assertTrue("is not subscribed", service.isSubscribed());
+
+		try {
+			waitForMessage(2);
+			Assert.fail("TimeoutException should have been thrown!");
+		} catch (TimeoutException e) {
+			Assert.assertEquals("Nr messages does not match", 0, cbk.messageCounter);
+		}
+		service.unsubscribe();
+		Assert.assertNull("the session ID is not null", service.getSessionId());
 	}
-	
+
 	private void waitForMessage(int nrSeconds) throws Exception {
 		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (messageReceived) {
@@ -188,9 +230,9 @@ public class ReceivePublicationTest {
 		}
 		throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 	}
-	
+
 	private class MsgCallback extends SCMessageCallback {
-		
+
 		private SCMessage response = null;
 		private int messageCounter = 0;
 		private int expectedMessages = 0;
@@ -207,11 +249,11 @@ public class ReceivePublicationTest {
 		public void receive(SCMessage msg) {
 			response = msg;
 			messageCounter++;
-			if ( expectedMessages == messageCounter) {
+			if (expectedMessages == messageCounter) {
 				ReceivePublicationTest.messageReceived = true;
 			}
-			if (((messageCounter+1) % 1000) == 0) {
-				ReceivePublicationTest.testLogger.info("Receiving message nr. " + (messageCounter+1));
+			if (((messageCounter + 1) % 1000) == 0) {
+				ReceivePublicationTest.testLogger.info("Receiving message nr. " + (messageCounter + 1));
 			}
 		}
 

@@ -38,7 +38,7 @@ public abstract class SCService {
 	/** The pending request, marks if a reply is outstanding or if service is ready for next. */
 	protected volatile boolean pendingRequest;
 	/** The session active, marks state of a session. */
-	protected volatile boolean subscriptionActive = false;
+	protected volatile boolean sessionActive = false;
 
 	/**
 	 * Instantiates a new service.
@@ -50,7 +50,7 @@ public abstract class SCService {
 	 */
 	public SCService(SCClient scClient, String serviceName, SCRequester requester) {
 		this.serviceName = serviceName;
-		this.subscriptionActive = false;
+		this.sessionActive = false;
 		this.sessionId = null;
 		this.pendingRequest = false;
 		this.requester = requester;

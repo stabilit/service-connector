@@ -24,7 +24,7 @@ import org.serviceconnector.api.SCSubscribeMessage;
  * @author JTraber
  */
 public abstract class SCPublishServerCallback {
-	
+
 	/** The sc publish server. */
 	protected SCPublishServer scPublishServer = null;
 
@@ -52,6 +52,19 @@ public abstract class SCPublishServerCallback {
 	}
 
 	/**
+	 * Change subscription.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param operationTimeoutInMillis
+	 *            the operation timeout in milliseconds
+	 * @return the sC message
+	 */
+	public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutInMillis) {
+		return message;
+	}
+
+	/**
 	 * Unsubscribe.
 	 * 
 	 * @param message
@@ -63,15 +76,13 @@ public abstract class SCPublishServerCallback {
 	}
 
 	/**
-	 * Change subscription.
+	 * Abort subscription.
 	 * 
 	 * @param message
 	 *            the message
 	 * @param operationTimeoutInMillis
 	 *            the operation timeout in milliseconds
-	 * @return the sC message
 	 */
-	public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutInMillis) {
-		return message;
+	public void abortSubscription(SCMessage scMessage, int operationTimeoutInMillis) {
 	}
 }

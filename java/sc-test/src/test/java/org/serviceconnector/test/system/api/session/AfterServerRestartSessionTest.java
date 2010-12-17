@@ -94,7 +94,7 @@ public class AfterServerRestartSessionTest {
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
 				TestConstants.sesServiceName1);
-		
+		//TODO JAN was willst du hier testen?? .. execute wirft SCServiceException korrekt oder?
 		response = service.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());

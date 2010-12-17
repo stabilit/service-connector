@@ -259,6 +259,29 @@ public class TestPublishServer extends TestStatefulServer {
 				}
 			}
 		}
+		
+		// publish n messages 128 byte long with delay w. n is defined in the request body, w in messageInfo  
+		public void publishMessagesWithDelay(SCMessage request, int operationTimeoutInMillis) {
+			String[] dataString = ((String) request.getData()).split("\\|");			
+			int count = Integer.parseInt(dataString[0]);
+			int waitTime = Integer.parseInt(dataString[1]);
+			SCPublishMessage pubMessage = new SCPublishMessage(new byte[128]);
+			pubMessage.setCompressed(false);
+			for (int i = 0; i < count; i++) {
+				try {
+					pubMessage.setMask(TestConstants.maskSrv);
+					pubMessage.setData("publish message nr:" + i);
+					this.publishSrv.publish(pubMessage);
+					Thread.sleep(waitTime);
+					if (((i+1) % 100) == 0) {
+						TestPublishServer.testLogger.info("Publishing message nr. " + (i+1));
+					}
+				} catch (Exception e) {
+					logger.error("cannot publish",e);
+					break;
+				}
+			}
+		}
 
 	}
 }

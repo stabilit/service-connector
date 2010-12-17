@@ -18,6 +18,8 @@ package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.srv.SrvPublishService;
+import org.serviceconnector.api.srv.SrvService;
 import org.serviceconnector.api.srv.SrvSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -57,7 +59,7 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// look up srvService
-		SrvSessionService srvService = this.getSrvSessionServiceByServiceName(serviceName);
+		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 
 		String sessionId = reqMessage.getSessionId();
 		// create scMessage
@@ -68,10 +70,14 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(sessionId);
 		scMessage.setServiceName(reqMessage.getServiceName());
 
-		// inform callback with scMessages
-		srvService.getCallback().abortSession(scMessage,
-				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+		int oti = Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT));
 
+		// inform callback with scMessages
+		if (srvService instanceof SrvSessionService) {
+			((SrvSessionService) srvService).getCallback().abortSession(scMessage, oti);
+		} else {
+			((SrvPublishService) srvService).getCallback().abortSubscription(scMessage, oti);
+		}
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);

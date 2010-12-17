@@ -89,7 +89,7 @@ public class SCSessionService extends SCService {
 	 *             the exception
 	 */
 	public synchronized SCMessage createSession(int operationTimeoutSeconds, SCMessage scMessage) throws Exception {
-		if (this.subscriptionActive) {
+		if (this.sessionActive) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
@@ -127,7 +127,7 @@ public class SCSessionService extends SCService {
 			throw ex;
 		}
 		this.sessionId = reply.getSessionId();
-		this.subscriptionActive = true;
+		this.sessionActive = true;
 		this.triggerSessionTimeout();
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
@@ -183,7 +183,7 @@ public class SCSessionService extends SCService {
 	 *             the exception
 	 */
 	public synchronized void deleteSession(int operationTimeoutSeconds, SCMessage scMessage) throws Exception {
-		if (this.subscriptionActive == false) {
+		if (this.sessionActive == false) {
 			// delete session not possible - no session on this service just ignore
 			return;
 		}
@@ -206,7 +206,7 @@ public class SCSessionService extends SCService {
 			try {
 				deleteSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				if (this.subscriptionActive == false) {
+				if (this.sessionActive == false) {
 					// ignore errors in state of dead session
 					return;
 				}
@@ -214,7 +214,7 @@ public class SCSessionService extends SCService {
 			}
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				if (this.subscriptionActive == false) {
+				if (this.sessionActive == false) {
 					// ignore errors in state of dead session
 					return;
 				}
@@ -225,7 +225,7 @@ public class SCSessionService extends SCService {
 		} finally {
 			this.pendingRequest = false;
 			this.sessionId = null;
-			this.subscriptionActive = false;
+			this.sessionActive = false;
 		}
 	}
 
@@ -233,9 +233,8 @@ public class SCSessionService extends SCService {
 		return this.execute(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
 	}
 
-	@SuppressWarnings("unchecked")
 	public synchronized SCMessage execute(int operationTimeoutSeconds, SCMessage requestMsg) throws Exception {
-		if (this.subscriptionActive == false) {
+		if (this.sessionActive == false) {
 			throw new SCServiceException("execute not possible, no active session.");
 		}
 		if (requestMsg == null) {
@@ -298,7 +297,7 @@ public class SCSessionService extends SCService {
 	}
 
 	public synchronized void send(int operationtTimeoutSeconds, SCMessage requestMsg, SCMessageCallback callback) throws Exception {
-		if (this.subscriptionActive == false) {
+		if (this.sessionActive == false) {
 			throw new SCServiceException("execute not possible, no active session.");
 		}
 		if (callback == null) {
@@ -430,7 +429,7 @@ public class SCSessionService extends SCService {
 				SCSessionService.this.triggerSessionTimeout();
 			} catch (Exception e) {
 				// echo failed - mark session as dead
-				SCSessionService.this.subscriptionActive = false;
+				SCSessionService.this.sessionActive = false;
 				SCSessionService.this.sessionTimeout.cancel(false);
 			}
 		}
