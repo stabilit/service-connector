@@ -67,6 +67,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 
 		Subscription subscription = this.getSubscriptionById(subscriptionId);
 		StatefulServer server = subscription.getServer();
+		reqMessage.setHeader(SCMPHeaderAttributeKey.ACTUAL_MASK, subscription.getMask().getValue());
 
 		CommandCallback callback = new CommandCallback(true);
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);

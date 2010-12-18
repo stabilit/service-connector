@@ -64,4 +64,8 @@ public class SubscriptionMask {
 		}
 		return true;
 	}
+	
+	public String getValue() {
+		return new String(this.mask);
+	}
 }
