@@ -100,12 +100,12 @@ public class TestPublishClientFilippe extends Thread {
 				try {
 					SCMessage scMessage = new SCMessage("reject");
 					scMessage.setSessionInfo("sessionInfo");
-					sessionService.createSession(10, scMessage);
+					sessionService.createSession(10, scMessage, new DemoPublishClientCallback(sessionService));
 				} catch (Exception e) {
 				}
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				sessionService.createSession(10, scMessage);
+				sessionService.createSession(10, scMessage, new DemoPublishClientCallback(sessionService));
 
 				sessionService.execute(new SCMessage());
 				sessionService.deleteSession();
@@ -114,7 +114,7 @@ public class TestPublishClientFilippe extends Thread {
 				SCSessionService sessionService = sc.newSessionService(TestConstants.pubServiceName1);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				sessionService.createSession(10, scMessage);
+				sessionService.createSession(10, scMessage, new DemoPublishClientCallback(sessionService));
 
 				SCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
 				message.setCompressed(false);

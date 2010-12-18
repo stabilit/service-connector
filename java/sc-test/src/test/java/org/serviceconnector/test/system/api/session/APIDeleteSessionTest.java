@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestMessageCallback;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMgmtClient;
@@ -47,6 +48,7 @@ public class APIDeleteSessionTest {
 	private SCClient client;
 	private SCSessionService service;
 	private int threadCount = 0;
+	private TestMessageCallback cbk = null;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -105,7 +107,8 @@ public class APIDeleteSessionTest {
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 		response = service.execute(request);
 
 		// disable service
@@ -137,7 +140,8 @@ public class APIDeleteSessionTest {
 		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 		Assert.assertNotNull("the session ID is null", service.getSessionId());
 		service.deleteSession();
 		service.deleteSession();

@@ -54,7 +54,8 @@ public class DemoSessionCacheClient extends Thread {
 			SCMessage msg = new SCMessage();
 			msg.setSessionInfo("session-info"); // optional
 			msg.setData("certificate or what so ever"); // optional
-			service.createSession(10, msg); // alternative with operation timeout and message
+			SCMessageCallback cbk = new DemoSessionClientCallback(service); // callback on service!!
+			service.createSession(10, msg, cbk); // alternative with operation timeout and message
 			// service.createSession(msg); // alternative with message
 
 			String sid = service.getSessionId();
@@ -62,7 +63,7 @@ public class DemoSessionCacheClient extends Thread {
 			SCMessage requestMsg = new SCMessage();
 			requestMsg.setCacheId("CBCD_SECURITY_MARKET");
 			SCMessage responseMsg = new SCMessage();
-			SCMessageCallback cbk = new DemoSessionClientCallback(service); // callback on service!!
+			
 			for (int i = 0; i < 10; i++) {
 				requestMsg.setData("body nr : " + i);
 				logger.info("Message sent: " + requestMsg.getData());

@@ -35,6 +35,8 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	NOT_FOUND("404", "Not found."),
 	/** The REQUEST_TIMEOUT. */
 	REQUEST_TIMEOUT("408", "The SC did not timely respond to the request"),
+	/** The BROKEN_SESSION. */
+	BROKEN_SESSION("410", "Session is broken"),
 
 	/** 420 Validation errors */
 	/** The header validation error. */

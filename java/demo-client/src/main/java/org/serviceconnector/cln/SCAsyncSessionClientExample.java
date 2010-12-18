@@ -59,13 +59,14 @@ public class SCAsyncSessionClientExample {
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
 			sessionServiceA.setEchoTimeoutInSeconds(300);
-			sessionServiceA.createSession(60, scMessage);
+			SCMessageCallback cbk = new ExampleCallback(sessionServiceA);
+			sessionServiceA.createSession(60, scMessage, cbk);
 
 			SCMessage requestMsg = new SCMessage();
 			requestMsg.setData("Hello World");
 			requestMsg.setCompressed(false);
-			SCMessageCallback callback = new ExampleCallback(sessionServiceA);
-			sessionServiceA.send(requestMsg, callback);
+			
+			sessionServiceA.send(requestMsg);
 
 			// wait until message received
 			waitForMessage(10);

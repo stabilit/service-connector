@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestMessageCallback;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
@@ -52,6 +53,7 @@ public class APIAfterServerAbortSessionTest {
 	private SCClient client;
 	private SCSessionService service;
 	private int threadCount = 0;
+	private TestMessageCallback cbk = null;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -91,7 +93,8 @@ public class APIAfterServerAbortSessionTest {
 		} catch (Exception e) {
 		}
 		scCtx = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"
+				+ (Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass
@@ -103,31 +106,32 @@ public class APIAfterServerAbortSessionTest {
 	 * Description: create session after server was aborted<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test (expected = SCServiceException.class)
-	public void t01_createSession() throws Exception {	
+	@Test(expected = SCServiceException.class)
+	public void t01_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		
+
 		ctrl.stopServer(srvCtx);
-		
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 	}
 
 	/**
 	 * Description: exchange message after server was aborted<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test (expected = SCServiceException.class)
+	@Test(expected = SCServiceException.class)
 	public void t02_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
-		
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
+
 		ctrl.stopServer(srvCtx);
-		
+
 		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.execute(request);
 	}
@@ -136,21 +140,21 @@ public class APIAfterServerAbortSessionTest {
 	 * Description: exchange message after server was aborted with operation timeout = 30<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test (expected = SCServiceException.class)
+	@Test(expected = SCServiceException.class)
 	public void t03_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
-		
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
+
 		ctrl.stopServer(srvCtx);
-		
+
 		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.execute(30, request);
 	}
 
-	
 	/**
 	 * Description: send message after server was aborted <br>
 	 * Expectation: passes because exception is given to callback and handled there
@@ -161,35 +165,37 @@ public class APIAfterServerAbortSessionTest {
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		
+
 		ctrl.stopServer(srvCtx);
-		
-		service.send(request, cbk);
+
+		service.send(request);
 		waitForMessage(10); // will wait max 10 seconds for response
 		response = cbk.response;
-		Assert.assertEquals("response is not null", null, response);	//is null because exception was received 
+		Assert.assertEquals("response is not null", null, response); //is null because exception was received 
 	}
 
 	/**
 	 * Description: delete session after server was aborted<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test (expected = SCServiceException.class)
-	public void t05_deleteSession() throws Exception {	
+	@Test(expected = SCServiceException.class)
+	public void t05_deleteSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
-		
-		ctrl.stopServer(srvCtx); 
-		
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
+
+		ctrl.stopServer(srvCtx);
+
 		service.deleteSession();
 	}
-	
+
 	private void waitForMessage(int nrSeconds) throws Exception {
 		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (messageReceived) {
@@ -199,7 +205,7 @@ public class APIAfterServerAbortSessionTest {
 		}
 		throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 	}
-	
+
 	private class MsgCallback extends SCMessageCallback {
 		private SCMessage response = null;
 
@@ -224,5 +230,5 @@ public class APIAfterServerAbortSessionTest {
 			APIAfterServerAbortSessionTest.messageReceived = true;
 		}
 	}
-	
+
 }

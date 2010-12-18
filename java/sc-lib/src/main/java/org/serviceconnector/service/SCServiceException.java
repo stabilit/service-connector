@@ -28,6 +28,10 @@ import org.serviceconnector.scmp.SCMPError;
  * 
  * @author JTraber
  */
+/**
+ * @author schoeggii
+ *
+ */
 public class SCServiceException extends Exception {
 
 	/** The Constant serialVersionUID. */
@@ -117,5 +121,9 @@ public class SCServiceException extends Exception {
 	 */
 	public void setSCMPError(String errorCode) {
 		this.scmpError = SCMPError.getSCMPErrorByCode(errorCode);
+	}
+
+	public void setSCMPError(SCMPError scmpError) {
+		this.scmpError = scmpError;
 	}
 }

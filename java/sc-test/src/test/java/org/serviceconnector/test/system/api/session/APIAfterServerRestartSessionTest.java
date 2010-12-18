@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestMessageCallback;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
@@ -17,7 +18,7 @@ import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 
 public class APIAfterServerRestartSessionTest {
-	
+
 	/** The Constant testLogger. */
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
@@ -30,6 +31,7 @@ public class APIAfterServerRestartSessionTest {
 	private SCClient client;
 	private SCSessionService service;
 	private int threadCount = 0;
+	private TestMessageCallback cbk = null;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -69,7 +71,8 @@ public class APIAfterServerRestartSessionTest {
 		} catch (Exception e) {
 		}
 		scCtx = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"
+				+ (Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass
@@ -87,9 +90,10 @@ public class APIAfterServerRestartSessionTest {
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.echoAppErrorCmd);
-		
+
 		ctrl.stopServer(srvCtx);
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
@@ -97,10 +101,10 @@ public class APIAfterServerRestartSessionTest {
 		//TODO JAN was willst du hier testen?? .. execute wirft SCServiceException korrekt oder?
 		response = service.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		Assert.assertEquals("messageInfo is not the same",request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		Assert.assertEquals("appErrorCode is not set",TestConstants.appErrorCode, response.getAppErrorCode());
-		Assert.assertEquals("appErrorText is not set",TestConstants.appErrorText, response.getAppErrorText());
+		Assert.assertEquals("appErrorCode is not set", TestConstants.appErrorCode, response.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not set", TestConstants.appErrorText, response.getAppErrorText());
 		service.deleteSession();
 	}
 

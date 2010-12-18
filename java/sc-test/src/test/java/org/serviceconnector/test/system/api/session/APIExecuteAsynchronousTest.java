@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestMessageCallback;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
@@ -53,6 +54,7 @@ public class APIExecuteAsynchronousTest {
 	private SCClient client;
 	private SCSessionService service;
 	private int threadCount = 0;
+	private TestMessageCallback cbk = null;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -93,7 +95,8 @@ public class APIExecuteAsynchronousTest {
 		} catch (Exception e) {
 		}
 		scCtx = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"
+				+ (Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass
@@ -111,11 +114,12 @@ public class APIExecuteAsynchronousTest {
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.echoAppErrorCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(request, cbk);
+		service.send(request);
 		waitForMessage(10);
 		response = cbk.response;
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
@@ -136,11 +140,12 @@ public class APIExecuteAsynchronousTest {
 		request.setCompressed(true);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(request, cbk);
+		service.send(request);
 		waitForMessage(10);
 		response = cbk.response;
 
@@ -160,11 +165,12 @@ public class APIExecuteAsynchronousTest {
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(new SCMessage());
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(new SCMessage(), cbk);
 		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(request, cbk);
+		service.send(request);
 		waitForMessage(10);
 		response = cbk.response;
 
@@ -184,11 +190,12 @@ public class APIExecuteAsynchronousTest {
 		request.setCompressed(true);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(new SCMessage());
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(new SCMessage(), cbk);
 		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(request, cbk);
+		service.send(request);
 		waitForMessage(10);
 		response = cbk.response;
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
@@ -209,7 +216,7 @@ public class APIExecuteAsynchronousTest {
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(request, cbk);
+		service.send(request);
 	}
 
 	/**
@@ -224,14 +231,15 @@ public class APIExecuteAsynchronousTest {
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo(TestConstants.rejectSessionCmd);
 		try {
-			response = service.createSession(request);
+			this.cbk = new TestMessageCallback(service);
+			response = service.createSession(request, cbk);
 		} catch (Exception e) {
 			// ignore rejection
 		}
 		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(request, cbk);
+		service.send(request);
 	}
 
 	/**
@@ -244,13 +252,14 @@ public class APIExecuteAsynchronousTest {
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 		String sessionId = service.getSessionId();
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(request, cbk);
+		service.send(request);
 		waitForMessage(10);
 		response = cbk.response;
 		Assert.assertEquals("sessionId is not the same", sessionId, response.getSessionId());
@@ -270,12 +279,13 @@ public class APIExecuteAsynchronousTest {
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(3, request, cbk); // SC oti = 3*0.8*1000 = 2400ms
+		service.send(3, request); // SC oti = 3*0.8*1000 = 2400ms
 		waitForMessage(10);
 		response = cbk.response;
 
@@ -291,12 +301,13 @@ public class APIExecuteAsynchronousTest {
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(2, request, cbk); // SC oti = 2*0.8*1000 = 1600ms
+		service.send(2, request); // SC oti = 2*0.8*1000 = 1600ms
 		waitForMessage(10); // will wait max 10 seconds for response
 		response = cbk.response;
 		Thread.sleep(5000); // wait for the server
@@ -305,7 +316,7 @@ public class APIExecuteAsynchronousTest {
 		messageReceived = false;
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("hallo"); // send second message
-		service.send(2, request, cbk);
+		service.send(2, request);
 		waitForMessage(10); // will wait max 10 seconds for the second response
 		response = cbk.response;
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
@@ -324,12 +335,13 @@ public class APIExecuteAsynchronousTest {
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		service.send(2, request, cbk); // SC oti = 2*0.8*1000 = 1600ms
+		service.send(2, request); // SC oti = 2*0.8*1000 = 1600ms
 		waitForMessage(10); // will wait max 10 seconds for response
 		response = cbk.response;
 
@@ -337,7 +349,7 @@ public class APIExecuteAsynchronousTest {
 		messageReceived = false;
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("gaga");
-		service.send(2, request, cbk);
+		service.send(2, request);
 		waitForMessage(10); // will wait max 10 seconds for response
 		response = cbk.response;
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());

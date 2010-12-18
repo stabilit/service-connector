@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestMessageCallback;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCMessageCallback;
 import org.serviceconnector.api.SCService;
@@ -51,6 +52,7 @@ public class APIAfterSCAbortSessionTest {
 	private SCClient client;
 	private SCSessionService service;
 	private int threadCount = 0;
+	private TestMessageCallback cbk = null;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -90,7 +92,8 @@ public class APIAfterSCAbortSessionTest {
 		} catch (Exception e) {
 		}
 		scCtx = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"
+				+ (Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass
@@ -102,33 +105,34 @@ public class APIAfterSCAbortSessionTest {
 	 * Description: create session after SC was aborted<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test (expected = SCServiceException.class)
-	public void t01_createSession() throws Exception {	
+	@Test(expected = SCServiceException.class)
+	public void t01_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		
+
 		ctrl.stopServer(srvCtx); // stop test server now, it cannot be stopped without SC
 		ctrl.stopSC(scCtx);
-		
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 	}
-	
+
 	/**
 	 * Description: exchange message after SC was aborted<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test (expected = SCServiceException.class)
+	@Test(expected = SCServiceException.class)
 	public void t02_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
-		
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
+
 		ctrl.stopServer(srvCtx); // stop test server now, it cannot be stopped without SC
 		ctrl.stopSC(scCtx);
-		
+
 		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.execute(request);
 	}
@@ -137,42 +141,42 @@ public class APIAfterSCAbortSessionTest {
 	 * Description: send message after SC was aborted<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test (expected = SCServiceException.class)
+	@Test(expected = SCServiceException.class)
 	public void t03_send() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(service);
-		
+
 		ctrl.stopServer(srvCtx); // stop test server now, it cannot be stopped without SC
 		ctrl.stopSC(scCtx);
-		
-		service.send(request, cbk);
+
+		service.send(request);
 	}
-	
 
 	/**
 	 * Description: delete session after SC was aborted<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test (expected = SCServiceException.class)
-	public void t04_deleteSession() throws Exception {	
+	@Test(expected = SCServiceException.class)
+	public void t04_deleteSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		response = service.createSession(request);
-		
+		this.cbk = new TestMessageCallback(service);
+		response = service.createSession(request, cbk);
+
 		ctrl.stopServer(srvCtx); // stop test server now, it cannot be stopped without SC
 		ctrl.stopSC(scCtx);
-		
+
 		service.deleteSession();
 	}
-	
-	
+
 	private class MsgCallback extends SCMessageCallback {
 		private SCMessage response = null;
 

@@ -20,6 +20,8 @@ import java.util.concurrent.CountDownLatch;
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
@@ -43,9 +45,8 @@ public class PerformanceSessionClient implements Runnable {
 	private final int executeCycles;
 	private final int messageSize;
 
-	public PerformanceSessionClient(CountDownLatch beforeAttachSignal,
-			CountDownLatch afterAttachSignal, CountDownLatch attachedSignal,
-			CountDownLatch doneSignal, ThreadSafeCounter counter, int sessionCycles,
+	public PerformanceSessionClient(CountDownLatch beforeAttachSignal, CountDownLatch afterAttachSignal,
+			CountDownLatch attachedSignal, CountDownLatch doneSignal, ThreadSafeCounter counter, int sessionCycles,
 			int executeCycles, int messageSize) {
 		this.beforeAttachSignal = beforeAttachSignal;
 		this.afterAttachSignal = afterAttachSignal;
@@ -78,7 +79,7 @@ public class PerformanceSessionClient implements Runnable {
 				SCSessionService service = sc.newSessionService(TestConstants.sesServiceName1);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				service.createSession(300, scMessage);
+				service.createSession(300, scMessage, new MsgCallback(service));
 				for (int j = 0; j < executeCycles; j++) {
 					service.execute(new SCMessage(new byte[messageSize]));
 					counter.increment();
@@ -98,9 +99,23 @@ public class PerformanceSessionClient implements Runnable {
 			// signal that this worker is done
 			doneSignal.countDown();
 
-			testLogger.info("Performance client has taken " + (stop - start) + "ms to execute "
-					+ counter + " messages of " + messageSize + "B.\nCurrent number on the latch:\t"
-					+ doneSignal.getCount());
+			testLogger.info("Performance client has taken " + (stop - start) + "ms to execute " + counter
+					+ " messages of " + messageSize + "B.\nCurrent number on the latch:\t" + doneSignal.getCount());
 		}
 	}
+
+	private class MsgCallback extends SCMessageCallback {
+		public MsgCallback(SCService service) {
+			super(service);
+		}
+
+		@Override
+		public void receive(SCMessage reply) {
+		}
+
+		@Override
+		public void receive(Exception e) {
+		}
+	}
+
 }

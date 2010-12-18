@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestMessageCallback;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
@@ -48,6 +49,7 @@ public class APISessionBenchmark {
 	private SCClient client;
 	private SCSessionService service;
 	private int threadCount = 0;
+	private TestMessageCallback cbk = null;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -87,14 +89,14 @@ public class APISessionBenchmark {
 		} catch (Exception e) {
 		}
 		scCtx = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"
+				+ (Thread.activeCount() - threadCount));
 	}
 
 	@AfterClass
 	public static void afterAllTests() throws Exception {
 		ctrl = null;
 	}
-
 
 	/**
 	 * Description: Create and delete session x times. No message body is sent or received. Measure performance <br>
@@ -105,13 +107,13 @@ public class APISessionBenchmark {
 		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		
+		this.cbk = new TestMessageCallback(service);
 		int nr = 10000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
-			if (((i+1) % 1000) == 0)
-				testLogger.info("Creating Session nr. " + (i+1) + "...");
-			response = service.createSession(10, request);
+			if (((i + 1) % 1000) == 0)
+				testLogger.info("Creating Session nr. " + (i + 1) + "...");
+			response = service.createSession(10, request, cbk);
 			service.deleteSession(10);
 		}
 		long stop = System.currentTimeMillis();
@@ -120,7 +122,6 @@ public class APISessionBenchmark {
 		Assert.assertEquals(true, perf > 100);
 	}
 
-	
 	@Test
 	public void benchmark_10000_sessions_paralell() throws Exception {
 		SCMessage request = null;
@@ -128,6 +129,7 @@ public class APISessionBenchmark {
 		int nr = 10000;
 		SCSessionService[] sessionServices = new SCSessionService[nr];
 		String[] sessionID = new String[nr];
+		this.cbk = new TestMessageCallback(sessionServices[0]);
 		testLogger.info("Creating Services...");
 		for (int i = 0; i < nr; i++) {
 			sessionServices[i] = client.newSessionService(TestConstants.sesServiceName1);
@@ -135,9 +137,9 @@ public class APISessionBenchmark {
 		long start = System.currentTimeMillis();
 		//create sessions
 		for (int i = 0; i < nr; i++) {
-			if (((i+1) % 1000) == 0)
-				testLogger.info("Creating session nr. " + (i+1) + "...");
-			response = sessionServices[i].createSession(10, request);
+			if (((i + 1) % 1000) == 0)
+				testLogger.info("Creating session nr. " + (i + 1) + "...");
+			response = sessionServices[i].createSession(10, request, cbk);
 			sessionID[i] = sessionServices[i].getSessionId();
 		}
 		long stop = System.currentTimeMillis();
@@ -156,8 +158,8 @@ public class APISessionBenchmark {
 		//delete sessions
 		start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
-			if (((i+1) % 1000) == 0)
-				testLogger.info("Deleting session nr. " + (i+1) + "...");
+			if (((i + 1) % 1000) == 0)
+				testLogger.info("Deleting session nr. " + (i + 1) + "...");
 			sessionServices[i].deleteSession(10);
 		}
 		stop = System.currentTimeMillis();
@@ -166,20 +168,20 @@ public class APISessionBenchmark {
 		testLogger.info(nr + " Session deletion performance : " + perf2 + " sessions/sec.");
 		Assert.assertEquals(true, perf1 > 100);
 		Assert.assertEquals(true, perf2 > 500);
-		
+
 	}
 
-//
-//	@Test
-//	public void createSessionExecuteDeleteSession_10000ExecuteMessagesDividedInto10ParallelClients_outputsTime() throws Exception {
-//		int threadCount = Thread.activeCount();
-//
-//		ClientThreadController clientCtrl = new ClientThreadController(false, true, 10, 10, 100, 128);
-//		long result = clientCtrl.perform();
-//
-//		testLogger.info("Threads before initializing clients:\t" + threadCount);
-//		testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
-//		Assert.assertEquals(true, result < 25000);
-//	}
-//
+	//
+	//	@Test
+	//	public void createSessionExecuteDeleteSession_10000ExecuteMessagesDividedInto10ParallelClients_outputsTime() throws Exception {
+	//		int threadCount = Thread.activeCount();
+	//
+	//		ClientThreadController clientCtrl = new ClientThreadController(false, true, 10, 10, 100, 128);
+	//		long result = clientCtrl.perform();
+	//
+	//		testLogger.info("Threads before initializing clients:\t" + threadCount);
+	//		testLogger.info("Threads after execution completed:\t" + Thread.activeCount());
+	//		Assert.assertEquals(true, result < 25000);
+	//	}
+	//
 }

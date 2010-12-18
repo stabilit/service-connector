@@ -51,14 +51,14 @@ public class ClnAPIAsyncSessionTestCase {
 			SCSessionService sessionServiceA = sc.newSessionService("session-1");
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
-			sessionServiceA.createSession(60, scMessage);
+			SCMessageCallback callback = new TestCallback(sessionServiceA);
+			sessionServiceA.createSession(60, scMessage, callback);
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];
 			requestMsg.setData(buffer);
 			requestMsg.setCompressed(false);
 			requestMsg.setMessageInfo("test");
-			SCMessageCallback callback = new TestCallback(sessionServiceA);
-			sessionServiceA.send(requestMsg, callback);
+			sessionServiceA.send(requestMsg);
 			Thread.sleep(100000);
 			// deletes the session
 			sessionServiceA.deleteSession();

@@ -54,6 +54,7 @@ public class MsgCompressionTest {
 	private static ProcessCtx srvCtx;
 	private SCRequester requester;
 	private int threadCount = 0;
+	private String sessionId;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -108,7 +109,7 @@ public class MsgCompressionTest {
 
 	@Test
 	public void largeMsgCompressionBodyStringTest() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester, "session-1",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 		StringBuilder sb = new StringBuilder();
@@ -128,7 +129,7 @@ public class MsgCompressionTest {
 
 	@Test
 	public void msgCompressionBodyByteTest() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(requester, "session-1",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 
@@ -147,7 +148,7 @@ public class MsgCompressionTest {
 
 	@Test
 	public void largeMsgCompressionBodyByteTest() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(requester, "session-1",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 
@@ -166,7 +167,7 @@ public class MsgCompressionTest {
 
 	@Test
 	public void noMsgCompressionBodyStreamTest() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(requester, "session-1",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 
@@ -186,7 +187,7 @@ public class MsgCompressionTest {
 
 	@Test
 	public void msgCompressionBodyStreamTest() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(req, "session-1",
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(requester, "session-1",
 				this.sessionId);
 		clnExecuteCall.setMessagInfo("message info");
 

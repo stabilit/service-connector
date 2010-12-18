@@ -18,6 +18,8 @@ package org.serviceconnector.cln;
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.net.ConnectionType;
@@ -53,28 +55,28 @@ public class TestSessionClientFilippe extends Thread {
 				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo(" ");
-				sessionService.createSession(60, scMessage);
+				sessionService.createSession(60, scMessage, new DemoSessionClientCallback(sessionService));
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSession_arbitrarySpaceSessionInfo_sessionIdIsNotEmpty") {
 				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
-				sessionService.createSession(60, scMessage);
+				sessionService.createSession(60, scMessage, new DemoSessionClientCallback(sessionService));
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSession_arbitrarySpaceSessionInfoDataOneChar_sessionIdIsNotEmpty") {
 				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 				SCMessage scMessage = new SCMessage("a");
 				scMessage.setSessionInfo("The quick brown fox jumps over a lazy dog.");
-				sessionService.createSession(10, scMessage);
+				sessionService.createSession(10, scMessage, new DemoSessionClientCallback(sessionService));
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSession_256LongSessionInfoData60kBByteArray_sessionIdIsNotEmpty") {
 				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 				SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 				scMessage.setSessionInfo(TestConstants.stringLength256);
-				sessionService.createSession(60, scMessage);
+				sessionService.createSession(60, scMessage, new DemoSessionClientCallback(sessionService));
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "deleteSession_beforeCreateSession_noSessionId") {
@@ -85,7 +87,7 @@ public class TestSessionClientFilippe extends Thread {
 				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				sessionService.createSession(60, scMessage);
+				sessionService.createSession(60, scMessage, new DemoSessionClientCallback(sessionService));
 				sessionService.deleteSession();
 
 			} else if (getMethodName() == "createSession_rejectTheSessionThenCreateValidSessionThenExecuteAMessage_passes") {
@@ -94,12 +96,12 @@ public class TestSessionClientFilippe extends Thread {
 				try {
 					SCMessage scMessage = new SCMessage("reject");
 					scMessage.setSessionInfo("sessionInfo");
-					sessionService.createSession(60, scMessage);
+					sessionService.createSession(60, scMessage, new DemoSessionClientCallback(sessionService));
 				} catch (Exception e) {
 				}
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				sessionService.createSession(10, scMessage);
+				sessionService.createSession(10, scMessage, new DemoSessionClientCallback(sessionService));
 
 				sessionService.execute(new SCMessage());
 				sessionService.deleteSession();
@@ -108,7 +110,7 @@ public class TestSessionClientFilippe extends Thread {
 				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				sessionService.createSession(60, scMessage);
+				sessionService.createSession(60, scMessage, new DemoSessionClientCallback(sessionService));
 
 				SCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
 				message.setCompressed(false);
@@ -121,13 +123,13 @@ public class TestSessionClientFilippe extends Thread {
 
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				sessionService.createSession(60, scMessage);
+				sessionService.createSession(60, scMessage, new DemoSessionClientCallback(sessionService));
 				sessionService.execute(new SCMessage(new byte[128]));
 				sessionService.deleteSession();
 
 				scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				sessionService.createSession(60, scMessage);
+				sessionService.createSession(60, scMessage, new DemoSessionClientCallback(sessionService));
 				sessionService.execute(new SCMessage(new byte[128]));
 				sessionService.deleteSession();
 
@@ -135,7 +137,7 @@ public class TestSessionClientFilippe extends Thread {
 				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				sessionService.createSession(1, scMessage);
+				sessionService.createSession(1, scMessage, new DemoSessionClientCallback(sessionService));
 				Thread.sleep(6000);
 				sessionService.deleteSession();
 			}
@@ -157,5 +159,21 @@ public class TestSessionClientFilippe extends Thread {
 
 	public String getMethodName() {
 		return methodName;
+	}
+	
+	private class DemoSessionClientCallback extends SCMessageCallback {
+
+		public DemoSessionClientCallback(SCService service) {
+			super(service);
+		}
+
+		@Override
+		public void receive(SCMessage reply) {
+			logger.info("Publish client received: " + reply.getData());
+		}
+
+		@Override
+		public void receive(Exception e) {
+		}
 	}
 }

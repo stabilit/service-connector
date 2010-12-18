@@ -24,6 +24,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.net.ConnectionType;
@@ -51,7 +53,8 @@ public class ClnAPISyncCacheSessionTestCase {
 			SCSessionService sessionServiceA = sc.newSessionService("session-1");
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
-			sessionServiceA.createSession(60, scMessage);
+			SCMessageCallback callback = new TestCallback(sessionServiceA);
+			sessionServiceA.createSession(60, scMessage, callback);
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];
 			requestMsg.setData(buffer);
@@ -78,5 +81,22 @@ public class ClnAPISyncCacheSessionTestCase {
 
 	@After
 	public void afterOneTest() {
+	}
+	
+	private class TestCallback extends SCMessageCallback {
+
+		public TestCallback(SCService service) {
+			super(service);
+		}
+
+		@Override
+		public void receive(SCMessage msg) {
+			System.out.println(msg);
+		}
+
+		@Override
+		public void receive(Exception ex) {
+			logger.error("callback", ex);
+		}
 	}
 }

@@ -20,10 +20,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.sc.SetupTestCases;
+import org.serviceconnector.test.sc.cln.api.ClnAPIPublishTestCase.TestPublishCallback;
 
 public class PerformanceSessionServiceTestCase {
 
@@ -50,7 +53,8 @@ public class PerformanceSessionServiceTestCase {
 			SCSessionService sessionServiceA = sc.newSessionService("session-1");
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
-			sessionServiceA.createSession(10, scMessage);
+			SCMessageCallback callback = new TestCallback(sessionServiceA);
+			sessionServiceA.createSession(10, scMessage, callback);
 
 			SCMessage requestMsg = new SCMessage();
 			byte[] buffer = new byte[1024];
@@ -88,6 +92,23 @@ public class PerformanceSessionServiceTestCase {
 			} catch (Throwable e) {
 				sc = null;
 			}
+		}
+	}
+	
+	private class TestCallback extends SCMessageCallback {
+
+		public TestCallback(SCService service) {
+			super(service);
+		}
+
+		@Override
+		public void receive(SCMessage msg) {
+			System.out.println(msg);
+		}
+
+		@Override
+		public void receive(Exception ex) {
+			logger.error("callback", ex);
 		}
 	}
 }

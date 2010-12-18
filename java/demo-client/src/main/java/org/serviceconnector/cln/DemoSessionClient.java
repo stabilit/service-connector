@@ -52,14 +52,15 @@ public class DemoSessionClient {
 			SCMessage msg = new SCMessage();
 			msg.setSessionInfo("session-info"); // optional
 			msg.setData("certificate or what so ever"); // optional
-			SCMessage reply = service.createSession(10, msg); // create a session within 10 seconds
+			SCMessageCallback cbk = new DemoSessionClientCallback(service); // callback on service!!
+			SCMessage reply = service.createSession(10, msg, cbk); // create a session within 10 seconds
 			Object body = reply.getData();
 
 			String sid = service.getSessionId();
 
 			SCMessage requestMsg = new SCMessage();
 			SCMessage responseMsg = new SCMessage();
-			SCMessageCallback cbk = new DemoSessionClientCallback(service); // callback on service!!
+			
 			for (int i = 0; i < 5; i++) {
 				requestMsg.setData("body nr : " + i);
 				responseMsg = service.execute(requestMsg); // regular synchronous call
@@ -69,7 +70,7 @@ public class DemoSessionClient {
 			}
 			for (int i = 0; i < 5; i++) {
 				requestMsg.setData("body nr : " + i);
-				service.send(requestMsg, cbk); // regular asynchronous call
+				service.send(requestMsg); // regular asynchronous call
 				logger.info("Message sent async: " + requestMsg.getData());
 				Thread.sleep(2000);
 			}

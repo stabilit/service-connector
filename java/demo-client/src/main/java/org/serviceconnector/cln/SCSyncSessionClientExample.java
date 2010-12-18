@@ -22,6 +22,8 @@
 package org.serviceconnector.cln;
 
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCMessageCallback;
+import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 
@@ -45,7 +47,8 @@ public class SCSyncSessionClientExample {
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
 			sessionServiceA.setEchoTimeoutInSeconds(300);
-			sessionServiceA.createSession(60, scMessage);
+			SCMessageCallback cbk = new ExampleCallback(sessionServiceA);
+			sessionServiceA.createSession(60, scMessage, cbk);
 
 			SCMessage requestMsg = new SCMessage();
 			requestMsg.setData("Hello World");
@@ -65,6 +68,28 @@ public class SCSyncSessionClientExample {
 			} catch (Exception e) {
 				sc = null;
 			}
+		}
+	}
+	
+	/**
+	 * The Class ExampleCallback. Callback used for asynchronously execution.
+	 */
+	private static class ExampleCallback extends SCMessageCallback {
+
+		public ExampleCallback(SCService service) {
+			super(service);
+		}
+
+		@Override
+		public void receive(SCMessage msg) {
+			@SuppressWarnings("unused")
+			SCClient client = this.getService().getScClient();
+			System.out.println(msg);
+		}
+
+		@Override
+		public void receive(Exception ex) {
+			logger.error("callback", ex);
 		}
 	}
 }
