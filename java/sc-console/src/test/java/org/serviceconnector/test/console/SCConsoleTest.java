@@ -29,6 +29,10 @@ import org.serviceconnector.net.ConnectionType;
 public class SCConsoleTest {
 
 	protected static class ExitException extends SecurityException {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8667013915273056665L;
 		public final int status;
 
 		public ExitException(int status) {

@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 public class Statistics {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(Statistics.class);
 	
 	/** The instance. */
