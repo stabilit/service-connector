@@ -16,74 +16,55 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.call;
 
-import java.net.InetAddress;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPCallback;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
- * The Class SCMPEchoCall. Call sends an echo.
+ * The Class SCMPCheckRegistrationCall. Checks server registration.
  * 
  * @author JTraber
  */
-public class SCMPEchoCall extends SCMPSessionCallAdapter {
+public class SCMPCheckRegistrationCall extends SCMPCallAdapter  {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPEchoCall.class);
+	protected final static Logger logger = Logger.getLogger(SCMPCheckRegistrationCall.class);
 	
 	/**
-	 * Instantiates a SCMPClnEchoCall.
+	 * Instantiates a new SCMPCheckRegistrationCall.
 	 */
-	public SCMPEchoCall() {
-		this(null, null, null);
+	public SCMPCheckRegistrationCall() {
+		this(null, null);
+	}
+	
+	/**
+	 * Instantiates a new SCMPCheckRegistrationCall.
+	 * 
+	 * @param requester
+	 *            the requesters to use when invoking call
+	 */
+	public SCMPCheckRegistrationCall(IRequester requester, String serviceName) {
+		super(requester, serviceName);
 	}
 
-	/**
-	 * Instantiates a new SCMPEchoCall.
-	 * 
-	 * @param req
-	 *            the requester to use when invoking call
-	 * @param serviceName
-	 *            the service name
-	 * @param sessionId
-	 *            the session id
-	 */
-	public SCMPEchoCall(IRequester req, String serviceName, String sessionId) {
-		super(req, serviceName, sessionId);
+	/** {@inheritDoc} */
+	@Override
+	public ISCMPCall newInstance(IRequester req, String serviceName) {
+		return new SCMPCheckRegistrationCall(req, serviceName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
-		InetAddress localHost = InetAddress.getLocalHost();
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke(scmpCallback, timeoutInMillis);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
-		return new SCMPEchoCall(req, serviceName, sessionId);
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.ECHO;
+		return SCMPMsgType.CHECK_REGISTRATION;
 	}
 
-	/**
-	 * Sets the header.
-	 * 
-	 * @param header
-	 *            the header
-	 */
-	public void setHeader(Map<String, String> header) {
-		this.requestMessage.setHeader(header);
-	}
+
 }

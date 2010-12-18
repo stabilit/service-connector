@@ -35,16 +35,6 @@ public enum SCMPHeaderAttributeKey {
 	CACHE_EXPIRATION_DATETIME("ced"),
 	/** The CACHE_ID. */
 	CACHE_ID("cid"),
-	/** The REQ_ID. */
-	CLN_REQ_ID("crq"),
-	/** The SC_REQ_ID. */
-	SC_REQ_ID("brq"),
-	/** The SC_RES_ID. */
-	SC_RES_ID("brs"),
-	/** The SRV_REQ_ID. */
-	SRV_REQ_ID("srq"),
-	/** The SRV_RES_ID. */
-	SRV_RES_ID("srs"),
 	/** The COMPRESSION. */
 	COMPRESSION("cmp"),
 	/** The ECHO_INTERVAL. */
@@ -65,6 +55,8 @@ public enum SCMPHeaderAttributeKey {
 	MSG_INFO("min"),
 	/** The MSG_TYPE. */
 	MSG_TYPE("mty"),
+	/** The ACTUAL_MASK. */
+	ACTUAL_MASK("ams"),
 	/** The MASK. */
 	MASK("msk"),
 	/** The CASCADED_MASK. */

@@ -24,6 +24,7 @@ import javax.activity.InvalidActivityException;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
+import org.serviceconnector.call.SCMPCheckRegistrationCall;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -173,6 +174,35 @@ public class SCSessionServer {
 		}
 	}
 
+	public synchronized void checkRegistration() throws Exception {
+		this.checkRegistration(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	public synchronized void checkRegistration(int operationTimeoutSeconds) throws Exception {
+		if (this.registered == false) {
+			throw new InvalidActivityException("Server already is not registered for a service.");
+		}
+		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
+		IRequester req = null;
+
+		SrvService srvService = srvServiceRegistry.removeSrvService(this.serviceName + "_" + this.scServer.getListenerPort());
+		req = srvService.getRequester();
+		SCMPCheckRegistrationCall checkRegistrationCall = (SCMPCheckRegistrationCall) SCMPCallFactory.CHECK_REGISTRATION_CALL
+				.newInstance(req, this.serviceName);
+		SCServerCallback callback = new SCServerCallback(true);
+		try {
+			checkRegistrationCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		} catch (Exception e) {
+			throw new SCServiceException("check registration failed", e);
+		}
+		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		if (reply.isFault()) {
+			SCServiceException ex = new SCServiceException("check registration failed");
+			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			throw ex;
+		}
+	}
+	
 	public synchronized void deregister() throws Exception {
 		this.deregister(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
@@ -192,7 +222,7 @@ public class SCSessionServer {
 			SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 					.newInstance(req, this.serviceName);
 			SCServerCallback callback = new SCServerCallback(true);
-			this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+			this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();	//TODO JOT ?? deregister has no msn
 			try {
 				deRegisterServerCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {

@@ -42,6 +42,8 @@ public final class SCMPCallFactory {
 	public static final ISCMPCall DETACH_CALL = new SCMPDetachCall();
 	/** The REGISTER_SERVER_CALL. */
 	public static final ISCMPCall REGISTER_SERVER_CALL = new SCMPRegisterServerCall();
+	/** The CHECK_REGISTRATION_CALL. */
+	public static final ISCMPCall CHECK_REGISTRATION_CALL = new SCMPCheckRegistrationCall();
 	/** The DEREGISTER_SERVER_CALL. */
 	public static final ISCMPCall DEREGISTER_SERVER_CALL = new SCMPDeRegisterServerCall();
 	/** The CLN_CREATE_SESSION_CALL. */

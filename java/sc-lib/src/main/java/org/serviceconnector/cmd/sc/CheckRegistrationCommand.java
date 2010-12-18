@@ -16,7 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
+import java.net.InetSocketAddress;
+
 import org.apache.log4j.Logger;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -25,43 +28,55 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.Session;
-import org.serviceconnector.util.ValidatorUtility;
+import org.serviceconnector.server.Server;
 
 /**
- * The Class EchoCommand. Responsible for validation and execution of echo command. Used to refresh session on SC.
+ * The Class CheckRegistrationCommand. Validates the server registration. 
+ * Used by the server to check that SC is alive and the registration is valid.
  * 
- * @author JTraber
+ * @author JTrnka
  */
-public class EchoCommand extends CommandAdapter {
+public class CheckRegistrationCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(EchoCommand.class);
-
+	protected final static Logger logger = Logger.getLogger(CheckRegistrationCommand.class);
+	
 	/**
-	 * Instantiates a new EchoCommand.
+	 * Instantiates a new CheckRegistrationCommand.
 	 */
-	public EchoCommand() {
+	public CheckRegistrationCommand() {
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.ECHO;
+		return SCMPMsgType.CHECK_REGISTRATION;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
+		InetSocketAddress socketAddress = request.getRemoteSocketAddress();
+
 		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();
-		Session session = this.getSessionById(sessionId);
-		// cancel session timeout
-		this.sessionRegistry.cancelSessionTimeout(session);
-		message.setIsReply(true);
-		response.setSCMP(message);
-		// schedule session timeout
-		this.sessionRegistry.scheduleSessionTimeout(session);
+		String serviceName = message.getServiceName();
+		String serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
+
+		// Check the presence of the server
+		Server server = this.serverRegistry.getServer(serverKey);
+		if (server == null) {
+			// server does not exist =>
+			SCMPCommandException cmdExc = new SCMPCommandException(SCMPError.NO_SERVER, "server key " + serverKey);
+			cmdExc.setMessageType(getKey());
+			throw cmdExc;
+		}
+
+		// send back positive response
+		SCMPMessage scmpReply = new SCMPMessage();
+		scmpReply.setIsReply(true);
+		scmpReply.setMessageType(getKey());
+		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
+		response.setSCMP(scmpReply);
 	}
 
 	/** {@inheritDoc} */
@@ -70,20 +85,11 @@ public class EchoCommand extends CommandAdapter {
 		SCMPMessage message = request.getMessage();
 		try {
 			// serviceName
-			String serviceName = message.getServiceName();
+			String serviceName = (String) message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
-			// operation timeout
-			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			// sessionId
-			String sessionId = message.getSessionId();
-			if (sessionId == null || sessionId.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
-			}
 		} catch (HasFaultResponseException ex) {
-			logger.warn("validation error", ex);
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
 			throw ex;
@@ -94,4 +100,5 @@ public class EchoCommand extends CommandAdapter {
 			throw validatorException;
 		}
 	}
+	
 }

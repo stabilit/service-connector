@@ -23,6 +23,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SCSubscribeMessage extends SCMessage {
 
 	private String mask;
+	private String actualMask;
 	private int noDataIntervalInSeconds;
 
 	public SCSubscribeMessage() {
@@ -51,6 +52,16 @@ public class SCSubscribeMessage extends SCMessage {
 		this.mask = mask;
 	}
 
+	public String getActualMask() {
+		return actualMask;
+	}
+
+	public void setActualMask(String actualMask) throws SCMPValidatorException {
+		// mask is set only internally by SC => no validation
+		this.actualMask = actualMask;
+	}
+
+	
 	public int getNoDataIntervalInSeconds() {
 		return noDataIntervalInSeconds;
 	}

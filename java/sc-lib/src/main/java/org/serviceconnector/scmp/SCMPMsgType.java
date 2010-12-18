@@ -47,6 +47,8 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	SRV_ABORT_SESSION("SAS"),
 	/** The REGISTER_SERVER. */
 	REGISTER_SERVER("REG"),
+	/** The CHECK_REGISTRATION. */
+	CHECK_REGISTRATION("CRG"),
 	/** The DEREGISTER_SERVER. */
 	DEREGISTER_SERVER("DRG"),
 	/** The CLN_EXECUTE. */
@@ -55,7 +57,6 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	SRV_EXECUTE("SXE"),
 	/** The ECHO. */
 	ECHO("ECH"),
-
 	/** The CLN_SUBSCRIBE. */
 	CLN_SUBSCRIBE("CSU"),
 	/** The SRV_SUBSCRIBE. */
