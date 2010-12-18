@@ -15,16 +15,8 @@
  */
 package org.serviceconnector.cln;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.serviceconnector.TestConstants;
-import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.api.cln.SCSessionService;
-import org.serviceconnector.api.srv.SCSessionServer;
-import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
-import org.serviceconnector.log.SessionLogger;
 
 public class TestSessionClient extends Thread {
 	

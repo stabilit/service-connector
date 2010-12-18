@@ -67,10 +67,10 @@ public class EHCacheImpl implements ICacheImpl {
 				CacheConfiguration defaultCacheConfiguration = new CacheConfiguration(cacheConfiguration.getCacheName(),
 						cacheConfiguration.getMaxElementsInMemory());
 				defaultCacheConfiguration.setEternal(false); // ignore any
-															// timeouts
+				// timeouts
 				defaultCacheConfiguration.setTimeToIdleSeconds(60);
 				defaultCacheConfiguration.setTimeToLiveSeconds(120);
-				defaultCacheConfiguration.setOverflowToDisk(true);				
+				defaultCacheConfiguration.setOverflowToDisk(true);
 				defaultCacheConfiguration.setMaxElementsInMemory(cacheConfiguration.getMaxElementsInMemory());
 				defaultCacheConfiguration.setMaxElementsOnDisk(cacheConfiguration.getMaxElementsOnDisk());
 				defaultCacheConfiguration.setDiskPersistent(cacheConfiguration.isDiskPersistent());

@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 public class SessionLogger {
 
 	private static final Logger sessionLogger = Logger.getLogger(Loggers.SESSION.getValue());
-	private static final SessionLogger instance = new SessionLogger();
 
 	private static String CREATE_SESSION_STR = "create session:%s";
 	private static String DELETE_SESSION_STR = "delete session:%s";

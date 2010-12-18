@@ -26,7 +26,6 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.sc.SetupTestCases;
-import org.serviceconnector.test.sc.cln.api.ClnAPIPublishTestCase.TestPublishCallback;
 
 public class PerformanceSessionServiceTestCase {
 

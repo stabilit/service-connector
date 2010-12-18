@@ -50,6 +50,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SCSessionService extends SCService {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCSessionService.class);
 	/** The sessionTimeout, timeout runs when session need to be refreshed. */
 	private ScheduledFuture<TimeoutWrapper> sessionTimeout;
