@@ -27,7 +27,7 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
-import org.serviceconnector.scmp.SCMPHeadlineKey;
+import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -39,7 +39,7 @@ public class KeepAliveMessageEncoderDecoderTest {
 	/** The coder factory. */
 	private FlyweightEncoderDecoderFactory coderFactory = AppContext.getEncoderDecoderFactory();
 	/** The head key. */
-	private SCMPHeadlineKey headKey;
+	private SCMPHeaderKey headKey;
 	/** The encode scmp. */
 	private SCMPMessage encodeScmp;
 
@@ -49,7 +49,7 @@ public class KeepAliveMessageEncoderDecoderTest {
 	 */
 	@Test
 	public void t01_DecodeKRQTest() {
-		this.headKey = SCMPHeadlineKey.KRQ;
+		this.headKey = SCMPHeaderKey.KRQ;
 
 		String requestString = TestUtil.getSCMPString(headKey, null, null);
 
@@ -72,7 +72,7 @@ public class KeepAliveMessageEncoderDecoderTest {
 	 */
 	@Test
 	public void t02_DecodeKRSTest() {
-		this.headKey = SCMPHeadlineKey.KRS;
+		this.headKey = SCMPHeaderKey.KRS;
 		String requestString = headKey.name() + " 0000000 00000 1.0\n";
 
 		byte[] buffer = requestString.getBytes();
@@ -94,7 +94,7 @@ public class KeepAliveMessageEncoderDecoderTest {
 	 */
 	@Test
 	public void t10_EncodeKRQTest() {
-		this.headKey = SCMPHeadlineKey.KRQ;
+		this.headKey = SCMPHeaderKey.KRQ;
 		this.encodeScmp = new SCMPKeepAlive();
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
 
@@ -115,7 +115,7 @@ public class KeepAliveMessageEncoderDecoderTest {
 	 */
 	@Test
 	public void t11_EncodeKRSTest() {
-		this.headKey = SCMPHeadlineKey.KRS;
+		this.headKey = SCMPHeaderKey.KRS;
 		this.encodeScmp = new SCMPKeepAlive();
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
 

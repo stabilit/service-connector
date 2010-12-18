@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPHeadlineKey;
+import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPInternalStatus;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -59,14 +59,14 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		}
 
 		// evaluate right headline key from SCMP type
-		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
+		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
 		if (scmpMsg.isReply()) {
-			headerKey = SCMPHeadlineKey.RES;
+			headerKey = SCMPHeaderKey.RES;
 			if (scmpMsg.isFault()) {
-				headerKey = SCMPHeadlineKey.EXC;
+				headerKey = SCMPHeaderKey.EXC;
 			}
 		} else {
-			headerKey = SCMPHeadlineKey.REQ;
+			headerKey = SCMPHeaderKey.REQ;
 		}
 
 		StringBuilder sb = this.writeHeader(scmpMsg.getHeader());
@@ -75,6 +75,9 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		// write body depends on body type
 		Object body = scmpMsg.getBody();
 		try {
+			if (MessageLogger.isEnabled()) {
+				MessageLogger.logOutputMessage(headerKey, scmpMsg);
+			}
 			if (body != null) {
 				if (byte[].class == body.getClass()) {
 					byte[] ba = (byte[]) body;
@@ -89,9 +92,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					os.write(ba);
 					os.flush();
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (MessageLogger.isEnabled()) {
-						MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
-					}
+
 					return;
 				}
 				if (String.class == body.getClass()) {
@@ -113,9 +114,6 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 						bw.flush();
 					}
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (MessageLogger.isEnabled()) {
-						MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
-					}
 					return;
 				}
 				scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
@@ -131,9 +129,6 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 			throw new EncodingDecodingException("io error when decoding message", ex);
 		}
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-		if (MessageLogger.isEnabled()) {
-			MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
-		}
 		return;
 	}
 }

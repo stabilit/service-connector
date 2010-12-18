@@ -27,7 +27,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPHeadlineKey;
+import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPInternalStatus;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -59,30 +59,30 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		}
 
 		// evaluate right headline key from SCMP type
-		SCMPHeadlineKey headerKey = SCMPHeadlineKey.UNDEF;
+		SCMPHeaderKey headerKey = SCMPHeaderKey.UNDEF;
 		if (scmpMsg.isReply()) {
 			if (scmpMsg.isFault()) {
-				headerKey = SCMPHeadlineKey.EXC;
+				headerKey = SCMPHeaderKey.EXC;
 			} else {
 				if (scmpMsg.isPart()) {
 					if (scmpMsg.isPollRequest()) {
-						headerKey = SCMPHeadlineKey.PAC;
+						headerKey = SCMPHeaderKey.PAC;
 					} else {
-						headerKey = SCMPHeadlineKey.PRS;
+						headerKey = SCMPHeaderKey.PRS;
 					}
 				} else {
-					headerKey = SCMPHeadlineKey.RES;
+					headerKey = SCMPHeaderKey.RES;
 				}
 			}
 		} else {
 			if (scmpMsg.isPart() || scmpMsg.isComposite()) {
 				if (scmpMsg.isPollRequest()) {
-					headerKey = SCMPHeadlineKey.PAC;
+					headerKey = SCMPHeaderKey.PAC;
 				} else {
-					headerKey = SCMPHeadlineKey.PRQ;
+					headerKey = SCMPHeaderKey.PRQ;
 				}
 			} else {
-				headerKey = SCMPHeadlineKey.REQ;
+				headerKey = SCMPHeaderKey.REQ;
 			}
 		}
 
@@ -91,6 +91,9 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		Object body = scmpMsg.getBody();
 		int headerSize = sb.length();
 		try {
+			if (MessageLogger.isEnabled()) {
+				MessageLogger.logOutputMessage(headerKey, scmpMsg);
+			}
 			if (body != null) {
 				if (byte[].class == body.getClass()) {
 					byte[] ba = (byte[]) body;
@@ -112,9 +115,6 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					os.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (MessageLogger.isEnabled()) {
-						MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
-					}
 					return;
 				}
 				if (String.class == body.getClass()) {
@@ -139,9 +139,6 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					}
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (MessageLogger.isEnabled()) {
-						MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
-					}
 					return;
 				}
 				if (body instanceof InputStream) {
@@ -155,9 +152,6 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					os.flush();
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-					if (MessageLogger.isEnabled()) {
-						MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
-					}
 					return;
 				}
 				// set internal status to save communication state
@@ -175,9 +169,6 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		}
 		// set internal status to save communication state
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
-		if (MessageLogger.isEnabled()) {
-			MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
-		}
 		return;
 	}
 }

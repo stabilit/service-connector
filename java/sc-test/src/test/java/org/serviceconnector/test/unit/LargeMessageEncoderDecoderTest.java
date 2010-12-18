@@ -30,7 +30,7 @@ import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPBodyType;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPHeadlineKey;
+import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -44,7 +44,7 @@ public class LargeMessageEncoderDecoderTest {
 	/** The coder factory. */
 	private FlyweightEncoderDecoderFactory coderFactory = AppContext.getEncoderDecoderFactory();
 	/** The head key. */
-	private SCMPHeadlineKey headKey;
+	private SCMPHeaderKey headKey;
 	/** The msg type. */
 	private SCMPMsgType msgType;
 	/** The body type. */
@@ -63,7 +63,7 @@ public class LargeMessageEncoderDecoderTest {
 	 */
 	@Before
 	public void beforeOneTest() {
-		this.headKey = SCMPHeadlineKey.REQ;
+		this.headKey = SCMPHeaderKey.REQ;
 		this.msgType = SCMPMsgType.ATTACH;
 		this.bodyType = SCMPBodyType.BINARY;
 		this.msgSequenceNr = "1";
@@ -106,7 +106,7 @@ public class LargeMessageEncoderDecoderTest {
 	 */
 	@Test
 	public void t02_DecodeRESTest() {
-		headKey = SCMPHeadlineKey.RES;
+		headKey = SCMPHeaderKey.RES;
 		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
 
 		String requestString = TestUtil.getSCMPString(headKey, header, body);
@@ -130,7 +130,7 @@ public class LargeMessageEncoderDecoderTest {
 	 */
 	@Test
 	public void t03_DecodeEXCTest() {
-		headKey = SCMPHeadlineKey.EXC;
+		headKey = SCMPHeaderKey.EXC;
 
 		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
 
@@ -179,7 +179,7 @@ public class LargeMessageEncoderDecoderTest {
 	 */
 	@Test
 	public void t05_DecodePRQTest() {
-		headKey = SCMPHeadlineKey.PRQ;
+		headKey = SCMPHeaderKey.PRQ;
 		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
 
 		String requestString = TestUtil.getSCMPString(headKey, header, body);
@@ -206,7 +206,7 @@ public class LargeMessageEncoderDecoderTest {
 	 */
 	@Test
 	public void t06_DecodePRSTest() {
-		headKey = SCMPHeadlineKey.PRS;
+		headKey = SCMPHeaderKey.PRS;
 
 		String header = "bty=" + bodyType.getValue() + "\n" + "msn=" + msgSequenceNr + "\n" + "mty=" + msgType.getValue() + "\n";
 
@@ -297,7 +297,7 @@ public class LargeMessageEncoderDecoderTest {
 	public void t21_EncodeRESTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
-		this.headKey = SCMPHeadlineKey.RES;
+		this.headKey = SCMPHeaderKey.RES;
 		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
@@ -324,7 +324,7 @@ public class LargeMessageEncoderDecoderTest {
 	public void t22_encodeEXCTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
-		this.headKey = SCMPHeadlineKey.EXC;
+		this.headKey = SCMPHeaderKey.EXC;
 		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
@@ -350,7 +350,7 @@ public class LargeMessageEncoderDecoderTest {
 	public void t23_EncodePRQTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
-		this.headKey = SCMPHeadlineKey.PRQ;
+		this.headKey = SCMPHeaderKey.PRQ;
 		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);
@@ -376,7 +376,7 @@ public class LargeMessageEncoderDecoderTest {
 	public void t24_EncodePRSTest() {
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPPart());
 
-		this.headKey = SCMPHeadlineKey.PRS;
+		this.headKey = SCMPHeaderKey.PRS;
 		String header = "msn=" + msgSequenceNr + "\n" + "bty=" + bodyType.getValue() + "\n" + "mty=" + msgType.getValue() + "\n";
 
 		String expectedString = TestUtil.getSCMPString(headKey, header, body);

@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
  * 
  * @author JTraber
  */
-public enum SCMPHeadlineKey {
+public enum SCMPHeaderKey {
 
 	/** The UNDEF, UNDEFINED. */
 	UNDEF,
@@ -45,7 +45,7 @@ public enum SCMPHeadlineKey {
 	KRS;
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPHeadlineKey.class);
+	protected static final Logger logger = Logger.getLogger(SCMPHeaderKey.class);
 
 	/**
 	 * Gets the msg header key by string.
@@ -54,8 +54,8 @@ public enum SCMPHeadlineKey {
 	 *            the header key
 	 * @return the msg header key
 	 */
-	public static SCMPHeadlineKey getMsgHeaderKey(String headerKey) {
-		return SCMPHeadlineKey.valueOf(headerKey);
+	public static SCMPHeaderKey getMsgHeaderKey(String headerKey) {
+		return SCMPHeaderKey.valueOf(headerKey);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public enum SCMPHeadlineKey {
 	 *            the b
 	 * @return the key by headline
 	 */
-	public static SCMPHeadlineKey getKeyByHeadline(byte[] b) {
+	public static SCMPHeaderKey getKeyByHeadline(byte[] b) {
 		if (b == null) {
 			return UNDEF;
 		}
@@ -118,7 +118,7 @@ public enum SCMPHeadlineKey {
 	 *            the string
 	 * @return the key by headline
 	 */
-	public static SCMPHeadlineKey getKeyByHeadline(String string) {
+	public static SCMPHeaderKey getKeyByHeadline(String string) {
 		byte[] b = string.getBytes();
 		return getKeyByHeadline(b);
 	}

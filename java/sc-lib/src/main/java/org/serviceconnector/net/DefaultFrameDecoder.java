@@ -18,7 +18,7 @@ package org.serviceconnector.net;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.scmp.SCMPHeadlineKey;
+import org.serviceconnector.scmp.SCMPHeaderKey;
 
 /**
  * The Class DefaultFrameDecoder.
@@ -44,8 +44,8 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 			return 0; // don't throw exception it is the case if client disconnects
 		}
 		// check headerKey
-		SCMPHeadlineKey headerKey = SCMPHeadlineKey.getKeyByHeadline(buffer);
-		if (headerKey == SCMPHeadlineKey.UNDEF) {
+		SCMPHeaderKey headerKey = SCMPHeaderKey.getKeyByHeadline(buffer);
+		if (headerKey == SCMPHeaderKey.UNDEF) {
 			throw new FrameDecoderException("invalid scmp header line:" + new String(buffer, 0, Constants.SCMP_HEADLINE_SIZE));
 		}
 		// parse frame size

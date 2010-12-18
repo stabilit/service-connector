@@ -21,7 +21,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.scmp.SCMPHeadlineKey;
+import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 
 
@@ -48,10 +48,10 @@ public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPKeepAlive keepAlive = (SCMPKeepAlive) obj;
 		if (keepAlive.isReply()) {
-			SCMPHeadlineKey headerKey = SCMPHeadlineKey.KRS;
+			SCMPHeaderKey headerKey = SCMPHeaderKey.KRS;
 			writeHeadLine(bw, headerKey, 0, 0);
 		} else {
-			SCMPHeadlineKey headerKey = SCMPHeadlineKey.KRQ;
+			SCMPHeaderKey headerKey = SCMPHeaderKey.KRQ;
 			writeHeadLine(bw, headerKey, 0, 0);
 		}
 		return;

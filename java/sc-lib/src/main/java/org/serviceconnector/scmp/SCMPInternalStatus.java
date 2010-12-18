@@ -43,7 +43,7 @@ public enum SCMPInternalStatus {
 	 *            the header key
 	 * @return the internal status
 	 */
-	public static SCMPInternalStatus getInternalStatus(SCMPHeadlineKey headerKey) {
+	public static SCMPInternalStatus getInternalStatus(SCMPHeaderKey headerKey) {
 		switch (headerKey) {
 		case PRQ:
 			return SCMPInternalStatus.PRQ;

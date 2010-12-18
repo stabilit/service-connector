@@ -40,7 +40,7 @@ import org.serviceconnector.log.MessageLogger;
 import org.serviceconnector.scmp.SCMPBodyType;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPHeadlineKey;
+import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPPart;
@@ -70,9 +70,9 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		is.skip(1); // read LF
 
 		SCMPMessage scmpMsg = null;
-		// evaluating headline key and creating corresponding SCMP type
-		SCMPHeadlineKey headlineKey = SCMPHeadlineKey.getKeyByHeadline(headline);
-		switch (headlineKey) {
+		// evaluating header key and creating corresponding SCMP type
+		SCMPHeaderKey headerKey = SCMPHeaderKey.getKeyByHeadline(headline);
+		switch (headerKey) {
 		case KRS:
 		case KRQ:
 			scmpMsg = new SCMPKeepAlive();
@@ -136,11 +136,11 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		}
 
 		scmpMsg.setHeader(metaMap);
+		if (MessageLogger.isEnabled()) {
+			MessageLogger.logInputMessage(headerKey, scmpMsg);
+		}
 		if (scmpBodySize <= 0) {
 			// no body found stop decoding
-			if (MessageLogger.isEnabled()) {
-				MessageLogger.logInputMessage(this.getClass().getSimpleName(), scmpMsg);
-			}
 			return scmpMsg;
 		}
 		// decoding body - depends on body type
@@ -185,13 +185,10 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		} catch (Exception ex) {
 			logger.error("decode", ex);
 		}
-		if (MessageLogger.isEnabled()) {
-			MessageLogger.logInputMessage(this.getClass().getSimpleName(), scmpMsg);
-		}
 		return scmpMsg;
 	}
 
-	protected void writeHeadLine(BufferedWriter bw, SCMPHeadlineKey headerKey, int messageSize, int headerSize) throws IOException {
+	protected void writeHeadLine(BufferedWriter bw, SCMPHeaderKey headerKey, int messageSize, int headerSize) throws IOException {
 		bw.write(headerKey.toString());
 		bw.write(dfMsgSize.format(messageSize));
 		bw.write(dfHeaderSize.format(headerSize));

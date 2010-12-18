@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.serviceconnector.Constants;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPHeadlineKey;
+import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -17,7 +17,7 @@ public class TestUtil {
 	public static DecimalFormat dfMsg = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
 	public static DecimalFormat dfHeader = new DecimalFormat(Constants.SCMP_FORMAT_OF_HEADER_SIZE);
 
-	public static String getSCMPString(SCMPHeadlineKey headKey, String header, String body) {
+	public static String getSCMPString(SCMPHeaderKey headKey, String header, String body) {
 		int headerSize = 0;
 		int bodySize = 0;
 		String msgString = "";
