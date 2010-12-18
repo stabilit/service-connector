@@ -90,7 +90,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					os.flush();
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					if (MessageLogger.isEnabled()) {
-						MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+						MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
 					}
 					return;
 				}
@@ -114,7 +114,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					}
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					if (MessageLogger.isEnabled()) {
-						MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+						MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
 					}
 					return;
 				}
@@ -132,7 +132,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		}
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 		if (MessageLogger.isEnabled()) {
-			MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+			MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
 		}
 		return;
 	}

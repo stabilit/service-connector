@@ -139,7 +139,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		if (scmpBodySize <= 0) {
 			// no body found stop decoding
 			if (MessageLogger.isEnabled()) {
-				MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+				MessageLogger.logInputMessage(this.getClass().getSimpleName(), scmpMsg);
 			}
 			return scmpMsg;
 		}
@@ -186,7 +186,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			logger.error("decode", ex);
 		}
 		if (MessageLogger.isEnabled()) {
-			MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+			MessageLogger.logInputMessage(this.getClass().getSimpleName(), scmpMsg);
 		}
 		return scmpMsg;
 	}

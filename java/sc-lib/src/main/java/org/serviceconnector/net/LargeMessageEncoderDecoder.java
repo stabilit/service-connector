@@ -113,7 +113,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					if (MessageLogger.isEnabled()) {
-						MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+						MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
 					}
 					return;
 				}
@@ -140,7 +140,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					if (MessageLogger.isEnabled()) {
-						MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+						MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
 					}
 					return;
 				}
@@ -156,7 +156,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 					// set internal status to save communication state
 					scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 					if (MessageLogger.isEnabled()) {
-						MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+						MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
 					}
 					return;
 				}
@@ -176,7 +176,7 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		// set internal status to save communication state
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 		if (MessageLogger.isEnabled()) {
-			MessageLogger.logMessage(this.getClass().getSimpleName(), scmpMsg);
+			MessageLogger.logOutputMessage(this.getClass().getSimpleName(), scmpMsg);
 		}
 		return;
 	}

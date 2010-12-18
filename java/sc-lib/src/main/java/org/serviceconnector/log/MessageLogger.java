@@ -27,8 +27,8 @@ public class MessageLogger {
 
 	private static final Logger messageLogger = Logger.getLogger(Loggers.MESSAGE.getValue());
 
-	private static String MSG_LONG_STR = "msg:%s";
-	private static String MSG_SHORT_STR = "msg:%s";
+	private static String MSG_INPUT_STR = "<-:%s";
+	private static String MSG_OUTPUT_STR = "->:%s";
 
 	/**
 	 * Private constructor for singleton use.
@@ -40,11 +40,11 @@ public class MessageLogger {
 	 * @param className
 	 * @param message
 	 */
-	public static synchronized void logMessage(String className, SCMPMessage message) {
+	public static synchronized void logInputMessage(String className, SCMPMessage message) {
 		if (messageLogger.isTraceEnabled()) {
 			// write out all header attributes
 			Formatter format = new Formatter();
-			format.format(MSG_LONG_STR, message.getHeader().toString());
+			format.format(MSG_INPUT_STR, message.getHeader().toString());
 			messageLogger.trace(format.toString());
 			format.close();
 		} else if (messageLogger.isDebugEnabled()) {
@@ -61,7 +61,38 @@ public class MessageLogger {
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE,message));
 			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT,message));		
 			Formatter format = new Formatter();
-			format.format(MSG_SHORT_STR, builder.toString());
+			format.format(MSG_INPUT_STR, builder.toString());
+			messageLogger.debug(format.toString());
+			format.close();
+		}
+	}
+
+	/**
+	 * @param className
+	 * @param message
+	 */
+	public static synchronized void logOutputMessage(String className, SCMPMessage message) {
+		if (messageLogger.isTraceEnabled()) {
+			// write out all header attributes
+			Formatter format = new Formatter();
+			format.format(MSG_OUTPUT_STR, message.getHeader().toString());
+			messageLogger.trace(format.toString());
+			format.close();
+		} else if (messageLogger.isDebugEnabled()) {
+			// write out only important attributes
+			StringBuilder builder = new StringBuilder();
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MSG_TYPE,message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SERVICE_NAME,message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SESSION_ID,message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MASK,message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.IP_ADDRESS_LIST,message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.CASCADED_MASK,message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT,message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.CACHE_ID,message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE,message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT,message));		
+			Formatter format = new Formatter();
+			format.format(MSG_OUTPUT_STR, builder.toString());
 			messageLogger.debug(format.toString());
 			format.close();
 		}
