@@ -281,7 +281,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 
 		/** {@inheritDoc} */
 		@Override
-		public void callback(SCMPMessage scmpReply) {
+		public void receive(SCMPMessage scmpReply) {
 			// check for cache id
 			if (scmpReply.getCacheId() != null) {
 				// try save reply in cache
@@ -309,7 +309,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 
 		/** {@inheritDoc} */
 		@Override
-		public void callback(Exception ex) {
+		public void receive(Exception ex) {
 			SCMPMessage fault = null;
 			if (ex instanceof IdleTimeoutException) {
 				// operation timeout handling
@@ -330,7 +330,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				logger.warn("not possible to set service name in EXC of execute command.");
 			}
 			fault.setSessionId(sessionId);
-			this.callback(fault);
+			this.receive(fault);
 			// schedule session timeout
 			Session session = this.sessionRegistry.getSession(this.sessionId);
 			this.sessionRegistry.scheduleSessionTimeout(session);

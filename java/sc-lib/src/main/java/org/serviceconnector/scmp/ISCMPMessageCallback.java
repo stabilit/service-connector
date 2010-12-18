@@ -21,7 +21,7 @@ package org.serviceconnector.scmp;
  * 
  * @author JTraber
  */
-public interface ISCMPCallback {
+public interface ISCMPMessageCallback {
 
 	/**
 	 * Callback. This method gets informed when a message received.
@@ -31,7 +31,7 @@ public interface ISCMPCallback {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void callback(SCMPMessage scmpReply) throws Exception;
+	public abstract void receive(SCMPMessage scmpReply) throws Exception;
 
 	/**
 	 * Callback. This method gets informed in case of an error.
@@ -39,5 +39,5 @@ public interface ISCMPCallback {
 	 * @param ex
 	 *            the ex
 	 */
-	public abstract void callback(Exception ex);
+	public abstract void receive(Exception ex);
 }

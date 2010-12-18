@@ -78,9 +78,9 @@ public class SCServiceCallback extends SynchronousCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public void callback(SCMPMessage scmpReply) {
+	public void receive(SCMPMessage scmpReply) {
 		if (this.synchronous) {
-			super.callback(scmpReply);
+			super.receive(scmpReply);
 			return;
 		}
 		if (scmpReply.isFault()) {
@@ -111,10 +111,10 @@ public class SCServiceCallback extends SynchronousCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public void callback(Exception ex) {
+	public void receive(Exception ex) {
 		if (this.synchronous) {
 			// interested thread waits for message
-			super.callback(ex);
+			super.receive(ex);
 			return;
 		}
 		this.messageCallback.receive(ex);

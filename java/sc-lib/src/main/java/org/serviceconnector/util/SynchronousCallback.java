@@ -55,7 +55,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public void callback(SCMPMessage scmpReply) {
+	public void receive(SCMPMessage scmpReply) {
 		if (this.synchronous == false) {
 			// offering is only allowed if someone is expecting a message - prevents race conditions, an answer might
 			// arrive late after operation timeout already run out, can be ignored
@@ -72,7 +72,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public void callback(Exception ex) {
+	public void receive(Exception ex) {
 		if (this.synchronous == false) {
 			// offering is only allowed if someone is expecting a message - prevents race conditions, an answer might
 			// arrive late after operation timeout already run out, can be ignored

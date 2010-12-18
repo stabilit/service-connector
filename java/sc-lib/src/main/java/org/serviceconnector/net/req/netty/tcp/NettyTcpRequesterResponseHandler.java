@@ -28,7 +28,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.Statistics;
 
@@ -42,7 +42,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(NettyTcpRequesterResponseHandler.class);
 	/** The scmp callback. */
-	private ISCMPCallback scmpCallback;
+	private ISCMPMessageCallback scmpCallback;
 	/** The pending request. */
 	private volatile boolean pendingRequest;
 
@@ -60,7 +60,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 	 * @param callback
 	 *            the new callback
 	 */
-	public void setCallback(ISCMPCallback callback) {
+	public void setCallback(ISCMPMessageCallback callback) {
 		this.scmpCallback = callback;
 		this.pendingRequest = true;
 	}
@@ -85,7 +85,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			Exception ex = (Exception) th;
 			if (this.pendingRequest) {
 				this.pendingRequest = false;
-				this.scmpCallback.callback(ex);
+				this.scmpCallback.receive(ex);
 				return;
 			}
 			if (ex instanceof IdleTimeoutException) {
@@ -123,9 +123,9 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			ret = (SCMPMessage) encoderDecoder.decode(bais);
 		} catch (Exception ex) {
 			logger.warn("receive" + ex.toString());
-			this.scmpCallback.callback(ex);
+			this.scmpCallback.receive(ex);
 			return;
 		}
-		this.scmpCallback.callback(ret);
+		this.scmpCallback.receive(ret);
 	}
 }

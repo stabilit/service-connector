@@ -48,19 +48,19 @@ public class SCMPSrvChangeSubscriptionCall extends SCMPServerCallAdapter {
 	/**
 	 * Instantiates a new SCMPSrvChangeSubscriptionCall.
 	 * 
-	 * @param req
+	 * @param requester
 	 *            the requester
 	 * @param receivedMessage
 	 *            the received message
 	 */
-	public SCMPSrvChangeSubscriptionCall(IRequester req, SCMPMessage receivedMessage) {
-		super(req, receivedMessage);
+	public SCMPSrvChangeSubscriptionCall(IRequester requester, SCMPMessage receivedMessage) {
+		super(requester, receivedMessage);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
-		return new SCMPSrvChangeSubscriptionCall(req, receivedMessage);
+	public ISCMPCall newInstance(IRequester requester, SCMPMessage receivedMessage) {
+		return new SCMPSrvChangeSubscriptionCall(requester, receivedMessage);
 	}
 
 	/** {@inheritDoc} */

@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.connection;
 
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 
 /**
@@ -79,7 +79,7 @@ public interface IConnection {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception;
+	public abstract void send(SCMPMessage scmp, ISCMPMessageCallback callback) throws Exception;
 
 	/**
 	 * Disconnect.

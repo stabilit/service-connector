@@ -25,7 +25,7 @@ import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -62,7 +62,7 @@ public class SCMPSrvSubscribeCall extends SCMPServerCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
+	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
 		// adding ip of current unit to header field ip address list
 		InetAddress localHost = InetAddress.getLocalHost();
 		String ipList = this.requestMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);

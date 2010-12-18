@@ -33,7 +33,7 @@ import org.serviceconnector.net.CommunicationException;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.req.netty.NettyConnectionAdpater;
 import org.serviceconnector.net.req.netty.NettyOperationListener;
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -82,7 +82,7 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 
 	/** {@inheritDoc} */
 	@Override
-	public void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception {
+	public void send(SCMPMessage scmp, ISCMPMessageCallback callback) throws Exception {
 		// logger.info("send cache id = " + scmp.getCacheId());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scmp);

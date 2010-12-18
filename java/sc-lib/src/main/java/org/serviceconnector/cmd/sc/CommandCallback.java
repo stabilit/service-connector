@@ -51,7 +51,7 @@ public class CommandCallback extends SynchronousCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public void callback(Exception ex) {
+	public void receive(Exception ex) {
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
@@ -63,6 +63,6 @@ public class CommandCallback extends SynchronousCallback {
 		} else {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
 		}
-		super.callback(fault);
+		super.receive(fault);
 	}
 }

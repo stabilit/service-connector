@@ -21,7 +21,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnExecuteCall;
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPBodyType;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -62,7 +62,7 @@ public class SrvExecuteAsyncTestCase extends SuperSessionTestCase {
 		}
 	}
 
-	private class SrvExecuteTestCaseCallback implements ISCMPCallback {
+	private class SrvExecuteTestCaseCallback implements ISCMPMessageCallback {
 
 		private SCMPClnExecuteCall clnExecuteCall;
 
@@ -71,7 +71,7 @@ public class SrvExecuteAsyncTestCase extends SuperSessionTestCase {
 		}
 
 		@Override
-		public void callback(SCMPMessage scmpReply) throws Exception {
+		public void receive(SCMPMessage scmpReply) throws Exception {
 			SrvExecuteAsyncTestCase.pendingRequest = false;
 			Assert.assertEquals("message data test case", scmpReply.getBody());
 			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply
@@ -86,7 +86,7 @@ public class SrvExecuteAsyncTestCase extends SuperSessionTestCase {
 		}
 
 		@Override
-		public void callback(Exception ex) {
+		public void receive(Exception ex) {
 			SrvExecuteAsyncTestCase.pendingRequest = false;
 		}
 	}

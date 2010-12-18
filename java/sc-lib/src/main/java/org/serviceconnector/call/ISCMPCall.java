@@ -18,7 +18,7 @@
 package org.serviceconnector.call;
 
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
@@ -85,7 +85,7 @@ public interface ISCMPCall {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void invoke(ISCMPCallback callback, int timeoutMillis) throws Exception;
+	public void invoke(ISCMPMessageCallback callback, int timeoutMillis) throws Exception;
 
 	/**
 	 * Sets the body.
@@ -136,5 +136,5 @@ public interface ISCMPCall {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void closeGroup(ISCMPCallback callback, int timeoutMillis) throws Exception;
+	public void closeGroup(ISCMPMessageCallback callback, int timeoutMillis) throws Exception;
 }

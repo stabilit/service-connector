@@ -18,7 +18,7 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -54,7 +54,7 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
+	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
 		this.setVersion(SCMPMessage.SC_VERSION.toString());
 		this.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		super.invoke(scmpCallback, timeoutInMillis);

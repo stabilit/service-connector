@@ -19,15 +19,15 @@ package org.serviceconnector.scmp;
 /**
  * The Interface ISCMPSynchronousCallback.
  */
-public interface ISCMPSynchronousCallback extends ISCMPCallback {
+public interface ISCMPSynchronousCallback extends ISCMPMessageCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract void callback(SCMPMessage scmpReply) throws Exception;
+	public abstract void receive(SCMPMessage scmpReply) throws Exception;
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract void callback(Exception ex);
+	public abstract void receive(Exception ex);
 
 	/**
 	 * Careful, be aware of timeout concept if you use this method. Gets the message synchronous. Waits until message/fault received

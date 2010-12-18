@@ -18,7 +18,7 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPInternalStatus;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -126,13 +126,13 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** {@inheritDoc} */
 	@Override
-	public void closeGroup(ISCMPCallback callback, int timeoutMillis) {
+	public void closeGroup(ISCMPMessageCallback callback, int timeoutMillis) {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback callback, int timeoutInMillis) throws Exception {
+	public void invoke(ISCMPMessageCallback callback, int timeoutInMillis) throws Exception {
 		this.requestMessage.setMessageType(this.getMessageType());
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, timeoutInMillis);
 		this.requester.send(this.requestMessage, timeoutInMillis, callback);
@@ -190,7 +190,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 		/** {@inheritDoc} */
 		@Override
-		public void invoke(ISCMPCallback callback, int timeoutInMillis) throws Exception {
+		public void invoke(ISCMPMessageCallback callback, int timeoutInMillis) throws Exception {
 			if (this.groupState == SCMPGroupState.CLOSE) {
 				logger.warn("tried to invoke groupCall but state of group is closed");
 			}
@@ -223,7 +223,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 		/** {@inheritDoc} */
 		@Override
-		public void closeGroup(ISCMPCallback callback, int timeoutMillis) throws Exception {
+		public void closeGroup(ISCMPMessageCallback callback, int timeoutMillis) throws Exception {
 			this.groupState = SCMPGroupState.CLOSE;
 			// send empty closing REQ
 			SCMPMessage message = new SCMPMessage();

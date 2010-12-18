@@ -336,7 +336,7 @@ public class SCPublishService extends SCService {
 
 		/** {@inheritDoc} */
 		@Override
-		public void callback(SCMPMessage reply) {
+		public void receive(SCMPMessage reply) {
 			if (SCPublishService.this.sessionActive == false) {
 				// client is not subscribed anymore - stop continuing
 				return;
@@ -345,11 +345,11 @@ public class SCPublishService extends SCService {
 				// operation failed
 				SCMPMessageFault fault = (SCMPMessageFault) reply;
 				if (fault.getCause() != null) {
-					super.callback(fault.getCause());
+					super.receive(fault.getCause());
 				} else { // EXC received
 					SCServiceException ex = new SCServiceException("SCPublishService operation failed");
 					ex.setSCMPError(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-					super.callback(ex);
+					super.receive(ex);
 				}
 				return;
 			}
@@ -382,7 +382,7 @@ public class SCPublishService extends SCService {
 				} catch (Exception e) {
 					logger.info("subscribed " + e.toString());
 					SCMPMessageFault fault = new SCMPMessageFault(e);
-					super.callback(fault);
+					super.receive(fault);
 					return;
 				}
 			}

@@ -18,7 +18,7 @@ import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.IConnection;
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -80,7 +80,7 @@ public abstract class NettyConnectionAdpater implements IConnection {
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract void send(SCMPMessage scmp, ISCMPCallback callback) throws Exception;
+	public abstract void send(SCMPMessage scmp, ISCMPMessageCallback callback) throws Exception;
 
 	/** {@inheritDoc} */
 	@Override

@@ -25,7 +25,7 @@ import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
@@ -60,12 +60,12 @@ public class Requester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public void send(SCMPMessage message, int timeoutInMillis, ISCMPCallback callback) throws Exception {
+	public void send(SCMPMessage message, int timeoutInMillis, ISCMPMessageCallback callback) throws Exception {
 		// return an already connected live instance
 		IConnection connection = this.connectionPool.getConnection();
 		ConnectionContext connectionContext = connection.getContext();
 		try {
-			ISCMPCallback requesterCallback = new RequesterSCMPCallback(callback, connectionContext);
+			ISCMPMessageCallback requesterCallback = new RequesterSCMPCallback(callback, connectionContext);
 			// setting up operation timeout after successful send
 			TimeoutWrapper timeoutWrapper = new TimeoutWrapper((ITimeout) requesterCallback);
 			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
@@ -102,10 +102,10 @@ public class Requester implements IRequester {
 	 * The Class SCRequesterSCMPCallback. Component used for asynchronous communication. It gets informed at the time a reply is
 	 * received. Handles freeing up earlier requested connections.
 	 */
-	private class RequesterSCMPCallback implements ISCMPCallback, ITimeout {
+	private class RequesterSCMPCallback implements ISCMPMessageCallback, ITimeout {
 
 		/** The scmp callback, callback to inform next layer. */
-		private ISCMPCallback scmpCallback;
+		private ISCMPMessageCallback scmpCallback;
 		/** The connection context. */
 		private ConnectionContext connectionCtx;
 		/** The operation timeout. */
@@ -113,7 +113,7 @@ public class Requester implements IRequester {
 		/** The timeout in milliseconds. */
 		private int timeoutInMillis;
 
-		public RequesterSCMPCallback(ISCMPCallback scmpCallback, ConnectionContext connectionCtx) {
+		public RequesterSCMPCallback(ISCMPMessageCallback scmpCallback, ConnectionContext connectionCtx) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = connectionCtx;
 			this.operationTimeout = null;
@@ -122,19 +122,19 @@ public class Requester implements IRequester {
 
 		/** {@inheritDoc} */
 		@Override
-		public void callback(SCMPMessage scmpReply) throws Exception {
+		public void receive(SCMPMessage scmpReply) throws Exception {
 			// cancel operation timeout
 			this.operationTimeout.cancel(false);
 			// first handle connection - that user has a connection to work, if he has only 1
 			this.freeConnection();
-			this.scmpCallback.callback(scmpReply);
+			this.scmpCallback.receive(scmpReply);
 			// removes canceled oti timeouts
 			AppContext.otiScheduler.purge();
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		public void callback(Exception ex) {
+		public void receive(Exception ex) {
 			// cancel operation timeout
 			this.operationTimeout.cancel(false);
 			// first handle connection - that user has a connection to work, if he has only 1
@@ -145,7 +145,7 @@ public class Requester implements IRequester {
 				// another exception occurred - just free the connection
 				this.freeConnection();
 			}
-			this.scmpCallback.callback(ex);
+			this.scmpCallback.receive(ex);
 		}
 
 		/**
@@ -203,9 +203,9 @@ public class Requester implements IRequester {
 		public void timeout() {
 			this.disconnectConnection();
 			try {
-				this.scmpCallback.callback(new IdleTimeoutException("idle timeout. operation - could not be completed."));
+				this.scmpCallback.receive(new IdleTimeoutException("idle timeout. operation - could not be completed."));
 			} catch (Exception e) {
-				this.scmpCallback.callback(e);
+				this.scmpCallback.receive(e);
 			}
 		}
 	}

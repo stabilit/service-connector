@@ -18,7 +18,7 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
@@ -56,7 +56,7 @@ public class SCMPCheckRegistrationCall extends SCMPCallAdapter  {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPCallback scmpCallback, int timeoutInMillis) throws Exception {
+	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
 		super.invoke(scmpCallback, timeoutInMillis);
 	}
 

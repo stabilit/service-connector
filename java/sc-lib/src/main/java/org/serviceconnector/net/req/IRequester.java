@@ -16,7 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.req;
 
-import org.serviceconnector.scmp.ISCMPCallback;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 
 /**
@@ -39,7 +39,7 @@ public interface IRequester {
 	 * @throws Exception
 	 *             exception in sending/receiving process
 	 */
-	public void send(SCMPMessage scmp, int timeoutInMillis, ISCMPCallback callback) throws Exception;
+	public void send(SCMPMessage scmp, int timeoutInMillis, ISCMPMessageCallback callback) throws Exception;
 
 	/**
 	 * Returns a hash code which identifies client connection.
