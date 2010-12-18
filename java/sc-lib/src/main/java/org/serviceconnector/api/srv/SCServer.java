@@ -69,7 +69,8 @@ public class SCServer {
 		this(scHost, scPort, null, listenerPort, connectionType);
 	}
 
-	public SCServer(String scHost, int scPort, List<String> networkInterfaces, int listenerPort, ConnectionType connectionType) {
+	public SCServer(String scHost, int scPort, List<String> networkInterfaces, int listenerPort,
+			ConnectionType connectionType) {
 		this.nics = networkInterfaces;
 		this.responder = null;
 		this.requester = null;
@@ -127,8 +128,8 @@ public class SCServer {
 	}
 
 	/**
-	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes connection to
-	 * server at the time registerServer is received.
+	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes
+	 * connection to server at the time registerServer is received.
 	 * 
 	 * @param immediateConnect
 	 *            the new immediate connect
@@ -260,7 +261,7 @@ public class SCServer {
 		this.responder.destroy();
 	}
 
-	public void destroy() {
+	public synchronized void destroy() {
 		this.requester.destroy();
 		AppContext.destroy();
 	}

@@ -27,7 +27,6 @@ import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPPublishCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -55,23 +54,21 @@ public class SCPublishServer extends SCSessionServer {
 		if (publishMessage == null) {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "subscibeMessage can not be null");
 		}
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-		SrvService srvService = srvServiceRegistry.getSrvService(this.serviceName + "_" + this.scServer.getListenerPort());
-		if (srvService == null) {
-			throw new SCServiceException("Service not found, service name: " + this.serviceName);
-		}
-		SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(srvService.getRequester(),
-				serviceName);
-		publishCall.setRequestBody(publishMessage.getData());
-		publishCall.setMask(publishMessage.getMask());
-		SCServerCallback callback = new SCServerCallback(true);
-		publishCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		SCMPMessage message = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		if (message.isFault()) {
-			SCServiceException ex = new SCServiceException("publish failed");
-			ex.setSCMPError(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			throw ex;
+		synchronized (this.scServer) {
+			// get lock on scServer - only one server is allowed to communicate over the initial connection
+			ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester,
+					serviceName);
+			publishCall.setRequestBody(publishMessage.getData());
+			publishCall.setMask(publishMessage.getMask());
+			SCServerCallback callback = new SCServerCallback(true);
+			publishCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			SCMPMessage message = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			if (message.isFault()) {
+				SCServiceException ex = new SCServiceException("publish failed");
+				ex.setSCMPError(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				throw ex;
+			}
 		}
 	}
 }
