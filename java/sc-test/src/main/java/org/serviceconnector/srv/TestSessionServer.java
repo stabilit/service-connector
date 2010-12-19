@@ -131,8 +131,8 @@ public class TestSessionServer extends TestStatefulServer {
 				} else if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
 					try {
 						response.setReject(true);
-						response.setAppErrorCode(4000);
-						response.setAppErrorText("session rejected intentionaly!");
+						response.setAppErrorCode(TestConstants.appErrorCode);
+						response.setAppErrorText(TestConstants.appErrorText);
 					} catch (SCMPValidatorException e) {
 					}
 				}

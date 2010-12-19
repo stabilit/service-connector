@@ -418,8 +418,8 @@ public class APISubscribeTest {
 			subMsgResponse = service.subscribe(subMsgRequest, cbk);
 		} catch (SCServiceException e) {
 			passed = true;
-			Assert.assertEquals("is not appErrorCode", 4000, e.getAppErrorCode());
-			Assert.assertEquals("is not appErrorText", false, e.getAppErrorText().equals(""));
+			Assert.assertEquals("is not appErrorCode", TestConstants.appErrorCode, e.getAppErrorCode());
+			Assert.assertEquals("is not appErrorText", TestConstants.appErrorText, e.getAppErrorText());
 		}
 		Assert.assertTrue("did not throw exception", passed);
 		Assert.assertFalse("is subscribed", service.isSubscribed());

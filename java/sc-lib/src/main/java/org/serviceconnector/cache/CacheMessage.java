@@ -22,11 +22,15 @@ import java.util.Map;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SCMPCacheMessage.
+ * The Class CacheMessage.
  */
 public class CacheMessage implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6754331155322189585L;
 
 	/** The header. */
 	private Map<String, String> header;
@@ -36,18 +40,8 @@ public class CacheMessage implements Serializable {
 	/** The body. */
 	private Object body;
 
-//	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-//		System.out.println("CacheMessage.writeObject()");
-//		out.writeObject(this);	
-//	}
-//
-//	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-//		System.out.println("CacheMessage.readObject()");
-//		in.readObject();
-//	}
-
 	/**
-	 * Instantiates a new sCMP cache message.
+	 * Instantiates a new cache message.
 	 * 
 	 * @param body
 	 *            the body

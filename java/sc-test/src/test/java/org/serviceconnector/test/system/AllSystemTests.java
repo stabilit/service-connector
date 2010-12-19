@@ -27,31 +27,27 @@ import org.serviceconnector.test.system.api.publish.APIUnsubscribeTest;
 import org.serviceconnector.test.system.api.session.APIAfterSCAbortSessionTest;
 import org.serviceconnector.test.system.api.session.APIAfterServerAbortSessionTest;
 import org.serviceconnector.test.system.api.session.APIAfterServerRestartSessionTest;
-import org.serviceconnector.test.system.api.session.APICreateSessionTest;
-import org.serviceconnector.test.system.api.session.APIDeleteSessionTest;
-import org.serviceconnector.test.system.api.session.APIExecuteAsynchronousTest;
-import org.serviceconnector.test.system.api.session.APIExecuteTest;
+import org.serviceconnector.test.system.api.session.APICreateDeleteSessionTest;
+import org.serviceconnector.test.system.api.session.APIExecuteAndSendTest;
 import org.serviceconnector.test.system.scmp.SCMPClnCreateSessionTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
 		// API session tests
-		APICreateSessionTest.class, //
-		APIDeleteSessionTest.class, // 
-		APIExecuteTest.class, //
-		APIExecuteAsynchronousTest.class, //
-		APIAfterSCAbortSessionTest.class, //
-		APIAfterServerAbortSessionTest.class, //
-		APIAfterServerRestartSessionTest.class, //
+		APICreateDeleteSessionTest.class,
+		APIExecuteAndSendTest.class,
+		APIAfterSCAbortSessionTest.class,
+		APIAfterServerAbortSessionTest.class,
+		APIAfterServerRestartSessionTest.class,
 
 		// API publish tests
-		APISubscribeTest.class, // 
-		APIUnsubscribeTest.class, //
-		APIChangeSubscriptionTest.class, //
-		APIReceivePublicationTest.class, //
-		APIAfterSCAbortReceivePublicationTest.class, //
-		APIAfterServerAbortReceivePublicationTest.class, //
-		APIAfterServerRestartReceivePublicationTest.class, //
+		APISubscribeTest.class,
+		APIUnsubscribeTest.class,
+		APIChangeSubscriptionTest.class,
+		APIReceivePublicationTest.class,
+		APIAfterSCAbortReceivePublicationTest.class,
+		APIAfterServerAbortReceivePublicationTest.class,
+		APIAfterServerRestartReceivePublicationTest.class,
 
 		// SCMP session test
 		SCMPClnCreateSessionTest.class })

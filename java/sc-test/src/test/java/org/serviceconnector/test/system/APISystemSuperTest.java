@@ -13,37 +13,52 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.conf.apache.common.configuration;
+package org.serviceconnector.test.system;
 
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.serviceconnector.TestConstants;
+import org.serviceconnector.ctrl.util.ProcessCtx;
+import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 
-public class CommonConfigSample {
+public class APISystemSuperTest {
 
 	/** The Constant testLogger. */
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 	
-	public static void main(String[] args) {
-		String commonPropertiesFile = "org/serviceconnector/conf/apache/common/configuration/sc.common.properties";
-		CompositeConfiguration config = new CompositeConfiguration();
-		try {
-			PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration(commonPropertiesFile);
-			config.addConfiguration(propertiesConfiguration);
-			int a = config.getInt("a");
-			int b = config.getInt("b");
-			int c = config.getInt("c");
-			int d = config.getInt("d");
-			int e = config.getInt("e");
-			testLogger.info("a = " + a);
-			testLogger.info("b = " + b);
-			testLogger.info("c = " + c);
-			testLogger.info("d = " + d);
-			testLogger.info("e = " + e);
-		} catch (ConfigurationException e) {
-			e.printStackTrace();
-		}
+	protected static ProcessesController ctrl;
+	protected static ProcessCtx scCtx;
+	protected int threadCount = 0;
+	
+	@BeforeClass
+	public static void beforeAllTests() throws Exception {
+		ctrl = new ProcessesController();
 	}
+
+	@Before
+	public void beforeOneTest() throws Exception {
+		threadCount = Thread.activeCount();
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+	}
+
+	@After
+	public void afterOneTest() throws Exception {
+		try {
+			ctrl.stopSC(scCtx);
+		} catch (Exception e) {
+		}
+		scCtx = null;
+		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"
+				+ (Thread.activeCount() - threadCount));
+	}
+
+	@AfterClass
+	public static void afterAllTests() throws Exception {
+		ctrl = null;
+	}
+
 }

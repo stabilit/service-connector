@@ -87,22 +87,22 @@ public class SCSessionService extends SCService {
 	 *            the operation timeout seconds
 	 * @param scMessage
 	 *            the sc message
-	 * @param scMessagCallback
+	 * @param messageCallback
 	 *            TODO
 	 * @return the sC message
 	 * @throws Exception
 	 *             the exception
 	 */
 	public synchronized SCMessage createSession(int operationTimeoutSeconds, SCMessage scMessage,
-			SCMessageCallback scMessagCallback) throws Exception {
+			SCMessageCallback messageCallback) throws Exception {
 		if (this.sessionActive) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
-		if (scMessagCallback == null) {
-			throw new SCServiceException("sc message callback must be set.");
+		if (messageCallback == null) {
+			throw new SCServiceException("message callback must be set.");
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		this.messageCallback = scMessagCallback;
+		this.messageCallback = messageCallback;
 		this.requester.getContext().getSCMPMsgSequenceNr().reset();
 		SCServiceCallback callback = new SCServiceCallback(true);
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
@@ -199,7 +199,7 @@ public class SCSessionService extends SCService {
 		if (this.pendingRequest) {
 			// pending request - reply still outstanding
 			throw new SCServiceException(
-					"execute not possible, there is a pending request - two pending request are not allowed.");
+					"delete session not possible, there is a pending request - two pending request are not allowed.");
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
@@ -310,7 +310,7 @@ public class SCSessionService extends SCService {
 	public synchronized void send(int operationtTimeoutSeconds, SCMessage requestMsg)
 			throws Exception {
 		if (this.sessionActive == false) {
-			throw new SCServiceException("execute not possible, no active session.");
+			throw new SCServiceException("send not possible, no active session.");
 		}
 		if (requestMsg == null) {
 			throw new InvalidParameterException("Message must be set.");
@@ -318,7 +318,7 @@ public class SCSessionService extends SCService {
 		if (this.pendingRequest) {
 			// already executed before - reply still outstanding
 			throw new SCServiceException(
-					"execute not possible, there is a pending request - two pending request are not allowed.");
+					"send not possible, there is a pending request - two pending request are not allowed.");
 		}
 		ValidatorUtility.validateInt(1, operationtTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.pendingRequest = true;
@@ -343,7 +343,7 @@ public class SCSessionService extends SCService {
 			clnExecuteCall.invoke(scmpCallback, operationtTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
-			throw new SCServiceException("execute request failed ", e);
+			throw new SCServiceException("send request failed ", e);
 		}
 	}
 

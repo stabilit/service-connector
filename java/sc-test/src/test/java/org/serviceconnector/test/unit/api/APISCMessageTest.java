@@ -402,15 +402,6 @@ public class APISCMessageTest {
 	}
 
 	/**
-	 * Description: Set reject flag true<br>
-	 * Expectation: reject should be true
-	 */
-	public void t67_Reject() throws Exception {
-		message.setReject(true);
-		Assert.assertTrue("is not true", message.isReject());
-	}
-
-	/**
 	 * Description: Set Null-Value as AppErrorText<br>
 	 * Expectation: AppErrorText is set to Null
 	 */
@@ -587,8 +578,8 @@ public class APISCMessageTest {
 	}
 	
 	/**
-	 * Description: Set compress modus to true<br>
-	 * Expectation: Compress is set to true
+	 * Description: Set reject true<br>
+	 * Expectation: reject is set to true
 	 */
 	@Test
 	public void t100_Reject() {
@@ -597,8 +588,8 @@ public class APISCMessageTest {
 	}
 
 	/**
-	 * Description: Set compress modus to false<br>
-	 * Expectation: Compress is set to false
+	 * Description: Set reject modus to false<br>
+	 * Expectation: reject is set to false
 	 */
 	@Test
 	public void t101_Reject() {

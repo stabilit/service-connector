@@ -22,9 +22,36 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
-
 /**
- * The Enum SCVersion. Responsible to provide SCVersion and compatibility checks.
+ * Provides actual SC version method to check compatibility.
+ * 
+ * The SC versioning schema follows this philosophy </br>
+ * 
+ * <pre>
+ * 	A99.99-999 (Ex. V2.4-265)</br>
+ *    | |  |   |</br>
+ *    | |  |   +-- revision number</br>
+ *    | |  +-- version number</br>
+ *    | +-- release number</br>
+ *    +-- version type</br>
+ * </pre>
+ * 
+ * Version type designates the target and scope and can be: </br>
+ * <ul>
+ * <li>X – experimental, usually not distributed</li>
+ * <li>T – field test, deployed to selected customers</li>
+ * <li>X – experimental, usually not distributed</li>
+ * </ul>
+ *<p>
+ * Release number designates the major release (design) of the product. It starts at 1 and is incremented by 1. New release is
+ * usually a complete rewrite. V(i+1).xx-zzz is not compatible with V(i).xx-zzz
+ *<p>
+ * Version number designates the interface signature. It starts at 0 and is incremented by 1. New versions are compatible, but may
+ * contain additional features. V2.(x+1)-zzz is compatible with V2.(x)-zzz but needs recompilation and review of the application
+ * code where the product is used.
+ * 
+ * Revision number designates the actual development stage. It starts at 1 and is incremented by 1. New versions are fully
+ * compatible. V2.4-(z+1) is compatible with V2.4-z
  * 
  * @author JTraber
  */
@@ -37,7 +64,7 @@ public enum SCVersion {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCVersion.class);
-	
+
 	/** The Constant df. */
 	private static final DecimalFormat df = new DecimalFormat("000");
 

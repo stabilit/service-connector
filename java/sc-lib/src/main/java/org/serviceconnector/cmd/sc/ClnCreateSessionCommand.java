@@ -148,25 +148,25 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 
 			SCMPMessage reply = callback.getMessageSync(otiOnServerMillis);
 
-			if (reply.isFault() == false) {
+			if (reply.isFault()) {
+				// response is an error - remove session id from header
+				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+				// remove session from server
+				server.removeSession(session);
+			} else {
 				boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-				if (rejectSessionFlag == false) {
-					// session has not been rejected, add server to session
+				if (rejectSessionFlag) {
+					// session has been rejected by the server - remove session id from header
+					reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
+					// remove session from server
+					server.removeSession(session);
+				} else {
+					// session has not accepted, add server to session
 					session.setServer(server);
 					session.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());
 					// finally add session to the registry
 					this.sessionRegistry.addSession(session.getId(), session);
-				} else {
-					// session has been rejected - remove session id from header
-					reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-					// creation failed remove from server
-					server.removeSession(session);
 				}
-			} else {
-				// session has been rejected - remove session id from header
-				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-				// creation failed remove from server
-				server.removeSession(session);
 			}
 			// forward server reply to client
 			reply.setIsReply(true);
