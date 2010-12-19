@@ -25,10 +25,10 @@ import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.test.system.APISystemSuperClientTest;
+import org.serviceconnector.test.system.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
-public class APICreateDeleteSessionTest extends APISystemSuperClientTest {
+public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest {
 
 	private SCSessionService service;
 
@@ -73,8 +73,9 @@ public class APICreateDeleteSessionTest extends APISystemSuperClientTest {
 
 	/**
 	 * Description: Create session to file service<br>
-	 * Expectation: throws SCServiceException (unfortunatelly this passes because file services uses sessions) TODO TRN
+	 * Expectation: throws SCServiceException (unfortunatelly this passes because file services uses sessions)
 	 * file service accepts create session (sessionService)
+	 * TODO JOT/TRN how do we distinguish between session for file services??
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t03_createSession() throws Exception {
@@ -305,14 +306,17 @@ public class APICreateDeleteSessionTest extends APISystemSuperClientTest {
 		SCMessage response = new SCMessage();
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo(TestConstants.rejectSessionCmd);
+		Boolean passed = false;
 		try {
 			cbk = new MsgCallback(service);
 			response = service.createSession(request, cbk);
 		} catch (SCServiceException e) {
+			passed = true;
 			Assert.assertNull("the session ID is NOT null", service.getSessionId());
 			Assert.assertEquals("is not appErrorCode", TestConstants.appErrorCode, e.getAppErrorCode());
 			Assert.assertEquals("is not appErrorText", TestConstants.appErrorText, e.getAppErrorText());
 		}
+		Assert.assertTrue("did not throw exception", passed);
 		service.deleteSession();
 	}
 	

@@ -21,10 +21,10 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.test.system.APISystemSuperClientTest;
+import org.serviceconnector.test.system.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
-public class APIAfterSCAbortSessionTest extends APISystemSuperClientTest {
+public class APIAfterSCAbortSessionTest extends APISystemSuperSessionClientTest {
 
 	private SCSessionService service;
 

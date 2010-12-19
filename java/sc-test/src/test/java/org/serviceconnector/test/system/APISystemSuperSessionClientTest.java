@@ -29,7 +29,7 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.service.SCServiceException;
 
-public class APISystemSuperClientTest extends APISystemSuperTest {
+public class APISystemSuperSessionClientTest extends APISystemSuperTest {
 
 	protected SCClient client;
 	protected ProcessCtx srvCtx;
@@ -87,7 +87,7 @@ public class APISystemSuperClientTest extends APISystemSuperTest {
 		@Override
 		public void receive(SCMessage msg) {
 			response = msg;
-			APISystemSuperClientTest.messageReceived = true;
+			APISystemSuperSessionClientTest.messageReceived = true;
 		}
 
 		@Override
@@ -100,8 +100,7 @@ public class APISystemSuperClientTest extends APISystemSuperTest {
 				logger.error("receive error: " + e.getMessage());
 			}
 			response = null;
-			APISystemSuperClientTest.messageReceived = true;
+			APISystemSuperSessionClientTest.messageReceived = true;
 		}
 	}
-
 }

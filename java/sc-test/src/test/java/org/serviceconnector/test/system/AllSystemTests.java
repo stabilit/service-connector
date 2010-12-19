@@ -20,10 +20,8 @@ import org.junit.runners.Suite;
 import org.serviceconnector.test.system.api.publish.APIAfterSCAbortReceivePublicationTest;
 import org.serviceconnector.test.system.api.publish.APIAfterServerAbortReceivePublicationTest;
 import org.serviceconnector.test.system.api.publish.APIAfterServerRestartReceivePublicationTest;
-import org.serviceconnector.test.system.api.publish.APIChangeSubscriptionTest;
 import org.serviceconnector.test.system.api.publish.APIReceivePublicationTest;
-import org.serviceconnector.test.system.api.publish.APISubscribeTest;
-import org.serviceconnector.test.system.api.publish.APIUnsubscribeTest;
+import org.serviceconnector.test.system.api.publish.APISubscribeUnsubscribeChangeTest;
 import org.serviceconnector.test.system.api.session.APIAfterSCAbortSessionTest;
 import org.serviceconnector.test.system.api.session.APIAfterServerAbortSessionTest;
 import org.serviceconnector.test.system.api.session.APIAfterServerRestartSessionTest;
@@ -41,9 +39,7 @@ import org.serviceconnector.test.system.scmp.SCMPClnCreateSessionTest;
 		APIAfterServerRestartSessionTest.class,
 
 		// API publish tests
-		APISubscribeTest.class,
-		APIUnsubscribeTest.class,
-		APIChangeSubscriptionTest.class,
+		APISubscribeUnsubscribeChangeTest.class,
 		APIReceivePublicationTest.class,
 		APIAfterSCAbortReceivePublicationTest.class,
 		APIAfterServerAbortReceivePublicationTest.class,
