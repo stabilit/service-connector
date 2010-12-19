@@ -44,7 +44,7 @@ public class APIAfterServerRestartReceivePublicationTest extends APISystemSuperP
 				TestConstants.pubServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
 				TestConstants.pubServiceName1);
 		
-		waitForMessage(10);
+		cbk.waitForMessage(10);
 		Assert.assertTrue("Test is not implemented", false);
 	}
 	}

@@ -56,7 +56,7 @@ public class APIAfterServerAbortReceivePublicationTest extends APISystemSuperPub
 		
 		ctrl.stopServer(srvCtx);
 		
-		waitForMessage(10);
+		cbk.waitForMessage(10);
 		Assert.assertTrue("Test is not implemented", false);
 	}
 }

@@ -34,7 +34,6 @@ public class APISystemSuperPublishClientTest extends APISystemSuperTest {
 
 	protected SCClient client;
 	protected ProcessCtx srvCtx;
-	protected static boolean messageReceived = false;
 	protected MsgCallback cbk = null;
 
 	@Before
@@ -45,7 +44,6 @@ public class APISystemSuperPublishClientTest extends APISystemSuperTest {
 				TestConstants.pubServiceName1);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		messageReceived = false;
 	}
 
 	@After
@@ -64,30 +62,29 @@ public class APISystemSuperPublishClientTest extends APISystemSuperTest {
 	}
 
 	
-	protected void waitForMessage(int nrSeconds) throws Exception {
-		for (int i = 0; i < (nrSeconds * 10); i++) {
-			if (messageReceived) {
-				return;
-			}
-			Thread.sleep(100);
-		}
-		throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
-	}
-
 	protected class MsgCallback extends SCMessageCallback {
 
-		private SCMessage message = null;
-		private int messageCounter = 0;
-		private int expectedMessages = 0;
+		private SCMessage message;
+		private int messageCounter;
+		private int expectedMessages;
 
 		public MsgCallback(SCService service) {
 			super(service);
-			APIReceivePublicationTest.messageReceived = false;
 			message = null;
 			messageCounter = 0;
-			expectedMessages = 0;
+			expectedMessages = 1;
 		}
 
+		public void waitForMessage(int nrSeconds) throws Exception {
+			for (int i = 0; i < (nrSeconds * 10); i++) {
+				if (messageCounter == expectedMessages) {
+					return;
+				}
+				Thread.sleep(100);
+			}
+			throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
+		}
+		
 		public SCMessage getMessage() {
 			return message;
 		}
@@ -100,14 +97,10 @@ public class APISystemSuperPublishClientTest extends APISystemSuperTest {
 			return messageCounter;
 		}
 		
-		
 		@Override
 		public void receive(SCMessage msg) {
 			message = msg;
 			messageCounter++;
-			if (expectedMessages == messageCounter) {
-				APIReceivePublicationTest.messageReceived = true;
-			}
 			if (((messageCounter + 1) % 100) == 0) {
 				APIReceivePublicationTest.testLogger.info("Receiving message nr. " + (messageCounter + 1));
 			}
@@ -121,7 +114,7 @@ public class APISystemSuperPublishClientTest extends APISystemSuperTest {
 				logger.info("SC error received code:" + scError.getErrorCode() + " text:" + scError.getErrorText());
 			}
 			message = null;
-			APIReceivePublicationTest.messageReceived = true;
+			messageCounter = expectedMessages;
 		}
 	}
 
