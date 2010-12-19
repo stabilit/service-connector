@@ -16,6 +16,7 @@ import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.service.SCServiceException;
 
 public class APIAfterServerRestartSessionTest {
 
@@ -82,9 +83,9 @@ public class APIAfterServerRestartSessionTest {
 
 	/**
 	 * Description: regular exchange messages<br>
-	 * Expectation: passes
+	 * Expectation: throws SCServiceException
 	 */
-	@Test
+	@Test (expected = SCServiceException.class)
 	public void t01_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
@@ -98,14 +99,9 @@ public class APIAfterServerRestartSessionTest {
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
 				TestConstants.sesServiceName1);
-		//TODO JAN was willst du hier testen?? .. execute wirft SCServiceException korrekt oder?
+
 		response = service.execute(request);
-		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
-		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
-		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		Assert.assertEquals("appErrorCode is not set", TestConstants.appErrorCode, response.getAppErrorCode());
-		Assert.assertEquals("appErrorText is not set", TestConstants.appErrorText, response.getAppErrorText());
-		service.deleteSession();
+
 	}
 
 }

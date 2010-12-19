@@ -175,41 +175,38 @@ public class APICreateSessionTest {
 
 	/**
 	 * Description: Create session with operationTimeout = 0<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test(expected = SCServiceException.class)
 	public void t06_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(0, request, cbk);
-		service.deleteSession();
 	}
 
 	/**
 	 * Description: Create session with operationTimeout = -1<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test(expected = SCServiceException.class)
 	public void t07_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(-1, request, cbk);
-		service.deleteSession();
 	}
 
 	/**
 	 * Description: Create session with operationTimeout = 3601<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test(expected = SCServiceException.class)
 	public void t08_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		response = service.createSession(3601, request, cbk);
-		service.deleteSession();
 	}
 
 	/**
