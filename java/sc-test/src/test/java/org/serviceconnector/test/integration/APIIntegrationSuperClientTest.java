@@ -22,6 +22,8 @@ import org.serviceconnector.api.cln.SCClient;
 public class APIIntegrationSuperClientTest extends APIIntegrationSuperTest {
 
 	protected SCClient client;
+	protected static boolean messageReceived = false;
+	private int threadCount = 0;
 	
 	@Before
 	public void beforeOneTest() throws Exception {

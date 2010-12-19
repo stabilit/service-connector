@@ -305,7 +305,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.echoAppErrorCmd);
 		service.send(request);
-		waitForMessage(10);
+		cbk.waitForMessage(10);
 		response = cbk.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -330,7 +330,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.echoCmd);
 		service.send(request);
-		waitForMessage(10);
+		cbk.waitForMessage(10);
 		response = cbk.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -355,7 +355,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		response = service.createSession(new SCMessage(), cbk);
 		request.setMessageInfo(TestConstants.echoCmd);
 		service.send(request);
-		waitForMessage(20);
+		cbk.waitForMessage(20);
 		response = cbk.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -380,7 +380,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		response = service.createSession(new SCMessage(), cbk);
 		request.setMessageInfo(TestConstants.echoCmd);
 		service.send(request);
-		waitForMessage(20);
+		cbk.waitForMessage(20);
 		response = cbk.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -424,7 +424,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		// send
 		request.setMessageInfo(TestConstants.echoCmd);
 		service.send(request);
-		waitForMessage(10);
+		cbk.waitForMessage(10);
 		response = cbk.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -468,7 +468,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
 		service.send(request);
-		waitForMessage(10);
+		cbk.waitForMessage(10);
 		response = cbk.getResponse();
 		Assert.assertEquals("sessionId is not the same", sessionId, response.getSessionId());
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
@@ -491,7 +491,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); 		// server will sleep 5000ms
 		service.send(3, request); 		// SC oti = 3*0.8*1000 = 2400ms => will return exception
-		waitForMessage(10);
+		cbk.waitForMessage(10);
 		response = cbk.getResponse();
 		// TODO TRN check SC error
 	}
@@ -510,7 +510,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); 		// server will sleep 5000ms
 		service.send(3, request); 		// SC oti = 3*0.8*1000 = 2400ms => will return exception
-		waitForMessage(10); 			// will wait max 10 seconds for response
+		cbk.waitForMessage(10); 			// will wait max 10 seconds for response
 		response = cbk.getResponse();
 		Thread.sleep(4000); 			//wait 4000ms to allow server sleep request completion
 
@@ -519,7 +519,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("hallo"); 		// send second message
 		service.send(request);
-		waitForMessage(10); 			// will wait max 10 seconds for the second response
+		cbk.waitForMessage(10); 			// will wait max 10 seconds for the second response
 		response = cbk.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -541,7 +541,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); 		// server will sleep 5000ms
 		service.send(3, request); 		// SC oti = 3*0.8*1000 = 2400ms => will return exception
-		waitForMessage(10); 			// will wait max 10 seconds for response
+		cbk.waitForMessage(10); 			// will wait max 10 seconds for response
 		response = cbk.getResponse();
 
 		// second message
@@ -549,7 +549,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("gaga");
 		service.send(request);
-		waitForMessage(10); 			// will wait max 10 seconds for response
+		cbk.waitForMessage(10); 			// will wait max 10 seconds for response
 		response = cbk.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());

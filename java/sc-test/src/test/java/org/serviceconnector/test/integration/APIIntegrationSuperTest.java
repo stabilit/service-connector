@@ -30,7 +30,6 @@ public class APIIntegrationSuperTest {
 	
 	protected static ProcessesController ctrl;
 	protected static ProcessCtx scCtx;
-	protected int threadCount = 0;
 	
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {

@@ -15,7 +15,6 @@
  */
 package org.serviceconnector.test.integration.api.cln;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,11 +25,7 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.integration.APIIntegrationSuperClientTest;
 
-
 public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
-
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(APIEnableDisableServiceTest.class);
 
 	private SCMgmtClient client;
 	

@@ -34,6 +34,7 @@ public class APIIntegrationSuperServerTest extends APIIntegrationSuperTest {
 	protected SCServer server;
 	protected SCSessionServer sessionServer = null;
 	protected SCPublishServer publishServer = null;
+	private int threadCount = 0;
 	
 	@Before
 	public void beforeOneTest() throws Exception {

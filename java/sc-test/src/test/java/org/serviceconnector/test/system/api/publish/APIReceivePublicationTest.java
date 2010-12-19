@@ -206,9 +206,9 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		response = cbk2.getMessage();
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
 		
-		service1.unsubscribe();
+		service1.unsubscribe(2);
 		Assert.assertNull("the session ID is not null)", service1.getSessionId());
-		service2.unsubscribe();
+		service2.unsubscribe(2);
 		Assert.assertNull("the session ID is not null)", service2.getSessionId());
 	}
 

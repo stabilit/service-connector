@@ -261,7 +261,7 @@ public class ProcessesController {
 					SCSubscribeMessage scMessage = new SCSubscribeMessage();
 					SCMessageCallback cbk = new MsgCallback(scPublishService);
 					scMessage.setSessionInfo(TestConstants.killServerCmd);
-					scMessage.setMask("ABCD");
+					scMessage.setMask("ABCD"); // dummy (mask may not be empty)
 					try {
 						scPublishService.subscribe(scMessage, cbk);
 					} catch (SCServiceException ex) {

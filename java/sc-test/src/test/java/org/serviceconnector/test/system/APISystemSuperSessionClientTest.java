@@ -62,17 +62,7 @@ public class APISystemSuperSessionClientTest extends APISystemSuperTest {
 		super.afterOneTest();
 	}
 
-	protected void waitForMessage(int nrSeconds) throws Exception {
-		for (int i = 0; i < (nrSeconds * 10); i++) {
-			if (messageReceived) {
-				return;
-			}
-			Thread.sleep(100);
-		}
-		throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
-	}
 
-	
 	protected class MsgCallback extends SCMessageCallback {
 		private SCMessage response = null;
 
@@ -84,6 +74,17 @@ public class APISystemSuperSessionClientTest extends APISystemSuperTest {
 			return response;
 		}
 
+		public void waitForMessage(int nrSeconds) throws Exception {
+			for (int i = 0; i < (nrSeconds * 10); i++) {
+				if (APISystemSuperSessionClientTest.messageReceived) {
+					return;
+				}
+				Thread.sleep(100);
+			}
+			throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
+		}
+
+		
 		@Override
 		public void receive(SCMessage msg) {
 			response = msg;
