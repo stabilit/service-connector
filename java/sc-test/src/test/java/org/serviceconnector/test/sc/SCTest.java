@@ -25,11 +25,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.serviceconnector.test.integration.scmp.ConnectionPoolTest;
-import org.serviceconnector.test.sc.group.GroupCallTestCase;
 import org.serviceconnector.test.sc.publish.PublishLargeMessagesTestCase;
 import org.serviceconnector.test.sc.scVersion.SCVersionToSCTest;
-import org.serviceconnector.test.sc.session.ClnCreateSessionWaitMechanismTestCase;
-import org.serviceconnector.test.sc.session.SessionTimeoutTestCase;
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeTestCase;
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeWaitMechanismTestCase;
 import org.serviceconnector.test.sc.subscriptionChange.ClnChangeSubscriptionTestCase;
@@ -50,7 +47,6 @@ import org.serviceconnector.test.unit.scmp.SCMPLargeResponseTest;
  */
 @RunWith(Suite.class)
 @SuiteClasses( { 
-	ClnCreateSessionWaitMechanismTestCase.class,
 		SCMPClnExecuteTest.class,
 		ClnSubscribeTestCase.class,
 		ClnSubscribeWaitMechanismTestCase.class,
@@ -59,8 +55,7 @@ import org.serviceconnector.test.unit.scmp.SCMPLargeResponseTest;
 		ConnectionPoolTest.class, 
 		SCVersionToSCTest.class,
 		DecodeSCMPVersionTest.class,
-		SessionTimeoutTestCase.class,
-		GroupCallTestCase.class,
+		
 		// SCImplTestCases
 		DefaultFrameDecoderTest.class,
 		HttpFrameDecoderTest.class,

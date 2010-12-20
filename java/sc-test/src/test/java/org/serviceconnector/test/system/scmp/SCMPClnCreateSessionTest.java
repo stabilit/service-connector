@@ -29,6 +29,7 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
+import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
@@ -67,7 +68,7 @@ public class SCMPClnCreateSessionTest {
 		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
-				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10, TestConstants.sesServiceName1);
+				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 1, 1, TestConstants.sesServiceName1);
 		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
 	}
@@ -174,5 +175,32 @@ public class SCMPClnCreateSessionTest {
 		Assert.assertNull(sessId);
 		Assert.assertFalse(responseMessage.isFault());
 		Assert.assertTrue(responseMessage.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION));
+	}
+
+	/**
+	 * Description: create session call - wait until session times out<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t30_ClnCreateSessionSessionTimesOut() throws Exception {
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
+				this.requester, TestConstants.sesServerName1);
+		createSessionCall.setSessionInfo("sessionInfo");
+		createSessionCall.setEchoIntervalSeconds(1);
+		TestCallback cbk = new TestCallback();
+		createSessionCall.invoke(cbk, 4000);
+		SCMPMessage responseMessage = cbk.getMessageSync(3000);
+		TestUtil.checkReply(responseMessage);
+
+		String sessionId = responseMessage.getSessionId();
+		// wait until session times out and get cleaned up
+		Thread.sleep(1000);
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+				TestConstants.sesServerName1, sessionId);
+		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);
+		clnExecuteCall.setRequestBody(TestConstants.pangram);
+		clnExecuteCall.invoke(cbk, 1000);
+		SCMPMessage msg = cbk.getMessageSync(3000);
+		TestUtil.verifyError(msg, SCMPError.NOT_FOUND, SCMPMsgType.CLN_EXECUTE);
 	}
 }

@@ -29,6 +29,7 @@ import org.serviceconnector.test.system.api.session.APICreateDeleteSessionTest;
 import org.serviceconnector.test.system.api.session.APIExecuteAndSendTest;
 import org.serviceconnector.test.system.scmp.SCMPClnCreateSessionTest;
 import org.serviceconnector.test.system.scmp.SCMPClnExecuteTest;
+import org.serviceconnector.test.system.scmp.SCMPGroupCallTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
@@ -48,7 +49,8 @@ import org.serviceconnector.test.system.scmp.SCMPClnExecuteTest;
 
 		// SCMP session test
 		SCMPClnCreateSessionTest.class,
-		SCMPClnExecuteTest.class
+		SCMPClnExecuteTest.class,
+		SCMPGroupCallTest.class
 		})
 public class AllSystemTests {
 }
