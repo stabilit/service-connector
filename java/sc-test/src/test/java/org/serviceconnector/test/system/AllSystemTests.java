@@ -28,6 +28,7 @@ import org.serviceconnector.test.system.api.session.APIAfterServerRestartSession
 import org.serviceconnector.test.system.api.session.APICreateDeleteSessionTest;
 import org.serviceconnector.test.system.api.session.APIExecuteAndSendTest;
 import org.serviceconnector.test.system.scmp.SCMPClnCreateSessionTest;
+import org.serviceconnector.test.system.scmp.SCMPClnExecuteTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
@@ -46,6 +47,7 @@ import org.serviceconnector.test.system.scmp.SCMPClnCreateSessionTest;
 		APIAfterServerRestartReceivePublicationTest.class,
 
 		// SCMP session test
-		SCMPClnCreateSessionTest.class })
+		SCMPClnCreateSessionTest.class,
+		SCMPClnExecuteTest.class})
 public class AllSystemTests {
 }
