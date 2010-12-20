@@ -26,7 +26,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.serviceconnector.test.integration.scmp.ConnectionPoolTest;
 import org.serviceconnector.test.sc.group.GroupCallTestCase;
-import org.serviceconnector.test.sc.manage.ManageTestCase;
 import org.serviceconnector.test.sc.operationTimeout.SrvExecuteOTITestCase;
 import org.serviceconnector.test.sc.publish.PublishLargeMessagesTestCase;
 import org.serviceconnector.test.sc.register.DeRegisterServerTestCase;
@@ -63,7 +62,6 @@ import org.serviceconnector.test.unit.scmp.SCMPLargeResponseTest;
 		ClnSubscribeWaitMechanismTestCase.class,
 		ClnChangeSubscriptionTestCase.class,
 		PublishLargeMessagesTestCase.class,
-		ManageTestCase.class,
 		ConnectionPoolTest.class, 
 		SCVersionToSCTest.class,
 		DecodeSCMPVersionTest.class,
