@@ -34,8 +34,6 @@ import org.serviceconnector.test.sc.register.RegisterServerTestCase;
 import org.serviceconnector.test.sc.scVersion.SCVersionToSCTest;
 import org.serviceconnector.test.sc.session.ClnCreateSessionWaitMechanismTestCase;
 import org.serviceconnector.test.sc.session.SessionTimeoutTestCase;
-import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteAsyncTestCase;
-import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteLargeAsyncTestCase;
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeTestCase;
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeWaitMechanismTestCase;
 import org.serviceconnector.test.sc.subscriptionChange.ClnChangeSubscriptionTestCase;
@@ -60,8 +58,6 @@ import org.serviceconnector.test.unit.scmp.SCMPLargeResponseTest;
 		RegisterServerTestCase.class,
 		DeRegisterServerTestCase.class,
 		SCMPClnExecuteTest.class,
-		SrvExecuteAsyncTestCase.class,
-		SrvExecuteLargeAsyncTestCase.class,
 		SrvExecuteOTITestCase.class,
 		ClnSubscribeTestCase.class,
 		ClnSubscribeWaitMechanismTestCase.class,
