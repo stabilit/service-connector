@@ -148,6 +148,13 @@ public class SCMPLargeResponse extends SCMPMessage {
 	private Object mergePartBodies() {
 		// put all parts together to get complete body
 		SCMPMessage firstScmp = scmpList.get(0);
+		for (int i = 0; i < scmpList.size(); i++) {
+			firstScmp = scmpList.get(i);
+			if (firstScmp.getBodyLength() != 0) {
+				// first scmp with body found continue
+				break;
+			}
+		}
 		if (firstScmp.isByteArray()) {
 			this.outputStream = new ByteArrayOutputStream();
 			try {

@@ -59,6 +59,7 @@ public class Requester implements IRequester {
 	}
 
 	/** {@inheritDoc} */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void send(SCMPMessage message, int timeoutInMillis, ISCMPMessageCallback callback) throws Exception {
 		// return an already connected live instance
@@ -146,6 +147,8 @@ public class Requester implements IRequester {
 				this.freeConnection();
 			}
 			this.scmpCallback.receive(ex);
+			// removes canceled oti timeouts
+			AppContext.otiScheduler.purge();
 		}
 
 		/**

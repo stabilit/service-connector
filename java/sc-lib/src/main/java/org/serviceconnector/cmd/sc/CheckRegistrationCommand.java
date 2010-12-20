@@ -70,7 +70,6 @@ public class CheckRegistrationCommand extends CommandAdapter {
 			cmdExc.setMessageType(getKey());
 			throw cmdExc;
 		}
-
 		// send back positive response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
