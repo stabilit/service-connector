@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.test.system.scmp;
+package org.serviceconnector.test.integration.scmp;
 
 import junit.framework.Assert;
 
@@ -40,7 +40,6 @@ import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.integration.scmp.TestCallback;
 
 public class SCMPManageTest {
 	/** The Constant testLogger. */

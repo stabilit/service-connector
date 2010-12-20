@@ -17,7 +17,6 @@ package org.serviceconnector.test.system;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.call.SCMPManageCall;
 import org.serviceconnector.test.system.api.publish.APIAfterSCAbortReceivePublicationTest;
 import org.serviceconnector.test.system.api.publish.APIAfterServerAbortReceivePublicationTest;
 import org.serviceconnector.test.system.api.publish.APIAfterServerRestartReceivePublicationTest;
@@ -30,7 +29,6 @@ import org.serviceconnector.test.system.api.session.APICreateDeleteSessionTest;
 import org.serviceconnector.test.system.api.session.APIExecuteAndSendTest;
 import org.serviceconnector.test.system.scmp.SCMPClnCreateSessionTest;
 import org.serviceconnector.test.system.scmp.SCMPClnExecuteTest;
-import org.serviceconnector.test.system.scmp.SCMPManageTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
@@ -50,7 +48,7 @@ import org.serviceconnector.test.system.scmp.SCMPManageTest;
 
 		// SCMP session test
 		SCMPClnCreateSessionTest.class,
-		SCMPClnExecuteTest.class,
-		SCMPManageTest.class})
+		SCMPClnExecuteTest.class
+		})
 public class AllSystemTests {
 }

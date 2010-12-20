@@ -17,6 +17,7 @@ package org.serviceconnector.test.integration;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.serviceconnector.call.SCMPManageCall;
 import org.serviceconnector.test.integration.api.cln.APIAfterSCAbortClientTest;
 import org.serviceconnector.test.integration.api.cln.APIAfterSCRestartClientTest;
 import org.serviceconnector.test.integration.api.cln.APIAttachDetachClientTest;
@@ -31,6 +32,7 @@ import org.serviceconnector.test.integration.api.srv.APIRegisterPublishServerTes
 import org.serviceconnector.test.integration.api.srv.APIRegisterSessionServerTest;
 import org.serviceconnector.test.integration.scmp.ConnectionPoolTest;
 import org.serviceconnector.test.integration.scmp.SCMPAttachDetachTest;
+import org.serviceconnector.test.integration.scmp.SCMPManageTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
@@ -53,6 +55,7 @@ import org.serviceconnector.test.integration.scmp.SCMPAttachDetachTest;
 		// SCMP client test
 		SCMPAttachDetachTest.class,
 		ConnectionPoolTest.class,
+		SCMPManageTest.class
 })
 public class AllIntegrationTests {
 }
