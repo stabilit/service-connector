@@ -138,7 +138,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 */
 	@Test
 	public void t010_disabledService() throws Exception {
-		SCMessage request = new SCMessage(new byte[128]);
+		SCMessage request = new SCMessage("tesst");
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		cbk = new MsgCallback(service);

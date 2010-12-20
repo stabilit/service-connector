@@ -172,7 +172,7 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		SCPublishService service1 = client.newPublishService(TestConstants.pubServiceName1);
 		SCPublishService service2 = client.newPublishService(TestConstants.pubServiceName1);
 		
-		int nrMessages = 100;
+		int nrMessages = 10000;
 		MsgCallback cbk1 = new MsgCallback(service1);
 		cbk1.setExpectedMessages(nrMessages);
 		MsgCallback cbk2 = new MsgCallback(service2);
@@ -181,8 +181,6 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setData(Integer.toString(nrMessages));
 		
 		subMsgResponse = service1.subscribe(subMsgRequest, cbk1);
@@ -191,17 +189,18 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 		Assert.assertTrue("is not subscribed", service1.isSubscribed());
 		
+		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		subMsgResponse = service2.subscribe(subMsgRequest, cbk2);
 		Assert.assertNotNull("the session ID is null", service2.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 		Assert.assertTrue("is not subscribed", service2.isSubscribed());
 		
-		cbk1.waitForMessage(20);
+		cbk1.waitForMessage(200);
 		Assert.assertEquals("Nr messages does not match", nrMessages, cbk1.getMessageCount());
 		SCMessage response = cbk1.getMessage();
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
-		cbk2.waitForMessage(20);
+		cbk2.waitForMessage(200);
 		Assert.assertEquals("Nr messages does not match", nrMessages, cbk2.getMessageCount());
 		response = cbk2.getMessage();
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);

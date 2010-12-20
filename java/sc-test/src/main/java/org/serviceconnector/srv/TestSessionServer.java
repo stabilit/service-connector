@@ -123,6 +123,7 @@ public class TestSessionServer extends TestStatefulServer {
 					try {
 						response.setAppErrorCode(1050);
 						response.setAppErrorText("kill server requested!");
+						response.setReject(true);
 					} catch (SCMPValidatorException e) {
 					}
 					KillThread<SCSessionServer> kill = new KillThread<SCSessionServer>(this.scSessionServer);

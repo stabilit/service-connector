@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.scmp;
 
+import java.io.ByteArrayInputStream;
+
 import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
@@ -36,6 +38,7 @@ import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPBodyType;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -46,12 +49,12 @@ import org.serviceconnector.test.integration.scmp.TestCallback;
 /**
  * @author JTraber
  */
-public class SCMPClnExecuteSyncTest {
+public class SCMPClnExecuteTest {
 
 	/** The Constant testLogger. */
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPClnExecuteSyncTest.class);
+	protected final static Logger logger = Logger.getLogger(SCMPClnExecuteTest.class);
 
 	private static ProcessesController ctrl;
 	private ProcessCtx scCtx;
@@ -104,31 +107,102 @@ public class SCMPClnExecuteSyncTest {
 	}
 
 	/**
-	 * Description: execute call - waits 2 seconds - another execute times out when waiting for free connection<br>
+	 * Description: execute call - compressed message of type string is exchanged<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t01_ClnExecuteWaitsForConnectionTimeout() throws Exception {
+	public void t01_ClnExecuteStringMessageCompressed() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
-		clnExecuteCall.setMessagInfo(TestConstants.sleepCmd);
-		clnExecuteCall.setRequestBody("2000");
-		TestCallback cbk = new TestCallback();
-		clnExecuteCall.invoke(cbk, 10000);
+		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);
+		clnExecuteCall.setRequestBody(TestConstants.stringLength257);
+		clnExecuteCall.setCompressed(true);
+		TestCallback cbk = new TestCallback(false);
+		clnExecuteCall.invoke(cbk, 1000);
+		SCMPMessage scmpReply = cbk.getMessageSync(3000);
+		Assert.assertEquals(TestConstants.stringLength257, scmpReply.getBody());
+		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+	}
 
-		// to assure second create is not faster
-		Thread.sleep(20);
-		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+	/**
+	 * Description: execute call - compressed message of type byte is exchanged<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t02_ClnExecuteByteMessageCompressed() throws Exception {
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
-		TestCallback cbk1 = new TestCallback();
-		clnExecuteCall.invoke(cbk1, 1000);
+		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);
+		String largeString = TestUtil.getLargeString();
+		clnExecuteCall.setRequestBody(largeString.getBytes());
+		clnExecuteCall.setCompressed(true);
+		TestCallback cbk = new TestCallback(false);
+		clnExecuteCall.invoke(cbk, 1000);
+		SCMPMessage scmpReply = cbk.getMessageSync(3000);
+		Assert.assertEquals(largeString, new String((byte[]) scmpReply.getBody()));
+	}
 
-		SCMPMessage reply = cbk.getMessageSync(3000);
-		SCMPMessage reply1 = cbk1.getMessageSync(3000);
+	/**
+	 * Description: execute call - message of type stream is always exchanged uncompressed, ignores compression<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t10_ClnExecuteStreamMessage() throws Exception {
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+				TestConstants.sesServerName1, this.sessionId);
+		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);
+		String largeString = TestUtil.getLargeString();
+		ByteArrayInputStream in = new ByteArrayInputStream(largeString.getBytes());
+		clnExecuteCall.setRequestBody(in);
+		TestCallback cbk = new TestCallback(false);
+		clnExecuteCall.invoke(cbk, 1000);
+		SCMPMessage scmpReply = cbk.getMessageSync(3000);
+		Assert.assertEquals(new String(largeString.getBytes()), new String((byte[]) scmpReply.getBody()));
+	}
 
-		TestUtil.checkReply(reply);
-		Assert.assertTrue(reply1.isFault());
-		TestUtil.verifyError(reply1, SCMPError.NO_FREE_CONNECTION, SCMPMsgType.CLN_EXECUTE);
+	/**
+	 * Description: execute call 100 times - message received by callback<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t15_ClnExecute100Async() throws Exception {
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+				TestConstants.sesServerName1, this.sessionId);
+		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);
+		clnExecuteCall.setRequestBody(TestConstants.pangram);
+		ExecuteCallback callback = new ExecuteCallback();
+
+		for (int i = 0; i < 100; i++) {
+			callback.messageReceived = false;
+			clnExecuteCall.invoke(callback, 1000);
+			while (callback.messageReceived == false);
+			Assert.assertEquals(TestConstants.pangram, callback.reply.getBody());
+			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), callback.reply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+			Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), callback.reply.getMessageType());
+		}
+	}
+
+	/**
+	 * Description: execute call 100 times large messages - message received by callback<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t16_ClnExecute100LargeMessagesAsync() throws Exception {
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+				TestConstants.sesServerName1, this.sessionId);
+		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);
+		String largeString = TestUtil.getLargeString();
+		clnExecuteCall.setRequestBody(largeString);
+		ExecuteCallback callback = new ExecuteCallback();
+
+		for (int i = 0; i < 100; i++) {
+			callback.messageReceived = false;
+			clnExecuteCall.invoke(callback, 1000);
+			while (callback.messageReceived == false);
+			Assert.assertEquals(largeString, callback.reply.getBody());
+			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), callback.reply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+			Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), callback.reply.getMessageType());
+		}
 	}
 
 	/**
@@ -302,6 +376,34 @@ public class SCMPClnExecuteSyncTest {
 	}
 
 	/**
+	 * Description: execute call - waits 2 seconds - another execute times out when waiting for free connection<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t70_ClnExecuteWaitsForConnectionTimeout() throws Exception {
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+				TestConstants.sesServerName1, this.sessionId);
+		clnExecuteCall.setMessagInfo(TestConstants.sleepCmd);
+		clnExecuteCall.setRequestBody("2000");
+		TestCallback cbk = new TestCallback();
+		clnExecuteCall.invoke(cbk, 10000);
+
+		// to assure second create is not faster
+		Thread.sleep(20);
+		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+				TestConstants.sesServerName1, this.sessionId);
+		TestCallback cbk1 = new TestCallback();
+		clnExecuteCall.invoke(cbk1, 1000);
+
+		SCMPMessage reply = cbk.getMessageSync(3000);
+		SCMPMessage reply1 = cbk1.getMessageSync(3000);
+
+		TestUtil.checkReply(reply);
+		Assert.assertTrue(reply1.isFault());
+		TestUtil.verifyError(reply1, SCMPError.NO_FREE_CONNECTION, SCMPMsgType.CLN_EXECUTE);
+	}
+
+	/**
 	 * Cln create session.
 	 * 
 	 * @throws Exception
@@ -330,5 +432,25 @@ public class SCMPClnExecuteSyncTest {
 		TestCallback cbk = new TestCallback();
 		deleteSessionCall.invoke(cbk, 1000);
 		cbk.getMessageSync(3000);
+	}
+
+	/**
+	 * The Class ExecuteCallback.
+	 */
+	private class ExecuteCallback implements ISCMPMessageCallback {
+
+		public boolean messageReceived = false;
+		public SCMPMessage reply;
+
+		@Override
+		public void receive(SCMPMessage scmpReply) throws Exception {
+			this.reply = scmpReply;
+			this.messageReceived = true;
+		}
+
+		@Override
+		public void receive(Exception ex) {
+			this.messageReceived = true;
+		}
 	}
 }

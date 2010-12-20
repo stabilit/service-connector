@@ -39,7 +39,7 @@ import org.serviceconnector.test.sc.srvExecute.aynch.SrvExecuteLargeAsyncTestCas
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeTestCase;
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeWaitMechanismTestCase;
 import org.serviceconnector.test.sc.subscriptionChange.ClnChangeSubscriptionTestCase;
-import org.serviceconnector.test.system.scmp.SCMPClnExecuteSyncTest;
+import org.serviceconnector.test.system.scmp.SCMPClnExecuteTest;
 import org.serviceconnector.test.unit.DecodeSCMPVersionTest;
 import org.serviceconnector.test.unit.DefaultEncoderDecoderTest;
 import org.serviceconnector.test.unit.DefaultFrameDecoderTest;
@@ -59,7 +59,7 @@ import org.serviceconnector.test.unit.scmp.SCMPLargeResponseTest;
 	ClnCreateSessionWaitMechanismTestCase.class,
 		RegisterServerTestCase.class,
 		DeRegisterServerTestCase.class,
-		SCMPClnExecuteSyncTest.class,
+		SCMPClnExecuteTest.class,
 		SrvExecuteAsyncTestCase.class,
 		SrvExecuteLargeAsyncTestCase.class,
 		SrvExecuteOTITestCase.class,
