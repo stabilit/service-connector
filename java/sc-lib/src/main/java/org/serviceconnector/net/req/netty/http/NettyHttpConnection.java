@@ -95,7 +95,7 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 	/** {@inheritDoc} */
 	@Override
 	public void send(SCMPMessage scmp, ISCMPMessageCallback callback) throws Exception {
-		//logger.info("send cache id = " + scmp.getCacheId());
+		// logger.info("send cache id = " + scmp.getCacheId());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scmp);
 		encoderDecoder.encode(baos, scmp);
@@ -115,14 +115,7 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 
 		ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(buffer);
 		request.setContent(channelBuffer);
-		ChannelFuture future = channel.write(request);
-		future.addListener(this.operationListener);
-		try {
-			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
-		} catch (CommunicationException ex) {
-			logger.error("send", ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on " + this.localSocketAddress);
-		}
+		channel.write(request);
 		if (ConnectionLogger.isEnabledFull()) {
 			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
 					this.localSocketAddress.getPort(), buffer, 0, buffer.length);

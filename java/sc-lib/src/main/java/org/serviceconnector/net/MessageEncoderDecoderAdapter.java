@@ -136,9 +136,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		}
 
 		scmpMsg.setHeader(metaMap);
-		if (MessageLogger.isEnabled()) {
-			MessageLogger.logInputMessage(headerKey, scmpMsg);
-		}
+		// message logging
+		MessageLogger.logInputMessage(headerKey, scmpMsg);
 		if (scmpBodySize <= 0) {
 			// no body found stop decoding
 			return scmpMsg;
@@ -214,7 +213,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		}
 		return sb;
 	}
-	
+
 	protected byte[] compressBody(byte[] bodyBuffer, int bodyOffset, int bodyLength) throws IOException {
 		byte[] output = null;
 		// message compression required

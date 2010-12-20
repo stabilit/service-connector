@@ -326,6 +326,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				SCMPMessage message;
 				message = request.getMessage();
 				fault.setServiceName(message.getServiceName());
+				fault.setMessageType(message.getMessageType());
 			} catch (Exception e) {
 				logger.warn("not possible to set service name in EXC of execute command.");
 			}

@@ -91,9 +91,8 @@ public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		Object body = scmpMsg.getBody();
 		int headerSize = sb.length();
 		try {
-			if (MessageLogger.isEnabled()) {
-				MessageLogger.logOutputMessage(headerKey, scmpMsg);
-			}
+			// message logging
+			MessageLogger.logOutputMessage(headerKey, scmpMsg);
 			if (body != null) {
 				if (byte[].class == body.getClass()) {
 					byte[] ba = (byte[]) body;

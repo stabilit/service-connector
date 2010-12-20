@@ -88,6 +88,7 @@ public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandl
 			return;
 		}
 		SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SC_ERROR, th.getMessage());
+		fault.setMessageType(SCMPMsgType.UNDEFINED);
 		response.setSCMP(fault);
 		response.write();
 	}

@@ -26,7 +26,6 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.Timer;
-import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.CommunicationException;
@@ -93,14 +92,7 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 
 		ChannelBuffer chBuffer = ChannelBuffers.buffer(baos.size());
 		chBuffer.writeBytes(baos.toByteArray());
-		ChannelFuture future = channel.write(chBuffer);
-		future.addListener(operationListener);
-		try {
-			operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
-		} catch (CommunicationException ex) {
-			logger.error("send", ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "send failed on " + this.localSocketAddress);
-		}
+		channel.write(chBuffer);
 		if (ConnectionLogger.isEnabledFull()) {
 			ConnectionLogger.logWriteBuffer(this.getClass().getSimpleName(), this.localSocketAddress.getHostName(),
 					this.localSocketAddress.getPort(), chBuffer.toByteBuffer().array(), 0, chBuffer.toByteBuffer().array().length);

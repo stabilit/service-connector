@@ -75,9 +75,8 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		// write body depends on body type
 		Object body = scmpMsg.getBody();
 		try {
-			if (MessageLogger.isEnabled()) {
-				MessageLogger.logOutputMessage(headerKey, scmpMsg);
-			}
+			// message logging
+			MessageLogger.logOutputMessage(headerKey, scmpMsg);
 			if (body != null) {
 				if (byte[].class == body.getClass()) {
 					byte[] ba = (byte[]) body;

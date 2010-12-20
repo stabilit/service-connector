@@ -38,6 +38,7 @@ import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.net.res.netty.NettyHttpResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessageFault;
+import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
 import org.serviceconnector.web.cmd.IWebCommand;
@@ -91,6 +92,7 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 			return;
 		}
 		SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SC_ERROR, th.getMessage());
+		fault.setMessageType(SCMPMsgType.UNDEFINED);
 		response.setSCMP(fault);
 		response.write();
 	}
