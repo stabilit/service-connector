@@ -26,7 +26,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.serviceconnector.test.integration.scmp.ConnectionPoolTest;
 import org.serviceconnector.test.sc.publish.PublishLargeMessagesTestCase;
-import org.serviceconnector.test.sc.scVersion.SCVersionToSCTest;
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeTestCase;
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeWaitMechanismTestCase;
 import org.serviceconnector.test.sc.subscriptionChange.ClnChangeSubscriptionTestCase;
@@ -53,7 +52,6 @@ import org.serviceconnector.test.unit.scmp.SCMPLargeResponseTest;
 		ClnChangeSubscriptionTestCase.class,
 		PublishLargeMessagesTestCase.class,
 		ConnectionPoolTest.class, 
-		SCVersionToSCTest.class,
 		DecodeSCMPVersionTest.class,
 		
 		// SCImplTestCases
