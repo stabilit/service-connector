@@ -151,6 +151,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		clientMgmt.detach();
 
 		// execute
+		request.setMessageInfo(TestConstants.echoCmd);
 		response = service.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -245,12 +246,12 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		cbk = new MsgCallback(service);
 		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.sleepCmd);
-		request.setData("5000"); 		// server will sleep 5000ms
+		request.setData("5000"); // server will sleep 5000ms
 		try {
 			response = service.execute(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
 		} catch (SCServiceException e) {
-			// will get here after 3000 ms, 
-			Thread.sleep(5000);			//wait 5000ms to allow server sleep request completion
+			// will get here after 3000 ms,
+			Thread.sleep(5000); // wait 5000ms to allow server sleep request completion
 		}
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("hallo");
@@ -274,7 +275,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		cbk = new MsgCallback(service);
 		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.sleepCmd);
-		request.setData("5000"); 		// server will sleep 5000ms
+		request.setData("5000"); // server will sleep 5000ms
 		try {
 			response = service.execute(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
 		} catch (SCServiceException e) {
@@ -289,8 +290,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		service.deleteSession();
 	}
-	
-	
+
 	/**
 	 * Description: send 1 uncompressed message<br>
 	 * Expectation: passes
@@ -432,7 +432,6 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		service.deleteSession();
 	}
 
-	
 	/**
 	 * Description: send message after session rejection<br>
 	 * Expectation: throws SCserviceException
@@ -489,8 +488,8 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		cbk = new MsgCallback(service);
 		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.sleepCmd);
-		request.setData("5000"); 		// server will sleep 5000ms
-		service.send(3, request); 		// SC oti = 3*0.8*1000 = 2400ms => will return exception
+		request.setData("5000"); // server will sleep 5000ms
+		service.send(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
 		cbk.waitForMessage(10);
 		response = cbk.getResponse();
 		// TODO TRN check SC error
@@ -508,18 +507,18 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		cbk = new MsgCallback(service);
 		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.sleepCmd);
-		request.setData("5000"); 		// server will sleep 5000ms
-		service.send(3, request); 		// SC oti = 3*0.8*1000 = 2400ms => will return exception
-		cbk.waitForMessage(10); 			// will wait max 10 seconds for response
+		request.setData("5000"); // server will sleep 5000ms
+		service.send(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
+		cbk.waitForMessage(10); // will wait max 10 seconds for response
 		response = cbk.getResponse();
-		Thread.sleep(4000); 			//wait 4000ms to allow server sleep request completion
+		Thread.sleep(4000); // wait 4000ms to allow server sleep request completion
 
 		// second message
 		messageReceived = false;
 		request.setMessageInfo(TestConstants.echoCmd);
-		request.setData("hallo"); 		// send second message
+		request.setData("hallo"); // send second message
 		service.send(request);
-		cbk.waitForMessage(10); 			// will wait max 10 seconds for the second response
+		cbk.waitForMessage(10); // will wait max 10 seconds for the second response
 		response = cbk.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -539,9 +538,9 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		cbk = new MsgCallback(service);
 		response = service.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.sleepCmd);
-		request.setData("5000"); 		// server will sleep 5000ms
-		service.send(3, request); 		// SC oti = 3*0.8*1000 = 2400ms => will return exception
-		cbk.waitForMessage(10); 			// will wait max 10 seconds for response
+		request.setData("5000"); // server will sleep 5000ms
+		service.send(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
+		cbk.waitForMessage(10); // will wait max 10 seconds for response
 		response = cbk.getResponse();
 
 		// second message
@@ -549,7 +548,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("gaga");
 		service.send(request);
-		cbk.waitForMessage(10); 			// will wait max 10 seconds for response
+		cbk.waitForMessage(10); // will wait max 10 seconds for response
 		response = cbk.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -564,5 +563,4 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		service.deleteSession();
 	}
 
-	
 }

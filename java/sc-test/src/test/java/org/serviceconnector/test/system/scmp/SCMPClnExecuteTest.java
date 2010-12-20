@@ -175,7 +175,8 @@ public class SCMPClnExecuteTest {
 		for (int i = 0; i < 100; i++) {
 			callback.messageReceived = false;
 			clnExecuteCall.invoke(callback, 1000);
-			while (callback.messageReceived == false);
+			while (callback.messageReceived == false)
+				;
 			Assert.assertEquals(TestConstants.pangram, callback.reply.getBody());
 			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), callback.reply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 			Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), callback.reply.getMessageType());
@@ -198,7 +199,8 @@ public class SCMPClnExecuteTest {
 		for (int i = 0; i < 100; i++) {
 			callback.messageReceived = false;
 			clnExecuteCall.invoke(callback, 1000);
-			while (callback.messageReceived == false);
+			while (callback.messageReceived == false)
+				;
 			Assert.assertEquals(largeString, callback.reply.getBody());
 			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), callback.reply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 			Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), callback.reply.getMessageType());
@@ -401,6 +403,22 @@ public class SCMPClnExecuteTest {
 		TestUtil.checkReply(reply);
 		Assert.assertTrue(reply1.isFault());
 		TestUtil.verifyError(reply1, SCMPError.NO_FREE_CONNECTION, SCMPMsgType.CLN_EXECUTE);
+	}
+
+	/**
+	 * Description: execute call - waits 2 seconds, OTI runs out on SC<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t80_ClnExecuteOTITimesOut() throws Exception {
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+				TestConstants.sesServerName1, this.sessionId);
+		clnExecuteCall.setMessagInfo(TestConstants.sleepCmd);
+		clnExecuteCall.setRequestBody("2000");
+		TestCallback cbk = new TestCallback();
+		clnExecuteCall.invoke(cbk, 400);
+		SCMPMessage responseMessage = cbk.getMessageSync(2000);
+		TestUtil.verifyError(responseMessage, SCMPError.OPERATION_TIMEOUT_EXPIRED, SCMPMsgType.CLN_EXECUTE);
 	}
 
 	/**

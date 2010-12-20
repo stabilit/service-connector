@@ -26,10 +26,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.serviceconnector.test.integration.scmp.ConnectionPoolTest;
 import org.serviceconnector.test.sc.group.GroupCallTestCase;
-import org.serviceconnector.test.sc.operationTimeout.SrvExecuteOTITestCase;
 import org.serviceconnector.test.sc.publish.PublishLargeMessagesTestCase;
-import org.serviceconnector.test.sc.register.DeRegisterServerTestCase;
-import org.serviceconnector.test.sc.register.RegisterServerTestCase;
 import org.serviceconnector.test.sc.scVersion.SCVersionToSCTest;
 import org.serviceconnector.test.sc.session.ClnCreateSessionWaitMechanismTestCase;
 import org.serviceconnector.test.sc.session.SessionTimeoutTestCase;
@@ -54,10 +51,7 @@ import org.serviceconnector.test.unit.scmp.SCMPLargeResponseTest;
 @RunWith(Suite.class)
 @SuiteClasses( { 
 	ClnCreateSessionWaitMechanismTestCase.class,
-		RegisterServerTestCase.class,
-		DeRegisterServerTestCase.class,
 		SCMPClnExecuteTest.class,
-		SrvExecuteOTITestCase.class,
 		ClnSubscribeTestCase.class,
 		ClnSubscribeWaitMechanismTestCase.class,
 		ClnChangeSubscriptionTestCase.class,
