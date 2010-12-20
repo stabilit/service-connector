@@ -29,10 +29,10 @@ import org.serviceconnector.test.integration.api.srv.APIMultipleSCsServerTest;
 import org.serviceconnector.test.integration.api.srv.APIPublishServerTest;
 import org.serviceconnector.test.integration.api.srv.APIRegisterPublishServerTest;
 import org.serviceconnector.test.integration.api.srv.APIRegisterSessionServerTest;
-import org.serviceconnector.test.integration.scmp.ConnectionPoolTest;
 import org.serviceconnector.test.integration.scmp.SCMPAttachDetachTest;
 import org.serviceconnector.test.integration.scmp.SCMPManageTest;
 import org.serviceconnector.test.integration.scmp.SCMPRegisterDeregisterServerTest;
+import org.serviceconnector.test.integration.scmp.SCMPSCVersionTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
@@ -56,7 +56,9 @@ import org.serviceconnector.test.integration.scmp.SCMPRegisterDeregisterServerTe
 		SCMPAttachDetachTest.class,
 		ConnectionPoolTest.class,
 		SCMPManageTest.class,
-		SCMPRegisterDeregisterServerTest.class
+		SCMPRegisterDeregisterServerTest.class,
+		SCMPSCVersionTest.class,
+		ConnectDisconnectTest.class
 })
 public class AllIntegrationTests {
 }

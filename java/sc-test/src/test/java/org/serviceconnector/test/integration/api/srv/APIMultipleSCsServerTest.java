@@ -29,7 +29,7 @@ import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.test.integration.APIIntegrationSuperServerTest;
+import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
 
 public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 

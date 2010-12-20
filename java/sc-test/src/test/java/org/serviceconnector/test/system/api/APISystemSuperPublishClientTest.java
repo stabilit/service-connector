@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.system;
+package org.serviceconnector.test.system.api;
 
 import java.util.concurrent.TimeoutException;
 

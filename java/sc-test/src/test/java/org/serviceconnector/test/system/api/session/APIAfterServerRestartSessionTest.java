@@ -6,7 +6,7 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.test.system.APISystemSuperSessionClientTest;
+import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
 public class APIAfterServerRestartSessionTest extends APISystemSuperSessionClientTest {

@@ -26,7 +26,7 @@ import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.test.system.APISystemSuperPublishClientTest;
+import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
 @SuppressWarnings("unused")
 public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClientTest {

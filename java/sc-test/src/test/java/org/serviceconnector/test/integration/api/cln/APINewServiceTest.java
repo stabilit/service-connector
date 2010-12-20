@@ -28,7 +28,7 @@ import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.test.integration.APIIntegrationSuperClientTest;
+import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
 public class APINewServiceTest extends APIIntegrationSuperClientTest {
 

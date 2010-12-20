@@ -23,7 +23,7 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.test.integration.APIIntegrationSuperServerTest;
+import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
 
 public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 

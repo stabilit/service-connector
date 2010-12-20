@@ -27,7 +27,7 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.test.integration.APIIntegrationSuperClientTest;
+import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
 
 public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {

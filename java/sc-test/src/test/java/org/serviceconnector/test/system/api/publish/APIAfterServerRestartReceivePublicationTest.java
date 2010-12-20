@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCPublishService;
-import org.serviceconnector.test.system.APISystemSuperPublishClientTest;
+import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
 public class APIAfterServerRestartReceivePublicationTest extends APISystemSuperPublishClientTest {
 

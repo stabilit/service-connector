@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.integration;
+package org.serviceconnector.test.integration.api;
 
 import org.apache.log4j.Logger;
 import org.junit.After;

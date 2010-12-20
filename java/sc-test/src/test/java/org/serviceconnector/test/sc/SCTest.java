@@ -24,47 +24,18 @@ import junit.framework.Assert;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.serviceconnector.test.integration.scmp.ConnectionPoolTest;
 import org.serviceconnector.test.sc.publish.PublishLargeMessagesTestCase;
-import org.serviceconnector.test.sc.subscribe.ClnSubscribeTestCase;
 import org.serviceconnector.test.sc.subscribe.ClnSubscribeWaitMechanismTestCase;
 import org.serviceconnector.test.sc.subscriptionChange.ClnChangeSubscriptionTestCase;
-import org.serviceconnector.test.system.scmp.SCMPClnExecuteTest;
-import org.serviceconnector.test.unit.DecodeSCMPVersionTest;
-import org.serviceconnector.test.unit.DefaultEncoderDecoderTest;
-import org.serviceconnector.test.unit.DefaultFrameDecoderTest;
-import org.serviceconnector.test.unit.HttpFrameDecoderTest;
-import org.serviceconnector.test.unit.KeepAliveMessageEncoderDecoderTest;
-import org.serviceconnector.test.unit.LargeMessageEncoderDecoderTest;
-import org.serviceconnector.test.unit.LinkedQueueTest;
-import org.serviceconnector.test.unit.ValidatorUtilityTest;
-import org.serviceconnector.test.unit.scmp.SCMPLargeRequestTest;
-import org.serviceconnector.test.unit.scmp.SCMPLargeResponseTest;
 
 /**
  * @author JTraber
  */
 @RunWith(Suite.class)
 @SuiteClasses( { 
-		SCMPClnExecuteTest.class,
-		ClnSubscribeTestCase.class,
 		ClnSubscribeWaitMechanismTestCase.class,
 		ClnChangeSubscriptionTestCase.class,
-		PublishLargeMessagesTestCase.class,
-		ConnectionPoolTest.class, 
-		DecodeSCMPVersionTest.class,
-		
-		// SCImplTestCases
-		DefaultFrameDecoderTest.class,
-		HttpFrameDecoderTest.class,
-		SCMPLargeResponseTest.class,
-		SCMPLargeRequestTest.class,
-		SCMPLargeResponseTest.class,
-		LargeMessageEncoderDecoderTest.class,
-		KeepAliveMessageEncoderDecoderTest.class,
-		DefaultEncoderDecoderTest.class,
-		ValidatorUtilityTest.class,
-		LinkedQueueTest.class })
+		PublishLargeMessagesTestCase.class})
 public class SCTest {
 
 	private SCTest() {

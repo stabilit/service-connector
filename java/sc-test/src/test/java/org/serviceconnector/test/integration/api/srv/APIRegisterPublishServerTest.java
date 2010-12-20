@@ -29,7 +29,7 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.test.integration.APIIntegrationSuperServerTest;
+import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
 
 public class APIRegisterPublishServerTest extends APIIntegrationSuperServerTest {
 

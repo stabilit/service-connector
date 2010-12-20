@@ -1,4 +1,4 @@
-package org.serviceconnector.test.integration.scmp;
+package org.serviceconnector;
 
 import org.serviceconnector.util.SynchronousCallback;
 
