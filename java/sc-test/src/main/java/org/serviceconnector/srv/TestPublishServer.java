@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
@@ -148,8 +149,7 @@ public class TestPublishServer extends TestStatefulServer {
 					} catch (SCMPValidatorException e) {
 					}
 				} else {
-					String methodName = request.getSessionInfo();
-					PublishThread publishThread = new PublishThread(this.scPublishServer, methodName, request,
+					PublishThread publishThread = new PublishThread(this.scPublishServer, sessionInfo, request,
 							operationTimeoutInMillis);
 					publishThread.start();
 					return response;
@@ -172,6 +172,16 @@ public class TestPublishServer extends TestStatefulServer {
 						response.setAppErrorText(TestConstants.appErrorText);
 					} catch (SCMPValidatorException e) {
 					}
+				} else {
+					try {
+						PublishThread th = new PublishThread();
+						Method method = th.getClass().getMethod(sessionInfo, SCMessage.class, int.class);
+						method.invoke(th, request, operationTimeoutInMillis);
+					} catch (Exception e1) {
+						logger.error("cannot not invoke method:" + sessionInfo, e1);
+						return response;
+					}
+					return response;
 				}
 			}
 			SubscriptionLogger.logChangeSubscribe("publish-1", request.getSessionId(), request.getMask());
@@ -189,6 +199,9 @@ public class TestPublishServer extends TestStatefulServer {
 		String methodName;
 		SCMessage request;
 		int operationTimeoutInMillis = 0;
+
+		public PublishThread() {
+		}
 
 		public PublishThread(SCPublishServer publishSrv, String methodName, SCMessage request, int operationTimeoutInMillis) {
 			this.publishSrv = publishSrv;
@@ -279,6 +292,22 @@ public class TestPublishServer extends TestStatefulServer {
 					logger.error("cannot publish", e);
 					break;
 				}
+			}
+		}
+
+		// publish a large message
+		public void publishLargeMessage(SCMessage request, int operationTimeoutInMillis) {
+			String largeString = TestUtil.getLargeString();
+			SCPublishMessage pubMessage = new SCPublishMessage(largeString);
+			pubMessage.setCompressed(false);
+			try {
+				Thread.sleep(1000);
+				pubMessage.setMask(TestConstants.maskSrv);
+				pubMessage.setData(largeString);
+				this.publishSrv.publish(pubMessage);
+				TestPublishServer.testLogger.info("publish message large message");
+			} catch (Exception e) {
+				logger.error("cannot publish", e);
 			}
 		}
 

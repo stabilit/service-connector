@@ -96,7 +96,6 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 			}
 			// sleep for a while and then try again
 			Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-
 		} while (++i < tries);
 
 		SCMPMessage reply = callback.getMessageSync(otiOnServerMillis);

@@ -23,8 +23,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 
 /**
  * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a call for the callback.
@@ -91,9 +91,9 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMessage getMessageSync(int timeoutInMillis) {
-		if (timeoutInMillis == 0) {
-			// timeout inactive
-			return this.getMessageSyncEverWaiting();
+		if (timeoutInMillis <= 0) {
+			// timeoutInMillis must be greater than 0
+			return null;
 		}
 		// set synchronous mode
 		this.synchronous = true;
@@ -110,28 +110,6 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			}
 		} catch (Exception e) {
 			logger.error("getMessageSync", e);
-			SCMPMessageFault fault = new SCMPMessageFault(e);
-			return fault;
-		}
-		return reply;
-	}
-
-	/**
-	 * Gets the message sync ever waiting.
-	 * 
-	 * @return the message sync ever waiting
-	 */
-	private SCMPMessage getMessageSyncEverWaiting() {
-		// set synchronous mode
-		this.synchronous = true;
-		// the method take() from BlockingQueue waits inside
-		SCMPMessage reply = null;
-		try {
-			reply = this.answer.take();
-			// reset synchronous mode
-			this.synchronous = false;
-		} catch (Exception e) {
-			logger.error("getMessageSyncEverWaiting", e);
 			SCMPMessageFault fault = new SCMPMessageFault(e);
 			return fault;
 		}
