@@ -40,21 +40,21 @@ import org.serviceconnector.util.TimeMillis;
 
 
 /**
- * The Class SCMPCacheTest.
+ * The class CacheExpirationTest tests the cache expiration functionality.
  * 
  * @author ds
  */
 public class CacheExpirationTest {
 
 	private CacheManager cacheManager;
+	
 	/**
-	 * Scmp cache write test.
-	 * @throws Exception 
+	 * Run before each test and setup the dummy environment (services and cache manager).
+	 * <br/>
 	 * 
-	 * @throws CacheException
-	 *             the sCMP cache exception
+	 * @throws Exception
+	 * 
 	 */
-
 	@Before
 	public void beforeTest() throws Exception {
 	   AppContext.setSCEnvironment(true);
@@ -74,8 +74,15 @@ public class CacheExpirationTest {
 		cacheManager.destroy();
 	}
 
+	/**
+	 * Description: Simple cache write test, not expired<br>
+	 * Write a message into the cache using a dummy id and nr and read the message from cache again, checking if both contents
+	 * (body) equals. Verify if cache size is 1.<br>
+	 *  
+	 * Expectation: passes
+	 */
 	@Test
-	public void testNotExpiredCacheWrite() throws CacheException {
+	public void t01_notExpiredCacheWriteTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the buffer";
 		byte[] buffer = stringWrite.getBytes();
@@ -100,8 +107,15 @@ public class CacheExpirationTest {
 		Assert.assertEquals(false, cacheComposite.isExpired());
 	}
 
+	/**
+	 * Description: Simple cache write test, expired<br>
+	 * Write a message into the cache using a dummy id and nr. Set the expiration date and time one hour to the past.
+	 * Try to read the message from its cache again but this should fail because the message has been expired.<br>
+	 *  
+	 * Expectation: passes
+	 */
 	@Test
-	public void testExpiredCacheWrite() throws CacheException {
+	public void t02_expiredCacheWriteTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the buffer";
 		byte[] buffer = stringWrite.getBytes();

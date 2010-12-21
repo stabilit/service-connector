@@ -51,7 +51,7 @@ public class Cache {
 	public Cache(CacheManager manager, String serviceName) {
 		this.manager = manager;
 		this.serviceName = serviceName;
-		this.cacheImpl = CacheImplFactory.getDefaultCacheImpl(manager.getScmpCacheConfiguration(), serviceName);
+		this.cacheImpl = CacheImplFactory.getDefaultCacheImpl(manager.getCacheConfiguration(), serviceName);
 	}
 
 	/**

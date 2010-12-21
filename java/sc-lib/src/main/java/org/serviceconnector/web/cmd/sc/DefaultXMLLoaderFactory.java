@@ -475,7 +475,7 @@ public class DefaultXMLLoaderFactory {
 		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			writer.writeStartElement("cache");
 			CacheManager cacheManager = AppContext.getCacheManager();
-			ICacheConfiguration cacheConfiguration = cacheManager.getScmpCacheConfiguration();
+			ICacheConfiguration cacheConfiguration = cacheManager.getCacheConfiguration();
 			this.writeCacheConfiguration(writer, cacheConfiguration);
 			writer.writeEndElement(); // close cache tag
 			writer.writeStartElement("caches");

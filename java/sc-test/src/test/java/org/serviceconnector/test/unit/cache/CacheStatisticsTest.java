@@ -33,7 +33,7 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SessionService;
 
 /**
- * The Class SCMPCacheTest.
+ * The class CacheStatisticsTest tests the cache statistics functionality.
  * 
  * @author ds
  */
@@ -42,14 +42,11 @@ public class CacheStatisticsTest {
 	private CacheManager cacheManager;
 
 	/**
-	 * Scmp cache write test.
+	 * Run before each test and setup the dummy environment (services and cache manager)<br/>
 	 * 
 	 * @throws Exception
 	 * 
-	 * @throws CacheException
-	 *             the sCMP cache exception
 	 */
-
 	@Before
 	public void beforeTest() throws Exception {
 		AppContext.setSCEnvironment(true);
@@ -60,13 +57,24 @@ public class CacheStatisticsTest {
 		cacheManager.initialize();
 	}
 
+	/**
+	 * Run after each test, destroy cache manager<br/>
+	 */
 	@After
 	public void afterTest() {
 		cacheManager.destroy();
 	}
 
+	/**
+	 * Description: Cache element size test.
+	 * Write 1 message (element) into the cache and check the cache element size.
+	 * The element size MUST return 3, one for the message, one for the composite and
+	 * one for the internal CacheCompositeRegistry.<br>
+	 *  
+	 * Expectation: passes
+	 */
 	@Test
-	public void testElementSize() throws CacheException {
+	public void t01_elementSizeTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		int elementSize = scmpCache.getElementSize();
 		Assert.assertEquals(0, elementSize);
@@ -88,8 +96,16 @@ public class CacheStatisticsTest {
 		memoryStoreSize = scmpCache.getMemoryStoreSize();
 	}
 
+	/**
+	 * Description: Cache part element size test.
+	 * Write 10 messages (elements) into the cache and check the cache element size.
+	 * The element size MUST return 12, 10 for the messages, one for the composite and
+	 * one for the internal CacheCompositeRegistry.<br>
+	 *  
+	 * Expectation: passes
+	 */
 	@Test
-	public void testPartElementSize() throws CacheException {
+	public void t02_partElementSizeTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		int elementSize = scmpCache.getElementSize();
 		Assert.assertEquals(0, elementSize);
@@ -106,8 +122,16 @@ public class CacheStatisticsTest {
 		Assert.assertEquals(12, elementSize);
 	}
 
+	/**
+	 * Description: Huge cache part element size test.
+	 * Write 1000 messages (elements) into the cache and check the cache element size.
+	 * The element size MUST return 12, 10 for the messages, one for the composite and
+	 * one for the internal CacheCompositeRegistry.<br>
+	 *  
+	 * Expectation: passes
+	 */
 	@Test
-	public void testLargePartElementSize() throws CacheException {
+	public void t03_largePartElementSizeTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		int elementSize = scmpCache.getElementSize();
 		Assert.assertEquals(0, elementSize);

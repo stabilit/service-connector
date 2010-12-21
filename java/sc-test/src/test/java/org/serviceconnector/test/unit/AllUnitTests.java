@@ -27,7 +27,7 @@ import org.serviceconnector.test.unit.cache.CacheExpirationTest;
 import org.serviceconnector.test.unit.cache.CacheExpirationThreadRunTest;
 import org.serviceconnector.test.unit.cache.CacheStatisticsTest;
 import org.serviceconnector.test.unit.cache.CacheTest;
-import org.serviceconnector.test.unit.cache.CacheThreadRunTest;
+import org.serviceconnector.test.unit.cache.CacheManagerTest;
 import org.serviceconnector.test.unit.scmp.SCMPLargeRequestTest;
 import org.serviceconnector.test.unit.scmp.SCMPLargeResponseTest;
 import org.serviceconnector.test.unit.scmp.SCMPMessageMaskTest;
@@ -58,6 +58,6 @@ import org.serviceconnector.test.unit.scmp.SCMPVersionTest;
 		CacheExpirationThreadRunTest.class, 
 		CacheStatisticsTest.class,
 		CacheTest.class,
-		CacheThreadRunTest.class })
+		CacheManagerTest.class })
 public class AllUnitTests {
 }

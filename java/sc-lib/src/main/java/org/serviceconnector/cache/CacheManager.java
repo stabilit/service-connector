@@ -64,6 +64,10 @@ public class CacheManager {
 		if (this.cacheConfiguration == null) {
 			this.cacheConfiguration = new CacheConfiguration();
 		}
+		if (this.cacheConfiguration.isCacheEnabled() == false) {
+			CacheLogger.debug("cache is not enabled");
+			return;
+		}
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		Service services[] = serviceRegistry.getServices();
 		for (int i = 0; i < services.length; i++) {
@@ -132,6 +136,21 @@ public class CacheManager {
 		return (Object[]) this.cacheMap.values().toArray();
 	}
 
+	/**
+	 * Checks if is cache enabled.
+	 *
+	 * @return true, if is cache enabled
+	 */
+	public boolean isCacheEnabled() {
+	    if (this.cacheConfiguration == null) {
+	    	return false;
+	    }
+	    return this.cacheConfiguration.isCacheEnabled();
+	}
+	
+	/**
+	 * Removes the expired caches.
+	 */
 	public void removeExpiredCaches() {
 		CacheLogger.debug("check for expired messages in cache");
 		Object[] caches = this.getAllCaches();
@@ -145,11 +164,11 @@ public class CacheManager {
 	}
 
 	/**
-	 * Gets the scmp cache configuration.
+	 * Gets the cache configuration.
 	 * 
-	 * @return the scmp cache configuration
+	 * @return the cache configuration
 	 */
-	public ICacheConfiguration getScmpCacheConfiguration() {
+	public ICacheConfiguration getCacheConfiguration() {
 		return cacheConfiguration;
 	}
 
@@ -186,6 +205,11 @@ public class CacheManager {
 			}
 		}
 
+		/**
+		 * cache expiration thread run method, checks withing given interval if any cache elements were expired and removes them
+		 * from cache.
+		 * 
+		 */
 		@Override
 		public void run() {
 			while (this.killed == false) {

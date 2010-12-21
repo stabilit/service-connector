@@ -45,11 +45,11 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SessionService;
 
 /**
- * The Class SCMPCacheTest.
+ * The class CacheManagerTest tests the cache manager initialization and destroy functionality.
  * 
  * @author ds
  */
-public class CacheThreadRunTest {
+public class CacheManagerTest {
 
 	@Before
 	public void beforeTest() throws Exception {
@@ -61,10 +61,11 @@ public class CacheThreadRunTest {
 
 	/**
 	 * Description:	Create cacheManager, initialize it, then destroy it. <br>
+	 * 
 	 * Expectation: passes
 	 */
 	@Test
-	public void testInitDestroy() throws CacheException {
+	public void t01_initDestroyTest() throws CacheException {
 		AppContext.setSCEnvironment(true);
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		Service service = new SessionService("dummy");
@@ -80,5 +81,6 @@ public class CacheThreadRunTest {
 		}
 		cacheManager.destroy();
 	}
+
 
 }

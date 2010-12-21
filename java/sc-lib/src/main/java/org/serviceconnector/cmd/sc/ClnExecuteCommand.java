@@ -75,14 +75,16 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
-		// check for cache id
+		CacheManager cacheManager = null;	
 		if (message.getCacheId() != null) {
+			cacheManager = AppContext.getCacheManager();
+		}
+		if (cacheManager != null && cacheManager.isCacheEnabled()) {
 			logger.info("client execute command with cache id = " + message.getCacheId());
 			// try to load response from cache
 			try {
-				CacheManager scmpCacheManager = AppContext.getCacheManager();
 				String serviceName = message.getServiceName();
-				Cache scmpCache = scmpCacheManager.getCache(serviceName);
+				Cache scmpCache = cacheManager.getCache(serviceName);
 				if (scmpCache == null) {
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
 							"no cache instance, service name = " + message.getServiceName());
@@ -92,7 +94,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				CacheId cacheId = new CacheId(message.getCacheId());
 				CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 				if (cacheComposite != null) {
-					synchronized (scmpCacheManager) {
+					synchronized (cacheManager) {
 						// check if cache is loading
 						if (cacheComposite.isLoading()) {
 							// check if it is a part request and sequence nr in cache equals cache composite size
@@ -283,12 +285,15 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		@Override
 		public void receive(SCMPMessage scmpReply) {
 			// check for cache id
+			CacheManager cacheManager = null;
 			if (scmpReply.getCacheId() != null) {
 				// try save reply in cache
+				cacheManager = AppContext.getCacheManager();
+			}
+			if (cacheManager != null && cacheManager.isCacheEnabled()) {
 				try {
-					CacheManager scmpCacheManager = AppContext.getCacheManager();
 					String serviceName = scmpReply.getServiceName();
-					Cache scmpCache = scmpCacheManager.getCache(serviceName);
+					Cache scmpCache = cacheManager.getCache(serviceName);
 					if (scmpCache == null) {
 						CommandCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
 					} else {
