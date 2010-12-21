@@ -236,4 +236,36 @@ public class SCMPClnSubscribeTest {
 		unSubscribeCall.invoke(cbk, 3000);
 		TestUtil.checkReply(cbk.getMessageSync(3000));
 	}
+
+	/**
+	 * Description: subscribe call - receives large message<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t40_ClnSubscribeGetLargeMessage() throws Exception {
+		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
+				TestConstants.pubServerName1);
+
+		subscribeCall.setSessionInfo(TestConstants.publishLargeMessageCmd);
+		subscribeCall.setNoDataIntervalSeconds(10);
+		subscribeCall.setMask(TestConstants.mask);
+		subscribeCall.setRequestBody("get large message");
+		TestCallback cbk = new TestCallback();
+		subscribeCall.invoke(cbk, 10000);
+		SCMPMessage reply = cbk.getMessageSync(3000);
+		TestUtil.checkReply(reply);
+		String sessionId = reply.getSessionId();
+
+		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
+				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
+		receivePublicationCall.invoke(cbk, 2000);
+		reply = cbk.getMessageSync(2000);
+		Assert.assertTrue(reply.isLargeMessage());
+		Assert.assertEquals(TestUtil.getLargeString(), reply.getBody());
+
+		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
+				this.requester, TestConstants.pubServerName1, sessionId);
+		unSubscribeCall.invoke(cbk, 3000);
+		TestUtil.checkReply(cbk.getMessageSync(3000));
+	}
 }

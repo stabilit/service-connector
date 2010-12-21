@@ -16,62 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.sc;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import junit.framework.Assert;
-
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.serviceconnector.test.sc.publish.PublishLargeMessagesTestCase;
 import org.serviceconnector.test.sc.subscriptionChange.ClnChangeSubscriptionTestCase;
 
 /**
  * @author JTraber
  */
 @RunWith(Suite.class)
-@SuiteClasses( {
-		ClnChangeSubscriptionTestCase.class,
-		PublishLargeMessagesTestCase.class})
+@SuiteClasses( { ClnChangeSubscriptionTestCase.class })
 public class SCTest {
-
-	private SCTest() {
-	}
-
-	public static Map<String, String> splitStringToMap(String stringToSplit, String entryDelimiter, String keyDelimiter) {
-		Map<String, String> map = new HashMap<String, String>();
-
-		String[] rows = stringToSplit.split(entryDelimiter);
-
-		for (String row : rows) {
-			String[] keyValue = row.split(keyDelimiter, 2);
-			map.put(keyValue[0], keyValue[1]);
-		}
-		return map;
-	}
-
-	public static void assertEqualsUnorderedStringIgnorePorts(String expected, String actual) {
-		// actual = actual.replaceAll("127.0.0.1/", "localhost/");
-		actual = actual.replaceAll("localhost/\\d*:", "localhost/:");
-
-		Map<String, String> expectedMap = splitStringToMap(expected, "\\|", "\\:");
-		Map<String, String> actualMap = splitStringToMap(actual, "\\|", "\\:");
-
-		if (expectedMap.equals(actualMap) == false) {
-			System.out.println("actual : " + actual);
-			System.out.println("expected : " + expected);
-		}
-		Assert.assertEquals(expectedMap, actualMap);
-	}
-
-	public static Map<String, String> convertInspectStringToMap(String string) {
-		Map<String, String> map = new HashMap<String, String>();
-
-		String[] values = string.split("@|&");
-		for (int i = 0; i < values.length / 2; i++) {
-			map.put(values[i * 2], values[i * 2 + 1]);
-		}
-		return map;
-	}
 }
