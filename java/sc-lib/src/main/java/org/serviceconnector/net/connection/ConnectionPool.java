@@ -218,7 +218,8 @@ public class ConnectionPool {
 			return;
 		}
 		connection.resetNrOfIdles();
-		this.freeConnections.add(connection);
+		// insert used connection at first position of list
+		this.freeConnections.add(0, connection);
 	}
 
 	/**
