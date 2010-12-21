@@ -40,12 +40,12 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.DateTimeUtility;
 
-public class ConnectDisconnectTest {
+public class ConnectionTest {
 
 	/** The Constant testLogger. */
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ConnectDisconnectTest.class);
+	protected final static Logger logger = Logger.getLogger(ConnectionTest.class);
 
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;

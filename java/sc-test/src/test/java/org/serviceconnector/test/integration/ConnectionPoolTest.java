@@ -33,6 +33,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.serviceconnector.Constants;
+import org.serviceconnector.SCVersion;
+import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -41,7 +43,11 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.connection.IConnection;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.integration.scmp.SCMPAttachDetachTest;
+import org.serviceconnector.util.DateTimeUtility;
 
 /**
  * @author JTraber
@@ -198,5 +204,55 @@ public class ConnectionPoolTest {
 			connections.add(connectionPool.getConnection());
 		}
 		Assert.assertFalse(connectionPool.hasFreeConnections());
+	}
+
+	/**
+	 * Description: Get connection send a message and free connection - 50000 times<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t50_GetConnectionSendAttachFreeConnection50000Times() throws Exception {
+		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
+
+		for (int i = 0; i < 50000; i++) {
+			IConnection connection = connectionPool.getConnection();
+			SCMPMessage message = new SCMPMessage();
+			message.setMessageType(SCMPMsgType.ATTACH);
+			message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
+			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
+			TestCallback cbk = new TestCallback();
+			connection.send(message, cbk);
+			cbk.getMessageSync(1000);
+			connectionPool.freeConnection(connection);
+			if (i % 10000 == 0) {
+				testLogger.info("connection nr " + i + " is done!");
+			}
+		}
+	}
+
+	/**
+	 * Description: Create new ConnectionPool get connection send a message and free connection destroy pool - 50000 times<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t51_NewConnectionPoolGetConnectionSendAttachFreeConnection50000Times() throws Exception {
+		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
+		for (int i = 0; i < 50000; i++) {
+			ConnectionPool cp = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(),
+					this.keepAlivInSeconds);
+			IConnection connection = cp.getConnection();
+			SCMPMessage message = new SCMPMessage();
+			message.setMessageType(SCMPMsgType.ATTACH);
+			message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
+			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
+			TestCallback cbk = new TestCallback();
+			connection.send(message, cbk);
+			cbk.getMessageSync(1000);
+			cp.freeConnection(connection);
+			cp.destroy();
+			if (i % 10000 == 0) {
+				testLogger.info("connection nr " + i + " is done!");
+			}
+		}
 	}
 }

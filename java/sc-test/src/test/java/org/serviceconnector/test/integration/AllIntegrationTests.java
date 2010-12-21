@@ -58,7 +58,7 @@ import org.serviceconnector.test.integration.scmp.SCMPSCVersionTest;
 		SCMPManageTest.class,
 		SCMPRegisterDeregisterServerTest.class,
 		SCMPSCVersionTest.class,
-		ConnectDisconnectTest.class
+		ConnectionTest.class
 })
 public class AllIntegrationTests {
 }
