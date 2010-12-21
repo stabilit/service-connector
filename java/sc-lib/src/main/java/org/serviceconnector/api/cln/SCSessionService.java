@@ -76,6 +76,17 @@ public class SCSessionService extends SCService {
 		this.echoIntervalInSeconds = Constants.DEFAULT_ECHO_INTERVAL_SECONDS;
 	}
 
+	/**
+	 * Creates the session.
+	 * 
+	 * @param scMessage
+	 *            the sc message
+	 * @param callback
+	 *            the callback
+	 * @return the sC message
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized SCMessage createSession(SCMessage scMessage, SCMessageCallback callback) throws Exception {
 		return this.createSession(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scMessage, callback);
 	}
@@ -88,8 +99,8 @@ public class SCSessionService extends SCService {
 	 * @param scMessage
 	 *            the sc message
 	 * @param messageCallback
-	 *            TODO
-	 * @return the sC message
+	 *            the message callback which is used to inform the client in case of asynchronous operations
+	 * @return the sc message
 	 * @throws Exception
 	 *             the exception
 	 */
