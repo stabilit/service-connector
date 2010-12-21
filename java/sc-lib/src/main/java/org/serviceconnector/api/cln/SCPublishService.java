@@ -203,6 +203,7 @@ public class SCPublishService extends SCService {
 				ex.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 				ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 			}
+			this.sessionActive = false;
 			throw ex;
 		}
 		this.sessionId = reply.getSessionId();

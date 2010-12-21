@@ -122,6 +122,7 @@ public class SCSessionService extends SCService {
 			throw new SCServiceException("create session failed ", e);
 		}
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		this.triggerSessionTimeout();
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("create session failed");
 			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
@@ -137,7 +138,6 @@ public class SCSessionService extends SCService {
 		}
 		this.sessionId = reply.getSessionId();
 		this.sessionActive = true;
-		this.triggerSessionTimeout();
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
@@ -278,17 +278,18 @@ public class SCSessionService extends SCService {
 			clnExecuteCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
+			this.triggerSessionTimeout();
 			throw new SCServiceException("execute reuest failed ", e);
 		}
 		// wait for message in callback
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		this.pendingRequest = false;
+		this.triggerSessionTimeout();
 		if (reply.isFault()) {
 			SCServiceException scEx = new SCServiceException("execute failed");
 			scEx.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			throw scEx;
 		}
-		this.triggerSessionTimeout();
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
@@ -340,6 +341,7 @@ public class SCSessionService extends SCService {
 			clnExecuteCall.invoke(scmpCallback, operationtTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.pendingRequest = false;
+			this.triggerSessionTimeout();
 			throw new SCServiceException("send request failed ", e);
 		}
 	}
