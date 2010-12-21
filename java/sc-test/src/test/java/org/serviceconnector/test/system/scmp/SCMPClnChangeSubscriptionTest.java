@@ -43,7 +43,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-public class ClnChangeSubscriptionTestCase {
+public class SCMPClnChangeSubscriptionTest {
 
 	/** The Constant testLogger. */
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());

@@ -27,6 +27,7 @@ import org.serviceconnector.test.system.api.session.APIAfterServerAbortSessionTe
 import org.serviceconnector.test.system.api.session.APIAfterServerRestartSessionTest;
 import org.serviceconnector.test.system.api.session.APICreateDeleteSessionTest;
 import org.serviceconnector.test.system.api.session.APIExecuteAndSendTest;
+import org.serviceconnector.test.system.scmp.SCMPClnChangeSubscriptionTest;
 import org.serviceconnector.test.system.scmp.SCMPClnCreateSessionTest;
 import org.serviceconnector.test.system.scmp.SCMPClnExecuteTest;
 import org.serviceconnector.test.system.scmp.SCMPGroupCallTest;
@@ -50,7 +51,8 @@ import org.serviceconnector.test.system.scmp.SCMPGroupCallTest;
 		// SCMP session test
 		SCMPClnCreateSessionTest.class,
 		SCMPClnExecuteTest.class,
-		SCMPGroupCallTest.class
+		SCMPGroupCallTest.class,
+		SCMPClnChangeSubscriptionTest.class
 		})
 public class AllSystemTests {
 }
