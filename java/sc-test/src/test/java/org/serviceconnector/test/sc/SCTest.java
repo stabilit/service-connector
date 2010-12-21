@@ -25,15 +25,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.serviceconnector.test.sc.publish.PublishLargeMessagesTestCase;
-import org.serviceconnector.test.sc.subscribe.ClnSubscribeWaitMechanismTestCase;
 import org.serviceconnector.test.sc.subscriptionChange.ClnChangeSubscriptionTestCase;
 
 /**
  * @author JTraber
  */
 @RunWith(Suite.class)
-@SuiteClasses( { 
-		ClnSubscribeWaitMechanismTestCase.class,
+@SuiteClasses( {
 		ClnChangeSubscriptionTestCase.class,
 		PublishLargeMessagesTestCase.class})
 public class SCTest {

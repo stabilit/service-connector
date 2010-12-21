@@ -197,4 +197,43 @@ public class SCMPClnSubscribeTest {
 		reply = cbk.getMessageSync(3000);
 		TestUtil.checkReply(reply);
 	}
+
+	/**
+	 * Description: subscribe call - waits 2 seconds - another subscribe fails because no free server is available<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t30_ClnSubscribeFailsNoFreeServer() throws Exception {
+		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
+				TestConstants.pubServerName1);
+
+		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+		subscribeCall.setNoDataIntervalSeconds(2);
+		subscribeCall.setMask(TestConstants.mask);
+		TestCallback cbk = new TestCallback(true);
+		subscribeCall.setRequestBody("2000");
+		subscribeCall.invoke(cbk, 3000);
+
+		subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
+				TestConstants.pubServerName1);
+
+		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+		subscribeCall.setNoDataIntervalSeconds(2);
+		subscribeCall.setMask(TestConstants.mask);
+		TestCallback cbk1 = new TestCallback(true);
+		subscribeCall.invoke(cbk1, 1000);
+
+		SCMPMessage reply = cbk.getMessageSync(1000);
+		SCMPMessage reply1 = cbk1.getMessageSync(1000);
+		String sessionId = reply.getSessionId();
+
+		TestUtil.checkReply(reply);
+		Assert.assertTrue(reply1.isFault());
+		TestUtil.verifyError(reply1, SCMPError.NO_FREE_SERVER, SCMPMsgType.CLN_SUBSCRIBE);
+
+		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
+				this.requester, TestConstants.pubServerName1, sessionId);
+		unSubscribeCall.invoke(cbk, 3000);
+		TestUtil.checkReply(cbk.getMessageSync(3000));
+	}
 }
