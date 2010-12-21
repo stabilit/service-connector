@@ -32,6 +32,7 @@ public class TestConstants {
 	public static final String log4jSCcascadedProperties = "log4j-sc-cascaded.properties";
 	public static final String SCProperties = "sc.properties";
 	public static final String SCcascadedProperties = "sc-cascaded.properties";
+	public static final String SCNoInterfacesProperties = "sc-nointerfaces.properties";
 	
 	public static final String sesServiceName1 = "session-1";
 	public static final String sesServiceName2 = "session-2";

@@ -36,7 +36,6 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.log.SubscriptionLogger;
-import org.serviceconnector.test.system.api.publish.APIReceivePublicationTest;
 import org.serviceconnector.util.FileUtility;
 
 @SuppressWarnings("unused")
@@ -44,7 +43,7 @@ public class TestPublishServer extends TestStatefulServer {
 
 	/** The Constant testLogger. */
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	
+
 	static {
 		TestStatefulServer.logger = Logger.getLogger(TestPublishServer.class);
 	}
@@ -58,7 +57,7 @@ public class TestPublishServer extends TestStatefulServer {
 	 *            [2] SC port<br>
 	 *            [3] maxSessions<br>
 	 *            [4] maxConnections<br>
-	 *            [5] connectionType ("netty.tcp" or "netty.http")<br> 
+	 *            [5] connectionType ("netty.tcp" or "netty.http")<br>
 	 *            [6] serviceNames (comma delimited list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
@@ -140,7 +139,7 @@ public class TestPublishServer extends TestStatefulServer {
 					}
 					KillThread<SCPublishServer> kill = new KillThread<SCPublishServer>(this.scPublishServer);
 					kill.start();
-				// watch out for reject request
+					// watch out for reject request
 				} else if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
 					try {
 						response.setReject(true);
@@ -213,12 +212,12 @@ public class TestPublishServer extends TestStatefulServer {
 
 		// ==================================================================================
 		// methods invoked by name (passed in messageInfo)
-		
+
 		// do nothing
 		public void doNothing(SCMessage request, int operationTimeoutInMillis) {
 		}
 
-		// publish n compressed messages 128 byte long. n is defined in the request body 
+		// publish n compressed messages 128 byte long. n is defined in the request body
 		public void publishMessagesCompressed(SCMessage request, int operationTimeoutInMillis) {
 			String dataString = (String) request.getData();
 			int count = Integer.parseInt(dataString);
@@ -229,17 +228,17 @@ public class TestPublishServer extends TestStatefulServer {
 					pubMessage.setMask(TestConstants.maskSrv);
 					pubMessage.setData("publish message nr:" + i);
 					this.publishSrv.publish(pubMessage);
-					if (((i+1) % 1000) == 0) {
-						TestPublishServer.testLogger.info("Publishing message nr. " + (i+1));
+					if (((i + 1) % 1000) == 0) {
+						TestPublishServer.testLogger.info("Publishing message nr. " + (i + 1));
 					}
 				} catch (Exception e) {
-					logger.error("cannot publish",e);
+					logger.error("cannot publish", e);
 					break;
 				}
 			}
 		}
 
-		// publish n uncompressed messages 128 byte long. n is defined in the request body 
+		// publish n uncompressed messages 128 byte long. n is defined in the request body
 		public void publishMessagesUncompressed(SCMessage request, int operationTimeoutInMillis) {
 			String dataString = (String) request.getData();
 			int count = Integer.parseInt(dataString);
@@ -250,19 +249,19 @@ public class TestPublishServer extends TestStatefulServer {
 					pubMessage.setMask(TestConstants.maskSrv);
 					pubMessage.setData("publish message nr:" + i);
 					this.publishSrv.publish(pubMessage);
-					if (((i+1) % 1000) == 0) {
-						TestPublishServer.testLogger.info("Publishing message nr. " + (i+1));
+					if (((i + 1) % 1000) == 0) {
+						TestPublishServer.testLogger.info("Publishing message nr. " + (i + 1));
 					}
 				} catch (Exception e) {
-					logger.error("cannot publish",e);
+					logger.error("cannot publish", e);
 					break;
 				}
 			}
 		}
-		
-		// publish n messages 128 byte long with delay w. n is defined in the request body, w in messageInfo  
+
+		// publish n messages 128 byte long with delay w. n is defined in the request body, w in messageInfo
 		public void publishMessagesWithDelay(SCMessage request, int operationTimeoutInMillis) {
-			String[] dataString = ((String) request.getData()).split("\\|");			
+			String[] dataString = ((String) request.getData()).split("\\|");
 			int count = Integer.parseInt(dataString[0]);
 			int waitTime = Integer.parseInt(dataString[1]);
 			SCPublishMessage pubMessage = new SCPublishMessage(new byte[128]);
@@ -273,15 +272,29 @@ public class TestPublishServer extends TestStatefulServer {
 					pubMessage.setData("publish message nr:" + i);
 					this.publishSrv.publish(pubMessage);
 					Thread.sleep(waitTime);
-					if (((i+1) % 100) == 0) {
-						TestPublishServer.testLogger.info("Publishing message nr. " + (i+1));
+					if (((i + 1) % 100) == 0) {
+						TestPublishServer.testLogger.info("Publishing message nr. " + (i + 1));
 					}
 				} catch (Exception e) {
-					logger.error("cannot publish",e);
+					logger.error("cannot publish", e);
 					break;
 				}
 			}
 		}
 
+		// sleep for time defined in the body and send back the same message
+		public SCMessage sleep(SCMessage request, int operationTimeoutInMillis) {
+			String dataString = (String) request.getData();
+			int millis = Integer.parseInt(dataString);
+			try {
+				logger.info("Sleeping " + millis + "ms");
+				Thread.sleep(millis);
+			} catch (InterruptedException e) {
+				logger.warn("sleep interrupted " + e.getMessage());
+			} catch (Exception e) {
+				logger.error("sleep error", e);
+			}
+			return request;
+		}
 	}
 }
