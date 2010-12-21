@@ -318,7 +318,11 @@ public class SCMessage {
 	 *            the new application error code
 	 * @throws SCMPValidatorException
 	 */
-	public void setAppErrorCode(int appErrorCode) throws SCMPValidatorException {
+	public void setAppErrorCode(Integer appErrorCode) throws SCMPValidatorException {
+		if(appErrorCode == null) {
+			this.appErrorCode = 0;
+			return;
+		}
 		ValidatorUtility.validateInt(0, appErrorCode, SCMPError.HV_WRONG_APP_ERROR_CODE);
 		this.appErrorCode = appErrorCode;
 	}

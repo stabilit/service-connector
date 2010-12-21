@@ -22,8 +22,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 /**
- * A utility class that provides a reverse map of the {@link Enum} that is keyed by the value of the {@link Enum}
- * constant.
+ * A utility class that provides a reverse map of the {@link Enum} that is keyed by the value of the {@link Enum} constant.
  * 
  * @author JTraber
  * @param <K>
@@ -35,7 +34,7 @@ public class ReverseEnumMap<K, V extends IReversibleEnum<K, V>> {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(ReverseEnumMap.class);
-	
+
 	/** The reverse map. */
 	private final Map<K, V> reverseMap = new HashMap<K, V>();
 
@@ -59,6 +58,9 @@ public class ReverseEnumMap<K, V extends IReversibleEnum<K, V>> {
 	 * @return enum constant
 	 */
 	public V get(final K enumValue) {
+		if (enumValue == null) {
+			return null;
+		}
 		return reverseMap.get(enumValue);
 	}
 }

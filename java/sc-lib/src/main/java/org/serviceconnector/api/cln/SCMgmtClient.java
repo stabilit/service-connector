@@ -156,6 +156,7 @@ public class SCMgmtClient extends SCClient {
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("inspect failed");
 			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw ex;
 		}
 		return (String) reply.getBody();
@@ -187,6 +188,7 @@ public class SCMgmtClient extends SCClient {
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("manage failed");
 			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw ex;
 		}
 		return (String) reply.getBody();

@@ -134,16 +134,11 @@ public class SCSessionService extends SCService {
 		}
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		this.triggerSessionTimeout();
-		if (reply.isFault()) {
+		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
 			SCServiceException ex = new SCServiceException("create session failed");
 			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			throw ex;
-		}
-		if (reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
-			SCServiceException ex = new SCServiceException("create session failed, session rejected");
-			if (reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE) != null) {
-				ex.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-			}
+			ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			ex.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 			ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 			throw ex;
 		}
@@ -153,9 +148,7 @@ public class SCSessionService extends SCService {
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
-		if (reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE) != null) {
-			replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-		}
+		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 		return replyToClient;
 	}
@@ -227,20 +220,13 @@ public class SCSessionService extends SCService {
 			try {
 				deleteSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				if (this.sessionActive == false) {
-					// ignore errors in state of dead session
-					return;
-				}
 				throw new SCServiceException("delete session failed ", e);
 			}
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				if (this.sessionActive == false) {
-					// ignore errors in state of dead session
-					return;
-				}
 				SCServiceException ex = new SCServiceException("delete session failed");
 				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		} finally {
@@ -299,6 +285,7 @@ public class SCSessionService extends SCService {
 		if (reply.isFault()) {
 			SCServiceException scEx = new SCServiceException("execute failed");
 			scEx.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			scEx.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw scEx;
 		}
 		SCMessage replyToClient = new SCMessage();
@@ -429,6 +416,7 @@ public class SCSessionService extends SCService {
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
 			ex.setSCMPError(SCMPError.BROKEN_SESSION);
+			ex.setSCMPDetailErrorText("refreshing session by echo failed");
 			this.messageCallback.receive(ex);
 			return;
 		}
@@ -439,6 +427,7 @@ public class SCSessionService extends SCService {
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
 			ex.setSCMPError(SCMPError.BROKEN_SESSION);
+			ex.setSCMPDetailErrorText("refreshing session by echo failed");
 			this.messageCallback.receive(ex);
 			return;
 		}

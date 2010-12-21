@@ -74,6 +74,9 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 	 *            the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
+		if(sessionInfo == null) {
+			return;
+		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 

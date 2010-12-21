@@ -124,6 +124,7 @@ public class SCClient {
 				this.requester.destroy();
 				SCServiceException ex = new SCServiceException("attach to " + host + ":" + port + " failed");
 				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 			this.attached = true;
@@ -174,6 +175,7 @@ public class SCClient {
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("detach client failed");
 				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		} finally {

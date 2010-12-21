@@ -21,9 +21,8 @@ import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
- * The Class SCMPClnUnsubscribeCall. Call unsubscribes form a publish service.
+ * The Class SCMPClnUnsubscribeCall. Call unsubscribes from a publish service.
  * 
  * @author JTraber
  */
@@ -31,7 +30,7 @@ public class SCMPClnUnsubscribeCall extends SCMPSessionCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPClnUnsubscribeCall.class);
-	
+
 	/**
 	 * Instantiates a new SCMPClnUnsubscribeCall.
 	 */
@@ -64,14 +63,17 @@ public class SCMPClnUnsubscribeCall extends SCMPSessionCallAdapter {
 	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
 		return new SCMPClnUnsubscribeCall(req, serviceName, sessionId);
 	}
-	
+
 	/**
-	 * Sets the session info.
+	 * Sets the session info. 
 	 * 
 	 * @param sessionInfo
 	 *            the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
+		if (sessionInfo == null) {
+			return;
+		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 }

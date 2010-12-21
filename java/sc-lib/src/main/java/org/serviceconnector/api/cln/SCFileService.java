@@ -67,6 +67,7 @@ public class SCFileService extends SCService {
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("upload file failed");
 				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		} finally {
@@ -97,6 +98,7 @@ public class SCFileService extends SCService {
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("download file failed");
 				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 			if (reply.isComposite()) {
@@ -128,6 +130,7 @@ public class SCFileService extends SCService {
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("list files failed");
 			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw ex;
 		}
 		String fileNameList = new String((byte[]) reply.getBody());
@@ -150,6 +153,7 @@ public class SCFileService extends SCService {
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("create file session failed");
 			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw ex;
 		}
 		this.sessionId = reply.getSessionId();
@@ -170,6 +174,7 @@ public class SCFileService extends SCService {
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("delete file session failed");
 				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		} finally {

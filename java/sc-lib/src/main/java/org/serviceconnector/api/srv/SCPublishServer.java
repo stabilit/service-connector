@@ -67,6 +67,7 @@ public class SCPublishServer extends SCSessionServer {
 			if (message.isFault()) {
 				SCServiceException ex = new SCServiceException("publish failed");
 				ex.setSCMPError(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCMPDetailErrorText(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		}

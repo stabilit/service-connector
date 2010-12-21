@@ -28,10 +28,6 @@ import org.serviceconnector.scmp.SCMPError;
  * 
  * @author JTraber
  */
-/**
- * @author schoeggii
- *
- */
 public class SCServiceException extends Exception {
 
 	/** The Constant serialVersionUID. */
@@ -43,6 +39,8 @@ public class SCServiceException extends Exception {
 	private String appErrorText;
 	/** The scmp error. */
 	private SCMPError scmpError;
+	/** The scmp detail error text. */
+	private String scmpDetailErrorText;
 
 	/**
 	 * Instantiates a new SC service exception.
@@ -81,7 +79,11 @@ public class SCServiceException extends Exception {
 	 * @param appErrorCode
 	 *            the new application error code
 	 */
-	public void setAppErrorCode(int appErrorCode) {
+	public void setAppErrorCode(Integer appErrorCode) {
+		if(appErrorCode == null) {
+			this.appErrorCode = 0;
+			return;
+		}
 		this.appErrorCode = appErrorCode;
 	}
 
@@ -123,7 +125,32 @@ public class SCServiceException extends Exception {
 		this.scmpError = SCMPError.getSCMPErrorByCode(errorCode);
 	}
 
+	/**
+	 * Sets the SCMP error.
+	 * 
+	 * @param scmpError
+	 *            the new SCMP error
+	 */
 	public void setSCMPError(SCMPError scmpError) {
 		this.scmpError = scmpError;
+	}
+
+	/**
+	 * Sets the SCMP detail error text.
+	 * 
+	 * @param scmpDetailErrorText
+	 *            the new SCMP detail error text
+	 */
+	public void setSCMPDetailErrorText(String scmpDetailErrorText) {
+		this.scmpDetailErrorText = scmpDetailErrorText;
+	}
+
+	/**
+	 * Gets the SCMP detail error text.
+	 * 
+	 * @return the SCMP detail error text
+	 */
+	public String getSCMPDetailErrorText() {
+		return this.scmpDetailErrorText;
 	}
 }

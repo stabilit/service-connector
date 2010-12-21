@@ -63,7 +63,7 @@ public class SCSubscribeMessage extends SCMessage {
 
 	
 	public int getNoDataIntervalInSeconds() {
-		return noDataIntervalInSeconds;
+		return this.noDataIntervalInSeconds;
 	}
 
 	public void setNoDataIntervalInSeconds(int noDataIntervalInSeconds) throws SCMPValidatorException {

@@ -46,12 +46,12 @@ public class SCPublishService extends SCService {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCPublishService.class);
-	private int noDataInterval;
+	private int noDataIntervalSeconds;
 	private SCMessageCallback scMessageCallback;
 
 	public SCPublishService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);
-		this.noDataInterval = 0;
+		this.noDataIntervalSeconds = 0;
 		this.scMessageCallback = null;
 	}
 
@@ -104,28 +104,21 @@ public class SCPublishService extends SCService {
 			throw new SCServiceException("change subscription failed", e);
 		}
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		if (reply.isFault()) {
-			this.sessionActive = false;
+		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
+			// reply is fault or rejected
 			SCServiceException ex = new SCServiceException("change subscription failed");
 			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			throw ex;
-		}
-		if (reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
-			SCServiceException ex = new SCServiceException("change subscription failed, subscription rejected");
-			if (reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE) != null) {
-				ex.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-				ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
-			}
+			ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			ex.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+			ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 			throw ex;
 		}
 		SCSubscribeMessage replyToClient = new SCSubscribeMessage();
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
-		if (reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE) != null) {
-			replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-			replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
-		}
+		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 		return replyToClient;
 	}
 
@@ -169,13 +162,11 @@ public class SCPublishService extends SCService {
 		if (scMessageCallback == null) {
 			throw new InvalidParameterException("Callback must be set.");
 		}
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		this.noDataInterval = scSubscribeMessage.getNoDataIntervalInSeconds();
-		if (this.noDataInterval == 0) {
-			throw new InvalidParameterException("notDataInterval must be set.");
-		}
-		this.requester.getContext().getSCMPMsgSequenceNr().reset();
+		this.noDataIntervalSeconds = scSubscribeMessage.getNoDataIntervalInSeconds();
 		this.scMessageCallback = scMessageCallback;
+		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility.validateInt(1, this.noDataIntervalSeconds, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
+		this.requester.getContext().getSCMPMsgSequenceNr().reset();
 		SCServiceCallback callback = new SCServiceCallback(true);
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
 				this.serviceName);
@@ -191,19 +182,14 @@ public class SCPublishService extends SCService {
 			throw new SCServiceException("subscribe failed", e);
 		}
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		if (reply.isFault()) {
+		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
+			// reply is fault or rejected
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("subscribe failed");
 			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			throw ex;
-		}
-		if (reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
-			SCServiceException ex = new SCServiceException("change subscription failed, subscription rejected");
-			if (reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE) != null) {
-				ex.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-				ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
-			}
-			this.sessionActive = false;
+			ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			ex.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+			ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 			throw ex;
 		}
 		this.sessionId = reply.getSessionId();
@@ -213,10 +199,8 @@ public class SCPublishService extends SCService {
 		replyToClient.setData(reply.getBody());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
-		if (reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE) != null) {
-			replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-			replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
-		}
+		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 		return replyToClient;
 	}
 
@@ -244,7 +228,7 @@ public class SCPublishService extends SCService {
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		PublishServiceCallback callback = new PublishServiceCallback(this.scMessageCallback);
 		receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR
-				* (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataInterval));
+				* (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataIntervalSeconds));
 	}
 
 	/**
@@ -296,14 +280,13 @@ public class SCPublishService extends SCService {
 		}
 		this.sessionActive = false;
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+
 		try {
 			this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
 					this.requester, this.serviceName, this.sessionId);
 			SCServiceCallback callback = new SCServiceCallback(true);
-			if (scSubscribeMessage != null) {
-				unsubscribeCall.setSessionInfo(scSubscribeMessage.getSessionInfo());
-			}
+			unsubscribeCall.setSessionInfo(scSubscribeMessage.getSessionInfo());
 			try {
 				unsubscribeCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
@@ -313,6 +296,7 @@ public class SCPublishService extends SCService {
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("unsubscribe failed");
 				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		} finally {
@@ -350,6 +334,7 @@ public class SCPublishService extends SCService {
 				} else { // EXC received
 					SCServiceException ex = new SCServiceException("SCPublishService operation failed");
 					ex.setSCMPError(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+					ex.setSCMPDetailErrorText(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 					super.receive(ex);
 				}
 				return;
