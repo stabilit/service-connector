@@ -45,7 +45,7 @@ public class TestAbstractClient extends Thread {
 		for (String methodString : this.methodsToInvoke) {
 			try {
 				Method method = this.getClass().getMethod(methodString);
-				method.invoke(this, new Object());
+				method.invoke(this);
 			} catch (Exception e) {
 				logger.error("runSessionClient " + methodString, e);
 			}
