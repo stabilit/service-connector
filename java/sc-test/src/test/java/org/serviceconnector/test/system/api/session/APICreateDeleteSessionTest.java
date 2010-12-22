@@ -73,7 +73,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 
 	/**
 	 * Description: Create session to file service<br>
-	 * Expectation: throws SCServiceException (unfortunatelly this passes because file services uses sessions)
+	 * Expectation: throws SCServiceException (unfortunately this passes because file services uses sessions)
 	 * file service accepts create session (sessionService)
 	 * TODO JOT/TRN how do we distinguish between session for file services??
 	 */
