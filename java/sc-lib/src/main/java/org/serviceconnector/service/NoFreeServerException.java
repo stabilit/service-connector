@@ -18,10 +18,22 @@ package org.serviceconnector.service;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.SCMPError;
 
+/**
+ * The Class NoFreeServerException.
+ */
 public class NoFreeServerException extends HasFaultResponseException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -6743108698413624462L;
 
+	/**
+	 * Instantiates a new no free server exception.
+	 * 
+	 * @param error
+	 *            the error
+	 * @param additionalInfo
+	 *            the additional info
+	 */
 	public NoFreeServerException(SCMPError error, String additionalInfo) {
 		super(error, additionalInfo);
 	}
