@@ -41,6 +41,7 @@ import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.SCMPError;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class AppContext. The AppContext is singelton and holds all factories and registries. Its the top context in a service
  * connector, server or even in clients. Its a superset of the specific contexts and unifies the data.
@@ -48,11 +49,14 @@ import org.serviceconnector.scmp.SCMPError;
 public final class AppContext {
 
 	// indicates that AppContext is running in a SC environment
+	/** The sc environment. */
 	private static boolean scEnvironment = false;
 
 	// communicator lock
+	/** The communicators lock. */
 	public static Object communicatorsLock = new Object();
 	// current attached communicators
+	/** The attached communicators. */
 	public static AtomicInteger attachedCommunicators = new AtomicInteger();
 	/** The executer, triggers all operation timeout for sending. */
 	public static ScheduledThreadPoolExecutor otiScheduler;
@@ -72,22 +76,45 @@ public final class AppContext {
 	private static RequesterConfiguration requesterConfiguration = new RequesterConfiguration();
 
 	// Factories
+	/** The command factory. */
 	private static FlyweightCommandFactory commandFactory;
+	
+	/** The Constant responderRegistry. */
 	private static final ResponderRegistry responderRegistry = new ResponderRegistry();
+	
+	/** The Constant connectionFactory. */
 	private static final ConnectionFactory connectionFactory = new ConnectionFactory();
+	
+	/** The Constant endpointFactory. */
 	private static final EndpointFactory endpointFactory = new EndpointFactory();
+	
+	/** The Constant frameDecoderFactory. */
 	private static final FlyweightFrameDecoderFactory frameDecoderFactory = new FlyweightFrameDecoderFactory();
+	
+	/** The Constant encoderDecoderFactory. */
 	private static final FlyweightEncoderDecoderFactory encoderDecoderFactory = new FlyweightEncoderDecoderFactory();
 
 	// Registries
+	/** The server registry. */
 	private static ServerRegistry serverRegistry = null;
+	
+	/** The service registry. */
 	private static ServiceRegistry serviceRegistry = null;
+	
+	/** The session registry. */
 	private static SessionRegistry sessionRegistry = null;
+	
+	/** The subscription registry. */
 	private static SubscriptionRegistry subscriptionRegistry = null;
+	
+	/** The srv service registry. */
 	private static SrvServiceRegistry srvServiceRegistry = new SrvServiceRegistry();
+	
+	/** The Constant scmpSessionCompositeRegistry. */
 	private static final SCMPSessionCompositeRegistry scmpSessionCompositeRegistry = new SCMPSessionCompositeRegistry();
 
 	// scmp cache
+	/** The Constant cacheManager. */
 	private static final CacheManager cacheManager = new CacheManager();
 
 	// initialize configurations in every case
@@ -105,6 +132,11 @@ public final class AppContext {
 	private AppContext() {
 	}
 
+	/**
+	 * Inits the commands.
+	 *
+	 * @param commandFactory the command factory
+	 */
 	public static void initCommands(FlyweightCommandFactory commandFactory) {
 		if (AppContext.commandFactory != null) {
 			// set only one time
@@ -113,58 +145,129 @@ public final class AppContext {
 		AppContext.commandFactory = commandFactory;
 	}
 
+	/**
+	 * Gets the command factory.
+	 *
+	 * @return the command factory
+	 */
 	public static FlyweightCommandFactory getCommandFactory() {
 		return AppContext.commandFactory;
 	}
 
+	/**
+	 * Gets the connection factory.
+	 *
+	 * @return the connection factory
+	 */
 	public static ConnectionFactory getConnectionFactory() {
 		return AppContext.connectionFactory;
 	}
 
+	/**
+	 * Gets the encoder decoder factory.
+	 *
+	 * @return the encoder decoder factory
+	 */
 	public static FlyweightEncoderDecoderFactory getEncoderDecoderFactory() {
 		return AppContext.encoderDecoderFactory;
 	}
 
+	/**
+	 * Gets the frame decoder factory.
+	 *
+	 * @return the frame decoder factory
+	 */
 	public static FlyweightFrameDecoderFactory getFrameDecoderFactory() {
 		return AppContext.frameDecoderFactory;
 	}
 
+	/**
+	 * Gets the endpoint factory.
+	 *
+	 * @return the endpoint factory
+	 */
 	public static EndpointFactory getEndpointFactory() {
 		return AppContext.endpointFactory;
 	}
 
+	/**
+	 * Gets the responder registry.
+	 *
+	 * @return the responder registry
+	 */
 	public static ResponderRegistry getResponderRegistry() {
 		return AppContext.responderRegistry;
 	}
 
+	/**
+	 * Gets the srv service registry.
+	 *
+	 * @return the srv service registry
+	 */
 	public static SrvServiceRegistry getSrvServiceRegistry() {
 		return AppContext.srvServiceRegistry;
 	}
 
+	/**
+	 * Gets the server registry.
+	 *
+	 * @return the server registry
+	 */
 	public static ServerRegistry getServerRegistry() {
 		return AppContext.serverRegistry;
 	}
 
+	/**
+	 * Gets the service registry.
+	 *
+	 * @return the service registry
+	 */
 	public static ServiceRegistry getServiceRegistry() {
 		return AppContext.serviceRegistry;
 	}
 
+	/**
+	 * Gets the session registry.
+	 *
+	 * @return the session registry
+	 */
 	public static SessionRegistry getSessionRegistry() {
 		return AppContext.sessionRegistry;
 	}
 
+	/**
+	 * Gets the subscription registry.
+	 *
+	 * @return the subscription registry
+	 */
 	public static SubscriptionRegistry getSubscriptionRegistry() {
 		return AppContext.subscriptionRegistry;
 	}
 
+	/**
+	 * Gets the sCMP session composite registry.
+	 *
+	 * @return the sCMP session composite registry
+	 */
 	public static SCMPSessionCompositeRegistry getSCMPSessionCompositeRegistry() {
 		return AppContext.scmpSessionCompositeRegistry;
 	}
 
+	/**
+	 * Gets the cache manager.
+	 *
+	 * @return the cache manager
+	 */
 	public static CacheManager getCacheManager() {
 		return AppContext.cacheManager;
 	}
 
+	/**
+	 * Inits the configuration.
+	 *
+	 * @param configFile the config file
+	 * @throws Exception the exception
+	 */
 	public static void initConfiguration(String configFile) throws Exception {
 		AppContext.apacheCompositeConfig = new CompositeConfiguration();
 		// system properties override every setting
@@ -182,26 +285,56 @@ public final class AppContext {
 		AppContext.requesterConfiguration.init(AppContext.apacheCompositeConfig);
 	}
 
+	/**
+	 * Gets the apache composite config.
+	 *
+	 * @return the apache composite config
+	 */
 	public static CompositeConfiguration getApacheCompositeConfig() {
 		return apacheCompositeConfig;
 	}
 
+	/**
+	 * Gets the basic configuration.
+	 *
+	 * @return the basic configuration
+	 */
 	public static BasicConfiguration getBasicConfiguration() {
 		return basicConfiguration;
 	}
 
+	/**
+	 * Gets the cache configuration.
+	 *
+	 * @return the cache configuration
+	 */
 	public static CacheConfiguration getCacheConfiguration() {
 		return cacheConfiguration;
 	}
 
+	/**
+	 * Gets the responder configuration.
+	 *
+	 * @return the responder configuration
+	 */
 	public static ResponderConfiguration getResponderConfiguration() {
 		return responderConfiguration;
 	}
 
+	/**
+	 * Gets the requester configuration.
+	 *
+	 * @return the requester configuration
+	 */
 	public static RequesterConfiguration getRequesterConfiguration() {
 		return requesterConfiguration;
 	}
 
+	/**
+	 * Sets the sC environment.
+	 *
+	 * @param scEnvironment the new sC environment
+	 */
 	public static void setSCEnvironment(boolean scEnvironment) {
 		AppContext.scEnvironment = scEnvironment;
 		if (AppContext.scEnvironment) {
@@ -212,10 +345,18 @@ public final class AppContext {
 		}
 	}
 
+	/**
+	 * Checks if is sc environment.
+	 *
+	 * @return true, if is sc environment
+	 */
 	public static boolean isScEnvironment() {
 		return AppContext.scEnvironment;
 	}
 
+	/**
+	 * Inits the.
+	 */
 	public static void init() {
 		synchronized (AppContext.communicatorsLock) {
 			ConnectionFactory.init();
@@ -228,6 +369,9 @@ public final class AppContext {
 		}
 	}
 
+	/**
+	 * Destroy.
+	 */
 	public static void destroy() {
 		synchronized (AppContext.communicatorsLock) {
 			// got lock to complete destroy

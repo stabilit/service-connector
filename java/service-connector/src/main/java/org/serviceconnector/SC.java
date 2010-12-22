@@ -109,6 +109,7 @@ public final class SC {
 		AppContext.initCommands(new ServiceConnectorCommandFactory());
 		AppContext.initConfiguration(configFileName);
 
+		WebContext.initConfiguration(configFileName);
 		WebContext.initContext(new ServiceConnectorWebCommandFactory());
 
 		// load servers

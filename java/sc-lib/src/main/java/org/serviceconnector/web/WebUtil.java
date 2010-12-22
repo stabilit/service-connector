@@ -15,8 +15,10 @@
  */
 package org.serviceconnector.web;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -69,6 +71,35 @@ public abstract class WebUtil {
 				return null;
 			}
 			return loadResource("/resources" + name);
+		}
+	}
+
+	/**
+	 * Gets the resource url.
+	 *
+	 * @param name the name
+	 * @return the resource url
+	 */
+	public static URL getResourceURL(String name) {
+		if (name == null) {
+			return null;
+		}
+		try {
+			URL url = ClassLoader.getSystemResource(name);
+			if (url != null) {
+				return url;
+			}
+			url = WebUtil.class.getResource(name);
+			if (url != null) {
+				return url;
+			}
+			File file = new File(name);
+			if (file.exists()) {
+				return file.toURI().toURL();
+			}
+			return null;
+		} catch (Exception e) {
+			return null;
 		}
 	}
 

@@ -85,6 +85,13 @@ function resetTranslet() {
 	ajaxSystem.ajaxCall('ajax/system?action=resetTranslet');	
 }
 
+function downloadAndReplaceSelected() {
+	var check = window.confirm("Download and Replace Selected! Are you sure?");
+	if (check == false) {
+		return;
+    }
+}
+
 function systemCallback() {
    	setStatusSuccess();
 }
@@ -148,4 +155,18 @@ function contentCall(id, query) {
 }
 
 var ajaxContent = new AjaxCallObject('Content', 'ajax/content', contentCallback, errorCallback);
+
+
+function maintenanceCallback() {
+	var scMaintenance = document.getElementById("sc_maintenance");
+	if (scMaintenance != null) {
+		scMaintenance.innerHTML = this.req.responseText;
+	}
+}
+
+function maintenanceCall(service, query) {
+	ajaxMaintenance.ajaxCall('ajax/maintenance?service='+service + '&' + query);
+}
+
+var ajaxMaintenance = new AjaxCallObject('Maintenanace', 'ajax/maintenance', maintenanceCallback, errorCallback);
 

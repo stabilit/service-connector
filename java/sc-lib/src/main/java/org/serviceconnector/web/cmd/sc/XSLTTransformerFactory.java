@@ -29,6 +29,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.web.WebUtil;
+import org.serviceconnector.web.ctx.WebContext;
 
 
 // TODO: Auto-generated Javadoc
@@ -59,7 +60,9 @@ public class XSLTTransformerFactory {
 	 * @param translet the translet
 	 */
 	public void addTranslet(String key, Templates translet) {
-		this.transletMap.put(key, translet);
+		if (WebContext.getWebConfiguration().isTransletEnabled()) {
+		    this.transletMap.put(key, translet);
+		}
 	}
 
 	/**

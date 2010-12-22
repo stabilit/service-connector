@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 
 /**
- * The Class SCMPCacheConfiguration.
+ * The Class CacheConfiguration.
  */
 public class CacheConfiguration implements ICacheConfiguration {
 

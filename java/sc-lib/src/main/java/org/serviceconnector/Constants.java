@@ -187,7 +187,9 @@ public final class Constants {
 	public static final String PROPERTY_QUALIFIER_LIST_SCRIPT = ".listScript";
 	public static final String PROPERTY_QUALIFIER_UPLOAD_SCRIPT = ".uploadScript";
 
+	// default cache values
 	public static final boolean DEFAULT_CACHE_ENABLED = true;
+
 	public static final String DEFAULT_CACHE_NAME = "scCache";
 	public static final boolean DEFAULT_CACHE_DISK_PERSISTENT = true;
 	public static final String DEFAULT_CACHE_DISK_PATH = "cache";
@@ -196,7 +198,7 @@ public final class Constants {
 	public static final int DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = 300;
 	// for internal use in class Cache
 	public static final int DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS = 60000;
-
+    // cache property keys
 	public static final String CACHE_ENABLED = "cache.enabled";
 	public static final String CACHE_NAME = "cache.name";
 	public static final String CACHE_DISK_PERSISTENT = "cache.diskPersistent";
@@ -205,6 +207,11 @@ public final class Constants {
 	public static final String CACHE_MAX_ELEMENTS_ON_DISK = "cache.maxElementsOnDisk";
 	public static final String CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = "cache.expirationCheckIntervalSeconds";
 	public static final String CED_DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ss.SSSZ";
+
+	// web default values
+	public static final boolean DEFAULT_WEB_TRANSLET_ENABLED = true;
+    // web property keys
+	public static final String WEB_TRANSLET_ENABLED = "web.translet.enabled";
 
 	/*
 	 * SCMP protocol constants ***********************

@@ -15,8 +15,15 @@
  */
 package org.serviceconnector.web.ctx;
 
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.EnvironmentConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
+import org.serviceconnector.web.WebConfiguration;
 import org.serviceconnector.web.cmd.FlyweightWebCommandFactory;
 import org.serviceconnector.web.cmd.IWebCommand;
 import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
@@ -26,6 +33,11 @@ import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
  * The Class WebContext.
  */
 public class WebContext {
+
+	// initialize configurations in every case
+	static {
+		WebContext.webConfiguration = new WebConfiguration();
+	}
 
 	/** The instance. */
 	protected static WebContext instance = new WebContext();
@@ -37,10 +49,30 @@ public class WebContext {
 	/** The web command factory. */
 	private static FlyweightWebCommandFactory webCommandFactory;
 
+	/** The composite configuration. */
+	private static CompositeConfiguration apacheCompositeConfig;
+	
+	/** The web configuration. */
+	private static WebConfiguration webConfiguration = new WebConfiguration();
+
 	/**
 	 * Instantiates a new web context.
 	 */
 	public WebContext() {
+	}
+
+	public static void initConfiguration(String configFile) throws Exception {
+		WebContext.apacheCompositeConfig = new CompositeConfiguration();
+		// system properties override every setting
+		try {
+			// add environment variables to configuration
+			WebContext.apacheCompositeConfig.addConfiguration(new EnvironmentConfiguration());
+			WebContext.apacheCompositeConfig.addConfiguration(new PropertiesConfiguration(configFile));
+		} catch (Exception e) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.toString());
+		}
+
+		WebContext.webConfiguration.init(WebContext.apacheCompositeConfig);
 	}
 
 	/**
@@ -56,7 +88,16 @@ public class WebContext {
 		}
 		WebContext.webCommandFactory = webCommandFactory;
 	}
-	
+
+	/**
+	 * Gets the web configuration.
+	 *
+	 * @return the web configuration
+	 */
+	public static WebConfiguration getWebConfiguration() {
+		return webConfiguration;
+	}
+
 	/**
 	 * Gets the web command.
 	 * 

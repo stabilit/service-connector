@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.Enumeration;
@@ -53,13 +54,16 @@ import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.server.FileServer;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.util.DateTimeUtility;
+import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
@@ -101,6 +105,8 @@ public class DefaultXMLLoaderFactory {
 		this.addXMLLoader("/logs", loader);
 		loader = new CacheXMLLoader();
 		this.addXMLLoader("/cache", loader);
+		loader = new MaintenanceXMLLoader();
+		this.addXMLLoader("/maintenance", loader);
 		loader = new AjaxResourceXMLLoader();
 		this.addXMLLoader("/ajax/resource", loader);
 		loader = new TimerXMLLoader();
@@ -109,6 +115,8 @@ public class DefaultXMLLoaderFactory {
 		this.addXMLLoader("/ajax/system", loader);
 		loader = new AjaxContentXMLLoader();
 		this.addXMLLoader("/ajax/content", loader);
+		loader = new AjaxMaintenanceXMLLoader();
+		this.addXMLLoader("/ajax/maintenance", loader);
 	}
 
 	/**
@@ -561,31 +569,32 @@ public class DefaultXMLLoaderFactory {
 			writer.writeEndElement(); // end of details
 		}
 
-		private void writeCacheComposite(XMLStreamWriter writer, Cache cache, CacheKey cacheKey, CacheComposite cacheComposite, IWebRequest request) throws XMLStreamException {
-			String compositeParam = request.getParameter("composite");		
+		private void writeCacheComposite(XMLStreamWriter writer, Cache cache, CacheKey cacheKey, CacheComposite cacheComposite,
+				IWebRequest request) throws XMLStreamException {
+			String compositeParam = request.getParameter("composite");
 			writer.writeStartElement("composite");
 			writer.writeStartElement("key");
 			writer.writeCharacters(cacheKey.getCacheId());
 			writer.writeEndElement();
 			writer.writeStartElement("size");
 			writer.writeCharacters(String.valueOf(cacheComposite.getSize()));
-			writer.writeEndElement();  // end of size
-			writer.writeStartElement("expiration");	
+			writer.writeEndElement(); // end of size
+			writer.writeStartElement("expiration");
 			if (cacheComposite.getExpiration() != null) {
-			    writer.writeCharacters(DateTimeUtility.getTimeAsString(cacheComposite.getExpiration()));
+				writer.writeCharacters(DateTimeUtility.getTimeAsString(cacheComposite.getExpiration()));
 			}
-			writer.writeEndElement();  // end of expiration
+			writer.writeEndElement(); // end of expiration
 			writer.writeStartElement("creation");
 			writer.writeCharacters(DateTimeUtility.getTimeAsString(cacheComposite.getCreationTime()));
-			writer.writeEndElement();  // end of creation
+			writer.writeEndElement(); // end of creation
 			writer.writeStartElement("lastModified");
 			writer.writeCharacters(DateTimeUtility.getTimeAsString(cacheComposite.getLastModifiedTime()));
-			writer.writeEndElement();  // end of lastModified
+			writer.writeEndElement(); // end of lastModified
 			if (compositeParam != null && compositeParam.equals(cacheKey.getCacheId())) {
 				// get all messages
 				CacheId cacheId = new CacheId(cacheKey.getCacheId());
 				for (int i = 0; i < cacheComposite.getSize(); i++) {
-					cacheId.setSequenceNr(String.valueOf(i+1));
+					cacheId.setSequenceNr(String.valueOf(i + 1));
 					writer.writeStartElement("message");
 					try {
 						CacheMessage cacheMessage = cache.getMessage(cacheId.getFullCacheId());
@@ -593,18 +602,18 @@ public class DefaultXMLLoaderFactory {
 					} catch (CacheException e) {
 					}
 					writer.writeEndElement();
-					
+
 				}
 			}
 			writer.writeEndElement(); // end of composite
 		}
-		
-		
+
 		/**
 		 * Write cache message.
-		 *
-		 * @param cacheMessage the cache message
-		 * @throws XMLStreamException 
+		 * 
+		 * @param cacheMessage
+		 *            the cache message
+		 * @throws XMLStreamException
 		 */
 		private void writeCacheMessage(XMLStreamWriter writer, CacheMessage cacheMessage) throws XMLStreamException {
 			if (cacheMessage == null) {
@@ -620,18 +629,18 @@ public class DefaultXMLLoaderFactory {
 			writer.writeCharacters(cacheMessage.getMessageType());
 			writer.writeEndElement();
 			writer.writeStartElement("compressed");
-			writer.writeCharacters(String.valueOf(cacheMessage.isCompressed()));			
+			writer.writeCharacters(String.valueOf(cacheMessage.isCompressed()));
 			writer.writeEndElement();
 			Object body = cacheMessage.getBody();
 			if (body != null && body instanceof byte[]) {
 				writer.writeStartElement("bodyLength");
-				writer.writeCharacters(String.valueOf(((byte[])body).length));			
-				writer.writeEndElement();			
+				writer.writeCharacters(String.valueOf(((byte[]) body).length));
+				writer.writeEndElement();
 			}
 			if (body != null && body instanceof String) {
 				writer.writeStartElement("bodyLength");
-				writer.writeCharacters(String.valueOf(((String)body).length()));			
-				writer.writeEndElement();			
+				writer.writeCharacters(String.valueOf(((String) body).length()));
+				writer.writeEndElement();
 			}
 		}
 
@@ -639,6 +648,49 @@ public class DefaultXMLLoaderFactory {
 		public IFactoryable newInstance() {
 			return new CacheXMLLoader();
 		}
+	}
+
+	/**
+	 * The Class MaintenanceXMLLoader.
+	 */
+	public static class MaintenanceXMLLoader extends AbstractXMLLoader {
+
+		/**
+		 * Instantiates a new default xml loader.
+		 */
+		public MaintenanceXMLLoader() {
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			writer.writeStartElement("maintenance");
+			// load any file services
+			loadFileServices(writer, request);
+
+			writer.writeEndElement(); // close maintenance tag
+		}
+
+		private void loadFileServices(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
+			writer.writeStartElement("services");
+			String serviceParameter = request.getParameter("service");
+			Service[] services = serviceRegistry.getServices();
+			for (Service service : services) {
+				if (service instanceof FileService) {
+					writer.writeStartElement("service");
+					this.writeBean(writer, service);
+					writer.writeEndElement(); // close service tag
+				}
+			}
+			writer.writeEndElement(); // close services tag
+		}
+
+		@Override
+		public IFactoryable newInstance() {
+			return new MaintenanceXMLLoader();
+		}
+
 	}
 
 	/**
@@ -857,6 +909,90 @@ public class DefaultXMLLoaderFactory {
 				throw new NotFoundException();
 			}
 			loader.loadBody(writer, request);
+
+		}
+	}
+
+	/**
+	 * The Class AjaxMaintenanceXMLLoader.
+	 */
+	public static class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
+		/**
+		 * Instantiates a new system xml loader.
+		 */
+		public AjaxMaintenanceXMLLoader() {
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public IFactoryable newInstance() {
+			return new AjaxMaintenanceXMLLoader();
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public boolean isText() {
+			return false;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			String serviceName = request.getParameter("service");
+			if (serviceName == null) {
+				throw new InvalidParameterException("service parameter missing");
+			}
+			// load file services and the file list
+			ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
+			writer.writeStartElement("service");
+			Service service = serviceRegistry.getService(serviceName);
+			this.writeBean(writer, service);
+			if (service instanceof FileService) {
+				FileService fileService = (FileService) service;
+				FileServer fileServer = fileService.getServer();
+				SCMPMessage reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(),
+						serviceName, 10);
+				Object body = reply.getBody();
+				if (body != null && body instanceof byte[]) {
+					String sBody = new String((byte[]) body);
+					String[] files = sBody.split("\\|");
+					writer.writeStartElement("files");
+					for (int i = 0; i < files.length; i++) {
+						writer.writeStartElement("file");
+						writer.writeCData(files[i]);
+						writer.writeEndElement();
+					}
+					writer.writeEndElement();
+				}
+			}
+			writer.writeEndElement(); // close service tag
+			// load current configuration directory
+			String configFileName = SystemInfo.getConfigFileName();
+			URL resourceURL = WebUtil.getResourceURL(configFileName);
+			if (resourceURL != null) {
+				writer.writeStartElement("resource");
+				writer.writeStartElement("url");
+				writer.writeCData(resourceURL.toString());
+				writer.writeEndElement(); // close url tag
+				File file = new File(resourceURL.getFile());
+				String parent = file.getParent();
+				if (parent != null) {
+					File parentFile = new File(parent);
+					File[] files = parentFile.listFiles();
+					if (files != null) {
+						writer.writeStartElement("files");
+						for (int i = 0; i < files.length; i++) {
+							if (files[i].isFile()) {
+							   writer.writeStartElement("file");
+							   writer.writeCData(files[i].getName());
+							   writer.writeEndElement(); // close file tag
+							}
+						}
+						writer.writeEndElement(); // close files tag
+					}
+				}
+				writer.writeEndElement(); // close resource tag
+			}
 
 		}
 	}
