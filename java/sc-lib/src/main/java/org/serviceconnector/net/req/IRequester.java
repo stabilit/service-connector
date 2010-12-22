@@ -42,16 +42,14 @@ public interface IRequester {
 	public void send(SCMPMessage scmp, int timeoutInMillis, ISCMPMessageCallback callback) throws Exception;
 
 	/**
-	 * Returns a hash code which identifies client connection.
-	 * 
-	 * @return the string
-	 */
-	public String toHashCodeString();
-
-	/**
 	 * Destroy.
 	 */
 	public void destroy();
 
-	RequesterContext getContext();
+	/**
+	 * Gets the context.
+	 * 
+	 * @return the context
+	 */
+	public RequesterContext getContext();
 }

@@ -127,12 +127,6 @@ public class SCRequester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized String toHashCodeString() {
-		return " [" + this.hashCode() + "]";
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void destroy() {
 		this.connectionPool.destroy();
 	}

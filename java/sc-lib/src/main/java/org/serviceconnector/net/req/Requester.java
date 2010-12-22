@@ -83,12 +83,6 @@ public class Requester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized String toHashCodeString() {
-		return " [" + this.hashCode() + "]";
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public RequesterContext getContext() {
 		return this.reqContext;
 	}
