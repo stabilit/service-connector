@@ -40,7 +40,7 @@ public class TestClient {
 	 *            [7] serviceName<br>
 	 *            [8] echoIntervalInSeconds<br>
 	 *            [9] echoTimeoutInSeconds<br>
-	 *            [10] methodsToInvoke
+	 *            [10] methodsToInvoke (split by | "init|attach|detach")
 	 */
 	public static void main(String[] args) {
 		logger.log(Level.OFF, "TestClient starting ...");
