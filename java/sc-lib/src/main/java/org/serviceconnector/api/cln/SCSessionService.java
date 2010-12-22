@@ -352,7 +352,9 @@ public class SCSessionService extends SCService {
 					"delete session not possible, there is a pending request - two pending request are not allowed.");
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getSessionInfo(), 256, SCMPError.HV_WRONG_SESSION_INFO);
+		if (scMessage != null) {
+			ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getSessionInfo(), 256, SCMPError.HV_WRONG_SESSION_INFO);
+		}
 		// cancel session timeout even if its running already
 		this.cancelSessionTimeout(true);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();

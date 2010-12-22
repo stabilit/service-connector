@@ -30,7 +30,7 @@ public class ProcessCtx {
 	private String pidFileName = null;
 	private boolean running = false;
 	private String serviceNames;
-	private String serverType;
+	private String communicatorType;
 	private String processName;
 	private int scPort;
 	private ConnectionType connectionType;
@@ -121,12 +121,12 @@ public class ProcessCtx {
 		this.connectionType = connectionType;
 	}
 
-	public String getServerType() {
-		return serverType;
+	public String getCommunicatorType() {
+		return communicatorType;
 	}
 
-	public void setServerType(String serverType) {
-		this.serverType = serverType;
+	public void setCommunicatorType(String communicatorType) {
+		this.communicatorType = communicatorType;
 	}
 
 }

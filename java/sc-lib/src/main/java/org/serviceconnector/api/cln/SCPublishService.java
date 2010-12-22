@@ -287,8 +287,10 @@ public class SCPublishService extends SCService {
 		}
 		this.sessionActive = false;
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		ValidatorUtility
-				.validateStringLengthIgnoreNull(1, scSubscribeMessage.getSessionInfo(), 256, SCMPError.HV_WRONG_SESSION_INFO);
+		if (scSubscribeMessage != null) {
+			ValidatorUtility.validateStringLengthIgnoreNull(1, scSubscribeMessage.getSessionInfo(), 256,
+					SCMPError.HV_WRONG_SESSION_INFO);
+		}
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
 		try {

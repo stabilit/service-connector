@@ -101,7 +101,7 @@ public class ProcessesController {
 		proc.setSCPort(Integer.parseInt(this.getPortFromConfFile(scPropertiesFullName)));
 
 		/*
-		 * start SC process Args: [0] -Dlog4j.configuration=file [1] log4jProperties [2]-jar [3] SC runnable [4]
+		 * start SC process Arguments: [0] -Dlog4j.configuration=file [1] log4jProperties [2]-jar [3] SC runnable [4]
 		 * -sc.configuration
 		 */
 		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + scRunableFullName
@@ -213,9 +213,9 @@ public class ProcessesController {
 		proc.setServiceNames(serviceNames);
 		proc.setProcessName(serverName);
 		proc.setConnectionType(connectionType);
-		proc.setServerType(serverType);
+		proc.setCommunicatorType(serverType);
 		/*
-		 * start server process Args: [0] -Dlog4j.configuration=file [1] log4jProperties [2] -jar [3] server runnable
+		 * start server process Arguments: [0] -Dlog4j.configuration=file [1] log4jProperties [2] -jar [3] server runnable
 		 * [4] serverType ("session" or "publish") [5] serverName [6] listenerPort [7] SC port [8] maxSessions [9]
 		 * maxConnections [10] connectionType ("netty.tcp" or "netty.http") [11] serviceNames (comma delimited list)
 		 */
@@ -244,7 +244,7 @@ public class ProcessesController {
 				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
 				clientMgmt.enableService(serviceName); // service might be disabled during tests
-				if (srvProcess.getServerType() == TestConstants.COMMUNICATOR_TYPE_SESSION) {
+				if (srvProcess.getCommunicatorType() == TestConstants.COMMUNICATOR_TYPE_SESSION) {
 					// Create session with KILL command
 					SCSessionService scSessionService = clientMgmt.newSessionService(serviceName);
 					SCMessage scMessage = new SCMessage();
@@ -284,4 +284,46 @@ public class ProcessesController {
 			}
 		}
 	}
+
+	public ProcessCtx startClient(String clientType, String log4jClnProperties, String clientName, String scHost, int scPort,
+			ConnectionType connectionType, int maxConnections, int keepAliveIntervalInSeconds, String serviceName,
+			int echoIntervalInSeconds, int echoTimeoutInSeconds, String methodsToInvoke) throws Exception {
+
+		ProcessCtx proc = new ProcessCtx();
+
+		String clnRunablFullName = userDir + fs + "target" + fs + TestConstants.clientRunable;
+		if (FileUtility.notExists(clnRunablFullName)) {
+			testLogger.error("File:" + clnRunablFullName + " does not exist!");
+			throw new Exception("File:" + clnRunablFullName + " does not exist!");
+		}
+		proc.setRunableName(clnRunablFullName);
+
+		String log4jFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jClnProperties;
+		if (FileUtility.notExists(log4jFileFullName)) {
+			testLogger.error("File:" + log4jFileFullName + " does not exist!");
+			throw new Exception("File:" + log4jFileFullName + " does not exist!");
+		}
+		proc.setLog4jFileName(log4jFileFullName);
+
+		String pidFileNameFull = userDir + fs + "log" + fs + "srv" + fs + clientName + ".pid";
+		proc.setPidFileName(pidFileNameFull);
+
+		proc.setServiceNames(serviceName);
+		proc.setProcessName(clientName);
+		proc.setConnectionType(connectionType);
+		proc.setCommunicatorType(clientType);
+		/*
+		 * start client process Arguments: [0] -Dlog4j.configuration=file [1] log4jProperties [2] -jar [3] client runnable
+		 * [4] clientType ("session" or "publish") [5] clientName [6] scHost [7] scPort [8] ConnectionType ("netty.tcp" or "netty.http") [9] maxConnections [10]
+		 * keepAliveIntervalSeconds [11] serviceName [12] echoIntervalInSeconds[13] echoTimeoutInSeconds[14] methodsToInvoke (split by | "init|attach|detach")[15]
+		 */
+		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + clnRunablFullName + " " + clientType
+				+ " " + clientName + " " + scHost + " " + scPort + " " + connectionType.getValue() + " " + maxConnections + " "
+				+ keepAliveIntervalInSeconds + " " + serviceName + " " + echoIntervalInSeconds + " " + echoTimeoutInSeconds + " "
+				+ methodsToInvoke;
+		Process clnProcess = Runtime.getRuntime().exec(command);
+		proc.setProcess(clnProcess);
+		return proc;
+	}
+
 }
