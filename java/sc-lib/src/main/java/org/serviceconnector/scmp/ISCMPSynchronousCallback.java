@@ -33,7 +33,6 @@ public interface ISCMPSynchronousCallback extends ISCMPMessageCallback {
 	 * Careful, be aware of timeout concept if you use this method. Gets the message synchronous. Waits until message/fault received
 	 * or time you hand over runs out.<br>
 	 * <br>
-	 * Hand over 0 value if you like to wait forever for some reason. Might be useful for test purposes.
 	 * 
 	 * @param timeoutInMillis
 	 *            the timeout in milliseconds

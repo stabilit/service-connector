@@ -14,10 +14,9 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.api;
+package org.serviceconnector.api.cln;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.net.req.SCRequester;
 
 /**
@@ -38,8 +37,10 @@ public abstract class SCService {
 	protected SCClient scClient;
 	/** The pending request, marks if a reply is outstanding or if service is ready for next. */
 	protected volatile boolean pendingRequest;
-	/** The session active, marks state of a session. */
+	/** The session active, marks state of a session/subscription. */
 	protected volatile boolean sessionActive = false;
+	/** The message callback. */
+	protected SCMessageCallback messageCallback;
 
 	/**
 	 * Instantiates a new service.
@@ -61,7 +62,7 @@ public abstract class SCService {
 	/**
 	 * Sets the request complete.
 	 */
-	public synchronized void setRequestComplete() {
+	synchronized void setRequestComplete() {
 		this.pendingRequest = false;
 	}
 

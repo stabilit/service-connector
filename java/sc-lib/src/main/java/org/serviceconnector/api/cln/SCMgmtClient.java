@@ -33,6 +33,8 @@ import org.serviceconnector.service.ServiceState;
  * @author JTrnka
  */
 public class SCMgmtClient extends SCClient {
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(SCMgmtClient.class);
 
 	public SCMgmtClient(String host, int port) {
 		super(host, port);
@@ -41,9 +43,6 @@ public class SCMgmtClient extends SCClient {
 	public SCMgmtClient(String host, int port, ConnectionType connectionType) {
 		super(host, port, connectionType);
 	}
-
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMgmtClient.class);
 
 	/**
 	 * Disable service on SC.

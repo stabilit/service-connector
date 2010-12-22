@@ -17,9 +17,9 @@ package org.serviceconnector.cln;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestPublishServiceMessageCallback;
+import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
@@ -59,31 +59,31 @@ public class TestPublishClientFilippe extends Thread {
 
 			if (getMethodName() == "subscribe_serviceNameValidMaskSameAsInServer_isSubscribedSessionIdExists") {
 				SCPublishService service = sc.newPublishService(TestConstants.pubServiceName1);
-				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
+				service.subscribe(subscibeMessage, new TestPublishServiceMessageCallback(service));
 				service.unsubscribe();
 
 			} else if (getMethodName() == "subscribe_timeoutMaxAllowed_isSubscribedSessionIdExists") {
 				SCPublishService service = sc.newPublishService(TestConstants.pubServiceName1);
-				service.subscribe(3600, subscibeMessage, new DemoPublishClientCallback(service));
+				service.subscribe(3600, subscibeMessage, new TestPublishServiceMessageCallback(service));
 				service.unsubscribe();
 
 			} else if (getMethodName() == "changeSubscription_toMaskWhiteSpace_passes") {
 				SCPublishService service = sc.newPublishService(TestConstants.pubServiceName1);
-				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
+				service.subscribe(subscibeMessage, new TestPublishServiceMessageCallback(service));
 				subscibeMessage.setMask(" ");
 				service.changeSubscription(subscibeMessage);
 				service.unsubscribe();
 
 			} else if (getMethodName() == "subscribeUnsubscribe_twice_isSubscribedThenNot") {
 				SCPublishService service = sc.newPublishService(TestConstants.pubServiceName1);
-				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
+				service.subscribe(subscibeMessage, new TestPublishServiceMessageCallback(service));
 				service.unsubscribe();
-				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
+				service.subscribe(subscibeMessage, new TestPublishServiceMessageCallback(service));
 				service.unsubscribe();
 
 			} else if (getMethodName() == "changeSubscription_twice_passes") {
 				SCPublishService service = sc.newPublishService(TestConstants.pubServiceName1);
-				service.subscribe(subscibeMessage, new DemoPublishClientCallback(service));
+				service.subscribe(subscibeMessage, new TestPublishServiceMessageCallback(service));
 
 				service.changeSubscription(subscibeMessage);
 				service.changeSubscription(subscibeMessage);
@@ -100,12 +100,12 @@ public class TestPublishClientFilippe extends Thread {
 				try {
 					SCMessage scMessage = new SCMessage("reject");
 					scMessage.setSessionInfo("sessionInfo");
-					sessionService.createSession(10, scMessage, new DemoPublishClientCallback(sessionService));
+					sessionService.createSession(10, scMessage, new TestSessionServiceMessageCallback(sessionService));
 				} catch (Exception e) {
 				}
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				sessionService.createSession(10, scMessage, new DemoPublishClientCallback(sessionService));
+				sessionService.createSession(10, scMessage, new TestSessionServiceMessageCallback(sessionService));
 
 				sessionService.execute(new SCMessage());
 				sessionService.deleteSession();
@@ -114,7 +114,7 @@ public class TestPublishClientFilippe extends Thread {
 				SCSessionService sessionService = sc.newSessionService(TestConstants.pubServiceName1);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				sessionService.createSession(10, scMessage, new DemoPublishClientCallback(sessionService));
+				sessionService.createSession(10, scMessage, new TestSessionServiceMessageCallback(sessionService));
 
 				SCMessage message = new SCMessage(new byte[TestConstants.dataLength1MB]);
 				message.setCompressed(false);
@@ -141,21 +141,5 @@ public class TestPublishClientFilippe extends Thread {
 
 	public String getMethodName() {
 		return methodName;
-	}
-
-	private class DemoPublishClientCallback extends SCMessageCallback {
-
-		public DemoPublishClientCallback(SCService service) {
-			super(service);
-		}
-
-		@Override
-		public void receive(SCMessage reply) {
-			logger.info("Publish client received: " + reply.getData());
-		}
-
-		@Override
-		public void receive(Exception e) {
-		}
 	}
 }

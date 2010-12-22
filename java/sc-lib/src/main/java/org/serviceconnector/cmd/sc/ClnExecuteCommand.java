@@ -37,6 +37,7 @@ import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -75,7 +76,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
-		CacheManager cacheManager = null;	
+		CacheManager cacheManager = null;
 		if (message.getCacheId() != null) {
 			cacheManager = AppContext.getCacheManager();
 		}
@@ -251,7 +252,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 	/**
 	 * The Class ClnExecuteCommandCallback.
 	 */
-	private class ClnExecuteCommandCallback extends CommandCallback {
+	private class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 
 		/** The callback. */
 		private IResponderCallback callback;
@@ -318,15 +319,15 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			SCMPMessage fault = null;
 			if (ex instanceof IdleTimeoutException) {
 				// operation timeout handling
-				fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT_EXPIRED, ERROR_STRING_TIMEOUT);
+				fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT_EXPIRED, "Operation timeout expired on SC cln execute");
 			} else if (ex instanceof IOException) {
-				fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
+				fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln execute");
 			} else if (ex instanceof ConnectionPoolBusyException) {
-				fault = new SCMPMessageFault(ex, SCMPError.SC_ERROR, ERROR_STRING_FAIL);
+				fault = new SCMPMessageFault(ex, SCMPError.SC_ERROR, "executing cln execute failed");
 			} else {
-				fault = new SCMPMessageFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
+				fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln execute failed");
 			}
-			// set sid & serviceName for EXC
+			// set serviceName for EXC
 			try {
 				SCMPMessage message;
 				message = request.getMessage();

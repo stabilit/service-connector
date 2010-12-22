@@ -103,15 +103,14 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			reply = this.answer.poll(timeoutInMillis, TimeUnit.MILLISECONDS);
 			// reset synchronous mode
 			this.synchronous = false;
+		} catch (InterruptedException e) {
+			// finally clause handles exception too
+		} finally {
 			if (reply == null) {
 				// time runs out before message got received
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.REQUEST_TIMEOUT, "Getting message synchronous failed");
 				return fault;
 			}
-		} catch (Exception e) {
-			logger.error("getMessageSync", e);
-			SCMPMessageFault fault = new SCMPMessageFault(e);
-			return fault;
 		}
 		return reply;
 	}

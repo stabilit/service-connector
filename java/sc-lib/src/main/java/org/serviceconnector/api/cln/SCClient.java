@@ -99,6 +99,7 @@ public class SCClient {
 	 *             port is not within limits 0 to 0xFFFF, host unset<br>
 	 */
 	public synchronized void attach(int operationTimeout) throws Exception {
+		// 1. checking preconditions and initialize
 		if (this.attached) {
 			throw new SCServiceException("already attached");
 		}
@@ -107,18 +108,20 @@ public class SCClient {
 		}
 		ValidatorUtility.validateInt(1, operationTimeout, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		ValidatorUtility.validateInt(1, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+		// 2. initialize call & invoke
 		synchronized (AppContext.communicatorsLock) {
 			AppContext.init();
 			this.requester = new SCRequester(new RequesterContext(this.host, this.port, this.connectionType.getValue(),
 					keepAliveIntervalSeconds, this.maxConnections));
-			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 			SCServiceCallback callback = new SCServiceCallback(true);
+			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
 			try {
 				attachCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				this.requester.destroy();
 				throw new SCServiceException("attach to " + host + ":" + port + " failed", e);
 			}
+			// 3. receiving reply and error handling
 			SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				this.requester.destroy();
@@ -127,6 +130,7 @@ public class SCClient {
 				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
+			// 4. post process, reply to client
 			this.attached = true;
 			AppContext.attachedCommunicators.incrementAndGet();
 		}
@@ -158,19 +162,22 @@ public class SCClient {
 	 *             the exception
 	 */
 	public synchronized void detach(int operationTimeout) throws Exception {
+		// 1. checking preconditions and initialize
 		if (this.attached == false) {
 			// client is not attached just ignore
 			return;
 		}
 		ValidatorUtility.validateInt(1, operationTimeout, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		SCServiceCallback callback = new SCServiceCallback(true);
+		// 2. initialize call & invoke
 		try {
+			SCServiceCallback callback = new SCServiceCallback(true);
 			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 			try {
 				detachCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("detach client failed", e);
 			}
+			// 3. receiving reply and error handling
 			SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("detach client failed");
@@ -179,6 +186,7 @@ public class SCClient {
 				throw ex;
 			}
 		} finally {
+			// 4. post process, reply to client
 			this.attached = false;
 			AppContext.attachedCommunicators.decrementAndGet();
 			// destroy connection pool

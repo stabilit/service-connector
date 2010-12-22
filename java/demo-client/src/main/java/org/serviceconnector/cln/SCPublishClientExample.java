@@ -22,10 +22,9 @@
 package org.serviceconnector.cln;
 
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCPublishService;
 
 public class SCPublishClientExample {
@@ -68,7 +67,7 @@ public class SCPublishClientExample {
 
 	class TestPublishCallback extends SCMessageCallback {
 
-		public TestPublishCallback(SCService service) {
+		public TestPublishCallback(SCPublishService service) {
 			super(service);
 		}
 

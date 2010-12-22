@@ -48,7 +48,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 	 */
 	@Test
 	public void t01_createSession() throws Exception {
-		SCMessage request = null;
+		SCMessage request = new SCMessage();
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		cbk = new MsgCallback(service);
@@ -198,7 +198,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 	 */
 	@Test
 	public void t12_createTwoSessions() throws Exception {
-		SCMessage request = null;
+		SCMessage request = new SCMessage();
 		SCMessage response = null;
 		SCSessionService service1 = client.newSessionService(TestConstants.sesServiceName1);
 		SCSessionService service2 = client.newSessionService(TestConstants.sesServiceName1);
@@ -338,7 +338,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 	 */
 	@Test
 	public void t41_disabledService() throws Exception {
-		SCMessage request = null;
+		SCMessage request = new SCMessage();
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		cbk = new MsgCallback(service);
@@ -362,7 +362,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 	 */
 	@Test
 	public void t42_deleteSessionTwice() throws Exception {
-		SCMessage request = null;
+		SCMessage request = new SCMessage();
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
 		cbk = new MsgCallback(service);

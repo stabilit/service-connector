@@ -338,7 +338,7 @@ public class StatefulServer extends Server {
 					.getSrvAbortTimeout());
 			SessionLogger.logAbortSession(this.getClass().getName(), abortMessage.getSessionId());
 		}
-		super.destroy();
+		this.destroy();
 		this.sessions = null;
 	}
 

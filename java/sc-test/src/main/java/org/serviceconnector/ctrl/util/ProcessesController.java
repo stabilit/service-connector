@@ -24,10 +24,11 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestPublishServiceMessageCallback;
+import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.SCSubscribeMessage;
+import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
@@ -124,8 +125,7 @@ public class ProcessesController {
 		int timeout = 10; // seconds
 		try {
 			if (FileUtility.exists(scProcess.getPidFileName())) {
-				SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, scProcess.getSCPort(),
-						ConnectionType.NETTY_TCP);
+				SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, scProcess.getSCPort(), ConnectionType.NETTY_TCP);
 				client.attach(timeout);
 				client.killSC();
 				FileUtility.waitNotExists(scProcess.getPidFileName(), timeout);
@@ -164,10 +164,10 @@ public class ProcessesController {
 	 * @return Process with JVM in which the server is started
 	 * @throws Exception
 	 */
-	public ProcessCtx startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort,
-			int scPort, int maxSessions, int maxConnections, String serviceNames) throws Exception {
-		return this.startServer(serverType, log4jSrvProperties, serverName, listenerPort, scPort, maxSessions,
-				maxConnections, ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, serviceNames);
+	public ProcessCtx startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
+			int maxSessions, int maxConnections, String serviceNames) throws Exception {
+		return this.startServer(serverType, log4jSrvProperties, serverName, listenerPort, scPort, maxSessions, maxConnections,
+				ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, serviceNames);
 	}
 
 	/**
@@ -188,9 +188,8 @@ public class ProcessesController {
 	 * @return Process with JVM in which the server is started
 	 * @throws Exception
 	 */
-	public ProcessCtx startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort,
-			int scPort, int maxSessions, int maxConnections, ConnectionType connectionType, String serviceNames)
-			throws Exception {
+	public ProcessCtx startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
+			int maxSessions, int maxConnections, ConnectionType connectionType, String serviceNames) throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
 
@@ -220,9 +219,9 @@ public class ProcessesController {
 		 * [4] serverType ("session" or "publish") [5] serverName [6] listenerPort [7] SC port [8] maxSessions [9]
 		 * maxConnections [10] connectionType ("netty.tcp" or "netty.http") [11] serviceNames (comma delimited list)
 		 */
-		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + srvRunablFullName + " "
-				+ serverType + " " + serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " "
-				+ maxConnections + " " + " " + connectionType.getValue() + " " + serviceNames;
+		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + srvRunablFullName + " " + serverType
+				+ " " + serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " " + " "
+				+ connectionType.getValue() + " " + serviceNames;
 		Process srvProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(srvProcess);
 		int timeout = 10;
@@ -241,8 +240,7 @@ public class ProcessesController {
 		int timeout = 10; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileName())) {
-				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP,
-						ConnectionType.NETTY_TCP);
+				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
 				clientMgmt.enableService(serviceName); // service might be disabled during tests
@@ -252,14 +250,14 @@ public class ProcessesController {
 					SCMessage scMessage = new SCMessage();
 					scMessage.setSessionInfo(TestConstants.killServerCmd);
 					try {
-						scSessionService.createSession(scMessage, new MsgCallback(scSessionService));
+						scSessionService.createSession(scMessage, new TestSessionServiceMessageCallback(scSessionService));
 					} catch (SCServiceException ex) {
 					}
 				} else {
 					// Subscribe with KILL command
 					SCPublishService scPublishService = clientMgmt.newPublishService(serviceName);
 					SCSubscribeMessage scMessage = new SCSubscribeMessage();
-					SCMessageCallback cbk = new MsgCallback(scPublishService);
+					SCMessageCallback cbk = new TestPublishServiceMessageCallback(scPublishService);
 					scMessage.setSessionInfo(TestConstants.killServerCmd);
 					scMessage.setMask("ABCD"); // dummy (mask may not be empty)
 					try {
@@ -284,20 +282,6 @@ public class ProcessesController {
 				} catch (Exception e) {
 				}
 			}
-		}
-	}
-
-	private class MsgCallback extends SCMessageCallback {
-		public MsgCallback(SCService service) {
-			super(service);
-		}
-
-		@Override
-		public void receive(SCMessage reply) {
-		}
-
-		@Override
-		public void receive(Exception e) {
 		}
 	}
 }

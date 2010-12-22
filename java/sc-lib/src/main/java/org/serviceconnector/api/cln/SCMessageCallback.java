@@ -14,9 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.api;
+package org.serviceconnector.api.cln;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.api.SCMessage;
 
 
 /**

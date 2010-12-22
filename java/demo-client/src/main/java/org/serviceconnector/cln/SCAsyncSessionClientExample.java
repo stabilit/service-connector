@@ -25,9 +25,8 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCSessionService;
 
 /**
@@ -100,7 +99,7 @@ public class SCAsyncSessionClientExample {
 	 */
 	private class ExampleCallback extends SCMessageCallback {
 
-		public ExampleCallback(SCService service) {
+		public ExampleCallback(SCSessionService service) {
 			super(service);
 		}
 

@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
-import org.serviceconnector.TestMessageCallback;
+import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
@@ -48,7 +48,7 @@ public class APICreateSessionHttpClientToSCTest {
 	private int threadCount = 0;
 	private SCClient client;
 	private Exception ex;
-	private TestMessageCallback cbk = null;
+	private TestSessionServiceMessageCallback cbk = null;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -161,7 +161,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -186,7 +186,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -210,7 +210,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -234,7 +234,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -258,7 +258,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -283,7 +283,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -307,7 +307,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -331,7 +331,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -354,7 +354,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -373,7 +373,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -397,7 +397,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -421,7 +421,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -446,7 +446,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -469,7 +469,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -490,7 +490,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -515,7 +515,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -534,7 +534,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		sessionService.deleteSession();
 		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -552,7 +552,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		sessionService.deleteSession();
 		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -570,7 +570,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		sessionService.deleteSession();
 		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -589,7 +589,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		sessionService.deleteSession();
 		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -604,7 +604,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage();
 		scMessage.setSessionInfo("sessionInfo");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		try {
 			sessionService.createSession(10, scMessage, cbk);
@@ -625,7 +625,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage0 = new SCMessage();
 		scMessage0.setSessionInfo("sessionInfo");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage0, cbk);
 		try {
 			SCMessage scMessage1 = new SCMessage();
@@ -653,7 +653,7 @@ public class APICreateSessionHttpClientToSCTest {
 
 		SCMessage scMessage0 = new SCMessage();
 		scMessage0.setSessionInfo("sessionInfo");
-		this.cbk = new TestMessageCallback(sessionService0);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService0);
 		sessionService0.createSession(10, scMessage0, cbk);
 
 		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
@@ -661,7 +661,7 @@ public class APICreateSessionHttpClientToSCTest {
 
 		SCMessage scMessage1 = new SCMessage();
 		scMessage1.setSessionInfo("sessionInfo");
-		TestMessageCallback cbk1 = new TestMessageCallback(sessionService1);
+		TestSessionServiceMessageCallback cbk1 = new TestSessionServiceMessageCallback(sessionService1);
 		sessionService1.createSession(10, scMessage1, cbk1);
 
 		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
@@ -688,7 +688,7 @@ public class APICreateSessionHttpClientToSCTest {
 
 		SCMessage scMessage0 = new SCMessage(" ");
 		scMessage0.setSessionInfo("sessionInfo");
-		this.cbk = new TestMessageCallback(sessionService0);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService0);
 		sessionService0.createSession(10, scMessage0, cbk);
 
 		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
@@ -696,7 +696,7 @@ public class APICreateSessionHttpClientToSCTest {
 
 		SCMessage scMessage1 = new SCMessage(" ");
 		scMessage1.setSessionInfo("sessionInfo");
-		TestMessageCallback cbk1 = new TestMessageCallback(sessionService1);
+		TestSessionServiceMessageCallback cbk1 = new TestSessionServiceMessageCallback(sessionService1);
 		sessionService1.createSession(10, scMessage1, cbk1);
 
 		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
@@ -720,7 +720,7 @@ public class APICreateSessionHttpClientToSCTest {
 				testLogger.info("createSession_12 cycle:\t" + i + " ...");
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(10, scMessage, cbk);
 			Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 			sessionService.deleteSession();
@@ -742,7 +742,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -768,7 +768,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -792,7 +792,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -817,7 +817,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -844,7 +844,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -868,7 +868,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -891,7 +891,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -918,7 +918,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -945,7 +945,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -970,7 +970,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(serviceName);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -993,7 +993,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -1020,7 +1020,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -1044,7 +1044,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(messageData);
 		scMessage.setSessionInfo(sessionInfo);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1067,7 +1067,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(data);
 			scMessage.setSessionInfo(sessionInfo);
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(timeoutInSeconds, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -1084,7 +1084,7 @@ public class APICreateSessionHttpClientToSCTest {
 	@Test(expected = SCMPValidatorException.class)
 	public void t405_createSession() throws Exception {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(-1, null, cbk);
 	}
 
@@ -1097,7 +1097,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(" ");
 		scMessage.setSessionInfo("sessionInfo");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 
 		SCMessage scMessage1 = new SCMessage();
@@ -1117,7 +1117,7 @@ public class APICreateSessionHttpClientToSCTest {
 				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
 			SCMessage scMessage = new SCMessage(" ");
 			scMessage.setSessionInfo("sessionInfo");
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(10, scMessage, cbk);
 			Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 			sessionService.deleteSession();
@@ -1135,7 +1135,7 @@ public class APICreateSessionHttpClientToSCTest {
 
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo("sessionInfo");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 	}
 
@@ -1149,7 +1149,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage("a");
 			scMessage.setSessionInfo("sessionInfo");
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(10, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -1170,7 +1170,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage("a");
 			scMessage.setSessionInfo("sessionInfo");
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(10, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -1189,7 +1189,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo("");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1204,7 +1204,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(" ");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1219,7 +1219,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(TestConstants.pangram);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1238,7 +1238,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(sb.toString());
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1258,7 +1258,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage("a");
 			scMessage.setSessionInfo(sb.toString());
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(10, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -1276,7 +1276,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo("sessionInfo");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		sessionService.deleteSession();
 		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -1287,7 +1287,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo(" ");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		sessionService.deleteSession();
 		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -1298,7 +1298,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage("a");
 		scMessage.setSessionInfo("sessionInfo");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		try {
 			SCMessage scMessage1 = new SCMessage();
@@ -1322,7 +1322,7 @@ public class APICreateSessionHttpClientToSCTest {
 
 		SCMessage scMessage0 = new SCMessage("a");
 		scMessage0.setSessionInfo("sessionInfo");
-		this.cbk = new TestMessageCallback(sessionService0);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService0);
 		sessionService0.createSession(10, scMessage0, cbk);
 
 		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
@@ -1330,7 +1330,7 @@ public class APICreateSessionHttpClientToSCTest {
 
 		SCMessage scMessage1 = new SCMessage("a");
 		scMessage1.setSessionInfo("sessionInfo");
-		TestMessageCallback cbk1 = new TestMessageCallback(sessionService1);
+		TestSessionServiceMessageCallback cbk1 = new TestSessionServiceMessageCallback(sessionService1);
 		sessionService1.createSession(10, scMessage1, cbk1);
 
 		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
@@ -1350,7 +1350,7 @@ public class APICreateSessionHttpClientToSCTest {
 				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
 			SCMessage scMessage = new SCMessage("a");
 			scMessage.setSessionInfo("sessionInfo");
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(10, scMessage, cbk);
 			Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 			sessionService.deleteSession();
@@ -1364,7 +1364,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 			scMessage.setSessionInfo("sessionInfo");
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(10, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -1380,7 +1380,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 			scMessage.setSessionInfo("sessionInfo");
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(10, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -1397,7 +1397,7 @@ public class APICreateSessionHttpClientToSCTest {
 		try {
 			SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 			scMessage.setSessionInfo("sessionInfo");
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(10, scMessage, cbk);
 		} catch (Exception e) {
 			ex = e;
@@ -1412,7 +1412,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo("");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1423,7 +1423,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo(" ");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1434,7 +1434,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo(TestConstants.pangram);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1445,7 +1445,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo(TestConstants.stringLength256);
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 		sessionService.deleteSession();
@@ -1456,7 +1456,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo("sessionInfo");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		sessionService.deleteSession();
 		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -1467,7 +1467,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo(" ");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		sessionService.deleteSession();
 		Assert.assertEquals(true, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
@@ -1478,7 +1478,7 @@ public class APICreateSessionHttpClientToSCTest {
 		SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo("sessionInfo");
-		this.cbk = new TestMessageCallback(sessionService);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService);
 		sessionService.createSession(10, scMessage, cbk);
 		try {
 			sessionService.createSession(10, scMessage, cbk);
@@ -1500,7 +1500,7 @@ public class APICreateSessionHttpClientToSCTest {
 
 		SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage.setSessionInfo("sessionInfo");
-		this.cbk = new TestMessageCallback(sessionService0);
+		this.cbk = new TestSessionServiceMessageCallback(sessionService0);
 		sessionService0.createSession(10, scMessage, cbk);
 
 		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
@@ -1508,7 +1508,7 @@ public class APICreateSessionHttpClientToSCTest {
 
 		SCMessage scMessage1 = new SCMessage(new byte[TestConstants.dataLength60kB]);
 		scMessage1.setSessionInfo("sessionInfo");
-		TestMessageCallback cbk1 = new TestMessageCallback(sessionService1);
+		TestSessionServiceMessageCallback cbk1 = new TestSessionServiceMessageCallback(sessionService1);
 		sessionService1.createSession(10, scMessage1, cbk1);
 
 		Assert.assertEquals(false, sessionService0.getSessionId() == null || sessionService0.getSessionId().isEmpty());
@@ -1528,7 +1528,7 @@ public class APICreateSessionHttpClientToSCTest {
 				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
 			SCMessage scMessage = new SCMessage(new byte[TestConstants.dataLength60kB]);
 			scMessage.setSessionInfo("sessionInfo");
-			this.cbk = new TestMessageCallback(sessionService);
+			this.cbk = new TestSessionServiceMessageCallback(sessionService);
 			sessionService.createSession(10, scMessage, cbk);
 			Assert.assertEquals(false, sessionService.getSessionId() == null || sessionService.getSessionId().isEmpty());
 			sessionService.deleteSession();
@@ -1541,7 +1541,7 @@ public class APICreateSessionHttpClientToSCTest {
 		int sessionsCount = 1000;
 		String[] sessions = new String[sessionsCount];
 		SCSessionService[] sessionServices = new SCSessionService[sessionsCount];
-		this.cbk = new TestMessageCallback(sessionServices[0]);
+		this.cbk = new TestSessionServiceMessageCallback(sessionServices[0]);
 		for (int i = 0; i < sessionsCount; i++) {
 			if ((i % 100) == 0)
 				testLogger.info("createSession_1000times cycle:\t" + i + " ...");
@@ -1573,7 +1573,7 @@ public class APICreateSessionHttpClientToSCTest {
 		int ctr = 0;
 		String[] sessions = new String[sessionsCount];
 		SCSessionService[] sessionServices = new SCSessionService[sessionsCount];
-		this.cbk = new TestMessageCallback(sessionServices[0]);
+		this.cbk = new TestSessionServiceMessageCallback(sessionServices[0]);
 		try {
 			for (int i = 0; i < sessionsCount; i++) {
 				if ((i % 100) == 0)

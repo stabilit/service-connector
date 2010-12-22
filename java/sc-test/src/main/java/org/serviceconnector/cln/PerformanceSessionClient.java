@@ -19,9 +19,8 @@ import java.util.concurrent.CountDownLatch;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
@@ -79,7 +78,7 @@ public class PerformanceSessionClient implements Runnable {
 				SCSessionService service = sc.newSessionService(TestConstants.sesServiceName1);
 				SCMessage scMessage = new SCMessage();
 				scMessage.setSessionInfo("sessionInfo");
-				service.createSession(300, scMessage, new MsgCallback(service));
+				service.createSession(300, scMessage, new TestSessionServiceMessageCallback(service));
 				for (int j = 0; j < executeCycles; j++) {
 					service.execute(new SCMessage(new byte[messageSize]));
 					counter.increment();
@@ -103,19 +102,4 @@ public class PerformanceSessionClient implements Runnable {
 					+ " messages of " + messageSize + "B.\nCurrent number on the latch:\t" + doneSignal.getCount());
 		}
 	}
-
-	private class MsgCallback extends SCMessageCallback {
-		public MsgCallback(SCService service) {
-			super(service);
-		}
-
-		@Override
-		public void receive(SCMessage reply) {
-		}
-
-		@Override
-		public void receive(Exception e) {
-		}
-	}
-
 }

@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
-import org.serviceconnector.TestMessageCallback;
+import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
@@ -32,7 +32,7 @@ public class APIExecuteBenchmark {
 	private SCClient client;
 	private SCSessionService service;
 	private int threadCount = 0;
-	private TestMessageCallback cbk = null;
+	private TestSessionServiceMessageCallback cbk = null;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -93,7 +93,7 @@ public class APIExecuteBenchmark {
 		request.setCompressed(true);
 		request.setSessionInfo("sessionInfo");
 		request.setMessageInfo(TestConstants.echoCmd);
-		this.cbk = new TestMessageCallback(service);
+		this.cbk = new TestSessionServiceMessageCallback(service);
 		response = service.createSession(10, request, cbk);
 		int nrMessages = 10000;
 		long start = System.currentTimeMillis();
@@ -127,7 +127,7 @@ public class APIExecuteBenchmark {
 		request.setSessionInfo("sessionInfo");
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setCompressed(false);
-		this.cbk = new TestMessageCallback(service);
+		this.cbk = new TestSessionServiceMessageCallback(service);
 		response = service.createSession(10, request, this.cbk);
 		int nrMessages = 10000;
 		long start = System.currentTimeMillis();

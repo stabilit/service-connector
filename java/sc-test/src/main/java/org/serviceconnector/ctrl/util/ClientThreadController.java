@@ -19,9 +19,8 @@ import java.util.concurrent.CountDownLatch;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cln.PerformanceSessionClient;
@@ -114,7 +113,7 @@ public class ClientThreadController {
 			SCSessionService service = sc.newSessionService(TestConstants.sesServiceName1);
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
-			service.createSession(300, scMessage, new MsgCallback(service));
+			service.createSession(300, scMessage, new TestSessionServiceMessageCallback(service));
 			response = service.execute(new SCMessage("executed"));
 			service.deleteSession();
 			sc.detach();
@@ -125,19 +124,5 @@ public class ClientThreadController {
 		testLogger.info("Messages executed successfuly (server):\t" + response.getData().toString());
 		testLogger.info("Time to create session execute and delete session:\t" + result + "ms");
 
-	}
-
-	private class MsgCallback extends SCMessageCallback {
-		public MsgCallback(SCService service) {
-			super(service);
-		}
-
-		@Override
-		public void receive(SCMessage reply) {
-		}
-
-		@Override
-		public void receive(Exception e) {
-		}
 	}
 }

@@ -23,8 +23,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.SCService;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
@@ -58,8 +56,6 @@ public class SCSessionService extends SCService {
 	private int echoTimeoutInSeconds;
 	/** The echo interval in seconds. */
 	private int echoIntervalInSeconds;
-
-	private SCMessageCallback messageCallback;
 
 	/**
 	 * Instantiates a new session service.
@@ -106,34 +102,37 @@ public class SCSessionService extends SCService {
 	 */
 	public synchronized SCMessage createSession(int operationTimeoutSeconds, SCMessage scMessage, SCMessageCallback messageCallback)
 			throws Exception {
+		// 1. checking preconditions and initialize
 		if (this.sessionActive) {
 			throw new SCServiceException("session already created - delete session first.");
 		}
 		if (messageCallback == null) {
 			throw new SCServiceException("message callback must be set.");
 		}
+		if (scMessage == null) {
+			throw new SCServiceException("scMessage must be set.");
+		}
+		if (scMessage.getDataLength() > Constants.MAX_MESSAGE_SIZE) {
+			throw new SCServiceException("message > 60kB not allowed");
+		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.messageCallback = messageCallback;
 		this.requester.getContext().getSCMPMsgSequenceNr().reset();
-		SCServiceCallback callback = new SCServiceCallback(true);
+		// 2. initialize call & invoke
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, this.serviceName);
-		if (scMessage != null) {
-			if (scMessage.getDataLength() > Constants.MAX_MESSAGE_SIZE) {
-				throw new SCServiceException("message > 60kB not allowed");
-			}
-			createSessionCall.setRequestBody(scMessage.getData());
-			createSessionCall.setCompressed(scMessage.isCompressed());
-			createSessionCall.setSessionInfo(scMessage.getSessionInfo());
-		}
+		createSessionCall.setRequestBody(scMessage.getData());
+		createSessionCall.setCompressed(scMessage.isCompressed());
+		createSessionCall.setSessionInfo(scMessage.getSessionInfo());
 		createSessionCall.setEchoIntervalSeconds(this.echoIntervalInSeconds);
+		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			createSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			throw new SCServiceException("create session failed ", e);
 		}
+		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		this.triggerSessionTimeout();
 		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
 			SCServiceException ex = new SCServiceException("create session failed");
 			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
@@ -142,6 +141,8 @@ public class SCSessionService extends SCService {
 			ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 			throw ex;
 		}
+		// 4. post process, reply to client
+		this.triggerSessionTimeout();
 		this.sessionId = reply.getSessionId();
 		this.sessionActive = true;
 		SCMessage replyToClient = new SCMessage();
@@ -151,6 +152,145 @@ public class SCSessionService extends SCService {
 		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 		return replyToClient;
+	}
+
+	public synchronized SCMessage execute(SCMessage requestMsg) throws Exception {
+		return this.execute(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
+	}
+
+	public synchronized SCMessage execute(int operationTimeoutSeconds, SCMessage scMessage) throws Exception {
+		// 1. checking preconditions and initialize
+		if (this.sessionActive == false) {
+			throw new SCServiceException("execute not possible, no active session.");
+		}
+		if (this.pendingRequest) {
+			// pending Request - reply still outstanding
+			throw new SCServiceException("execute not possible, there is a pending request - two pending request are not allowed.");
+		}
+		if (scMessage == null) {
+			throw new SCServiceException("scMessage must be set.");
+		}
+		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		// cancel session timeout even if its running already
+		this.cancelSessionTimeout(true);
+		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		// 2. initialize call & invoke
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+				this.serviceName, this.sessionId);
+		clnExecuteCall.setMessagInfo(scMessage.getMessageInfo());
+		clnExecuteCall.setCacheId(scMessage.getCacheId());
+		clnExecuteCall.setCompressed(scMessage.isCompressed());
+		clnExecuteCall.setRequestBody(scMessage.getData());
+		SCServiceCallback callback = new SCServiceCallback(true);
+		try {
+			clnExecuteCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		} catch (Exception e) {
+			this.triggerSessionTimeout();
+			throw new SCServiceException("execute reuest failed ", e);
+		}
+		// 3. receiving reply and error handling
+		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		this.triggerSessionTimeout();
+		if (reply.isFault()) {
+			SCServiceException scEx = new SCServiceException("execute failed");
+			scEx.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			scEx.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			throw scEx;
+		}
+		// 4. post process, reply to client
+		SCMessage replyToClient = new SCMessage();
+		replyToClient.setData(reply.getBody());
+		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		replyToClient.setSessionId(this.sessionId);
+		replyToClient.setCacheId(reply.getCacheId());
+		replyToClient.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
+		return replyToClient;
+	}
+
+	public synchronized void send(SCMessage requestMsg) throws Exception {
+		this.send(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
+	}
+
+	public synchronized void send(int operationtTimeoutSeconds, SCMessage scMessage) throws Exception {
+		// 1. checking preconditions and initialize
+		if (this.sessionActive == false) {
+			throw new SCServiceException("send not possible, no active session.");
+		}
+		if (this.pendingRequest) {
+			// already executed before - reply still outstanding
+			throw new SCServiceException("send not possible, there is a pending request - two pending request are not allowed.");
+		}
+		if (scMessage == null) {
+			throw new InvalidParameterException("Message must be set.");
+		}
+		ValidatorUtility.validateInt(1, operationtTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		// cancel session timeout even if its running already
+		this.cancelSessionTimeout(true);
+		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		// important to set pendingRequest true in case of asynchronous communication
+		this.pendingRequest = true;
+		// 2. initialize call & invoke
+		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
+				this.serviceName, this.sessionId);
+		clnExecuteCall.setMessagInfo(scMessage.getMessageInfo());
+		clnExecuteCall.setCacheId(scMessage.getCacheId());
+		clnExecuteCall.setCompressed(scMessage.isCompressed());
+		clnExecuteCall.setRequestBody(scMessage.getData());
+		SCServiceCallback scmpCallback = new SCServiceCallback(this, this.messageCallback);
+		try {
+			clnExecuteCall.invoke(scmpCallback, operationtTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		} catch (Exception e) {
+			this.pendingRequest = false;
+			this.triggerSessionTimeout();
+			throw new SCServiceException("send request failed ", e);
+		}
+	}
+
+	/**
+	 * Echo. Refreshes the session on SC. Avoids session timeout.
+	 */
+	private synchronized void echo() {
+		// 1. checking preconditions and initialize
+		if (this.sessionActive == false) {
+			return;
+		}
+		if (this.pendingRequest) {
+			// an operation is running no echo allowed
+			return;
+		}
+		// cancel session timeout even if its running already
+		this.cancelSessionTimeout(true);
+		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		// 2. initialize call & invoke
+		SCMPEchoCall clnEchoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(this.requester, this.serviceName,
+				this.sessionId);
+		SCServiceCallback callback = new SCServiceCallback(true);
+		try {
+			clnEchoCall.invoke(callback, this.echoTimeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		} catch (Exception e) {
+			// inactivate the session
+			this.sessionActive = false;
+			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
+			ex.setSCMPError(SCMPError.BROKEN_SESSION);
+			ex.setSCMPDetailErrorText("refreshing session by echo failed");
+			this.messageCallback.receive(ex);
+			return;
+		}
+		// 3. receiving reply and error handling
+		SCMPMessage reply = callback.getMessageSync(this.echoTimeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		if (reply.isFault()) {
+			// inactivate the session
+			this.sessionActive = false;
+			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
+			ex.setSCMPError(SCMPError.BROKEN_SESSION);
+			ex.setSCMPDetailErrorText("refreshing session by echo failed");
+			this.messageCallback.receive(ex);
+			return;
+		}
+		// 4. post process, reply to client
+		this.triggerSessionTimeout();
 	}
 
 	/**
@@ -196,6 +336,7 @@ public class SCSessionService extends SCService {
 	 *             the exception
 	 */
 	public synchronized void deleteSession(int operationTimeoutSeconds, SCMessage scMessage) throws Exception {
+		// 1. checking preconditions and initialize
 		if (this.sessionActive == false) {
 			// delete session not possible - no session on this service just ignore
 			return;
@@ -206,12 +347,12 @@ public class SCSessionService extends SCService {
 					"delete session not possible, there is a pending request - two pending request are not allowed.");
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		this.pendingRequest = true;
 		// cancel session timeout even if its running already
 		this.cancelSessionTimeout(true);
-		SCServiceCallback callback = new SCServiceCallback(true);
+		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		try {
-			this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+			// 2. initialize call & invoke
+			SCServiceCallback callback = new SCServiceCallback(true);
 			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
 			if (scMessage != null) {
@@ -222,6 +363,7 @@ public class SCSessionService extends SCService {
 			} catch (Exception e) {
 				throw new SCServiceException("delete session failed ", e);
 			}
+			// 3. receiving reply and error handling
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("delete session failed");
@@ -230,109 +372,13 @@ public class SCSessionService extends SCService {
 				throw ex;
 			}
 		} finally {
-			this.pendingRequest = false;
+			// 4. post process, reply to client
 			this.sessionId = null;
 			this.sessionActive = false;
 		}
 	}
 
-	public synchronized SCMessage execute(SCMessage requestMsg) throws Exception {
-		return this.execute(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
-	}
-
-	public synchronized SCMessage execute(int operationTimeoutSeconds, SCMessage requestMsg) throws Exception {
-		if (this.sessionActive == false) {
-			throw new SCServiceException("execute not possible, no active session.");
-		}
-		if (requestMsg == null) {
-			throw new InvalidParameterException("Message must be set.");
-		}
-		if (this.pendingRequest) {
-			// pending Request - reply still outstanding
-			throw new SCServiceException("execute not possible, there is a pending request - two pending request are not allowed.");
-		}
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		this.pendingRequest = true;
-		// cancel session timeout even if its running already
-		this.cancelSessionTimeout(true);
-		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				this.serviceName, this.sessionId);
-		String msgInfo = requestMsg.getMessageInfo();
-		String cacheId = requestMsg.getCacheId();
-		clnExecuteCall.setMessagInfo(msgInfo);
-		clnExecuteCall.setCacheId(cacheId);
-		clnExecuteCall.setCompressed(requestMsg.isCompressed());
-		clnExecuteCall.setRequestBody(requestMsg.getData());
-		// invoke asynchronous
-		SCServiceCallback callback = new SCServiceCallback(true);
-		try {
-			clnExecuteCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		} catch (Exception e) {
-			this.pendingRequest = false;
-			this.triggerSessionTimeout();
-			throw new SCServiceException("execute reuest failed ", e);
-		}
-		// wait for message in callback
-		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		this.pendingRequest = false;
-		this.triggerSessionTimeout();
-		if (reply.isFault()) {
-			SCServiceException scEx = new SCServiceException("execute failed");
-			scEx.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			scEx.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-			throw scEx;
-		}
-		SCMessage replyToClient = new SCMessage();
-		replyToClient.setData(reply.getBody());
-		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
-		replyToClient.setSessionId(this.sessionId);
-		replyToClient.setCacheId(reply.getCacheId());
-		replyToClient.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
-		return replyToClient;
-	}
-
-	public synchronized void send(SCMessage requestMsg) throws Exception {
-		this.send(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
-	}
-
-	public synchronized void send(int operationtTimeoutSeconds, SCMessage requestMsg) throws Exception {
-		if (this.sessionActive == false) {
-			throw new SCServiceException("send not possible, no active session.");
-		}
-		if (requestMsg == null) {
-			throw new InvalidParameterException("Message must be set.");
-		}
-		if (this.pendingRequest) {
-			// already executed before - reply still outstanding
-			throw new SCServiceException("send not possible, there is a pending request - two pending request are not allowed.");
-		}
-		ValidatorUtility.validateInt(1, operationtTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		this.pendingRequest = true;
-		// cancel session timeout even if its running already
-		this.cancelSessionTimeout(true);
-		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				this.serviceName, this.sessionId);
-		String msgInfo = requestMsg.getMessageInfo();
-		String cacheId = requestMsg.getCacheId();
-		clnExecuteCall.setMessagInfo(msgInfo);
-		clnExecuteCall.setCacheId(cacheId);
-		clnExecuteCall.setCompressed(requestMsg.isCompressed());
-		clnExecuteCall.setRequestBody(requestMsg.getData());
-		SCServiceCallback scmpCallback = new SCServiceCallback(this, this.messageCallback);
-		try {
-			clnExecuteCall.invoke(scmpCallback, operationtTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		} catch (Exception e) {
-			this.pendingRequest = false;
-			this.triggerSessionTimeout();
-			throw new SCServiceException("send request failed ", e);
-		}
-	}
-
-	public synchronized void setRequestComplete() {
+	synchronized void setRequestComplete() {
 		super.setRequestComplete();
 		// trigger session timeout
 		this.triggerSessionTimeout();
@@ -383,46 +429,6 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * Echo.
-	 */
-	private synchronized void echo() {
-		if (this.pendingRequest) {
-			// an operation is running no echo necessary
-			return;
-		}
-		this.pendingRequest = true;
-		// cancel session timeout even if its running already
-		this.cancelSessionTimeout(true);
-		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
-		SCMPEchoCall clnEchoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(this.requester, this.serviceName,
-				this.sessionId);
-		SCServiceCallback callback = new SCServiceCallback(true);
-		try {
-			clnEchoCall.invoke(callback, this.echoTimeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		} catch (Exception e) {
-			this.pendingRequest = false;
-			this.sessionActive = false;
-			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
-			ex.setSCMPError(SCMPError.BROKEN_SESSION);
-			ex.setSCMPDetailErrorText("refreshing session by echo failed");
-			this.messageCallback.receive(ex);
-			return;
-		}
-		// wait for message in callback
-		SCMPMessage reply = callback.getMessageSync(this.echoTimeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
-		this.pendingRequest = false;
-		if (reply.isFault()) {
-			this.sessionActive = false;
-			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
-			ex.setSCMPError(SCMPError.BROKEN_SESSION);
-			ex.setSCMPDetailErrorText("refreshing session by echo failed");
-			this.messageCallback.receive(ex);
-			return;
-		}
-		this.triggerSessionTimeout();
-	}
-
-	/**
 	 * The Class SCSessionTimeout. Get control at the time a session refresh is needed. Takes care of sending an echo to SC which
 	 * gets the session refreshed.
 	 */
@@ -433,14 +439,8 @@ public class SCSessionService extends SCService {
 		 */
 		@Override
 		public void timeout() {
-			synchronized (SCSessionService.this) {
-				if (SCSessionService.this.pendingRequest) {
-					// no echo will be sent in state of pending request
-					return;
-				}
-				// send echo to SC
-				SCSessionService.this.echo();
-			}
+			// send echo to SC
+			SCSessionService.this.echo();
 		}
 
 		/** {@inheritDoc} */

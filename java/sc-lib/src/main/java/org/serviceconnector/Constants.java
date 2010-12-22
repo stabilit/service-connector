@@ -187,7 +187,7 @@ public final class Constants {
 	public static final String PROPERTY_QUALIFIER_LIST_SCRIPT = ".listScript";
 	public static final String PROPERTY_QUALIFIER_UPLOAD_SCRIPT = ".uploadScript";
 
-	public static final boolean DEFAULT_CACHE_ENABLED = false;
+	public static final boolean DEFAULT_CACHE_ENABLED = true;
 	public static final String DEFAULT_CACHE_NAME = "scCache";
 	public static final boolean DEFAULT_CACHE_DISK_PERSISTENT = true;
 	public static final String DEFAULT_CACHE_DISK_PATH = "cache";

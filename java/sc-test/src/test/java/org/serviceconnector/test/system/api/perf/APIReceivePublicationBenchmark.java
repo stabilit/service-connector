@@ -11,10 +11,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.SCService;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -159,7 +158,7 @@ public class APIReceivePublicationBenchmark {
 		long startPart = System.currentTimeMillis();
 		long stopPart = 0;
 
-		public MsgCallback(SCService service) {
+		public MsgCallback(SCPublishService service) {
 			super(service);
 			APIReceivePublicationBenchmark.messageReceived = false;
 			response = null;

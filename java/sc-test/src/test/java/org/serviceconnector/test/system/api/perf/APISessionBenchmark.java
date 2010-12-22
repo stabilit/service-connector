@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
-import org.serviceconnector.TestMessageCallback;
+import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
@@ -49,7 +49,7 @@ public class APISessionBenchmark {
 	private SCClient client;
 	private SCSessionService service;
 	private int threadCount = 0;
-	private TestMessageCallback cbk = null;
+	private TestSessionServiceMessageCallback cbk = null;
 
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
@@ -107,7 +107,7 @@ public class APISessionBenchmark {
 		SCMessage request = null;
 		SCMessage response = null;
 		service = client.newSessionService(TestConstants.sesServiceName1);
-		this.cbk = new TestMessageCallback(service);
+		this.cbk = new TestSessionServiceMessageCallback(service);
 		int nr = 10000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
@@ -129,7 +129,7 @@ public class APISessionBenchmark {
 		int nr = 10000;
 		SCSessionService[] sessionServices = new SCSessionService[nr];
 		String[] sessionID = new String[nr];
-		this.cbk = new TestMessageCallback(sessionServices[0]);
+		this.cbk = new TestSessionServiceMessageCallback(sessionServices[0]);
 		testLogger.info("Creating Services...");
 		for (int i = 0; i < nr; i++) {
 			sessionServices[i] = client.newSessionService(TestConstants.sesServiceName1);

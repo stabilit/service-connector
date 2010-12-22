@@ -47,8 +47,8 @@ public class CommandCallback extends SynchronousCallback {
 
 	public CommandCallback(boolean synchronous) {
 		this.synchronous = synchronous;
-	}
-
+	}	
+	
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {

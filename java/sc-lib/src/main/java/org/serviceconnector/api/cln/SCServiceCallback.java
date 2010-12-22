@@ -23,8 +23,6 @@ package org.serviceconnector.api.cln;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.SCMessageCallback;
-import org.serviceconnector.api.SCService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -37,7 +35,7 @@ import org.serviceconnector.util.SynchronousCallback;
  * 
  * @author JTraber
  */
-public class SCServiceCallback extends SynchronousCallback {
+class SCServiceCallback extends SynchronousCallback {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCServiceCallback.class);
@@ -48,20 +46,12 @@ public class SCServiceCallback extends SynchronousCallback {
 	protected SCService service;
 
 	/**
-	 * Instantiates a new ServiceCallback.
-	 */
-	public SCServiceCallback() {
-		this(null, null);
-	}
-
-	/**
 	 * Instantiates a new service callback.
 	 * 
 	 * @param synchronous
 	 *            the synchronous
 	 */
 	public SCServiceCallback(boolean synchronous) {
-		this();
 		this.synchronous = synchronous;
 	}
 
@@ -79,7 +69,9 @@ public class SCServiceCallback extends SynchronousCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage scmpReply) {
+		// 3. receiving reply and error handling
 		if (this.synchronous) {
+			// hand it over to SynchronousCallback
 			super.receive(scmpReply);
 			return;
 		}
@@ -88,38 +80,38 @@ public class SCServiceCallback extends SynchronousCallback {
 			SCServiceException e = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			e.setSCMPError(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			e.setSCMPDetailErrorText(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-			this.messageCallback.receive(e);
+			// inform service request is completed
 			this.service.setRequestComplete();
+			this.messageCallback.receive(e);
 			return;
 		}
+		// 4. post process, reply to client
 		SCMessage messageReply = new SCMessage();
 		messageReply.setData(scmpReply.getBody());
 		messageReply.setCompressed(scmpReply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		messageReply.setSessionId(scmpReply.getSessionId());
 		try {
 			messageReply.setMessageInfo(scmpReply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-			if (scmpReply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE) != null) {
-				messageReply.setAppErrorCode(scmpReply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-				messageReply.setAppErrorText(scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
-			}
+			messageReply.setAppErrorCode(scmpReply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+			messageReply.setAppErrorText(scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 		} catch (SCMPValidatorException ex) {
 			logger.warn("attributes invalid when setting in scmessage");
 		}
-		this.messageCallback.receive(messageReply);
 		// inform service request is completed
 		this.service.setRequestComplete();
+		this.messageCallback.receive(messageReply);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
 		if (this.synchronous) {
-			// interested thread waits for message
+			// hand it over to SynchronousCallback
 			super.receive(ex);
 			return;
 		}
-		this.messageCallback.receive(ex);
 		// inform service request is completed
 		this.service.setRequestComplete();
+		this.messageCallback.receive(ex);
 	}
 }
