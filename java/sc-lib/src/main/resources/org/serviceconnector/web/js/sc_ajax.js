@@ -85,14 +85,31 @@ function resetTranslet() {
 	ajaxSystem.ajaxCall('ajax/system?action=resetTranslet');	
 }
 
-function downloadAndReplaceSelected() {
+function downloadAndReplaceSelected(service) {
+	// get all checkboxes
+	var inputs = document.getElementsByTagName("input"); //or document.forms[0].elements;  
+	var query = "";
+	for (var i = 0; i < inputs.length; i++) {  
+		if (inputs[i].type == "checkbox") {  
+			if (inputs[i].checked) {
+				query += "&file=" + inputs[i].id;
+			}  
+		}  
+	}
+	if (query == "") {
+		alert("No files selected! Please select one or more files!");
+		return;
+	}
 	var check = window.confirm("Download and Replace Selected! Are you sure?");
 	if (check == false) {
 		return;
     }
+//	alert('ajax/system?action=downloadAndReplace&service=' + service +  query);
+	ajaxSystem.ajaxCall('ajax/system?action=downloadAndReplace&service=' + service + query);	
 }
 
 function systemCallback() {
+	alert(this.req.responseText);
    	setStatusSuccess();
 }
 

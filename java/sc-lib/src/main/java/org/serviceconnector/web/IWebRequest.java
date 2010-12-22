@@ -53,6 +53,15 @@ public interface IWebRequest {
 	public abstract String getParameter(String string);
 
 	/**
+	 * Gets the parameter list.
+	 * 
+	 * @param string
+	 *            the string
+	 * @return the parameter list
+	 */
+	public abstract List<String> getParameterList(String string);
+
+	/**
 	 * Gets the attribute.
 	 * 
 	 * @param key

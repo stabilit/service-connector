@@ -67,25 +67,25 @@ public class CacheConfiguration implements ICacheConfiguration {
 	 */
 	public synchronized void init(CompositeConfiguration compositeConfiguration) throws Exception {
 
-		Boolean cacheEnabled = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED);
+		Boolean cacheEnabled = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED, null);
 		if (cacheEnabled != null && this.cacheEnabled != cacheEnabled) {
 			this.cacheEnabled = cacheEnabled;
 			logger.info("cacheEnabled set to " + cacheEnabled);
 		}
 
-		String sCacheName = compositeConfiguration.getString(Constants.CACHE_NAME);
+		String sCacheName = compositeConfiguration.getString(Constants.CACHE_NAME, null);
 		if (sCacheName != null && sCacheName != this.cacheName) {
 			this.cacheName = sCacheName;
 			logger.info("cacheName set to " + this.cacheName);
 		}
 
-		Boolean diskPersistent = compositeConfiguration.getBoolean(Constants.CACHE_DISK_PERSISTENT);
+		Boolean diskPersistent = compositeConfiguration.getBoolean(Constants.CACHE_DISK_PERSISTENT, null);
 		if (diskPersistent != null && diskPersistent != this.diskPersistent) {
 			this.diskPersistent = diskPersistent;
 			logger.info("diskPersistent set to " + this.diskPersistent);
 		}
 
-		String sDiskPath = compositeConfiguration.getString(Constants.CACHE_DISK_PATH);
+		String sDiskPath = compositeConfiguration.getString(Constants.CACHE_DISK_PATH, null);
 		if (sDiskPath != null && sDiskPath != this.diskPath) {
 			this.diskPath = sDiskPath;
 			logger.info("diskPath set to " + this.diskPath);

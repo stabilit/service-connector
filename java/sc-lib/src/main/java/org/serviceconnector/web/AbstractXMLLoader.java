@@ -145,6 +145,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		if (this.isText()) {
 			OutputStreamWriter writer = new OutputStreamWriter(os);
 			this.loadBody(writer, request);
+			writer.flush();
 			return;
 
 		}

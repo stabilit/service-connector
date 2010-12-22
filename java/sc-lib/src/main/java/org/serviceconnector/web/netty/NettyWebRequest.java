@@ -95,6 +95,13 @@ public class NettyWebRequest extends AbstractWebRequest {
 
 	/** {@inheritDoc} */
 	@Override
+	public List<String> getParameterList(String name) {
+		List<String> paramList = this.parameters.get(name);
+		return paramList;
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public Cookie getCookie(String key) {
 		if (key == null || this.cookies == null) {
 			return null;

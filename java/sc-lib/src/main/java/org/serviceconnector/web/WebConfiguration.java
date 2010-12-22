@@ -22,16 +22,17 @@ import org.serviceconnector.Constants;
 /**
  * The Class WebConfiguration.
  */
-public class WebConfiguration  {
+public class WebConfiguration {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(WebConfiguration.class);
 
-	/** The translet enabled flag. 
+	/**
+	 * The translet enabled flag.
 	 * 
-	 *  If this flag is true then all xsl transformations will be cached internal otherwise not. 
-	 *  
-	*/
+	 * If this flag is true then all xsl transformations will be cached internal otherwise not.
+	 * 
+	 */
 	private boolean transletEnabled;
 
 	/**
@@ -50,18 +51,16 @@ public class WebConfiguration  {
 	 *             the exception
 	 */
 	public synchronized void init(CompositeConfiguration compositeConfiguration) throws Exception {
-
-		Boolean transletEnabled = compositeConfiguration.getBoolean(Constants.WEB_TRANSLET_ENABLED);
-		if (transletEnabled != null) {
-			this.transletEnabled = transletEnabled;
-			logger.info("web translet enabled set to " + transletEnabled);
-		}
-
+			Boolean transletEnabled = compositeConfiguration.getBoolean(Constants.WEB_TRANSLET_ENABLED, null);
+			if (transletEnabled != null) {
+				this.transletEnabled = transletEnabled;
+				logger.info("web translet enabled set to " + transletEnabled);
+			}
 	}
 
 	/**
 	 * Checks if is translet enabled.
-	 *
+	 * 
 	 * @return true, if is translet enabled
 	 */
 	public boolean isTransletEnabled() {

@@ -855,22 +855,48 @@ public class DefaultXMLLoaderFactory {
 		@Override
 		public void loadBody(Writer writer, IWebRequest request) throws Exception {
 			String action = request.getParameter("action");
-			if ("gc".equals(action)) {
-				System.gc();
-				logger.info("run gc");
+			try {
+				if ("gc".equals(action)) {
+					logger.info("run gc");
+					System.gc();
+					writer.write("success");
+				}
+				if ("terminate".equals(action)) {
+					logger.info("SC terminated by user interface");
+					writer.write("success");
+					System.exit(1);
+				}
+				if ("resetCache".equals(action)) {
+					logger.info("reset cache by user interface");
+					CacheManager cacheManager = AppContext.getCacheManager();
+					cacheManager.clearAll();
+					writer.write("success");
+				}
+				if ("resetTranslet".equals(action)) {
+					logger.info("reset translet by user interface");
+					XSLTTransformerFactory.getInstance().clearTranslet();
+					writer.write("success");
+				}
+				if ("downloadAndReplace".equals(action)) {
+					logger.info("download and replace configuration");
+					downloadAndReplace(writer, request);
+					writer.write("success");
+				}
+			} catch (Exception e) {
+                writer.write("failure: " + e.getMessage());
 			}
-			if ("terminate".equals(action)) {
-				logger.info("SC terminated by user interface");
-				System.exit(1);
+		}
+
+		private void downloadAndReplace(Writer writer, IWebRequest request) throws Exception {
+			String serviceName = request.getParameter("service");
+			if (serviceName == null) {
+				throw new WebCommandException("service is missing");
 			}
-			if ("resetCache".equals(action)) {
-				logger.info("reset cache by user interface");
-				CacheManager cacheManager = AppContext.getCacheManager();
-				cacheManager.clearAll();
-			}
-			if ("resetTranslet".equals(action)) {
-				logger.info("reset translet by user interface");
-				XSLTTransformerFactory.getInstance().clearTranslet();
+			List<String> fileList = request.getParameterList("file");
+			if (fileList != null) {
+				for (String file : fileList) {
+					System.out.println(file);
+				}
 			}
 		}
 	}
@@ -983,9 +1009,9 @@ public class DefaultXMLLoaderFactory {
 						writer.writeStartElement("files");
 						for (int i = 0; i < files.length; i++) {
 							if (files[i].isFile()) {
-							   writer.writeStartElement("file");
-							   writer.writeCData(files[i].getName());
-							   writer.writeEndElement(); // close file tag
+								writer.writeStartElement("file");
+								writer.writeCData(files[i].getName());
+								writer.writeEndElement(); // close file tag
 							}
 						}
 						writer.writeEndElement(); // close files tag
