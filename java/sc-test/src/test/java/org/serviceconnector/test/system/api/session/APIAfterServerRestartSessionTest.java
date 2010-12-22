@@ -38,7 +38,7 @@ public class APIAfterServerRestartSessionTest extends APISystemSuperSessionClien
 		request.setMessageInfo(TestConstants.echoAppErrorCmd);
 
 		ctrl.stopServer(srvCtx);
-		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
+		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
 				TestConstants.sesServiceName1);
 
@@ -58,7 +58,7 @@ public class APIAfterServerRestartSessionTest extends APISystemSuperSessionClien
 		response = service.createSession(request, cbk);
 
 		ctrl.stopServer(srvCtx);
-		srvCtx = ctrl.startServer(TestConstants.SERVER_TYPE_SESSION, TestConstants.log4jSrvProperties,
+		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
 				TestConstants.sesServiceName1);
 		

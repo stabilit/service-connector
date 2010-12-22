@@ -244,7 +244,7 @@ public class ProcessesController {
 				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
 				clientMgmt.enableService(serviceName); // service might be disabled during tests
-				if (srvProcess.getServerType() == TestConstants.SERVER_TYPE_SESSION) {
+				if (srvProcess.getServerType() == TestConstants.COMMUNICATOR_TYPE_SESSION) {
 					// Create session with KILL command
 					SCSessionService scSessionService = clientMgmt.newSessionService(serviceName);
 					SCMessage scMessage = new SCMessage();

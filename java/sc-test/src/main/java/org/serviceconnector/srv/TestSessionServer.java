@@ -50,7 +50,7 @@ public class TestSessionServer extends TestStatefulServer {
 	 */
 	public static void main(String[] args) throws Exception {
 		logger.log(Level.OFF, "TestSessionServer is starting ...");
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < args.length; i++) {
 			logger.log(Level.OFF, "args[" + i + "]:" + args[i]);
 		}
 		TestSessionServer server = new TestSessionServer();

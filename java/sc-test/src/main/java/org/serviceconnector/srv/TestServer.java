@@ -46,9 +46,9 @@ public class TestServer {
 
 		TestStatefulServer server = null;
 
-		if (args[0].equals(TestConstants.SERVER_TYPE_SESSION)) {
+		if (args[0].equals(TestConstants.COMMUNICATOR_TYPE_SESSION)) {
 			server = new TestSessionServer();
-		} else if (args[0].equals(TestConstants.SERVER_TYPE_PUBLISH)) {
+		} else if (args[0].equals(TestConstants.COMMUNICATOR_TYPE_PUBLISH)) {
 			server = new TestPublishServer();
 		}
 		server.setServerName(args[1]);

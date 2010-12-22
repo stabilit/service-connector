@@ -23,9 +23,8 @@ public class TestConstants {
 	public static final int PORT_MAX = 65535;
 	public static final int PORT_LISTENER = 30000; 
 
-	public static final String SERVER_TYPE_SESSION = "session";
-	public static final String SERVER_TYPE_PUBLISH = "publish";
-	
+	public static final String COMMUNICATOR_TYPE_SESSION = "session";
+	public static final String COMMUNICATOR_TYPE_PUBLISH = "publish";	
 
 	public static final String log4jSrvProperties = "log4j-srv.properties";
 	public static final String log4jSCProperties = "log4j-sc.properties";

@@ -289,7 +289,9 @@ public class SCPublishService extends SCService {
 			SCServiceCallback callback = new SCServiceCallback(true);
 			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
 					this.requester, this.serviceName, this.sessionId);
-			unsubscribeCall.setSessionInfo(scSubscribeMessage.getSessionInfo());
+			if (scSubscribeMessage != null) {
+				unsubscribeCall.setSessionInfo(scSubscribeMessage.getSessionInfo());
+			}
 			try {
 				unsubscribeCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
