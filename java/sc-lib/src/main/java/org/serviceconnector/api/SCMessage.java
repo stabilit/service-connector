@@ -24,8 +24,6 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class SCMessage. A SCMessage is the basic transport unit to communicate with a Service Connector.
@@ -94,14 +92,12 @@ public class SCMessage {
 	 *            investigating the body.<br>
 	 *            Any printable character, length > 0 and < 256 Byte<br>
 	 *            Example: SECURITY_MARKET_QUERY
-	 * @throws SCMPValidatorException
 	 */
-	public void setMessageInfo(String messageInfo) throws SCMPValidatorException {
+	public void setMessageInfo(String messageInfo) {
 		if (messageInfo == null) {
 			this.messageInfo = null;
 			return;
 		}
-		ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 		this.messageInfo = messageInfo;
 	}
 
@@ -119,14 +115,12 @@ public class SCMessage {
 	 * 
 	 * @param sessionInfo
 	 *            Optional information passed together with the message body Any printable character, length > 0 and < 256 Byte<br>
-	 * @throws SCMPValidatorException
 	 */
-	public void setSessionInfo(String sessionInfo) throws SCMPValidatorException {
+	public void setSessionInfo(String sessionInfo) {
 		if (sessionInfo == null) {
 			this.sessionInfo = null;
 			return;
 		}
-		ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.sessionInfo = sessionInfo;
 	}
 
@@ -273,7 +267,6 @@ public class SCMessage {
 			this.cacheId = null;
 			return;
 		}
-		ValidatorUtility.validateStringLength(1, cacheId, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.cacheId = cacheId;
 	}
 
@@ -291,14 +284,12 @@ public class SCMessage {
 	 * 
 	 * @param appErrorText
 	 *            the new application error text
-	 * @throws SCMPValidatorException
 	 */
-	public void setAppErrorText(String appErrorText) throws SCMPValidatorException {
+	public void setAppErrorText(String appErrorText) {
 		if (appErrorText == null) {
 			this.appErrorText = null;
 			return;
 		}
-		ValidatorUtility.validateStringLength(1, appErrorText, 256, SCMPError.HV_WRONG_APP_ERROR_TEXT);
 		this.appErrorText = appErrorText;
 	}
 
@@ -316,14 +307,12 @@ public class SCMessage {
 	 * 
 	 * @param appErrorCode
 	 *            the new application error code
-	 * @throws SCMPValidatorException
 	 */
-	public void setAppErrorCode(Integer appErrorCode) throws SCMPValidatorException {
-		if(appErrorCode == null) {
+	public void setAppErrorCode(Integer appErrorCode) {
+		if (appErrorCode == null) {
 			this.appErrorCode = 0;
 			return;
 		}
-		ValidatorUtility.validateInt(0, appErrorCode, SCMPError.HV_WRONG_APP_ERROR_CODE);
 		this.appErrorCode = appErrorCode;
 	}
 
@@ -360,10 +349,8 @@ public class SCMessage {
 	 * 
 	 * @param cacheExpirationDateTime
 	 *            the new cache expiration date time
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
 	 */
-	public void setCacheExpirationDateTime(Date cacheExpirationDateTime) throws SCMPValidatorException {
+	public void setCacheExpirationDateTime(Date cacheExpirationDateTime) {
 		if (cacheExpirationDateTime == null) {
 			this.cacheExpirationDateTime = null;
 			return;
@@ -377,21 +364,11 @@ public class SCMessage {
 	 * 
 	 * @param cacheExpirationDateTime
 	 *            the new cache expiration date time
-	 * @throws SCMPValidatorException
 	 */
-	public void setCacheExpirationDateTime(String cacheExpirationDateTime) throws SCMPValidatorException {
+	public void setCacheExpirationDateTime(String cacheExpirationDateTime) {
 		if (cacheExpirationDateTime == null) {
 			this.cacheExpirationDateTime = null;
 			return;
-		}
-		SimpleDateFormat format = new SimpleDateFormat(Constants.CED_DATE_FORMAT);
-		format.setLenient(false);
-
-		try {
-			format.parse(cacheExpirationDateTime);
-		} catch (Exception e) {
-			throw new SCMPValidatorException(SCMPError.HV_ERROR, "wrong format of cacheExpirationDateTime should be "
-					+ Constants.CED_DATE_FORMAT);
 		}
 		this.cacheExpirationDateTime = cacheExpirationDateTime;
 	}

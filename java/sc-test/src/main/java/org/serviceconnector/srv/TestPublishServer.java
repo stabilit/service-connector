@@ -133,21 +133,15 @@ public class TestPublishServer extends TestStatefulServer {
 				// watch out for kill server message
 				if (sessionInfo.equals(TestConstants.killServerCmd)) {
 					logger.log(Level.OFF, "Kill request received, exiting ...");
-					try {
-						response.setAppErrorCode(1050);
-						response.setAppErrorText("kill server requested!");
-					} catch (SCMPValidatorException e) {
-					}
+					response.setAppErrorCode(1050);
+					response.setAppErrorText("kill server requested!");
 					KillThread<SCPublishServer> kill = new KillThread<SCPublishServer>(this.scPublishServer);
 					kill.start();
 					// watch out for reject request
 				} else if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
-					try {
-						response.setReject(true);
-						response.setAppErrorCode(TestConstants.appErrorCode);
-						response.setAppErrorText(TestConstants.appErrorText);
-					} catch (SCMPValidatorException e) {
-					}
+					response.setReject(true);
+					response.setAppErrorCode(TestConstants.appErrorCode);
+					response.setAppErrorText(TestConstants.appErrorText);
 				} else {
 					PublishThread publishThread = new PublishThread(this.scPublishServer, sessionInfo, request,
 							operationTimeoutInMillis);
@@ -166,12 +160,9 @@ public class TestPublishServer extends TestStatefulServer {
 			if (sessionInfo != null) {
 				// watch out for reject request
 				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
-					try {
-						response.setReject(true);
-						response.setAppErrorCode(TestConstants.appErrorCode);
-						response.setAppErrorText(TestConstants.appErrorText);
-					} catch (SCMPValidatorException e) {
-					}
+					response.setReject(true);
+					response.setAppErrorCode(TestConstants.appErrorCode);
+					response.setAppErrorText(TestConstants.appErrorText);
 				} else {
 					try {
 						PublishThread th = new PublishThread();

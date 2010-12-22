@@ -156,11 +156,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			}
 			// message info
 			String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-			if (messageInfo != null) {
-				ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
-			}
-			// compression
-			message.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
@@ -180,21 +176,24 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 	}
 
 	/**
-	 * Try loading message from cache.
-	 * This method tries to load the message from its cache. An exception is thrown
-	 * if the message is not full part of the cache. In case of a successful cache load the method
-	 * return true otherwise false.
-	 *
-	 * @param request the request
-	 * @param response the response
-	 * @param responderCallback the responder callback
+	 * Try loading message from cache. This method tries to load the message from its cache. An exception is thrown if the message is
+	 * not full part of the cache. In case of a successful cache load the method return true otherwise false.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @param responderCallback
+	 *            the responder callback
 	 * @return true, if successful
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
-	private boolean tryLoadingMessageFromCache(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
+	private boolean tryLoadingMessageFromCache(IRequest request, IResponse response, IResponderCallback responderCallback)
+			throws Exception {
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
-		CacheManager cacheManager = AppContext.getCacheManager();		
+		CacheManager cacheManager = AppContext.getCacheManager();
 		String serviceName = message.getServiceName();
 		Cache scmpCache = cacheManager.getCache(serviceName);
 		if (scmpCache == null) {
@@ -261,14 +260,14 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				responderCallback.responseCallback(request, response);
 				CacheLogger.debug("Sent a cache message to the client (" + cacheId + " "
 						+ message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME) + ")");
-				return true;  // message loaded from cache
+				return true; // message loaded from cache
 			}
 		}
 		if (cacheComposite == null) {
 			// cache does not exist, this is the first request for it
 			scmpCache.startLoading(message.getCacheId());
 		}
-        return false;  // message not loaded from cache
+		return false; // message not loaded from cache
 	}
 
 	/**

@@ -17,17 +17,18 @@
 package org.serviceconnector.util;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
- * The Class ValidatorUtility. Provides validation functions for checking header
- * fields of requestFs.
+ * The Class ValidatorUtility. Provides validation functions for checking header fields of requestFs.
  * 
  * @author JTraber
  */
@@ -68,6 +69,26 @@ public final class ValidatorUtility {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_LDT, localDateTimeString);
 		}
 		return localDateTime;
+	}
+
+	/**
+	 * Validate cache expiration date time.
+	 * 
+	 * @param cacheExpirationDateTime
+	 *            the cache expiration date time
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
+	public static void validateCacheExpirationDateTime(String cacheExpirationDateTime) throws SCMPValidatorException {
+		SimpleDateFormat format = new SimpleDateFormat(Constants.CED_DATE_FORMAT);
+		format.setLenient(false);
+
+		try {
+			format.parse(cacheExpirationDateTime);
+		} catch (Exception e) {
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "wrong format of cacheExpirationDateTime should be "
+					+ Constants.CED_DATE_FORMAT);
+		}
 	}
 
 	/**
@@ -179,6 +200,28 @@ public final class ValidatorUtility {
 		if (intValue < lowerLimitInc || intValue > upperLimitInc) {
 			throw new SCMPValidatorException(error, "IntValue " + intValue + " not within limits");
 		}
+	}
+
+	/**
+	 * Validate string length.
+	 * 
+	 * @param minSizeInc
+	 *            the min size inc
+	 * @param stringValue
+	 *            the string value
+	 * @param maxSizeInc
+	 *            the max size inc
+	 * @param error
+	 *            the error
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
+	public static void validateStringLengthIgnoreNull(int minSizeInc, String stringValue, int maxSizeInc, SCMPError error)
+			throws SCMPValidatorException {
+		if (stringValue == null) {
+			return;
+		}
+		ValidatorUtility.validateStringLength(minSizeInc, stringValue, maxSizeInc, error);
 	}
 
 	/**

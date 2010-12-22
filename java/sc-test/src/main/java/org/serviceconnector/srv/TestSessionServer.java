@@ -120,22 +120,16 @@ public class TestSessionServer extends TestStatefulServer {
 				// watch out for kill server message
 				if (sessionInfo.equals(TestConstants.killServerCmd)) {
 					logger.log(Level.OFF, "Kill request received, exiting ...");
-					try {
-						response.setAppErrorCode(1050);
-						response.setAppErrorText("kill server requested!");
-						response.setReject(true);
-					} catch (SCMPValidatorException e) {
-					}
+					response.setAppErrorCode(1050);
+					response.setAppErrorText("kill server requested!");
+					response.setReject(true);
 					KillThread<SCSessionServer> kill = new KillThread<SCSessionServer>(this.scSessionServer);
 					kill.start();
 					// watch out for reject request
 				} else if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
-					try {
-						response.setReject(true);
-						response.setAppErrorCode(TestConstants.appErrorCode);
-						response.setAppErrorText(TestConstants.appErrorText);
-					} catch (SCMPValidatorException e) {
-					}
+					response.setReject(true);
+					response.setAppErrorCode(TestConstants.appErrorCode);
+					response.setAppErrorText(TestConstants.appErrorText);
 				}
 			}
 			SessionLogger.logCreateSession(this.getClass().getName(), request.getSessionId());
@@ -184,12 +178,8 @@ public class TestSessionServer extends TestStatefulServer {
 
 		// send back an application error
 		public SCMessage echoAppError(SCMessage request, int operationTimeoutInMillis) {
-			try {
-				request.setAppErrorCode(TestConstants.appErrorCode);
-				request.setAppErrorText(TestConstants.appErrorText);
-			} catch (SCMPValidatorException e) {
-				logger.error("cannot set appError ", e);
-			}
+			request.setAppErrorCode(TestConstants.appErrorCode);
+			request.setAppErrorText(TestConstants.appErrorText);
 			return request;
 		}
 

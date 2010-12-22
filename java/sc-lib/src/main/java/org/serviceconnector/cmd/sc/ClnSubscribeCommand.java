@@ -180,9 +180,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 			// sessionInfo is optional
 			String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
-			if (sessionInfo != null) {
-				ValidatorUtility.validateStringLength(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
-			}
+			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 			// noDataInterval
 			String noDataIntervalValue = message.getHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 			ValidatorUtility.validateInt(1, noDataIntervalValue, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);

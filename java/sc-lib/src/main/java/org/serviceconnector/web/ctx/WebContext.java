@@ -19,7 +19,6 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.EnvironmentConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;

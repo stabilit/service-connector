@@ -19,7 +19,7 @@ package org.serviceconnector;
 import org.apache.log4j.Logger;
 
 /**
- * The Interface IConstants. SCM constants.
+ * The class Constants. SCM constants.
  * 
  * @author JTraber
  */

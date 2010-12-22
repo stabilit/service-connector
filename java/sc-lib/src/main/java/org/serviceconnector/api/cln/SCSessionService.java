@@ -116,6 +116,7 @@ public class SCSessionService extends SCService {
 			throw new SCServiceException("message > 60kB not allowed");
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getSessionInfo(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.messageCallback = messageCallback;
 		this.requester.getContext().getSCMPMsgSequenceNr().reset();
 		// 2. initialize call & invoke
@@ -171,6 +172,8 @@ public class SCSessionService extends SCService {
 			throw new SCServiceException("scMessage must be set.");
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getMessageInfo(), 256, SCMPError.HV_WRONG_MESSAGE_INFO);
+		ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getCacheId(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		// cancel session timeout even if its running already
 		this.cancelSessionTimeout(true);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
@@ -226,6 +229,8 @@ public class SCSessionService extends SCService {
 			throw new InvalidParameterException("Message must be set.");
 		}
 		ValidatorUtility.validateInt(1, operationtTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getMessageInfo(), 256, SCMPError.HV_WRONG_MESSAGE_INFO);
+		ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getCacheId(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		// cancel session timeout even if its running already
 		this.cancelSessionTimeout(true);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
@@ -347,6 +352,7 @@ public class SCSessionService extends SCService {
 					"delete session not possible, there is a pending request - two pending request are not allowed.");
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getSessionInfo(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		// cancel session timeout even if its running already
 		this.cancelSessionTimeout(true);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();

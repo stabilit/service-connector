@@ -23,7 +23,6 @@ package org.serviceconnector.api.cln;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
@@ -90,13 +89,9 @@ class SCServiceCallback extends SynchronousCallback {
 		messageReply.setData(scmpReply.getBody());
 		messageReply.setCompressed(scmpReply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		messageReply.setSessionId(scmpReply.getSessionId());
-		try {
-			messageReply.setMessageInfo(scmpReply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-			messageReply.setAppErrorCode(scmpReply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-			messageReply.setAppErrorText(scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
-		} catch (SCMPValidatorException ex) {
-			logger.warn("attributes invalid when setting in scmessage");
-		}
+		messageReply.setMessageInfo(scmpReply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		messageReply.setAppErrorCode(scmpReply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+		messageReply.setAppErrorText(scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 		// inform service request is completed
 		this.service.setRequestComplete();
 		this.messageCallback.receive(messageReply);

@@ -95,6 +95,8 @@ public class SCPublishService extends SCService {
 		this.messageCallback = scMessageCallback;
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		ValidatorUtility.validateInt(1, this.noDataIntervalSeconds, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
+		ValidatorUtility
+				.validateStringLengthIgnoreNull(1, scSubscribeMessage.getSessionInfo(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.requester.getContext().getSCMPMsgSequenceNr().reset();
 		// 2. initialize call & invoke
 		SCServiceCallback callback = new SCServiceCallback(true);
@@ -168,6 +170,8 @@ public class SCPublishService extends SCService {
 			throw new SCServiceException("scSubscribeMessage can not be null");
 		}
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility
+				.validateStringLengthIgnoreNull(1, scSubscribeMessage.getSessionInfo(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
@@ -283,6 +287,8 @@ public class SCPublishService extends SCService {
 		}
 		this.sessionActive = false;
 		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+		ValidatorUtility
+				.validateStringLengthIgnoreNull(1, scSubscribeMessage.getSessionInfo(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
 		try {

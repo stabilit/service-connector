@@ -132,8 +132,6 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 			if (messageInfo != null) {
 				ValidatorUtility.validateStringLength(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 			}
-			// compression
-			message.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
