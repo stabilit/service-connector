@@ -83,6 +83,9 @@ public class SCMPClnExecuteCall extends SCMPSessionCallAdapter {
 	 *            the new message info
 	 */
 	public void setMessagInfo(String messageInfo) {
+		if(messageInfo == null) {
+			return;
+		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
 	}
 
@@ -92,6 +95,9 @@ public class SCMPClnExecuteCall extends SCMPSessionCallAdapter {
 	 * @param cacheId the new cache id
 	 */
 	public void setCacheId(String cacheId) {
+		if(cacheId == null) {
+			return;
+		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId);
 	}
 

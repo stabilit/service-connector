@@ -350,10 +350,8 @@ public class SCPublishService extends SCService {
 				try {
 					messageReply.setMask(reply.getHeader(SCMPHeaderAttributeKey.MASK));
 					messageReply.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-					if (reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE) != null) {
-						messageReply.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-						messageReply.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
-					}
+					messageReply.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+					messageReply.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 				} catch (SCMPValidatorException ex) {
 					logger.warn("attributes invalid when setting in scmessage");
 				}

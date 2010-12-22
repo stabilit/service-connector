@@ -317,14 +317,9 @@ public class SCSessionService extends SCService {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
-		if (msgInfo != null) {
-			// message info optional
-			clnExecuteCall.setMessagInfo(msgInfo);
-		}
 		String cacheId = requestMsg.getCacheId();
-		if (cacheId != null) {
-			clnExecuteCall.setCacheId(cacheId);
-		}
+		clnExecuteCall.setMessagInfo(msgInfo);
+		clnExecuteCall.setCacheId(cacheId);
 		clnExecuteCall.setCompressed(requestMsg.isCompressed());
 		clnExecuteCall.setRequestBody(requestMsg.getData());
 		SCServiceCallback scmpCallback = new SCServiceCallback(this, this.messageCallback);
