@@ -259,14 +259,9 @@ public class SCSessionService extends SCService {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
 		String msgInfo = requestMsg.getMessageInfo();
-		if (msgInfo != null) {
-			// message info optional
-			clnExecuteCall.setMessagInfo(msgInfo);
-		}
 		String cacheId = requestMsg.getCacheId();
-		if (cacheId != null) {
-			clnExecuteCall.setCacheId(cacheId);
-		}
+		clnExecuteCall.setMessagInfo(msgInfo);
+		clnExecuteCall.setCacheId(cacheId);
 		clnExecuteCall.setCompressed(requestMsg.isCompressed());
 		clnExecuteCall.setRequestBody(requestMsg.getData());
 		// invoke asynchronous
@@ -294,10 +289,8 @@ public class SCSessionService extends SCService {
 		replyToClient.setSessionId(this.sessionId);
 		replyToClient.setCacheId(reply.getCacheId());
 		replyToClient.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		if (reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE) != null) {
-			replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-			replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
-		}
+		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 		return replyToClient;
 	}
 
