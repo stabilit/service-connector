@@ -102,7 +102,7 @@ public abstract class WebUtil {
 			return null;
 		}
 	}
-
+	
 	/**
 	 * Gets the xML date as string.
 	 * 

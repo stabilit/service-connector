@@ -141,11 +141,11 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		} catch (Exception e) {
 			xmlDocument.addException(e);
 		}
-		if (xmlDocument.isText()) {
-			xmlDocument.load(responseOutputStream);
-			response.setContentType("text/html");
-			return;
-		}
+//		if (xmlDocument.isText()) {
+//			xmlDocument.load(responseOutputStream);
+//			response.setContentType("text/html");
+//			return;
+//		}
 		xmlDocument.load(xmlOS);
 		// check if xmlview is yes or true
 		if (isXMLView(request)) {

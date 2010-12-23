@@ -109,7 +109,19 @@ function downloadAndReplaceSelected(service) {
 }
 
 function systemCallback() {
-	alert(this.req.responseText);
+	var dialogBox = document.getElementById("DialogBox");
+	if (dialogBox != null) {
+       dialogBox.innerHTML = this.req.responseText;
+       showLayer("DialogBox");
+       centerLayer("DialogBox", 400, 400, 0, 0);
+	}
+	var action = this.ajaxGetParam("action");
+	var service = this.ajaxGetParam("service");
+	if (action == "downloadAndReplace") {
+		if (service != null) {
+		    maintenanceCall(service);
+		}
+	}
    	setStatusSuccess();
 }
 

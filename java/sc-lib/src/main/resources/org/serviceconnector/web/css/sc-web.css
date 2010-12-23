@@ -36,6 +36,35 @@ a.sc_header:hover {
 	color: #FFFF00;
 }
 
+#DialogBox {
+	background:transparent;
+	position: absolute;
+	text-align: center;	
+	visibility: hidden;
+	z-index: 1;
+}
+
+.sc_dialog_table {
+	background-color: transparent;
+	border:2px solid #666666;
+	width: 100%;
+}
+
+.sc_dialog_table_header {
+	background-color: #666666;
+	color:#FFFFFF;
+	font-weight:bold;
+	height: 40px;
+}
+
+.sc_dialog_table_content {
+	background-color: #FFFFFF;
+	border-top:1px solid #666666;
+	font-size:12px;
+	padding:4px;
+	color:#000000;
+}
+
 div#sc_root {
 	width: 100%;
 	height: 100%;

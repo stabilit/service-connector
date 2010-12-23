@@ -17,9 +17,11 @@ package org.serviceconnector.web.cmd.sc;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.Date;
@@ -37,6 +39,7 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheException;
@@ -855,36 +858,52 @@ public class DefaultXMLLoaderFactory {
 		@Override
 		public void loadBody(Writer writer, IWebRequest request) throws Exception {
 			String action = request.getParameter("action");
+			writer.write("<system>");
+			writer.write("<action>" + action + "</action>");
 			try {
 				if ("gc".equals(action)) {
 					logger.info("run gc");
 					System.gc();
-					writer.write("success");
+					writer.write("<status>success</status>");
+					writer.write("<messages>");
+					writer.write("<message>GC did run.</message>");
+					writer.write("</messages>");
 				}
 				if ("terminate".equals(action)) {
 					logger.info("SC terminated by user interface");
-					writer.write("success");
+					writer.write("<status>success</status>");
+					writer.write("<messages>");
+					writer.write("<message>SC has been terminated.</message>");
+					writer.write("</messages>");
 					System.exit(1);
 				}
 				if ("resetCache".equals(action)) {
 					logger.info("reset cache by user interface");
 					CacheManager cacheManager = AppContext.getCacheManager();
 					cacheManager.clearAll();
-					writer.write("success");
+					writer.write("<status>success</status>");
+					writer.write("<messages>");
+					writer.write("<message>Cache has been cleared.</message>");
+					writer.write("</messages>");
 				}
 				if ("resetTranslet".equals(action)) {
 					logger.info("reset translet by user interface");
 					XSLTTransformerFactory.getInstance().clearTranslet();
-					writer.write("success");
+					writer.write("<status>success</status>");
+					writer.write("<messages>");
+					writer.write("<message>Translet have been resetted.</message>");
+					writer.write("</messages>");
 				}
 				if ("downloadAndReplace".equals(action)) {
 					logger.info("download and replace configuration");
 					downloadAndReplace(writer, request);
-					writer.write("success");
+					writer.write("<status>success</status>");
 				}
-			} catch (Exception e) {
-                writer.write("failure: " + e.getMessage());
+			} catch (Exception e) {				
+				writer.write("<status>failure</status>");
+				writer.write("<message>" + e.getMessage() + "</message>");
 			}
+			writer.write("</system>");
 		}
 
 		private void downloadAndReplace(Writer writer, IWebRequest request) throws Exception {
@@ -892,11 +911,68 @@ public class DefaultXMLLoaderFactory {
 			if (serviceName == null) {
 				throw new WebCommandException("service is missing");
 			}
+			ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
+			Service service = serviceRegistry.getService(serviceName);
+			if (service == null) {
+				throw new WebCommandException("service " + serviceName + " not found");
+			}
+			if (service instanceof FileService == false) {
+				throw new WebCommandException("service " + serviceName + " is not a file service");
+			}
+			writer.write("<service>" + serviceName + "</service>");
+			FileService fileService = (FileService) service;
+			FileServer fileServer = fileService.getServer();
 			List<String> fileList = request.getParameterList("file");
+			writer.write("<messages>");
+			writer.write("<message>The following files were downloaded from file service [" + serviceName + "]:</message>");
 			if (fileList != null) {
 				for (String file : fileList) {
-					System.out.println(file);
+					if (file.startsWith("fs:") && file.endsWith(":fs")) {						
+						try {
+							file = file.substring(3, file.length() - 3);
+							String path = fileService.getPath() + file;
+							// download file
+							URL downloadURL = new URL("http://" + fileServer.getHost() + ":" + fileServer.getPortNr() + "/" + path);
+							String configFileName = SystemInfo.getConfigFileName();
+							URL resourceURL = WebUtil.getResourceURL(configFileName);
+							String resourceURLString = resourceURL.toString();
+							String resourceURLPath = resourceURLString.substring(0, resourceURLString.length()-configFileName.length());
+							URL configURL = new URL(resourceURLPath + file);
+							downloadAndReplaceSingleFile(writer, downloadURL, configURL, file);
+						} catch (Exception e) {
+							writer.write("<message>" + file + " did fail, " + e.getMessage() + "</message>");
+						}
+					} else {
+						writer.write("<message>" + file + " invalid format</message>");
+					}
 				}
+			}
+			writer.write("</messages>");
+		}
+
+		private void downloadAndReplaceSingleFile(Writer writer, URL url, URL configURL, String file) throws Exception {
+		    File configFile = new File(configURL.toURI());
+		    String status = "successful (copied)";
+		    if (configFile.exists()) {
+		    	status = "successful (replaced)";
+		    }
+		    try {
+				FileOutputStream fos = new FileOutputStream(configFile);
+				HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+				httpCon.connect();
+				InputStream in = httpCon.getInputStream();
+				byte[] fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
+				int readBytes = -1;
+				while ((readBytes = in.read(fullBuffer)) > 0) {
+				    fos.write(fullBuffer, 0, readBytes);
+				}
+				in.close();
+				fos.close();
+				writer.write("<message>" + file + " " + status + "</message>");
+			} catch (Exception e) {
+				status = "failed";
+				writer.write("<message>" + file + " " + status + "</message>");
+				throw e;
 			}
 		}
 	}

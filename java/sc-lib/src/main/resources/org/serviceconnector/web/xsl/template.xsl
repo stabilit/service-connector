@@ -21,8 +21,14 @@
 				<script type="text/javascript" src="sc_ajax.js"></script>
 				<script type="text/javascript" src="sc.js"></script>
 				<script type="text/javascript"><xsl:call-template name="sc_script"/></script>
+				<script type="text/javascript">
+				  window.document.onclick=function() {
+				     hideLayer('DialogBox');
+				  }
+				</script>
 			</head>
 			<body>
+			    <div id="DialogBox"></div>
 				<div id="sc_root" >
 					<div id="sc_header">
 					   <xsl:call-template name="sc_header"/> 
