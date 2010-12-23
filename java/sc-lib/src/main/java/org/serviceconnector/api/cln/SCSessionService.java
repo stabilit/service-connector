@@ -265,8 +265,6 @@ public class SCSessionService extends SCService {
 			// an operation is running no echo allowed
 			return;
 		}
-		// cancel session timeout even if its running already
-		this.cancelSessionTimeout(true);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCMPEchoCall clnEchoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(this.requester, this.serviceName,
