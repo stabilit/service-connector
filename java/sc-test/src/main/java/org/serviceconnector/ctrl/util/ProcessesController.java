@@ -285,6 +285,42 @@ public class ProcessesController {
 		}
 	}
 
+	/**
+	 * Start client.
+	 * 
+	 * @param clientType
+	 *            the client type
+	 * @param log4jClnProperties
+	 *            the log4j cln properties
+	 * @param clientName
+	 *            the client name
+	 * @param scHost
+	 *            the sc host
+	 * @param scPort
+	 *            the sc port
+	 * @param connectionType
+	 *            the connection type
+	 * @param maxConnections
+	 *            the max connections
+	 * @param keepAliveIntervalInSeconds
+	 *            the keep alive interval in seconds
+	 * @param serviceName
+	 *            the service name
+	 * @param echoIntervalInSeconds
+	 *            the echo interval in seconds
+	 * @param echoTimeoutInSeconds
+	 *            the echo timeout in seconds
+	 * @param methodsToInvoke
+	 *            the methods to invoke
+	 * @return the process ctx
+	 * @throws Exception
+	 *             the exception <br>
+	 * <br>
+	 *             Example to call: <br>
+	 *             ProcessCtx clnCtx = ctrl.startClient(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSCProperties,
+	 *             TestConstants.sesServiceName1, TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, 10, 0,
+	 *             TestConstants.sesServiceName1, 300, 5, "\"initAttach|detach\"");
+	 */
 	public ProcessCtx startClient(String clientType, String log4jClnProperties, String clientName, String scHost, int scPort,
 			ConnectionType connectionType, int maxConnections, int keepAliveIntervalInSeconds, String serviceName,
 			int echoIntervalInSeconds, int echoTimeoutInSeconds, String methodsToInvoke) throws Exception {
@@ -323,6 +359,7 @@ public class ProcessesController {
 				+ methodsToInvoke;
 		Process clnProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(clnProcess);
+		testLogger.info("Client started");
 		return proc;
 	}
 
