@@ -210,6 +210,4 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		service2.unsubscribe(2);
 		Assert.assertNull("the session ID is not null)", service2.getSessionId());
 	}
-
-
 }

@@ -19,7 +19,6 @@ package org.serviceconnector.api.srv;
 import org.apache.log4j.Logger;
 import org.serviceconnector.registry.Registry;
 
-
 /**
  * The Class SrvServiceRegistry. Registry of services on backend server. Gives access to services and their callback.
  * 
@@ -60,6 +59,7 @@ public class SrvServiceRegistry extends Registry<String, SrvService> {
 	 *            the key
 	 */
 	public SrvService removeSrvService(String key) {
+		logger.debug("remove SrvService " + key);
 		return super.remove(key);
 	}
 }

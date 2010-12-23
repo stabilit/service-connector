@@ -76,7 +76,7 @@ public abstract class SCService {
 	 * @return true, if is active
 	 */
 	public boolean isActive() {
-		return this.isActive();
+		return this.sessionActive;
 	}
 
 	/**
