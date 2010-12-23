@@ -35,7 +35,6 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(APIMultipleSCsClientTest.class);
 	
-	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx2;
 	private static ProcessCtx scCtx1;
 	private SCClient client1;
@@ -44,36 +43,43 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		scCtx1 = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		scCtx2 = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
+
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
+		scCtx1 = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx2 = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
 		client1 = null;
-		client2 = null;		
+		client2 = null;	
 	}
 	
 	@After
 	public void afterOneTest() throws Exception {
+		try {
+			client1.detach();
+		} catch (Exception e) {}
 		client1 = null;
+		try {
+			client2.detach();
+		} catch (Exception e) {}
 		client2 = null;
-		super.afterOneTest();
+		try {
+			ctrl.stopSC(scCtx2);
+			
+		} catch (Exception e) {
+		}
+		scCtx2 = null;
+		try {
+			ctrl.stopSC(scCtx1);
+			
+		} catch (Exception e) {
+		}
+		scCtx2 = null;
 	}
 
 	@AfterClass
 	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopSC(scCtx2);
-			scCtx2 = null;
-		} catch (Exception e) {
-		}
-		try {
-			ctrl.stopSC(scCtx1);
-			scCtx2 = null;
-		} catch (Exception e) {
-		}
 		ctrl = null;
 	}
 

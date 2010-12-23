@@ -16,17 +16,11 @@
 package org.serviceconnector.test.integration.api.cln;
 
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCMgmtClient;
-import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
 public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
@@ -36,36 +30,6 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 
 	private SCMgmtClient client;
 	
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-	}
-
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-	}
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			client.detach();
-		} catch (Exception e) {}
-		client = null;
-		try {
-			ctrl.stopSC(scCtx);
-		} catch (Exception e) {}
-		scCtx = null;
-		super.afterOneTest();
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		ctrl = null;
-	}
-
-
 	/**
 	 * Description: attach after SC was restarted<br> 
 	 * Expectation:	will pass because this is the first time
@@ -73,10 +37,12 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 	@Test
 	public void t101_attach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		client.attach();
-		Assert.assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
 	}
 
 	/**
@@ -87,10 +53,12 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 	public void t102_attach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		Assert.assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		client.detach();
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		client.attach();
 		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
@@ -103,61 +71,78 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 	public void t103_attach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		Assert.assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
 
 	/**
 	 * Description: detach after SC was restarted<br> 
-	 * Expectation:	throws SCServiceException
+	 * Expectation:	passes
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test
 	public void t104_detach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		client.detach();
+		Assert.assertEquals("Client is attached", false, client.isAttached());
 	}
 	
 	/**
 	 * Description: enable service after SC was restarted<br> 
-	 * Expectation:	throws SCServiceException
+	 * Expectation:	passes, because new connection is created
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test
 	public void t105_enableService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		client.enableService(TestConstants.sesServiceName1);
+		Assert.assertEquals("Service is not enabled", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 
 	/**
 	 * Description: disable service after SC was restarted<br> 
-	 * Expectation:	throws SCServiceException
+	 * Expectation:	passes, because new connection is created
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test
 	public void t106_disableService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		client.disableService(TestConstants.sesServiceName1);
+		Assert.assertEquals("Service is not disabled", false, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 
 	/**
 	 * Description: getWorkload after SC was restarted<br> 
-	 * Expectation:	throws SCServiceException
+	 * Expectation:	passes, because new connection is created
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test
 	public void t107_getWorkload() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		client.getWorkload(TestConstants.sesServiceName1);
 	}
 
@@ -168,8 +153,10 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 	@Test
 	public void t201_attach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		client.attach();
 		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
@@ -182,10 +169,12 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 	public void t202_attach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		Assert.assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());;
 		client.detach();
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		client.attach();
 		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
@@ -198,61 +187,78 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 	public void t203_attach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		Assert.assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
 
 	/**
 	 * Description: detach after SC was restarted<br> 
-	 * Expectation:	throws SCServiceException
+	 * Expectation:	passes
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test
 	public void t204_detach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		client.detach();
 	}
 	
 	/**
 	 * Description: enable service after SC was restarted<br> 
-	 * Expectation:	throws SCServiceException
+	 * Expectation:	passes, because new connection is created
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test
 	public void t205_enableService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		client.enableService(TestConstants.sesServiceName1);
+		Assert.assertEquals("Service is not enabled", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 
 	/**
 	 * Description: disable service after SC was restarted<br> 
-	 * Expectation:	throws SCServiceException
+	 * Expectation:	passes, because new connection is created
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test
 	public void t206_disableService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		client.disableService(TestConstants.sesServiceName1);
+		Assert.assertEquals("Service is not disabled", false, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 
 	/**
 	 * Description: getWorkload after SC was restarted<br> 
-	 * Expectation:	throws SCServiceException
+	 * Expectation:	passes, because new connection is created
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test
 	public void t207_getWorkload() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
+		
 		ctrl.stopSC(scCtx);
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		
 		client.getWorkload(TestConstants.sesServiceName1);
+
 	}
 }

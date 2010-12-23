@@ -59,7 +59,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	public void t010_attach() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		Assert.assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	public void t020_attach() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		Assert.assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
 	}
 
 	
@@ -82,7 +82,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	public void t030_attach() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		Assert.assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
 	}
 
 	/**
@@ -157,13 +157,13 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 
 	/**
 	 * Description: Attach client with default host and tcp-port and timeout of 10 seconds<br>
-	 * Expectation:	Client is attached.
+	 * Expectation:	passes
 	 */
 	@Test
 	public void t110_attach() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach(10);
-		Assert.assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
 	}
 	
 	
@@ -175,7 +175,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	public void t120_attach() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		Assert.assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		client.attach();	// second attach throws SCServiceException			
 	}
 
@@ -187,7 +187,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	public void t130_setKeepAliveIntervalInSeconds() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		Assert.assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		client.setKeepAliveIntervalSeconds(10);	// too late => throws SCServiceException			
 	}
 	
@@ -199,7 +199,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	public void t140_setMaxConnections() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		Assert.assertEquals("Client is attached", true, client.isAttached());
+		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		client.setMaxConnections(10);	// too late => throws SCServiceException			
 	}
 

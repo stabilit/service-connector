@@ -16,16 +16,11 @@
 package org.serviceconnector.test.integration.api.srv;
 
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
-import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
@@ -34,46 +29,6 @@ public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(APIAfterSCAbortServerTest.class);
-
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-	}
-
-	@Before
-	public void beforeOneTest() throws Exception {
-		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		threadCount = Thread.activeCount();
-	}
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			if (publishServer != null) publishServer.deregister();
-		} catch (Exception e) {}
-		publishServer = null;
-		try {
-			if (sessionServer != null) sessionServer.deregister();
-		} catch (Exception e) {}
-		sessionServer = null;
-		try {
-			server.stopListener();
-		} catch (Exception e) {}
-		try {
-			server.destroy();
-		} catch (Exception e) {}
-		server = null;
-		try {
-			ctrl.stopSC(scCtx);
-			scCtx = null;
-		} catch (Exception e) {}
-		ctrl = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
-	}
-	
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-	}
 
 	/**
 	 * Description: start listener after SC was aborted<br> 
