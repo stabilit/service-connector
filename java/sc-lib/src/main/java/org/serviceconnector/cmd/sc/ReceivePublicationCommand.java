@@ -107,17 +107,17 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 	public void validate(IRequest request) throws Exception {
 		SCMPMessage message = request.getMessage();
 		try {
-			// msgSequenceNr
+			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
 			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
-			// serviceName
+			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
-			// sessionId
+			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			if (sessionId == null || sessionId.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");

@@ -47,8 +47,7 @@ public class SCFileService extends SCService {
 
 	public synchronized void uploadFile(int operationTimeoutSeconds, String remoteFileName, InputStream inStream) throws Exception {
 		// 1. checking preconditions and initialize
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		// first create file session
+		// create file session
 		this.createFileSession(operationTimeoutSeconds);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
@@ -67,8 +66,8 @@ public class SCFileService extends SCService {
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("upload file failed");
-				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		} finally {
@@ -85,8 +84,7 @@ public class SCFileService extends SCService {
 	public synchronized void downloadFile(int operationTimeoutSeconds, String remoteFileName, OutputStream outStream)
 			throws Exception {
 		// 1. checking preconditions and initialize
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		// first create file session
+		// create file session
 		this.createFileSession(operationTimeoutSeconds);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
@@ -100,8 +98,8 @@ public class SCFileService extends SCService {
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("download file failed");
-				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 			// 4. post process, reply to client
@@ -137,8 +135,8 @@ public class SCFileService extends SCService {
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("list files failed");
-			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw ex;
 		}
 		// 4. post process, reply to client
@@ -164,8 +162,8 @@ public class SCFileService extends SCService {
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("create file session failed");
-			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw ex;
 		}
 		// 4. post process, reply to client
@@ -189,8 +187,8 @@ public class SCFileService extends SCService {
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("delete file session failed");
-				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		} finally {

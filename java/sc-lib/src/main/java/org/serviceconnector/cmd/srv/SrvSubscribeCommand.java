@@ -68,17 +68,8 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 		SCMessage scReply = srvService.getCallback().subscribe(scMessage,
 				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 
-		// create session in SCMPSessionCompositeRegistry
-		SrvCommandAdapter.sessionCompositeRegistry.addSession(sessionId);
-		// handling msgSequenceNr
-		SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
-
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
-		reply.setServiceName(serviceName);
-		reply.setSessionId(sessionId);
-		reply.setMessageType(this.getKey());
 
 		if (scReply != null) {
 			reply.setBody(scReply.getData());
@@ -92,9 +83,19 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scReply.getAppErrorText());
 			}
 			if (scReply.isReject()) {
+				// subscription rejected
 				reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
+			} else {
+				// create session in SCMPSessionCompositeRegistry
+				SrvCommandAdapter.sessionCompositeRegistry.addSession(sessionId);
+				// handling msgSequenceNr
+				SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
+				reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			}
 		}
+		reply.setServiceName(serviceName);
+		reply.setSessionId(sessionId);
+		reply.setMessageType(this.getKey());
 		response.setSCMP(reply);
 	}
 
@@ -104,28 +105,31 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 		SCMPMessage message = request.getMessage();
 
 		try {
-			// msgSequenceNr
+			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
 			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
-			// serviceName
+			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
-			// sessionId
+			// operation timeout mandatory
+			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
+			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			if (sessionId == null || sessionId.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 			}
-			// mask
+			// mask mandatory
 			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-			// ipAddressList
+			// ipAddressList mandatory
 			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
-			// sessionInfo
+			// sessionInfo optional
 			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {

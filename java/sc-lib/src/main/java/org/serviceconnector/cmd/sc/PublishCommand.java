@@ -84,22 +84,22 @@ public class PublishCommand extends CommandAdapter {
 	public void validate(IRequest request) throws Exception {
 		SCMPMessage message = request.getMessage();
 		try {
-			// msgSequenceNr
+			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
 			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
-			// serviceName
+			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
-			// message info
-			String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
-			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
-			// mask
+			// mask mandatory
 			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+			// message info optional
+			String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

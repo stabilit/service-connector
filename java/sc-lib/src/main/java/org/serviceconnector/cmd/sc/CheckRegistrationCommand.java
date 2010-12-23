@@ -83,7 +83,7 @@ public class CheckRegistrationCommand extends CommandAdapter {
 	public void validate(IRequest request) throws Exception {
 		SCMPMessage message = request.getMessage();
 		try {
-			// serviceName
+			// serviceName mandatory
 			String serviceName = (String) message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");

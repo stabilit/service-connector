@@ -71,16 +71,9 @@ public class SCMPClnDeleteSessionCall extends SCMPSessionCallAdapter {
 	 *            the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
+		if(sessionInfo == null) {
+			return;
+		}
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
-	}
-
-	/**
-	 * Sets the service name.
-	 * 
-	 * @param serviceName
-	 *            the new service name
-	 */
-	public void setServiceName(String serviceName) {
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 }

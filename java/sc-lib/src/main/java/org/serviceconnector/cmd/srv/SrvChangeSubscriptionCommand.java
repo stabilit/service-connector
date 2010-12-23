@@ -29,6 +29,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class SrvChangeSubscriptionCommand. Responsible for validation and execution of server change subscription command. Allows
@@ -109,21 +110,34 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 		SCMPMessage message = request.getMessage();
 
 		try {
-			// msgSequenceNr
+			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
 			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
-			}
-			// sessionId
+			} 
+			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			if (sessionId == null || sessionId.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 			}
-			// serviceName
+			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
+			// operation timeout mandatory
+			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
+			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			// ipAddressList mandatory
+			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
+			ValidatorUtility.validateIpAddressList(ipAddressList);
+			// mask mandatory
+			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
+			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+			//TODO JAN/JOT ams actual mask mandatory
+			// sessionInfo optional
+			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

@@ -128,26 +128,34 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 	public void validate(IRequest request) throws Exception {
 		SCMPMessage message = request.getMessage();
 		try {
-			// msgSequenceNr
+			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
 			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
-			// serviceName
+			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
-			// operation timeout
+			// subscriptionId mandatory
+			String subscriptionId = message.getSessionId();
+			if (subscriptionId == null || subscriptionId.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "subscriptionId must be set");
+			}
+			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			// mask
+			// ipAddressList mandatory
+			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
+			ValidatorUtility.validateIpAddressList(ipAddressList);
+			// mask mandatory
 			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-			if (mask.indexOf("%") != -1) {
-				// percent sign in mask not allowed
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "Percent sign not allowed " + mask);
-			}
+			// sessionInfo optional
+			ValidatorUtility.validateStringLengthIgnoreNull(1, message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO), 256,
+					SCMPError.HV_WRONG_SESSION_INFO);
+			// cascadedMask & cascadedSubscriptionId will not be validated, sent from another SC
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

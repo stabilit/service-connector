@@ -88,14 +88,14 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 			} catch (ConnectionPoolBusyException ex) {
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
-					server.abortSession(subscription);
+					server.abortSession(subscription, "unsubscribe subscription failed, busy connection pool to server");
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
 							"no free connection on server for service " + reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
 			} catch (Exception ex) {
-				server.abortSession(subscription);
+				server.abortSession(subscription, "unsubscribe subscription failed " + ex);
 				throw ex;
 			}
 			// sleep for a while and then try again
@@ -105,9 +105,8 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		SCMPMessage reply = callback.getMessageSync(otiOnServerMillis);
 
 		if (reply.isFault()) {
-			server.abortSessionsAndDestroy();
+			server.abortSession(subscription, "unsubscribe failed");
 		}
-
 		// free server from subscription
 		server.removeSession(subscription);
 		// forward server reply to client
@@ -122,24 +121,27 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 	public void validate(IRequest request) throws Exception {
 		SCMPMessage message = request.getMessage();
 		try {
-			// msgSequenceNr
+			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
 			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
-			// serviceName
+			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
-			// operation timeout
+			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			// sessionId
+			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			if (sessionId == null || sessionId.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 			}
+			// sessionInfo optional
+			ValidatorUtility.validateStringLengthIgnoreNull(1, message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO), 256,
+					SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

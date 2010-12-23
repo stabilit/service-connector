@@ -21,7 +21,6 @@ import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SCMPPublishCall. Call publishes a message to clients.
  * 
@@ -31,7 +30,7 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPPublishCall.class);
-	
+
 	/**
 	 * Instantiates a new SCMPPublishCall.
 	 */
@@ -82,9 +81,12 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 	 *            the new mask
 	 */
 	public void setMask(String mask) {
+		if (mask == null) {
+			return;
+		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
 	}
-	
+
 	/** {@inhertiDoc} **/
 	@Override
 	public void setRequestBody(Object obj) {

@@ -93,10 +93,6 @@ public class SCPublishService extends SCService {
 		}
 		this.noDataIntervalSeconds = scSubscribeMessage.getNoDataIntervalInSeconds();
 		this.messageCallback = scMessageCallback;
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		ValidatorUtility.validateInt(1, this.noDataIntervalSeconds, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
-		ValidatorUtility
-				.validateStringLengthIgnoreNull(1, scSubscribeMessage.getSessionInfo(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.requester.getContext().getSCMPMsgSequenceNr().reset();
 		// 2. initialize call & invoke
 		SCServiceCallback callback = new SCServiceCallback(true);
@@ -117,8 +113,8 @@ public class SCPublishService extends SCService {
 		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
 			// reply is fault or rejected
 			SCServiceException ex = new SCServiceException("subscribe failed");
-			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			ex.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 			ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 			throw ex;
@@ -169,9 +165,6 @@ public class SCPublishService extends SCService {
 		if (scSubscribeMessage == null) {
 			throw new SCServiceException("scSubscribeMessage can not be null");
 		}
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		ValidatorUtility
-				.validateStringLengthIgnoreNull(1, scSubscribeMessage.getSessionInfo(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
@@ -191,8 +184,8 @@ public class SCPublishService extends SCService {
 		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
 			// reply is fault or rejected
 			SCServiceException ex = new SCServiceException("change subscription failed");
-			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			ex.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 			ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 			throw ex;
@@ -230,8 +223,8 @@ public class SCPublishService extends SCService {
 			// inactivate the session
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("receive publication failed");
-			ex.setSCMPError(SCMPError.BROKEN_SESSION);
-			ex.setSCMPDetailErrorText("receive publication failed");
+			ex.setSCErrorCode(SCMPError.BROKEN_SESSION.getErrorCode());
+			ex.setSCErrorText("receive publication failed");
 			this.messageCallback.receive(ex);
 			return;
 		}
@@ -286,8 +279,8 @@ public class SCPublishService extends SCService {
 			return;
 		}
 		this.sessionActive = false;
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		if (scSubscribeMessage != null) {
+			// scSubscribeMessage might be null for unsubscribe operation
 			ValidatorUtility.validateStringLengthIgnoreNull(1, scSubscribeMessage.getSessionInfo(), 256,
 					SCMPError.HV_WRONG_SESSION_INFO);
 		}
@@ -309,8 +302,8 @@ public class SCPublishService extends SCService {
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("unsubscribe failed");
-				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		} finally {

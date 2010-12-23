@@ -201,7 +201,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			SessionRegistry.this.removeSession(session);
 			Server server = session.getServer();
 			// aborts session on server
-			server.abortSession(session);
+			server.abortSession(session, "session timed out in registry");
 			SessionLogger.logTimeoutSession(this.getClass().getName(), session.getId());
 		}
 

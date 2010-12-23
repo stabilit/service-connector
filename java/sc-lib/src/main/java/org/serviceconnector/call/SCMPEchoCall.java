@@ -76,14 +76,4 @@ public class SCMPEchoCall extends SCMPSessionCallAdapter {
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.ECHO;
 	}
-
-	/**
-	 * Sets the header.
-	 * 
-	 * @param header
-	 *            the header
-	 */
-	public void setHeader(Map<String, String> header) {
-		this.requestMessage.setHeader(header);
-	}
 }

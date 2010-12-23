@@ -183,7 +183,6 @@ public class SCServer {
 	 * @throws SCMPValidatorException
 	 */
 	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) throws SCMPValidatorException {
-		ValidatorUtility.validateInt(0, this.keepAliveIntervalSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
 	}
 
@@ -197,7 +196,6 @@ public class SCServer {
 		if (this.connectionType == null) {
 			throw new InvalidParameterException("connectionType must be set.");
 		}
-
 		ValidatorUtility.validateInt(1, this.scPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		ValidatorUtility.validateInt(1, this.listenerPort, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 
@@ -273,8 +271,6 @@ public class SCServer {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
-		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCSessionServer(this, serviceName, requester);
 	}
 
@@ -285,8 +281,6 @@ public class SCServer {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
-		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCPublishServer(this, serviceName, requester);
 	}
 }

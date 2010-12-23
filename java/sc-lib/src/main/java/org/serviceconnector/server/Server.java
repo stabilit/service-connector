@@ -108,10 +108,12 @@ public abstract class Server {
 	/**
 	 * Abort session on server.
 	 * 
-	 * @param abortMessage
-	 *            the abort message
+	 * @param session
+	 *            the session
+	 * @param reason
+	 *            the reason
 	 */
-	public abstract void abortSession(AbstractSession session);
+	public abstract void abortSession(AbstractSession session, String reason);
 
 	/**
 	 * Destroy server.

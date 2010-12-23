@@ -17,8 +17,6 @@ package org.serviceconnector.api;
 
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.util.ValidatorUtility;
 
 public class SCSubscribeMessage extends SCMessage {
 
@@ -43,12 +41,6 @@ public class SCSubscribeMessage extends SCMessage {
 	}
 
 	public void setMask(String mask) throws SCMPValidatorException {
-		if (mask != null ) {
-			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-			if (mask.indexOf('%') != -1) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MASK, "Percent sign not allowed in mask.");
-			}			
-		}
 		this.mask = mask;
 	}
 
@@ -60,14 +52,12 @@ public class SCSubscribeMessage extends SCMessage {
 		// mask is set only internally by SC => no validation
 		this.actualMask = actualMask;
 	}
-
 	
 	public int getNoDataIntervalInSeconds() {
 		return this.noDataIntervalInSeconds;
 	}
 
 	public void setNoDataIntervalInSeconds(int noDataIntervalInSeconds) throws SCMPValidatorException {
-		ValidatorUtility.validateInt(1, noDataIntervalInSeconds, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
 		this.noDataIntervalInSeconds = noDataIntervalInSeconds;
 	}
 }

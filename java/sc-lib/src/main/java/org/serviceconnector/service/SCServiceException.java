@@ -21,8 +21,6 @@
  */
 package org.serviceconnector.service;
 
-import org.serviceconnector.scmp.SCMPError;
-
 /**
  * The Class SCServiceException. Used to notify errors on SC service level.
  * 
@@ -37,10 +35,10 @@ public class SCServiceException extends Exception {
 	private int appErrorCode;
 	/** The application error text. */
 	private String appErrorText;
-	/** The scmp error. */
-	private SCMPError scmpError;
-	/** The scmp detail error text. */
-	private String scmpDetailErrorText;
+	/** The sc error text. */
+	private String scErrorText;
+	/** The sc error code. */
+	private String scErrorCode;
 
 	/**
 	 * Instantiates a new SC service exception.
@@ -80,7 +78,7 @@ public class SCServiceException extends Exception {
 	 *            the new application error code
 	 */
 	public void setAppErrorCode(Integer appErrorCode) {
-		if(appErrorCode == null) {
+		if (appErrorCode == null) {
 			this.appErrorCode = 0;
 			return;
 		}
@@ -107,50 +105,40 @@ public class SCServiceException extends Exception {
 	}
 
 	/**
-	 * Gets the SCMP error.
+	 * Sets the SC error code.
 	 * 
-	 * @return the SCMP error
+	 * @param scErrorCode
+	 *            the new SC error code
 	 */
-	public SCMPError getSCMPError() {
-		return this.scmpError;
+	public void setSCErrorCode(String scErrorCode) {
+		this.scErrorCode = scErrorCode;
 	}
 
 	/**
-	 * Sets the SCMP error.
+	 * Sets the sC error text.
 	 * 
-	 * @param errorCode
-	 *            the new SCMP error
+	 * @param scErrorText
+	 *            the new sC error text
 	 */
-	public void setSCMPError(String errorCode) {
-		this.scmpError = SCMPError.getSCMPErrorByCode(errorCode);
+	public void setSCErrorText(String scErrorText) {
+		this.scErrorText = scErrorText;
 	}
 
 	/**
-	 * Sets the SCMP error.
+	 * Gets the SC error code.
 	 * 
-	 * @param scmpError
-	 *            the new SCMP error
+	 * @return the SC error code
 	 */
-	public void setSCMPError(SCMPError scmpError) {
-		this.scmpError = scmpError;
+	public String getSCErrorCode() {
+		return this.scErrorCode;
 	}
 
 	/**
-	 * Sets the SCMP detail error text.
+	 * Gets the SC error text.
 	 * 
-	 * @param scmpDetailErrorText
-	 *            the new SCMP detail error text
+	 * @return the SC error text
 	 */
-	public void setSCMPDetailErrorText(String scmpDetailErrorText) {
-		this.scmpDetailErrorText = scmpDetailErrorText;
-	}
-
-	/**
-	 * Gets the SCMP detail error text.
-	 * 
-	 * @return the SCMP detail error text
-	 */
-	public String getSCMPDetailErrorText() {
-		return this.scmpDetailErrorText;
+	public String getSCErrorText() {
+		return this.scErrorText;
 	}
 }

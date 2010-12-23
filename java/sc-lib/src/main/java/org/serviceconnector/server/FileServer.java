@@ -203,7 +203,7 @@ public class FileServer extends Server {
 
 	/** {@inheritDoc} */
 	@Override
-	public void abortSession(AbstractSession session) {
+	public void abortSession(AbstractSession session, String reason) {
 		FileSession fileSession = (FileSession) session;
 		HttpURLConnection httpURLConnection = fileSession.getHttpURLConnection();
 		if (httpURLConnection != null) {

@@ -29,6 +29,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class SrvAbortSessionCommand. Responsible for validation and execution of abort session command. Aborts an active session on
@@ -94,22 +95,25 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		SCMPMessage message = request.getMessage();
 
 		try {
-			// serviceName
+			// serviceName mandatory
 			String serviceName = (String) message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
-			// sessionId
+			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			if (sessionId == null || sessionId.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 			}
-			// sc error code
+			// operation timeout mandatory
+			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
+			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			// sc error code mandatory
 			String sec = (String) message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
 			if (sec == null || sec.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_ERROR_CODE, "sc error code must be set");
 			}
-			// sc error text
+			// sc error text mandatory
 			String set = (String) message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT);
 			if (set == null || set.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_ERROR_TEXT, "sc error text must be set");

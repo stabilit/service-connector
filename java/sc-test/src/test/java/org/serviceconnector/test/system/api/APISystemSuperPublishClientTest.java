@@ -61,7 +61,6 @@ public class APISystemSuperPublishClientTest extends APISystemSuperTest {
 		super.afterOneTest();
 	}
 
-	
 	protected class MsgCallback extends SCMessageCallback {
 
 		private SCMessage message;
@@ -84,19 +83,19 @@ public class APISystemSuperPublishClientTest extends APISystemSuperTest {
 			}
 			throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 		}
-		
+
 		public SCMessage getMessage() {
 			return message;
 		}
-		
+
 		public void setExpectedMessages(int msgCount) {
 			expectedMessages = msgCount;
 		}
-		
+
 		public int getMessageCount() {
 			return messageCounter;
 		}
-		
+
 		@Override
 		public void receive(SCMessage msg) {
 			message = msg;
@@ -110,8 +109,8 @@ public class APISystemSuperPublishClientTest extends APISystemSuperTest {
 		public void receive(Exception e) {
 			logger.error("receive error: " + e.getMessage());
 			if (e instanceof SCServiceException) {
-				SCMPError scError = ((SCServiceException) e).getSCMPError();
-				logger.info("SC error received code:" + scError.getErrorCode() + " text:" + scError.getErrorText());
+				logger.info("SC error received code:" + ((SCServiceException) e).getSCErrorCode() + " text:"
+						+ ((SCServiceException) e).getSCErrorText());
 			}
 			message = null;
 			messageCounter = expectedMessages;

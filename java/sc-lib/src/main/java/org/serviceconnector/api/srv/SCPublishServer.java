@@ -56,7 +56,6 @@ public class SCPublishServer extends SCSessionServer {
 		}
 		synchronized (this.scServer) {
 			// get lock on scServer - only one server is allowed to communicate over the initial connection
-			ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester,
 					serviceName);
 			publishCall.setRequestBody(publishMessage.getData());
@@ -66,8 +65,8 @@ public class SCPublishServer extends SCSessionServer {
 			SCMPMessage message = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (message.isFault()) {
 				SCServiceException ex = new SCServiceException("publish failed");
-				ex.setSCMPError(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-				ex.setSCMPDetailErrorText(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				ex.setSCErrorCode(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorText(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		}

@@ -103,14 +103,14 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			} catch (ConnectionPoolBusyException ex) {
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
-					statefulServer.abortSessionsAndDestroy();
+					statefulServer.abortSessionsAndDestroy("deleting session failed, connection pool to server busy");
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
 							"no free connection on server for service " + message.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
 			} catch (Exception ex) {
-				statefulServer.abortSessionsAndDestroy();
+				statefulServer.abortSessionsAndDestroy("deleting session failed" + ex);
 				throw ex;
 			}
 			// sleep for a while and then try again
@@ -120,7 +120,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		SCMPMessage reply = callback.getMessageSync(otiOnServerMillis);
 
 		if (reply.isFault()) {
-			statefulServer.abortSessionsAndDestroy();
+			statefulServer.abortSessionsAndDestroy("deleting session failed");
 		}
 		// free server from session
 		statefulServer.removeSession(session);
@@ -135,20 +135,20 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 	public void validate(IRequest request) throws Exception {
 		SCMPMessage message = request.getMessage();
 		try {
-			// msgSequenceNr
+			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
 			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
-			// serviceName
+			// serviceName mandatory
 			String serviceName = (String) message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
-			// operation timeout
+			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			// sessionId
+			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			if (sessionId == null || sessionId.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");

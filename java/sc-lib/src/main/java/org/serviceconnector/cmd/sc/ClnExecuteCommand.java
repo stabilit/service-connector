@@ -136,27 +136,30 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 	public void validate(IRequest request) throws Exception {
 		try {
 			SCMPMessage message = request.getMessage();
-			// msgSequenceNr
+			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
 			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
-			// serviceName
+			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
-			// operation timeout
+			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			// sessionId
+			// sessionId mandatory
 			String sessionId = message.getSessionId();
 			if (sessionId == null || sessionId.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 			}
-			// message info
+			// message info optional
 			String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
+			// cacheId optional
+			String cacheId = (String) message.getHeader(SCMPHeaderAttributeKey.CACHE_ID);
+			ValidatorUtility.validateStringLengthIgnoreNull(1, cacheId, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

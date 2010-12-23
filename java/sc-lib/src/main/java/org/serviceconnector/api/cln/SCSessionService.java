@@ -112,11 +112,6 @@ public class SCSessionService extends SCService {
 		if (scMessage == null) {
 			throw new SCServiceException("scMessage must be set.");
 		}
-		if (scMessage.getDataLength() > Constants.MAX_MESSAGE_SIZE) {
-			throw new SCServiceException("message > 60kB not allowed");
-		}
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getSessionInfo(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		this.messageCallback = messageCallback;
 		this.requester.getContext().getSCMPMsgSequenceNr().reset();
 		// 2. initialize call & invoke
@@ -136,8 +131,8 @@ public class SCSessionService extends SCService {
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
 			SCServiceException ex = new SCServiceException("create session failed");
-			ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			ex.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 			ex.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 			throw ex;
@@ -171,9 +166,6 @@ public class SCSessionService extends SCService {
 		if (scMessage == null) {
 			throw new SCServiceException("scMessage must be set.");
 		}
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getMessageInfo(), 256, SCMPError.HV_WRONG_MESSAGE_INFO);
-		ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getCacheId(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		// cancel session timeout even if its running already
 		this.cancelSessionTimeout(true);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
@@ -196,8 +188,8 @@ public class SCSessionService extends SCService {
 		this.triggerSessionTimeout();
 		if (reply.isFault()) {
 			SCServiceException scEx = new SCServiceException("execute failed");
-			scEx.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-			scEx.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+			scEx.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+			scEx.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw scEx;
 		}
 		// 4. post process, reply to client
@@ -228,9 +220,6 @@ public class SCSessionService extends SCService {
 		if (scMessage == null) {
 			throw new InvalidParameterException("Message must be set.");
 		}
-		ValidatorUtility.validateInt(1, operationtTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getMessageInfo(), 256, SCMPError.HV_WRONG_MESSAGE_INFO);
-		ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getCacheId(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		// cancel session timeout even if its running already
 		this.cancelSessionTimeout(true);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
@@ -276,8 +265,8 @@ public class SCSessionService extends SCService {
 			// inactivate the session
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
-			ex.setSCMPError(SCMPError.BROKEN_SESSION);
-			ex.setSCMPDetailErrorText("refreshing session by echo failed");
+			ex.setSCErrorCode(SCMPError.BROKEN_SESSION.getErrorCode());
+			ex.setSCErrorText("refreshing session by echo failed");
 			this.messageCallback.receive(ex);
 			return;
 		}
@@ -287,8 +276,8 @@ public class SCSessionService extends SCService {
 			// inactivate the session
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
-			ex.setSCMPError(SCMPError.BROKEN_SESSION);
-			ex.setSCMPDetailErrorText("refreshing session by echo failed");
+			ex.setSCErrorCode(SCMPError.BROKEN_SESSION.getErrorCode());
+			ex.setSCErrorText("refreshing session by echo failed");
 			this.messageCallback.receive(ex);
 			return;
 		}
@@ -349,8 +338,8 @@ public class SCSessionService extends SCService {
 			throw new SCServiceException(
 					"delete session not possible, there is a pending request - two pending request are not allowed.");
 		}
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		if (scMessage != null) {
+			// message might be null for deleteSession operation
 			ValidatorUtility.validateStringLengthIgnoreNull(1, scMessage.getSessionInfo(), 256, SCMPError.HV_WRONG_SESSION_INFO);
 		}
 		// cancel session timeout even if its running already
@@ -373,8 +362,8 @@ public class SCSessionService extends SCService {
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("delete session failed");
-				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		} finally {
@@ -421,6 +410,7 @@ public class SCSessionService extends SCService {
 	 *            the new echo timeout in seconds
 	 */
 	public void setEchoTimeoutInSeconds(int echoTimeoutInSeconds) throws SCMPValidatorException {
+		// validate in this case its a local needed information
 		ValidatorUtility.validateInt(1, echoTimeoutInSeconds, 3600, SCMPError.HV_WRONG_ECHO_TIMEOUT);
 		this.echoTimeoutInSeconds = echoTimeoutInSeconds;
 	}
@@ -465,7 +455,6 @@ public class SCSessionService extends SCService {
 	 *             the sCMP validator exception
 	 */
 	public void setEchoIntervalInSeconds(int echoIntervalInSeconds) throws SCMPValidatorException {
-		ValidatorUtility.validateInt(1, echoIntervalInSeconds, 3600, SCMPError.HV_WRONG_ECHO_INTERVAL);
 		this.echoIntervalInSeconds = echoIntervalInSeconds;
 	}
 

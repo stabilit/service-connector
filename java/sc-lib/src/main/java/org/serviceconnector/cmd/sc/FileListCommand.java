@@ -66,13 +66,18 @@ public class FileListCommand extends CommandAdapter {
 	public void validate(IRequest request) throws Exception {
 		try {
 			SCMPMessage message = request.getMessage();
-			// operation timeout
+			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			// serviceName
+			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
+			}
+			// sessionId mandatory
+			String sessionId = message.getSessionId();
+			if (sessionId == null || sessionId.equals("")) {
+				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
 			}
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point

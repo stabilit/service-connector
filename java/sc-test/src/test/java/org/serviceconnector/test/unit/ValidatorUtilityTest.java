@@ -84,7 +84,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateIpAddressList("127.0.0.1545");
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_IPLIST_FORMAT.getErrorText() + " [127.0.0.1545]", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_IPLIST.getErrorText() + " [127.0.0.1545]", e.getMessage());
 		}
 
 		try {
@@ -92,7 +92,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateIpAddressList("127.0.0");
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_IPLIST_FORMAT.getErrorText() + " [127.0.0]", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_IPLIST.getErrorText() + " [127.0.0]", e.getMessage());
 		}
 
 		try {
@@ -100,7 +100,7 @@ public class ValidatorUtilityTest {
 			ValidatorUtility.validateIpAddressList("127.0.0.1/");
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_IPLIST_FORMAT.getErrorText() + " [127.0.0.1/]", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_IPLIST.getErrorText() + " [127.0.0.1/]", e.getMessage());
 		}
 	}
 

@@ -56,7 +56,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The HV_WRONG_LDT. */
 	HV_WRONG_LDT("427", "Parsing localDateTime failed."),
 	/** The HV_WRONG_IPLIST_FORMAT. */
-	HV_WRONG_IPLIST_FORMAT("428", "Invalid iplist format."),
+	HV_WRONG_IPLIST("428", "Invalid iplist value."),
 	/** The HV_WRONG_MAX_SESSIONS. */
 	HV_WRONG_MAX_SESSIONS("429", "Invalid maxSessions value."),
 	/** The HV_WRONG_MAX_CONNECTIONS. */

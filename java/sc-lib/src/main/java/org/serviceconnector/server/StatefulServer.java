@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPSrvAbortSessionCall;
 import org.serviceconnector.call.SCMPSrvChangeSubscriptionCall;
@@ -148,7 +147,8 @@ public class StatefulServer extends Server {
 	 *            the callback
 	 * @throws ConnectionPoolBusyException
 	 */
-	public void deleteSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
+	public void deleteSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
 		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL.newInstance(
 				requester, message);
 
@@ -171,7 +171,8 @@ public class StatefulServer extends Server {
 	 *            the callback
 	 * @throws ConnectionPoolBusyException
 	 */
-	public void subscribe(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
+	public void subscribe(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
 		SCMPSrvSubscribeCall subscribeCall = (SCMPSrvSubscribeCall) SCMPCallFactory.SRV_SUBSCRIBE_CALL.newInstance(requester,
 				msgToForward);
 		try {
@@ -193,7 +194,8 @@ public class StatefulServer extends Server {
 	 *            the callback
 	 * @throws ConnectionPoolBusyException
 	 */
-	public void unsubscribe(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
+	public void unsubscribe(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
 		SCMPSrvUnsubscribeCall unsubscribeCall = (SCMPSrvUnsubscribeCall) SCMPCallFactory.SRV_UNSUBSCRIBE_CALL.newInstance(
 				requester, message);
 
@@ -278,7 +280,7 @@ public class StatefulServer extends Server {
 	 * @param abortMessage
 	 *            the abort message
 	 */
-	public void abortSession(AbstractSession session) {
+	public void abortSession(AbstractSession session, String reason) {
 		// delete session in global registries
 		StatefulServer.sessionRegistry.removeSession(session.getId());
 		StatefulServer.subscriptionRegistry.removeSubscription(session.getId());
@@ -289,40 +291,42 @@ public class StatefulServer extends Server {
 			// no need for forwarding message id
 			SCMPMessage abortMessage = new SCMPMessage();
 			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText()
-					+ " [delete session failed]");
+			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText() + " [" + reason
+					+ "]");
 			abortMessage.setServiceName(this.getServiceName());
 			abortMessage.setSessionId(session.getId());
+			abortMessage
+					.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, AppContext.getBasicConfiguration().getSrvAbortTimeout());
 			this.serverAbortSession(abortMessage, callback, AppContext.getBasicConfiguration().getSrvAbortTimeout());
 		} catch (Exception e) {
 			// server session abort failed - clean up server
-			this.abortSessionsAndDestroy();
+			this.abortSessionsAndDestroy(reason + " failed " + e);
 			return;
 		}
-		SCMPMessage reply = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+		SCMPMessage reply = callback.getMessageSync(AppContext.getBasicConfiguration().getSrvAbortTimeout());
 		if (reply.isFault()) {
 			// error in server abort session operation
-			this.abortSessionsAndDestroy();
+			this.abortSessionsAndDestroy(reason + " failed");
 		}
 	}
 
 	/**
 	 * Abort sessions and destroy. All sessions are aborted and server gets destroyed.
 	 */
-	public void abortSessionsAndDestroy() {
+	public void abortSessionsAndDestroy(String reason) {
 		// deregister server from service
 		this.getService().removeServer(this);
 		// set up server abort session message
 		SCMPMessage abortMessage = new SCMPMessage();
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText()
-				+ " [delete session failed]");
+		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText() + " [" + reason + "]");
+		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, AppContext.getBasicConfiguration().getSrvAbortTimeout());
 
 		for (AbstractSession session : this.sessions) {
 			// delete session in global registries
 			if (session instanceof Subscription) {
 				StatefulServer.subscriptionRegistry.removeSubscription(session.getId());
-				if(session.getServer() == null) {
+				if (session.getServer() == null) {
 					// server already destroyed
 					continue;
 				}

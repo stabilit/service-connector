@@ -159,31 +159,32 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		SCMPMessage message = request.getMessage();
 
 		try {
-			// msgSequenceNr
+			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
 			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
 			}
-			// serviceName
+			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
-			// mask
-			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
-			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-			// operation timeout
+			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
 			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-			// ipAddressList
+			// ipAddressList mandatory
 			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
+			// mask mandatory
+			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
+			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
+			// noDataInterval mandatory
+			String noDataIntervalValue = message.getHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+			ValidatorUtility.validateInt(1, noDataIntervalValue, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
 			// sessionInfo is optional
 			String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
-			// noDataInterval
-			String noDataIntervalValue = message.getHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
-			ValidatorUtility.validateInt(1, noDataIntervalValue, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
+			// cascadedMask & cascadedSubscriptionId will not be validated, sent from another SC
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

@@ -19,7 +19,6 @@ import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.service.SCServiceException;
 
 @SuppressWarnings("unused")
@@ -38,7 +37,7 @@ public class APIReceivePublicationBenchmark {
 	private SCClient client;
 	private SCPublishService service;
 	private int threadCount = 0;
-	long start= 0;
+	long start = 0;
 	long stop = 0;
 
 	@BeforeClass
@@ -107,11 +106,11 @@ public class APIReceivePublicationBenchmark {
 		if (cbk.messageCounter == nrMessages) {
 			long perf = nrMessages * 1000 / (cbk.stop - cbk.start);
 			testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
-			Assert.assertEquals("Performence not fast enough, only"+ perf + " msg/sec.", true, perf > 1000);
+			Assert.assertEquals("Performence not fast enough, only" + perf + " msg/sec.", true, perf > 1000);
 		}
 		service.unsubscribe();
 	}
-	
+
 	/**
 	 * Description: receive 100000 compressed messages<br>
 	 * Expectation: performance better than 1000 msg/sec
@@ -132,12 +131,11 @@ public class APIReceivePublicationBenchmark {
 		if (cbk.messageCounter == nrMessages) {
 			long perf = nrMessages * 1000 / (cbk.stop - cbk.start);
 			testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
-			Assert.assertEquals("Performence not fast enough, only"+ perf + " msg/sec.", true, perf > 1000);
+			Assert.assertEquals("Performence not fast enough, only" + perf + " msg/sec.", true, perf > 1000);
 		}
 		service.unsubscribe();
 	}
 
-	
 	private void waitForMessage(int nrSeconds) throws Exception {
 		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (messageReceived) {
@@ -149,7 +147,7 @@ public class APIReceivePublicationBenchmark {
 	}
 
 	private class MsgCallback extends SCMessageCallback {
-		
+
 		private SCMessage response = null;
 		private int messageCounter = 0;
 		private int expectedMessages = 0;
@@ -170,13 +168,14 @@ public class APIReceivePublicationBenchmark {
 		public void receive(SCMessage msg) {
 			response = msg;
 			messageCounter++;
-			
-			if (((messageCounter+1) % 1000) == 0) {
+
+			if (((messageCounter + 1) % 1000) == 0) {
 				stopPart = System.currentTimeMillis();
-				APIReceivePublicationBenchmark.testLogger.info("Receiving message nr. " + (messageCounter+1) + "... "+(1000000 / (stopPart - startPart))+ " msg/sec.");
+				APIReceivePublicationBenchmark.testLogger.info("Receiving message nr. " + (messageCounter + 1) + "... "
+						+ (1000000 / (stopPart - startPart)) + " msg/sec.");
 				startPart = System.currentTimeMillis();
 			}
-			if ( expectedMessages == messageCounter) {
+			if (expectedMessages == messageCounter) {
 				stop = System.currentTimeMillis();
 				APIReceivePublicationBenchmark.messageReceived = true;
 			}
@@ -186,8 +185,8 @@ public class APIReceivePublicationBenchmark {
 		public void receive(Exception e) {
 			logger.error("receive error: " + e.getMessage());
 			if (e instanceof SCServiceException) {
-				SCMPError scError = ((SCServiceException) e).getSCMPError();
-				logger.info("SC error received code:" + scError.getErrorCode() + " text:" + scError.getErrorText());
+				logger.info("SC error received code:" + ((SCServiceException) e).getSCErrorCode() + " text:"
+						+ ((SCServiceException) e).getSCErrorText());
 			}
 			response = null;
 			APIReceivePublicationBenchmark.messageReceived = true;

@@ -106,7 +106,6 @@ public class SCClient {
 		if (host == null) {
 			throw new InvalidParameterException("host must be set");
 		}
-		ValidatorUtility.validateInt(1, operationTimeout, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		ValidatorUtility.validateInt(1, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		// 2. initialize call & invoke
 		synchronized (AppContext.communicatorsLock) {
@@ -126,8 +125,8 @@ public class SCClient {
 			if (reply.isFault()) {
 				this.requester.destroy();
 				SCServiceException ex = new SCServiceException("attach to " + host + ":" + port + " failed");
-				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 			// 4. post process, reply to client
@@ -167,7 +166,6 @@ public class SCClient {
 			// client is not attached just ignore
 			return;
 		}
-		ValidatorUtility.validateInt(1, operationTimeout, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		// 2. initialize call & invoke
 		try {
 			SCServiceCallback callback = new SCServiceCallback(true);
@@ -181,8 +179,8 @@ public class SCClient {
 			SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("detach client failed");
-				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		} finally {
@@ -264,8 +262,6 @@ public class SCClient {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
-		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCFileService(this, serviceName, this.requester);
 	}
 
@@ -283,8 +279,6 @@ public class SCClient {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
-		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCSessionService(this, serviceName, this.requester);
 	}
 
@@ -302,8 +296,6 @@ public class SCClient {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
-		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCPublishService(this, serviceName, this.requester);
 	}
 
@@ -333,5 +325,4 @@ public class SCClient {
 	public int getMaxConnections() {
 		return this.maxConnections;
 	}
-
 }

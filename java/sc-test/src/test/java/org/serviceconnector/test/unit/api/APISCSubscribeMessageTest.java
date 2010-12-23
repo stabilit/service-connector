@@ -63,15 +63,6 @@ public class APISCSubscribeMessageTest {
 	}
 
 	/**
-	 * Description:	Set mask = ""<br>
-	 * Expectation:	throws SCMPValidatorException
-	 */
-	@Test (expected = SCMPValidatorException.class)
-	public void t11_mask() throws Exception {
-		message.setMask("");
-	}
-
-	/**
 	 * Description:	Set mask = " "<br>
 	 * Expectation:	throws SCMPValidatorException
 	 */

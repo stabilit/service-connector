@@ -31,7 +31,7 @@ public class CascadedSC extends Server {
 	}
 
 	@Override
-	public void abortSession(AbstractSession session) {
+	public void abortSession(AbstractSession session, String reason) {
 		// TODO JOT subscription timeout what todo??? JAN
 		// delete subscription, unsubscribe local and on cascadeSC, nothing more
 	}

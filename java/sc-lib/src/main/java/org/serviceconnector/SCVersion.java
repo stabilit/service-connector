@@ -23,9 +23,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
- * Provides actual SC version method to check compatibility.
- * 
- * The SC versioning schema follows this philosophy </br>
+ * Provides actual SC version method to check compatibility. The SC versioning schema follows this philosophy </br>
  * 
  * <pre>
  * 	A99.99-999 (Ex. V2.4-265)</br>
@@ -47,11 +45,9 @@ import org.serviceconnector.scmp.SCMPError;
  * usually a complete rewrite. V(i+1).xx-zzz is not compatible with V(i).xx-zzz
  *<p>
  * Version number designates the interface signature. It starts at 0 and is incremented by 1. New versions are compatible, but may
- * contain additional features. V2.(x+1)-zzz is compatible with V2.(x)-zzz but needs recompilation and review of the application
- * code where the product is used.
- * 
- * Revision number designates the actual development stage. It starts at 1 and is incremented by 1. New versions are fully
- * compatible. V2.4-(z+1) is compatible with V2.4-z
+ * contain additional features. V2.(x+1)-zzz is compatible with V2.(x)-zzz but needs recompilation and review of the application code
+ * where the product is used. Revision number designates the actual development stage. It starts at 1 and is incremented by 1. New
+ * versions are fully compatible. V2.4-(z+1) is compatible with V2.4-z
  * 
  * @author JTraber
  */
@@ -94,30 +90,33 @@ public enum SCVersion {
 	/**
 	 * Checks if is supported.
 	 * 
-	 * @param text
+	 * @param scVersion
 	 *            the text in format 999.999-999 e.g. 1.5-003
 	 * @throws SCMPValidatorException
 	 *             the sCMP validator exception
 	 */
-	public void isSupported(String text) throws SCMPValidatorException {
-		if (text.matches("\\d*\\.\\d*-\\d{3}") == false) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, text);
+	public void isSupported(String scVersion) throws SCMPValidatorException {
+		if (scVersion == null) {
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, "version must be set");
 		}
-		String[] splitted = text.split("\\.|-");
+		if (scVersion.matches("\\d*\\.\\d*-\\d{3}") == false) {
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, scVersion);
+		}
+		String[] splitted = scVersion.split("\\.|-");
 		if (splitted.length != 3) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, text);
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, scVersion);
 		}
 		int release = Integer.parseInt(splitted[0]);
 		if (this.release != release) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_RELEASE_NR, text);
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_RELEASE_NR, scVersion);
 		}
 		int version = Integer.parseInt(splitted[1]);
 		if (this.version < version) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, text);
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, scVersion);
 		}
 		int revision = Integer.parseInt(splitted[2]);
 		if ((this.version == version) && (this.revision < revision)) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_REVISION_NR, text);
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_REVISION_NR, scVersion);
 		}
 		return;
 	}

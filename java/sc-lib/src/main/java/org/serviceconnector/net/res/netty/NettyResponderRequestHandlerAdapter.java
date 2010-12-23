@@ -278,7 +278,7 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 					continue;
 				}
 				StatefulServer statefulServer = (StatefulServer) server;
-				statefulServer.abortSessionsAndDestroy();
+				statefulServer.abortSessionsAndDestroy("clean up dead server");
 			}
 		}
 	}

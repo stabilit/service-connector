@@ -65,6 +65,4 @@ public class SCMPCheckRegistrationCall extends SCMPCallAdapter  {
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CHECK_REGISTRATION;
 	}
-
-
 }

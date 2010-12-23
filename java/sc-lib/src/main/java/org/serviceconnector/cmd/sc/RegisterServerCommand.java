@@ -141,36 +141,33 @@ public class RegisterServerCommand extends CommandAdapter {
 	public void validate(IRequest request) throws Exception {
 		SCMPMessage message = request.getMessage();
 		try {
-			// serviceName
+			// serviceName mandatory
 			String serviceName = (String) message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
 			}
-			// maxSessions - validate with lower limit 1
+			// scVersion mandatory
+			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
+			SCMPMessage.SC_VERSION.isSupported(scVersion);
+			// localDateTime mandatory
+			ValidatorUtility.validateLocalDateTime(message.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
+			// maxSessions - validate with lower limit 1 mandatory
 			String maxSessionsValue = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
 			int maxSessions = ValidatorUtility.validateInt(1, maxSessionsValue, SCMPError.HV_WRONG_MAX_SESSIONS);
-			// maxConnections - validate with lower limit 1
+			// maxConnections - validate with lower limit 1 & higher limit maxSessions mandatory
 			String maxConnectionsValue = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_CONNECTIONS);
 			int maxConnections = ValidatorUtility.validateInt(1, maxConnectionsValue, maxSessions,
 					SCMPError.HV_WRONG_MAX_CONNECTIONS);
-
 			if (maxConnections == 1 && maxSessions != 1) {
 				// invalid configuration
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MAX_SESSIONS, "maxSessions must be 1 if maxConnections is 1");
 			}
-			// immmediateConnect
-			message.getHeaderFlag(SCMPHeaderAttributeKey.IMMEDIATE_CONNECT);
-			// portNr - portNr >= 1 && portNr <= 0xFFFF
+			// portNr - portNr >= 1 && portNr <= 0xFFFF mandatory
 			String portNr = (String) message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
 			ValidatorUtility.validateInt(1, portNr, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
-			// scVersion
-			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
-			SCMPMessage.SC_VERSION.isSupported(scVersion);
-			// localDateTime
-			ValidatorUtility.validateLocalDateTime(message.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
-			// keepAliveInterval
+			// keepAliveInterval mandatory
 			String kpi = message.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
-			ValidatorUtility.validateInt(0, kpi, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
+			ValidatorUtility.validateInt(0, kpi, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);			
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

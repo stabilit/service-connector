@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.srv;
 
-import java.security.InvalidParameterException;
 import java.util.List;
 
 import javax.activity.InvalidActivityException;
@@ -37,7 +36,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.SynchronousCallback;
-import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class SCServer. Basic class for any kind of a server which communicates with an SC.
@@ -130,15 +128,6 @@ public class SCSessionServer {
 		if (this.registered) {
 			throw new InvalidActivityException("Server already registered for a service.");
 		}
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
-		ValidatorUtility.validateAllowedCharacters(serviceName, SCMPError.HV_WRONG_SERVICE_NAME);
-		ValidatorUtility.validateInt(1, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
-		ValidatorUtility.validateInt(1, maxConnections, 1024, SCMPError.HV_WRONG_MAX_SESSIONS);
-		ValidatorUtility.validateInt(1, maxConnections, maxSessions, SCMPError.HV_WRONG_MAX_SESSIONS);
-		if ((maxSessions == 1) && (maxConnections > 1)) {
-			throw new InvalidParameterException("maxConnections must be = 1 for single-session server");
-		}
-
 		// already validated
 		int listenerPort = this.scServer.getListenerPort();
 		int keepAliveIntervalSeconds = this.scServer.getKeepAliveIntervalSeconds();
@@ -167,8 +156,8 @@ public class SCSessionServer {
 				SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 				if (reply.isFault()) {
 					SCServiceException ex = new SCServiceException("register server failed");
-					ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-					ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+					ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+					ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 					throw ex;
 				}
 				AppContext.attachedCommunicators.incrementAndGet();
@@ -197,8 +186,8 @@ public class SCSessionServer {
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("check registration failed");
-				ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-				ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
 			}
 		}
@@ -214,7 +203,6 @@ public class SCSessionServer {
 			// sc server not registered - deregister not necessary
 			return;
 		}
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		synchronized (this.scServer) {
 			// get lock on scServer - only one server is allowed to communicate over the initial connection
 			try {
@@ -232,8 +220,8 @@ public class SCSessionServer {
 				SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 				if (reply.isFault()) {
 					SCServiceException ex = new SCServiceException("deregister server failed");
-					ex.setSCMPError(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-					ex.setSCMPDetailErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
+					ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+					ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 					throw ex;
 				}
 			} finally {

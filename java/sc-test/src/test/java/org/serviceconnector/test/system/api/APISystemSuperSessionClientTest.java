@@ -35,7 +35,7 @@ public class APISystemSuperSessionClientTest extends APISystemSuperTest {
 	protected ProcessCtx srvCtx;
 	protected static boolean messageReceived = false;
 	protected MsgCallback cbk = null;
-	
+
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
@@ -62,7 +62,6 @@ public class APISystemSuperSessionClientTest extends APISystemSuperTest {
 		super.afterOneTest();
 	}
 
-
 	protected class MsgCallback extends SCMessageCallback {
 		private SCMessage response = null;
 
@@ -84,7 +83,6 @@ public class APISystemSuperSessionClientTest extends APISystemSuperTest {
 			throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 		}
 
-		
 		@Override
 		public void receive(SCMessage msg) {
 			response = msg;
@@ -95,8 +93,8 @@ public class APISystemSuperSessionClientTest extends APISystemSuperTest {
 		public void receive(Exception e) {
 			testLogger.info("Error received");
 			if (e instanceof SCServiceException) {
-				SCMPError scError = ((SCServiceException) e).getSCMPError();
-				logger.info("SC error code:" + scError.getErrorCode() + " text:" + scError.getErrorText());
+				logger.info("SC error received code:" + ((SCServiceException) e).getSCErrorCode() + " text:"
+						+ ((SCServiceException) e).getSCErrorText());
 			} else {
 				logger.error("receive error: " + e.getMessage());
 			}

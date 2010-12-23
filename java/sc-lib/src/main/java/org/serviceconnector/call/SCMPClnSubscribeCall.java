@@ -111,6 +111,9 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 	 *            the new mask
 	 */
 	public void setMask(String mask) {
+		if (mask == null) {
+			return;
+		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);
 	}
 

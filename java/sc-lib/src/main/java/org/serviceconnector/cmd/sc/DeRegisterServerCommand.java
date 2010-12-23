@@ -33,8 +33,8 @@ import org.serviceconnector.server.ServerType;
 import org.serviceconnector.server.StatefulServer;
 
 /**
- * The Class DeRegisterServerCommand. Responsible for validation and execution of deregister command. Used to
- * deregisters server from SC service. Server will be removed from server registry.
+ * The Class DeRegisterServerCommand. Responsible for validation and execution of deregister command. Used to deregisters server from
+ * SC service. Server will be removed from server registry.
  * 
  * @author JTraber
  */
@@ -68,7 +68,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 		// deregister server from service
 		server.getService().removeServer(server);
 
-		server.abortSessionsAndDestroy();
+		server.abortSessionsAndDestroy("deregister of server");
 		this.serverRegistry.removeServer(serverKey);
 
 		SCMPMessage scmpReply = new SCMPMessage();
@@ -84,7 +84,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 		SCMPMessage message = request.getMessage();
 
 		try {
-			// serviceName
+			// serviceName mandatory
 			String serviceName = (String) message.getServiceName();
 			if (serviceName == null || serviceName.equals("")) {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
@@ -115,8 +115,8 @@ public class DeRegisterServerCommand extends CommandAdapter {
 
 		if (server == null || (server.getType().equals(ServerType.STATEFUL_SERVER) == false)) {
 			// no available server for this service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND,
-					"server not registered, key " + key);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "server not registered, key "
+					+ key);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}

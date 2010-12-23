@@ -199,7 +199,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			subscriptionQueue.unsubscribe(subscription.getId());
 
 			StatefulServer server = subscription.getServer();
-			server.abortSession(subscription);
+			server.abortSession(subscription, "subscription timed out in registry");
 			SubscriptionLogger.logAbortSubscription(subscription.getId());
 		}
 

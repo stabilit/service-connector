@@ -59,9 +59,8 @@ public final class ValidatorUtility {
 	 */
 	public static Date validateLocalDateTime(String localDateTimeString) throws SCMPValidatorException {
 		if (localDateTimeString == null) {
-			return null;
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_LDT, "localDateTimeString must be set");
 		}
-
 		Date localDateTime = null;
 		try {
 			localDateTime = DateTimeUtility.parseDateString(localDateTimeString);
@@ -100,9 +99,12 @@ public final class ValidatorUtility {
 	 *             the SCMP validator exception
 	 */
 	public static void validateIpAddressList(String ipAddressListString) throws SCMPValidatorException {
+		if (ipAddressListString == null) {
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_IPLIST, "ipAddressListString must be set");
+		}
 		Matcher m = PAT_IPLIST.matcher(ipAddressListString);
 		if (!m.matches()) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_IPLIST_FORMAT, ipAddressListString);
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_IPLIST, ipAddressListString);
 		}
 	}
 

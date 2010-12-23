@@ -67,10 +67,10 @@ public class AttachCommand extends CommandAdapter {
 		SCMPMessage message = request.getMessage();
 
 		try {
-			// scVersion
+			// scVersion mandatory
 			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
 			SCMPMessage.SC_VERSION.isSupported(scVersion);
-			// localDateTime
+			// localDateTime mandatory
 			ValidatorUtility.validateLocalDateTime(message.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point

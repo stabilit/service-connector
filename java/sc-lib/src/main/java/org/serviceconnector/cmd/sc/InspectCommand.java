@@ -120,7 +120,7 @@ public class InspectCommand extends CommandAdapter {
 	public void validate(IRequest request) throws Exception {
 		try {
 			SCMPMessage message = request.getMessage();
-			// ipAddressList
+			// ipAddressList mandatory
 			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 		} catch (HasFaultResponseException ex) {
