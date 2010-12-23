@@ -105,6 +105,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			this.synchronous = false;
 		} catch (InterruptedException e) {
 			// finally clause handles exception too
+			logger.warn("InterruptedException when waiting for message " + e);
 		} finally {
 			if (reply == null) {
 				// time runs out before message got received
