@@ -45,6 +45,8 @@ public class ServiceConnectorCommandFactory extends FlyweightCommandFactory {
 		this.addCommand(clnDeleteSessionCommand.getKey(), clnDeleteSessionCommand);
 		ICommand registerServerCommand = new RegisterServerCommand();
 		this.addCommand(registerServerCommand.getKey(), registerServerCommand);
+		ICommand checkRegistrationCommand = new CheckRegistrationCommand();
+		this.addCommand(checkRegistrationCommand.getKey(), checkRegistrationCommand);
 		ICommand deRegisterServerCommand = new DeRegisterServerCommand();
 		this.addCommand(deRegisterServerCommand.getKey(), deRegisterServerCommand);
 		ICommand clnEchoCommand = new EchoCommand();

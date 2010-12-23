@@ -25,6 +25,7 @@ import org.serviceconnector.test.integration.api.cln.APIMultipleSCsClientTest;
 import org.serviceconnector.test.integration.api.cln.APINewServiceTest;
 import org.serviceconnector.test.integration.api.srv.APIAfterSCAbortServerTest;
 import org.serviceconnector.test.integration.api.srv.APIAfterSCRestartServerTest;
+import org.serviceconnector.test.integration.api.srv.APICheckRegistrationTest;
 import org.serviceconnector.test.integration.api.srv.APIMultipleSCsServerTest;
 import org.serviceconnector.test.integration.api.srv.APIPublishServerTest;
 import org.serviceconnector.test.integration.api.srv.APIRegisterPublishServerTest;
@@ -47,6 +48,7 @@ import org.serviceconnector.test.integration.scmp.SCMPSCVersionTest;
 		// API server tests
 		APIRegisterSessionServerTest.class,
 		APIRegisterPublishServerTest.class,
+		APICheckRegistrationTest.class,
 		APIPublishServerTest.class,
 		APIMultipleSCsServerTest.class,
 		APIAfterSCAbortServerTest.class,

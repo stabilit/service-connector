@@ -43,7 +43,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -62,7 +62,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(null);
@@ -81,7 +81,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask("");
@@ -100,7 +100,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(" ");
@@ -119,7 +119,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.stringLength257);
@@ -138,7 +138,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
@@ -157,7 +157,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -176,7 +176,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -195,7 +195,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -214,7 +214,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -237,7 +237,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -256,7 +256,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);
@@ -275,7 +275,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
 		publishServer.register(10, 2, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, publishServer.isRegistered());
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
 		
 		SCPublishMessage publishMessage = new SCPublishMessage();
 		publishMessage.setMask(TestConstants.mask);

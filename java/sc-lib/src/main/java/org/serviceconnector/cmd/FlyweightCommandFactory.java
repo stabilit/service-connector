@@ -60,7 +60,7 @@ public abstract class FlyweightCommandFactory {
 	public ICommand getCommand(SCMPMsgType key) {
 		ICommand command = FlyweightCommandFactory.commands.get(key.getValue());
 		if (command == null) {
-			logger.fatal("key : " + key + " not found!");
+			logger.error("key : " + key + " not found!");
 			throw new InvalidParameterException("key : " + key + " not found!");
 		}
 		return command;
