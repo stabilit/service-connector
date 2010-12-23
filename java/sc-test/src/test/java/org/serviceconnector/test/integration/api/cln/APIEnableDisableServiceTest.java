@@ -15,9 +15,7 @@
  */
 package org.serviceconnector.test.integration.api.cln;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCMgmtClient;
@@ -28,20 +26,7 @@ import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 
 	private SCMgmtClient client;
-	
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-	}
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			client.detach();
-		} catch (Exception e) {}
-		super.afterOneTest();
-	}
-		
+			
 	/**
 	 * Description: check non-existing service<br> 
 	 * Expectation:	throws SCServiceException
@@ -51,6 +36,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled("notExistingService"));
+		client.detach();
 	}
 
 	/**
@@ -62,6 +48,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		client.enableService("notExistingService");
+		client.detach();
 	}
 	
 	/**
@@ -73,6 +60,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		client.disableService("notExistingService");
+		client.detach();
 	}
 
 	/**
@@ -94,6 +82,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		client.detach();
 	}
 	
 	/**
@@ -119,6 +108,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 		Assert.assertEquals("Disabled ", false, client.isServiceEnabled(TestConstants.sesServiceName1));
 		client.enableService(TestConstants.sesServiceName1);
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		client.detach();
 	}
 	
 	/**
@@ -136,6 +126,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 		client.enableService(TestConstants.sesServiceName1);
 		client.enableService(TestConstants.sesServiceName1);
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
+		client.detach();
 	}
 
 	/**
@@ -154,5 +145,6 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 			client.enableService(TestConstants.sesServiceName1);
 			Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		}
+		client.detach();
 	}
 }

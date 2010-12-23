@@ -17,15 +17,12 @@ package org.serviceconnector.test.integration.api.cln;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
@@ -40,12 +37,6 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	private SCClient client1;
 	private SCClient client2;
 	
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-
-	}
-
 	@Before
 	public void beforeOneTest() throws Exception {
 		scCtx1 = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
@@ -76,11 +67,6 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 		} catch (Exception e) {
 		}
 		scCtx2 = null;
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		ctrl = null;
 	}
 
 	/**

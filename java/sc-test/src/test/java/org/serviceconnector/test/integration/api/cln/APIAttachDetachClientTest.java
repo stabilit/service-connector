@@ -31,7 +31,6 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(APIAttachDetachClientTest.class);
 
-
 	/**
 	 * helper create the client with different parameters
 	 * @param host
