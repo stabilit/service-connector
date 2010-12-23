@@ -34,11 +34,10 @@ public class APIIntegrationSuperServerTest extends APIIntegrationSuperTest {
 	protected SCServer server;
 	protected SCSessionServer sessionServer = null;
 	protected SCPublishServer publishServer = null;
-	private int threadCount = 0;
 	
 	@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
+		super.beforeOneTest();
 	}
 
 	@After
@@ -59,7 +58,7 @@ public class APIIntegrationSuperServerTest extends APIIntegrationSuperTest {
 		} catch (Exception e) {}
 
 		server = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"+(Thread.activeCount() - threadCount));
+		super.afterOneTest();
 	}
 	
 	protected class SesSrvCallback extends SCSessionServerCallback {

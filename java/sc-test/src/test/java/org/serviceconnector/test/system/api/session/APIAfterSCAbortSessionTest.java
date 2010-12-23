@@ -51,6 +51,7 @@ public class APIAfterSCAbortSessionTest extends APISystemSuperSessionClientTest 
 
 		ctrl.stopServer(srvCtx); // stop test server now, it cannot be stopped without SC later
 		ctrl.stopSC(scCtx);
+		
 		cbk = new MsgCallback(service);
 		response = service.createSession(request, cbk);
 	}

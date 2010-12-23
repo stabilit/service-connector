@@ -23,11 +23,10 @@ public class APIIntegrationSuperClientTest extends APIIntegrationSuperTest {
 
 	protected SCClient client;
 	protected static boolean messageReceived = false;
-	private int threadCount = 0;
 	
 	@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
+		super.beforeOneTest();
 	}
 
 	@After
@@ -36,6 +35,6 @@ public class APIIntegrationSuperClientTest extends APIIntegrationSuperTest {
 			client.detach();
 		} catch (Exception e) {}
 		client = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " difference :"+(Thread.activeCount() - threadCount));
+		super.afterOneTest();
 	}
 }
