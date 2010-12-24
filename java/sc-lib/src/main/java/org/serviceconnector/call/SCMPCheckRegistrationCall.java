@@ -56,12 +56,6 @@ public class SCMPCheckRegistrationCall extends SCMPCallAdapter  {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
-		super.invoke(scmpCallback, timeoutInMillis);
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CHECK_REGISTRATION;
 	}
