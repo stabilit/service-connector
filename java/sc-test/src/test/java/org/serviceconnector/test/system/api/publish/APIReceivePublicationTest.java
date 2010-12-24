@@ -17,7 +17,6 @@ package org.serviceconnector.test.system.api.publish;
 
 import java.util.concurrent.TimeoutException;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
@@ -28,46 +27,34 @@ import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
 public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 
-	private SCPublishService service;
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			service.unsubscribe();
-		} catch (Exception e1) {
-		}
-		service = null;
-		super.afterOneTest();
-	}
-
 	/**
 	 * Description: receive one message (regular)<br>
 	 * Expectation: passes
 	 */
 	@Test
 	public void t01_receive() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		cbk = new MsgCallback(service);
+		cbk = new MsgCallback(publishService);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 1;
 		subMsgRequest.setData(Integer.toString(nrMessages));
 		cbk.setExpectedMessages(nrMessages);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-		Assert.assertTrue("is not subscribed", service.isSubscribed());
+		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
 
 		cbk.waitForMessage(10);
 		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.getMessageCount());
 		SCMessage response = cbk.getMessage();
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
 
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
 	/**
@@ -76,28 +63,28 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 	 */
 	@Test
 	public void t02_receive() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		cbk = new MsgCallback(service);
+		cbk = new MsgCallback(publishService);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 1000;
 		subMsgRequest.setData(Integer.toString(nrMessages));
 		cbk.setExpectedMessages(nrMessages);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-		Assert.assertTrue("is not subscribed", service.isSubscribed());
+		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
 
 		cbk.waitForMessage(10);
 		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.getMessageCount());
 		SCMessage response = cbk.getMessage();
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
 
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
 	/**
@@ -106,29 +93,29 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 	 */
 	@Test
 	public void t03_receive() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		cbk = new MsgCallback(service);
+		cbk = new MsgCallback(publishService);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.publishMessagesWithDelayCmd);
 		int nrMessages = 5;
 		String waitInMillis = "1000";
 		subMsgRequest.setData(nrMessages + "|" + waitInMillis);
 		cbk.setExpectedMessages(nrMessages);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-		Assert.assertTrue("is not subscribed", service.isSubscribed());
+		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
 
 		cbk.waitForMessage(5);
 		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.getMessageCount());
 		SCMessage response = cbk.getMessage();
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
 
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
 	/**
@@ -137,21 +124,21 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 	 */
 	@Test
 	public void t04_receiveNoMatch() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		cbk = new MsgCallback(service);
+		cbk = new MsgCallback(publishService);
 		// wrong mask
 		subMsgRequest.setMask(TestConstants.mask1);
 		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 200;
 		subMsgRequest.setData(Integer.toString(nrMessages));
 		cbk.setExpectedMessages(nrMessages);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-		Assert.assertTrue("is not subscribed", service.isSubscribed());
+		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
 
 		try {
 			cbk.waitForMessage(2);
@@ -159,8 +146,8 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		} catch (TimeoutException e) {
 			Assert.assertEquals("Nr messages does not match", 0, cbk.getMessageCount());
 		}
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
 	/**

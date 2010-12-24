@@ -11,18 +11,6 @@ import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 @SuppressWarnings("unused")
 public class APIAfterServerRestartSessionTest extends APISystemSuperSessionClientTest {
 
-	private SCSessionService service;
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			service.deleteSession();
-		} catch (Exception e1) {
-		}
-		service = null;
-		super.afterOneTest();
-	}
-
 	/**
 	 * Description: exchange one message after server has been restarted<br>
 	 * Expectation: throws SCServiceException
@@ -32,17 +20,17 @@ public class APIAfterServerRestartSessionTest extends APISystemSuperSessionClien
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(service);
-		response = service.createSession(request, cbk);
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.echoAppErrorCmd);
 
-		ctrl.stopServer(srvCtx);
-		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
+		ctrl.stopServer(sesSrvCtx);
+		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
 				TestConstants.sesServiceName1);
 
-		response = service.execute(request);
+		response = sessionService.execute(request);
 	}
 	
 	/**
@@ -53,16 +41,16 @@ public class APIAfterServerRestartSessionTest extends APISystemSuperSessionClien
 	public void t05_deleteSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(service);
-		response = service.createSession(request, cbk);
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, cbk);
 
-		ctrl.stopServer(srvCtx);
-		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
+		ctrl.stopServer(sesSrvCtx);
+		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
 				TestConstants.sesServiceName1);
 		
-		service.deleteSession();
+		sessionService.deleteSession();
 	}
 
 }

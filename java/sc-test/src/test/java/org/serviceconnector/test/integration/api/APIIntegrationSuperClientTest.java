@@ -18,14 +18,20 @@ package org.serviceconnector.test.integration.api;
 import org.junit.After;
 import org.junit.Before;
 import org.serviceconnector.api.cln.SCClient;
+import org.serviceconnector.api.cln.SCPublishService;
+import org.serviceconnector.api.cln.SCSessionService;
 
 public class APIIntegrationSuperClientTest extends APIIntegrationSuperTest {
 
 	protected SCClient client;
+	protected SCSessionService sessionService = null;
+	protected SCPublishService publishService = null;
 	protected static boolean messageReceived = false;
 	
 	@Before
 	public void beforeOneTest() throws Exception {
+		sessionService = null;
+		publishService = null;
 		super.beforeOneTest();
 	}
 

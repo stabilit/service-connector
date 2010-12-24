@@ -17,7 +17,6 @@ package org.serviceconnector.test.system.api.publish;
 
 import java.security.InvalidParameterException;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
@@ -31,39 +30,27 @@ import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 @SuppressWarnings("unused")
 public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClientTest {
 
-	private SCPublishService service;
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			service.unsubscribe();
-		} catch (Exception e1) {
-		}
-		service = null;
-		super.afterOneTest();
-	}
-
 	/**
 	 * Description: subscribe (regular)<br>
 	 * Expectation: passes
 	 */
 	@Test
 	public void t01_subscribe() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("doNothing");
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-		Assert.assertTrue("is not subscribed", service.isSubscribed());
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
 	/**
@@ -72,15 +59,15 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t02_subscribe() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(null);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 	}
 
 	/**
@@ -89,14 +76,14 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t03_subscribe() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 	}
 	/**
 	 * Description: subscribe with service name = null<br>
@@ -104,15 +91,15 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = InvalidParameterException.class)
 	public void t04_subscribe() throws Exception {
-		service = client.newPublishService(null);
+		publishService = client.newPublishService(null);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 	}
 
 	/**
@@ -121,15 +108,15 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t05_subscribe() throws Exception {
-		service = client.newPublishService("");
+		publishService = client.newPublishService("");
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 	}
 
 	/**
@@ -138,15 +125,15 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t06_subscribe() throws Exception {
-		service = client.newPublishService(" ");
+		publishService = client.newPublishService(" ");
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 	}
 
 	/**
@@ -155,15 +142,15 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t07_subscribe() throws Exception {
-		service = client.newPublishService("gaga");
+		publishService = client.newPublishService("gaga");
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 	}
 	
 	/**
@@ -172,15 +159,15 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t08_subscribe() throws Exception {
-		service = client.newPublishService(TestConstants.sesServiceName1);
+		publishService = client.newPublishService(TestConstants.sesServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 	}
 	
 	/**
@@ -189,15 +176,15 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t09_subscribe() throws Exception {
-		service = client.newPublishService(TestConstants.filServiceName1);
+		publishService = client.newPublishService(TestConstants.filServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 	}
 
 	/**
@@ -206,14 +193,14 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t10_subscribe() throws Exception {
-		service = client.newPublishService(TestConstants.filServiceName1);
+		publishService = client.newPublishService(TestConstants.filServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		subMsgResponse = service.subscribe(subMsgRequest, null);
+		subMsgResponse = publishService.subscribe(subMsgRequest, null);
 	}
 
 
@@ -223,14 +210,14 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCServiceException.class )
 	public void t20_disabledService() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
+		cbk = new MsgCallback(publishService);
 
 		// disable service
 		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
@@ -238,7 +225,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		clientMgmt.disableService(TestConstants.pubServiceName1);
 		clientMgmt.detach();
 
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 	}
 
 	/**
@@ -247,21 +234,21 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test 
 	public void t30_noDataInterval() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(1);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-		Assert.assertTrue("is not subscribed", service.isSubscribed());
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
 	/**
@@ -306,16 +293,16 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t41_subscribeTwice() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(null);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 	}
 
 	/**
@@ -324,15 +311,15 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCServiceException.class )
 	public void t50_reject() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 	}
 	
 	/**
@@ -341,26 +328,26 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test
 	public void t51_reject() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
+		cbk = new MsgCallback(publishService);
 		Boolean passed = false;
 		try {
-			subMsgResponse = service.subscribe(subMsgRequest, cbk);
+			subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 		} catch (SCServiceException e) {
 			passed = true;
 			Assert.assertEquals("is not appErrorCode", TestConstants.appErrorCode, e.getAppErrorCode());
 			Assert.assertEquals("is not appErrorText", TestConstants.appErrorText, e.getAppErrorText());
 		}
 		Assert.assertTrue("did not throw exception", passed);
-		Assert.assertFalse("is subscribed", service.isSubscribed());
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		Assert.assertFalse("is subscribed", publishService.isSubscribed());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
 	/**
@@ -369,21 +356,21 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test
 	public void t60_unsubscribe() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("doNothing");
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
 	/**
@@ -392,15 +379,15 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test
 	public void t61_disabledService() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);	
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		cbk = new MsgCallback(publishService);	
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 		
 		// disable service
 		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
@@ -408,8 +395,8 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		clientMgmt.disableService(TestConstants.pubServiceName1);
 		clientMgmt.detach();
 		
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
 	/**
@@ -418,7 +405,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test
 	public void t62_unsubscribeTwice() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
@@ -426,17 +413,17 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 		
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 	
 	/**
@@ -445,26 +432,26 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test
 	public void t70_changeSubscription() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
 		subMsgRequest.setMask(TestConstants.mask1);
-		subMsgResponse = service.changeSubscription(subMsgRequest);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		subMsgResponse = publishService.changeSubscription(subMsgRequest);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
 	/**
@@ -473,20 +460,20 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t71_changeSubscription() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo("doNothing");
 		subMsgRequest.setData("certificate or what so ever");
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
 		subMsgRequest.setMask(null);
-		subMsgResponse = service.changeSubscription(subMsgRequest);
+		subMsgResponse = publishService.changeSubscription(subMsgRequest);
 	}
 
 	/**
@@ -495,13 +482,13 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t72_changeSubscription() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
-		subMsgResponse = service.changeSubscription(subMsgRequest);
+		subMsgResponse = publishService.changeSubscription(subMsgRequest);
 	}
 	
 
@@ -511,23 +498,23 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t73_changeSubscription() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 		
 		subMsgRequest.setMask(TestConstants.mask1);
-		subMsgResponse = service.changeSubscription(subMsgRequest);
+		subMsgResponse = publishService.changeSubscription(subMsgRequest);
 	}
 
 	/**
@@ -536,26 +523,26 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test
 	public void t74_changeSubscription() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgResponse = service.changeSubscription(subMsgRequest);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		subMsgResponse = publishService.changeSubscription(subMsgRequest);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
 	
@@ -565,15 +552,15 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test
 	public void t80_disabledService() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
@@ -584,13 +571,13 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		clientMgmt.detach();
 		
 		subMsgRequest.setMask(TestConstants.mask1);
-		subMsgResponse = service.changeSubscription(subMsgRequest);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		subMsgResponse = publishService.changeSubscription(subMsgRequest);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null", service.getSessionId());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
 	/**
@@ -599,21 +586,21 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test (expected = SCServiceException.class )
 	public void t90_reject() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
 		subMsgRequest.setMask(TestConstants.mask1);
 		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
-		subMsgResponse = service.changeSubscription(subMsgRequest);
+		subMsgResponse = publishService.changeSubscription(subMsgRequest);
 	}
 	
 	/**
@@ -622,15 +609,15 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 */
 	@Test
 	public void t91_reject() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setData("certificate or what so ever");
-		cbk = new MsgCallback(service);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
-		Assert.assertNotNull("the session ID is null", service.getSessionId());
+		cbk = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
@@ -639,16 +626,16 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 
 		Boolean passed = false;
 		try {
-			subMsgResponse = service.changeSubscription(subMsgRequest);
+			subMsgResponse = publishService.changeSubscription(subMsgRequest);
 		} catch (SCServiceException e) {
 			passed = true;
 			Assert.assertEquals("is not appErrorCode", TestConstants.appErrorCode, e.getAppErrorCode());
 			Assert.assertEquals("is not appErrorText", TestConstants.appErrorText, e.getAppErrorText());
 		}
 		Assert.assertTrue("did not throw exception", passed);
-		Assert.assertTrue("is nor subscribed", service.isSubscribed());
-		service.unsubscribe();
-		Assert.assertNull("the session ID is not null)", service.getSessionId());
+		Assert.assertTrue("is nor subscribed", publishService.isSubscribed());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null)", publishService.getSessionId());
 	}
 
 }

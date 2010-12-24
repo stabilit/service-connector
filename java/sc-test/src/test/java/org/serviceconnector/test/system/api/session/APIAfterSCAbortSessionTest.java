@@ -26,19 +26,6 @@ import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 @SuppressWarnings("unused")
 public class APIAfterSCAbortSessionTest extends APISystemSuperSessionClientTest {
 
-	private SCSessionService service;
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			service.deleteSession();
-		} catch (Exception e1) {
-		}
-		service = null;
-		super.afterOneTest();
-	}
-
-
 	/**
 	 * Description: create session after SC was aborted<br>
 	 * Expectation: throws SCServiceException
@@ -47,13 +34,13 @@ public class APIAfterSCAbortSessionTest extends APISystemSuperSessionClientTest 
 	public void t01_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 
-		ctrl.stopServer(srvCtx); // stop test server now, it cannot be stopped without SC later
+		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
 		ctrl.stopSC(scCtx);
 		
-		cbk = new MsgCallback(service);
-		response = service.createSession(request, cbk);
+		cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, cbk);
 	}
 
 	/**
@@ -65,15 +52,15 @@ public class APIAfterSCAbortSessionTest extends APISystemSuperSessionClientTest 
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(service);
-		response = service.createSession(request, cbk);
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, cbk);
 
-		ctrl.stopServer(srvCtx); // stop test server now, it cannot be stopped without SC later
+		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
 		ctrl.stopSC(scCtx);
 
 		request.setMessageInfo(TestConstants.echoCmd);
-		response = service.execute(request);
+		response = sessionService.execute(request);
 	}
 
 	/**
@@ -85,17 +72,17 @@ public class APIAfterSCAbortSessionTest extends APISystemSuperSessionClientTest 
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(service);
-		response = service.createSession(request, cbk);
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, cbk);
 		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
-		MsgCallback cbk = new MsgCallback(service);
+		MsgCallback cbk = new MsgCallback(sessionService);
 
-		ctrl.stopServer(srvCtx); 	// stop test server now, it cannot be stopped without SC later
+		ctrl.stopServer(sesSrvCtx); 	// stop test server now, it cannot be stopped without SC later
 		ctrl.stopSC(scCtx);
 
-		service.send(request);
+		sessionService.send(request);
 	}
 
 	/**
@@ -106,13 +93,13 @@ public class APIAfterSCAbortSessionTest extends APISystemSuperSessionClientTest 
 	public void t04_deleteSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(service);
-		response = service.createSession(request, cbk);
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, cbk);
 
-		ctrl.stopServer(srvCtx); // stop test server now, it cannot be stopped without SC later
+		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
 		ctrl.stopSC(scCtx);
 
-		service.deleteSession();
+		sessionService.deleteSession();
 	}
 }

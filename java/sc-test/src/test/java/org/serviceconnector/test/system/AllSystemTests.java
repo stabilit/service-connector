@@ -17,8 +17,8 @@ package org.serviceconnector.test.system;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.system.api.publish.APIAfterSCAbortReceivePublicationTest;
-import org.serviceconnector.test.system.api.publish.APIAfterServerAbortReceivePublicationTest;
+import org.serviceconnector.test.system.api.publish.APIAfterSCAbortPublishTest;
+import org.serviceconnector.test.system.api.publish.APIAfterServerAbortPublishTest;
 import org.serviceconnector.test.system.api.publish.APIAfterServerRestartReceivePublicationTest;
 import org.serviceconnector.test.system.api.publish.APIReceivePublicationTest;
 import org.serviceconnector.test.system.api.publish.APISubscribeUnsubscribeChangeTest;
@@ -44,8 +44,8 @@ import org.serviceconnector.test.system.scmp.SCMPGroupCallTest;
 		// API publish tests
 		APISubscribeUnsubscribeChangeTest.class,
 		APIReceivePublicationTest.class,
-		APIAfterSCAbortReceivePublicationTest.class,
-		APIAfterServerAbortReceivePublicationTest.class,
+		APIAfterSCAbortPublishTest.class,
+		APIAfterServerAbortPublishTest.class,
 		APIAfterServerRestartReceivePublicationTest.class,
 
 		// SCMP session test

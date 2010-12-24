@@ -33,13 +33,14 @@ import org.serviceconnector.test.system.api.publish.APIReceivePublicationTest;
 public class APISystemSuperPublishClientTest extends APISystemSuperTest {
 
 	protected SCClient client;
-	protected ProcessCtx srvCtx;
+	protected SCPublishService publishService = null;
+	protected ProcessCtx pubSrvCtx;
 	protected MsgCallback cbk = null;
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
+		pubSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
 				TestConstants.pubServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
 				TestConstants.pubServiceName1);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
@@ -49,15 +50,20 @@ public class APISystemSuperPublishClientTest extends APISystemSuperTest {
 	@After
 	public void afterOneTest() throws Exception {
 		try {
+			publishService.unsubscribe();
+		} catch (Exception e1) {
+		}
+		publishService = null;
+		try {
 			client.detach();
 		} catch (Exception e) {
 		}
 		client = null;
 		try {
-			ctrl.stopServer(srvCtx);
+			ctrl.stopServer(pubSrvCtx);
 		} catch (Exception e) {
 		}
-		srvCtx = null;
+		pubSrvCtx = null;
 		super.afterOneTest();
 	}
 

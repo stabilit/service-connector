@@ -15,46 +15,32 @@
  */
 package org.serviceconnector.test.system.api.publish;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCSubscribeMessage;
-import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
-public class APIAfterServerAbortReceivePublicationTest extends APISystemSuperPublishClientTest {
+public class APIAfterServerAbortPublishTest extends APISystemSuperPublishClientTest {
 	
-	private SCPublishService service;
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			service.unsubscribe();
-		} catch (Exception e1) {
-		}
-		service = null;
-		super.afterOneTest();
-	}
-
 	/**
 	 * Description: receive after server abort <br>
 	 * Expectation: passes as long as noDataInterval
 	 */
 	@Test
 	public void t01_receive() throws Exception {
-		service = client.newPublishService(TestConstants.pubServiceName1);
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		MsgCallback cbk = new MsgCallback(service);
+		MsgCallback cbk = new MsgCallback(publishService);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 1;
 		subMsgRequest.setData(Integer.toString(nrMessages));
 		cbk.setExpectedMessages(nrMessages);
-		subMsgResponse = service.subscribe(subMsgRequest, cbk);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 		
-		ctrl.stopServer(srvCtx);
+		ctrl.stopServer(pubSrvCtx);
 		
 		cbk.waitForMessage(10);
 		Assert.assertTrue("Test is not implemented", false);
