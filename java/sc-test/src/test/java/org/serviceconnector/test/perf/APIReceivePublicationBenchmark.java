@@ -1,4 +1,4 @@
-package org.serviceconnector.test.system.api.perf;
+package org.serviceconnector.test.perf;
 
 import java.util.concurrent.TimeoutException;
 

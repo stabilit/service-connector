@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.system.api.perf;
+package org.serviceconnector.test.perf;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
