@@ -23,11 +23,9 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMessageCallback;
-import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.service.SCServiceException;
 
 public class APISystemSuperSessionClientTest extends APISystemSuperTest {

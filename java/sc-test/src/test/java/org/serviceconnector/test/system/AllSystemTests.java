@@ -17,16 +17,12 @@ package org.serviceconnector.test.system;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.system.api.publish.APIAfterSCAbortPublishTest;
-import org.serviceconnector.test.system.api.publish.APIAfterServerAbortPublishTest;
-import org.serviceconnector.test.system.api.publish.APIAfterServerRestartReceivePublicationTest;
-import org.serviceconnector.test.system.api.publish.APIReceivePublicationTest;
-import org.serviceconnector.test.system.api.publish.APISubscribeUnsubscribeChangeTest;
-import org.serviceconnector.test.system.api.session.APIAfterSCAbortSessionTest;
-import org.serviceconnector.test.system.api.session.APIAfterServerAbortSessionTest;
-import org.serviceconnector.test.system.api.session.APIAfterServerRestartSessionTest;
-import org.serviceconnector.test.system.api.session.APICreateDeleteSessionTest;
-import org.serviceconnector.test.system.api.session.APIExecuteAndSendTest;
+import org.serviceconnector.test.system.api.cln.APIAfterAbortOrRestartPublishTest;
+import org.serviceconnector.test.system.api.cln.APIAfterAbortOrRestartSessionTest;
+import org.serviceconnector.test.system.api.cln.APICreateDeleteSessionTest;
+import org.serviceconnector.test.system.api.cln.APIExecuteAndSendTest;
+import org.serviceconnector.test.system.api.cln.APIReceivePublicationTest;
+import org.serviceconnector.test.system.api.cln.APISubscribeUnsubscribeChangeTest;
 import org.serviceconnector.test.system.scmp.SCMPClnChangeSubscriptionTest;
 import org.serviceconnector.test.system.scmp.SCMPClnCreateSessionTest;
 import org.serviceconnector.test.system.scmp.SCMPClnExecuteTest;
@@ -37,16 +33,13 @@ import org.serviceconnector.test.system.scmp.SCMPGroupCallTest;
 		// API session tests
 		APICreateDeleteSessionTest.class,
 		APIExecuteAndSendTest.class,
-		APIAfterSCAbortSessionTest.class,
-		APIAfterServerAbortSessionTest.class,
-		APIAfterServerRestartSessionTest.class,
+		APIAfterAbortOrRestartSessionTest.class,
+
 
 		// API publish tests
 		APISubscribeUnsubscribeChangeTest.class,
 		APIReceivePublicationTest.class,
-		APIAfterSCAbortPublishTest.class,
-		APIAfterServerAbortPublishTest.class,
-		APIAfterServerRestartReceivePublicationTest.class,
+		APIAfterAbortOrRestartPublishTest.class,
 
 		// SCMP session test
 		SCMPClnCreateSessionTest.class,

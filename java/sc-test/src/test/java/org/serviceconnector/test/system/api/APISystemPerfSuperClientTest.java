@@ -26,7 +26,6 @@ import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.service.SCServiceException;
 
 public class APISystemPerfSuperClientTest extends APISystemPerfSuperTest {
@@ -103,8 +102,9 @@ public class APISystemPerfSuperClientTest extends APISystemPerfSuperTest {
 		public void receive(Exception e) {
 			testLogger.info("Error received");
 			if (e instanceof SCServiceException) {
-				SCMPError scError = ((SCServiceException) e).getSCMPError();
-				logger.info("SC error code:" + scError.getErrorCode() + " text:" + scError.getErrorText());
+				String errorText = ((SCServiceException) e).getSCErrorText();
+				String errorCode = ((SCServiceException) e).getSCErrorCode();
+				logger.info("SC error code:" + errorCode + " text:" + errorText);
 			} else {
 				logger.error("receive error: " + e.getMessage());
 			}

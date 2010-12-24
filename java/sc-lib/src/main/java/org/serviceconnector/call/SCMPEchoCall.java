@@ -17,7 +17,6 @@
 package org.serviceconnector.call;
 
 import java.net.InetAddress;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;

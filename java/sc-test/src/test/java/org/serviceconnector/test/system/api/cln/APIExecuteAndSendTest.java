@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.system.api.session;
+package org.serviceconnector.test.system.api.cln;
 
 import org.junit.After;
 import org.junit.Assert;

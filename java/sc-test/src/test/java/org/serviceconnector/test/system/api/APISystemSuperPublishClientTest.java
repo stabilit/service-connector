@@ -26,9 +26,8 @@ import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.test.system.api.publish.APIReceivePublicationTest;
+import org.serviceconnector.test.system.api.cln.APIReceivePublicationTest;
 
 public class APISystemSuperPublishClientTest extends APISystemSuperTest {
 

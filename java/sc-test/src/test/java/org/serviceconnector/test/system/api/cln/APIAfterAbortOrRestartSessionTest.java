@@ -13,26 +13,101 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.system.api.session;
+package org.serviceconnector.test.system.api.cln;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
-public class APIAfterServerAbortSessionTest extends APISystemSuperSessionClientTest {
-	
+public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClientTest {
+
+	/**
+	 * Description: create session after SC was aborted<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t01_createSession() throws Exception {
+		SCMessage request = null;
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+
+		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
+		ctrl.stopSC(scCtx);
+		
+		cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, cbk);
+	}
+
+	/**
+	 * Description: exchange message after SC was aborted<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t02_execute() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, cbk);
+
+		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
+		ctrl.stopSC(scCtx);
+
+		request.setMessageInfo(TestConstants.echoCmd);
+		response = sessionService.execute(request);
+	}
+
+	/**
+	 * Description: send message after SC was aborted<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t03_send() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, cbk);
+		request.setMessageInfo(TestConstants.echoCmd);
+		messageReceived = false;
+		MsgCallback cbk = new MsgCallback(sessionService);
+
+		ctrl.stopServer(sesSrvCtx); 	// stop test server now, it cannot be stopped without SC later
+		ctrl.stopSC(scCtx);
+
+		sessionService.send(request);
+	}
+
+	/**
+	 * Description: delete session after SC was aborted<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t04_deleteSession() throws Exception {
+		SCMessage request = null;
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, cbk);
+
+		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
+		ctrl.stopSC(scCtx);
+
+		sessionService.deleteSession();
+	}
+
 	/**
 	 * Description: create session after server was aborted<br>
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t01_createSession() throws Exception {
+	public void t30_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
@@ -48,7 +123,7 @@ public class APIAfterServerAbortSessionTest extends APISystemSuperSessionClientT
 	 * Expectation: passes
 	 */
 	@Test
-	public void t02_createSession() throws Exception {
+	public void t31_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
@@ -72,7 +147,7 @@ public class APIAfterServerAbortSessionTest extends APISystemSuperSessionClientT
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t10_execute() throws Exception {
+	public void t32_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
@@ -91,7 +166,7 @@ public class APIAfterServerAbortSessionTest extends APISystemSuperSessionClientT
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t11_execute() throws Exception {
+	public void t33_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
@@ -110,7 +185,7 @@ public class APIAfterServerAbortSessionTest extends APISystemSuperSessionClientT
 	 * Expectation: passes because exception is given to callback and handled there
 	 */
 	@Test
-	public void t12_send() throws Exception {
+	public void t34_send() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
@@ -134,7 +209,7 @@ public class APIAfterServerAbortSessionTest extends APISystemSuperSessionClientT
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t20_deleteSession() throws Exception {
+	public void t35_deleteSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
@@ -146,4 +221,48 @@ public class APIAfterServerAbortSessionTest extends APISystemSuperSessionClientT
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: exchange one message after server has been restarted<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t50_execute() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, cbk);
+		request.setMessageInfo(TestConstants.echoAppErrorCmd);
+
+		ctrl.stopServer(sesSrvCtx);
+		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.sesServiceName1);
+
+		response = sessionService.execute(request);
+	}
+	
+	/**
+	 * Description: delete session after server has been restarted<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t51_deleteSession() throws Exception {
+		SCMessage request = null;
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, cbk);
+
+		ctrl.stopServer(sesSrvCtx);
+		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.sesServiceName1);
+		
+		sessionService.deleteSession();
+	}
+
+
+	
 }

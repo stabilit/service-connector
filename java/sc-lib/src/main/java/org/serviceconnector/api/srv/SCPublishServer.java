@@ -32,7 +32,6 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class SCPublishServer. A Server that publishes messages to an SC.
