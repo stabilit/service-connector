@@ -87,7 +87,7 @@ public class APISCSubscribeMessageTest {
 	@Test (expected = SCMPValidatorException.class)
 	public void t14_mask() throws Exception {
 		message.setMask(TestConstants.stringLength257);
-		Assert.assertEquals("mask is different", TestConstants.stringLength256, message.getMask());
+		Assert.assertEquals("mask is different", TestConstants.stringLength257, message.getMask());
 	}
 
 	/**

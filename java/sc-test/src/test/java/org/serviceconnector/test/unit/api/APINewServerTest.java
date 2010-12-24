@@ -114,7 +114,7 @@ public class APINewServerTest {
 	 */
 	@Test
 	public void t22_PublishServer() throws Exception {
-		SCPublishServer publishServer = server.newPublishServer(TestConstants.sesServiceName1);
+		SCPublishServer publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		Assert.assertNotNull("No PublishServer", publishServer);
 	}
 
@@ -124,12 +124,12 @@ public class APINewServerTest {
 	 */	
 	@Test
 	public void t23_ServerHostPort() throws Exception {
-		SCPublishServer publishServer = server.newPublishServer(TestConstants.sesServiceName1);
+		SCPublishServer publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		Assert.assertNotNull("Can not create PublishServer!", publishServer);
 		/* Cannot test interfaces, because they have dynamic values
 		Assert.assertEquals("PublishServer Host", TestConstants.HOST, publishServer.getListenerInterfaces());
 		*/
-		Assert.assertEquals("PublishServer Port", TestConstants.PORT_PUB_SRV_TCP, publishServer.getListenerPort());
+		Assert.assertEquals("PublishServer Port", TestConstants.PORT_SES_SRV_TCP, publishServer.getListenerPort());
 	}	
 
 	/**
@@ -138,7 +138,7 @@ public class APINewServerTest {
 	 */	
 	@Test
 	public void t24_SCHostPort() throws Exception  {
-		SCPublishServer publishServer = server.newPublishServer(TestConstants.sesServiceName1);
+		SCPublishServer publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		Assert.assertNotNull("Can not create PublishServer!", publishServer);
 		Assert.assertEquals("SC Host", TestConstants.HOST, publishServer.getSCHost());
 		Assert.assertEquals("SC Port", TestConstants.PORT_SC_TCP, publishServer.getSCPort());
