@@ -62,7 +62,7 @@ public class SCMPRegisterDeregisterServerTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		threadCount = Thread.activeCount();
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP
+		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
 	}
 
@@ -181,7 +181,7 @@ public class SCMPRegisterDeregisterServerTest {
 
 		registerServerCall.setMaxSessions(10);
 		registerServerCall.setMaxConnections(10);
-		registerServerCall.setPortNumber(TestConstants.PORT_LISTENER);
+		registerServerCall.setPortNumber(TestConstants.PORT_SES_SRV_TCP);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
 
@@ -207,13 +207,13 @@ public class SCMPRegisterDeregisterServerTest {
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
 
-		registerServerCall.invoke(cbk, 2000);
-		TestUtil.checkReply(cbk.getMessageSync(3000));
+		registerServerCall.invoke(cbk, 8000);
+		TestUtil.checkReply(cbk.getMessageSync(10000));
 
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 				.newInstance(this.requester, TestConstants.pubServerName1);
-		deRegisterServerCall.invoke(cbk, 1000);
-		TestUtil.checkReply(cbk.getMessageSync(3000));
+		deRegisterServerCall.invoke(cbk, 2000);
+		TestUtil.checkReply(cbk.getMessageSync(5000));
 	}
 
 	/**
@@ -232,16 +232,16 @@ public class SCMPRegisterDeregisterServerTest {
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
 
-		registerServerCall.invoke(cbk, 2000);
-		TestUtil.checkReply(cbk.getMessageSync(3000));
+		registerServerCall.invoke(cbk, 8000);
+		TestUtil.checkReply(cbk.getMessageSync(10000));
 		// first deregister server call
 		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
 				.newInstance(this.requester, TestConstants.pubServerName1);
-		deRegisterServerCall.invoke(cbk, 1000);
-		TestUtil.checkReply(cbk.getMessageSync(3000));
+		deRegisterServerCall.invoke(cbk, 5000);
+		TestUtil.checkReply(cbk.getMessageSync(8000));
 		// second deregister server call
-		deRegisterServerCall.invoke(cbk, 1000);
-		SCMPMessage reply = cbk.getMessageSync(3000);
+		deRegisterServerCall.invoke(cbk, 5000);
+		SCMPMessage reply = cbk.getMessageSync(8000);
 		Assert.assertTrue(reply.isFault());
 		Assert.assertEquals(SCMPMsgType.DEREGISTER_SERVER.getValue(), reply.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		Assert.assertEquals(SCMPError.NOT_FOUND.getErrorCode(), reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));

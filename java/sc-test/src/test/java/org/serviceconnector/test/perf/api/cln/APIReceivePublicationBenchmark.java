@@ -1,4 +1,4 @@
-package org.serviceconnector.test.perf;
+package org.serviceconnector.test.perf.api.cln;
 
 import java.util.concurrent.TimeoutException;
 
@@ -50,9 +50,9 @@ public class APIReceivePublicationBenchmark {
 		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
-				TestConstants.pubServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.pubServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
 				TestConstants.pubServiceName1);
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 

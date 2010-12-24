@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.ctrl.util;
 
@@ -101,8 +101,12 @@ public class ProcessesController {
 		proc.setSCPort(Integer.parseInt(this.getPortFromConfFile(scPropertiesFullName)));
 
 		/*
-		 * start SC process Arguments: [0] -Dlog4j.configuration=file [1] log4jProperties [2]-jar [3] SC runnable [4]
-		 * -sc.configuration
+		 * start SC process Arguments:
+		 * [0] -Dlog4j.configuration=file
+		 * [1] log4jProperties
+		 * [2] -jar
+		 * [3] SC runnable
+		 * [4] -sc.configuration
 		 */
 		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + scRunableFullName
 				+ " -sc.configuration " + scPropertiesFullName;
@@ -215,9 +219,18 @@ public class ProcessesController {
 		proc.setConnectionType(connectionType);
 		proc.setCommunicatorType(serverType);
 		/*
-		 * start server process Arguments: [0] -Dlog4j.configuration=file [1] log4jProperties [2] -jar [3] server runnable
-		 * [4] serverType ("session" or "publish") [5] serverName [6] listenerPort [7] SC port [8] maxSessions [9]
-		 * maxConnections [10] connectionType ("netty.tcp" or "netty.http") [11] serviceNames (comma delimited list)
+		 * start server process Arguments:
+		 * [0] -Dlog4j.configuration=file
+		 * [1] log4jProperties
+		 * [2] -jar [3] server runnable
+		 * [4] serverType ("session" or "publish")
+		 * [5] serverName
+		 * [6] listenerPort
+		 * [7] SC port
+		 * [8] maxSessions
+		 * [9] maxConnections
+		 * [10] connectionType ("netty.tcp" or "netty.http")
+		 * [11] serviceNames (comma delimited list)
 		 */
 		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + srvRunablFullName + " " + serverType
 				+ " " + serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " " + maxConnections + " " + " "
@@ -227,10 +240,10 @@ public class ProcessesController {
 		int timeout = 10;
 		try {
 			FileUtility.waitExists(pidFileNameFull, timeout);
-			testLogger.info("Server started");
+			testLogger.info("Server " + serverName + " started");
 		} catch (Exception e) {
 			testLogger.info(e.getMessage());
-			testLogger.error("Server not started within " + timeout + " seconds! Timeout exceeded.");
+			testLogger.error("Server " + serverName + "not started within " + timeout + " seconds! Timeout exceeded.");
 			throw e;
 		}
 		return proc;
@@ -240,7 +253,7 @@ public class ProcessesController {
 		int timeout = 10; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileName())) {
-				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
 				clientMgmt.enableService(serviceName); // service might be disabled during tests
@@ -268,10 +281,10 @@ public class ProcessesController {
 				clientMgmt.detach();
 				FileUtility.waitNotExists(srvProcess.getPidFileName(), timeout);
 			}
-			testLogger.info("Server stopped");
+			testLogger.info("Server " + srvProcess.getProcessName() + " stopped");
 		} catch (Exception e) {
 			testLogger.info(e.getMessage());
-			testLogger.error("Cannot stop server! Timeout exceeded.");
+			testLogger.error("Cannot stop " + srvProcess.getProcessName() + " server! Timeout exceeded.");
 		} finally {
 			if (srvProcess.isRunning()) {
 				srvProcess.getProcess().destroy();
@@ -350,8 +363,10 @@ public class ProcessesController {
 		proc.setCommunicatorType(clientType);
 		/*
 		 * start client process Arguments: [0] -Dlog4j.configuration=file [1] log4jProperties [2] -jar [3] client runnable
-		 * [4] clientType ("session" or "publish") [5] clientName [6] scHost [7] scPort [8] ConnectionType ("netty.tcp" or "netty.http") [9] maxConnections [10]
-		 * keepAliveIntervalSeconds [11] serviceName [12] echoIntervalInSeconds[13] echoTimeoutInSeconds[14] methodsToInvoke (split by | "init|attach|detach")[15]
+		 * [4] clientType ("session" or "publish") [5] clientName [6] scHost [7] scPort [8] ConnectionType ("netty.tcp" or
+		 * "netty.http") [9] maxConnections [10]
+		 * keepAliveIntervalSeconds [11] serviceName [12] echoIntervalInSeconds[13] echoTimeoutInSeconds[14] methodsToInvoke (split
+		 * by | "init|attach|detach")[15]
 		 */
 		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + clnRunablFullName + " " + clientType
 				+ " " + clientName + " " + scHost + " " + scPort + " " + connectionType.getValue() + " " + maxConnections + " "

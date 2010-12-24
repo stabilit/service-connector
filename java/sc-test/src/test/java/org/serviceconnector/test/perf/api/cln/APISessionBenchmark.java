@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.perf;
+package org.serviceconnector.test.perf.api.cln;
 
 import java.util.Arrays;
 
@@ -61,9 +61,9 @@ public class APISessionBenchmark {
 		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 50000, 10,
+				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 50000, 10,
 				TestConstants.sesServiceName1);
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 

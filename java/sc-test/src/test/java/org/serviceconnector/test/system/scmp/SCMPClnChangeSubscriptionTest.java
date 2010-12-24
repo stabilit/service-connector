@@ -66,8 +66,8 @@ public class SCMPClnChangeSubscriptionTest {
 		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties, TestConstants.pubServerName1,
-				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 1, 1, TestConstants.pubServerName1);
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP
+				TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.pubServerName1);
+		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
 	}
 

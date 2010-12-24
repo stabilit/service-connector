@@ -86,7 +86,7 @@ public class ConnectionTest {
 		ConnectionFactory connectionFactory = AppContext.getConnectionFactory();
 		IConnection connection = connectionFactory.createConnection(ConnectionType.NETTY_HTTP.getValue());
 		connection.setHost(TestConstants.HOST);
-		connection.setPort(TestConstants.PORT_HTTP);
+		connection.setPort(TestConstants.PORT_SC_HTTP);
 		connection.setIdleTimeoutSeconds(0); // idle timeout inactive
 		IIdleConnectionCallback idleCallback = new IdleCallback();
 		ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
@@ -122,7 +122,7 @@ public class ConnectionTest {
 			IConnection connection = connectionFactory.createConnection(ConnectionType.NETTY_HTTP.getValue());
 			connections[i] = connection;
 			connection.setHost(TestConstants.HOST);
-			connection.setPort(TestConstants.PORT_HTTP);
+			connection.setPort(TestConstants.PORT_SC_HTTP);
 			connection.setIdleTimeoutSeconds(0);
 			IIdleConnectionCallback idleCallback = new IdleCallback();
 			ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);

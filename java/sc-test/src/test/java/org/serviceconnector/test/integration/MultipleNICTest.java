@@ -77,7 +77,7 @@ public class MultipleNICTest {
 			Enumeration<InetAddress> inetAdresses = netint.getInetAddresses();
 			for (InetAddress inetAddress : Collections.list(inetAdresses)) {
 				try {
-					IRequester req = new Requester(new RequesterContext(inetAddress.getHostAddress(), TestConstants.PORT_HTTP,
+					IRequester req = new Requester(new RequesterContext(inetAddress.getHostAddress(), TestConstants.PORT_SC_HTTP,
 							ConnectionType.NETTY_HTTP.getValue(), 0));
 					SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
 

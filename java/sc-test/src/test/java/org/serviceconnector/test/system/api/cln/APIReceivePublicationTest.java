@@ -159,7 +159,7 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		SCPublishService service1 = client.newPublishService(TestConstants.pubServiceName1);
 		SCPublishService service2 = client.newPublishService(TestConstants.pubServiceName1);
 		
-		int nrMessages = 10000;
+		int nrMessages = 100;
 		MsgCallback cbk1 = new MsgCallback(service1);
 		cbk1.setExpectedMessages(nrMessages);
 		MsgCallback cbk2 = new MsgCallback(service2);

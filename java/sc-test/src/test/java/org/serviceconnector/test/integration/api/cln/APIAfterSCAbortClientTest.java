@@ -22,7 +22,7 @@ public class APIAfterSCAbortClientTest extends APIIntegrationSuperClientTest  {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t101_attach() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		
 		ctrl.stopSC(scCtx);
 		
@@ -35,7 +35,7 @@ public class APIAfterSCAbortClientTest extends APIIntegrationSuperClientTest  {
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t102_detach() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
@@ -50,7 +50,7 @@ public class APIAfterSCAbortClientTest extends APIIntegrationSuperClientTest  {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t103_enableService() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
@@ -65,7 +65,7 @@ public class APIAfterSCAbortClientTest extends APIIntegrationSuperClientTest  {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t104_disableService() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
@@ -80,7 +80,7 @@ public class APIAfterSCAbortClientTest extends APIIntegrationSuperClientTest  {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t105_getWorkload() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
@@ -95,7 +95,7 @@ public class APIAfterSCAbortClientTest extends APIIntegrationSuperClientTest  {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t201_attach() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
 		
 		ctrl.stopSC(scCtx);
 		
@@ -108,7 +108,7 @@ public class APIAfterSCAbortClientTest extends APIIntegrationSuperClientTest  {
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t202_detach() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
@@ -123,7 +123,7 @@ public class APIAfterSCAbortClientTest extends APIIntegrationSuperClientTest  {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t203_enableService() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
@@ -138,7 +138,7 @@ public class APIAfterSCAbortClientTest extends APIIntegrationSuperClientTest  {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t204_disableService() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
@@ -153,7 +153,7 @@ public class APIAfterSCAbortClientTest extends APIIntegrationSuperClientTest  {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t205_getWorkload() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		

@@ -38,8 +38,8 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
 		ctrl.stopSC(scCtx);
 		
-		cbk = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, cbk);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
 	}
 
 	/**
@@ -52,8 +52,8 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		request.setCompressed(false);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, cbk);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
 
 		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
 		ctrl.stopSC(scCtx);
@@ -72,8 +72,8 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		request.setCompressed(false);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, cbk);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
 		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(sessionService);
@@ -93,8 +93,8 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		SCMessage request = null;
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, cbk);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
 
 		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
 		ctrl.stopSC(scCtx);
@@ -114,8 +114,8 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 
 		ctrl.stopServer(sesSrvCtx);
 		
-		cbk = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, cbk);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
 	}
 
 	/**
@@ -130,10 +130,10 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 
 		ctrl.stopServer(sesSrvCtx);
 		
-		cbk = new MsgCallback(sessionService);
+		msgCallback = new MsgCallback(sessionService);
 		Boolean passed = false;
 		try {
-			response = sessionService.createSession(request, cbk);
+			response = sessionService.createSession(request, msgCallback);
 		} catch (Exception e) {
 			passed = true;
 		}
@@ -152,8 +152,8 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		request.setCompressed(false);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, cbk);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
 
 		ctrl.stopServer(sesSrvCtx);
 
@@ -171,8 +171,8 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		request.setCompressed(false);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, cbk);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
 
 		ctrl.stopServer(sesSrvCtx);
 
@@ -190,8 +190,8 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		request.setCompressed(false);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, cbk);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
 		request.setMessageInfo(TestConstants.echoCmd);
 		messageReceived = false;
 		MsgCallback cbk = new MsgCallback(sessionService);
@@ -213,8 +213,8 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		SCMessage request = null;
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, cbk);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
 
 		ctrl.stopServer(sesSrvCtx);
 
@@ -231,13 +231,13 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		request.setCompressed(false);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, cbk);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
 		request.setMessageInfo(TestConstants.echoAppErrorCmd);
 
 		ctrl.stopServer(sesSrvCtx);
 		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
 				TestConstants.sesServiceName1);
 
 		response = sessionService.execute(request);
@@ -252,12 +252,12 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		SCMessage request = null;
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		cbk = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, cbk);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
 
 		ctrl.stopServer(sesSrvCtx);
 		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 100, 10,
+				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
 				TestConstants.sesServiceName1);
 		
 		sessionService.deleteSession();

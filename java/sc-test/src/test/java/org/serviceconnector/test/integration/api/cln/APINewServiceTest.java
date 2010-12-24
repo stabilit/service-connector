@@ -35,7 +35,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 	
@@ -80,12 +80,12 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	}
 
 	/**
-	 * Description: create new session service with service name = "My service = good"<br> 
+	 * Description: create new session service with service name = "service = gaga"<br> 
 	 * Expectation:	throws SCMPValidatorException (contains "=")
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t105_newSessionService() throws Exception {
-		client.newSessionService("My service = good");
+		client.newSessionService("service = gaga");
 	}
 
 
@@ -174,11 +174,20 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	}
 
 	/**
+	 * Description: create new publish service with service name = "service = gaga"<br> 
+	 * Expectation:	throws SCMPValidatorException (contains "=")
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t205_newPublisService() throws Exception {
+		client.newPublishService("service = gaga");
+	}
+
+	/**
 	 * Description: create new publish service with service name = "publish-1"<br> 
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t205_newPublisService() throws Exception {
+	public void t206_newPublisService() throws Exception {
 		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
 
@@ -187,7 +196,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t206_newPublisService() throws Exception {
+	public void t207_newPublisService() throws Exception {
 		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
@@ -197,7 +206,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t207_newPublisService() throws Exception {
+	public void t208_newPublisService() throws Exception {
 		Assert.assertEquals("create", true, client.newPublishService(TestConstants.sesServiceName1) instanceof SCPublishService);
 		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
@@ -207,7 +216,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t208_newPublisService() throws Exception {
+	public void t209_newPublisService() throws Exception {
 		int serviceCount = 1000;
 		SCPublishService[] services = new SCPublishService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {
@@ -256,11 +265,20 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	}
 
 	/**
+	 * Description: create new file service with service name = "service = gaga"<br> 
+	 * Expectation:	throws SCMPValidatorException (contains "=")
+	 */
+	@Test (expected = SCMPValidatorException.class)
+	public void t305_newFileService() throws Exception {
+		client.newPublishService("service = gaga");
+	}
+	
+	/**
 	 * Description: create new file service with service name = "file-1"<br> 
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t305_newFileService() throws Exception {
+	public void t306_newFileService() throws Exception {
 		Assert.assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
 	}
 
@@ -269,7 +287,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t306_newFileService() throws Exception {
+	public void t307_newFileService() throws Exception {
 		Assert.assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
 		Assert.assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
 	}
@@ -279,7 +297,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t307_newFileService() throws Exception {
+	public void t308_newFileService() throws Exception {
 		Assert.assertEquals("create", true, client.newFileService(TestConstants.sesServiceName1) instanceof SCFileService);
 		Assert.assertEquals("create", true, client.newFileService(TestConstants.pubServiceName1) instanceof SCFileService);
 	}
@@ -289,7 +307,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t308_newFileService() throws Exception {
+	public void t309_newFileService() throws Exception {
 		int serviceCount = 1000;
 		SCFileService[] services = new SCFileService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {

@@ -17,11 +17,14 @@ package org.serviceconnector;
 
 public class TestConstants {
 	public static final String HOST = "localhost";
-	public static final int PORT_HTTP = 7000;
-	public static final int PORT_TCP = 9000;
+	public static final int PORT_SC_HTTP = 7000;
+	public static final int PORT_SC_TCP = 9000;
 	public static final int PORT_MIN = 1;
 	public static final int PORT_MAX = 65535;
-	public static final int PORT_LISTENER = 30000; 
+	public static final int PORT_SES_SRV_TCP = 30000;
+	public static final int PORT_PUB_SRV_TCP = 30001;
+	public static final int PORT_SES_SRV_HTTP = 40000;
+	public static final int PORT_PUB_SRV_HTTP = 40001; 
 
 	public static final String COMMUNICATOR_TYPE_SESSION = "session";
 	public static final String COMMUNICATOR_TYPE_PUBLISH = "publish";	

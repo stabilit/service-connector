@@ -220,7 +220,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		cbk = new MsgCallback(publishService);
 
 		// disable service
-		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.pubServiceName1);
 		clientMgmt.detach();
@@ -390,7 +390,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 		
 		// disable service
-		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.pubServiceName1);
 		clientMgmt.detach();
@@ -565,7 +565,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
 		// disable service
-		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.pubServiceName1);
 		clientMgmt.detach();

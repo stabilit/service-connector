@@ -62,7 +62,7 @@ public class SCMPManageTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		threadCount = Thread.activeCount();
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP
+		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
 	}
 

@@ -95,7 +95,7 @@ public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t01_registerDeregister() throws Exception {
-		server1 = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server1 = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server1.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server1.isListening());
 		sessionServer1 = server1.newSessionServer(TestConstants.sesServiceName1);
@@ -103,7 +103,7 @@ public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 		sessionServer1.register(1, 1, cbk1);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
-		server2 = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER+1, ConnectionType.NETTY_TCP); 
+		server2 = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP+1, ConnectionType.NETTY_TCP); 
 		server2.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server2.isListening());
 		sessionServer2 = server2.newSessionServer(TestConstants.sesServiceName1);
@@ -138,7 +138,7 @@ public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t02_registerDeregister() throws Exception {
-		server1 = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server1 = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server1.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server1.isListening());
 		sessionServer1 = server1.newSessionServer(TestConstants.sesServiceName1);
@@ -146,7 +146,7 @@ public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 		sessionServer1.register(1, 1, cbk1);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
-		server2 = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER+1, ConnectionType.NETTY_HTTP); 
+		server2 = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP+1, ConnectionType.NETTY_HTTP); 
 		server2.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server2.isListening());
 		sessionServer2 = server2.newSessionServer(TestConstants.sesServiceName1);
@@ -181,7 +181,7 @@ public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 	 */
 	@Test
 	public void t03_registerDeregister() throws Exception {
-		server1 = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server1 = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server1.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server1.isListening());
 		sessionServer1 = server1.newSessionServer(TestConstants.sesServiceName1);
@@ -189,7 +189,7 @@ public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 		sessionServer1.register(1, 1, cbk1);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer1.isRegistered());
 		
-		server2 = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER+1, ConnectionType.NETTY_HTTP); 
+		server2 = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server2.startListener();
 		Assert.assertEquals("SessionServer is not listening", true, server2.isListening());
 		sessionServer2 = server2.newSessionServer(TestConstants.sesServiceName1);

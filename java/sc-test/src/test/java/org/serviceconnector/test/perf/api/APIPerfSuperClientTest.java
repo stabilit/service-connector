@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.system.api;
+package org.serviceconnector.test.perf.api;
 
 import java.util.concurrent.TimeoutException;
 
@@ -23,18 +23,20 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMessageCallback;
+import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 
-public class APISystemSuperSessionClientTest extends APISystemSuperTest {
+public class APIPerfSuperClientTest extends APIPerfSuperTest {
 
 	protected SCClient client;
 	protected SCSessionService sessionService = null;
+	protected SCPublishService publishService = null;
 	protected ProcessCtx sesSrvCtx;
-	protected static boolean messageReceived = false;
-	protected MsgCallback msgCallback = null;
+	protected ProcessCtx pubSrvCtx;
+	protected MsgCallback cbk = null;
 
 	@Before
 	public void beforeOneTest() throws Exception {
@@ -42,13 +44,20 @@ public class APISystemSuperSessionClientTest extends APISystemSuperTest {
 		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
 				TestConstants.sesServiceName1);
+		pubSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
+				TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
+				TestConstants.pubServiceName1);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
-		messageReceived = false;
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
+		try {
+			publishService.unsubscribe();
+		} catch (Exception e1) {
+		}
+		publishService = null;
 		try {
 			sessionService.deleteSession();
 		} catch (Exception e1) {
@@ -64,46 +73,68 @@ public class APISystemSuperSessionClientTest extends APISystemSuperTest {
 		} catch (Exception e) {
 		}
 		sesSrvCtx = null;
+		try {
+			ctrl.stopServer(pubSrvCtx);
+		} catch (Exception e) {
+		}
+		pubSrvCtx = null;
 		super.afterOneTest();
 	}
 
 	protected class MsgCallback extends SCMessageCallback {
-		private SCMessage response = null;
 
-		public MsgCallback(SCSessionService service) {
+		private SCMessage message;
+		private int messageCounter;
+		private int expectedMessages;
+
+		public MsgCallback(SCPublishService service) {
 			super(service);
-		}
-
-		public SCMessage getResponse() {
-			return response;
+			message = null;
+			messageCounter = 0;
+			expectedMessages = 1;
 		}
 
 		public void waitForMessage(int nrSeconds) throws Exception {
 			for (int i = 0; i < (nrSeconds * 10); i++) {
-				if (APISystemSuperSessionClientTest.messageReceived) {
+				if (messageCounter == expectedMessages) {
 					return;
 				}
 				Thread.sleep(100);
 			}
 			throw new TimeoutException("No message received within " + nrSeconds + " seconds timeout.");
 		}
+
+		public SCMessage getMessage() {
+			return message;
+		}
+
+		public void setExpectedMessages(int msgCount) {
+			expectedMessages = msgCount;
+		}
+
+		public int getMessageCount() {
+			return messageCounter;
+		}
+
 		@Override
 		public void receive(SCMessage msg) {
-			response = msg;
-			APISystemSuperSessionClientTest.messageReceived = true;
+			message = msg;
+			messageCounter++;
+			if (((messageCounter + 1) % 100) == 0) {
+				APIPerfSuperClientTest.testLogger.info("Receiving message nr. " + (messageCounter + 1));
+			}
 		}
 
 		@Override
 		public void receive(Exception e) {
-			testLogger.info("Error received");
+			logger.error("receive error: " + e.getMessage());
 			if (e instanceof SCServiceException) {
 				logger.info("SC error received code:" + ((SCServiceException) e).getSCErrorCode() + " text:"
 						+ ((SCServiceException) e).getSCErrorText());
-			} else {
-				logger.error("receive error: " + e.getMessage());
 			}
-			response = null;
-			APISystemSuperSessionClientTest.messageReceived = true;
+			message = null;
+			messageCounter = expectedMessages;
 		}
 	}
+	
 }

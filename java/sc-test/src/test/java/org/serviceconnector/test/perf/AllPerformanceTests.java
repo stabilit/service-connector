@@ -17,6 +17,11 @@ package org.serviceconnector.test.perf;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.serviceconnector.test.perf.api.cln.APIAttachBenchmark;
+import org.serviceconnector.test.perf.api.cln.APIExecuteBenchmark;
+import org.serviceconnector.test.perf.api.cln.APIReceivePublicationBenchmark;
+import org.serviceconnector.test.perf.api.cln.APISessionBenchmark;
+import org.serviceconnector.test.perf.api.srv.APIPublishBenchmark;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
@@ -25,6 +30,6 @@ import org.junit.runners.Suite;
 	APIExecuteBenchmark.class,
 	APIPublishBenchmark.class, 
 	APIReceivePublicationBenchmark.class})
-public class APIAllPerformanceTests {
+public class AllPerformanceTests {
 }
 

@@ -1,4 +1,4 @@
-package org.serviceconnector.test.perf;
+package org.serviceconnector.test.perf.api.srv;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -78,7 +78,7 @@ public class APIPublishBenchmark {
 	 */
 	@Test
 	public void benchmark_100000_msg_compressed() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_PUB_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new SrvCallback(publishServer);
@@ -110,7 +110,7 @@ public class APIPublishBenchmark {
 	 */
 	@Test
 	public void benchmark_100000_msg_uncompressed() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_PUB_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
 		SCPublishServerCallback cbk = new SrvCallback(publishServer);

@@ -37,17 +37,16 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	protected final static Logger logger = Logger.getLogger(APIRegisterSessionServerTest.class);
 
 	/**
-	 * Description:	register session server on port  SC is not listening<br>
+	 * Description:	register session server on port SC is not listening<br>
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t101_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, 9002, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, 9002, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
-		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 	}
 
 	/**
@@ -56,31 +55,35 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test (expected = InvalidParameterException.class)
 	public void t102_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(null);
 	}
 
 	/**
 	 * Description:	register session server with service name = ""<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t103_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer("");
+		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
+		sessionServer.register(1, 1, cbk);
 	}
 	
 	/**
 	 * Description:	register session server with service name = " "<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t104_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(" ");
+		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
+		sessionServer.register(1, 1, cbk);
 	}
 
 	/**
@@ -89,7 +92,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t105_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer("gaga");
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -102,7 +105,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t106_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = null;
@@ -115,7 +118,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test
 	public void t107_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -130,7 +133,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test
 	public void t108_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -140,11 +143,11 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with 1 session and 10 connections<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t109_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -153,11 +156,11 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with 10 session and 20 connections<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t110_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -166,11 +169,11 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with 0 session and 1 connection<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t111_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -179,11 +182,11 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	
 	/**
 	 * Description:	register session server with 1 session and 0 connection<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t112_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -192,11 +195,11 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with 0 session and 0 connection<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t113_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -209,7 +212,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test (expected = InvalidActivityException.class)
 	public void t114_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -223,7 +226,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t115_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
@@ -236,7 +239,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test
 	public void t116_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -259,7 +262,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test
 	public void t198_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk1 = new SesSrvCallback(sessionServer1);
@@ -281,7 +284,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test
 	public void t199_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer1);
@@ -303,7 +306,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t201_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, 9002, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, 9002, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -317,31 +320,35 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test (expected = InvalidParameterException.class)
 	public void t202_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(null);
 	}
 
 	/**
 	 * Description:	register session server with service name = ""<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t203_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer("");
+		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
+		sessionServer.register(1, 1, cbk);
 	}
 	
 	/**
 	 * Description:	register session server with service name = " "<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t204_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(" ");
+		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
+		sessionServer.register(1, 1, cbk);
 	}
 
 	/**
@@ -350,7 +357,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t205_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer("gaga");
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -363,7 +370,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t206_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = null;
@@ -376,7 +383,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test
 	public void t207_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -391,7 +398,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test
 	public void t208_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -401,11 +408,11 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with 1 session and 10 connections<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t209_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -414,11 +421,11 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with 10 session and 20 connections<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t210_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -427,11 +434,11 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with 0 session and 1 connection<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t211_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -440,11 +447,11 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	
 	/**
 	 * Description:	register session server with 1 session and 0 connection<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t212_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -453,11 +460,11 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with 0 session and 0 connection<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t213_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -470,7 +477,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test (expected = InvalidActivityException.class)
 	public void t214_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -484,7 +491,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t215_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
 		sessionServer.register(1, 1, cbk);
@@ -498,7 +505,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test
 	public void t216_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer);
@@ -521,7 +528,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test
 	public void t298_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk1 = new SesSrvCallback(sessionServer1);
@@ -543,7 +550,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 	 */
 	@Test
 	public void t299_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		SCSessionServer sessionServer1 = server.newSessionServer(TestConstants.sesServiceName1);
 		SCSessionServerCallback cbk = new SesSrvCallback(sessionServer1);

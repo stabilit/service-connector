@@ -59,7 +59,7 @@ public class PerformanceSessionClient implements Runnable {
 
 	@Override
 	public void run() {
-		SCClient sc = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		SCClient sc = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		long start = System.currentTimeMillis();
 		try {
 			// wait for signal to start cycle

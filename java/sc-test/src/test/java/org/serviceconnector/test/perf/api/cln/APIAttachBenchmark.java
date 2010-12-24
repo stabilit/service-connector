@@ -13,62 +13,16 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.perf;
+package org.serviceconnector.test.perf.api.cln;
 
-import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCClient;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.test.perf.api.APIPerfSuperClientTest;
 
-public class APIAttachBenchmark {
-
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(APIAttachBenchmark.class);
-
-	private static ProcessesController ctrl;
-	private static ProcessCtx scCtx;
-	private SCClient client;
-
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-	}
-
-	@Before
-	public void beforeOneTest() throws Exception {
-	}
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			client.detach();
-		} catch (Exception e) {
-		}
-		client = null;
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopSC(scCtx);
-			scCtx = null;
-		} catch (Exception e) {
-		}
-		ctrl = null;
-	}
+public class APIAttachBenchmark extends APIPerfSuperClientTest{
 
 	/**
 	 * Description: Attach/detach 10000 times to SC on localhost and tcp-connection type. Measure performance <br>
@@ -76,7 +30,7 @@ public class APIAttachBenchmark {
 	 */
 	@Test
 	public void benchmark_10000_tcp() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		int nr = 10000;
 		int sleep = 0;
 		long start = System.currentTimeMillis();
@@ -102,7 +56,7 @@ public class APIAttachBenchmark {
 	 */
 	@Test
 	public void benchmark_10000_http() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
 		int nr = 10000;
 		int sleep = 0;
 		long start = System.currentTimeMillis();
@@ -133,7 +87,7 @@ public class APIAttachBenchmark {
 		SCClient[] clients = new SCClient[nr];
 		// create clients
 		for (int i= 0; i < nr; i++) {
-			clients[i] = new SCClient(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP);
+			clients[i] = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
 		}
 		//attach
 		long start = System.currentTimeMillis();
@@ -165,7 +119,7 @@ public class APIAttachBenchmark {
 		SCClient[] clients = new SCClient[nr];
 		// create clients
 		for (int i= 0; i < nr; i++) {
-			clients[i] = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+			clients[i] = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		}
 		//attach
 		long start = System.currentTimeMillis();

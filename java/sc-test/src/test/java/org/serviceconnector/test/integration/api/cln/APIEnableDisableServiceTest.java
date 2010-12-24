@@ -33,7 +33,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t01_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled("notExistingService"));
 		client.detach();
@@ -45,7 +45,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t02_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		client.enableService("notExistingService");
 		client.detach();
@@ -57,7 +57,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t03_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		client.disableService("notExistingService");
 		client.detach();
@@ -69,7 +69,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t04_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 	
@@ -79,7 +79,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t05_default() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		client.detach();
@@ -91,7 +91,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t06_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.disableService(TestConstants.sesServiceName1);
 	}
 
@@ -101,7 +101,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t07_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		client.disableService(TestConstants.sesServiceName1);
@@ -117,7 +117,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t08_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 		client.disableService(TestConstants.sesServiceName1);
@@ -135,7 +135,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test
 	public void t09_disable_enable() throws Exception {
-		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP);
+		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		int nr = 1000;
 		for (int i = 0; i < nr; i++) {

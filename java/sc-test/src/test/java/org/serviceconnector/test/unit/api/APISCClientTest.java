@@ -61,9 +61,9 @@ public class APISCClientTest {
 	 */
 	@Test
 	public void t01_construtor() {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP);
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
 		Assert.assertEquals("Host not equal", TestConstants.HOST, client.getHost());
-		Assert.assertEquals("Port not equal", TestConstants.PORT_TCP, client.getPort());
+		Assert.assertEquals("Port not equal", TestConstants.PORT_SC_TCP, client.getPort());
 		Assert.assertNotNull(client);
 	}
 
@@ -73,9 +73,9 @@ public class APISCClientTest {
 	 */
 	@Test
 	public void t02_construtor() {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP, ConnectionType.NETTY_TCP );
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP );
 		Assert.assertEquals("Host not equal", TestConstants.HOST, client.getHost());
-		Assert.assertEquals("Port not equal", TestConstants.PORT_TCP, client.getPort());
+		Assert.assertEquals("Port not equal", TestConstants.PORT_SC_TCP, client.getPort());
 		Assert.assertEquals("Connection Type not equal", ConnectionType.NETTY_TCP, client.getConnectionType());
 		Assert.assertNotNull(client);
 	}
@@ -87,9 +87,9 @@ public class APISCClientTest {
 	 */
 	@Test
 	public void t03_construtor() {
-		client = new SCClient(null, TestConstants.PORT_TCP);
+		client = new SCClient(null, TestConstants.PORT_SC_TCP);
 		Assert.assertEquals("Host not equal", null, client.getHost());
-		Assert.assertEquals("Port not equal", TestConstants.PORT_TCP, client.getPort());
+		Assert.assertEquals("Port not equal", TestConstants.PORT_SC_TCP, client.getPort());
 		Assert.assertNotNull(client);
 	}
 
@@ -111,7 +111,7 @@ public class APISCClientTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void t10_maxConnections() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP );
 		client.setMaxConnections(0);
 	}
 	
@@ -121,7 +121,7 @@ public class APISCClientTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void t11_maxConnections() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP );
 		client.setMaxConnections(Integer.MIN_VALUE);
 	}
 
@@ -131,7 +131,7 @@ public class APISCClientTest {
 	 */
 	@Test
 	public void t12_maxConnections() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP );
 		client.setMaxConnections(Integer.MAX_VALUE);
 		Assert.assertEquals("MaxConnections not equal", Integer.MAX_VALUE, client.getMaxConnections());
 	}
@@ -142,7 +142,7 @@ public class APISCClientTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void t13_maxConnections() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP );
 		client.setMaxConnections(-1);
 	}
 
@@ -152,7 +152,7 @@ public class APISCClientTest {
 	 */
 	@Test
 	public void t14_maxConnections() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP );
 		client.setMaxConnections(1);
 		Assert.assertEquals("MaxConnections not equal", 1, client.getMaxConnections());
 	}
@@ -163,7 +163,7 @@ public class APISCClientTest {
 	 */
 	@Test
 	public void t20_keepAliveInterval() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP );
 		client.setKeepAliveIntervalSeconds(0); // can be set before attach
 		Assert.assertEquals("MaxConnections not equal", 0, client.getKeepAliveIntervalSeconds());
 	}
@@ -174,7 +174,7 @@ public class APISCClientTest {
 	 */
 	@Test
 	public void t21_keepAliveInterval() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP );
 		client.setKeepAliveIntervalSeconds(Integer.MAX_VALUE); // can be set before attach
 		Assert.assertEquals("MaxConnections not equal", Integer.MAX_VALUE, client.getKeepAliveIntervalSeconds());
 	}
@@ -185,7 +185,7 @@ public class APISCClientTest {
 	 */
 	@Test
 	public void t22_keepAliveInterval() throws Exception {
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_TCP );
+		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP );
 		client.setKeepAliveIntervalSeconds(Integer.MIN_VALUE); // can be set before attach
 		Assert.assertEquals("MaxConnections not equal", Integer.MIN_VALUE, client.getKeepAliveIntervalSeconds());
 	}

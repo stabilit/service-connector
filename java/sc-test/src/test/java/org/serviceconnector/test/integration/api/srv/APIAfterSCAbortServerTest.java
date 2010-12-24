@@ -36,7 +36,7 @@ public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 	 */
 	@Test
 	public void t101_startListener() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP);
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP);
 		
 		ctrl.stopSC(scCtx);
 		
@@ -50,7 +50,7 @@ public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 	 */
 	@Test
 	public void t102_stopListener() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		
@@ -66,7 +66,7 @@ public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t103_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		
 		ctrl.stopSC(scCtx);
 		
@@ -86,7 +86,7 @@ public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t104_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		
 		ctrl.stopSC(scCtx);
 		
@@ -105,7 +105,7 @@ public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t105_deregister() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_TCP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		
 		server.startListener();
 		
@@ -126,7 +126,7 @@ public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 	 */
 	@Test
 	public void t201_startListener() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_HTTP); 
 		
 		ctrl.stopSC(scCtx);
 		
@@ -140,7 +140,7 @@ public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 	 */
 	@Test
 	public void t202_stopListener() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		
@@ -156,7 +156,7 @@ public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t203_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_HTTP); 
 		
 		ctrl.stopSC(scCtx);
 		
@@ -176,7 +176,7 @@ public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t204_register() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_HTTP); 
 		
 		ctrl.stopSC(scCtx);
 		
@@ -195,7 +195,7 @@ public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t205_deregister() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_HTTP, TestConstants.PORT_LISTENER, ConnectionType.NETTY_HTTP); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);

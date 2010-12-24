@@ -39,7 +39,7 @@ public class APINewServerTest {
 	
 	@Before
 	public void beforeOneTest() throws Exception {
-		server = new SCServer(TestConstants.HOST, TestConstants.PORT_TCP, TestConstants.PORT_LISTENER); 
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP); 
 		server.startListener();
 	}
 
@@ -83,7 +83,7 @@ public class APINewServerTest {
 		/* Cannot test interfaces, because they have dynamic values
 		Assert.assertEquals("SessionServer Host", TestConstants.HOST, sessionServer.getListenerInterfaces());
 		*/
-		Assert.assertEquals("SessionServer Port", TestConstants.PORT_LISTENER, sessionServer.getListenerPort());
+		Assert.assertEquals("SessionServer Port", TestConstants.PORT_SES_SRV_TCP, sessionServer.getListenerPort());
 	}	
 
 	/**
@@ -95,7 +95,7 @@ public class APINewServerTest {
 		SCSessionServer sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
 		Assert.assertNotNull("Can not create SessionServer!", sessionServer);
 		Assert.assertEquals("SC Host", TestConstants.HOST, sessionServer.getSCHost());
-		Assert.assertEquals("SC Port", TestConstants.PORT_TCP, sessionServer.getSCPort());
+		Assert.assertEquals("SC Port", TestConstants.PORT_SC_TCP, sessionServer.getSCPort());
 	}
 	
 	/**
@@ -129,7 +129,7 @@ public class APINewServerTest {
 		/* Cannot test interfaces, because they have dynamic values
 		Assert.assertEquals("PublishServer Host", TestConstants.HOST, publishServer.getListenerInterfaces());
 		*/
-		Assert.assertEquals("PublishServer Port", TestConstants.PORT_LISTENER, publishServer.getListenerPort());
+		Assert.assertEquals("PublishServer Port", TestConstants.PORT_PUB_SRV_TCP, publishServer.getListenerPort());
 	}	
 
 	/**
@@ -141,7 +141,7 @@ public class APINewServerTest {
 		SCPublishServer publishServer = server.newPublishServer(TestConstants.sesServiceName1);
 		Assert.assertNotNull("Can not create PublishServer!", publishServer);
 		Assert.assertEquals("SC Host", TestConstants.HOST, publishServer.getSCHost());
-		Assert.assertEquals("SC Port", TestConstants.PORT_TCP, publishServer.getSCPort());
+		Assert.assertEquals("SC Port", TestConstants.PORT_SC_TCP, publishServer.getSCPort());
 	}		
 
 	

@@ -73,8 +73,8 @@ public class SCMPClnExecuteTest {
 		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
-				TestConstants.PORT_LISTENER, TestConstants.PORT_TCP, 1, 1, TestConstants.sesServiceName1);
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP
+				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
+		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
 		this.clnCreateSession();
 	}

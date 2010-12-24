@@ -77,8 +77,8 @@ public class ConnectionPoolTest {
 	@Parameters
 	public static Collection<Object[]> getParameters() {
 		return Arrays.asList( //
-				new Object[] { new Integer(TestConstants.PORT_TCP), ConnectionType.NETTY_TCP }, //
-				new Object[] { new Integer(TestConstants.PORT_HTTP), ConnectionType.NETTY_HTTP });
+				new Object[] { new Integer(TestConstants.PORT_SC_TCP), ConnectionType.NETTY_TCP }, //
+				new Object[] { new Integer(TestConstants.PORT_SC_HTTP), ConnectionType.NETTY_HTTP });
 	}
 
 	@BeforeClass
