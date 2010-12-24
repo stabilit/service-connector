@@ -79,20 +79,20 @@ public class APIAfterAbortOrRestartPublishTest extends APISystemSuperPublishClie
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		cbk = new MsgCallback(publishService);
+		msgCallback = new MsgCallback(publishService);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 1;
 		subMsgRequest.setData(Integer.toString(nrMessages));
-		cbk.setExpectedMessages(nrMessages);
-		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		msgCallback.setExpectedMessages(nrMessages);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		
 		ctrl.stopServer(pubSrvCtx);
 		pubSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
 				TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
 				TestConstants.pubServiceName1);
 		
-		cbk.waitForMessage(10);
+		msgCallback.waitForMessage(10);
 		Assert.assertTrue("Test is not implemented", false);
 	}
 

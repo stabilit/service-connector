@@ -52,17 +52,16 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	}
 
 	/**
-	 * Description: create new session service with service name = ""<br> 
+	 * Description: create new session service with name = ""<br> 
 	 * Expectation:	throws SCMPValidatorException
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t102_newSessionService() throws Exception {
 		client.newSessionService("");
 	}
-	
 
 	/**
-	 * Description: create new session service with service name = " "<br> 
+	 * Description: create new session service with name = " "<br> 
 	 * Expectation:	throws SCMPValidatorException
 	 */
 	@Test (expected = SCMPValidatorException.class)
@@ -152,7 +151,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t202_newPublisService() throws Exception {
-		Assert.assertEquals("create", true, client.newPublishService("") instanceof SCPublishService);
+		client.newPublishService("");
 	}
 
 	/**
@@ -243,7 +242,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 */
 	@Test (expected = SCMPValidatorException.class)
 	public void t302_newFileService() throws Exception {
-		Assert.assertEquals("create", true, client.newFileService("") instanceof SCFileService);
+		client.newFileService("");
 	}
 
 	/**

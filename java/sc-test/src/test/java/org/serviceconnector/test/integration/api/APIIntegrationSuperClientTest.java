@@ -26,7 +26,6 @@ public class APIIntegrationSuperClientTest extends APIIntegrationSuperTest {
 	protected SCClient client;
 	protected SCSessionService sessionService = null;
 	protected SCPublishService publishService = null;
-	protected static boolean messageReceived = false;
 	
 	@Before
 	public void beforeOneTest() throws Exception {

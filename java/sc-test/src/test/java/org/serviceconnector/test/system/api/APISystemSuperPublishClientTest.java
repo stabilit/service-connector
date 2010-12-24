@@ -34,7 +34,7 @@ public class APISystemSuperPublishClientTest extends APISystemSuperTest {
 	protected SCClient client;
 	protected SCPublishService publishService = null;
 	protected ProcessCtx pubSrvCtx;
-	protected MsgCallback cbk = null;
+	protected MsgCallback msgCallback = null;
 
 	@Before
 	public void beforeOneTest() throws Exception {

@@ -21,8 +21,11 @@
  */
 package org.serviceconnector.call;
 
+import java.net.InetAddress;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
@@ -55,6 +58,21 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 		super(req, serviceName, sessionId);
 	}
 
+	/**
+	 * Invoke.
+	 * 
+	 * @param scmpCallback
+	 *            the scmp callback
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
+	@Override
+	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
+		InetAddress localHost = InetAddress.getLocalHost();
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
+		super.invoke(scmpCallback, timeoutInMillis);
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public ISCMPCall newInstance(IRequester requester, String serviceName, String sessionId) {

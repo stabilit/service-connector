@@ -36,21 +36,21 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		cbk = new MsgCallback(publishService);
+		msgCallback = new MsgCallback(publishService);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 1;
 		subMsgRequest.setData(Integer.toString(nrMessages));
-		cbk.setExpectedMessages(nrMessages);
-		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		msgCallback.setExpectedMessages(nrMessages);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
 
-		cbk.waitForMessage(10);
-		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.getMessageCount());
-		SCMessage response = cbk.getMessage();
+		msgCallback.waitForMessage(10);
+		Assert.assertEquals("Nr messages does not match", nrMessages, msgCallback.getMessageCount());
+		SCMessage response = msgCallback.getMessage();
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
 
 		publishService.unsubscribe();
@@ -66,21 +66,21 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		cbk = new MsgCallback(publishService);
+		msgCallback = new MsgCallback(publishService);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 1000;
 		subMsgRequest.setData(Integer.toString(nrMessages));
-		cbk.setExpectedMessages(nrMessages);
-		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		msgCallback.setExpectedMessages(nrMessages);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
 
-		cbk.waitForMessage(10);
-		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.getMessageCount());
-		SCMessage response = cbk.getMessage();
+		msgCallback.waitForMessage(10);
+		Assert.assertEquals("Nr messages does not match", nrMessages, msgCallback.getMessageCount());
+		SCMessage response = msgCallback.getMessage();
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
 
 		publishService.unsubscribe();
@@ -96,22 +96,22 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		cbk = new MsgCallback(publishService);
+		msgCallback = new MsgCallback(publishService);
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.publishMessagesWithDelayCmd);
 		int nrMessages = 5;
 		String waitInMillis = "1000";
 		subMsgRequest.setData(nrMessages + "|" + waitInMillis);
-		cbk.setExpectedMessages(nrMessages);
-		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		msgCallback.setExpectedMessages(nrMessages);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
 
-		cbk.waitForMessage(5);
-		Assert.assertEquals("Nr messages does not match", nrMessages, cbk.getMessageCount());
-		SCMessage response = cbk.getMessage();
+		msgCallback.waitForMessage(5);
+		Assert.assertEquals("Nr messages does not match", nrMessages, msgCallback.getMessageCount());
+		SCMessage response = msgCallback.getMessage();
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
 
 		publishService.unsubscribe();
@@ -127,24 +127,24 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
-		cbk = new MsgCallback(publishService);
+		msgCallback = new MsgCallback(publishService);
 		// wrong mask
 		subMsgRequest.setMask(TestConstants.mask1);
 		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 200;
 		subMsgRequest.setData(Integer.toString(nrMessages));
-		cbk.setExpectedMessages(nrMessages);
-		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		msgCallback.setExpectedMessages(nrMessages);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
 
 		try {
-			cbk.waitForMessage(2);
+			msgCallback.waitForMessage(2);
 			Assert.fail("TimeoutException should have been thrown!");
 		} catch (TimeoutException e) {
-			Assert.assertEquals("Nr messages does not match", 0, cbk.getMessageCount());
+			Assert.assertEquals("Nr messages does not match", 0, msgCallback.getMessageCount());
 		}
 		publishService.unsubscribe();
 		Assert.assertNull("the session ID is not null", publishService.getSessionId());
