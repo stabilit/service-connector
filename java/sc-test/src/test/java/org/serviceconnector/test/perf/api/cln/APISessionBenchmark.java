@@ -33,70 +33,10 @@ import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.test.perf.api.APIPerfSuperClientTest;
 
 @SuppressWarnings("unused")
-public class APISessionBenchmark {
-
-	/** The Constant testLogger. */
-	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(APISessionBenchmark.class);
-
-	private static ProcessesController ctrl;
-	private ProcessCtx scCtx;
-	private ProcessCtx srvCtx;
-	private SCClient client;
-	private SCSessionService service;
-	private int threadCount = 0;
-	private TestSessionServiceMessageCallback cbk = null;
-
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-	}
-
-	@Before
-	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 50000, 10,
-				TestConstants.sesServiceName1);
-		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
-		client.attach();
-	}
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			service.deleteSession();
-		} catch (Exception e1) {
-		}
-		service = null;
-		try {
-			client.detach();
-		} catch (Exception e) {
-		}
-		client = null;
-		try {
-			ctrl.stopServer(srvCtx);
-		} catch (Exception e) {
-		}
-		srvCtx = null;
-		try {
-			ctrl.stopSC(scCtx);
-		} catch (Exception e) {
-		}
-		scCtx = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :"
-				+ (Thread.activeCount() - threadCount));
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		ctrl = null;
-	}
+public class APISessionBenchmark extends APIPerfSuperClientTest {
 
 	/**
 	 * Description: Create and delete session x times. No message body is sent or received. Measure performance <br>
@@ -104,42 +44,47 @@ public class APISessionBenchmark {
 	 */
 	@Test
 	public void benchmark_10000_sessions_seriell() throws Exception {
-		SCMessage request = null;
+		SCMessage request = new SCMessage();
 		SCMessage response = null;
-		service = client.newSessionService(TestConstants.sesServiceName1);
-		this.cbk = new TestSessionServiceMessageCallback(service);
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback = new MsgCallback(sessionService);
 		int nr = 10000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
 			if (((i + 1) % 1000) == 0)
 				testLogger.info("Creating Session nr. " + (i + 1) + "...");
-			response = service.createSession(10, request, cbk);
-			service.deleteSession(10);
+			response = sessionService.createSession(10, request, msgCallback);
+			sessionService.deleteSession(10);
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
 		testLogger.info(nr + " Sessions created and deleted performance : " + perf + " sessions/sec.");
-		Assert.assertEquals(true, perf > 100);
+		Assert.assertTrue("Performence not fast enough, only" + perf + " sess/sec.", perf > 100);
 	}
 
 	@Test
-	public void benchmark_10000_sessions_paralell() throws Exception {
-		SCMessage request = null;
+	public void benchmark_1000_sessions_paralell() throws Exception {
+		SCMessage request = new SCMessage();
 		SCMessage response = null;
-		int nr = 10000;
+		int nr = 1000;
 		SCSessionService[] sessionServices = new SCSessionService[nr];
 		String[] sessionID = new String[nr];
-		this.cbk = new TestSessionServiceMessageCallback(sessionServices[0]);
+		msgCallback = new MsgCallback(sessionServices[0]);
+		
+		// create services
 		testLogger.info("Creating Services...");
 		for (int i = 0; i < nr; i++) {
+			if (((i + 1) % 100) == 0)
+				testLogger.info("Creating service nr. " + (i + 1) + "...");
 			sessionServices[i] = client.newSessionService(TestConstants.sesServiceName1);
 		}
 		long start = System.currentTimeMillis();
+		
 		//create sessions
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 1000) == 0)
+			if (((i + 1) % 100) == 0)
 				testLogger.info("Creating session nr. " + (i + 1) + "...");
-			response = sessionServices[i].createSession(10, request, cbk);
+			response = sessionServices[i].createSession(10, request, msgCallback);
 			sessionID[i] = sessionServices[i].getSessionId();
 		}
 		long stop = System.currentTimeMillis();
@@ -158,7 +103,7 @@ public class APISessionBenchmark {
 		//delete sessions
 		start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
-			if (((i + 1) % 1000) == 0)
+			if (((i + 1) % 100) == 0)
 				testLogger.info("Deleting session nr. " + (i + 1) + "...");
 			sessionServices[i].deleteSession(10);
 		}
@@ -166,8 +111,8 @@ public class APISessionBenchmark {
 		long perf2 = nr * 1000 / (stop - start);
 		testLogger.info(nr + " Session creation performance : " + perf1 + " sessions/sec.");
 		testLogger.info(nr + " Session deletion performance : " + perf2 + " sessions/sec.");
-		Assert.assertEquals(true, perf1 > 100);
-		Assert.assertEquals(true, perf2 > 500);
+		Assert.assertTrue("Performence not fast enough, only" + perf1 + " sess/sec.", perf1 > 100);
+		Assert.assertTrue("Performence not fast enough, only" + perf2 + " sess/sec.", perf2 > 500);
 
 	}
 
