@@ -33,9 +33,9 @@ public class APISystemSuperSessionClientTest extends APISystemSuperTest {
 	protected SCClient client;
 	protected SCSessionService sessionService = null;
 	protected ProcessCtx sesSrvCtx;
-	protected static boolean messageReceived = false;
 	protected MsgCallback msgCallback = null;
-
+	protected static boolean messageReceived = false;
+	
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
