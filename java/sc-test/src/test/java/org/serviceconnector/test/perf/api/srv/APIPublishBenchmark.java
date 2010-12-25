@@ -31,7 +31,7 @@ public class APIPublishBenchmark {
 	private static ProcessesController ctrl;
 	private static ProcessCtx scCtx;
 	private SCServer server;
-	private SCPublishServer publishServer;
+	private SCPublishServer publishServer; 
 	private int threadCount = 0;
 
 	@BeforeClass
