@@ -16,20 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.integration;
 
-import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionFactory;
@@ -40,45 +32,10 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.DateTimeUtility;
 
-public class ConnectionTest {
-
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ConnectionTest.class);
-
-	private static ProcessesController ctrl;
-	private static ProcessCtx scCtx;
-	private int threadCount = 0;
-
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-	}
-
-	@Before
-	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
-	}
-
-	@After
-	public void afterOneTest() throws Exception {
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopSC(scCtx);
-			scCtx = null;
-		} catch (Exception e) {
-		}
-		ctrl = null;
-	}
+public class ConnectionTest extends IntegrationSuperTest{
 
 	/**
-	 * Description: Gets a connection send a message and frees it - 50'000 times the same connection<br>
+	 * Description: connect, send message and disconnect - 50'000 times the same connection<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -92,31 +49,40 @@ public class ConnectionTest {
 		ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
 		connection.setContext(connectionContext);
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
-
+		
+		SCMPMessage message = new SCMPMessage();
+		message.setMessageType(SCMPMsgType.ATTACH);
+		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
+		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
+		
 		for (int i = 0; i < 50000; i++) {
 			connection.connect();
-			SCMPMessage message = new SCMPMessage();
-			message.setMessageType(SCMPMsgType.ATTACH);
-			message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
-			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			TestUtil.checkReply(cbk.getMessageSync(3000));
 			connection.disconnect();
-			if (i % 1000 == 0) {
-				testLogger.info("connection nr " + i + " is done!");
+			if ((i+1) % 1000 == 0) {
+				testLogger.info("connection nr " + (i+1) + "...");
 			}
 		}
 	}
 
 	/**
-	 * Description: Gets a connection send a message 1000 times - after all disconnect the 500 connections<br>
+	 * Description: create 1000 connections, connect, send a message and disconnect them all<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t10_Connect500SendAndDisconnect() throws Exception {
-		int numberOfConnections = 500;
+	public void t10_Connect1000SendAndDisconnect() throws Exception {
+		int numberOfConnections = 1000;
 		IConnection[] connections = new IConnection[numberOfConnections];
+
+		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
+		
+		SCMPMessage message = new SCMPMessage();
+		message.setMessageType(SCMPMsgType.ATTACH);
+		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
+		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
+		
 		for (int i = 0; i < numberOfConnections; i++) {
 			ConnectionFactory connectionFactory = AppContext.getConnectionFactory();
 			IConnection connection = connectionFactory.createConnection(ConnectionType.NETTY_HTTP.getValue());
@@ -127,18 +93,12 @@ public class ConnectionTest {
 			IIdleConnectionCallback idleCallback = new IdleCallback();
 			ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
 			connection.setContext(connectionContext);
-			String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
-
 			connection.connect();
-			SCMPMessage message = new SCMPMessage();
-			message.setMessageType(SCMPMsgType.ATTACH);
-			message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
-			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			TestUtil.checkReply(cbk.getMessageSync(3000));
-			if (i % 100 == 0) {
-				testLogger.info("connection nr " + i + " is done!");
+			if ((i+1) % 100 == 0) {
+				testLogger.info("connection nr " + (i+1) + "...");
 			}
 		}
 		for (int i = 0; i < numberOfConnections; i++) {

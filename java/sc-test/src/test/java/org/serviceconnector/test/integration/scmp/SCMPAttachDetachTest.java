@@ -21,11 +21,7 @@ import java.util.Collection;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -36,32 +32,21 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.test.integration.IntegrationSuperTest;
 import org.serviceconnector.util.ValidatorUtility;
 
 @RunWith(Parameterized.class)
-public class SCMPAttachDetachTest {
-
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPAttachDetachTest.class);
+public class SCMPAttachDetachTest extends IntegrationSuperTest {
 
 	private int port;
 	private ConnectionType connectionType;
-
-	private static ProcessesController ctrl;
-	private static ProcessCtx scCtx;
 	private SCRequester requester;
-	private int threadCount = 0;
 
 	public SCMPAttachDetachTest(Integer port, ConnectionType connectionType) {
 		this.port = port;
@@ -75,17 +60,6 @@ public class SCMPAttachDetachTest {
 				new Object[] { new Integer(TestConstants.PORT_SC_HTTP), ConnectionType.NETTY_HTTP });
 	}
 
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-	}
-
-	@Before
-	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
-	}
-
 	@After
 	public void afterOneTest() throws Exception {
 		try {
@@ -93,17 +67,7 @@ public class SCMPAttachDetachTest {
 		} catch (Exception e) {
 		}
 		requester = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopSC(scCtx);
-			scCtx = null;
-		} catch (Exception e) {
-		}
-		ctrl = null;
+		super.afterOneTest();
 	}
 
 	/**

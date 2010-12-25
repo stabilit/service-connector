@@ -81,7 +81,6 @@ public class EHCacheImpl implements ICacheImpl {
 			}
 		}
 		this.config = new CacheConfiguration(serviceName, cacheConfiguration.getMaxElementsInMemory());
-		// TODO from configuration file
 		this.config.setEternal(true);
 		// this.config.setTimeToIdleSeconds(60);
 		// this.config.setTimeToLiveSeconds(120);

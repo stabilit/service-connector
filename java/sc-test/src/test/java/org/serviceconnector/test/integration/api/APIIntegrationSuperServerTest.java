@@ -25,8 +25,9 @@ import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
+import org.serviceconnector.test.integration.IntegrationSuperTest;
 
-public class APIIntegrationSuperServerTest extends APIIntegrationSuperTest {
+public class APIIntegrationSuperServerTest extends IntegrationSuperTest {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(APIIntegrationSuperServerTest.class);

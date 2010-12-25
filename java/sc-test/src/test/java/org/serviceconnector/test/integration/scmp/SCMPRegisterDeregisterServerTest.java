@@ -18,11 +18,8 @@ package org.serviceconnector.test.integration.scmp;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
@@ -30,9 +27,6 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -40,28 +34,15 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.test.integration.IntegrationSuperTest;
 
-public class SCMPRegisterDeregisterServerTest {
+public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPAttachDetachTest.class);
-
-	private static ProcessesController ctrl;
-	private static ProcessCtx scCtx;
 	private SCRequester requester;
-	private int threadCount = 0;
-
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
+		super.beforeOneTest();
 		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
 	}
@@ -73,17 +54,7 @@ public class SCMPRegisterDeregisterServerTest {
 		} catch (Exception e) {
 		}
 		requester = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopSC(scCtx);
-			scCtx = null;
-		} catch (Exception e) {
-		}
-		ctrl = null;
+		super.afterOneTest();
 	}
 
 	/**

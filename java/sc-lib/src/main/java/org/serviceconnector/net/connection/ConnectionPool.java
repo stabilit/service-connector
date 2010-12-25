@@ -157,7 +157,7 @@ public class ConnectionPool {
 					// found an active connection quit loop
 					break;
 				} else {
-					// null connection its a dead one
+					// null connection is a dead one
 					connection.destroy();
 					connection = null;
 				}

@@ -35,29 +35,37 @@ import org.serviceconnector.test.unit.scmp.SCMPVersionTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { 
+		// API unit tests
 		APISCMessageTest.class,
 		APISCSubscribeMessageTest.class,
 		APISCPublishMessageTest.class,
 		APISCClientTest.class,
 		APISCServerTest.class,
 		APINewServerTest.class,
-		DefaultFrameDecoderTest.class,
-		HttpFrameDecoderTest.class,
-		SCMPLargeResponseTest.class,
-		SCMPLargeRequestTest.class,
-		LargeMessageEncoderDecoderTest.class,
-		KeepAliveMessageEncoderDecoderTest.class,
-		DefaultEncoderDecoderTest.class,
-		ValidatorUtilityTest.class,
-		SCMPMessageMaskTest.class,
-		DecodeSCMPVersionTest.class,
-		LinkedQueueTest.class,
-		SCVersionTest.class,
-		SCMPVersionTest.class,
+		
+		// Cache unit tests
 		CacheExpirationTest.class, 
 		CacheExpirationThreadRunTest.class, 
 		CacheStatisticsTest.class,
 		CacheTest.class,
-		CacheManagerTest.class })
+		CacheManagerTest.class,
+		
+		// SCMP unit tests
+		SCMPVersionTest.class,
+		SCMPMessageMaskTest.class,
+		SCMPLargeResponseTest.class,
+		SCMPLargeRequestTest.class,
+		
+		// other unit tests
+		DefaultFrameDecoderTest.class,
+		HttpFrameDecoderTest.class,
+		LargeMessageEncoderDecoderTest.class,
+		KeepAliveMessageEncoderDecoderTest.class,
+		DefaultEncoderDecoderTest.class,
+		ValidatorUtilityTest.class,
+		DecodeSCMPVersionTest.class,
+		LinkedQueueTest.class,
+		SCVersionTest.class
+ })
 public class AllUnitTests {
 }

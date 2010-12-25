@@ -23,11 +23,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -36,9 +33,6 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
@@ -46,28 +40,18 @@ import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.test.integration.scmp.SCMPAttachDetachTest;
 import org.serviceconnector.util.DateTimeUtility;
 
 /**
  * @author JTraber
  */
 @RunWith(Parameterized.class)
-public class ConnectionPoolTest {
-
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPAttachDetachTest.class);
+public class ConnectionPoolTest extends IntegrationSuperTest {
 
 	private int port;
 	private ConnectionType connectionType;
 	private int keepAlivInSeconds = 1;
-
-	private static ProcessesController ctrl;
-	private static ProcessCtx scCtx;
 	private ConnectionPool connectionPool;
-	private int threadCount = 0;
 
 	public ConnectionPoolTest(Integer port, ConnectionType connectionType) {
 		this.port = port;
@@ -81,15 +65,9 @@ public class ConnectionPoolTest {
 				new Object[] { new Integer(TestConstants.PORT_SC_HTTP), ConnectionType.NETTY_HTTP });
 	}
 
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-	}
-
 	@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
+		super.beforeOneTest();
 		connectionPool = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(), this.keepAlivInSeconds);
 	}
 
@@ -100,21 +78,11 @@ public class ConnectionPoolTest {
 		} catch (Exception e) {
 		}
 		connectionPool = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopSC(scCtx);
-			scCtx = null;
-		} catch (Exception e) {
-		}
-		ctrl = null;
+		super.afterOneTest();
 	}
 
 	/**
-	 * Description: Gets a connection and frees it<br>
+	 * Description: Gets one connection and frees it<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -142,7 +110,7 @@ public class ConnectionPoolTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t11_ConnectionPoolHasNoFreeConnections() throws Exception {
+	public void t11_ConnectionPoolHasNoFreeConnection() throws Exception {
 		connectionPool.setMaxConnections(2);
 		for (int i = 0; i < 2; i++) {
 			connectionPool.getConnection();
@@ -170,7 +138,7 @@ public class ConnectionPoolTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t21_NoKeepAliveForUsedConnections() throws Exception {
+	public void t21_NoKeepAliveForUsedConnection() throws Exception {
 		connectionPool.setMaxConnections(1);
 		IConnection connection = connectionPool.getConnection();
 		Thread.sleep((long) ((this.keepAlivInSeconds + 0.2) * Constants.SEC_TO_MILLISEC_FACTOR));
@@ -207,51 +175,52 @@ public class ConnectionPoolTest {
 	}
 
 	/**
-	 * Description: Get connection send a message and free connection - 50000 times<br>
+	 * Description: Get connection send a message and free connection - 10000 times<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t50_GetConnectionSendAttachFreeConnection50000Times() throws Exception {
+	public void t50_GetConnectionSendAttachFreeConnection10000Times() throws Exception {
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
-
-		for (int i = 0; i < 50000; i++) {
+		SCMPMessage message = new SCMPMessage();
+		message.setMessageType(SCMPMsgType.ATTACH);
+		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
+		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
+		
+		for (int i = 0; i < 10000; i++) {
 			IConnection connection = connectionPool.getConnection();
-			SCMPMessage message = new SCMPMessage();
-			message.setMessageType(SCMPMsgType.ATTACH);
-			message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
-			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			cbk.getMessageSync(1000);
 			connectionPool.freeConnection(connection);
-			if (i % 10000 == 0) {
-				testLogger.info("connection nr " + i + " is done!");
+			if ((i+1) % 5000 == 0) {
+				testLogger.info("connection nr " + (i+1) + "...");
 			}
 		}
 	}
 
 	/**
-	 * Description: Create new ConnectionPool get connection send a message and free connection destroy pool - 50000 times<br>
+	 * Description: Create new ConnectionPool get connection send a message and free connection destroy pool - 10000 times<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t51_NewConnectionPoolGetConnectionSendAttachFreeConnection50000Times() throws Exception {
+	public void t51_NewConnectionPoolGetConnectionSendAttachFreeConnection10000Times() throws Exception {
 		String ldt = DateTimeUtility.getCurrentTimeZoneMillis();
-		for (int i = 0; i < 50000; i++) {
+		SCMPMessage message = new SCMPMessage();
+		message.setMessageType(SCMPMsgType.ATTACH);
+		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
+		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
+		
+		for (int i = 0; i < 10000; i++) {
 			ConnectionPool cp = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(),
 					this.keepAlivInSeconds);
 			IConnection connection = cp.getConnection();
-			SCMPMessage message = new SCMPMessage();
-			message.setMessageType(SCMPMsgType.ATTACH);
-			message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
-			message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			cbk.getMessageSync(1000);
 			cp.freeConnection(connection);
 			cp.destroy();
-			if (i % 10000 == 0) {
-				testLogger.info("connection nr " + i + " is done!");
+			if ((i+1) % 5000 == 0) {
+				testLogger.info("connection nr " + (i+1) + "...");
 			}
 		}
 	}

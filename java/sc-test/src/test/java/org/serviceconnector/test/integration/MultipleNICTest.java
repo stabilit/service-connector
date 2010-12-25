@@ -7,11 +7,6 @@ import java.util.Enumeration;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
@@ -19,50 +14,12 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
 
-public class MultipleNICTest {
-
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(MultipleNICTest.class);
-
-	private static ProcessesController ctrl;
-	private static ProcessCtx scCtx;
-	private int threadCount = 0;
-
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCNoInterfacesProperties);
-	}
-
-	@Before
-	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
-	}
-
-	@After
-	public void afterOneTest() throws Exception {
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		try {
-			ctrl.stopSC(scCtx);
-			scCtx = null;
-		} catch (Exception e) {
-		}
-		ctrl = null;
-	}
+public class MultipleNICTest extends IntegrationSuperTest {
 
 	/**
 	 * Description: Connects to all available NIC on the current PC<br>
@@ -90,6 +47,22 @@ public class MultipleNICTest {
 					req.destroy();
 				} catch (Exception e) {
 					Assert.fail("Connection to NIC : " + inetAddress.getHostAddress() + " failed!");
+					// TODO TRN/JOT at home or by Jana getting here with: java.net.ConnectException: Connection refused: no further information
+					/*
+					 Ethernet adapter LAN:
+					 Connection-specific DNS Suffix  . : DSL2740B
+					 Description . . . . . . . . . . . : Intel(R) 82566MM Gigabit Network 
+					 Physical Address. . . . . . . . . : 00-17-A4-EB-E6-36
+					 Dhcp Enabled. . . . . . . . . . . : Yes
+					 Autoconfiguration Enabled . . . . : Yes
+					 IP Address. . . . . . . . . . . . : 10.10.0.7
+					 Subnet Mask . . . . . . . . . . . : 255.255.0.0
+					 Default Gateway . . . . . . . . . : 10.10.0.2
+					 DHCP Server . . . . . . . . . . . : 10.10.0.2
+					 DNS Servers . . . . . . . . . . . : 10.10.0.2
+					 Lease Obtained. . . . . . . . . . : Saturday, 25 December, 2010 9:05:41
+					 Lease Expires . . . . . . . . . . : Sunday, 26 December, 2010 9:05:41the NIC 10.10.0.7 
+					 */ 
 				}
 			}
 		}

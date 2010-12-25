@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.integration.api;
+package org.serviceconnector.test.integration;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -25,7 +25,7 @@ import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 
-public class APIIntegrationSuperTest {
+public class IntegrationSuperTest {
 
 	/** The Constant testLogger. */
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());

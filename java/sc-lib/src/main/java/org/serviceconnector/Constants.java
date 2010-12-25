@@ -128,9 +128,6 @@ public final class Constants {
 	/** File qualifier for command line argument configuration file. */
 	public static final String CLI_CONFIG_ARG = "-sc.configuration";
 
-	/** Comma or semicolon REGEX. */
-	public static final String COMMA_OR_SEMICOLON = ",|;"; // TODO not used
-
 	/**
 	 * File containing the Sc process PID. Created at startup and deleted on
 	 * exit or error. Used to check is sc is running.

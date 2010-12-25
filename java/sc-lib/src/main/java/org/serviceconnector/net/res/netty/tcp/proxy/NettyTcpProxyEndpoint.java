@@ -65,7 +65,7 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 
 	/** {@inheritDoc} */
 	@Override
-	// TODO TRN why is this necessary here or missing in the other end points?
+	// TODO TRN why is this necessary here or missing in the other end points JOT?
 	public void setResponder(IResponder resp) {
 		super.setResponder(resp);
 		CommunicatorConfig remoteHostConfig = null;

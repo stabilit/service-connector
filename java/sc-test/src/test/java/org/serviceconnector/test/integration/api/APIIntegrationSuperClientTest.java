@@ -20,8 +20,9 @@ import org.junit.Before;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.test.integration.IntegrationSuperTest;
 
-public class APIIntegrationSuperClientTest extends APIIntegrationSuperTest {
+public class APIIntegrationSuperClientTest extends IntegrationSuperTest {
 
 	protected SCClient client;
 	protected SCSessionService sessionService = null;

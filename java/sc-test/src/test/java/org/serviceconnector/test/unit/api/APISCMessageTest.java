@@ -115,7 +115,7 @@ public class APISCMessageTest {
 	}
 
 	/**
-	 * Description: Set Null-Value as MessageInfo<br>
+	 * Description: Set null value  as MessageInfo<br>
 	 * Expectation: MessageInfo is set to Null
 	 */
 	@Test
@@ -125,7 +125,7 @@ public class APISCMessageTest {
 	}
 
 	/**
-	 * Description: Set Empty-Value as MessageInfo<br>
+	 * Description: Set empty value as MessageInfo<br>
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
@@ -196,7 +196,7 @@ public class APISCMessageTest {
 	}
 
 	/**
-	 * Description: Set Null-Value as session Id<br>
+	 * Description: Set null value as session Id<br>
 	 * Expectation: SessionId is set to Null
 	 */
 	@Test
@@ -240,7 +240,7 @@ public class APISCMessageTest {
 	}
 
 	/**
-	 * Description: Set Null-Value as SessionInfo<br>
+	 * Description: Set null value as SessionInfo<br>
 	 * Expectation: SessionInfo is set to Null
 	 */
 	@Test
@@ -250,7 +250,7 @@ public class APISCMessageTest {
 	}
 
 	/**
-	 * Description: Set Empty-Value as SessionInfo<br>
+	 * Description: Set empty value as SessionInfo<br>
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
@@ -321,7 +321,7 @@ public class APISCMessageTest {
 	}
 
 	/**
-	 * Description: Set Null-Value as CacheId<br>
+	 * Description: Set null value as CacheId<br>
 	 * Expectation: CacheId is set to Null
 	 */
 	@Test
@@ -331,7 +331,7 @@ public class APISCMessageTest {
 	}
 
 	/**
-	 * Description: Set Empty-Value as CacheId<br>
+	 * Description: Set empty value as CacheId<br>
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
@@ -402,7 +402,7 @@ public class APISCMessageTest {
 	}
 
 	/**
-	 * Description: Set Null-Value as AppErrorText<br>
+	 * Description: Set null value as AppErrorText<br>
 	 * Expectation: AppErrorText is set to Null
 	 */
 	@Test
@@ -412,7 +412,7 @@ public class APISCMessageTest {
 	}
 
 	/**
-	 * Description: Set Empty-Value as AppErrorText<br>
+	 * Description: Set empty value as AppErrorText<br>
 	 * Expectation: SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)
@@ -512,7 +512,7 @@ public class APISCMessageTest {
 	}
 
 	/**
-	 * Description: Set Empty-Value as CacheExpirationDateTime<br>
+	 * Description: Set empty value as CacheExpirationDateTime<br>
 	 * Expectation: throws SCMPValidatorException
 	 */
 	@Test(expected = SCMPValidatorException.class)

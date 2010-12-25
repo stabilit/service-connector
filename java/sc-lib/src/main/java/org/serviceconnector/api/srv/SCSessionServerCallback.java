@@ -57,7 +57,7 @@ public abstract class SCSessionServerCallback {
 	 * @param message
 	 *            the message
 	 * @param operationTimeoutInMillis
-	 *            TODO
+	 *            the operation timeout in milliseconds
 	 */
 	public void abortSession(SCMessage message, int operationTimeoutInMillis) {
 	}
