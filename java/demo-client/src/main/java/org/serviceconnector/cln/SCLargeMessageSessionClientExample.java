@@ -24,7 +24,6 @@ package org.serviceconnector.cln;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMessageCallback;
-import org.serviceconnector.api.cln.SCService;
 import org.serviceconnector.api.cln.SCSessionService;
 
 public class SCLargeMessageSessionClientExample {
