@@ -38,7 +38,6 @@ public class APIPerfSuperClientTest extends APIPerfSuperTest {
 	protected SCPublishService publishService = null;
 	protected ProcessCtx sesSrvCtx;
 	protected ProcessCtx pubSrvCtx;
-	protected MsgCallback msgCallback = null;
 
 	@Before
 	public void beforeOneTest() throws Exception {

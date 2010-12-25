@@ -47,13 +47,13 @@ public class APISessionBenchmark extends APIPerfSuperClientTest {
 		SCMessage request = new SCMessage();
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
+		MsgCallback cbk = new MsgCallback(sessionService);
 		int nr = 10000;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < nr; i++) {
 			if (((i + 1) % 1000) == 0)
 				testLogger.info("Creating Session nr. " + (i + 1) + "...");
-			response = sessionService.createSession(10, request, msgCallback);
+			response = sessionService.createSession(10, request, cbk);
 			sessionService.deleteSession(10);
 		}
 		long stop = System.currentTimeMillis();
@@ -69,7 +69,7 @@ public class APISessionBenchmark extends APIPerfSuperClientTest {
 		int nr = 1000;
 		SCSessionService[] sessionServices = new SCSessionService[nr];
 		String[] sessionID = new String[nr];
-		msgCallback = new MsgCallback(sessionServices[0]);
+		MsgCallback cbk = new MsgCallback(sessionServices[0]);
 		
 		// create services
 		testLogger.info("Creating Services...");
@@ -84,7 +84,7 @@ public class APISessionBenchmark extends APIPerfSuperClientTest {
 		for (int i = 0; i < nr; i++) {
 			if (((i + 1) % 100) == 0)
 				testLogger.info("Creating session nr. " + (i + 1) + "...");
-			response = sessionServices[i].createSession(10, request, msgCallback);
+			response = sessionServices[i].createSession(10, request, cbk);
 			sessionID[i] = sessionServices[i].getSessionId();
 		}
 		long stop = System.currentTimeMillis();

@@ -22,8 +22,8 @@ public class APIExecuteBenchmark extends APIPerfSuperClientTest{
 		request.setCompressed(true);
 		request.setSessionInfo("sessionInfo");
 		request.setMessageInfo(TestConstants.echoCmd);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(10, request, msgCallback);
+		MsgCallback cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(10, request, cbk);
 		int nrMessages = 10000;
 		long start = System.currentTimeMillis();
 		long startPart = System.currentTimeMillis();
@@ -56,8 +56,8 @@ public class APIExecuteBenchmark extends APIPerfSuperClientTest{
 		request.setSessionInfo("sessionInfo");
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setCompressed(false);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(10, request, msgCallback);
+		MsgCallback cbk = new MsgCallback(sessionService);
+		response = sessionService.createSession(10, request, cbk);
 		int nrMessages = 10000;
 		long start = System.currentTimeMillis();
 		long startPart = System.currentTimeMillis();

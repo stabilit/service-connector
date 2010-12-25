@@ -25,12 +25,12 @@ public class APIReceivePublicationBenchmark extends APIPerfSuperClientTest {
 		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 100000;
 		subMsgRequest.setData(Integer.toString(nrMessages));
-		msgCallback = new MsgCallback(publishService);
-		msgCallback.setExpectedMessages(nrMessages);
-		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-		msgCallback.waitForMessage(120);
-		if (msgCallback.getMessageCount() == nrMessages) {
-			long perf = nrMessages * 1000 / msgCallback.getDifference();
+		MsgCallback cbk = new MsgCallback(publishService);
+		cbk.setExpectedMessages(nrMessages);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		cbk.waitForMessage(120);
+		if (cbk.getMessageCount() == nrMessages) {
+			long perf = nrMessages * 1000 / cbk.getDifference();
 			testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
 			Assert.assertTrue("Performence not fast enough, only" + perf + " msg/sec.", perf > 1000);
 		}
@@ -50,12 +50,12 @@ public class APIReceivePublicationBenchmark extends APIPerfSuperClientTest {
 		subMsgRequest.setSessionInfo(TestConstants.publishMsgUncompressedCmd);
 		int nrMessages = 100000;
 		subMsgRequest.setData(Integer.toString(nrMessages));
-		msgCallback = new MsgCallback(publishService);
-		msgCallback.setExpectedMessages(nrMessages);
-		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-		msgCallback.waitForMessage(120);
-		if (msgCallback.getMessageCount() == nrMessages) {
-			long perf = nrMessages * 1000 / msgCallback.getDifference();
+		MsgCallback cbk = new MsgCallback(publishService);
+		cbk.setExpectedMessages(nrMessages);
+		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
+		cbk.waitForMessage(120);
+		if (cbk.getMessageCount() == nrMessages) {
+			long perf = nrMessages * 1000 / cbk.getDifference();
 			testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
 			Assert.assertTrue("Performence not fast enough, only" + perf + " msg/sec.", perf > 1000);
 		}

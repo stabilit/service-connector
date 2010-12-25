@@ -25,11 +25,15 @@ import org.serviceconnector.test.perf.api.srv.APIPublishBenchmark;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
+	// API Client benchmarks
 	APIAttachBenchmark.class,
 	APISessionBenchmark.class, 
 	APIExecuteBenchmark.class,
-	APIPublishBenchmark.class, 
-	APIReceivePublicationBenchmark.class})
+	APIReceivePublicationBenchmark.class,
+	
+	// API server benchmarks
+	APIPublishBenchmark.class
+	})
 public class AllPerformanceTests {
 }
 

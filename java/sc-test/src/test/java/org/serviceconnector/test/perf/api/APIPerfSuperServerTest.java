@@ -13,9 +13,8 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.integration.api;
+package org.serviceconnector.test.perf.api;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.serviceconnector.api.SCMessage;
@@ -26,11 +25,8 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 
-public class APIIntegrationSuperServerTest extends APIIntegrationSuperTest {
+public class APIPerfSuperServerTest extends APIPerfSuperTest {
 
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(APIIntegrationSuperServerTest.class);
-	
 	protected SCServer server;
 	protected SCSessionServer sessionServer = null;
 	protected SCPublishServer publishServer = null;
@@ -60,7 +56,6 @@ public class APIIntegrationSuperServerTest extends APIIntegrationSuperTest {
 		server = null;
 		super.afterOneTest();
 	}
-	
 	protected class SesSrvCallback extends SCSessionServerCallback {
 		public SesSrvCallback(SCSessionServer server) {
 			super(server);
@@ -103,4 +98,5 @@ public class APIIntegrationSuperServerTest extends APIIntegrationSuperTest {
 		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
 		}
 	}
+
 }
