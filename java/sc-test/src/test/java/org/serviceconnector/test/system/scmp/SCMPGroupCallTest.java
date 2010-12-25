@@ -18,11 +18,8 @@ package org.serviceconnector.test.system.scmp;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
@@ -33,8 +30,6 @@ import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -42,39 +37,27 @@ import org.serviceconnector.scmp.SCMPBodyType;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.test.system.SystemSuperTest;
 
-public class SCMPGroupCallTest {
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPGroupCallTest.class);
+public class SCMPGroupCallTest extends SystemSuperTest {
 
-	private static ProcessesController ctrl;
-	private ProcessCtx scCtx;
-	private ProcessCtx srvCtx;
+	private ProcessCtx sesSrvCtx;
 	private SCRequester requester;
 	private String sessionId;
-	private int threadCount = 0;
-
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-	}
-
-	@Before
+	
+		@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
+		super.beforeOneTest();
+		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
 				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
 		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
-		this.clnCreateSession();
+		this.createSession();
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		this.clnDeleteSession();
+		this.deleteSession();
 		this.sessionId = null;
 		try {
 			this.requester.destroy();
@@ -82,22 +65,13 @@ public class SCMPGroupCallTest {
 		}
 		this.requester = null;
 		try {
-			ctrl.stopServer(srvCtx);
+			ctrl.stopServer(sesSrvCtx);
 		} catch (Exception e) {
 		}
-		srvCtx = null;
-		try {
-			ctrl.stopSC(scCtx);
-		} catch (Exception e) {
-		}
-		scCtx = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
+		sesSrvCtx = null;
+		super.afterOneTest();
 	}
 
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		ctrl = null;
-	}
 
 	/**
 	 * Description: execute group call - open group send each letter alone and close group<br>
@@ -156,12 +130,12 @@ public class SCMPGroupCallTest {
 	}
 
 	/**
-	 * Cln create session.
+	 * create session.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void clnCreateSession() throws Exception {
+	private void createSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("sessionInfo");
@@ -173,12 +147,12 @@ public class SCMPGroupCallTest {
 	}
 
 	/**
-	 * Cln delete session.
+	 * delete session.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void clnDeleteSession() throws Exception {
+	private void deleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.requester, TestConstants.sesServerName1, this.sessionId);
 		TestCallback cbk = new TestCallback();

@@ -27,9 +27,10 @@ import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.APIReceivePublicationTest;
 
-public class APISystemSuperPublishClientTest extends APISystemSuperTest {
+public class APISystemSuperPublishClientTest extends SystemSuperTest {
 
 	protected SCClient client;
 	protected SCPublishService publishService = null;

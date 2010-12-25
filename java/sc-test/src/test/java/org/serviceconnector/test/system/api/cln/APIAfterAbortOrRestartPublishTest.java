@@ -44,7 +44,7 @@ public class APIAfterAbortOrRestartPublishTest extends APISystemSuperPublishClie
 	
 		cbk.waitForMessage(10);
 
-		Assert.assertTrue("Test is not implemented", false);
+		Assert.fail("Test is not implemented");
 	}
 	
 	/**
@@ -67,7 +67,8 @@ public class APIAfterAbortOrRestartPublishTest extends APISystemSuperPublishClie
 		ctrl.stopServer(pubSrvCtx);
 		
 		cbk.waitForMessage(10);
-		Assert.assertTrue("Test is not implemented", false);
+		
+		Assert.fail("Test is not implemented");
 	}
 
 	/**
@@ -93,7 +94,8 @@ public class APIAfterAbortOrRestartPublishTest extends APISystemSuperPublishClie
 				TestConstants.pubServiceName1);
 		
 		msgCallback.waitForMessage(10);
-		Assert.assertTrue("Test is not implemented", false);
+		
+		Assert.fail("Test is not implemented");
 	}
 
 }

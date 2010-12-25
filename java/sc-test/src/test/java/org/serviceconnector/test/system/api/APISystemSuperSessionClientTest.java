@@ -27,8 +27,9 @@ import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.test.system.SystemSuperTest;
 
-public class APISystemSuperSessionClientTest extends APISystemSuperTest {
+public class APISystemSuperSessionClientTest extends SystemSuperTest {
 
 	protected SCClient client;
 	protected SCSessionService sessionService = null;

@@ -18,11 +18,8 @@ package org.serviceconnector.test.system.scmp;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
@@ -32,8 +29,6 @@ import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -41,33 +36,20 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.test.system.SystemSuperTest;
 
 /**
  * The Class ClnCreateSessionTestCase.
  */
-public class SCMPClnCreateSessionTest {
+public class SCMPClnCreateSessionTest extends SystemSuperTest {
 
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPClnCreateSessionTest.class);
-
-	private static ProcessesController ctrl;
-	private ProcessCtx scCtx;
-	private ProcessCtx srvCtx;
+	private ProcessCtx sesSrvCtx;
 	private SCRequester requester;
-	private int threadCount = 0;
-
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
+		super.beforeOneTest();
+		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
 				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
 		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
@@ -81,29 +63,20 @@ public class SCMPClnCreateSessionTest {
 		}
 		this.requester = null;
 		try {
-			ctrl.stopServer(srvCtx);
+			ctrl.stopServer(sesSrvCtx);
 		} catch (Exception e) {
 		}
-		srvCtx = null;
-		try {
-			ctrl.stopSC(scCtx);
-		} catch (Exception e) {
-		}
-		scCtx = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
+		sesSrvCtx = null;
+		super.afterOneTest();
 	}
 
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		ctrl = null;
-	}
 
 	/**
-	 * Description: create session call - echo time interval wrong<br>
-	 * Expectation: passes
+	 * Description: create session - echo time interval wrong<br>
+	 * Expectation: passes, returns error
 	 */
 	@Test
-	public void t01_ClnCreateSessionEciWrong() throws Exception {
+	public void t01_WrongECI() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -117,11 +90,11 @@ public class SCMPClnCreateSessionTest {
 	}
 
 	/**
-	 * Description: create session call - serviceName not set<br>
-	 * Expectation: passes
+	 * Description: create session - serviceName not set<br>
+	 * Expectation: passes, returns error
 	 */
 	@Test
-	public void t02_ClnCreateSessionServiceNameWrong() throws Exception {
+	public void t02_WrongServiceName() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -136,34 +109,34 @@ public class SCMPClnCreateSessionTest {
 	}
 
 	/**
-	 * Description: create session call - delete session call<br>
+	 * Description: create session - delete session<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t10_ClnCreateSessionClnDeleteSession() throws Exception {
+	public void t10_CreateSessionDeleteSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(3000);
 		TestCallback cbk = new TestCallback();
-		createSessionCall.invoke(cbk, 1000);
-		SCMPMessage responseMessage = cbk.getMessageSync(3000);
+		createSessionCall.invoke(cbk, 2000);
+		SCMPMessage responseMessage = cbk.getMessageSync(4000);
 		String sessId = responseMessage.getSessionId();
 		TestUtil.checkReply(responseMessage);
 
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.requester, responseMessage.getServiceName(), sessId);
-		deleteSessionCall.invoke(cbk, 1000);
-		responseMessage = cbk.getMessageSync(3000);
+		deleteSessionCall.invoke(cbk, 2000);
+		responseMessage = cbk.getMessageSync(4000);
 		TestUtil.checkReply(responseMessage);
 	}
 
 	/**
-	 * Description: create session call - session gets rejected<br>
-	 * Expectation: passes
+	 * Description: create session - session gets rejected<br>
+	 * Expectation: passes, returns rejection
 	 */
 	@Test
-	public void t20_ClnCreateSessionRejectedSession() throws Exception {
+	public void t20_SessionRejected() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo(TestConstants.rejectSessionCmd);
@@ -178,11 +151,11 @@ public class SCMPClnCreateSessionTest {
 	}
 
 	/**
-	 * Description: create session call - wait until session times out<br>
-	 * Expectation: passes
+	 * Description: create session - wait until session times out<br>
+	 * Expectation: passes, returns error
 	 */
 	@Test
-	public void t30_ClnCreateSessionSessionTimesOut() throws Exception {
+	public void t30_SessionTimesOut() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("sessionInfo");
@@ -194,7 +167,7 @@ public class SCMPClnCreateSessionTest {
 
 		String sessionId = responseMessage.getSessionId();
 		// wait until session times out and get cleaned up
-		Thread.sleep(1000);
+		Thread.sleep(3000);
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, sessionId);
 		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);

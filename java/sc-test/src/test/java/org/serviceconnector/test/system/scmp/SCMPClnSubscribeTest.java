@@ -97,11 +97,11 @@ public class SCMPClnSubscribeTest {
 	}
 
 	/**
-	 * Description: subscribe call - mask not set<br>
-	 * Expectation: passes
+	 * Description: subscribe - mask not set<br>
+	 * Expectation: passes, returns error
 	 */
 	@Test
-	public void t01_ClnSubscribeCallMaskNotSet() throws Exception {
+	public void t01_MaskNotSet() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
 				TestConstants.pubServerName1);
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -110,15 +110,15 @@ public class SCMPClnSubscribeTest {
 		subscribeCall.invoke(cbk, 3000);
 		SCMPMessage fault = cbk.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		TestUtil.verifyError((SCMPMessageFault) fault, SCMPError.HV_ERROR, SCMPMsgType.CLN_SUBSCRIBE);
+		TestUtil.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_MASK, SCMPMsgType.CLN_SUBSCRIBE);
 	}
 
 	/**
-	 * Description: subscribe call - no data interval not set<br>
-	 * Expectation: passes
+	 * Description: subscribe - no data interval not set<br>
+	 * Expectation: passes, returns error
 	 */
 	@Test
-	public void t02_ClnSubscribeCallNoiNotSet() throws Exception {
+	public void t02_NOINotSet() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
 				TestConstants.pubServerName1);
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -128,15 +128,15 @@ public class SCMPClnSubscribeTest {
 		subscribeCall.invoke(cbk, 3000);
 		SCMPMessage fault = cbk.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		TestUtil.verifyError((SCMPMessageFault) fault, SCMPError.HV_ERROR, SCMPMsgType.CLN_SUBSCRIBE);
+		TestUtil.verifyError((SCMPMessageFault) fault, SCMPError.HV_WRONG_NODATA_INTERVAL, SCMPMsgType.CLN_SUBSCRIBE);
 	}
 
 	/**
-	 * Description: subscribe call - receive publication call no data received<br>
+	 * Description: subscribe - receive publication call no data received<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t10_ClnSubscribeCallReceivePublicationCallNoData() throws Exception {
+	public void t10_ReceiveNoData() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
 				TestConstants.pubServerName1);
 
@@ -164,11 +164,11 @@ public class SCMPClnSubscribeTest {
 	}
 
 	/**
-	 * Description: subscribe call - receive publication call message received<br>
+	 * Description: subscribe - receive publication call message received<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t11_ClnSubscribeCallReceivePublicationCallMessage() throws Exception {
+	public void t11_ReceiveMessage() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
 				TestConstants.pubServerName1);
 
@@ -199,11 +199,11 @@ public class SCMPClnSubscribeTest {
 	}
 
 	/**
-	 * Description: subscribe call - waits 2 seconds - another subscribe fails because no free server is available<br>
+	 * Description: subscribe - waits 2 seconds - another subscribe fails because no free server is available<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t30_ClnSubscribeFailsNoFreeServer() throws Exception {
+	public void t30_FailsNoFreeServer() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
 				TestConstants.pubServerName1);
 
@@ -238,11 +238,11 @@ public class SCMPClnSubscribeTest {
 	}
 
 	/**
-	 * Description: subscribe call - receives large message<br>
+	 * Description: subscribe  - receives large message<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t40_ClnSubscribeGetLargeMessage() throws Exception {
+	public void t40_GetLargeMessage() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
 				TestConstants.pubServerName1);
 

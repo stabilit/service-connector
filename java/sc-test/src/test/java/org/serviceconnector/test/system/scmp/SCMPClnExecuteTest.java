@@ -20,11 +20,8 @@ import java.io.ByteArrayInputStream;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
@@ -34,8 +31,6 @@ import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -45,43 +40,30 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.test.system.SystemSuperTest;
 
 /**
  * @author JTraber
  */
-public class SCMPClnExecuteTest {
+public class SCMPClnExecuteTest extends SystemSuperTest {
 
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPClnExecuteTest.class);
-
-	private static ProcessesController ctrl;
-	private ProcessCtx scCtx;
-	private ProcessCtx srvCtx;
+	private ProcessCtx sesSrvCtx;
 	private SCRequester requester;
 	private String sessionId;
-	private int threadCount = 0;
-
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
+		super.beforeOneTest();
+		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
 				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
 		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
-		this.clnCreateSession();
+		this.createSession();
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
-		this.clnDeleteSession();
+		this.deleteSession();
 		this.sessionId = null;
 		try {
 			this.requester.destroy();
@@ -89,29 +71,19 @@ public class SCMPClnExecuteTest {
 		}
 		this.requester = null;
 		try {
-			ctrl.stopServer(srvCtx);
+			ctrl.stopServer(sesSrvCtx);
 		} catch (Exception e) {
 		}
-		srvCtx = null;
-		try {
-			ctrl.stopSC(scCtx);
-		} catch (Exception e) {
-		}
-		scCtx = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		ctrl = null;
+		sesSrvCtx = null;
+		super.afterOneTest();
 	}
 
 	/**
-	 * Description: execute call - compressed message of type string is exchanged<br>
+	 * Description: execute - compressed message of type string is exchanged<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t01_ClnExecuteStringMessageCompressed() throws Exception {
+	public void t01_StringMessageCompressed() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);
@@ -125,11 +97,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call - compressed message of type byte is exchanged<br>
+	 * Description: execute - compressed message of type byte is exchanged<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t02_ClnExecuteByteMessageCompressed() throws Exception {
+	public void t02_ByteMessageCompressed() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);
@@ -143,11 +115,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call - message of type stream is always exchanged uncompressed, ignores compression<br>
+	 * Description: execute - message of type stream is always exchanged uncompressed, ignores compression<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t10_ClnExecuteStreamMessage() throws Exception {
+	public void t10_StreamMessage() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);
@@ -161,11 +133,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call 100 times - message received by callback<br>
+	 * Description: execute 100 times - message received by callback<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t15_ClnExecute100Async() throws Exception {
+	public void t15_100AsynchronousMessages() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);
@@ -184,11 +156,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call 100 times large messages - message received by callback<br>
+	 * Description: execute 100 times large messages - message received by callback<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t16_ClnExecute100LargeMessagesAsync() throws Exception {
+	public void t16_100LargeMessagesAsynchronous() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);
@@ -208,11 +180,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call - exception on server - hand over to client<br>
+	 * Description: execute - exception on server - hand over to client<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t20_ClnExecuteEXCOnServer() throws Exception {
+	public void t20_EXCOnServer() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessagInfo(TestConstants.raiseExceptionCmd);
@@ -224,11 +196,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call - application error code and application error text<br>
+	 * Description: execute - application error code and application error text returned by server<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t30_ClnExecuteAppErrorCodeText() throws Exception {
+	public void t30_AppErrorCodeText() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessagInfo(TestConstants.echoAppErrorCmd);
@@ -241,11 +213,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call small request - large response both uncompressed<br>
+	 * Description: execute small request - large response both uncompressed<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t40_ClnExecuteSmallRequestLargeResponseUncompressed() throws Exception {
+	public void t40_SmallRequestLargeResponseUncompressed() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessagInfo(TestConstants.largeResponseCmd);
@@ -267,11 +239,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call large request - small response both uncompressed<br>
+	 * Description: execute large request - small response both uncompressed<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t41_ClnExecuteLargeRequestSmallResponseUncompressed() throws Exception {
+	public void t41_LargeRequestSmallResponseUncompressed() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		String largeString = TestUtil.getLargeString();
@@ -286,11 +258,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call large request - large response both uncompressed<br>
+	 * Description: execute large request - large response both uncompressed<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t42_ClnExecuteLargeRequestLargeResponseUncompressed() throws Exception {
+	public void t42_LargeRequestLargeResponseUncompressed() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		String largeString = TestUtil.getLargeString();
@@ -311,11 +283,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call small request - large response both compressed<br>
+	 * Description: execute small request - large response both compressed<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t50_ClnExecuteSmallRequestLargeResponseCompressed() throws Exception {
+	public void t50_SmallRequestLargeResponseCompressed() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessagInfo(TestConstants.largeResponseCmd);
@@ -336,11 +308,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call large request - small response both compressed<br>
+	 * Description: execute large request - small response both compressed<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t51_ClnExecuteLargeRequestSmallResponseCompressed() throws Exception {
+	public void t51_LargeRequestSmallResponseCompressed() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		String largeString = TestUtil.getLargeString();
@@ -354,11 +326,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call large request - large response both compressed<br>
+	 * Description: execute large request - large response both compressed<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t52_ClnExecuteLargeRequestLargeResponseCompressed() throws Exception {
+	public void t52_LargeRequestLargeResponseCompressed() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		String largeString = TestUtil.getLargeString();
@@ -378,11 +350,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call - waits 2 seconds - another execute times out when waiting for free connection<br>
+	 * Description: execute - waits 2 seconds - another execute times out when waiting for free connection<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t70_ClnExecuteWaitsForConnectionTimeout() throws Exception {
+	public void t70_WaitsForConnectionTimeout() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessagInfo(TestConstants.sleepCmd);
@@ -406,11 +378,11 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Description: execute call - waits 2 seconds, OTI runs out on SC<br>
+	 * Description: execute - waits 2 seconds, OTI runs out on SC<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t80_ClnExecuteOTITimesOut() throws Exception {
+	public void t80_OTITimesOut() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessagInfo(TestConstants.sleepCmd);
@@ -422,12 +394,12 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Cln create session.
+	 * create session.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void clnCreateSession() throws Exception {
+	private void createSession() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("sessionInfo");
@@ -439,12 +411,12 @@ public class SCMPClnExecuteTest {
 	}
 
 	/**
-	 * Cln delete session.
+	 * delete session.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void clnDeleteSession() throws Exception {
+	private void deleteSession() throws Exception {
 		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
 				this.requester, TestConstants.sesServerName1, this.sessionId);
 		TestCallback cbk = new TestCallback();

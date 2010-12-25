@@ -18,11 +18,8 @@ package org.serviceconnector.test.system.scmp;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
@@ -33,8 +30,6 @@ import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -42,31 +37,19 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.test.system.SystemSuperTest;
 
-public class SCMPClnChangeSubscriptionTest {
+public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 
-	/** The Constant testLogger. */
-	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPClnCreateSessionTest.class);
-
-	private static ProcessesController ctrl;
-	private ProcessCtx scCtx;
-	private ProcessCtx srvCtx;
+	private ProcessCtx pubSrvCtx;
 	private SCRequester requester;
-	private int threadCount = 0;
-
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties, TestConstants.pubServerName1,
-				TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.pubServerName1);
+		super.beforeOneTest();
+		pubSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
+				TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1,
+				TestConstants.pubServiceName1);
 		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
 	}
@@ -79,29 +62,19 @@ public class SCMPClnChangeSubscriptionTest {
 		}
 		this.requester = null;
 		try {
-			ctrl.stopServer(srvCtx);
+			ctrl.stopServer(pubSrvCtx);
 		} catch (Exception e) {
 		}
-		srvCtx = null;
-		try {
-			ctrl.stopSC(scCtx);
-		} catch (Exception e) {
-		}
-		scCtx = null;
-		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
-	}
-
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		ctrl = null;
+		pubSrvCtx = null;
+		super.afterOneTest();
 	}
 
 	/**
-	 * Description: subscribe call - receive publication call no data message - change subscription call get message and unsubscribe<br>
+	 * Description: subscribe, receive publication no data message, change subscription, get message and unsubscribe<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t01_ClnChangeSubscriptionGetMessageAfter() throws Exception {
+	public void t01_GetMessageAfterChange() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
 				TestConstants.pubServerName1);
 
@@ -146,11 +119,11 @@ public class SCMPClnChangeSubscriptionTest {
 	}
 
 	/**
-	 * Description: change subscription call twice - second one fails because of no free connection<br>
+	 * Description: change subscription twice, second one fails because there is no free connection<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t20_ClnChangeSubscriptionTwiceFailsNoFreeConnection() throws Exception {
+	public void t20_ChangeTwiceFailsNoFreeConnection() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
 				TestConstants.pubServerName1);
 
