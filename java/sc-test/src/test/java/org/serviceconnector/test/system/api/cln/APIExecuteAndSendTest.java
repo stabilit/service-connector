@@ -126,7 +126,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 */
 	@Test
 	public void t010_disabledService() throws Exception {
-		SCMessage request = new SCMessage("tesst");
+		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback = new MsgCallback(sessionService);
@@ -153,7 +153,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t020_executeBeforeCreateSession() throws Exception {
-		SCMessage request = new SCMessage(new byte[128]);
+		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		response = sessionService.execute(request);
@@ -210,7 +210,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t050_operationTimeout() throws Exception {
-		SCMessage request = new SCMessage("hallo");
+		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
@@ -227,7 +227,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 */
 	@Test
 	public void t051_operationTimeout() throws Exception {
-		SCMessage request = new SCMessage("hallo");
+		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
@@ -385,7 +385,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t120_sendBeforeCreateSession() throws Exception {
-		SCMessage request = new SCMessage(new byte[128]);
+		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		sessionService.send(request);
@@ -397,7 +397,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 */
 	@Test
 	public void t110_disabledService() throws Exception {
-		SCMessage request = new SCMessage(new byte[128]);
+		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback = new MsgCallback(sessionService);
@@ -470,7 +470,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 */
 	@Test
 	public void t150_operationTimeout() throws Exception {
-		SCMessage request = new SCMessage("hallo");
+		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback = new MsgCallback(sessionService);
@@ -489,7 +489,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 */
 	@Test
 	public void t151_operationTimeout() throws Exception {
-		SCMessage request = new SCMessage("hallo");
+		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback = new MsgCallback(sessionService);
@@ -520,7 +520,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 */
 	@Test
 	public void t152_operationTimeout() throws Exception {
-		SCMessage request = new SCMessage("hallo");
+		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback = new MsgCallback(sessionService);

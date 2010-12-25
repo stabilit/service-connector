@@ -145,8 +145,11 @@ public class TestPublishServer extends TestStatefulServer {
 				} else {
 					PublishThread publishThread = new PublishThread(this.scPublishServer, sessionInfo, request,
 							operationTimeoutInMillis);
-					publishThread.start();
-					return response;
+					try {
+						publishThread.start();
+					} catch (Exception e1) {
+						logger.error("cannot not invoke method:" + sessionInfo, e1);
+					}
 				}
 			}
 			SubscriptionLogger.logSubscribe("publish-1", request.getSessionId(), request.getMask());
@@ -164,15 +167,13 @@ public class TestPublishServer extends TestStatefulServer {
 					response.setAppErrorCode(TestConstants.appErrorCode);
 					response.setAppErrorText(TestConstants.appErrorText);
 				} else {
+					PublishThread publishThread = new PublishThread(this.scPublishServer, sessionInfo, request,
+							operationTimeoutInMillis);
 					try {
-						PublishThread th = new PublishThread();
-						Method method = th.getClass().getMethod(sessionInfo, SCMessage.class, int.class);
-						method.invoke(th, request, operationTimeoutInMillis);
+						publishThread.start();
 					} catch (Exception e1) {
 						logger.error("cannot not invoke method:" + sessionInfo, e1);
-						return response;
 					}
-					return response;
 				}
 			}
 			SubscriptionLogger.logChangeSubscribe("publish-1", request.getSessionId(), request.getMask());

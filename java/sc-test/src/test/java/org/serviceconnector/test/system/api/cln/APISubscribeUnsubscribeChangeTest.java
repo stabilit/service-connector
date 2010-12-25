@@ -37,11 +37,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test
 	public void t01_subscribe() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo("doNothing");
-		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -116,11 +115,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class)
 	public void t07_subscribe() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(null);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -133,10 +131,9 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class)
 	public void t08_subscribe() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -148,11 +145,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = InvalidParameterException.class)
 	public void t09_subscribe() throws Exception {
 		publishService = client.newPublishService(null);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -165,11 +161,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class)
 	public void t10_subscribe() throws Exception {
 		publishService = client.newPublishService("");
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -182,11 +177,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class)
 	public void t11_subscribe() throws Exception {
 		publishService = client.newPublishService(" ");
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -199,11 +193,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class)
 	public void t12_subscribe() throws Exception {
 		publishService = client.newPublishService("gaga");
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -216,11 +209,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class)
 	public void t13_subscribe() throws Exception {
 		publishService = client.newPublishService(TestConstants.sesServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -233,11 +225,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class)
 	public void t14_subscribe() throws Exception {
 		publishService = client.newPublishService(TestConstants.filServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -250,11 +241,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = InvalidParameterException.class)
 	public void t15_subscribe() throws Exception {
 		publishService = client.newPublishService(TestConstants.filServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		subMsgResponse = publishService.subscribe(subMsgRequest, null);
 	}
@@ -267,11 +257,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class )
 	public void t20_disabledService() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 
@@ -291,11 +280,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test 
 	public void t30_noDataInterval() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(1);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -316,11 +304,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		SCPublishService service1 = client.newPublishService(TestConstants.pubServiceName1);
 		SCPublishService service2 = client.newPublishService(TestConstants.pubServiceName1);
 		
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		
 		MsgCallback cbk1 = new MsgCallback(service1);
 		MsgCallback cbk2 = new MsgCallback(service2);
@@ -350,11 +337,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class)
 	public void t41_subscribeTwice() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(null);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
@@ -372,7 +358,6 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -389,7 +374,6 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		Boolean passed = false;
@@ -413,11 +397,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test
 	public void t60_unsubscribe() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo("doNothing");
-		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -436,11 +419,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test
 	public void t61_disabledService() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);	
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -463,11 +445,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t62_unsubscribeTwice() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -489,11 +470,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test
 	public void t70_changeSubscription() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
@@ -517,11 +497,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class)
 	public void t71_changeSubscription() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo("doNothing");
-		subMsgRequest.setData("certificate or what so ever");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
@@ -539,11 +518,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class)
 	public void t72_changeSubscription() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		subMsgResponse = publishService.changeSubscription(subMsgRequest);
 	}
 	
@@ -555,11 +533,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class)
 	public void t73_changeSubscription() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
@@ -580,11 +557,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test
 	public void t74_changeSubscription() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
@@ -609,11 +585,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test
 	public void t80_disabledService() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
@@ -643,11 +618,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test (expected = SCServiceException.class )
 	public void t90_reject() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
@@ -666,11 +640,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	@Test
 	public void t91_reject() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setData("certificate or what so ever");
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());

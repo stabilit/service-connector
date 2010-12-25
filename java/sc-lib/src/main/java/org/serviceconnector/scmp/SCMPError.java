@@ -39,7 +39,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	BROKEN_SESSION("410", "Session is broken"),
 
 	/** 420-450 Validation errors */
-	/** The header validation error. */
+	/** The HV = header validation error. */
 	HV_ERROR("420", "Validation error occured."),
 	/** The HV_WRONG_SC_VERSION_FORMAT. */
 	HV_WRONG_SC_VERSION_FORMAT("421", "Invalid sc version format."),

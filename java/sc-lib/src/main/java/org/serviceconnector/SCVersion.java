@@ -38,7 +38,7 @@ import org.serviceconnector.scmp.SCMPError;
  * <ul>
  * <li>X – experimental, usually not distributed</li>
  * <li>T – field test, deployed to selected customers</li>
- * <li>X – experimental, usually not distributed</li>
+ * <li>V – final version, publically available</li>
  * </ul>
  *<p>
  * Release number designates the major release (design) of the product. It starts at 1 and is incremented by 1. New release is
