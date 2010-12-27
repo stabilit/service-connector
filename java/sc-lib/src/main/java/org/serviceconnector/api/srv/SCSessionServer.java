@@ -35,6 +35,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.SynchronousCallback;
 
 /**
@@ -147,6 +148,8 @@ public class SCSessionServer {
 				registerServerCall.setPortNumber(listenerPort);
 				registerServerCall.setImmediateConnect(immediateConnect);
 				registerServerCall.setKeepAliveInterval(keepAliveIntervalSeconds);
+				registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
+				registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 				SCServerCallback callback = new SCServerCallback(true);
 				try {
 					registerServerCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);

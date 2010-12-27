@@ -91,6 +91,9 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 	 *            the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
+		if(sessionInfo == null) {
+			return;
+		}
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 

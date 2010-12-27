@@ -18,12 +18,8 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
-import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.util.DateTimeUtility;
-
 
 /**
  * The Class SCMPAttachCall. Call attaches on SCMP level.
@@ -34,7 +30,7 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPAttachCall.class);
-	
+
 	/**
 	 * Instantiates a new SCMPAttachCall.
 	 */
@@ -54,14 +50,6 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
-		this.setVersion(SCMPMessage.SC_VERSION.toString());
-		this.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
-		super.invoke(scmpCallback, timeoutInMillis);
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public ISCMPCall newInstance(IRequester requester) {
 		return new SCMPAttachCall(requester);
 	}
@@ -72,7 +60,10 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	 * @param version
 	 *            the new version
 	 */
-	private void setVersion(String version) {
+	public void setVersion(String version) {
+		if (version == null) {
+			return;
+		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 	}
 
@@ -82,7 +73,10 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	 * @param localDateTime
 	 *            the new local date time
 	 */
-	private void setLocalDateTime(String localDateTime) {
+	public void setLocalDateTime(String localDateTime) {
+		if (localDateTime == null) {
+			return;
+		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, localDateTime);
 	}
 

@@ -35,6 +35,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.integration.IntegrationSuperTest;
+import org.serviceconnector.util.DateTimeUtility;
 
 public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 
@@ -71,6 +72,8 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.setMaxConnections(10);
 		registerServerCall.setPortNumber(9100);
 		registerServerCall.setImmediateConnect(true);
+		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
+		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		registerServerCall.invoke(cbk, 1000);
 		SCMPMessage reply = cbk.getMessageSync(3000);
 		Assert.assertTrue(reply.isFault());
@@ -92,6 +95,8 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.setMaxConnections(10);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
+		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		registerServerCall.invoke(cbk, 1000);
 		SCMPMessage reply = cbk.getMessageSync(3000);
 		Assert.assertTrue(reply.isFault());
@@ -113,6 +118,8 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.setMaxConnections(0);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
+		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		registerServerCall.invoke(cbk, 1000);
 		SCMPMessage reply = cbk.getMessageSync(3000);
 		Assert.assertTrue(reply.isFault());
@@ -134,6 +141,8 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.setMaxConnections(10);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
+		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		registerServerCall.invoke(cbk, 1000);
 		SCMPMessage reply = cbk.getMessageSync(3000);
 		Assert.assertTrue(reply.isFault());
@@ -155,6 +164,8 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.setPortNumber(TestConstants.PORT_SES_SRV_TCP);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
+		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 
 		registerServerCall.invoke(cbk, 1000);
 		SCMPMessage reply = cbk.getMessageSync(3000);
@@ -177,6 +188,8 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.setPortNumber(51000);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
+		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 
 		registerServerCall.invoke(cbk, 8000);
 		TestUtil.checkReply(cbk.getMessageSync(10000));
@@ -202,6 +215,8 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.setPortNumber(51000);
 		registerServerCall.setImmediateConnect(true);
 		registerServerCall.setKeepAliveInterval(360);
+		registerServerCall.setVersion(SCMPMessage.SC_VERSION.toString());
+		registerServerCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 
 		registerServerCall.invoke(cbk, 8000);
 		TestUtil.checkReply(cbk.getMessageSync(10000));

@@ -113,7 +113,7 @@ public class ProcessesController {
 
 		Process process = Runtime.getRuntime().exec(command);
 		proc.setProcess(process);
-		int timeout = 10; // seconds
+		int timeout = 15; // seconds
 		try {
 			FileUtility.waitExists(pidFileFullName, timeout);
 			testLogger.info("SC started");
@@ -126,7 +126,7 @@ public class ProcessesController {
 	}
 
 	public void stopSC(ProcessCtx scProcess) throws Exception {
-		int timeout = 10; // seconds
+		int timeout = 15; // seconds
 		try {
 			if (FileUtility.exists(scProcess.getPidFileName())) {
 				SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, scProcess.getSCPort(), ConnectionType.NETTY_TCP);
@@ -237,7 +237,7 @@ public class ProcessesController {
 				+ connectionType.getValue() + " " + serviceNames;
 		Process srvProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(srvProcess);
-		int timeout = 10;
+		int timeout = 15;
 		try {
 			FileUtility.waitExists(pidFileNameFull, timeout);
 			testLogger.info("Server " + serverName + " started");
@@ -250,7 +250,7 @@ public class ProcessesController {
 	}
 
 	public void stopServer(ProcessCtx srvProcess) throws Exception {
-		int timeout = 10; // seconds
+		int timeout = 15; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileName())) {
 				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);

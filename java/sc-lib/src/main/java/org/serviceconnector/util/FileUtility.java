@@ -130,6 +130,7 @@ public class FileUtility {
 			}
 		} catch (Exception e) {
 			// ignore any error
+			e.printStackTrace();
 		}
 	}
 	

@@ -18,6 +18,8 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.util.DateTimeUtility;
 
 public class MultipleNICTest extends IntegrationSuperTest {
 
@@ -37,7 +39,8 @@ public class MultipleNICTest extends IntegrationSuperTest {
 					IRequester req = new Requester(new RequesterContext(inetAddress.getHostAddress(), TestConstants.PORT_SC_HTTP,
 							ConnectionType.NETTY_HTTP.getValue(), 0));
 					SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
-
+					attachCall.setVersion(SCMPMessage.SC_VERSION.toString());
+					attachCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 					attachCall.invoke(cbk, 1000);
 					TestUtil.checkReply(cbk.getMessageSync(1000));
 
