@@ -351,6 +351,7 @@ public class SCSessionService extends SCService {
 			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
 					.newInstance(this.requester, this.serviceName, this.sessionId);
 			if (scMessage != null) {
+				// message might be null for deleteSession operation
 				deleteSessionCall.setSessionInfo(scMessage.getSessionInfo());
 			}
 			try {

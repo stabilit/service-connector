@@ -38,7 +38,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	/** The client to used to invoke the call. */
 	protected IRequester requester;
 	/** The session id to use for the call. */
-	protected String sessionId;	
+	protected String sessionId;
 	/** The service name. */
 	protected String serviceName;
 	/** The request message. */
@@ -157,11 +157,20 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		throw new UnsupportedOperationException();
 	}
 
+	private String limitStringLength(String string) {
+		System.out.println(string.length());
+		System.out.println(string.getBytes().length);
+		if (string.getBytes().length > 256) {
+			return string.substring(0, 256);
+		}
+		return string;
+	}
+
 	/**
-	 * The Class SCMPGroupCall. A group call is a summary of individual single calls. Each single call can be a large or
-	 * small message request and response. But all of them are handled as partial messages, large calls will be split
-	 * into partial calls (PRQ). The client uses group calls if the active communication is open end. Closing the group
-	 * will send the completing request (REQ). <br>
+	 * The Class SCMPGroupCall. A group call is a summary of individual single calls. Each single call can be a large or small
+	 * message request and response. But all of them are handled as partial messages, large calls will be split into partial calls
+	 * (PRQ). The client uses group calls if the active communication is open end. Closing the group will send the completing request
+	 * (REQ). <br>
 	 * Communication sample: <br>
 	 * openGroup (no transport) <br>
 	 * PRQ -> <-PRS <br>
