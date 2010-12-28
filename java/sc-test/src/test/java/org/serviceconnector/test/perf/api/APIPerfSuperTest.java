@@ -20,6 +20,8 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.rules.TestName;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
@@ -34,6 +36,9 @@ public class APIPerfSuperTest {
 	protected static ProcessCtx scCtx;
 	protected int threadCount = 0;
 
+	@Rule 
+	public TestName name = new TestName();
+	
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
@@ -42,6 +47,7 @@ public class APIPerfSuperTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
+		testLogger.info("** " + name.getMethodName());
 		threadCount = Thread.activeCount();
 	}
 

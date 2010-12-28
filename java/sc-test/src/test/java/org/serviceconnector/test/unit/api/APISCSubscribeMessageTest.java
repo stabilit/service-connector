@@ -24,8 +24,9 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.test.unit.SuperUnitTest;
 
-public class APISCSubscribeMessageTest {
+public class APISCSubscribeMessageTest extends SuperUnitTest{
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(APISCSubscribeMessageTest.class);
@@ -33,13 +34,15 @@ public class APISCSubscribeMessageTest {
 	private SCSubscribeMessage message;
 
 	@Before
-	public void beforeOneTest() {
+	public void beforeOneTest() throws Exception{
+		super.beforeOneTest();
 		message = new SCSubscribeMessage();
 	}
 	
 	@After
 	public void afterOneTest(){
 		message = null;
+		super.afterOneTest();
 	}
 	
 	/**

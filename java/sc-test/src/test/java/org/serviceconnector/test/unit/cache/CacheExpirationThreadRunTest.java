@@ -37,6 +37,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SessionService;
+import org.serviceconnector.test.unit.SuperUnitTest;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.TimeMillis;
 
@@ -45,7 +46,7 @@ import org.serviceconnector.util.TimeMillis;
  * 
  * @author ds
  */
-public class CacheExpirationThreadRunTest {
+public class CacheExpirationThreadRunTest extends SuperUnitTest {
 
 	private CacheManager cacheManager;
 
@@ -59,7 +60,8 @@ public class CacheExpirationThreadRunTest {
 	 * 
 	 */
 	@Before
-	public void beforeTest() throws Exception {
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
 		AppContext.setSCEnvironment(true);
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		Service service = new SessionService("dummy");
@@ -74,8 +76,9 @@ public class CacheExpirationThreadRunTest {
 	 * Run after each test, destroy cache manager<br/>
 	 */
 	@After
-	public void afterTest() {
+	public void afterOneTest() {
 		cacheManager.destroy();
+		super.afterOneTest();
 	}
 
 	/**

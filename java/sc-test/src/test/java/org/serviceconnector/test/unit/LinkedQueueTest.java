@@ -32,13 +32,14 @@ import org.serviceconnector.util.LinkedQueue;
 /**
  * @author JTraber
  */
-public class LinkedQueueTest {
+public class LinkedQueueTest extends SuperUnitTest {
 
 	private LinkedQueue<SCMPMessage> queue;
 	public boolean killThreads = false;
 
 	@Before
-	public void beforeOneTest() {
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
 		this.queue = new LinkedQueue<SCMPMessage>();
 	}
 

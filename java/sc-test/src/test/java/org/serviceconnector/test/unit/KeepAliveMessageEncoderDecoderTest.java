@@ -34,7 +34,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 /**
  * The Class LargeMessageEncoderDecoderTest.
  */
-public class KeepAliveMessageEncoderDecoderTest {
+public class KeepAliveMessageEncoderDecoderTest extends SuperUnitTest {
 
 	/** The coder factory. */
 	private FlyweightEncoderDecoderFactory coderFactory = AppContext.getEncoderDecoderFactory();

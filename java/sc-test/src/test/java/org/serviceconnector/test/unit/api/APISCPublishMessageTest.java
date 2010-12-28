@@ -22,8 +22,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.api.SCPublishMessage;
+import org.serviceconnector.test.unit.SuperUnitTest;
 
-public class APISCPublishMessageTest {
+public class APISCPublishMessageTest extends SuperUnitTest {
 	
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(APISCPublishMessageTest.class);
@@ -31,13 +32,15 @@ public class APISCPublishMessageTest {
 	private SCPublishMessage message;
 
 	@Before
-	public void beforeOneTest() {
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
 		message = new SCPublishMessage();
 	}
 	
 	@After
 	public void afterOneTest(){
 		message = null;
+		super.afterOneTest();
 	}
 	
 	/**

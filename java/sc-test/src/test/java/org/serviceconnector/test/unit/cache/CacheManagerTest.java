@@ -33,8 +33,6 @@ package org.serviceconnector.test.unit.cache;
 
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.cache.CacheConfiguration;
 import org.serviceconnector.cache.CacheException;
@@ -43,21 +41,14 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SessionService;
+import org.serviceconnector.test.unit.SuperUnitTest;
 
 /**
  * The class CacheManagerTest tests the cache manager initialization and destroy functionality.
  * 
  * @author ds
  */
-public class CacheManagerTest {
-
-	@Before
-	public void beforeTest() throws Exception {
-	}
-
-	@After
-	public void afterTest() {
-	}
+public class CacheManagerTest extends SuperUnitTest {
 
 	/**
 	 * Description:	Create cacheManager, initialize it, then destroy it. <br>

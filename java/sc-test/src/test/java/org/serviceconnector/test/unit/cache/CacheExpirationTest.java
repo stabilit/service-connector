@@ -35,50 +35,51 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SessionService;
+import org.serviceconnector.test.unit.SuperUnitTest;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.TimeMillis;
-
 
 /**
  * The class CacheExpirationTest tests the cache expiration functionality.
  * 
  * @author ds
  */
-public class CacheExpirationTest {
+public class CacheExpirationTest extends SuperUnitTest {
 
 	private CacheManager cacheManager;
-	
+
 	/**
-	 * Run before each test and setup the dummy environment (services and cache manager).
-	 * <br/>
+	 * Run before each test and setup the dummy environment (services and cache manager). <br/>
 	 * 
 	 * @throws Exception
 	 * 
 	 */
 	@Before
-	public void beforeTest() throws Exception {
-	   AppContext.setSCEnvironment(true);
-       ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
-	   Service service = new SessionService("dummy");
-       serviceRegistry.addService("dummy", service);
-	   service = new SessionService("dummy1");
-       serviceRegistry.addService("dummy1", service);
-	   service = new SessionService("dummy2");
-       serviceRegistry.addService("dummy2", service);
-	   cacheManager = new CacheManager();
-	   cacheManager.initialize();
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		AppContext.setSCEnvironment(true);
+		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
+		Service service = new SessionService("dummy");
+		serviceRegistry.addService("dummy", service);
+		service = new SessionService("dummy1");
+		serviceRegistry.addService("dummy1", service);
+		service = new SessionService("dummy2");
+		serviceRegistry.addService("dummy2", service);
+		cacheManager = new CacheManager();
+		cacheManager.initialize();
 	}
 
 	@After
 	public void afterTest() {
 		cacheManager.destroy();
+		super.afterOneTest();
 	}
 
 	/**
 	 * Description: Simple cache write test, not expired<br>
 	 * Write a message into the cache using a dummy id and nr and read the message from cache again, checking if both contents
 	 * (body) equals. Verify if cache size is 1.<br>
-	 *  
+	 * 
 	 * Expectation: passes
 	 */
 	@Test
@@ -86,12 +87,13 @@ public class CacheExpirationTest {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the buffer";
 		byte[] buffer = stringWrite.getBytes();
-		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);		
+		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		Date now = new Date();
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, TimeMillis.HOUR.getMillis());	
-		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility.getTimeAsString(expirationDate));
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, TimeMillis.HOUR.getMillis());
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility
+				.getTimeAsString(expirationDate));
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
@@ -111,7 +113,7 @@ public class CacheExpirationTest {
 	 * Description: Simple cache write test, expired<br>
 	 * Write a message into the cache using a dummy id and nr. Set the expiration date and time one hour to the past.
 	 * Try to read the message from its cache again but this should fail because the message has been expired.<br>
-	 *  
+	 * 
 	 * Expectation: passes
 	 */
 	@Test
@@ -119,19 +121,20 @@ public class CacheExpirationTest {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the buffer";
 		byte[] buffer = stringWrite.getBytes();
-		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);		
+		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		Date now = new Date();
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, -TimeMillis.HOUR.getMillis());	
-		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility.getTimeAsString(expirationDate));
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, -TimeMillis.HOUR.getMillis());
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility
+				.getTimeAsString(expirationDate));
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, msgCacheId.getFullCacheId());
 		CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead.getCacheId());
 		if (cacheMessage != null) {
-		    Assert.fail("cache should be expired but is not");
+			Assert.fail("cache should be expired but is not");
 		}
 		CacheComposite cacheComposite = scmpCache.getComposite(msgCacheId.getCacheId());
 		int size = cacheComposite.getSize();

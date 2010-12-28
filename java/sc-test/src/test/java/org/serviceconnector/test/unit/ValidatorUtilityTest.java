@@ -33,7 +33,7 @@ import org.serviceconnector.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class ValidatorUtilityTest {
+public class ValidatorUtilityTest extends SuperUnitTest {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ValidatorUtilityTest.class);

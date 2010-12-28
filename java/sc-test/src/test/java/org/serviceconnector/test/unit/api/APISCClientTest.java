@@ -28,12 +28,13 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.test.unit.SuperUnitTest;
 
 /**
  * @author FJurnecka
  * 
  */
-public class APISCClientTest {
+public class APISCClientTest extends SuperUnitTest{
 
 	/** The Constant testLogger. */
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
@@ -47,12 +48,14 @@ public class APISCClientTest {
 	 * @throws java.lang.Exception
 	 */
 	@Before
-	public void beforeOneTest() {
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
 		client = null;
 	}
 	@After
 	public void afterOneTest(){
 		client = null;
+		super.afterOneTest();
 	}
 
 	/**

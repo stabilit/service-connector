@@ -26,7 +26,7 @@ import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPPart;
 
-public class DecodeSCMPVersionTest {
+public class DecodeSCMPVersionTest extends SuperUnitTest {
 
 	/** The coder factory. */
 	private FlyweightEncoderDecoderFactory coderFactory = AppContext.getEncoderDecoderFactory();

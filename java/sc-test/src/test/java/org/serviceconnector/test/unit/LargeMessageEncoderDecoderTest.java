@@ -39,7 +39,7 @@ import org.serviceconnector.scmp.SCMPPart;
 /**
  * The Class LargeMessageEncoderDecoderTest.
  */
-public class LargeMessageEncoderDecoderTest {
+public class LargeMessageEncoderDecoderTest extends SuperUnitTest {
 
 	/** The coder factory. */
 	private FlyweightEncoderDecoderFactory coderFactory = AppContext.getEncoderDecoderFactory();

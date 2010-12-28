@@ -35,13 +35,14 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SessionService;
+import org.serviceconnector.test.unit.SuperUnitTest;
 
 /**
  * The Class CacheTest tests the core cache functionality.
  * 
  * @author ds
  */
-public class CacheTest {
+public class CacheTest extends SuperUnitTest {
 
 	private CacheManager cacheManager;
 
@@ -52,7 +53,8 @@ public class CacheTest {
 	 * 
 	 */
 	@Before
-	public void beforeTest() throws Exception {
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
 		AppContext.setSCEnvironment(true);
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		Service service = new SessionService("dummy");
@@ -69,7 +71,7 @@ public class CacheTest {
 	 * Run after each test, destroy cache manager<br/>
 	 */
 	@After
-	public void afterTest() {
+	public void afterOneTest() {
 		cacheManager.destroy();
 	}
 

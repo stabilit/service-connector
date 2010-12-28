@@ -28,11 +28,12 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.Loggers;
+import org.serviceconnector.test.unit.SuperUnitTest;
 
 /**
  * @author FJurnecka
  */
-public class APISCMessageTest {
+public class APISCMessageTest extends SuperUnitTest {
 
 	/** The Constant testLogger. */
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
@@ -43,13 +44,15 @@ public class APISCMessageTest {
 	private SCMessage message;
 
 	@Before
-	public void beforeOneTest() {
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
 		message = new SCMessage();
 	}
 
 	@After
 	public void afterOneTest() {
 		message = null;
+		super.afterOneTest();
 	}
 
 	/**

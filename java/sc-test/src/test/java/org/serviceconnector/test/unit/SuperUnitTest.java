@@ -13,56 +13,35 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.integration;
+package org.serviceconnector.test.unit;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.TestName;
-import org.serviceconnector.TestConstants;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 
-public class IntegrationSuperTest {
+public class SuperUnitTest {
 
 	/** The Constant testLogger. */
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
-	protected static ProcessesController ctrl;
-	protected static ProcessCtx scCtx;
 	protected int threadCount = 0;
 
 	@Rule 
 	public TestName name = new TestName();
 	
-	@BeforeClass
-	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
-	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		testLogger.info("** " + name.getMethodName());
 		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}
 
 	@After
-	public void afterOneTest() throws Exception {
-		try {
-			ctrl.stopSC(scCtx);
-		} catch (Exception e) {
-		}
-		scCtx = null;
+	public void afterOneTest() {
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
 	}
 
-	@AfterClass
-	public static void afterAllTests() throws Exception {
-		ctrl = null;
-	}
 }

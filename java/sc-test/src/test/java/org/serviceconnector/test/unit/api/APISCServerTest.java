@@ -27,9 +27,10 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.test.unit.SuperUnitTest;
 
 
-public class APISCServerTest {
+public class APISCServerTest extends SuperUnitTest {
 
 	/** The Constant testLogger. */
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
@@ -40,7 +41,8 @@ public class APISCServerTest {
 	private SCServer server;
 
 	@Before
-	public void beforeOneTest() {
+	public void beforeOneTest() throws Exception{
+		super.beforeOneTest();
 		server = null;
 	}
 	
@@ -51,6 +53,7 @@ public class APISCServerTest {
 		} catch (Exception e) {
 		}
 		server = null;
+		super.afterOneTest();
 	}
 	
 	/**

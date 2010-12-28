@@ -38,7 +38,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 /**
  * The Class DefaultEncoderDecoderTest.
  */
-public class DefaultEncoderDecoderTest {
+public class DefaultEncoderDecoderTest extends SuperUnitTest {
 
 	/** The coder factory. */
 	private FlyweightEncoderDecoderFactory coderFactory = AppContext.getEncoderDecoderFactory();
@@ -61,7 +61,8 @@ public class DefaultEncoderDecoderTest {
 	 * Sets the up.
 	 */
 	@Before
-	public void beforeOneTest() {
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
 		this.headKey = SCMPHeaderKey.REQ;
 		this.msgType = SCMPMsgType.ATTACH;
 		this.bodyType = SCMPBodyType.BINARY;

@@ -28,7 +28,7 @@ import org.serviceconnector.net.IFrameDecoder;
  * 
  * @author JTraber
  */
-public class DefaultFrameDecoderTest {
+public class DefaultFrameDecoderTest extends SuperUnitTest {
 
 	/** The decoder. */
 	private IFrameDecoder decoder = AppContext.getFrameDecoderFactory().getFrameDecoder(Constants.TCP);
