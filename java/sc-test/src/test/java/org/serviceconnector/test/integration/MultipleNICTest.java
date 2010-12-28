@@ -19,8 +19,6 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
-import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.util.DateTimeUtility;
 
 public class MultipleNICTest extends IntegrationSuperTest {
 

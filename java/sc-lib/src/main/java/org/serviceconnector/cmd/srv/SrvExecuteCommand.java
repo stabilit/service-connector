@@ -16,10 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.srv;
 
-import java.text.SimpleDateFormat;
-
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SrvSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;

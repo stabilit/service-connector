@@ -1,7 +1,6 @@
 package org.serviceconnector.api.cln;
 
 import org.serviceconnector.api.SCPublishMessage;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
