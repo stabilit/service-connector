@@ -69,9 +69,9 @@ public class DemoPublishClient extends Thread {
 		} finally {
 			try {
 				SCSubscribeMessage msg = new SCSubscribeMessage();
-				msg.setSessionInfo("kill server"); // optional
-				service.unsubscribe(msg); // regular
-				sc.detach(); // detaches from SC, stops communication
+				msg.setSessionInfo("kill server"); 
+				service.unsubscribe(5,msg); 
+				sc.detach(2); // detaches from SC, stops communication
 			} catch (Exception e) {
 				logger.info("cleanup " + e.toString());
 			}

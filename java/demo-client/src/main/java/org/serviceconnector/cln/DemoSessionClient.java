@@ -79,9 +79,9 @@ public class DemoSessionClient {
 		} finally {
 			try {
 				SCMessage msg = new SCMessage();
-				msg.setSessionInfo("kill server"); // optional
-				service.deleteSession(msg); // regular
-				sc.detach(); // detaches from SC, stops communication
+				msg.setSessionInfo("kill server"); 
+				service.deleteSession(5,msg); 
+				sc.detach(2); // detaches from SC, stops communication
 			} catch (Exception e) {
 				logger.error("cleanup", e);
 			}
