@@ -45,18 +45,14 @@ class SCPublishServiceCallback extends SCServiceCallback {
 			replyToClient.setData(reply.getBody());
 			replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 			replyToClient.setSessionId(reply.getSessionId());
-			try {
-				replyToClient.setMask(reply.getHeader(SCMPHeaderAttributeKey.MASK));
-				replyToClient.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-				replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-				replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
-			} catch (SCMPValidatorException ex) {
-				logger.warn("attributes invalid when setting in scmessage");
-			}
+			replyToClient.setMask(reply.getHeader(SCMPHeaderAttributeKey.MASK));
+			replyToClient.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+			replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+			replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 			// inform service request is completed
 			this.service.setRequestComplete();
 			this.messageCallback.receive(replyToClient);
 		}
-		((SCPublishService)this.service).receivePublication();
+		((SCPublishService) this.service).receivePublication();
 	}
 }

@@ -17,7 +17,6 @@
 package org.serviceconnector.api;
 
 import java.io.InputStream;
-import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -94,10 +93,6 @@ public class SCMessage {
 	 *            Example: SECURITY_MARKET_QUERY
 	 */
 	public void setMessageInfo(String messageInfo) {
-		if (messageInfo == null) {
-			this.messageInfo = null;
-			return;
-		}
 		this.messageInfo = messageInfo;
 	}
 
@@ -117,10 +112,6 @@ public class SCMessage {
 	 *            Optional information passed together with the message body Any printable character, length > 0 and < 256 Byte<br>
 	 */
 	public void setSessionInfo(String sessionInfo) {
-		if (sessionInfo == null) {
-			this.sessionInfo = null;
-			return;
-		}
 		this.sessionInfo = sessionInfo;
 	}
 
@@ -159,19 +150,7 @@ public class SCMessage {
 	 *            the new data
 	 */
 	public void setData(Object data) {
-		if (data == null) {
-			this.data = null;
-			return;
-		}
-		if (data instanceof byte[]) {
-			this.data = data;
-			return;
-		}
-		if (data instanceof String) {
-			this.data = data;
-			return;
-		}
-		throw new InvalidParameterException("this type of body is not supported");
+		this.data = null;
 	}
 
 	/**
@@ -263,10 +242,6 @@ public class SCMessage {
 	 *            the new cache id
 	 */
 	public void setCacheId(String cacheId) throws SCMPValidatorException {
-		if (cacheId == null) {
-			this.cacheId = null;
-			return;
-		}
 		this.cacheId = cacheId;
 	}
 
@@ -286,10 +261,6 @@ public class SCMessage {
 	 *            the new application error text
 	 */
 	public void setAppErrorText(String appErrorText) {
-		if (appErrorText == null) {
-			this.appErrorText = null;
-			return;
-		}
 		this.appErrorText = appErrorText;
 	}
 
@@ -366,10 +337,6 @@ public class SCMessage {
 	 *            the new cache expiration date time
 	 */
 	public void setCacheExpirationDateTime(String cacheExpirationDateTime) {
-		if (cacheExpirationDateTime == null) {
-			this.cacheExpirationDateTime = null;
-			return;
-		}
 		this.cacheExpirationDateTime = cacheExpirationDateTime;
 	}
 

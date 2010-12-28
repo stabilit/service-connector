@@ -15,33 +15,56 @@
  */
 package org.serviceconnector.api;
 
-import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.util.ValidatorUtility;
-
+/**
+ * The Class SCPublishMessage.
+ */
 public class SCPublishMessage extends SCMessage {
 
+	/** The mask. */
 	private String mask = null;
 
+	/**
+	 * Instantiates a new sC publish message.
+	 */
 	public SCPublishMessage() {
 	}
 
+	/**
+	 * Instantiates a new sC publish message.
+	 * 
+	 * @param data
+	 *            the data
+	 */
 	public SCPublishMessage(byte[] data) {
 		super(data);
 	}
 
+	/**
+	 * Instantiates a new sC publish message.
+	 * 
+	 * @param data
+	 *            the data
+	 */
 	public SCPublishMessage(String data) {
 		super(data);
 	}
 
+	/**
+	 * Gets the mask.
+	 * 
+	 * @return the mask
+	 */
 	public String getMask() {
 		return mask;
 	}
 
-	public void setMask(String mask) throws SCMPValidatorException {
-		if (mask != null) {
-			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-		}
+	/**
+	 * Sets the mask.
+	 * 
+	 * @param mask
+	 *            the new mask
+	 */
+	public void setMask(String mask) {
 		this.mask = mask;
 	}
 }
