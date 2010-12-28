@@ -60,7 +60,6 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 		String serviceName = reqMessage.getServiceName();
 		// look up srvService
 		SrvSessionService srvService = this.getSrvSessionServiceByServiceName(serviceName);
-
 		String sessionId = reqMessage.getSessionId();
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
@@ -70,22 +69,24 @@ public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(sessionId);
 		scMessage.setServiceName(reqMessage.getServiceName());
 		scMessage.setSessionInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
-		
-		// inform callback with scMessages
-		srvService.getCallback().deleteSession(scMessage,
-				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
-		// handling msgSequenceNr
-		SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
-		msgSequenceNr.incrementMsgSequenceNr();
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
-		reply.setServiceName(serviceName);
-		reply.setSessionId(reqMessage.getSessionId());
-		reply.setMessageType(this.getKey());
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
-		response.setSCMP(reply);
-		// delete session in SCMPSessionCompositeRegistry
-		SrvCommandAdapter.sessionCompositeRegistry.removeSession(sessionId);
+		try {
+			// inform callback with scMessages
+			srvService.getCallback().deleteSession(scMessage,
+					Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+			// handling msgSequenceNr
+			SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
+			msgSequenceNr.incrementMsgSequenceNr();
+			// set up reply
+			SCMPMessage reply = new SCMPMessage();
+			reply.setServiceName(serviceName);
+			reply.setSessionId(reqMessage.getSessionId());
+			reply.setMessageType(this.getKey());
+			reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
+			response.setSCMP(reply);
+		} finally {
+			// delete session in SCMPSessionCompositeRegistry
+			SrvCommandAdapter.sessionCompositeRegistry.removeSession(sessionId);
+		}
 	}
 
 	/** {@inheritDoc} */

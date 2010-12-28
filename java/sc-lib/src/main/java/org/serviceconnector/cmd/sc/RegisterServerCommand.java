@@ -167,7 +167,7 @@ public class RegisterServerCommand extends CommandAdapter {
 			ValidatorUtility.validateInt(1, portNr, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 			// keepAliveInterval mandatory
 			String kpi = message.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
-			ValidatorUtility.validateInt(0, kpi, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);			
+			ValidatorUtility.validateInt(1, kpi, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);			
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

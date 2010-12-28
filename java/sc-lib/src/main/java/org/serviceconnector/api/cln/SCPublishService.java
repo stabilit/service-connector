@@ -72,10 +72,10 @@ public class SCPublishService extends SCService {
 	 * @param operationTimeoutSeconds
 	 *            the timeout in seconds
 	 * @param scSubscribeMessage
-	 *            the sc subscribe message
+	 *            the SC subscribe message
 	 * @param scMessageCallback
-	 *            the sc message callback
-	 * @return the sC subscribe message
+	 *            the SC message callback
+	 * @return the SC subscribe message
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -136,8 +136,8 @@ public class SCPublishService extends SCService {
 	 * Change subscription.
 	 * 
 	 * @param scSubscribeMessage
-	 *            the sc subscribe message
-	 * @return the sC subscribe message
+	 *            the SC subscribe message
+	 * @return the SC subscribe message
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -151,8 +151,8 @@ public class SCPublishService extends SCService {
 	 * @param operationTimeoutSeconds
 	 *            the timeout in seconds
 	 * @param scSubscribeMessage
-	 *            the sc subscribe message
-	 * @return the sC subscribe message
+	 *            the SC subscribe message
+	 * @return the SC subscribe message
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -244,7 +244,7 @@ public class SCPublishService extends SCService {
 	 * Unsubscribe.
 	 * 
 	 * @param scSubscribeMessage
-	 *            the sc subscribe message
+	 *            the SC subscribe message
 	 * @throws Exception
 	 *             the exception
 	 */

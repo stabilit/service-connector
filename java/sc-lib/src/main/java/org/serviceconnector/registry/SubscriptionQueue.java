@@ -24,10 +24,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cmd.sc.PublishTimeout;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.PublishTimeout;
 import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.LinkedNode;

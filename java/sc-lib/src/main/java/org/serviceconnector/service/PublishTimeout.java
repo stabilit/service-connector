@@ -1,4 +1,4 @@
-package org.serviceconnector.cmd.sc;
+package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
@@ -12,7 +12,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
-import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ITimeout;
 
 /**

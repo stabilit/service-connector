@@ -100,8 +100,8 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 				reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			}
 		}
-		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
+		reply.setServiceName(serviceName);
 		reply.setMessageType(this.getKey());
 		response.setSCMP(reply);
 	}

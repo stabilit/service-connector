@@ -68,22 +68,24 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(sessionId);
 		scMessage.setServiceName(reqMessage.getServiceName());
 		scMessage.setSessionInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
-		
-		// inform callback with scMessages
-		srvService.getCallback().unsubscribe(scMessage,
-				Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
-		// handling msgSequenceNr
-		SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
-		msgSequenceNr.incrementMsgSequenceNr();
-		// set up reply
-		SCMPMessage reply = new SCMPMessage();
-		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
-		reply.setServiceName(serviceName);
-		reply.setSessionId(reqMessage.getSessionId());
-		reply.setMessageType(this.getKey());
-		response.setSCMP(reply);
-		// delete session in SCMPSessionCompositeRegistry
-		SrvCommandAdapter.sessionCompositeRegistry.removeSession(sessionId);
+		try {
+			// inform callback with scMessages
+			srvService.getCallback().unsubscribe(scMessage,
+					Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
+			// handling msgSequenceNr
+			SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
+			msgSequenceNr.incrementMsgSequenceNr();
+			// set up reply
+			SCMPMessage reply = new SCMPMessage();
+			reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
+			reply.setServiceName(serviceName);
+			reply.setSessionId(reqMessage.getSessionId());
+			reply.setMessageType(this.getKey());
+			response.setSCMP(reply);
+		} finally {
+			// delete session in SCMPSessionCompositeRegistry
+			SrvCommandAdapter.sessionCompositeRegistry.removeSession(sessionId);
+		}
 	}
 
 	/** {@inheritDoc} */
