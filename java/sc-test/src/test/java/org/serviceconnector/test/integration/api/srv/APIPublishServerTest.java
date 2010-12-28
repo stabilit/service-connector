@@ -22,7 +22,6 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCPublishMessage;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
@@ -72,9 +71,9 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 
 	/**
 	 * Description:	publish 1 message with mask = ""<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t103_publish() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
@@ -91,9 +90,9 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 
 	/**
 	 * Description:	publish 1 message with mask = " "<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t104_publish() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
@@ -110,9 +109,9 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 
 	/**
 	 * Description:	publish 1 message with mask = 257 bytes long string<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t105_publish() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
