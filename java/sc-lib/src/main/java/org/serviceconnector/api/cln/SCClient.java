@@ -115,8 +115,6 @@ public class SCClient {
 					keepAliveIntervalSeconds, this.maxConnections));
 			SCServiceCallback callback = new SCServiceCallback(true);
 			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
-			attachCall.setVersion(SCMPMessage.SC_VERSION.toString());
-			attachCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 			try {
 				attachCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {

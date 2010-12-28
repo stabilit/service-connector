@@ -79,8 +79,6 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 	public void t01_AttachDetach() throws Exception {
 		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, this.port, this.connectionType.getValue(), 0));
 		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
-		attachCall.setVersion(SCMPMessage.SC_VERSION.toString());
-		attachCall.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
 		TestCallback callback = new TestCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync(3000);
