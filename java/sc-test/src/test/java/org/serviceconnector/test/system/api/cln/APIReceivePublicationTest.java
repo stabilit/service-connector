@@ -41,6 +41,7 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 1;
 		subMsgRequest.setData(Integer.toString(nrMessages));
+		subMsgRequest.setDataLength(((String)subMsgRequest.getData()).length());
 		msgCallback.setExpectedMessages(nrMessages);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
@@ -71,6 +72,7 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 1000;
 		subMsgRequest.setData(Integer.toString(nrMessages));
+		subMsgRequest.setDataLength(((String)subMsgRequest.getData()).length());
 		msgCallback.setExpectedMessages(nrMessages);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
@@ -102,6 +104,7 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		int nrMessages = 5;
 		String waitInMillis = "1000";
 		subMsgRequest.setData(nrMessages + "|" + waitInMillis);
+		subMsgRequest.setDataLength(((String)subMsgRequest.getData()).length());
 		msgCallback.setExpectedMessages(nrMessages);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
@@ -133,6 +136,7 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		subMsgRequest.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		int nrMessages = 200;
 		subMsgRequest.setData(Integer.toString(nrMessages));
+		subMsgRequest.setDataLength(((String)subMsgRequest.getData()).length());
 		msgCallback.setExpectedMessages(nrMessages);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
@@ -169,6 +173,7 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setData(Integer.toString(nrMessages));
+		subMsgRequest.setDataLength(((String)subMsgRequest.getData()).length());
 		
 		subMsgResponse = service1.subscribe(subMsgRequest, cbk1);
 		Assert.assertNotNull("the session ID is null", service1.getSessionId());

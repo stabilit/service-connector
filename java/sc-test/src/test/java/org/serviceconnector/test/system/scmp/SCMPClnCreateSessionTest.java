@@ -129,7 +129,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		createSessionCall.invoke(cbk, 1000);
 		SCMPMessage fault = cbk.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		TestUtil.verifyError(fault, SCMPError.SC_ERROR, SCMPMsgType.UNDEFINED);
+		TestUtil.verifyError(fault, SCMPError.SERVER_ERROR, SCMPMsgType.UNDEFINED);
 	}
 
 	/**

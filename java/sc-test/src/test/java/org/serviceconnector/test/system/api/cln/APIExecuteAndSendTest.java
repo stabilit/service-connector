@@ -368,7 +368,6 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	@Test
 	public void t051_operationTimeout() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
-		request.setDataLength(TestConstants.pangram.length());
 		request.setCompressed(false);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
@@ -384,6 +383,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		}
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("hallo");
+		request.setDataLength(((String) request.getData()).length());
 		response = sessionService.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -638,7 +638,6 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	@Test
 	public void t151_operationTimeout() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
-		request.setDataLength(TestConstants.pangram.length());
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback = new MsgCallback(sessionService);
@@ -654,6 +653,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		messageReceived = false;
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("hallo"); // send second message
+		request.setDataLength(((String) request.getData()).length());
 		sessionService.send(request);
 		msgCallback.waitForMessage(10); // will wait max 10 seconds for the second response
 		response = msgCallback.getResponse();
@@ -670,7 +670,6 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	@Test
 	public void t152_operationTimeout() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
-		request.setDataLength(TestConstants.pangram.length());
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback = new MsgCallback(sessionService);
@@ -685,6 +684,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		messageReceived = false;
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("gaga");
+		request.setDataLength(((String) request.getData()).length());
 		sessionService.send(request);
 		msgCallback.waitForMessage(10); // will wait max 10 seconds for response
 		response = msgCallback.getResponse();
@@ -694,6 +694,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 
 		// third message (synchronous)
 		request.setData("abraka-dabra");
+		request.setDataLength(((String) request.getData()).length());
 		response = sessionService.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());

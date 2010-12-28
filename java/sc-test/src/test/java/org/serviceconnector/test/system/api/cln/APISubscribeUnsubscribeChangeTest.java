@@ -38,6 +38,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t01_subscribe() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
@@ -257,6 +258,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t16_subscribeAPPError() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.echoAppErrorCmd);
@@ -349,6 +351,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t30_noDataInterval() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
@@ -373,6 +376,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		SCPublishService service2 = client.newPublishService(TestConstants.pubServiceName1);
 		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
@@ -468,6 +472,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t60_unsubscribe() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
@@ -516,6 +521,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
@@ -541,6 +547,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t70_changeSubscription() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
@@ -569,6 +576,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t71_changeSubscription() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
@@ -606,6 +614,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t73_changeSubscription() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
@@ -631,6 +640,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t74_changeSubscription() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
@@ -659,6 +669,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t75_changeSubscriptionAPPError() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.echoAppErrorCmd);
@@ -692,6 +703,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t80_disabledService() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
@@ -726,6 +738,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t90_reject() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
@@ -749,6 +762,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	public void t91_reject() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
