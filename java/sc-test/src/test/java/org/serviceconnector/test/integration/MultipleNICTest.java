@@ -7,6 +7,7 @@ import java.util.Enumeration;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
@@ -23,6 +24,12 @@ import org.serviceconnector.util.DateTimeUtility;
 
 public class MultipleNICTest extends IntegrationSuperTest {
 
+	@Before
+	public void beforeOneTest() throws Exception {
+		threadCount = Thread.activeCount();
+		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCNoInterfacesProperties);
+	}
+	
 	/**
 	 * Description: Connects to all available NIC on the current PC<br>
 	 * Expectation: passes
