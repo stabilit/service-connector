@@ -17,7 +17,7 @@ public class APIReceivePublicationBenchmark extends APIPerfSuperClientTest {
 	 * Expectation: performance better than 1000 msg/sec
 	 */
 	@Test
-	public void benchmark_100000_msg_compressed() throws Exception {
+	public void t_100000_msg_compressed() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
@@ -42,7 +42,7 @@ public class APIReceivePublicationBenchmark extends APIPerfSuperClientTest {
 	 * Expectation: performance better than 1000 msg/sec
 	 */
 	@Test
-	public void benchmark_100000_msg_uncompressed() throws Exception {
+	public void t_100000_msg_uncompressed() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;

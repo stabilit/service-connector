@@ -142,6 +142,9 @@ public class TestPublishServer extends TestStatefulServer {
 					response.setReject(true);
 					response.setAppErrorCode(TestConstants.appErrorCode);
 					response.setAppErrorText(TestConstants.appErrorText);
+				} else if (sessionInfo.equals(TestConstants.echoAppErrorCmd)) {
+					response.setAppErrorCode(TestConstants.appErrorCode);
+					response.setAppErrorText(TestConstants.appErrorText);
 				} else {
 					PublishThread publishThread = new PublishThread(this.scPublishServer, sessionInfo, request,
 							operationTimeoutInMillis);
@@ -164,6 +167,9 @@ public class TestPublishServer extends TestStatefulServer {
 				// watch out for reject request
 				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
 					response.setReject(true);
+					response.setAppErrorCode(TestConstants.appErrorCode);
+					response.setAppErrorText(TestConstants.appErrorText);
+				} else if (sessionInfo.equals(TestConstants.echoAppErrorCmd)) {
 					response.setAppErrorCode(TestConstants.appErrorCode);
 					response.setAppErrorText(TestConstants.appErrorText);
 				} else if (sessionInfo.equals(TestConstants.sleepCmd)) {

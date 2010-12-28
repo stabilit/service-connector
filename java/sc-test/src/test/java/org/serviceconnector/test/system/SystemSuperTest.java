@@ -46,7 +46,7 @@ public class SystemSuperTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		testLogger.info("** " + name.getMethodName());
+		testLogger.info(">> " + name.getMethodName() + " <<");
 		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}

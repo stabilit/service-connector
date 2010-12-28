@@ -249,6 +249,29 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		subMsgResponse = publishService.subscribe(subMsgRequest, null);
 	}
 
+	/**
+	 * Description: subscribe, do not reject but return APPError<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t16_subscribeAPPError() throws Exception {
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo(TestConstants.echoAppErrorCmd);
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		msgCallback = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+		Assert.assertEquals("appErrorCode is not the same", TestConstants.appErrorCode, subMsgResponse.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not the same", TestConstants.appErrorText, subMsgResponse.getAppErrorText());
+		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
+	}
 
 	/**
 	 * Description: subscribe to disabed service<br>
@@ -578,6 +601,38 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+
+		publishService.unsubscribe();
+		Assert.assertNull("the session ID is not null", publishService.getSessionId());
+	}
+
+	/**
+	 * Description: change subscription with the same mask<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t75_changeSubscriptionAPPError() throws Exception {
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo(TestConstants.echoAppErrorCmd);
+		subMsgRequest.setNoDataIntervalInSeconds(10);
+		msgCallback = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+		Assert.assertEquals("appErrorCode is not the same", TestConstants.appErrorCode, subMsgResponse.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not the same", TestConstants.appErrorText, subMsgResponse.getAppErrorText());
+
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgResponse = publishService.changeSubscription(subMsgRequest);
+		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
+		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
+		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
+		Assert.assertEquals("appErrorCode is not the same", TestConstants.appErrorCode, subMsgResponse.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not the same", TestConstants.appErrorText, subMsgResponse.getAppErrorText());
 
 		publishService.unsubscribe();
 		Assert.assertNull("the session ID is not null", publishService.getSessionId());

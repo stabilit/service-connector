@@ -29,7 +29,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 	 * Expectation: Performance better than 100 cycles/sec.
 	 */
 	@Test
-	public void benchmark_10000_tcp() throws Exception {
+	public void t_10000_tcp() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		int nr = 10000;
 		int sleep = 0;
@@ -46,7 +46,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr + "attach/detach performance : " + perf + " cycles/sec.");
+		testLogger.info(nr + " attach/detach performance : " + perf + " cycles/sec.");
 		Assert.assertEquals(true, perf > 50);
 	}
 
@@ -55,7 +55,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 	 * Expectation: Performance better than 100 cycles/sec.
 	 */
 	@Test
-	public void benchmark_10000_http() throws Exception {
+	public void t_10000_http() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
 		int nr = 10000;
 		int sleep = 0;
@@ -72,7 +72,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr + "attach/detach performance : " + perf + " cycles/sec.");
+		testLogger.info(nr + " attach/detach performance : " + perf + " cycles/sec.");
 		Assert.assertEquals(true, perf > 50);
 	}
 
@@ -82,7 +82,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 	 * Expectation:	All clients are detached.
 	 */
 	@Test
-	public void benchmark_5000_clients_http() throws Exception {
+	public void t_5000_clients_http() throws Exception {
 		int nr = 5000;
 		SCClient[] clients = new SCClient[nr];
 		// create clients
@@ -104,7 +104,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 		}
 		long stop = System.currentTimeMillis();
 		long perf = nr * 1000 / (stop - start);
-		testLogger.info(nr + "attach/detach performance : " + perf + " cycles/sec.");
+		testLogger.info(nr + " attach/detach performance : " + perf + " cycles/sec.");
 		Assert.assertEquals(true, perf > 100);
 		clients = null;
 	}
@@ -114,7 +114,7 @@ public class APIAttachBenchmark extends APIPerfSuperClientTest{
 	 * Expectation:	All clients are detached.
 	 */
 	@Test
-	public void benchmark_5000_clients_tcp() throws Exception {
+	public void t_5000_clients_tcp() throws Exception {
 		int nr = 5000;
 		SCClient[] clients = new SCClient[nr];
 		// create clients

@@ -15,7 +15,7 @@ public class APIExecuteBenchmark extends APIPerfSuperClientTest{
 	 * Expectation: Performance better than 600 msg/sec.
 	 */
 	@Test
-	public void benchmark_10000_msg_compressed() throws Exception {
+	public void t_10000_msg_compressed() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
@@ -49,7 +49,7 @@ public class APIExecuteBenchmark extends APIPerfSuperClientTest{
 	 * Expectation: Performance better than 600 msg/sec.
 	 */
 	@Test
-	public void benchmark_10000_msg_uncompressed() throws Exception {
+	public void t_10000_msg_uncompressed() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);

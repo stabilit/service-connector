@@ -35,7 +35,7 @@ public class SuperUnitTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
-		testLogger.info("** " + name.getMethodName());
+		testLogger.info(">> " + name.getMethodName() + " <<");
 		threadCount = Thread.activeCount();
 	}
 

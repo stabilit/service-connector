@@ -43,7 +43,7 @@ public class APISessionBenchmark extends APIPerfSuperClientTest {
 	 * Expectation: Performance better than 200 sessions/sec.
 	 */
 	@Test
-	public void benchmark_10000_sessions_seriell() throws Exception {
+	public void t_10000_sessions_seriell() throws Exception {
 		SCMessage request = new SCMessage();
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
@@ -63,7 +63,7 @@ public class APISessionBenchmark extends APIPerfSuperClientTest {
 	}
 
 	@Test
-	public void benchmark_1000_sessions_paralell() throws Exception {
+	public void t_1000_sessions_paralell() throws Exception {
 		SCMessage request = new SCMessage();
 		SCMessage response = null;
 		int nr = 1000;
