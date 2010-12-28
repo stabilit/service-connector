@@ -70,15 +70,13 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 
 	protected class MsgCallback extends SCMessageCallback {
 		private SCMessage response = null;
+		private int scErrorCode = 0;
+		private String scErrorText = null;
 
 		public MsgCallback(SCSessionService service) {
 			super(service);
 		}
-
-		public SCMessage getResponse() {
-			return response;
-		}
-
+	
 		public void waitForMessage(int nrSeconds) throws Exception {
 			for (int i = 0; i < (nrSeconds * 10); i++) {
 				if (APISystemSuperSessionClientTest.messageReceived) {
@@ -100,11 +98,26 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 			if (e instanceof SCServiceException) {
 				logger.info("SC error received code:" + ((SCServiceException) e).getSCErrorCode() + " text:"
 						+ ((SCServiceException) e).getSCErrorText());
+				scErrorCode =  Integer.parseInt(((SCServiceException) e).getSCErrorCode()) ;
+				scErrorText = ((SCServiceException) e).getSCErrorText();
 			} else {
 				logger.error("receive error: " + e.getMessage());
 			}
 			response = null;
 			APISystemSuperSessionClientTest.messageReceived = true;
 		}
+		
+		public SCMessage getResponse() {
+			return response;
+		}
+		
+		public int getScErrorCode() {
+			return scErrorCode;
+		}
+
+		public String getScErrorText() {
+			return scErrorText;
+		}
+
 	}
 }

@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.serviceconnector.test.system.api.cln.APIAfterAbortOrRestartPublishTest;
 import org.serviceconnector.test.system.api.cln.APIAfterAbortOrRestartSessionTest;
+import org.serviceconnector.test.system.api.cln.APIAfterSCAbortOrRestartSessionTest;
 import org.serviceconnector.test.system.api.cln.APICreateDeleteSessionTest;
 import org.serviceconnector.test.system.api.cln.APIExecuteAndSendTest;
 import org.serviceconnector.test.system.api.cln.APIReceivePublicationTest;
@@ -33,6 +34,7 @@ import org.serviceconnector.test.system.scmp.SCMPGroupCallTest;
 		// API session tests
 		APICreateDeleteSessionTest.class,
 		APIExecuteAndSendTest.class,
+		APIAfterSCAbortOrRestartSessionTest.class,
 		APIAfterAbortOrRestartSessionTest.class,
 
 

@@ -505,7 +505,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-
+		
 		subMsgRequest.setMask(TestConstants.mask1);
 		subMsgResponse = publishService.changeSubscription(subMsgRequest);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
