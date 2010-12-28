@@ -34,5 +34,6 @@ public class DemoClient {
 		SCMgmtClient client = new SCMgmtClient("localhost", 9000, ConnectionType.NETTY_TCP);
 		client.attach();
 		client.killSC();
+		client.detach();
 	}
 }
