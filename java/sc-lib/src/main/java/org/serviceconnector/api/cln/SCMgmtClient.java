@@ -21,6 +21,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPManageCall;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -125,7 +126,17 @@ public class SCMgmtClient extends SCClient {
 			// killSC not possible - client not attached
 			throw new SCServiceException("client not attached - killSC not possible.");
 		}
-		this.manageCall(Constants.KILL);
+		try {
+			this.manageCall(Constants.KILL);
+		} finally {
+			// 4. post process, reply to client
+			this.attached = false;
+			AppContext.attachedCommunicators.decrementAndGet();
+			// destroy connection pool
+			this.requester.destroy();
+			// release resources
+			AppContext.destroy();
+		}
 	}
 
 	/**

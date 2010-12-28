@@ -380,11 +380,11 @@ public final class AppContext {
 				ConnectionFactory.shutdownConnectionFactory();
 				if (AppContext.otiScheduler != null && AppContext.isScEnvironment() == false) {
 					// cancel operation timeout thread
-					AppContext.otiScheduler.shutdown();
+					AppContext.otiScheduler.shutdownNow();
 					AppContext.otiScheduler = null;
 				}
 				if (AppContext.eciScheduler != null) {
-					AppContext.eciScheduler.shutdown();
+					AppContext.eciScheduler.shutdownNow();
 					AppContext.eciScheduler = null;
 				}
 			}

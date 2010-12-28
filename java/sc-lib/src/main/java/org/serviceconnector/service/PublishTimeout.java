@@ -92,6 +92,7 @@ public class PublishTimeout implements ITimeout {
 				logger.debug("subscription not found - subscription has already been deleted subscriptionId " + subscriptionId);
 				// subscription has already been deleted
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.NOT_FOUND, "subscription not found");
+				fault.setMessageType(reqMsg.getMessageType());
 				response.setSCMP(fault);
 			} else {
 				// tries polling from queue
