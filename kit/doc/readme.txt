@@ -16,4 +16,3 @@ Special configuration in current version
 - demo client is hardcoded to connect to port 7000
 - demo server is hardcoded connect to port 9000
 - logging properties are configured for troubleshooting purposes => low performance
-- demo client needs 65 seconds to finaly terminate => this is known behaviour!
