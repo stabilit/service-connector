@@ -274,6 +274,51 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	}
 
 	/**
+	 * Description: subscribe with sessionInfo = ""<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t17_subscribe() throws Exception {
+		publishService = client.newPublishService(TestConstants.filServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo("");
+		msgCallback = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
+	}
+
+	/**
+	 * Description: subscribe with sessionInfo = " "<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t18_subscribe() throws Exception {
+		publishService = client.newPublishService(TestConstants.filServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo(" ");
+		msgCallback = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
+	}
+	
+	/**
+	 * Description: subscribe with sessionInfo = 257char<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t19_subscribe() throws Exception {
+		publishService = client.newPublishService(TestConstants.filServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo(TestConstants.stringLength257);
+		msgCallback = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
+	}
+	
+	/**
 	 * Description: subscribe to disabed service<br>
 	 * Expectation: throws SCServiceException
 	 */

@@ -286,4 +286,80 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 		}
 	}
 
+	/**
+	 * Description:	publish message with body = new Object<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t114_publish() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
+		publishServer.register(10, 2, cbk);
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
+		
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setData(new Object());
+		publishServer.publish(publishMessage);
+	}
+
+	/**
+	 * Description:	publish message with messageInfo = ""<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t115_publish() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
+		publishServer.register(10, 2, cbk);
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
+		
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setMessageInfo("");
+		publishServer.publish(publishMessage);
+	}
+
+	/**
+	 * Description:	publish message with messageInfo = ""<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t116_publish() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
+		publishServer.register(10, 2, cbk);
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
+		
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setMessageInfo(" ");
+		publishServer.publish(publishMessage);
+	}
+	
+	/**
+	 * Description:	publish message with messageInfo = 257char<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t117_publish() throws Exception {
+		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
+		server.startListener();
+		publishServer = server.newPublishServer(TestConstants.pubServiceName1);
+		SCPublishServerCallback cbk = new PubSrvCallback(publishServer);
+		publishServer.register(10, 2, cbk);
+		Assert.assertEquals("PublishServer is not registered", true, publishServer.isRegistered());
+		
+		SCPublishMessage publishMessage = new SCPublishMessage();
+		publishMessage.setMask(TestConstants.mask);
+		publishMessage.setMessageInfo(TestConstants.stringLength257);
+		publishServer.publish(publishMessage);
+	}
+
 }

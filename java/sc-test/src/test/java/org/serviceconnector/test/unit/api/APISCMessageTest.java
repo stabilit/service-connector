@@ -15,8 +15,6 @@
  */
 package org.serviceconnector.test.unit.api;
 
-import java.security.InvalidParameterException;
-
 import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
@@ -88,16 +86,6 @@ public class APISCMessageTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Create empty message with Object-DataParameter<br>
-	 * Expectation: InvalidParameter Exception
-	 */
-	@Test(expected = InvalidParameterException.class)
-	public void t20_Data() {
-		Object obj = new Object();
-		message.setData(obj);
-	}
-
-	/**
 	 * Description: Set arbitrary string to DataParameter<br>
 	 * Expectation: DataParameter is set to arbitrary string
 	 */
@@ -128,30 +116,11 @@ public class APISCMessageTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Set empty value as MessageInfo<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t31_MessageInfo() throws Exception {
-		message.setMessageInfo("");
-	}
-
-	/**
-	 * Description: Set empty Char as MessageInfo<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t32_MessageInfo() throws Exception {
-		message.setMessageInfo(" ");
-		Assert.assertEquals(" ", message.getMessageInfo());
-	}
-
-	/**
 	 * Description: Set sinlge Char as MessageInfo<br>
 	 * Expectation: MessageInfo is set to a single char Char
 	 */
 	@Test
-	public void t33_MessageInfo() throws Exception {
+	public void t32_MessageInfo() throws Exception {
 		message.setMessageInfo("a");
 		Assert.assertEquals("a", message.getMessageInfo());
 		Assert.assertEquals(1, message.getMessageInfo().length());
@@ -163,39 +132,9 @@ public class APISCMessageTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t34_MessageInfo() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 256; i++) {
-			sb.append('a');
-		}
-		message.setMessageInfo(sb.toString());
-		Assert.assertEquals(sb.toString(), message.getMessageInfo());
+		message.setMessageInfo(TestConstants.stringLength256);
+		Assert.assertEquals(TestConstants.stringLength256, message.getMessageInfo());
 		Assert.assertEquals(256, message.getMessageInfo().length());
-	}
-
-	/**
-	 * Description: Set 257 Chars as MessageInfo<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t35_MessageInfo() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 257; i++) {
-			sb.append('a');
-		}
-		message.setMessageInfo(sb.toString());
-	}
-
-	/**
-	 * Description: Set 32767 Chars as MessageInfo<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t36_MessageInfo() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < Short.MAX_VALUE; i++) {
-			sb.append('a');
-		}
-		message.setMessageInfo(sb.toString());
 	}
 
 	/**
@@ -253,30 +192,11 @@ public class APISCMessageTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Set empty value as SessionInfo<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t51_SessionInfo() throws Exception {
-		message.setSessionInfo("");
-	}
-
-	/**
-	 * Description: Set empty Char as SessionInfo<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t52_SessionInfo() throws Exception {
-		message.setSessionInfo(" ");
-		Assert.assertEquals(" ", message.getSessionInfo());
-	}
-
-	/**
 	 * Description: Set sinlge Char as SessionInfo<br>
 	 * Expectation: MessageInfo is set to a single char Char
 	 */
 	@Test
-	public void t53_SessionInfo() throws Exception {
+	public void t52_SessionInfo() throws Exception {
 		message.setSessionInfo("a");
 		Assert.assertEquals("a", message.getSessionInfo());
 		Assert.assertEquals(1, message.getSessionInfo().length());
@@ -287,40 +207,10 @@ public class APISCMessageTest extends SuperUnitTest {
 	 * Expectation: MessageInfo is set to a single 256 chars
 	 */
 	@Test
-	public void t54_SessionInfo() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 256; i++) {
-			sb.append('a');
-		}
-		message.setSessionInfo(sb.toString());
-		Assert.assertEquals(sb.toString(), message.getSessionInfo());
+	public void t53_SessionInfo() throws Exception {
+		message.setSessionInfo(TestConstants.stringLength256);
+		Assert.assertEquals(TestConstants.stringLength256, message.getSessionInfo());
 		Assert.assertEquals(256, message.getSessionInfo().length());
-	}
-
-	/**
-	 * Description: Set 257 Chars as SessionInfo<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t55_SessionInfo() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 257; i++) {
-			sb.append('a');
-		}
-		message.setSessionInfo(sb.toString());
-	}
-
-	/**
-	 * Description: Set 32767 Chars as SessionInfo<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t56_SessionInfo() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < Short.MAX_VALUE; i++) {
-			sb.append('a');
-		}
-		message.setSessionInfo(sb.toString());
 	}
 
 	/**
@@ -331,25 +221,6 @@ public class APISCMessageTest extends SuperUnitTest {
 	public void t60_CacheId() throws Exception {
 		message.setCacheId(null);
 		Assert.assertEquals("is not null", null, message.getCacheId());
-	}
-
-	/**
-	 * Description: Set empty value as CacheId<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t61_CacheId() throws Exception {
-		message.setCacheId("");
-	}
-
-	/**
-	 * Description: Set empty Char as CacheId<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t62_CacheId() throws Exception {
-		message.setCacheId(" ");
-		Assert.assertEquals(" ", message.getCacheId());
 	}
 
 	/**
@@ -369,39 +240,9 @@ public class APISCMessageTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t64_CacheId() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 256; i++) {
-			sb.append('a');
-		}
-		message.setCacheId(sb.toString());
-		Assert.assertEquals(sb.toString(), message.getCacheId());
+		message.setCacheId(TestConstants.stringLength256);
+		Assert.assertEquals(TestConstants.stringLength256, message.getCacheId());
 		Assert.assertEquals(256, message.getCacheId().length());
-	}
-
-	/**
-	 * Description: Set 257 Chars as CacheId<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t65_CacheId() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 257; i++) {
-			sb.append('a');
-		}
-		message.setCacheId(sb.toString());
-	}
-
-	/**
-	 * Description: Set 32767 Chars as CacheId<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t66_CacheId() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < Short.MAX_VALUE; i++) {
-			sb.append('a');
-		}
-		message.setCacheId(sb.toString());
 	}
 
 	/**
@@ -450,12 +291,8 @@ public class APISCMessageTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t74_AppErrorText() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 256; i++) {
-			sb.append('a');
-		}
-		message.setAppErrorText(sb.toString());
-		Assert.assertEquals(sb.toString(), message.getAppErrorText());
+		message.setAppErrorText(TestConstants.stringLength256);
+		Assert.assertEquals(TestConstants.stringLength256, message.getAppErrorText());
 		Assert.assertEquals(256, message.getAppErrorText().length());
 	}
 
@@ -465,11 +302,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void t75_AppErrorText() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 257; i++) {
-			sb.append('a');
-		}
-		message.setAppErrorText(sb.toString());
+		message.setAppErrorText(TestConstants.stringLength257);
 	}
 
 	/**
@@ -547,11 +380,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void t93_CacheExpirationDateTime() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 256; i++) {
-			sb.append('a');
-		}
-		message.setCacheExpirationDateTime(sb.toString());
+		message.setCacheExpirationDateTime(TestConstants.stringLength256);
 	}
 
 	/**
@@ -560,11 +389,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void t94_CacheExpirationDateTime() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 257; i++) {
-			sb.append('a');
-		}
-		message.setCacheExpirationDateTime(sb.toString());
+		message.setCacheExpirationDateTime(TestConstants.stringLength257);
 	}
 
 	/**

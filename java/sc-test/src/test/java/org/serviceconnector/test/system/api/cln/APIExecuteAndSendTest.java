@@ -143,6 +143,118 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		sessionService.deleteSession();
 	}
 
+	/**
+	 * Description: exchange message with body = new Object<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t006_execute() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
+		request.setMessageInfo(TestConstants.echoCmd);
+		request.setData(new Object());
+		response = sessionService.execute(request);
+	}
+
+	
+	/**
+	 * Description: exchange message with messageInfo = ""<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t007_execute() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
+		request.setMessageInfo(TestConstants.echoCmd);
+		request.setMessageInfo("");
+		response = sessionService.execute(request);
+	}
+	
+	/**
+	 * Description: exchange message with messageInfo = " "<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t008_execute() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
+		request.setMessageInfo(TestConstants.echoCmd);
+		request.setMessageInfo(" ");
+		response = sessionService.execute(request);
+	}
+	
+	/**
+	 * Description: exchange message with messageInfo = 257char<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t009_execute() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
+		request.setMessageInfo(TestConstants.echoCmd);
+		request.setMessageInfo(TestConstants.stringLength257);
+		response = sessionService.execute(request);
+	}
+
+	/**
+	 * Description: exchange message with cacheId = ""<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t010_execute() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
+		request.setMessageInfo(TestConstants.echoCmd);
+		request.setCacheId("");
+		response = sessionService.execute(request);
+	}
+
+	/**
+	 * Description: exchange message with cacheId = " "<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t011_execute() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
+		request.setMessageInfo(TestConstants.echoCmd);
+		request.setCacheId(" ");
+		response = sessionService.execute(request);
+	}
+	
+	/**
+	 * Description: exchange message with cacheId = 257char<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test (expected = SCServiceException.class)
+	public void t012_execute() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
+		request.setMessageInfo(TestConstants.echoCmd);
+		request.setCacheId(TestConstants.stringLength257);
+		response = sessionService.execute(request);
+	}
 	
 	/**
 	 * Description: exchange messages on service which has been disabled<br>

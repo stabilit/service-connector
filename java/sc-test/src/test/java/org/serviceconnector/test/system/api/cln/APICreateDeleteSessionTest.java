@@ -17,13 +17,11 @@ package org.serviceconnector.test.system.api.cln;
 
 import junit.framework.Assert;
 
-import org.junit.After;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
@@ -189,6 +187,97 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		response = sessionService.createSession(3601, request, msgCallback);
 	}
 
+	/**
+	 * Description: Create session with message = new Object<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t13_createSession() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setData(new Object());
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		response = sessionService.createSession(request, msgCallback);
+	}
+	
+	/**
+	 * Description: Create session with messageInfo = ""<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t14_createSession() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setMessageInfo("");
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		response = sessionService.createSession(request, msgCallback);
+	}
+	
+	/**
+	 * Description: Create session with messageInfo = " "<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t15_createSession() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setMessageInfo(" ");
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		response = sessionService.createSession(request, msgCallback);
+	}
+	
+	/**
+	 * Description: Create session with messageInfo = 257chars<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t16_createSession() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setMessageInfo(TestConstants.stringLength257);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		response = sessionService.createSession(request, msgCallback);
+	}
+	
+	/**
+	 * Description: Create session with sessionInfo = ""<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t17_createSession() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setSessionInfo("");
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		response = sessionService.createSession(request, msgCallback);
+	}
+	
+	/**
+	 * Description: Create session with sessionInfo = " "<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t18_createSession() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setSessionInfo(" ");
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		response = sessionService.createSession(request, msgCallback);
+	}
+	
+	/**
+	 * Description: Create session with sessionInfo = 257char<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t19_createSession() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setSessionInfo(TestConstants.stringLength257);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		response = sessionService.createSession(request, msgCallback);
+	}
+	
 	/**
 	 * Description: Create session with 60kB message<br>
 	 * Expectation: passes

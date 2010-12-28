@@ -81,10 +81,9 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setCacheId(reqMessage.getCacheId());
-		// set cache expiration, 1 hour
+		// set cache expiration
 		if (scReply.getCacheExpirationDateTime() != null) {
 			reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, scReply.getCacheExpirationDateTime());
-
 		}
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 		reply.setMessageType(this.getKey());
