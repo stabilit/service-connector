@@ -66,6 +66,7 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 		// create scMessage
 		SCSubscribeMessage scMessage = new SCSubscribeMessage();
 		scMessage.setData(reqMessage.getBody());
+		scMessage.setDataLength(reqMessage.getBodyLength());
 		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setSessionInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));

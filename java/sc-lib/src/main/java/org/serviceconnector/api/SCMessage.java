@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api;
 
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -42,6 +40,8 @@ public class SCMessage {
 	private boolean compressed;
 	/** The data. */
 	private Object data;
+	/** The data length. */
+	private int dataLength;
 	/** The session id - identifies session context of communication. */
 	private String sessionId;
 	/** The cache id. */
@@ -54,8 +54,8 @@ public class SCMessage {
 	private String appErrorText;
 	/** The reject flag used to reject a create session / subscribe. */
 	private boolean reject;
-	/** The cache expiration date time, format yyyy-MM-dd'T'hh:mm:ss.SSSZ. */
-	private String cacheExpirationDateTime;
+	/** The cache expiration date time, format on wire yyyy-MM-dd'T'hh:mm:ss.SSSZ. */
+	private Date cacheExpirationDateTime;
 
 	/**
 	 * Instantiates a new SCMessage.
@@ -65,6 +65,7 @@ public class SCMessage {
 		// default of compression is true
 		this.compressed = Constants.DEFAULT_COMPRESSION_FLAG;
 		this.data = null;
+		this.dataLength = 0;
 		this.sessionId = null;
 		this.sessionInfo = null;
 		this.cacheId = null;
@@ -163,28 +164,22 @@ public class SCMessage {
 	}
 
 	/**
-	 * Gets the data length.
+	 * Sets the data length.
+	 * 
+	 * @param dataLength
+	 *            the new data length
+	 */
+	public void setDataLength(int dataLength) {
+		this.dataLength = dataLength;
+	}
+
+	/**
+	 * Gets the data length. Data length gets set by API.
 	 * 
 	 * @return the data length
 	 */
 	public int getDataLength() {
-		if (this.data == null) {
-			return 0;
-		}
-		if (byte[].class == this.data.getClass()) {
-			return ((byte[]) this.data).length;
-		}
-		if (String.class == this.data.getClass()) {
-			return ((String) this.data).length();
-		}
-		if (this.data instanceof InputStream) {
-			/*
-			 * needs to be different in case of INPUT_STREAM body length is always unknown for streams. Set it on Integer.MAX_VALUE
-			 * 2^31-1 (2048 MB). Never rely on bodyLength for body type INPUT_STREAM.
-			 */
-			return Integer.MAX_VALUE;
-		}
-		return 0;
+		return this.dataLength;
 	}
 
 	/**
@@ -311,8 +306,8 @@ public class SCMessage {
 	 * 
 	 * @return the cache expiration date time
 	 */
-	public String getCacheExpirationDateTime() {
-		return cacheExpirationDateTime;
+	public Date getCacheExpirationDateTime() {
+		return this.cacheExpirationDateTime;
 	}
 
 	/**
@@ -322,21 +317,6 @@ public class SCMessage {
 	 *            the new cache expiration date time
 	 */
 	public void setCacheExpirationDateTime(Date cacheExpirationDateTime) {
-		if (cacheExpirationDateTime == null) {
-			this.cacheExpirationDateTime = null;
-			return;
-		}
-		SimpleDateFormat format = new SimpleDateFormat(Constants.CED_DATE_FORMAT);
-		this.cacheExpirationDateTime = format.format(cacheExpirationDateTime);
-	}
-
-	/**
-	 * Sets the cache expiration date time. Format has to be yyyy-MM-dd'T'hh:mm:ss.SSSZ.
-	 * 
-	 * @param cacheExpirationDateTime
-	 *            the new cache expiration date time
-	 */
-	public void setCacheExpirationDateTime(String cacheExpirationDateTime) {
 		this.cacheExpirationDateTime = cacheExpirationDateTime;
 	}
 

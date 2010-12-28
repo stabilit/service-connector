@@ -15,6 +15,8 @@
  */
 package org.serviceconnector.test.unit.api;
 
+import java.util.Date;
+
 import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
@@ -348,61 +350,19 @@ public class APISCMessageTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Set empty value as CacheExpirationDateTime<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Description: Set new Date as CacheExpirationDateTime<br>
+	 * Expectation: passes
 	 */
-	@Test(expected = SCMPValidatorException.class)
 	public void t90_CacheExpirationDateTime() throws Exception {
-		message.setCacheExpirationDateTime("");
+		message.setCacheExpirationDateTime(new Date());
 	}
 
 	/**
-	 * Description: Set empty Char as CacheExpirationDateTime<br>
-	 * Expectation: SCMPValidatorException
+	 * Description: Set null as CacheExpirationDateTime<br>
+	 * Expectation: passes
 	 */
-	@Test(expected = SCMPValidatorException.class)
 	public void t91_CacheExpirationDateTime() throws Exception {
-		message.setCacheExpirationDateTime(" ");
-	}
-
-	/**
-	 * Description: Set single Char as CacheExpirationDateTime<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t92_CacheExpirationDateTime() throws Exception {
-		message.setCacheExpirationDateTime("a");
-	}
-
-	/**
-	 * Description: Set 256 Chars as CacheExpirationDateTime<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t93_CacheExpirationDateTime() throws Exception {
-		message.setCacheExpirationDateTime(TestConstants.stringLength256);
-	}
-
-	/**
-	 * Description: Set 257 Chars as CacheExpirationDateTime<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t94_CacheExpirationDateTime() throws Exception {
-		message.setCacheExpirationDateTime(TestConstants.stringLength257);
-	}
-
-	/**
-	 * Description: Set 32767 Chars as CacheExpirationDateTime<br>
-	 * Expectation: SCMPValidatorException
-	 */
-	@Test(expected = SCMPValidatorException.class)
-	public void t95_CacheExpirationDateTime() throws Exception {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < Short.MAX_VALUE; i++) {
-			sb.append('a');
-		}
-		message.setCacheExpirationDateTime(sb.toString());
+		message.setCacheExpirationDateTime(null);
 	}
 	
 	/**

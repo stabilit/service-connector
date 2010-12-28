@@ -125,6 +125,7 @@ public class SCPublishService extends SCService {
 		this.receivePublication();
 		SCSubscribeMessage replyToClient = new SCSubscribeMessage();
 		replyToClient.setData(reply.getBody());
+		replyToClient.setDataLength(reply.getBodyLength());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
 		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
@@ -193,6 +194,7 @@ public class SCPublishService extends SCService {
 		// 4. post process, reply to client
 		SCSubscribeMessage replyToClient = new SCSubscribeMessage();
 		replyToClient.setData(reply.getBody());
+		replyToClient.setDataLength(reply.getBodyLength());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
 		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));

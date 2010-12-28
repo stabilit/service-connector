@@ -43,6 +43,7 @@ class SCPublishServiceCallback extends SCServiceCallback {
 			// data reply received - give to application
 			SCPublishMessage replyToClient = new SCPublishMessage();
 			replyToClient.setData(reply.getBody());
+			replyToClient.setDataLength(reply.getBodyLength());
 			replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 			replyToClient.setSessionId(reply.getSessionId());
 			replyToClient.setMask(reply.getHeader(SCMPHeaderAttributeKey.MASK));

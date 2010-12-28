@@ -107,6 +107,30 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		Assert.assertTrue(fault.isFault());
 		TestUtil.verifyError(fault, SCMPError.HV_WRONG_SERVICE_NAME, SCMPMsgType.CLN_CREATE_SESSION);
 	}
+	
+	/**
+	 * Description: create session - serviceName too long<br>
+	 * Expectation: passes, returns invalid scmp release nr error
+	 */
+	@Test
+	public void t05_ServiceNameTooLong() throws Exception {
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
+				this.requester, TestConstants.sesServerName1);
+		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
+		// set serviceName null
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 98<<10; i++) {
+			sb.append(i);
+			if(sb.length() > 100000) break;
+		}
+		createSessionCall.getRequest().setServiceName(sb.toString());
+		createSessionCall.setEchoIntervalSeconds(300);
+		TestCallback cbk = new TestCallback();
+		createSessionCall.invoke(cbk, 1000);
+		SCMPMessage fault = cbk.getMessageSync(3000);
+		Assert.assertTrue(fault.isFault());
+		TestUtil.verifyError(fault, SCMPError.SC_ERROR, SCMPMsgType.UNDEFINED);
+	}
 
 	/**
 	 * Description: create session - delete session<br>

@@ -67,15 +67,15 @@ class SCServiceCallback extends SynchronousCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public void receive(SCMPMessage scmpReply) {
+	public void receive(SCMPMessage reply) {
 		// 3. receiving reply and error handling
 		if (this.synchronous) {
 			// hand it over to SynchronousCallback
-			super.receive(scmpReply);
+			super.receive(reply);
 			return;
 		}
-		if (scmpReply.isFault()) {
-			SCMPMessageFault fault = (SCMPMessageFault) scmpReply;
+		if (reply.isFault()) {
+			SCMPMessageFault fault = (SCMPMessageFault) reply;
 			SCServiceException e = new SCServiceException(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			e.setSCErrorCode(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			e.setSCErrorText(fault.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
@@ -85,16 +85,17 @@ class SCServiceCallback extends SynchronousCallback {
 			return;
 		}
 		// 4. post process, reply to client
-		SCMessage messageReply = new SCMessage();
-		messageReply.setData(scmpReply.getBody());
-		messageReply.setCompressed(scmpReply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
-		messageReply.setSessionId(scmpReply.getSessionId());
-		messageReply.setMessageInfo(scmpReply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
-		messageReply.setAppErrorCode(scmpReply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
-		messageReply.setAppErrorText(scmpReply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
+		SCMessage replyToClient = new SCMessage();
+		replyToClient.setData(reply.getBody());
+		replyToClient.setDataLength(reply.getBodyLength());
+		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
+		replyToClient.setSessionId(reply.getSessionId());
+		replyToClient.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
+		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
+		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 		// inform service request is completed
 		this.service.setRequestComplete();
-		this.messageCallback.receive(messageReply);
+		this.messageCallback.receive(replyToClient);
 	}
 
 	/** {@inheritDoc} */

@@ -143,6 +143,7 @@ public class SCSessionService extends SCService {
 		this.sessionActive = true;
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
+		replyToClient.setDataLength(reply.getBodyLength());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
 		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
@@ -195,6 +196,7 @@ public class SCSessionService extends SCService {
 		// 4. post process, reply to client
 		SCMessage replyToClient = new SCMessage();
 		replyToClient.setData(reply.getBody());
+		replyToClient.setDataLength(reply.getBodyLength());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
 		replyToClient.setCacheId(reply.getCacheId());

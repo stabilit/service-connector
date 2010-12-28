@@ -16,7 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.srv;
 
+import java.text.SimpleDateFormat;
+
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SrvSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -63,6 +66,7 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		// create scMessage
 		SCMessage scMessage = new SCMessage();
 		scMessage.setData(reqMessage.getBody());
+		scMessage.setDataLength(reqMessage.getBodyLength());
 		scMessage.setCompressed(reqMessage.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setCacheId(reqMessage.getCacheId());
@@ -81,13 +85,14 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setCacheId(reqMessage.getCacheId());
-		// set cache expiration
-		if (scReply.getCacheExpirationDateTime() != null) {
-			reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, scReply.getCacheExpirationDateTime());
-		}
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 		reply.setMessageType(this.getKey());
 		if (scReply != null) {
+			// set cache expiration
+			if (scReply.getCacheExpirationDateTime() != null) {
+				reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, cacheExpirationDateFormat.format(scReply
+						.getCacheExpirationDateTime()));
+			}
 			reply.setBody(scReply.getData());
 			if (scReply.getMessageInfo() != null) {
 				reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, scReply.getMessageInfo());
