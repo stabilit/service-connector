@@ -121,6 +121,30 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	}
 
 	/**
+	 * Description: exchange one message, return APP error<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t005_executeAPPError() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
+		request.setMessageInfo(TestConstants.echoAppErrorCmd);
+		response = sessionService.execute(request);
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
+		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
+		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
+		Assert.assertEquals("appErrorCode is not the same", TestConstants.appErrorCode, response.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not the same", TestConstants.appErrorText, response.getAppErrorText());
+		sessionService.deleteSession();
+	}
+
+	
+	/**
 	 * Description: exchange messages on service which has been disabled<br>
 	 * Expectation: passes
 	 */
