@@ -150,7 +150,7 @@ public class SCMessage {
 	 *            the new data
 	 */
 	public void setData(Object data) {
-		this.data = null;
+		this.data = data;
 	}
 
 	/**
