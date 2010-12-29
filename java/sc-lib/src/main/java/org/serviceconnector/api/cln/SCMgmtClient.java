@@ -128,6 +128,10 @@ public class SCMgmtClient extends SCClient {
 		}
 		try {
 			this.manageCall(Constants.KILL);
+			// sleep to assure kill is sent
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			// ignore exception
 		} finally {
 			// 4. post process, reply to client
 			this.attached = false;
@@ -191,7 +195,7 @@ public class SCMgmtClient extends SCClient {
 			throw new SCServiceException("kill SC failed", e);
 		}
 		if (instruction.equalsIgnoreCase(Constants.KILL)) {
-			// kill sc doesn't reply a message
+			// kill SC doesn't reply a message
 			return null;
 		}
 		SCMPMessage reply = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);

@@ -267,7 +267,6 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 	 */
 	private void cleanUpDeadServer(String host, int port) {
 		String wildKey = "_" + host + "/" + port;
-		logger.debug("clean up dead server with key " + wildKey);
 		ServerRegistry serverRegistry = AppContext.getServerRegistry();
 		Set<String> keySet = serverRegistry.keySet();
 
@@ -277,6 +276,7 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 				if ((server instanceof StatefulServer) == false) {
 					continue;
 				}
+				logger.debug("clean up dead server with key " + wildKey);
 				StatefulServer statefulServer = (StatefulServer) server;
 				statefulServer.abortSessionsAndDestroy("clean up dead server");
 			}
