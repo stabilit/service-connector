@@ -24,16 +24,15 @@ public class DemoClient {
 
 		DemoSessionClient demoSessionClient = new DemoSessionClient();
 		DemoPublishClient demoPublishClient = new DemoPublishClient();
-		DemoFileClient demoFileClient = new DemoFileClient();
+//		DemoFileClient demoFileClient = new DemoFileClient();
 
 		demoSessionClient.run();
 		demoPublishClient.run();
 //		demoFileClient.start();
-
+		// sleep to assure deregister from server to SC is done!
 		Thread.sleep(1000);
 		SCMgmtClient client = new SCMgmtClient("localhost", 9000, ConnectionType.NETTY_TCP);
 		client.attach();
 		client.killSC();
-		client.detach();
 	}
 }
