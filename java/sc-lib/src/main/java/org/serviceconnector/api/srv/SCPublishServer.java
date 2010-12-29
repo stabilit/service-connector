@@ -55,12 +55,15 @@ public class SCPublishServer extends SCSessionServer {
 		}
 		synchronized (this.scServer) {
 			// get lock on scServer - only one server is allowed to communicate over the initial connection
-			SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester,
-					serviceName);
+			SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester, serviceName);
 			publishCall.setRequestBody(publishMessage.getData());
 			publishCall.setMask(publishMessage.getMask());
 			SCServerCallback callback = new SCServerCallback(true);
-			publishCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			try {
+				publishCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			} catch (Exception e) {
+				throw new SCServiceException("publish failed ", e);
+			}
 			SCMPMessage message = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (message.isFault()) {
 				SCServiceException ex = new SCServiceException("publish failed");

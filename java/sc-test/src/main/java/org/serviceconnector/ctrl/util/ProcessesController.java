@@ -21,6 +21,7 @@ import java.util.Properties;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.EnvironmentConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
@@ -56,8 +57,9 @@ public class ProcessesController {
 	 */
 	private String getLogDirPath(String log4jProperties) throws Exception {
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
-		compositeConfig.addConfiguration(new PropertiesConfiguration(log4jProperties));
 		compositeConfig.addConfiguration(new EnvironmentConfiguration());
+		compositeConfig.addConfiguration(new PropertiesConfiguration(log4jProperties));
+		compositeConfig.addConfiguration(new SystemConfiguration());
 		// Read & parse properties file.
 		return userDir + fs + compositeConfig.getString(TestConstants.logDirectoryToken);
 	}
@@ -86,7 +88,6 @@ public class ProcessesController {
 			throw new Exception("File:" + scPropertiesFullName + " does not exist!");
 		}
 		proc.setPropertyFileName(scPropertiesFullName);
-
 		String log4jFileFullName = userDir + fs + "src" + fs + "main" + fs + "resources" + fs + log4jSCProperties;
 		if (FileUtility.notExists(log4jFileFullName)) {
 			testLogger.error("File:" + log4jFileFullName + " does not exist!");
@@ -94,7 +95,8 @@ public class ProcessesController {
 		}
 		proc.setLog4jFileName(log4jFileFullName);
 
-		String pidFileFullName = userDir + fs + "log" + fs + "sc" + fs + Constants.PID_FILE_NAME;
+		String logDirPath = this.getLogDirPath(log4jSCProperties);
+		String pidFileFullName = logDirPath + fs + Constants.PID_FILE_NAME;
 		proc.setPidFileName(pidFileFullName);
 
 		// set sc port to SC stop at the end
@@ -118,6 +120,8 @@ public class ProcessesController {
 			FileUtility.waitExists(pidFileFullName, timeout);
 			testLogger.info("SC started");
 		} catch (Exception e) {
+			process.destroy();
+			process.waitFor();
 			testLogger.info(e.getMessage());
 			testLogger.error("SC not started within " + timeout + " seconds! Timeout exceeded.");
 			throw e;
@@ -242,6 +246,8 @@ public class ProcessesController {
 			FileUtility.waitExists(pidFileNameFull, timeout);
 			testLogger.info("Server " + serverName + " started");
 		} catch (Exception e) {
+			srvProcess.destroy();
+			srvProcess.waitFor();
 			testLogger.info(e.getMessage());
 			testLogger.error("Server " + serverName + "not started within " + timeout + " seconds! Timeout exceeded.");
 			throw e;

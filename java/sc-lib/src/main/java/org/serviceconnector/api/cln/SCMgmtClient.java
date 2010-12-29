@@ -126,21 +126,20 @@ public class SCMgmtClient extends SCClient {
 			// killSC not possible - client not attached
 			throw new SCServiceException("client not attached - killSC not possible.");
 		}
+		this.manageCall(Constants.KILL);
 		try {
-			this.manageCall(Constants.KILL);
 			// sleep to assure kill is sent
 			Thread.sleep(1000);
 		} catch (Exception e) {
 			// ignore exception
-		} finally {
-			// 4. post process, reply to client
-			this.attached = false;
-			AppContext.attachedCommunicators.decrementAndGet();
-			// destroy connection pool
-			this.requester.destroy();
-			// release resources
-			AppContext.destroy();
 		}
+		// 4. post process, reply to client
+		this.attached = false;
+		AppContext.attachedCommunicators.decrementAndGet();
+		// destroy connection pool
+		this.requester.destroy();
+		// release resources
+		AppContext.destroy();
 	}
 
 	/**

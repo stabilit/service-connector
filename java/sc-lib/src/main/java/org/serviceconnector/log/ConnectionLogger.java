@@ -20,14 +20,23 @@ import java.util.Formatter;
 
 import org.apache.log4j.Logger;
 
+/**
+ * The Class ConnectionLogger.
+ */
 public class ConnectionLogger {
 
+	/** The Constant connectionLogger. */
 	private static final Logger connectionLogger = Logger.getLogger(Loggers.CONNECTION.getValue());
 
+	/** The CONNECT_STR. */
 	private static String CONNECT_STR = "%s connect to:%s/%s";
+	/** The DISCONNECT_STR. */
 	private static String DISCONNECT_STR = "%s disconnect from:%s/%s";
+	/** The READ_STR. */
 	private static String READ_STR = "%s read from:%s/%s buffer:%s";
+	/** The WRITE_STR. */
 	private static String WRITE_STR = "%s write to:%s/%s buffer:%s";
+	/** The KEEP_ALIVE_STR. */
 	private static String KEEP_ALIVE_STR = "%s send keep alive to:%s/%s - idle count: %s";
 
 	/**
@@ -37,9 +46,14 @@ public class ConnectionLogger {
 	}
 
 	/**
+	 * Log connect.
+	 * 
 	 * @param className
+	 *            the class name
 	 * @param hostName
+	 *            the host name
 	 * @param port
+	 *            the port
 	 */
 	public static synchronized void logConnect(String className, String hostName, int port) {
 		Formatter format = new Formatter();
@@ -49,9 +63,14 @@ public class ConnectionLogger {
 	}
 
 	/**
+	 * Log disconnect.
+	 * 
 	 * @param className
+	 *            the class name
 	 * @param hostName
+	 *            the host name
 	 * @param port
+	 *            the port
 	 */
 	public static synchronized void logDisconnect(String className, String hostName, int port) {
 
@@ -62,12 +81,20 @@ public class ConnectionLogger {
 	}
 
 	/**
+	 * Log read buffer.
+	 * 
 	 * @param className
+	 *            the class name
 	 * @param hostName
+	 *            the host name
 	 * @param port
+	 *            the port
 	 * @param data
+	 *            the data
 	 * @param offset
+	 *            the offset
 	 * @param length
+	 *            the length
 	 */
 	public static synchronized void logReadBuffer(String className, String hostName, int port, byte[] data, int offset, int length) {
 		Formatter format = new Formatter();
@@ -81,12 +108,20 @@ public class ConnectionLogger {
 	}
 
 	/**
+	 * Log write buffer.
+	 * 
 	 * @param className
+	 *            the class name
 	 * @param hostName
+	 *            the host name
 	 * @param port
+	 *            the port
 	 * @param data
+	 *            the data
 	 * @param offset
+	 *            the offset
 	 * @param length
+	 *            the length
 	 */
 	public static synchronized void logWriteBuffer(String className, String hostName, int port, byte[] data, int offset, int length) {
 		Formatter format = new Formatter();
@@ -100,10 +135,16 @@ public class ConnectionLogger {
 	}
 
 	/**
+	 * Log keep alive.
+	 * 
 	 * @param className
+	 *            the class name
 	 * @param hostName
+	 *            the host name
 	 * @param port
+	 *            the port
 	 * @param nrOfIdles
+	 *            the nr of idles
 	 */
 	public static synchronized void logKeepAlive(String className, String hostName, int port, int nrOfIdles) {
 		Formatter format = new Formatter();
@@ -113,14 +154,18 @@ public class ConnectionLogger {
 	}
 
 	/**
-	 * @return
+	 * Checks if is enabled full.
+	 * 
+	 * @return true, if is enabled full
 	 */
 	public static boolean isEnabledFull() {
 		return connectionLogger.isTraceEnabled();
 	}
 
 	/**
-	 * @return
+	 * Checks if is enabled.
+	 * 
+	 * @return true, if is enabled
 	 */
 	public static boolean isEnabled() {
 		return connectionLogger.isDebugEnabled();

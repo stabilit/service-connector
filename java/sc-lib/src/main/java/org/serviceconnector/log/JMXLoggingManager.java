@@ -18,62 +18,96 @@ package org.serviceconnector.log;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
-
+import org.apache.log4j.Logger;
 
 /**
  * The Class JMXLoggingManager. Provides access for controlling logging over JMX console.
  * 
  * @author JTraber
  */
-public class JMXLoggingManager implements ILoggingManagerMXBean{
+public class JMXLoggingManager implements ILoggingManagerMXBean {
 
-	/**
-	 * Sets the connection logger level.
-	 * 
-	 * @param level
-	 *            the new connection logger level
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void setConnectionLoggerLevel(String levelValue) {
-		Level level = JMXLoggingManager.convertLevelValue(levelValue);
-		LogManager.getLogger("ConnectionLogger").setLevel(level);
+		Logger connectionLogger = LogManager.getLogger(Loggers.CONNECTION.getValue());
+		Level level = Level.toLevel(levelValue, connectionLogger.getLevel());
+		LogManager.getLogger(Loggers.CONNECTION.getValue()).setLevel(level);
 	}
 
-	/**
-	 * Gets the connection logger level.
-	 * 
-	 * @return the connection logger level
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public String getConnectionLoggerLevel() {
-		return LogManager.getLogger("ConnectionLogger").getLevel().toString();
+		return LogManager.getLogger(Loggers.CONNECTION.getValue()).getLevel().toString();
 	}
 
-	/**
-	 * Convert level value.
-	 * 
-	 * @param levelValue
-	 *            the level value
-	 * @return the level
-	 */
-	public static Level convertLevelValue(String levelValue) {
-		Level level = null;
+	/** {@inheritDoc} */
+	@Override
+	public String getCacheLoggerLevel() {
+		return LogManager.getLogger(Loggers.CACHE.getValue()).getLevel().toString();
+	}
 
-		if ("DEBUG".equals(levelValue)) {
-			level = Level.DEBUG;
-		} else if ("INFO".equals(levelValue)) {
-			level = Level.INFO;
-		} else if ("WARN".equals(levelValue)) {
-			level = Level.WARN;
-		} else if ("ERROR".equals(levelValue)) {
-			level = Level.ERROR;
-		} else if ("FATAL".equals(levelValue)) {
-			level = Level.FATAL;
-		} else if ("TRACE".equals(levelValue)) {
-			level = Level.TRACE;
-		} else if ("OFF".equals(levelValue)) {
-			level = Level.OFF;
-		} else {
-			return Level.INFO;
-		}
-		return level;
+	/** {@inheritDoc} */
+	@Override
+	public String getMessageLoggerLevel() {
+		return LogManager.getLogger(Loggers.MESSAGE.getValue()).getLevel().toString();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getPerformanceLoggerLevel() {
+		return LogManager.getLogger(Loggers.PERFORMANCE.getValue()).getLevel().toString();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getSessionLoggerLevel() {
+		return LogManager.getLogger(Loggers.SESSION.getValue()).getLevel().toString();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getSubscriptionLoggerLevel() {
+		return LogManager.getLogger(Loggers.SUBSCRIPTION.getValue()).getLevel().toString();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setCacheLoggerLevel(String levelValue) {
+		Logger cacheLogger = LogManager.getLogger(Loggers.CACHE.getValue());
+		Level level = Level.toLevel(levelValue, cacheLogger.getLevel());
+		LogManager.getLogger(Loggers.CACHE.getValue()).setLevel(level);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setMessageLoggerLevel(String levelValue) {
+		Logger messageLogger = LogManager.getLogger(Loggers.MESSAGE.getValue());
+		Level level = Level.toLevel(levelValue, messageLogger.getLevel());
+		LogManager.getLogger(Loggers.MESSAGE.getValue()).setLevel(level);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setPerformanceLoggerLevel(String levelValue) {
+		Logger performanceLogger = LogManager.getLogger(Loggers.PERFORMANCE.getValue());
+		Level level = Level.toLevel(levelValue, performanceLogger.getLevel());
+		LogManager.getLogger(Loggers.PERFORMANCE.getValue()).setLevel(level);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setSessionLoggerLevel(String levelValue) {
+		Logger sessionLogger = LogManager.getLogger(Loggers.SESSION.getValue());
+		Level level = Level.toLevel(levelValue, sessionLogger.getLevel());
+		LogManager.getLogger(Loggers.SESSION.getValue()).setLevel(level);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setSubscriptionLoggerLevel(String levelValue) {
+		Logger subscriptionLogger = LogManager.getLogger(Loggers.SUBSCRIPTION.getValue());
+		Level level = Level.toLevel(levelValue, subscriptionLogger.getLevel());
+		LogManager.getLogger(Loggers.SUBSCRIPTION.getValue()).setLevel(level);
 	}
 }

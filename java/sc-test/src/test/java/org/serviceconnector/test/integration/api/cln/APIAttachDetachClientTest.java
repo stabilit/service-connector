@@ -81,7 +81,6 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	public void t030_attach() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_HTTP);
 		client.attach();
-		Assert.assertEquals("Client is not attached", true, client.isAttached());
 	}
 
 	/**
