@@ -141,11 +141,11 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		} catch (Exception e) {
 			xmlDocument.addException(e);
 		}
-//		if (xmlDocument.isText()) {
-//			xmlDocument.load(responseOutputStream);
-//			response.setContentType("text/html");
-//			return;
-//		}
+		if (xmlDocument.isText()) {
+			xmlDocument.load(responseOutputStream);
+			response.setContentType("text/html");
+			return;
+		}
 		xmlDocument.load(xmlOS);
 		// check if xmlview is yes or true
 		if (isXMLView(request)) {
@@ -512,6 +512,8 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			Transformer transformer = XSLTTransformerFactory.getInstance().newTransformer(xslPath);
 			if (transformer == null) {
 				transformer = XSLTTransformerFactory.getInstance().newTransformer(this.getXSLPath(""));				
+			} else {
+				logger.info("transform using xslt " + xslPath);
 			}
 			if (transformer == null) {
                 throw new NotFoundException("xslt resource " + xslPath + " not found");

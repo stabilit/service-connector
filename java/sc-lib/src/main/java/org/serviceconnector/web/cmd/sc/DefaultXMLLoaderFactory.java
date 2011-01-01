@@ -845,68 +845,94 @@ public class DefaultXMLLoaderFactory {
 		/** {@inheritDoc} */
 		@Override
 		public boolean isText() {
-			return true;
+			return false;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
-			throw new UnsupportedOperationException();
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public void loadBody(Writer writer, IWebRequest request) throws Exception {
 			String action = request.getParameter("action");
-			writer.write("<system>");
-			writer.write("<action>" + action + "</action>");
+			writer.writeStartElement("system");
+			writer.writeStartElement("action");
+			writer.writeCData(action);
+			writer.writeEndElement(); // action
 			try {
 				if ("gc".equals(action)) {
 					logger.info("run gc");
 					System.gc();
-					writer.write("<status>success</status>");
-					writer.write("<messages>");
-					writer.write("<message>GC did run.</message>");
-					writer.write("</messages>");
+					writer.writeStartElement("status");
+					writer.writeCharacters("success");
+					writer.writeEndElement();
+					writer.writeStartElement("messages");
+					writer.writeStartElement("message");
+					writer.writeCharacters("GC did run.");
+					writer.writeEndElement();  // message
+					writer.writeEndElement(); // messages
 				}
 				if ("terminate".equals(action)) {
 					logger.info("SC terminated by user interface");
-					writer.write("<status>success</status>");
-					writer.write("<messages>");
-					writer.write("<message>SC has been terminated.</message>");
-					writer.write("</messages>");
+					writer.writeStartElement("status");
+					writer.writeCharacters("success");
+					writer.writeEndElement();
+					writer.writeStartElement("messages");
+					writer.writeStartElement("message");
+					writer.writeCharacters("SC has been terminated.");
+					writer.writeEndElement();  // message
+					writer.writeEndElement(); // messages
 					System.exit(1);
 				}
 				if ("resetCache".equals(action)) {
 					logger.info("reset cache by user interface");
 					CacheManager cacheManager = AppContext.getCacheManager();
 					cacheManager.clearAll();
-					writer.write("<status>success</status>");
-					writer.write("<messages>");
-					writer.write("<message>Cache has been cleared.</message>");
-					writer.write("</messages>");
+					writer.writeStartElement("status");
+					writer.writeCharacters("success");
+					writer.writeEndElement();
+					writer.writeStartElement("messages");
+					writer.writeStartElement("message");
+					writer.writeCharacters("Cache has been cleared.");
+					writer.writeEndElement();  // message
+					writer.writeEndElement(); // messages
 				}
 				if ("resetTranslet".equals(action)) {
 					logger.info("reset translet by user interface");
 					XSLTTransformerFactory.getInstance().clearTranslet();
-					writer.write("<status>success</status>");
-					writer.write("<messages>");
-					writer.write("<message>Translet have been resetted.</message>");
-					writer.write("</messages>");
+					writer.writeStartElement("status");
+					writer.writeCharacters("success");
+					writer.writeEndElement();
+					writer.writeStartElement("messages");
+					writer.writeStartElement("message");
+					writer.writeCharacters("Translet have been reset.");
+					writer.writeEndElement();  // message
+					writer.writeEndElement(); // messages
 				}
 				if ("downloadAndReplace".equals(action)) {
 					logger.info("download and replace configuration");
 					downloadAndReplace(writer, request);
-					writer.write("<status>success</status>");
+					writer.writeStartElement("status");
+					writer.writeCharacters("success");
+					writer.writeEndElement();
 				}
 			} catch (Exception e) {				
-				writer.write("<status>failure</status>");
-				writer.write("<message>" + e.getMessage() + "</message>");
+				writer.writeStartElement("status");
+				writer.writeCharacters("failure");
+				writer.writeEndElement();
+				writer.writeStartElement("messages");
+				writer.writeStartElement("message");
+				writer.writeCharacters(e.getMessage());
+				writer.writeEndElement();  // message
+				writer.writeEndElement(); // messages
 			}
-			writer.write("</system>");
+			writer.writeEndElement();
 		}
 
-		private void downloadAndReplace(Writer writer, IWebRequest request) throws Exception {
+		/** {@inheritDoc} */
+		@Override
+		public void loadBody(Writer writer, IWebRequest request) throws Exception {
+			throw new UnsupportedOperationException();
+		}
+
+		private void downloadAndReplace(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			String serviceName = request.getParameter("service");
 			if (serviceName == null) {
 				throw new WebCommandException("service is missing");
@@ -919,12 +945,16 @@ public class DefaultXMLLoaderFactory {
 			if (service instanceof FileService == false) {
 				throw new WebCommandException("service " + serviceName + " is not a file service");
 			}
-			writer.write("<service>" + serviceName + "</service>");
+			writer.writeStartElement("service");
+			writer.writeCharacters(serviceName);
+			writer.writeEndElement();
 			FileService fileService = (FileService) service;
 			FileServer fileServer = fileService.getServer();
 			List<String> fileList = request.getParameterList("file");
-			writer.write("<messages>");
-			writer.write("<message>The following files were downloaded from file service [" + serviceName + "]:</message>");
+			writer.writeStartElement("messages");
+			writer.writeStartElement("message");
+			writer.writeCharacters("The following files were downloaded from file service [" + serviceName + "]:");
+			writer.writeEndElement();
 			if (fileList != null) {
 				for (String file : fileList) {
 					if (file.startsWith("fs:") && file.endsWith(":fs")) {						
@@ -940,17 +970,21 @@ public class DefaultXMLLoaderFactory {
 							URL configURL = new URL(resourceURLPath + file);
 							downloadAndReplaceSingleFile(writer, downloadURL, configURL, file);
 						} catch (Exception e) {
-							writer.write("<message>" + file + " did fail, " + e.getMessage() + "</message>");
+							writer.writeStartElement("message");							
+							writer.writeCharacters(file + " did fail, " + e.getMessage());
+							writer.writeEndElement();
 						}
 					} else {
-						writer.write("<message>" + file + " invalid format</message>");
+						writer.writeStartElement("message");							
+						writer.writeCharacters(file + "  invalid format");
+						writer.writeEndElement();
 					}
 				}
 			}
-			writer.write("</messages>");
+			writer.writeEndElement();
 		}
 
-		private void downloadAndReplaceSingleFile(Writer writer, URL url, URL configURL, String file) throws Exception {
+		private void downloadAndReplaceSingleFile(XMLStreamWriter writer, URL url, URL configURL, String file) throws Exception {
 		    File configFile = new File(configURL.toURI());
 		    String status = "successful (copied)";
 		    if (configFile.exists()) {
@@ -968,10 +1002,14 @@ public class DefaultXMLLoaderFactory {
 				}
 				in.close();
 				fos.close();
-				writer.write("<message>" + file + " " + status + "</message>");
+				writer.writeStartElement("message");							
+				writer.writeCharacters(file + "  " + status);
+				writer.writeEndElement();
 			} catch (Exception e) {
 				status = "failed";
-				writer.write("<message>" + file + " " + status + "</message>");
+				writer.writeStartElement("message");							
+				writer.writeCharacters(file + "  " + status);
+				writer.writeEndElement();
 				throw e;
 			}
 		}
