@@ -92,4 +92,17 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 	public void setRequestBody(Object obj) {
 		this.requestMessage.setBody(obj);
 	}
+
+	/**
+	 * Sets the message info.
+	 * 
+	 * @param messageInfo
+	 *            the new message info
+	 */
+	public void setMessageInfo(String messageInfo) {
+		if (messageInfo == null) {
+			return;
+		}
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
+	}
 }

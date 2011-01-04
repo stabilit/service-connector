@@ -29,6 +29,7 @@ import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.ctrl.util.ProcessCtx;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -53,6 +54,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
 		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
+		AppContext.init();
 	}
 
 	@After
@@ -194,7 +196,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		Thread.sleep(3000);
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, sessionId);
-		clnExecuteCall.setMessagInfo(TestConstants.echoCmd);
+		clnExecuteCall.setMessageInfo(TestConstants.echoCmd);
 		clnExecuteCall.setRequestBody(TestConstants.pangram);
 		clnExecuteCall.invoke(cbk, 1000);
 		SCMPMessage msg = cbk.getMessageSync(3000);

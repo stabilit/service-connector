@@ -173,7 +173,7 @@ public class SCSessionService extends SCService {
 		// 2. initialize call & invoke
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
-		clnExecuteCall.setMessagInfo(scMessage.getMessageInfo());
+		clnExecuteCall.setMessageInfo(scMessage.getMessageInfo());
 		clnExecuteCall.setCacheId(scMessage.getCacheId());
 		clnExecuteCall.setCompressed(scMessage.isCompressed());
 		clnExecuteCall.setRequestBody(scMessage.getData());
@@ -230,7 +230,7 @@ public class SCSessionService extends SCService {
 		// 2. initialize call & invoke
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				this.serviceName, this.sessionId);
-		clnExecuteCall.setMessagInfo(scMessage.getMessageInfo());
+		clnExecuteCall.setMessageInfo(scMessage.getMessageInfo());
 		clnExecuteCall.setCacheId(scMessage.getCacheId());
 		clnExecuteCall.setCompressed(scMessage.isCompressed());
 		clnExecuteCall.setRequestBody(scMessage.getData());

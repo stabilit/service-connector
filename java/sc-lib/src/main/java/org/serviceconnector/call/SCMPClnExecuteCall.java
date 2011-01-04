@@ -21,8 +21,6 @@ import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class SCMPClnExecuteCall. Call sends data to backend server over SC.
  * 
@@ -82,7 +80,7 @@ public class SCMPClnExecuteCall extends SCMPSessionCallAdapter {
 	 * @param messageInfo
 	 *            the new message info
 	 */
-	public void setMessagInfo(String messageInfo) {
+	public void setMessageInfo(String messageInfo) {
 		if(messageInfo == null) {
 			return;
 		}

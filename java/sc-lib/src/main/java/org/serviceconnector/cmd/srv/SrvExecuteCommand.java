@@ -68,6 +68,7 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		scMessage.setMessageInfo(reqMessage.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		scMessage.setCacheId(reqMessage.getCacheId());
 		scMessage.setServiceName(reqMessage.getServiceName());
+		scMessage.setSessionId(reqMessage.getSessionId());
 
 		// inform callback with scMessages
 		SCMessage scReply = srvService.getCallback().execute(scMessage,

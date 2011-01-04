@@ -30,6 +30,7 @@ import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.ctrl.util.ProcessCtx;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -52,6 +53,7 @@ public class SCMPGroupCallTest extends SystemSuperTest {
 				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
 		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
+		AppContext.init();
 		this.createSession();
 	}
 
@@ -81,7 +83,7 @@ public class SCMPGroupCallTest extends SystemSuperTest {
 	public void t01_GroupCall() throws Exception {
 		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
-		executeCall.setMessagInfo(TestConstants.echoCmd);
+		executeCall.setMessageInfo(TestConstants.echoCmd);
 		ISCMPCall groupCall = executeCall.openGroup();
 
 		TestCallback cbk = new TestCallback();
@@ -111,7 +113,7 @@ public class SCMPGroupCallTest extends SystemSuperTest {
 	public void t10_GroupCallLargeRequest() throws Exception {
 		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, this.sessionId);
-		executeCall.setMessagInfo(TestConstants.echoCmd);
+		executeCall.setMessageInfo(TestConstants.echoCmd);
 		ISCMPCall groupCall = executeCall.openGroup();
 
 		String largeString = TestUtil.getLargeString();

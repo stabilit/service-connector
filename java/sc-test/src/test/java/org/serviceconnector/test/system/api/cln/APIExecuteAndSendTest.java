@@ -701,5 +701,4 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
 		sessionService.deleteSession();
 	}
-
 }
