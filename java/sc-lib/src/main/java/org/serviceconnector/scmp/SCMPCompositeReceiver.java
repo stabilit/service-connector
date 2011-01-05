@@ -26,15 +26,15 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 /**
- * The Class SCMPLargeResponse. Used to handle incoming large request/response. Stores parts and put them together to complete
+ * The Class SCMPCompositeReceiver. Used to handle incoming large request/response. Stores parts and put them together to complete
  * request/response.
  * 
  * @author JTraber
  */
-public class SCMPLargeResponse extends SCMPMessage {
+public class SCMPCompositeReceiver extends SCMPMessage {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPLargeResponse.class);
+	protected static final Logger logger = Logger.getLogger(SCMPCompositeReceiver.class);
 
 	/** The list of message parts. */
 	private List<SCMPMessage> scmpList;
@@ -50,14 +50,14 @@ public class SCMPLargeResponse extends SCMPMessage {
 	private boolean complete;
 
 	/**
-	 * Instantiates a new SCMPLargeResponse.
+	 * Instantiates a new SCMPCompositeReceiver.
 	 * 
 	 * @param request
 	 *            the request message
 	 * @param messagePart
 	 *            the message part
 	 */
-	public SCMPLargeResponse(SCMPMessage request, SCMPMessage messagePart) {
+	public SCMPCompositeReceiver(SCMPMessage request, SCMPMessage messagePart) {
 		this.outputStream = null;
 		this.writer = null;
 		this.offest = 0;

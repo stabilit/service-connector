@@ -57,4 +57,14 @@ public class Subscription extends AbstractSession {
 	public StatefulServer getServer() {
 		return (StatefulServer) this.server;
 	}
+
+	/**
+	 * Sets the ip address list.
+	 * 
+	 * @param ipAddressList
+	 *            the new ip address list
+	 */
+	public void setIpAddressList(String ipAddressList) {
+		this.ipAddressList = ipAddressList;
+	}
 }

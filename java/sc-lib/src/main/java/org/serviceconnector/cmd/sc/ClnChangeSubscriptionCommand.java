@@ -68,7 +68,11 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 		Subscription subscription = this.getSubscriptionById(subscriptionId);
 		StatefulServer server = subscription.getServer();
 		reqMessage.setHeader(SCMPHeaderAttributeKey.ACTUAL_MASK, subscription.getMask().getValue());
-
+		// enhance ipAddressList
+		String ipAddressList = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
+		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
+		
 		CommandCallback callback = new CommandCallback(true);
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
@@ -110,6 +114,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 				SubscriptionLogger.logChangeSubscribe(serviceName, subscriptionId, newMask);
 				queue.changeSubscription(subscriptionId, mask);
 				subscription.setMask(mask);
+				subscription.setIpAddressList(ipAddressList);
 			} else {
 				// session has been rejected - remove session id from header
 				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);

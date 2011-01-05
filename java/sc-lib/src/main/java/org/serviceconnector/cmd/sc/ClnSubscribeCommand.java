@@ -71,7 +71,10 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		PublishService service = this.validatePublishService(serviceName);
 
 		SubscriptionMask subscriptionMask = new SubscriptionMask(mask);
+		// enhance ipAddressList
 		String ipAddressList = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
+		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 		String sessionInfo = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 		// create subscription
 		Subscription subscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList);

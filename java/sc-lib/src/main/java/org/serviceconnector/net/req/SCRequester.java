@@ -29,8 +29,8 @@ import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPLargeRequest;
-import org.serviceconnector.scmp.SCMPLargeResponse;
+import org.serviceconnector.scmp.SCMPCompositeSender;
+import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
@@ -79,7 +79,7 @@ public class SCRequester implements IRequester {
 			// differ if message is large or not, sending procedure is different
 			if (message.isLargeMessage()) {
 				// SCMPLargeRequest handles splitting, works like an iterator
-				SCMPLargeRequest largeResponse = new SCMPLargeRequest(message);
+				SCMPCompositeSender largeResponse = new SCMPCompositeSender(message);
 				requesterCallback = new SCRequesterSCMPCallback(message, scmpCallback, connectionContext, largeResponse,
 						msgSequenceNr);
 				// setting up operation timeout after successful send
@@ -144,9 +144,9 @@ public class SCRequester implements IRequester {
 		/** The request message, initial message sent by requester. */
 		private SCMPMessage requestMsg;
 		/** The large response. */
-		private SCMPLargeResponse largeResponse;
+		private SCMPCompositeReceiver largeResponse;
 		/** The large request. */
-		private SCMPLargeRequest largeRequest;
+		private SCMPCompositeSender largeRequest;
 		/** The msgSequenceNr. */
 		private SCMPMessageSequenceNr msgSequenceNr;
 		/** The operation timeout. */
@@ -160,7 +160,7 @@ public class SCRequester implements IRequester {
 		}
 
 		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPMessageCallback scmpCallback, ConnectionContext conCtx,
-				SCMPLargeRequest largeRequest, SCMPMessageSequenceNr msgSequenceNr) {
+				SCMPCompositeSender largeRequest, SCMPMessageSequenceNr msgSequenceNr) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = conCtx;
 			this.requestMsg = reqMsg;
@@ -267,7 +267,7 @@ public class SCRequester implements IRequester {
 		private void handlingLargeResponse(SCMPMessage scmpReply) throws Exception {
 			// response is a part - response is large, continue polling
 			// SCMPLargeResponse handles parts of large requests, putting all together
-			this.largeResponse = new SCMPLargeResponse(requestMsg, scmpReply);
+			this.largeResponse = new SCMPCompositeReceiver(requestMsg, scmpReply);
 			SCMPMessage message = largeResponse.getPart();
 			// handling msgSequenceNr
 			if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {

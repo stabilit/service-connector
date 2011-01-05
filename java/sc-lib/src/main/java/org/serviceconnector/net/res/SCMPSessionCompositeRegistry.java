@@ -18,8 +18,8 @@ package org.serviceconnector.net.res;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.registry.Registry;
-import org.serviceconnector.scmp.SCMPLargeRequest;
-import org.serviceconnector.scmp.SCMPLargeResponse;
+import org.serviceconnector.scmp.SCMPCompositeSender;
+import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 
 /**
@@ -54,59 +54,14 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 	}
 
 	/**
-	 * Adds the scmp large response.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param largeResponse
-	 *            the large response
-	 */
-	public void addSCMPLargeResponse(String key, SCMPLargeResponse largeResponse) {
-		SCMPSessionCompositeItem item = this.get(key);
-		if (item == null) {
-			return;
-		}
-		item.setSCMPLargeResponse(largeResponse);
-	}
-
-	/**
-	 * Gets the SCMP large response.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return the SCMP large response
-	 */
-	public SCMPLargeResponse getSCMPLargeResponse(String key) {
-		SCMPSessionCompositeItem item = super.get(key);
-		if (item == null) {
-			return null;
-		}
-		return item.getSCMPLargeResponse();
-	}
-
-	/**
-	 * Removes the scmp large response.
-	 * 
-	 * @param key
-	 *            the key
-	 */
-	public void removeSCMPLargeResponse(String key) {
-		SCMPSessionCompositeItem item = super.get(key);
-		if (item == null) {
-			return;
-		}
-		item.setSCMPLargeResponse(null);
-	}
-
-	/**
-	 * Adds the SCMP large request.
+	 * Adds the scmp large request.
 	 * 
 	 * @param key
 	 *            the key
 	 * @param largeRequest
 	 *            the large request
 	 */
-	public void addSCMPLargeRequest(String key, SCMPLargeRequest largeRequest) {
+	public void addSCMPLargeRequest(String key, SCMPCompositeReceiver largeRequest) {
 		SCMPSessionCompositeItem item = this.get(key);
 		if (item == null) {
 			return;
@@ -121,7 +76,7 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 	 *            the key
 	 * @return the SCMP large request
 	 */
-	public SCMPLargeRequest getSCMPLargeRequest(String key) {
+	public SCMPCompositeReceiver getSCMPLargeRequest(String key) {
 		SCMPSessionCompositeItem item = super.get(key);
 		if (item == null) {
 			return null;
@@ -141,6 +96,51 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 			return;
 		}
 		item.setSCMPLargeRequest(null);
+	}
+
+	/**
+	 * Adds the SCMP large response.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param largeResponse
+	 *            the large response
+	 */
+	public void addSCMPLargeResponse(String key, SCMPCompositeSender largeResponse) {
+		SCMPSessionCompositeItem item = this.get(key);
+		if (item == null) {
+			return;
+		}
+		item.setSCMPLargeResponse(largeResponse);
+	}
+
+	/**
+	 * Gets the SCMP large response.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the SCMP large response
+	 */
+	public SCMPCompositeSender getSCMPLargeResponse(String key) {
+		SCMPSessionCompositeItem item = super.get(key);
+		if (item == null) {
+			return null;
+		}
+		return item.getSCMPLargeResponse();
+	}
+
+	/**
+	 * Removes the scmp large response.
+	 * 
+	 * @param key
+	 *            the key
+	 */
+	public void removeSCMPLargeResponse(String key) {
+		SCMPSessionCompositeItem item = super.get(key);
+		if (item == null) {
+			return;
+		}
+		item.setSCMPLargeResponse(null);
 	}
 
 	/**

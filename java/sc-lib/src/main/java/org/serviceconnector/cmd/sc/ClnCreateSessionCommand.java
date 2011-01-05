@@ -69,7 +69,10 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		// check service is present
 		Service abstractService = this.validateService(serviceName);
 
+		// enhance ipAddressList
 		String ipAddressList = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
+		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 		String sessionInfo = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 		int eci = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 

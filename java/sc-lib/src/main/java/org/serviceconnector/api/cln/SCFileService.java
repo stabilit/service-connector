@@ -30,7 +30,7 @@ import org.serviceconnector.call.SCMPFileUploadCall;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPLargeResponse;
+import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
@@ -104,7 +104,7 @@ public class SCFileService extends SCService {
 			}
 			// 4. post process, reply to client
 			if (reply.isComposite()) {
-				((SCMPLargeResponse) reply).getBodyAsStream(outStream);
+				((SCMPCompositeReceiver) reply).getBodyAsStream(outStream);
 				return;
 			}
 			outStream.write((byte[]) reply.getBody());

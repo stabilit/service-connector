@@ -17,8 +17,8 @@
 package org.serviceconnector.net.res;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.scmp.SCMPLargeRequest;
-import org.serviceconnector.scmp.SCMPLargeResponse;
+import org.serviceconnector.scmp.SCMPCompositeSender;
+import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 
 /**
@@ -33,9 +33,9 @@ public class SCMPSessionCompositeItem {
 	protected final static Logger logger = Logger.getLogger(SCMPSessionCompositeItem.class);
 
 	/** The large response. */
-	private SCMPLargeResponse largeResponse;
+	private SCMPCompositeReceiver largeRequest;
 	/** The sender. */
-	private SCMPLargeRequest largeRequest;
+	private SCMPCompositeSender largeResponse;
 	/** The msgSequenceNr. */
 	private SCMPMessageSequenceNr msgSequenceNr;
 
@@ -49,14 +49,14 @@ public class SCMPSessionCompositeItem {
 	/**
 	 * Instantiates a new SCMP session composite item.
 	 * 
-	 * @param largeResponse
-	 *            the large response
 	 * @param largeRequest
+	 *            the large response
+	 * @param largeResponse
 	 *            the large request
 	 */
-	public SCMPSessionCompositeItem(SCMPLargeResponse largeResponse, SCMPLargeRequest largeRequest) {
-		this.largeResponse = largeResponse;
+	public SCMPSessionCompositeItem(SCMPCompositeReceiver largeRequest, SCMPCompositeSender largeResponse) {
 		this.largeRequest = largeRequest;
+		this.largeResponse = largeResponse;
 		this.msgSequenceNr = new SCMPMessageSequenceNr();
 	}
 
@@ -65,8 +65,8 @@ public class SCMPSessionCompositeItem {
 	 * 
 	 * @return the SCMP large response
 	 */
-	public SCMPLargeResponse getSCMPLargeResponse() {
-		return largeResponse;
+	public SCMPCompositeReceiver getSCMPLargeRequest() {
+		return largeRequest;
 	}
 
 	/**
@@ -74,8 +74,8 @@ public class SCMPSessionCompositeItem {
 	 * 
 	 * @return the sCMP large request
 	 */
-	public SCMPLargeRequest getSCMPLargeRequest() {
-		return largeRequest;
+	public SCMPCompositeSender getSCMPLargeResponse() {
+		return largeResponse;
 	}
 
 	/**
@@ -90,20 +90,20 @@ public class SCMPSessionCompositeItem {
 	/**
 	 * Sets the SCMP large response.
 	 * 
-	 * @param largeResponse
+	 * @param largeRequest
 	 *            the new sCMP large response
 	 */
-	public void setSCMPLargeResponse(SCMPLargeResponse largeResponse) {
-		this.largeResponse = largeResponse;
+	public void setSCMPLargeRequest(SCMPCompositeReceiver largeRequest) {
+		this.largeRequest = largeRequest;
 	}
 
 	/**
 	 * Sets the large request.
 	 * 
-	 * @param largeRequest
+	 * @param largeResponse
 	 *            the new large request
 	 */
-	public void setSCMPLargeRequest(SCMPLargeRequest largeRequest) {
-		this.largeRequest = largeRequest;
+	public void setSCMPLargeResponse(SCMPCompositeSender largeResponse) {
+		this.largeResponse = largeResponse;
 	}
 }

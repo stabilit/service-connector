@@ -22,15 +22,15 @@ import java.io.InputStream;
 import org.apache.log4j.Logger;
 
 /**
- * The Class SCMPLargeRequest. Used to handle outgoing large request/response. Works like an iterator and provides functionality
+ * The Class SCMPCompositeSender. Used to handle outgoing large request/response. Works like an iterator and provides functionality
  * of splitting large SCMP into parts.
  * 
  * @author JTraber
  */
-public class SCMPLargeRequest extends SCMPMessage {
+public class SCMPCompositeSender extends SCMPMessage {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPLargeRequest.class);
+	protected static final Logger logger = Logger.getLogger(SCMPCompositeSender.class);
 
 	/** The large scmp message. */
 	private SCMPMessage message;
@@ -42,12 +42,12 @@ public class SCMPLargeRequest extends SCMPMessage {
 	private SCMPMessage currentPart;
 
 	/**
-	 * Instantiates a new SCMPLargeRequest.
+	 * Instantiates a new SCMPCompositeSender.
 	 * 
 	 * @param message
 	 *            the scmp message
 	 */
-	public SCMPLargeRequest(SCMPMessage message) {
+	public SCMPCompositeSender(SCMPMessage message) {
 		this.message = message;
 		this.largeMessageLength = this.message.getBodyLength();
 		this.offset = 0;

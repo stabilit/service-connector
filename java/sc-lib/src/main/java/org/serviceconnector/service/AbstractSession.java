@@ -28,7 +28,7 @@ public abstract class AbstractSession {
 	/** The server. */
 	protected Server server;
 	/** The ip address list. */
-	private String ipAddressList;
+	protected String ipAddressList;
 	/** The session info. */
 	private String sessionInfo;
 
