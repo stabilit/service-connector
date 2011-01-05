@@ -25,7 +25,6 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
 
-// TODO: Auto-generated Javadoc
 /**
  * Service Connector Message Protocol. Data container for one message.
  * 

@@ -300,13 +300,13 @@ public class StatefulServer extends Server {
 			this.serverAbortSession(abortMessage, callback, AppContext.getBasicConfiguration().getSrvAbortTimeout());
 		} catch (Exception e) {
 			// server session abort failed - clean up server
-			this.abortSessionsAndDestroy(reason + " failed " + e);
+			this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason + ". exception:" + e);
 			return;
 		}
 		SCMPMessage reply = callback.getMessageSync(AppContext.getBasicConfiguration().getSrvAbortTimeout());
 		if (reply.isFault()) {
 			// error in server abort session operation
-			this.abortSessionsAndDestroy(reason + " failed");
+			this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
 		}
 	}
 

@@ -18,12 +18,13 @@ package org.serviceconnector.net.res.netty.tcp.proxy;
 
 import java.util.concurrent.Executors;
 
+import net.sf.ehcache.config.InvalidConfigurationException;
+
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.serviceconnector.Constants;
 import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.conf.SystemConfigurationException;
 import org.serviceconnector.net.res.EndpointAdapter;
 import org.serviceconnector.net.res.IResponder;
 
@@ -65,7 +66,6 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 
 	/** {@inheritDoc} */
 	@Override
-	// TODO TRN why is this necessary here or missing in the other end points JOT?
 	public void setResponder(IResponder resp) {
 		super.setResponder(resp);
 		CommunicatorConfig remoteHostConfig = null;
@@ -73,7 +73,7 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 			CommunicatorConfig communicatorConfig = resp.getResponderConfig();
 			remoteHostConfig = communicatorConfig.getRemoteHostConfiguration();
 			if (remoteHostConfig == null) {
-				throw new SystemConfigurationException("no remote host configuration");
+				throw new InvalidConfigurationException("no remote host configuration");
 			}
 			String remoteHost = remoteHostConfig.getInterfaces().get(0);
 			int remotePort = remoteHostConfig.getPort();

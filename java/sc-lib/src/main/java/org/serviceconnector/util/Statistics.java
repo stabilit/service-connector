@@ -21,7 +21,6 @@ import java.util.Calendar;
 
 import org.apache.log4j.Logger;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Statistics.
  */

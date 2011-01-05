@@ -16,9 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web.cmd.sc;
 
+import net.sf.ehcache.config.InvalidConfigurationException;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.conf.CommunicatorConfig;
-import org.serviceconnector.conf.SystemConfigurationException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.web.IWebRequest;
@@ -94,7 +95,7 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 			String contextUserid = this.getAccessibleContext().getUserid();
 			String contextPassword = this.getAccessibleContext().getPassword();
 			if (contextUserid == null || contextPassword == null) {
-				throw new SystemConfigurationException("system configuration has no credentials");
+				throw new InvalidConfigurationException("system configuration has no credentials");
 			}
 			if (userid == null || password == null) {
 				throw new LoginException("not authorized");

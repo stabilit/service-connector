@@ -41,7 +41,6 @@ import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.SCMPError;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AppContext. The AppContext is singelton and holds all factories and registries. Its the top context in a service
  * connector, server or even in clients. Its a superset of the specific contexts and unifies the data.

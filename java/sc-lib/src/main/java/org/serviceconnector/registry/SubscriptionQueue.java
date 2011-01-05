@@ -161,13 +161,9 @@ public class SubscriptionQueue<E> {
 	 */
 	private synchronized void fireNewDataArrived() {
 		logger.debug("fireNewDataArrived");
-		Object[] nodeArray = null;
-		// TODO, can be improved, separate set of null pointer nodes
-		nodeArray = this.pointerMap.values().toArray();
-		// looping through every data pointer - looking for null pointing elements
+
 		LinkedNode<E> newNode = dataQueue.getLast();
-		for (int i = 0; i < nodeArray.length; i++) {
-			TimeAwareDataPointer ptr = (TimeAwareDataPointer) nodeArray[i];
+		for (TimeAwareDataPointer ptr : this.pointerMap.values()) {
 			if (ptr.getNode() == null) {
 				// data pointer points to null - try pointing to new element
 				if (ptr.setNode(newNode) == true) {

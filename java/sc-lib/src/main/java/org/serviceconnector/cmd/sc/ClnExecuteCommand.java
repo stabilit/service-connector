@@ -76,6 +76,10 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
+		Session session = this.getSessionById(sessionId);
+		// cancel session timeout
+		this.sessionRegistry.cancelSessionTimeout(session);
+		
 		CacheManager cacheManager = null;
 		if (message.getCacheId() != null) {
 			cacheManager = AppContext.getCacheManager();
@@ -85,18 +89,14 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			// try to load response from cache
 			try {
 				if (tryLoadingMessageFromCache(request, response, responderCallback)) {
+					this.sessionRegistry.scheduleSessionTimeout(session);
 					return;
 				}
 			} catch (Exception e) {
-				Session session = this.sessionRegistry.getSession(sessionId);
 				this.sessionRegistry.scheduleSessionTimeout(session);
 				throw e;
 			}
 		}
-
-		Session session = this.getSessionById(sessionId);
-		// cancel session timeout
-		this.sessionRegistry.cancelSessionTimeout(session);
 
 		StatefulServer server = session.getStatefulServer();
 		// try sending to the server
