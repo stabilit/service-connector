@@ -118,7 +118,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Set sinlge Char as MessageInfo<br>
+	 * Description: Set single Char as MessageInfo<br>
 	 * Expectation: MessageInfo is set to a single char Char
 	 */
 	@Test
@@ -194,7 +194,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Set sinlge Char as SessionInfo<br>
+	 * Description: Set single Char as SessionInfo<br>
 	 * Expectation: MessageInfo is set to a single char Char
 	 */
 	@Test
@@ -226,7 +226,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Set sinlge Char as CacheId<br>
+	 * Description: Set single Char as CacheId<br>
 	 * Expectation: MessageInfo is set to a single char Char
 	 */
 	@Test
@@ -277,7 +277,7 @@ public class APISCMessageTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Set sinlge Char as AppErrorText<br>
+	 * Description: Set single Char as AppErrorText<br>
 	 * Expectation: AppErrorText is set to a single char Char
 	 */
 	@Test
