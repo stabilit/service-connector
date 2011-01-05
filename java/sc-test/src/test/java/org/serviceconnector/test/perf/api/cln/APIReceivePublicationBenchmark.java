@@ -32,7 +32,7 @@ public class APIReceivePublicationBenchmark extends APIPerfSuperClientTest {
 		if (cbk.getMessageCount() == nrMessages) {
 			long perf = nrMessages * 1000 / cbk.getDifference();
 			testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
-			Assert.assertTrue("Performence not fast enough, only" + perf + " msg/sec.", perf > 1000);
+			Assert.assertTrue("Performance not fast enough, only" + perf + " msg/sec.", perf > 1000);
 		}
 		publishService.unsubscribe();
 	}
@@ -57,7 +57,7 @@ public class APIReceivePublicationBenchmark extends APIPerfSuperClientTest {
 		if (cbk.getMessageCount() == nrMessages) {
 			long perf = nrMessages * 1000 / cbk.getDifference();
 			testLogger.info(nrMessages + "msg à 128 byte performance : " + perf + " msg/sec.");
-			Assert.assertTrue("Performence not fast enough, only" + perf + " msg/sec.", perf > 1000);
+			Assert.assertTrue("Performance not fast enough, only" + perf + " msg/sec.", perf > 1000);
 		}
 		publishService.unsubscribe();
 	}
