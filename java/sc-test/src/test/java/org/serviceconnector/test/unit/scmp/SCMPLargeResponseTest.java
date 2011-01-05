@@ -21,7 +21,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.serviceconnector.scmp.SCMPBodyType;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
-import org.serviceconnector.scmp.SCMPLargeResponse;
+import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
@@ -49,7 +49,7 @@ public class SCMPLargeResponseTest {
 		SCMPPart firstPart = new SCMPPart(false);
 		String bodyString = "first part request";
 		firstPart.setBody(bodyString);
-		SCMPLargeResponse largeResponse = new SCMPLargeResponse(request, firstPart);
+		SCMPCompositeReceiver largeResponse = new SCMPCompositeReceiver(request, firstPart);
 
 		bodyLength += bodyString.length();
 		body.append(bodyString);
