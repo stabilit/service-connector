@@ -48,9 +48,13 @@ public class SCSessionServer {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCSessionServer.class);
 
+	/** The registered. Indicates if a server is already registered to an SC. */
 	private boolean registered;
+	/** The service name. */
 	protected String serviceName;
+	/** The requester. */
 	protected SCRequester requester;
+	/** The SC server. */
 	protected SCServer scServer;
 
 	static {
@@ -78,20 +82,55 @@ public class SCSessionServer {
 		return this.scServer.getKeepAliveIntervalSeconds();
 	}
 
+	/**
+	 * Gets the max sessions the server is serving for service.
+	 * 
+	 * @return the max sessions
+	 */
 	public int getMaxSessions() {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		return srvServiceRegistry.getSrvService(this.serviceName + "_" + this.scServer.getListenerPort()).getMaxSessions();
 	}
 
+	/**
+	 * Gets the max connections which the pool uses to connect to SC.
+	 * 
+	 * @return the max connections
+	 */
 	public int getMaxConnections() {
-		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-		return srvServiceRegistry.getSrvService(this.serviceName + "_" + this.scServer.getListenerPort()).getMaxConnections();
+		return this.requester.getContext().getMaxConnections();
 	}
 
+	/**
+	 * Register server with default operation timeout.
+	 * 
+	 * @param maxSessions
+	 *            the max sessions to serve
+	 * @param maxConnections
+	 *            the max connections pool uses to connect to SC
+	 * @param scCallback
+	 *            the SC callback
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void register(int maxSessions, int maxConnections, SCSessionServerCallback scCallback) throws Exception {
 		this.register(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
 	}
 
+	/**
+	 * Register server.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            allowed time to complete operation
+	 * @param maxSessions
+	 *            the max sessions to serve
+	 * @param maxConnections
+	 *            the max connections pool uses to connect to SC
+	 * @param scCallback
+	 *            the SC callback
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
 			SCSessionServerCallback scCallback) throws Exception {
 		if (scCallback == null) {
@@ -105,10 +144,36 @@ public class SCSessionServer {
 		this.registered = true;
 	}
 
+	/**
+	 * Register server with default operation timeout.
+	 * 
+	 * @param maxSessions
+	 *            the max sessions to serve
+	 * @param maxConnections
+	 *            the max connections pool uses to connect to SC
+	 * @param scCallback
+	 *            the SC callback
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void register(int maxSessions, int maxConnections, SCPublishServerCallback scCallback) throws Exception {
 		this.register(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
 	}
 
+	/**
+	 * Register server.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            allowed time to complete operation
+	 * @param maxSessions
+	 *            the max sessions to serve
+	 * @param maxConnections
+	 *            the max connections pool uses to connect to SC
+	 * @param scCallback
+	 *            the SC callback
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
 			SCPublishServerCallback scCallback) throws Exception {
 		if (scCallback == null) {
@@ -122,6 +187,18 @@ public class SCSessionServer {
 		this.registered = true;
 	}
 
+	/**
+	 * Do register.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            allowed time to complete operation
+	 * @param maxSessions
+	 *            the max sessions to serve
+	 * @param maxConnections
+	 *            the max connections pool uses to connect to SC
+	 * @throws Exception
+	 *             the exception
+	 */
 	private synchronized void doRegister(int operationTimeoutSeconds, int maxSessions, int maxConnections) throws Exception {
 		if (this.scServer.isListening() == false) {
 			throw new InvalidActivityException("Listener must be started before register service is allowed.");
@@ -168,10 +245,25 @@ public class SCSessionServer {
 		}
 	}
 
+	/**
+	 * Check registration with default operation timeout. This message can be sent from the registered server to SC in order to check
+	 * its registration
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void checkRegistration() throws Exception {
 		this.checkRegistration(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
+	/**
+	 * Check registration. This message can be sent from the registered server to SC in order to check its registration
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            allowed time to complete operation
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void checkRegistration(int operationTimeoutSeconds) throws Exception {
 		if (this.registered == false) {
 			throw new InvalidActivityException("Server already is not registered for a service.");
@@ -196,10 +288,24 @@ public class SCSessionServer {
 		}
 	}
 
+	/**
+	 * Deregister server with default operation timeout.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void deregister() throws Exception {
 		this.deregister(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
+	/**
+	 * Deregister server.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            the operation timeout seconds
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void deregister(int operationTimeoutSeconds) throws Exception {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		if (this.registered == false) {
@@ -235,7 +341,7 @@ public class SCSessionServer {
 	}
 
 	/**
-	 * Checks if is listening.
+	 * Checks if server is listening.
 	 * 
 	 * @return true, if is listening
 	 */
@@ -244,7 +350,7 @@ public class SCSessionServer {
 	}
 
 	/**
-	 * Checks if is registered.
+	 * Checks if serve is registered to an SC.
 	 * 
 	 * @return true, if is registered
 	 */
@@ -253,7 +359,7 @@ public class SCSessionServer {
 	}
 
 	/**
-	 * Checks if is immediate connect.
+	 * Checks if server has its immediate connect flag set.
 	 * 
 	 * @return true, if is immediate connect
 	 */
@@ -262,49 +368,64 @@ public class SCSessionServer {
 	}
 
 	/**
-	 * Gets the sC host.
+	 * Gets the SC host.
 	 * 
-	 * @return the sC host
+	 * @return the SC host
 	 */
 	public String getSCHost() {
 		return this.scServer.getSCHost();
 	}
 
 	/**
-	 * Gets the sC port.
+	 * Gets the SC port.
 	 * 
-	 * @return the sC port
+	 * @return the SC port
 	 */
 	public int getSCPort() {
 		return this.scServer.getSCPort();
 	}
 
 	/**
-	 * Gets the host.
+	 * Gets the interfaces on which server is listening.
 	 * 
-	 * @return the host
+	 * @return the interfaces
 	 */
 	public List<String> getListenerInterfaces() {
 		return this.scServer.getListenerInterfaces();
 	}
 
 	/**
-	 * Gets the port.
+	 * Gets the port on which server is listening.
 	 * 
-	 * @return the port
+	 * @return the listening port
 	 */
 	public int getListenerPort() {
 		return this.scServer.getListenerPort();
 	}
 
+	/**
+	 * Gets the connection type which is used to communicate with SC.
+	 * 
+	 * @return the connection type
+	 */
 	public ConnectionType getConnectionType() {
 		return this.scServer.getConnectionType();
 	}
 
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the service name
+	 */
 	public String getServiceName() {
 		return this.serviceName;
 	}
 
+	/**
+	 * Gets the SC server.
+	 * 
+	 * @return the SC server
+	 */
 	public SCServer getSCServer() {
 		return this.scServer;
 	}
