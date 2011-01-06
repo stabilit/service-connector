@@ -41,6 +41,16 @@ public class SCPublishServer extends SCSessionServer {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCPublishServer.class);
 
+	/**
+	 * Instantiates a new SC publish server.
+	 * 
+	 * @param scServer
+	 *            the SC server
+	 * @param serviceName
+	 *            the service name
+	 * @param requester
+	 *            the requester
+	 */
 	public SCPublishServer(SCServer scServer, String serviceName, SCRequester requester) {
 		super(scServer, serviceName, requester);
 	}
