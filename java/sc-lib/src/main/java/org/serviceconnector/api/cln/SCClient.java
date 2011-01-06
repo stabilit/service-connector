@@ -48,15 +48,19 @@ public class SCClient {
 	private String host;
 	/** The port of the SC. */
 	private int port;
-	/** The max connections to use in pool. */
+	/** The max connections to use in pool which connects to SC. Default = 100. */
 	private int maxConnections;
-	/** The keep alive interval. */
+	/**
+	 * The keep alive interval. Interval in seconds between two subsequent keepAlive requests (KRQ). The keepAlive message is solely
+	 * used to refresh the firewall timeout on the network path. KeepAlive message is only sent on an idle connection. The value = 0
+	 * means no keep alive messages will be sent. Default = 0.
+	 */
 	private int keepAliveIntervalSeconds;
-	/** The connection type. {netty.http} */
+	/** The connection type used to connect to SC. {netty.http/netty.tcp}. Default netty.tcp */
 	private ConnectionType connectionType;
 	/** The requester. */
 	protected SCRequester requester;
-
+	/** The attached flag. Indicates if a SCClient is already attached to SC */
 	protected boolean attached;
 
 	/**
@@ -145,7 +149,7 @@ public class SCClient {
 	}
 
 	/**
-	 * Detach.
+	 * Detach client from SC.
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -155,7 +159,7 @@ public class SCClient {
 	}
 
 	/**
-	 * Detach from SC.
+	 * Detach client from SC.
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -186,16 +190,18 @@ public class SCClient {
 		} finally {
 			// 4. post process, reply to client
 			this.attached = false;
-			AppContext.attachedCommunicators.decrementAndGet();
 			// destroy connection pool
 			this.requester.destroy();
-			// release resources
-			AppContext.destroy();
+			synchronized (AppContext.communicatorsLock) {
+				AppContext.attachedCommunicators.decrementAndGet();
+				// release resources
+				AppContext.destroy();
+			}
 		}
 	}
 
 	/**
-	 * Gets the connection type. Default {netty.http}
+	 * Gets the connection type.
 	 * 
 	 * @return the connection type in use
 	 */
@@ -204,18 +210,18 @@ public class SCClient {
 	}
 
 	/**
-	 * Gets the host.
+	 * Gets the SC host.
 	 * 
-	 * @return the host
+	 * @return the SC host
 	 */
 	public String getHost() {
 		return this.host;
 	}
 
 	/**
-	 * Gets the port.
+	 * Gets the SC port.
 	 * 
-	 * @return the port
+	 * @return the SC port
 	 */
 	public int getPort() {
 		return this.port;
@@ -231,16 +237,19 @@ public class SCClient {
 	}
 
 	/**
-	 * Sets the keep alive interval in seconds.
+	 * Sets the keep alive interval in seconds. Interval in seconds between two subsequent keepAlive requests (KRQ). The keepAlive
+	 * message is solely used to refresh the firewall timeout on the network path. KeepAlive message is only sent on an idle
+	 * connection. The value = 0 means no keep alive messages will be sent.
 	 * 
 	 * @param keepAliveIntervalSeconds
-	 *            the new keep alive interval in seconds
+	 *            Example: 360
 	 * @throws SCMPValidatorException
 	 * @throws Exception
 	 *             SCMPValidatorException - keepAliveIntervalSeconds not within limits 0 to 3600 <br>
 	 *             SCServiceException - if called after attach
 	 */
 	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) throws Exception {
+		// validate in this case its a local needed information
 		ValidatorUtility.validateInt(0, this.keepAliveIntervalSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 		if (this.attached) {
 			throw new SCServiceException("cannot set property, client is already attached");
@@ -300,8 +309,7 @@ public class SCClient {
 	}
 
 	/**
-	 * Sets the max connections. If client is already connected to the SC and max connections is lower than default value or value
-	 * set earlier connection pool is not reducing the connections immediately.
+	 * Sets the max connections of the pool which is connecting to SC.
 	 * 
 	 * @param maxConnections
 	 *            the new max connections used by connection pool.
@@ -310,6 +318,7 @@ public class SCClient {
 	 *             SCServiceException - when called after attach()
 	 */
 	public void setMaxConnections(int maxConnections) throws Exception {
+		// validate in this case its a local needed information
 		ValidatorUtility.validateInt(1, maxConnections, SCMPError.HV_WRONG_MAX_CONNECTIONS);
 		if (this.attached) {
 			throw new SCServiceException("cannot set property, client is already attached");

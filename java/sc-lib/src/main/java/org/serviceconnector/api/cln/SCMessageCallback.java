@@ -19,9 +19,8 @@ package org.serviceconnector.api.cln;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 
-
 /**
- * The Class SCMessageCallback.
+ * The Class SCMessageCallback. Abstract class provides basic functions for a message callback.
  * 
  * @author JTraber
  */
@@ -29,7 +28,7 @@ public abstract class SCMessageCallback {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMessageCallback.class);
-	
+
 	/** The service which is using the message callback. */
 	private SCService service;
 
@@ -42,7 +41,7 @@ public abstract class SCMessageCallback {
 	public SCMessageCallback(SCService service) {
 		this.service = service;
 	}
-	
+
 	/**
 	 * Callback. Method gets called when reply arrives.
 	 * 

@@ -52,9 +52,12 @@ public class SCSessionService extends SCService {
 	private final static Logger logger = Logger.getLogger(SCSessionService.class);
 	/** The sessionTimeout, timeout runs when session need to be refreshed. */
 	private ScheduledFuture<TimeoutWrapper> sessionTimeout;
-	/** The echo timeout in seconds. */
+	/** The echo timeout in seconds. Time to wait for the reply of SC in case of an echo until the session is marked as dead. */
 	private int echoTimeoutInSeconds;
-	/** The echo interval in seconds. */
+	/**
+	 * The echo interval in seconds. Interval in seconds between two subsequent ECHO messages sent by the client to SC. The message
+	 * is sent only when no message is pending.
+	 */
 	private int echoIntervalInSeconds;
 
 	/**
@@ -76,10 +79,10 @@ public class SCSessionService extends SCService {
 	 * Creates the session.
 	 * 
 	 * @param scMessage
-	 *            the sc message
+	 *            the SC message
 	 * @param callback
 	 *            the callback
-	 * @return the sC message
+	 * @return the SC message
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -93,10 +96,10 @@ public class SCSessionService extends SCService {
 	 * @param operationTimeoutSeconds
 	 *            the operation timeout seconds
 	 * @param scMessage
-	 *            the sc message
+	 *            the SC message
 	 * @param messageCallback
 	 *            the message callback which is used to inform the client in case of asynchronous operations
-	 * @return the sc message
+	 * @return the SC message
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -151,10 +154,30 @@ public class SCSessionService extends SCService {
 		return replyToClient;
 	}
 
+	/**
+	 * Execute with default operation timeout.
+	 * 
+	 * @param requestMsg
+	 *            the request message
+	 * @return the sC message
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized SCMessage execute(SCMessage requestMsg) throws Exception {
 		return this.execute(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
 	}
 
+	/**
+	 * Execute.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            allowed time to complete operation
+	 * @param scMessage
+	 *            the SC message to execute
+	 * @return the reply
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized SCMessage execute(int operationTimeoutSeconds, SCMessage scMessage) throws Exception {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive == false) {
@@ -206,10 +229,28 @@ public class SCSessionService extends SCService {
 		return replyToClient;
 	}
 
+	/**
+	 * Send with default operation timeout.
+	 * 
+	 * @param requestMsg
+	 *            the request message
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void send(SCMessage requestMsg) throws Exception {
 		this.send(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
 	}
 
+	/**
+	 * Send. Asynchronous operation.
+	 * 
+	 * @param operationtTimeoutSeconds
+	 *            allowed time to complete operation
+	 * @param scMessage
+	 *            the SC message
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void send(int operationtTimeoutSeconds, SCMessage scMessage) throws Exception {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive == false) {
@@ -288,7 +329,7 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * Delete session.
+	 * Delete session with default operation timeout.
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -301,7 +342,7 @@ public class SCSessionService extends SCService {
 	 * Delete session.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the operation timeout seconds
+	 *            allowed time to complete operation
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -310,10 +351,10 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * Delete session.
+	 * Delete session with default operation timeout.
 	 * 
 	 * @param scMessage
-	 *            the sc message
+	 *            the SC message
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -325,7 +366,7 @@ public class SCSessionService extends SCService {
 	 * Delete session.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the timeout in seconds
+	 *            allowed time to complete operation
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -376,6 +417,8 @@ public class SCSessionService extends SCService {
 		}
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	synchronized void setRequestComplete() {
 		super.setRequestComplete();
 		// trigger session timeout
@@ -410,7 +453,8 @@ public class SCSessionService extends SCService {
 	 * session is marked as dead.
 	 * 
 	 * @param echoTimeoutInSeconds
-	 *            the new echo timeout in seconds
+	 *            Validation: Number > 1 and < 3600<br>
+	 *            Example: 10
 	 */
 	public void setEchoTimeoutInSeconds(int echoTimeoutInSeconds) throws SCMPValidatorException {
 		// validate in this case its a local needed information
@@ -450,14 +494,14 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * Sets the echo interval in seconds.
+	 * Sets the echo interval in seconds. Interval in seconds between two subsequent ECHO messages sent by the client to SC. The
+	 * message is sent only when no message is pending.
 	 * 
 	 * @param echoIntervalInSeconds
-	 *            the new echo interval in seconds
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *            Validation: Number > 1 and < 3600<br>
+	 *            Example: 360
 	 */
-	public void setEchoIntervalInSeconds(int echoIntervalInSeconds) throws SCMPValidatorException {
+	public void setEchoIntervalInSeconds(int echoIntervalInSeconds) {
 		this.echoIntervalInSeconds = echoIntervalInSeconds;
 	}
 

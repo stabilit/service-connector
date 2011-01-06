@@ -32,29 +32,50 @@ public class SCMessage {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMessage.class);
 
-	/** The message info. */
+	/**
+	 * The message info. Optional information passed together with the message body that helps to identify the message content
+	 * without investigating the body.
+	 */
 	private String messageInfo;
-	/** The session info. */
+	/**
+	 * The session info. Optional information passed by the client to the session server when the session starts.
+	 */
 	private String sessionInfo;
 	/** The compressed - regards data part of the message. */
 	private boolean compressed;
-	/** The data. */
+	/** The data to transport. */
 	private Object data;
-	/** The data length. */
+	/** The length of transported data. */
 	private int dataLength;
 	/** The session id - identifies session context of communication. */
 	private String sessionId;
-	/** The cache id. */
+	/**
+	 * The cache id. Identification agreed by the communicating applications to uniquely identify the cached content. The cacheId is
+	 * unique per service.
+	 */
 	private String cacheId;
-	/** The service name. */
+	/**
+	 * The service name. The service name is an abstract name and represents the logical address of the service. In order to allow
+	 * message routing the name must be unique in scope of the entire SC network. Service names must be agreed at the application
+	 * level and are stored in the SC configuration.
+	 */
 	private String serviceName;
-	/** The application error code. */
+	/**
+	 * The application error code. Numeric value passed between server and the client used to implement error protocol on the
+	 * application level. Can be set by server whenever it responds with a message body.
+	 */
 	private int appErrorCode;
-	/** The application error text. */
+	/**
+	 * The application error text.Textual value passed between server and the client used to implement error protocol on the
+	 * application level. It can be the textual interpretation of the appErrorCode.
+	 */
 	private String appErrorText;
 	/** The reject flag used to reject a create session / subscribe. */
 	private boolean reject;
-	/** The cache expiration date time, format on wire yyyy-MM-dd'T'hh:mm:ss.SSSZ. */
+	/**
+	 * The cache expiration date time, format on wire yyyy-MM-dd'T'hh:mm:ss.SSSZ. Sent by the server, it represents the absolute
+	 * expiration date and time of the message in cache. It must be set together with cacheId attribute.
+	 */
 	private Date cacheExpirationDateTime;
 
 	/**
@@ -74,11 +95,23 @@ public class SCMessage {
 		this.reject = false;
 	}
 
+	/**
+	 * Instantiates a new SC message with byte[] data.
+	 * 
+	 * @param data
+	 *            the data
+	 */
 	public SCMessage(byte[] data) {
 		this();
 		this.data = data;
 	}
 
+	/**
+	 * Instantiates a new SC message with String data.
+	 * 
+	 * @param data
+	 *            the data
+	 */
 	public SCMessage(String data) {
 		this();
 		this.data = data;

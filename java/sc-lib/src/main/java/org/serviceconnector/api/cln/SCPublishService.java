@@ -41,9 +41,22 @@ public class SCPublishService extends SCService {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCPublishService.class);
-	/** The no data interval seconds. */
+	/**
+	 * The no data interval seconds.Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag
+	 * set. Default = 0.
+	 */
 	private int noDataIntervalSeconds;
 
+	/**
+	 * Instantiates a new SC publish service.
+	 * 
+	 * @param scClient
+	 *            the SC client
+	 * @param serviceName
+	 *            the service name
+	 * @param requester
+	 *            the requester
+	 */
 	public SCPublishService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);
 		this.noDataIntervalSeconds = 0;
@@ -51,26 +64,26 @@ public class SCPublishService extends SCService {
 	}
 
 	/**
-	 * Subscribe.
+	 * Subscribe with default operation timeout.
 	 * 
 	 * @param scSubscribeMessage
 	 *            the SC subscribe message
-	 * @param callback
-	 *            the callback
+	 * @param scMessageCallback
+	 *            the SC message callback
 	 * @return the SC subscribe message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized SCSubscribeMessage subscribe(SCSubscribeMessage scSubscribeMessage, SCMessageCallback callback)
+	public synchronized SCSubscribeMessage subscribe(SCSubscribeMessage scSubscribeMessage, SCMessageCallback scMessageCallback)
 			throws Exception {
-		return this.subscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage, callback);
+		return this.subscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage, scMessageCallback);
 	}
 
 	/**
 	 * Subscribe.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the timeout in seconds
+	 *            allowed time to complete operation
 	 * @param scSubscribeMessage
 	 *            the SC subscribe message
 	 * @param scMessageCallback
@@ -134,7 +147,7 @@ public class SCPublishService extends SCService {
 	}
 
 	/**
-	 * Change subscription.
+	 * Change subscription with default operation timeout.
 	 * 
 	 * @param scSubscribeMessage
 	 *            the SC subscribe message
@@ -150,7 +163,7 @@ public class SCPublishService extends SCService {
 	 * Change subscription.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the timeout in seconds
+	 *            allowed time to complete operation
 	 * @param scSubscribeMessage
 	 *            the SC subscribe message
 	 * @return the SC subscribe message
@@ -233,7 +246,7 @@ public class SCPublishService extends SCService {
 	}
 
 	/**
-	 * Unsubscribe.
+	 * Unsubscribe with default operation timeout.
 	 * 
 	 * @throws Exception
 	 *             the exception
@@ -270,7 +283,7 @@ public class SCPublishService extends SCService {
 	 * Unsubscribe.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the timeout in seconds
+	 *            allowed time to complete operation
 	 * @throws Exception
 	 *             the exception
 	 */

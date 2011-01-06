@@ -27,19 +27,23 @@ public abstract class SCService {
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCService.class);
 
-	/** The service name. */
+	/**
+	 * The service name. The service name is an abstract name and represents the logical address of the service. In order to allow
+	 * message routing the name must be unique in scope of the entire SC network. Service names must be agreed at the application
+	 * level and are stored in the SC configuration.
+	 */
 	protected String serviceName;
-	/** The session id, identifies current session context. */
+	/** The session id - identifies session context of communication. */
 	protected String sessionId;
 	/** The requester to communicate. */
 	protected SCRequester requester;
-	/** The sc client. */
+	/** The SC client. */
 	protected SCClient scClient;
 	/** The pending request, marks if a reply is outstanding or if service is ready for next. */
 	protected volatile boolean pendingRequest;
 	/** The session active, marks state of a session/subscription. */
 	protected volatile boolean sessionActive = false;
-	/** The message callback. */
+	/** The message callback to use for replies. */
 	protected SCMessageCallback messageCallback;
 
 	/**
@@ -66,7 +70,12 @@ public abstract class SCService {
 		this.pendingRequest = false;
 	}
 
-	public SCClient getScClient() {
+	/**
+	 * Gets the SC client.
+	 * 
+	 * @return the SC client
+	 */
+	public SCClient getSCClient() {
 		return scClient;
 	}
 

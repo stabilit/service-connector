@@ -135,11 +135,13 @@ public class SCMgmtClient extends SCClient {
 		}
 		// 4. post process, reply to client
 		this.attached = false;
-		AppContext.attachedCommunicators.decrementAndGet();
 		// destroy connection pool
 		this.requester.destroy();
-		// release resources
-		AppContext.destroy();
+		synchronized (AppContext.communicatorsLock) {
+			AppContext.attachedCommunicators.decrementAndGet();
+			// release resources
+			AppContext.destroy();
+		}
 	}
 
 	/**

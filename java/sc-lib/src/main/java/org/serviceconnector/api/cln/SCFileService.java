@@ -28,23 +28,56 @@ import org.serviceconnector.call.SCMPFileDownloadCall;
 import org.serviceconnector.call.SCMPFileListCall;
 import org.serviceconnector.call.SCMPFileUploadCall;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.util.ValidatorUtility;
 
+/**
+ * The Class SCFileService. SCFileService is a remote interface in client API to a file service and provides communication functions.
+ */
 public class SCFileService extends SCService {
 
+	/**
+	 * Instantiates a new sC file service.
+	 * 
+	 * @param scClient
+	 *            the SC client
+	 * @param serviceName
+	 *            the service name
+	 * @param requester
+	 *            the requester
+	 */
 	public SCFileService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);
 	}
 
+	/**
+	 * Upload file with default operation timeout.
+	 * 
+	 * @param remoteFileName
+	 *            the remote file name to store the file
+	 * @param inStream
+	 *            stream to upload
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void uploadFile(String remoteFileName, InputStream inStream) throws Exception {
 		this.uploadFile(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, remoteFileName, inStream);
 	}
 
+	/**
+	 * Upload file.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            allowed time to complete operation
+	 * @param remoteFileName
+	 *            the remote file name to store the file
+	 * @param inStream
+	 *            stream to upload
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void uploadFile(int operationTimeoutSeconds, String remoteFileName, InputStream inStream) throws Exception {
 		// 1. checking preconditions and initialize
 		// create file session
@@ -77,10 +110,32 @@ public class SCFileService extends SCService {
 		}
 	}
 
+	/**
+	 * Download file with default operation timeout.
+	 * 
+	 * @param remoteFileName
+	 *            the remote name of the file
+	 * @param outStream
+	 *            the out stream to store download
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void downloadFile(String remoteFileName, OutputStream outStream) throws Exception {
 		this.downloadFile(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, remoteFileName, outStream);
 	}
 
+	/**
+	 * Download file.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            allowed time to complete operation
+	 * @param remoteFileName
+	 *            the remote name of the file
+	 * @param outStream
+	 *            the out stream to store download
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void downloadFile(int operationTimeoutSeconds, String remoteFileName, OutputStream outStream)
 			throws Exception {
 		// 1. checking preconditions and initialize
@@ -114,13 +169,28 @@ public class SCFileService extends SCService {
 		}
 	}
 
+	/**
+	 * List files with default operation timeout.
+	 * 
+	 * @return the list of files on the remote server
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized List<String> listFiles() throws Exception {
 		return this.listFiles(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
+	/**
+	 * List files.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            allowed time to complete operation
+	 * @return the list of files on the remote server
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized List<String> listFiles(int operationTimeoutSeconds) throws Exception {
 		// 1. checking preconditions and initialize
-		ValidatorUtility.validateInt(1, operationTimeoutSeconds, 3600, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCServiceCallback callback = new SCServiceCallback(true);
@@ -145,6 +215,14 @@ public class SCFileService extends SCService {
 		return Arrays.asList(fileNames);
 	}
 
+	/**
+	 * Creates the file session.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            allowed time to complete operation
+	 * @throws SCServiceException
+	 *             the sC service exception
+	 */
 	private void createFileSession(int operationTimeoutSeconds) throws SCServiceException {
 		// 1. checking preconditions and initialize
 		this.requester.getContext().getSCMPMsgSequenceNr().reset();
@@ -170,6 +248,14 @@ public class SCFileService extends SCService {
 		this.sessionId = reply.getSessionId();
 	}
 
+	/**
+	 * Delete file session.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            allowed time to complete operation
+	 * @throws Exception
+	 *             the exception
+	 */
 	private synchronized void deleteFileSession(int operationTimeoutSeconds) throws Exception {
 		// 1. checking preconditions and initialize
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();

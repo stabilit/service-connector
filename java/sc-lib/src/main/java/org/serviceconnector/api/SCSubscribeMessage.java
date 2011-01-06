@@ -16,18 +16,25 @@
 package org.serviceconnector.api;
 
 import org.serviceconnector.Constants;
-import org.serviceconnector.cmd.SCMPValidatorException;
 
 /**
  * The Class SCSubscribeMessage.
  */
 public class SCSubscribeMessage extends SCMessage {
 
-	/** The mask. */
+	/**
+	 * The mask. The mask is used in SUBSCRIBE / CHANGE_SUBSCRIPTION to express the client interest and in PUBLISH to designate the
+	 * message contents. Only printable characters are allowed.
+	 */
 	private String mask;
-	/** The actual mask. */
+	/**
+	 * The actual mask. The actual client subscription mask filled by SC in SRV_CHANGE_SUBSCRIPTION.
+	 */
 	private String actualMask;
-	/** The no data interval in seconds. */
+	/**
+	 * The no data interval in seconds. Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag
+	 * set.
+	 */
 	private int noDataIntervalInSeconds;
 
 	/**
@@ -38,7 +45,7 @@ public class SCSubscribeMessage extends SCMessage {
 	}
 
 	/**
-	 * Instantiates a new sC subscribe message.
+	 * Instantiates a new sC subscribe message with byte[] data.
 	 * 
 	 * @param data
 	 *            the data
@@ -48,7 +55,7 @@ public class SCSubscribeMessage extends SCMessage {
 	}
 
 	/**
-	 * Instantiates a new sC subscribe message.
+	 * Instantiates a new sC subscribe message with String data.
 	 * 
 	 * @param data
 	 *            the data
@@ -70,16 +77,16 @@ public class SCSubscribeMessage extends SCMessage {
 	 * Sets the mask.
 	 * 
 	 * @param mask
-	 *            the new mask
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *            Any printable character, length > 0 and < 256 Byte<br>
+	 *            Client may not subscribe with mask containing "%" character.<br>
+	 *            Example: "000012100012832102FADF-----------X-----------"
 	 */
-	public void setMask(String mask) throws SCMPValidatorException {
+	public void setMask(String mask) {
 		this.mask = mask;
 	}
 
 	/**
-	 * Gets the actual mask.
+	 * Gets the actual mask. The actual client subscription mask filled by SC in SRV_CHANGE_SUBSCRIPTION.
 	 * 
 	 * @return the actual mask
 	 */
@@ -91,11 +98,10 @@ public class SCSubscribeMessage extends SCMessage {
 	 * Sets the actual mask.
 	 * 
 	 * @param actualMask
-	 *            the new actual mask
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *            Validation: Any printable character, length < 256Byte.<br>
+	 *            Example: "000012100012832102FADF-----------X-----------"
 	 */
-	public void setActualMask(String actualMask) throws SCMPValidatorException {
+	public void setActualMask(String actualMask) {
 		// mask is set only internally by SC
 		this.actualMask = actualMask;
 	}
@@ -110,14 +116,14 @@ public class SCSubscribeMessage extends SCMessage {
 	}
 
 	/**
-	 * Sets the no data interval in seconds.
+	 * Sets the no data interval in seconds. Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData
+	 * flag set.
 	 * 
 	 * @param noDataIntervalInSeconds
-	 *            the new no data interval in seconds
-	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *            Validation: Number > 0 and < 3600<br>
+	 *            Example: 60
 	 */
-	public void setNoDataIntervalInSeconds(Integer noDataIntervalInSeconds) throws SCMPValidatorException {
+	public void setNoDataIntervalInSeconds(Integer noDataIntervalInSeconds) {
 		if (noDataIntervalInSeconds == null) {
 			this.noDataIntervalInSeconds = 0;
 			return;
