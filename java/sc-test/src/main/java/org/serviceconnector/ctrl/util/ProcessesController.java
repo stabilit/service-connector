@@ -360,7 +360,7 @@ public class ProcessesController {
 		}
 		proc.setLog4jFileName(log4jFileFullName);
 
-		String pidFileNameFull = userDir + fs + "log" + fs + "srv" + fs + clientName + ".pid";
+		String pidFileNameFull = userDir + fs + "log" + fs + "cln" + fs + clientName + ".pid";
 		proc.setPidFileName(pidFileNameFull);
 
 		proc.setServiceNames(serviceName);
@@ -372,7 +372,7 @@ public class ProcessesController {
 		 * [4] clientType ("session" or "publish") [5] clientName [6] scHost [7] scPort [8] ConnectionType ("netty.tcp" or
 		 * "netty.http") [9] maxConnections [10]
 		 * keepAliveIntervalSeconds [11] serviceName [12] echoIntervalInSeconds[13] echoTimeoutInSeconds[14] methodsToInvoke (split
-		 * by | "init|attach|detach")[15]
+		 * by | "initAttach|detach")[15]
 		 */
 		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + clnRunablFullName + " " + clientType
 				+ " " + clientName + " " + scHost + " " + scPort + " " + connectionType.getValue() + " " + maxConnections + " "
@@ -380,8 +380,25 @@ public class ProcessesController {
 				+ methodsToInvoke;
 		Process clnProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(clnProcess);
-		testLogger.info("Client started");
+		int timeout = 15;
+		try {
+			FileUtility.waitExists(pidFileNameFull, timeout);
+			testLogger.info("Client " + clientName + " started");
+		} catch (Exception e) {
+			clnProcess.destroy();
+			clnProcess.waitFor();
+			testLogger.info(e.getMessage());
+			testLogger.error("Client " + clientName + "not started within " + timeout + " seconds! Timeout exceeded.");
+			throw e;
+		}
 		return proc;
 	}
 
+	public void stopClient(ProcessCtx clnProcess) throws Exception {
+		if (clnProcess.isRunning()) {
+			clnProcess.getProcess().destroy();
+			clnProcess.getProcess().waitFor();
+			FileUtility.deletePIDfile(clnProcess.getPidFileName());
+		}
+	}
 }

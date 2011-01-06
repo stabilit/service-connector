@@ -34,11 +34,14 @@ public class TestAbstractClient extends Thread {
 
 	@Override
 	public void run() {
-		// add exit handler
 		try {
+			FileUtility.createPIDfile(FileUtility.getPath() + fs + this.clientName + ".pid");
+			// add exit handler
 			this.addExitHandler(FileUtility.getPath() + fs + this.clientName + ".pid");
 		} catch (SCMPValidatorException e1) {
 			logger.fatal("unable to get path to pid file", e1);
+		} catch (Exception e) {
+			logger.fatal("unable to create pid file", e);
 		}
 		ctr = new ThreadSafeCounter();
 
@@ -50,6 +53,21 @@ public class TestAbstractClient extends Thread {
 				logger.error("runSessionClient " + methodString, e);
 			}
 		}
+	}
+	
+	public void p_initAttach() throws Exception {
+		client = new SCClient(this.host, this.port, this.connectionType);
+		client.setKeepAliveIntervalSeconds(this.keepAliveIntervalSeconds);
+		client.setMaxConnections(this.maxConnections);
+		client.attach();
+	}
+	
+	public void p_detach() throws Exception {
+		client.detach();
+	}
+	
+	public void p_exit() {
+		System.exit(0);
 	}
 
 	public void setMethodsToInvoke(List<String> methodsToInvoke) {
@@ -91,7 +109,7 @@ public class TestAbstractClient extends Thread {
 	public void setClientName(String clientName) {
 		this.clientName = clientName;
 	}
-	
+
 	/**
 	 * Adds the shutdown hook.
 	 */

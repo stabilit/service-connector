@@ -4,13 +4,16 @@ import java.util.Arrays;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.serviceconnector.TestSessionServiceMessageCallback;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 
 public class TestSessionClient extends TestAbstractClient {
 
-	protected int echoIntervalInSeconds;
-	protected int echoTimeoutInSeconds;
+	private int echoIntervalInSeconds;
+	private int echoTimeoutInSeconds;
+	private SCSessionService service;
 
 	static {
 		TestAbstractClient.logger = Logger.getLogger(TestSessionClient.class);
@@ -50,22 +53,30 @@ public class TestSessionClient extends TestAbstractClient {
 		testClient.run();
 	}
 
-	public void initAttach() throws Exception {
-		client = new SCClient(this.host, this.port, this.connectionType);
-		client.setKeepAliveIntervalSeconds(this.keepAliveIntervalSeconds);
-		client.setMaxConnections(this.maxConnections);
-		client.attach();
-	}
-
-	public void createSession() throws Exception {
-		SCSessionService service = client.newSessionService(this.serviceName);
+	public void p_createSession() throws Exception {
+		service = client.newSessionService(this.serviceName);
 		service.setEchoIntervalInSeconds(this.echoIntervalInSeconds);
 		service.setEchoTimeoutInSeconds(this.echoTimeoutInSeconds);
-		// service.createSession(scMessage, callback)
+		service.createSession(new SCMessage(), new TestSessionServiceMessageCallback(service));
 	}
-
-	public void detach() throws Exception {
-		client.detach();
+	
+	public void p_execute1000() throws Exception {
+		for (int i = 0; i < 1000; i++) {
+			service.execute(new SCMessage());
+		}
+	}
+	
+	public void p_deleteSession() throws Exception {
+		service.deleteSession();
+	}
+	
+	public void f_execute1000MessagesAndExit() throws Exception {
+		this.p_initAttach();
+		this.p_createSession();
+		this.p_execute1000();
+		this.p_deleteSession();
+		this.p_detach();
+		this.p_exit();
 	}
 
 	public void setEchoIntervalInSeconds(int echoIntervalInSeconds) {
