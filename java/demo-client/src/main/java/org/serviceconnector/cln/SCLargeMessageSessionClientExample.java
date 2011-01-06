@@ -87,7 +87,7 @@ public class SCLargeMessageSessionClientExample {
 		@Override
 		public void receive(SCMessage msg) {
 			@SuppressWarnings("unused")
-			SCClient client = this.getService().getScClient();
+			SCClient client = this.getService().getSCClient();
 			System.out.println(msg);
 		}
 
