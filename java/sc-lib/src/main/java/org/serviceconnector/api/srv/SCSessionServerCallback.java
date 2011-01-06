@@ -18,11 +18,11 @@ package org.serviceconnector.api.srv;
 import org.serviceconnector.api.SCMessage;
 
 /**
- * The Class SCSessionServerCallback.
+ * The Class SCSessionServerCallback. Abstract class provides basic functions for a session server callback.
  */
 public abstract class SCSessionServerCallback {
 
-	/** The sc publish server. */
+	/** The SC session server. */
 	protected SCSessionServer scSessionServer = null;
 
 	public SCSessionServerCallback(SCSessionServer scSessionServer) {
@@ -34,6 +34,8 @@ public abstract class SCSessionServerCallback {
 	 * 
 	 * @param message
 	 *            the message
+	 * @param operationTimeoutInMillis
+	 *            the operation timeout in millis
 	 * @return the sC message
 	 */
 	public SCMessage createSession(SCMessage message, int operationTimeoutInMillis) {

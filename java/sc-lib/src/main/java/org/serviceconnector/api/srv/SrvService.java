@@ -47,9 +47,9 @@ public abstract class SrvService {
 	 * Instantiates a new srv service.
 	 * 
 	 * @param scHost
-	 *            the sc host
+	 *            the SC host
 	 * @param scPort
-	 *            the sc port
+	 *            the SC port
 	 * @param serviceName
 	 *            the service name
 	 * @param maxSessions

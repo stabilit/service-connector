@@ -34,7 +34,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
 
 /**
- * The Class SCPublishServer. A Server that publishes messages to an SC.
+ * The Class SCPublishServer. A Server that publishes messages to a SC.
  */
 public class SCPublishServer extends SCSessionServer {
 
@@ -55,10 +55,28 @@ public class SCPublishServer extends SCSessionServer {
 		super(scServer, serviceName, requester);
 	}
 
+	/**
+	 * Publish with default operation timeout.
+	 * 
+	 * @param publishMessage
+	 *            the publish message
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void publish(SCPublishMessage publishMessage) throws Exception {
 		this.publish(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, publishMessage);
 	}
 
+	/**
+	 * Publish.
+	 * 
+	 * @param operationTimeoutSeconds
+	 *            allowed time to complete operation
+	 * @param publishMessage
+	 *            the publish message
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void publish(int operationTimeoutSeconds, SCPublishMessage publishMessage) throws Exception {
 		if (publishMessage == null) {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "subscibeMessage can not be null");

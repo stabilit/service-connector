@@ -39,38 +39,78 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
 
+/**
+ * The Class SCServer. Server to a SC.
+ */
 public class SCServer {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCServer.class);
-	/** The sc host. */
+	/** The SC host. */
 	private String scHost;
-	private List<String> nics = null;
-	/** The sc port. */
+	/** The SC port. */
 	private int scPort;
+	/** The network interfaces which the server is listening. */
+	private List<String> nics = null;
 	/** The listener port. */
 	private int listenerPort;
-	/** The connection type. */
+	/** The connection type which is used to communicate to SC. */
 	private ConnectionType connectionType;
 	/** The server listening state. */
 	private volatile boolean listening;
-	/** The immediate connect. */
+	/** The immediate connect. Indicates if server immediately gets connections from SC after register is done. */
 	private boolean immediateConnect;
 	/** The keep alive interval seconds. */
 	private int keepAliveIntervalSeconds;
 	/** The responder. */
 	private IResponder responder;
+	/** The requester. */
 	private SCRequester requester;
 
+	/**
+	 * Instantiates a new SC server.
+	 * 
+	 * @param scHost
+	 *            the SC host
+	 * @param scPort
+	 *            the SC port
+	 * @param listenerPort
+	 *            the listener port
+	 */
 	public SCServer(String scHost, int scPort, int listenerPort) {
 		this(scHost, scPort, null, listenerPort, ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
 	}
 
+	/**
+	 * Instantiates a new SC server.
+	 * 
+	 * @param scHost
+	 *            the SC host
+	 * @param scPort
+	 *            the SC port
+	 * @param listenerPort
+	 *            the listener port
+	 * @param connectionType
+	 *            the connection type
+	 */
 	public SCServer(String scHost, int scPort, int listenerPort, ConnectionType connectionType) {
 		this(scHost, scPort, null, listenerPort, connectionType);
 	}
 
-	public SCServer(String scHost, int scPort, List<String> networkInterfaces, int listenerPort,
-			ConnectionType connectionType) {
+	/**
+	 * Instantiates a new SC server.
+	 * 
+	 * @param scHost
+	 *            the SC host
+	 * @param scPort
+	 *            the SC port
+	 * @param networkInterfaces
+	 *            the network interfaces
+	 * @param listenerPort
+	 *            the listener port
+	 * @param connectionType
+	 *            the connection type
+	 */
+	public SCServer(String scHost, int scPort, List<String> networkInterfaces, int listenerPort, ConnectionType connectionType) {
 		this.nics = networkInterfaces;
 		this.responder = null;
 		this.requester = null;
@@ -92,18 +132,18 @@ public class SCServer {
 	}
 
 	/**
-	 * Gets the sC host.
+	 * Gets the SC host.
 	 * 
-	 * @return the sC host
+	 * @return the SC host
 	 */
 	public String getSCHost() {
 		return scHost;
 	}
 
 	/**
-	 * Gets the sC port.
+	 * Gets the SC port.
 	 * 
-	 * @return the sC port
+	 * @return the SC port
 	 */
 	public int getSCPort() {
 		return scPort;
@@ -128,18 +168,18 @@ public class SCServer {
 	}
 
 	/**
-	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes
-	 * connection to server at the time registerServer is received.
+	 * Sets the immediate connect. Affects connecting behavior from SC. If immediateConnect is set SC establishes connection to
+	 * server at the time registerServer is received.
 	 * 
 	 * @param immediateConnect
-	 *            the new immediate connect
+	 *            immediate connect
 	 */
 	public void setImmediateConnect(boolean immediateConnect) {
 		this.immediateConnect = immediateConnect;
 	}
 
 	/**
-	 * Checks if is immediate connect.
+	 * Checks if is immediate connect flag is set.
 	 * 
 	 * @return true, if is immediate connect
 	 */
@@ -148,22 +188,12 @@ public class SCServer {
 	}
 
 	/**
-	 * Checks if is listening.
+	 * Checks if server is listening.
 	 * 
 	 * @return true, if is listening
 	 */
 	public boolean isListening() {
 		return listening;
-	}
-
-	/**
-	 * Sets the listening.
-	 * 
-	 * @param listening
-	 *            the new listening
-	 */
-	public void setListening(boolean listening) {
-		this.listening = listening;
 	}
 
 	/**
@@ -176,16 +206,26 @@ public class SCServer {
 	}
 
 	/**
-	 * Sets the keep alive interval seconds.
+	 * Sets the keep alive interval in seconds. Interval in seconds between two subsequent keepAlive requests (KRQ). The keepAlive
+	 * message is solely used to refresh the firewall timeout on the network path. KeepAlive message is only sent on an idle
+	 * connection. The value = 0 means no keep alive messages will be sent.
 	 * 
 	 * @param keepAliveIntervalSeconds
-	 *            the new keep alive interval seconds
-	 * @throws SCMPValidatorException
+	 *            Example: 360
 	 */
-	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) throws SCMPValidatorException {
+	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) {
 		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
 	}
 
+	/**
+	 * Start listener.
+	 * 
+	 * @throws SCMPValidatorException
+	 *             scPort Number > 1 and < 65535<br>
+	 *             listenerPort Number > 1 and < 65535<br>
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized void startListener() throws Exception {
 		if (this.listening == true) {
 			throw new InvalidActivityException("listener is already started not allowed to start again.");
@@ -252,18 +292,30 @@ public class SCServer {
 		if (this.listening == false) {
 			// server is not listening
 			return;
-
 		}
 		this.listening = false;
 		this.responder.stopListening();
 		this.responder.destroy();
 	}
 
+	/**
+	 * Destroy server. Destroys server and releases all resources. No more communication to SC is possible after calling destroy.
+	 * Deregister servers and stop listener before calling destroy.
+	 */
 	public synchronized void destroy() {
 		this.requester.destroy();
 		AppContext.destroy();
 	}
 
+	/**
+	 * New session server.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the SC session server
+	 * @throws Exception
+	 *             the exception
+	 */
 	public SCSessionServer newSessionServer(String serviceName) throws Exception {
 		if (this.listening == false) {
 			throw new SCServiceException("newSessionServer not possible - server not listening.");
@@ -274,6 +326,15 @@ public class SCServer {
 		return new SCSessionServer(this, serviceName, requester);
 	}
 
+	/**
+	 * New publish server.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the SC publish server
+	 * @throws Exception
+	 *             the exception
+	 */
 	public SCPublishServer newPublishServer(String serviceName) throws Exception {
 		if (this.listening == false) {
 			throw new SCServiceException("newPublishServer not possible - server not listening.");

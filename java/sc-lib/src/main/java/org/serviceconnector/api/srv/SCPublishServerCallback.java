@@ -19,13 +19,13 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
 
 /**
- * The Class SCPublishServerCallback.
+ * The Class SCPublishServerCallback. Abstract class provides basic functions for a publish server callback.
  * 
  * @author JTraber
  */
 public abstract class SCPublishServerCallback {
 
-	/** The sc publish server. */
+	/** The SC publish server. */
 	protected SCPublishServer scPublishServer = null;
 
 	/**

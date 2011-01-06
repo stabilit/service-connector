@@ -35,7 +35,7 @@ import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * Client to an SC.
+ * The class SCClient. Client to a SC.
  * 
  * @author JTraber
  */
