@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.registry.Registry;
 
 /**
- * The Class SrvServiceRegistry. Registry of services on backend server. Gives access to services and their callback.
+ * The Class SrvServiceRegistry. Registry of services on backend server. Gives access to registered services and their callback.
  * 
  * @author JTraber
  */
