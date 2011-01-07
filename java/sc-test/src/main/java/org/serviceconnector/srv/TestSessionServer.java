@@ -16,6 +16,7 @@
 package org.serviceconnector.srv;
 
 import java.lang.reflect.Method;
+import java.util.Calendar;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -202,6 +203,23 @@ public class TestSessionServer extends TestStatefulServer {
 		public SCMessage largeResponse(SCMessage request, int operationTimeoutInMillis) {
 			String largeString = TestUtil.getLargeString();
 			request.setData(largeString);
+			return request;
+		}
+
+		// causes caching response message
+		public SCMessage cache(SCMessage request, int operationTimeoutInMillis) {
+			Calendar time = Calendar.getInstance();
+			String dataString = (String) request.getData();
+
+			if (dataString.equals("cidNoCed")) {
+				// reply without setting CacheExpirationDateTime
+				return request;
+			} else if (dataString.startsWith("cacheFor2Sec")) {
+				time.add(Calendar.SECOND, 2);
+			} else {
+				time.add(Calendar.HOUR_OF_DAY, 1);
+			}
+			request.setCacheExpirationDateTime(time.getTime());
 			return request;
 		}
 	}
