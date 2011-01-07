@@ -71,7 +71,7 @@ public final class Constants {
 	public static final int DEFAULT_KEEP_ALIVE_TIMEOUT_MILLIS = 2000;
 
 	/** The default keep alive interval, 0 = not active. */
-	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 0;
+	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 60;
 
 	/**
 	 * The default number of subsequent keep alive before the connection is
