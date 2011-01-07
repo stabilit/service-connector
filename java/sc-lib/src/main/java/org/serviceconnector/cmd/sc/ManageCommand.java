@@ -27,11 +27,12 @@ import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.ServiceState;
+import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -46,8 +47,8 @@ public class ManageCommand extends CommandAdapter {
 	protected final static Logger logger = Logger.getLogger(ManageCommand.class);
 
 	/** The Constant MANAGE_REGEX_STRING. */
-	private static final String MANAGE_REGEX_STRING = "(" + Constants.ENABLE + "|" + Constants.DISABLE + ")" + 
-			Constants.EQUAL_SIGN + "(.*)";
+	private static final String MANAGE_REGEX_STRING = "(" + Constants.ENABLE + "|" + Constants.DISABLE + ")" + Constants.EQUAL_SIGN
+			+ "(.*)";
 	/** The Constant MANAGE_PATTERN. */
 	private static final Pattern MANAGE_PATTERN = Pattern.compile(MANAGE_REGEX_STRING, Pattern.CASE_INSENSITIVE);
 
@@ -80,6 +81,18 @@ public class ManageCommand extends CommandAdapter {
 		if ((ipAddress.equals(localHost.getHostAddress())) && (bodyString.equalsIgnoreCase(Constants.KILL))) {
 			// kill request is allowed from localhost only!
 			logger.info("SC stopped by kill console command");
+			System.exit(0);
+		}
+
+		if ((ipAddress.equals(localHost.getHostAddress())) && (bodyString.equalsIgnoreCase(Constants.RESTARTSC))) {
+			// restart SC is allowed from localhost only!
+			logger.info("SC restart by restartSC console command");
+			String log4jFilePath = System.getProperty("log4j.configuration");
+			String log4jFile = log4jFilePath.substring(log4jFilePath.lastIndexOf("\\") + 1);
+			String configFile = SystemInfo.getConfigFileName().substring(SystemInfo.getConfigFileName().lastIndexOf("\\") + 1);
+			String startSCCmd = "java -jar ..\\bin\\scconsole.jar -l " + log4jFile + " -p " + configFile + " startSC";
+			logger.debug("startSCCmd: " + startSCCmd);
+			Runtime.getRuntime().exec(startSCCmd);
 			System.exit(0);
 		}
 

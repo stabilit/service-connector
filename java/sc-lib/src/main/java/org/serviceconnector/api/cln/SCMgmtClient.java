@@ -145,6 +145,34 @@ public class SCMgmtClient extends SCClient {
 	}
 
 	/**
+	 * Restart SC.
+	 *
+	 * @throws SCServiceException the sC service exception
+	 */
+	public void restartSC() throws SCServiceException {
+		if (this.attached == false) {
+			// restartSC not possible - client not attached
+			throw new SCServiceException("client not attached - restartSC not possible.");
+		}
+		this.manageCall(Constants.RESTARTSC);
+		try {
+			// sleep to assure restart is sent
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			// ignore exception
+		}
+		// 4. post process, reply to client
+		this.attached = false;
+		// destroy connection pool
+		this.requester.destroy();
+		synchronized (AppContext.communicatorsLock) {
+			AppContext.attachedCommunicators.decrementAndGet();
+			// release resources
+			AppContext.destroy();
+		}
+	}
+
+	/**
 	 * Inspect call.
 	 * 
 	 * @param instruction
@@ -195,7 +223,7 @@ public class SCMgmtClient extends SCClient {
 			this.requester.destroy();
 			throw new SCServiceException("kill SC failed", e);
 		}
-		if (instruction.equalsIgnoreCase(Constants.KILL)) {
+		if (instruction.equalsIgnoreCase(Constants.KILL) || instruction.equalsIgnoreCase(Constants.RESTARTSC)) {
 			// kill SC doesn't reply a message
 			return null;
 		}

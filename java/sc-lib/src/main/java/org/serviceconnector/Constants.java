@@ -150,6 +150,8 @@ public final class Constants {
 	public static final String STATE = "state";
 	public static final String SESSIONS = "sessions";
 	public static final String KILL = "kill";
+	public static final String RESTARTSC = "restartSC";
+	public static final String STARTSC = "startSC";
 	public static final String EQUAL_SIGN = "=";
 
 	/*
