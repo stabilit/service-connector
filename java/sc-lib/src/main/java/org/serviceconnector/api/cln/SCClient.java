@@ -53,7 +53,7 @@ public class SCClient {
 	/**
 	 * The keep alive interval. Interval in seconds between two subsequent keepAlive requests (KRQ). The keepAlive message is solely
 	 * used to refresh the firewall timeout on the network path. KeepAlive message is only sent on an idle connection. The value = 0
-	 * means no keep alive messages will be sent. Default = 0.
+	 * means no keep alive messages will be sent. Default = 60.
 	 */
 	private int keepAliveIntervalSeconds;
 	/** The connection type used to connect to SC. {netty.http/netty.tcp}. Default netty.tcp */
