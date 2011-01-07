@@ -59,7 +59,7 @@ public class SCServer {
 	private volatile boolean listening;
 	/** The immediate connect. Indicates if server immediately gets connections from SC after register is done. */
 	private boolean immediateConnect;
-	/** The keep alive interval seconds. */
+	/** The keep alive interval seconds. Default = 60. */
 	private int keepAliveIntervalSeconds;
 	/** The responder. */
 	private IResponder responder;
