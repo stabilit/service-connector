@@ -27,4 +27,10 @@ public final class ConsoleConstants {
 	
 	/** File qualifier for command line argument port */
 	public static final String CLI_PORT_ARG = "-p";
+	
+	/** File qualifier for command line argument log4j-file */
+	public static final String CLI_LOG4J_ARG = "-l";
+	
+	/** File qualifier for command line argument property-file */
+	public static final String CLI_PROP_ARG = "-p";
 }
