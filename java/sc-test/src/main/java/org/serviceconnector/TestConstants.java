@@ -57,6 +57,7 @@ public class TestConstants {
 	public static final String echoAppErrorCmd = "echoAppError";
 	public static final String largeResponseCmd = "largeResponse";
 	public static final String sleepCmd = "sleep";
+	public static final String cacheCmd = "cache";
 	
 	public static final String pangram = "The quick brown fox jumps over a lazy dog.";
 	public static final String stringLength32 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
