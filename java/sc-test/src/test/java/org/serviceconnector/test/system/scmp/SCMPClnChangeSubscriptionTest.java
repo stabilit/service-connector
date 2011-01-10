@@ -80,7 +80,7 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
 				TestConstants.pubServerName1);
 
-		subscribeCall.setSessionInfo(TestConstants.publishMessagesWithDelayCmd);
+		subscribeCall.setSessionInfo(TestConstants.publishMsgWithDelayCmd);
 		subscribeCall.setNoDataIntervalSeconds(2);
 		// mask does not match
 		subscribeCall.setMask(TestConstants.mask1);

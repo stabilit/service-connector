@@ -140,11 +140,12 @@ public class SessionRegistry extends Registry<String, Session> {
 		}
 		// always cancel old timeouter before setting up a new one
 		this.cancelSessionTimeout(session);
+		logger.debug("schedule session timeout " + session.getId());
 		// sets up session timeout
 		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session));
 		// schedule sessionTimeouter in registry timer
-		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(sessionTimeouter,
-				(int) session.getSessionTimeoutSeconds(), TimeUnit.SECONDS);
+		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(
+				sessionTimeouter, (long) session.getSessionTimeoutSeconds(), TimeUnit.SECONDS);
 		session.setTimeout(timeout);
 	}
 
@@ -163,7 +164,13 @@ public class SessionRegistry extends Registry<String, Session> {
 			// no session timeout has been set up for this session
 			return;
 		}
-		sessionTimeout.cancel(false);
+		logger.debug("cancel session timeout " + session.getId());
+		boolean cancelSuccess = sessionTimeout.cancel(false);
+		if (cancelSuccess == false) {
+			logger.debug("cancel of session timeout failed :" + session.getId() + " delay millis: "
+					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
+		}
+		this.sessionScheduler.purge();
 		// important to set timeouter null - rescheduling of same instance not possible
 		session.setTimeout(null);
 	}

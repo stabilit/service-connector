@@ -49,12 +49,14 @@ public class TestConstants {
 	public static final String rejectSessionCmd = "reject";
 	public static final String doNothingCmd = "doNothing";
 	public static final String publishCompressedMsgCmd = "publishMessagesCompressed";
-	public static final String publishMsgUncompressedCmd = "publishMessagesUncompressed";
-	public static final String publishMessagesWithDelayCmd = "publishMessagesWithDelay";
-	public static final String publishLargeMessageCmd = "publishLargeMessage";
+	public static final String publishUncompressedMsgCmd = "publishMessagesUncompressed";
+	public static final String publishMsgWithDelayCmd = "publishMessagesWithDelay";
+	public static final String publishLargeMsgCmd = "publishLargeMessage";
 	public static final String echoCmd = "echoMessage";
 	public static final String raiseExceptionCmd = "raiseException";
 	public static final String echoAppErrorCmd = "echoAppError";
+	public static final String echoAppError1Cmd = "echoAppError1";
+	public static final String echoAppError2Cmd = "echoAppError2";
 	public static final String largeResponseCmd = "largeResponse";
 	public static final String sleepCmd = "sleep";
 	public static final String cacheCmd = "cache";

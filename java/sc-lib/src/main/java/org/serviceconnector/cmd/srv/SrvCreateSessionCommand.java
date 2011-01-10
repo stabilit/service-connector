@@ -17,6 +17,7 @@
 package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SrvSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -84,7 +85,7 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 			if (scReply.isCompressed()) {
 				reply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 			}
-			if (scReply.getAppErrorCode() != -1) {
+			if (scReply.getAppErrorCode() != Constants.EMPTY_APP_ERROR_CODE) {
 				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_CODE, scReply.getAppErrorCode());
 			}
 			if (scReply.getAppErrorText() != null) {

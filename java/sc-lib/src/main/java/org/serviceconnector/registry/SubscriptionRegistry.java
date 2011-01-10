@@ -148,7 +148,12 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			// no subscription timeout has been set up for this subscription
 			return;
 		}
-		subscriptionTimeout.cancel(false);
+		logger.debug("cancel session timeout " + subscription.getId());
+		boolean cancelSuccess = subscriptionTimeout.cancel(false);
+		if (cancelSuccess == false) {
+			logger.debug("cancel of session timeout failed :" + subscription.getId() + " delay millis: "
+					+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS));
+		}
 		// important to set timeout null - rescheduling of same instance not possible
 		subscription.setTimeout(null);
 		// tries removing canceled timeouts

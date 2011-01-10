@@ -83,14 +83,13 @@ public class SCMessage {
 	 */
 	public SCMessage() {
 		this.messageInfo = null;
-		// default of compression is true
 		this.compressed = Constants.DEFAULT_COMPRESSION_FLAG;
 		this.data = null;
 		this.dataLength = 0;
 		this.sessionId = null;
 		this.sessionInfo = null;
 		this.cacheId = null;
-		this.appErrorCode = -1;
+		this.appErrorCode = Constants.EMPTY_APP_ERROR_CODE;
 		this.appErrorText = null;
 		this.reject = false;
 	}
@@ -207,7 +206,7 @@ public class SCMessage {
 	}
 
 	/**
-	 * Gets the data length. Data length gets set by API.
+	 * Gets the data length.
 	 * 
 	 * @return the data length
 	 */

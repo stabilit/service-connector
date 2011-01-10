@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.test.unit.SuperUnitTest;
 
@@ -61,10 +60,16 @@ public class APISCMessageTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t01_constructor() {
-		Assert.assertEquals("messageInfo is not null", null, message.getMessageInfo());
 		Assert.assertEquals("data is not null", null, message.getData());
+		Assert.assertEquals("data length is not 0", 0, message.getDataLength());
+		Assert.assertEquals("messageInfo is not null", null, message.getMessageInfo());
+		Assert.assertEquals("sessionInfo is not null", null, message.getSessionInfo());
 		Assert.assertEquals("sessionId is not null", null, message.getSessionId());
+		Assert.assertEquals("cacheId is not null", null, message.getCacheId());
+		Assert.assertEquals("appErrorText is not null", null, message.getAppErrorText());
+		Assert.assertEquals("appErrorCode is not empty", Constants.EMPTY_APP_ERROR_CODE, message.getAppErrorCode());
 		Assert.assertEquals("compressed flag is not default", Constants.DEFAULT_COMPRESSION_FLAG, message.isCompressed());
+		Assert.assertEquals("reject flag is not false", false, message.isReject());
 	}
 
 	/**
@@ -103,8 +108,8 @@ public class APISCMessageTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t22_Data() {
-		message.setData(new byte[1048576]);
-		Assert.assertEquals("DataParameter ", 1048576, ((byte[]) message.getData()).length);
+		message.setData(new byte[TestConstants.dataLength1MB]);
+		Assert.assertEquals("DataParameter ", TestConstants.dataLength1MB, ((byte[]) message.getData()).length);
 	}
 
 	/**
@@ -259,21 +264,22 @@ public class APISCMessageTest extends SuperUnitTest {
 
 	/**
 	 * Description: Set empty value as AppErrorText<br>
-	 * Expectation: SCMPValidatorException
+	 * Expectation: AppErrorText is empty
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test
 	public void t71_AppErrorText() throws Exception {
 		message.setAppErrorText("");
+		Assert.assertEquals("is not empty", "", message.getAppErrorText());
 	}
 
 	/**
-	 * Description: Set empty Char as AppErrorText<br>
-	 * Expectation: SCMPValidatorException
+	 * Description: Set blank as AppErrorText<br>
+	 * Expectation: AppErrorText is blank
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test
 	public void t72_AppErrorText() throws Exception {
 		message.setAppErrorText(" ");
-		Assert.assertEquals(" ", message.getAppErrorText());
+		Assert.assertEquals("is not blank", " ", message.getAppErrorText());
 	}
 
 	/**
@@ -283,8 +289,8 @@ public class APISCMessageTest extends SuperUnitTest {
 	@Test
 	public void t73_AppErrorText() throws Exception {
 		message.setAppErrorText("a");
-		Assert.assertEquals("a", message.getAppErrorText());
-		Assert.assertEquals(1, message.getAppErrorText().length());
+		Assert.assertEquals("string is not equal", "a", message.getAppErrorText());
+		Assert.assertEquals("length is not 1",1, message.getAppErrorText().length());
 	}
 
 	/**
@@ -294,30 +300,33 @@ public class APISCMessageTest extends SuperUnitTest {
 	@Test
 	public void t74_AppErrorText() throws Exception {
 		message.setAppErrorText(TestConstants.stringLength256);
-		Assert.assertEquals(TestConstants.stringLength256, message.getAppErrorText());
-		Assert.assertEquals(256, message.getAppErrorText().length());
+		Assert.assertEquals("string is not equal", TestConstants.stringLength256, message.getAppErrorText());
+		Assert.assertEquals("length is not 256", 256, message.getAppErrorText().length());
 	}
 
 	/**
 	 * Description: Set 257 Chars as AppErrorText<br>
-	 * Expectation: SCMPValidatorException
+	 * Expectation: passes because it is truncated later
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test
 	public void t75_AppErrorText() throws Exception {
 		message.setAppErrorText(TestConstants.stringLength257);
+		Assert.assertEquals("string is not equal", TestConstants.stringLength257, message.getAppErrorText());
+		Assert.assertEquals("length is not 257", 257, message.getAppErrorText().length());
 	}
 
 	/**
 	 * Description: Set 32767 Chars as AppErrorText<br>
-	 * Expectation: SCMPValidatorException
+	 * Expectation: passes because it is truncated later
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test
 	public void t76_AppErrorText() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Short.MAX_VALUE; i++) {
 			sb.append('a');
 		}
 		message.setAppErrorText(sb.toString());
+		Assert.assertEquals("length is not MAX_VALUE", Short.MAX_VALUE, message.getAppErrorText().length());
 	}
 
 	/**
@@ -332,11 +341,12 @@ public class APISCMessageTest extends SuperUnitTest {
 
 	/**
 	 * Description: Set AppErrorCode -1<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Expectation: passes because validation is in SC
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test
 	public void t81_AppErrorCode() throws Exception {
-		message.setAppErrorCode(-1);
+		message.setAppErrorCode(-2);
+		Assert.assertEquals("is not -2", -2, message.getAppErrorCode());
 	}
 	
 	/**

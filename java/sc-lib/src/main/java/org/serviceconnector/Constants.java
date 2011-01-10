@@ -98,6 +98,9 @@ public final class Constants {
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
 
+	/** Empty application error code. */
+	public static final int EMPTY_APP_ERROR_CODE = -9999;
+	
 	/** The wait time in a loop waiting for a busy connection. */
 	public static final int WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS = 200;
 

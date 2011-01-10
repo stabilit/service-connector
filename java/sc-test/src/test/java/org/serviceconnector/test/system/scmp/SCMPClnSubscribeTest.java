@@ -174,7 +174,7 @@ public class SCMPClnSubscribeTest {
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(1);
-		subscribeCall.setSessionInfo(TestConstants.publishMsgUncompressedCmd);
+		subscribeCall.setSessionInfo(TestConstants.publishUncompressedMsgCmd);
 		subscribeCall.setMask(TestConstants.mask);
 		subscribeCall.setRequestBody("5");
 		TestCallback cbk = new TestCallback(true);
@@ -246,7 +246,7 @@ public class SCMPClnSubscribeTest {
 		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
 				TestConstants.pubServerName1);
 
-		subscribeCall.setSessionInfo(TestConstants.publishLargeMessageCmd);
+		subscribeCall.setSessionInfo(TestConstants.publishLargeMsgCmd);
 		subscribeCall.setNoDataIntervalSeconds(10);
 		subscribeCall.setMask(TestConstants.mask);
 		subscribeCall.setRequestBody("get large message");

@@ -100,7 +100,7 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		SCSubscribeMessage subMsgResponse = null;
 		msgCallback = new MsgCallback(publishService);
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo(TestConstants.publishMessagesWithDelayCmd);
+		subMsgRequest.setSessionInfo(TestConstants.publishMsgWithDelayCmd);
 		int nrMessages = 5;
 		String waitInMillis = "1000";
 		subMsgRequest.setData(nrMessages + "|" + waitInMillis);

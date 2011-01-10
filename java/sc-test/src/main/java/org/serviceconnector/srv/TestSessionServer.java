@@ -184,6 +184,19 @@ public class TestSessionServer extends TestStatefulServer {
 			return request;
 		}
 
+		// send back an application error code only
+		public SCMessage echoAppError1(SCMessage request, int operationTimeoutInMillis) {
+			request.setAppErrorCode(TestConstants.appErrorCode);
+			return request;
+		}
+
+		// send back application error text only
+		public SCMessage echoAppError2(SCMessage request, int operationTimeoutInMillis) {
+			request.setAppErrorText(TestConstants.appErrorText);
+			return request;
+		}
+
+		
 		// sleep for time defined in the body and send back the same message
 		public SCMessage sleep(SCMessage request, int operationTimeoutInMillis) {
 			String dataString = (String) request.getData();

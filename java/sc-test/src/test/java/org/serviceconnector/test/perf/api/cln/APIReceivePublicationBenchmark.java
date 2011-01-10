@@ -47,7 +47,7 @@ public class APIReceivePublicationBenchmark extends APIPerfSuperClientTest {
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo(TestConstants.publishMsgUncompressedCmd);
+		subMsgRequest.setSessionInfo(TestConstants.publishUncompressedMsgCmd);
 		int nrMessages = 100000;
 		subMsgRequest.setData(Integer.toString(nrMessages));
 		MsgCallback cbk = new MsgCallback(publishService);
