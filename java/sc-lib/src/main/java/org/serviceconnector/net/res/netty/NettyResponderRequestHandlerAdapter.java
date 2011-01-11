@@ -309,7 +309,7 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 	 *             the exception
 	 */
 	protected void sendBadRequestError(IResponse response, SCMPMessage scmpReq) throws Exception {
-		SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.BAD_REQUEST, "messagType " + scmpReq.getMessageType());
+		SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.BAD_REQUEST, "messagType=" + scmpReq.getMessageType());
 		scmpFault.setMessageType(scmpReq.getMessageType());
 		scmpFault.setLocalDateTime();
 		response.setSCMP(scmpFault);

@@ -97,7 +97,7 @@ public enum SCVersion {
 	 */
 	public void isSupported(String scVersion) throws SCMPValidatorException {
 		if (scVersion == null) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, "version must be set");
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "SC version is missing");
 		}
 		if (scVersion.matches("\\d*\\.\\d*-\\d{3}") == false) {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, scVersion);
@@ -112,7 +112,7 @@ public enum SCVersion {
 		}
 		int version = Integer.parseInt(splitted[1]);
 		if (this.version < version) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_FORMAT, scVersion);
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_SC_VERSION_NR, scVersion);
 		}
 		int revision = Integer.parseInt(splitted[2]);
 		if ((this.version == version) && (this.revision < revision)) {

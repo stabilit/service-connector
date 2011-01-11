@@ -318,11 +318,10 @@ public class SCClient {
 	 *             SCServiceException - when called after attach()
 	 */
 	public void setMaxConnections(int maxConnections) throws Exception {
-		// validate in this case its a local needed information
-		ValidatorUtility.validateInt(1, maxConnections, SCMPError.HV_WRONG_MAX_CONNECTIONS);
 		if (this.attached) {
 			throw new SCServiceException("cannot set property, client is already attached");
 		}
+		ValidatorUtility.validateInt(1, maxConnections, SCMPError.HV_WRONG_MAX_CONNECTIONS);
 		this.maxConnections = maxConnections;
 	}
 

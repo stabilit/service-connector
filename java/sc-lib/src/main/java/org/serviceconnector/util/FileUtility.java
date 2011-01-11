@@ -155,7 +155,7 @@ public class FileUtility {
 		String fs = System.getProperty("file.separator");
 		int index = fileName.lastIndexOf(fs);
 		if (index == -1) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "invalid log directory " + fileName);
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "invalid log directory=" + fileName);
 		}
 		String path = null;
 		if (fileName.lastIndexOf(":") == -1) {	

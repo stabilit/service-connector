@@ -88,7 +88,7 @@ public class SCConsole {
 			showError("Port argument is missing");
 			System.exit(1);
 		} else {
-			ValidatorUtility.validateInt(0, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+			ValidatorUtility.validateInt(1, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		}
 		int status = SCConsole.run(host, port, bodyString);
 		System.exit(status);

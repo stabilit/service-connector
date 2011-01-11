@@ -20,17 +20,20 @@ import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.registry.Registry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceState;
+import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -98,7 +101,7 @@ public class InspectCommand extends CommandAdapter {
 				}
 			} else {
 				logger.debug("service:" + serviceName + " not found");
-				scmpReply = new SCMPMessageFault(SCMPError.NOT_FOUND, "service:" + serviceName + " not found");
+				scmpReply = new SCMPMessageFault(SCMPError.NOT_FOUND, "service=" + serviceName + " not found");
 			}
 			response.setSCMP(scmpReply);
 			return;
@@ -108,8 +111,16 @@ public class InspectCommand extends CommandAdapter {
 			// state for service requested
 			String serviceName = bodyString.substring(9);
 			logger.debug("sessions request for service:" + serviceName);
-			StatefulService service = this.validateStatefulService(serviceName);
-			scmpReply.setBody(service.getCountAvailableSessions() + "/" + service.getCountAllocatedSessions());
+			Service service = this.getService(serviceName);
+			if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE) {
+				// no service known with incoming serviceName
+				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service=" + serviceName
+						+ " is not known service");
+				scmpCommandException.setMessageType(getKey());
+				throw scmpCommandException;
+			}
+			StatefulService statefulService = (StatefulService) service;
+			scmpReply.setBody(statefulService.getCountAvailableSessions() + "/" + statefulService.getCountAllocatedSessions());
 			response.setSCMP(scmpReply);
 			return;
 		}

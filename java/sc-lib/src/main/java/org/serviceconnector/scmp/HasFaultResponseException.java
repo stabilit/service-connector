@@ -53,7 +53,7 @@ public abstract class HasFaultResponseException extends Exception {
 	 *            the additional info
 	 */
 	public HasFaultResponseException(SCMPError error, String additionalInfo) {
-		super(error.getErrorText() + " [" + additionalInfo + "]");
+		super(error.getErrorText(additionalInfo));
 		this.fault.setError(error, additionalInfo);
 	}
 

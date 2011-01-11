@@ -55,7 +55,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 
 		String localDateTimeString = SDF.format(date);
 		try {
-			Date validDate = ValidatorUtility.validateLocalDateTime(localDateTimeString);
+			Date validDate = ValidatorUtility.validateDateTime(localDateTimeString, SCMPError.HV_WRONG_LDT);
 			Assert.assertEquals(date.toGMTString(), validDate.toGMTString());
 		} catch (SCMPValidatorException ex) {
 			logger.error("validateLocalDateTimeTest", ex);
@@ -147,7 +147,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 			ValidatorUtility.validateInt(0, "-1", 2, SCMPError.HV_WRONG_PORTNR);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue -1 not within limits]", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue -1 is not in range (0-2)]", e.getMessage());
 		}
 
 		try {
@@ -155,7 +155,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 			ValidatorUtility.validateInt(0, "3", 2, SCMPError.HV_WRONG_PORTNR);
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue 3 not within limits]", e.getMessage());
+			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue 3 is not in range (0-2)]", e.getMessage());
 		}
 
 		try {
@@ -189,7 +189,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
 			Assert.assertEquals(SCMPError.HV_WRONG_SESSION_INFO.getErrorText()
-					+ " [StringValue length 1 is not within limits 2 to 4]", e.getMessage());
+					+ " [StringValue length 1 is not in range (2-4)]", e.getMessage());
 		}
 
 		try {
@@ -198,7 +198,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 			Assert.fail("Should throw exception");
 		} catch (SCMPValidatorException e) {
 			Assert.assertEquals(SCMPError.HV_WRONG_SESSION_INFO.getErrorText()
-					+ " [StringValue length 3 is not within limits 1 to 2]", e.getMessage());
+					+ " [StringValue length 3 is not in range (1-2)]", e.getMessage());
 		}
 	}
 }

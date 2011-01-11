@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 
 /**
  * The Class DateTimeUtility. Provides basic date time operations.
@@ -32,7 +33,7 @@ public final class DateTimeUtility {
 	protected static final Logger logger = Logger.getLogger(DateTimeUtility.class);
 
 	/** The Constant SDF. */
-	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	private static final SimpleDateFormat SDF = new SimpleDateFormat(Constants.SCMP_FORMAT_OF_DATE_TIME);
 
 	/**
 	 * Instantiates a new date time utility.
@@ -77,13 +78,13 @@ public final class DateTimeUtility {
 	}
 
 	/**
-	 * Gets the time as string.
+	 * Gets the date time as string.
 	 * 
 	 * @param date
 	 *            the date
-	 * @return the time as string
+	 * @return the date and time as string
 	 */
-	public static String getTimeAsString(Date date) {
+	public static String getDateTimeAsString(Date date) {
 		synchronized (SDF) { // SDF is not thread safe
 			return SDF.format(date);
 		}
@@ -115,6 +116,7 @@ public final class DateTimeUtility {
 	 */
 	public static Date parseDateString(String dateString) throws ParseException {
 		synchronized (SDF) {
+			SDF.setLenient(false);
 			return SDF.parse(dateString);
 		}
 	}

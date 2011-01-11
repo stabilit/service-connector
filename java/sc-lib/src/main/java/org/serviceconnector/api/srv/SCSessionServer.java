@@ -49,7 +49,7 @@ public class SCSessionServer {
 	protected final static Logger logger = Logger.getLogger(SCSessionServer.class);
 
 	/** The registered. Indicates if a server is already registered to an SC. */
-	private boolean registered;
+	protected boolean registered;
 	/** The service name. */
 	protected String serviceName;
 	/** The requester. */
@@ -134,55 +134,12 @@ public class SCSessionServer {
 	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
 			SCSessionServerCallback scCallback) throws Exception {
 		if (scCallback == null) {
-			throw new SCMPValidatorException(SCMPError.HV_ERROR, "callback must be set");
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "callback is missing");
 		}
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		this.doRegister(operationTimeoutSeconds, maxSessions, maxConnections);
 		// creating srvService & adding to registry
 		SrvService srvService = new SrvSessionService(this.serviceName, maxSessions, maxConnections, this.requester, scCallback);
-		srvServiceRegistry.addSrvService(this.serviceName + "_" + this.scServer.getListenerPort(), srvService);
-		this.registered = true;
-	}
-
-	/**
-	 * Register server with default operation timeout.
-	 * 
-	 * @param maxSessions
-	 *            the max sessions to serve
-	 * @param maxConnections
-	 *            the max connections pool uses to connect to SC
-	 * @param scCallback
-	 *            the SC callback
-	 * @throws Exception
-	 *             the exception
-	 */
-	public synchronized void register(int maxSessions, int maxConnections, SCPublishServerCallback scCallback) throws Exception {
-		this.register(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
-	}
-
-	/**
-	 * Register server.
-	 * 
-	 * @param operationTimeoutSeconds
-	 *            allowed time to complete operation
-	 * @param maxSessions
-	 *            the max sessions to serve
-	 * @param maxConnections
-	 *            the max connections pool uses to connect to SC
-	 * @param scCallback
-	 *            the SC callback
-	 * @throws Exception
-	 *             the exception
-	 */
-	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
-			SCPublishServerCallback scCallback) throws Exception {
-		if (scCallback == null) {
-			throw new SCMPValidatorException(SCMPError.HV_ERROR, "callback must be set");
-		}
-		this.doRegister(operationTimeoutSeconds, maxSessions, maxConnections);
-		// creating srvService & adding to registry
-		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
-		SrvService srvService = new SrvPublishService(this.serviceName, maxSessions, maxConnections, this.requester, scCallback);
 		srvServiceRegistry.addSrvService(this.serviceName + "_" + this.scServer.getListenerPort(), srvService);
 		this.registered = true;
 	}
@@ -199,7 +156,7 @@ public class SCSessionServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private synchronized void doRegister(int operationTimeoutSeconds, int maxSessions, int maxConnections) throws Exception {
+	protected synchronized void doRegister(int operationTimeoutSeconds, int maxSessions, int maxConnections) throws Exception {
 		if (this.scServer.isListening() == false) {
 			throw new InvalidActivityException("Listener must be started before register service is allowed.");
 		}
@@ -246,7 +203,8 @@ public class SCSessionServer {
 	}
 
 	/**
-	 * Check registration with default operation timeout. This message can be sent from the registered server to SC in order to check
+	 * Check registration with default operation timeout. This message can be sent from the registered server to SC in order to
+	 * check
 	 * its registration
 	 * 
 	 * @throws Exception

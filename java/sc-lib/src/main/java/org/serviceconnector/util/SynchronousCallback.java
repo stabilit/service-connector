@@ -93,6 +93,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 	public SCMPMessage getMessageSync(int timeoutInMillis) {
 		if (timeoutInMillis <= 0) {
 			// timeoutInMillis must be greater than 0
+			logger.error("timeoutInMillis <= 0");
 			return null;
 		}
 		// set synchronous mode
@@ -109,7 +110,8 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 		} finally {
 			if (reply == null) {
 				// time runs out before message got received
-				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.REQUEST_TIMEOUT, "Getting message synchronous failed");
+				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.REQUEST_ABORT, "");
+				logger.error("Operation did not complete in time, aborting");
 				return fault;
 			}
 		}

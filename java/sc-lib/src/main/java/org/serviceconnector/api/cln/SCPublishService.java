@@ -99,7 +99,7 @@ public class SCPublishService extends SCService {
 			throw new SCServiceException("already subscribed");
 		}
 		if (scSubscribeMessage == null) {
-			throw new SCServiceException("scSubscribeMessage can not be null");
+			throw new SCServiceException("scSubscribeMessage must not be null");
 		}
 		if (scMessageCallback == null) {
 			throw new InvalidParameterException("Callback must be set.");
@@ -177,7 +177,7 @@ public class SCPublishService extends SCService {
 			throw new SCServiceException("changeSubscription not possible - not subscribed");
 		}
 		if (scSubscribeMessage == null) {
-			throw new SCServiceException("scSubscribeMessage can not be null");
+			throw new SCServiceException("scSubscribeMessage must not be null");
 		}
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
@@ -238,8 +238,8 @@ public class SCPublishService extends SCService {
 			// inactivate the session
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("receive publication failed");
-			ex.setSCErrorCode(SCMPError.BROKEN_SESSION.getErrorCode());
-			ex.setSCErrorText("receive publication failed");
+			ex.setSCErrorCode(SCMPError.BROKEN_SUBSCRIPTION.getErrorCode());
+			ex.setSCErrorText(SCMPError.BROKEN_SUBSCRIPTION.getErrorText("receive publication for service="+this.serviceName+" failed"));
 			this.messageCallback.receive(ex);
 			return;
 		}

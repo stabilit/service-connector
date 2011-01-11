@@ -58,8 +58,8 @@ public class ResponderConfiguration {
 		@SuppressWarnings("unchecked")
 		List<String> respondersList = apacheCompositeConfig.getList(Constants.PROPERTY_LISTENERS);
 		if (respondersList == null) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property:"
-					+ Constants.PROPERTY_LISTENERS + " not found");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
+					+ Constants.PROPERTY_LISTENERS + " is missing");
 		}
 		// load all communicators in the list into the array
 		this.responderConfigList = new ArrayList<CommunicatorConfig>();

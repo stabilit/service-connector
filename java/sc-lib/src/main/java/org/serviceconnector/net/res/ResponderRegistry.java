@@ -44,7 +44,7 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/**
 	 * Sets an object in thread local attached to incoming thread. This object can be used later from the same thread.
-	 * Other threads can not access earlier set object.
+	 * Other threads cannot access earlier set object.
 	 * 
 	 * @param obj
 	 *            the new thread local

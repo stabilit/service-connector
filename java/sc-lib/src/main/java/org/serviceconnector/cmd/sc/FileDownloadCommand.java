@@ -73,22 +73,16 @@ public class FileDownloadCommand extends CommandAdapter {
 			SCMPMessage message = request.getMessage();
 			// remoteFileName mandatory
 			String remoteFileName = (String) message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
-			if (remoteFileName == null || remoteFileName.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_REMOTE_FILE_NAME, "remoteFileName must be set");
-			}
+			ValidatorUtility.validateStringLength(1, remoteFileName, 2562, SCMPError.HV_WRONG_REMOTE_FILE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(1000, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			if (serviceName == null || serviceName.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-			}
+			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
-			if (sessionId == null || sessionId.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
-			}
+			ValidatorUtility.validateStringLength(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

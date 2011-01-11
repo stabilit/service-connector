@@ -75,38 +75,38 @@ public class ServiceLoader {
 				String path = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_PATH);
 				String scUploadFileScriptName = config.getString(serviceName + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT);
 				if (scUploadFileScriptName == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property "
-							+ Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT + " is missing for service " + serviceName);
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
+							+ Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT + " is missing for service=" + serviceName);
 				}
 				String scGetFileListScriptName = config.getString(serviceName + Constants.PROPERTY_QUALIFIER_LIST_SCRIPT);
 				if (scGetFileListScriptName == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property "
-							+ Constants.PROPERTY_QUALIFIER_LIST_SCRIPT + " is missing for service " + serviceName);
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
+							+ Constants.PROPERTY_QUALIFIER_LIST_SCRIPT + " is missing for service=" + serviceName);
 				}
 				service = new FileService(serviceName, path, scUploadFileScriptName, scGetFileListScriptName);
 				String remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
 				Server server = AppContext.getServerRegistry().getServer(remoteHost);
 				if (server == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host "+ remoteHost
-							+ " configured for service " + serviceName + "does not exist");
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host="+ remoteHost
+							+ " configured for service=" + serviceName + " is not configured");
 				}
 				((FileService) service).setServer((FileServer) server);
 				break;
 			case UNDEFINED:
 			default:
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
-						"wrong serviceType, serviceName/serviceType: " + serviceName + "/" + serviceTypeString);
+						"wrong serviceType, serviceName/serviceType=" + serviceName + "/" + serviceTypeString);
 			}
 
 			// set service state as defined in configuration. Default is enabled
 			String enable = config.getString(serviceName + Constants.PROPERTY_QUALIFIER_ENABLED);
 			if (enable == null || enable.equals("true")) {
 				service.setState(ServiceState.ENABLED); // default is enabled
-				logger.trace("state enabled for service: " + serviceName);
+				logger.trace("state enabled for service=" + serviceName);
 
 			} else {
 				service.setState(ServiceState.DISABLED);
-				logger.trace("state disabled for service: " + serviceName);
+				logger.trace("state disabled for service=" + serviceName);
 			}
 			serviceRegistry.addService(service.getServiceName(), service);
 		}

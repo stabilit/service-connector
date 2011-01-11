@@ -31,6 +31,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.ServerType;
 import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class DeRegisterServerCommand. Responsible for validation and execution of deregister command. Used to deregisters server from
@@ -86,9 +87,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 		try {
 			// serviceName mandatory
 			String serviceName = (String) message.getServiceName();
-			if (serviceName == null || serviceName.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-			}
+			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
@@ -115,7 +114,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 
 		if (server == null || (server.getType().equals(ServerType.STATEFUL_SERVER) == false)) {
 			// no available server for this service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "server not registered, key "
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "server not registered, key="
 					+ key);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;

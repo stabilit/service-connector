@@ -584,14 +584,14 @@ public class DefaultXMLLoaderFactory {
 			writer.writeEndElement(); // end of size
 			writer.writeStartElement("expiration");
 			if (cacheComposite.getExpiration() != null) {
-				writer.writeCharacters(DateTimeUtility.getTimeAsString(cacheComposite.getExpiration()));
+				writer.writeCharacters(DateTimeUtility.getDateTimeAsString(cacheComposite.getExpiration()));
 			}
 			writer.writeEndElement(); // end of expiration
 			writer.writeStartElement("creation");
-			writer.writeCharacters(DateTimeUtility.getTimeAsString(cacheComposite.getCreationTime()));
+			writer.writeCharacters(DateTimeUtility.getDateTimeAsString(cacheComposite.getCreationTime()));
 			writer.writeEndElement(); // end of creation
 			writer.writeStartElement("lastModified");
-			writer.writeCharacters(DateTimeUtility.getTimeAsString(cacheComposite.getLastModifiedTime()));
+			writer.writeCharacters(DateTimeUtility.getDateTimeAsString(cacheComposite.getLastModifiedTime()));
 			writer.writeEndElement(); // end of lastModified
 			if (compositeParam != null && compositeParam.equals(cacheKey.getCacheId())) {
 				// get all messages

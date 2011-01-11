@@ -21,6 +21,8 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class SCMessage. A SCMessage is the basic transport unit to communicate with a Service Connector.
@@ -307,11 +309,11 @@ public class SCMessage {
 	 *            the new application error code
 	 */
 	public void setAppErrorCode(Integer appErrorCode) {
-		if (appErrorCode == null) {
-			this.appErrorCode = 0;
-			return;
+		if (appErrorCode == null){
+			this.appErrorCode = Constants.EMPTY_APP_ERROR_CODE;
+		} else {
+			this.appErrorCode = appErrorCode;
 		}
-		this.appErrorCode = appErrorCode;
 	}
 
 	/**
@@ -351,6 +353,7 @@ public class SCMessage {
 	public void setCacheExpirationDateTime(Date cacheExpirationDateTime) {
 		this.cacheExpirationDateTime = cacheExpirationDateTime;
 	}
+
 
 	/** {@inheritDoc} */
 	@Override

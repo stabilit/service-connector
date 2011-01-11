@@ -62,8 +62,8 @@ public class RequesterConfiguration {
 		@SuppressWarnings("unchecked")
 		List<String> requesterList = apacheCompositeConfig.getList(Constants.PROPERTY_REMOTE_NODES);
 		if (requesterList == null) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property:"
-					+ Constants.PROPERTY_REMOTE_NODES + " not found");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
+					+ Constants.PROPERTY_REMOTE_NODES + " is missing");
 		}
 		// load all communicators in the list into the array
 		this.requesterConfigList = new ArrayList<CommunicatorConfig>();

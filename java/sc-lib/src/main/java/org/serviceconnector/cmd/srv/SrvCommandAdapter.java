@@ -16,10 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.srv;
 
-import java.text.SimpleDateFormat;
-
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 import org.serviceconnector.api.srv.SrvPublishService;
 import org.serviceconnector.api.srv.SrvService;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
@@ -45,7 +42,6 @@ public abstract class SrvCommandAdapter implements ICommand {
 
 	/** The session composite registry. */
 	protected static SCMPSessionCompositeRegistry sessionCompositeRegistry = AppContext.getSCMPSessionCompositeRegistry();
-	protected static SimpleDateFormat cacheExpirationDateFormat = new SimpleDateFormat(Constants.CED_DATE_FORMAT);
 	
 	/** {@inheritDoc} */
 	@Override
@@ -58,7 +54,7 @@ public abstract class SrvCommandAdapter implements ICommand {
 	/** {@inheritDoc} */
 	@Override
 	public void validate(IRequest request) throws Exception {
-		throw new SCMPValidatorException(SCMPError.HV_ERROR, "no validator implemented");
+		throw new SCMPValidatorException(SCMPError.HV_ERROR, "validator is not implemented");
 	}
 
 	/** {@inheritDoc} */

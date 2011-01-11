@@ -35,6 +35,7 @@ import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -86,7 +87,7 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 		Assert.assertNull(result.getBody());
 		Assert.assertNull(result.getMessageSequenceNr());
 		Assert.assertEquals(SCMPMsgType.ATTACH.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
-		Assert.assertNotNull(ValidatorUtility.validateLocalDateTime(result.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME)));
+		Assert.assertNotNull(ValidatorUtility.validateDateTime(result.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME), SCMPError.HV_WRONG_LDT));
 
 		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
 		detachCall.invoke(callback, 1000);

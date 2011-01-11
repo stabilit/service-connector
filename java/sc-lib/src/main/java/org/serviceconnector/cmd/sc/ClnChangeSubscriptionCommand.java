@@ -140,17 +140,13 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 			}
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			if (serviceName == null || serviceName.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-			}
+			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 			// subscriptionId mandatory
-			String subscriptionId = message.getSessionId();
-			if (subscriptionId == null || subscriptionId.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "subscriptionId must be set");
-			}
+			String sessionId = message.getSessionId();
+			ValidatorUtility.validateStringLength(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(1000, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// ipAddressList mandatory
 			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
 			ValidatorUtility.validateIpAddressList(ipAddressList);

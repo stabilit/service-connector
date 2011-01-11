@@ -100,7 +100,7 @@ public class ServerLoader {
 				// nothing to do in case of a web server is registered in specific endpoint
 				continue;
 			default:
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong serverType, serverName/serverType: "
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong serverType, serverName/serverType="
 						+ serverName + "/" + serverTypeString);
 			}
 			AppContext.getServerRegistry().addServer(server.getServerKey(), server);

@@ -208,7 +208,6 @@ public final class Constants {
 	public static final String CACHE_MAX_ELEMENTS_IN_MEMORY = "cache.maxElementsInMemory";
 	public static final String CACHE_MAX_ELEMENTS_ON_DISK = "cache.maxElementsOnDisk";
 	public static final String CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = "cache.expirationCheckIntervalSeconds";
-	public static final String CED_DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ss.SSSZ";
 
 	// web default values
 	public static final boolean DEFAULT_WEB_TRANSLET_ENABLED = true;
@@ -231,6 +230,7 @@ public final class Constants {
 	public static final int SCMP_VERSION_LENGTH_IN_HEADLINE = 3;
 	public static final String SCMP_FORMAT_OF_MSG_SIZE = " 0000000";
 	public static final String SCMP_FORMAT_OF_HEADER_SIZE = " 00000";
+	public static final String SCMP_FORMAT_OF_DATE_TIME = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1
 	// =>
 	// 2147483647,

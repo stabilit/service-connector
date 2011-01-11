@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.test.unit.SuperUnitTest;
 
@@ -254,12 +255,11 @@ public class APISCMessageTest extends SuperUnitTest {
 
 	/**
 	 * Description: Set null value as AppErrorText<br>
-	 * Expectation: AppErrorText is set to Null
+	 * Expectation: passes
 	 */
 	@Test
 	public void t70_AppErrorText() throws Exception {
 		message.setAppErrorText(null);
-		Assert.assertEquals("is not null", null, message.getAppErrorText());
 	}
 
 	/**
@@ -306,27 +306,26 @@ public class APISCMessageTest extends SuperUnitTest {
 
 	/**
 	 * Description: Set 257 Chars as AppErrorText<br>
-	 * Expectation: passes because it is truncated later
+	 * Expectation: passes, is checked in SC
 	 */
 	@Test
 	public void t75_AppErrorText() throws Exception {
 		message.setAppErrorText(TestConstants.stringLength257);
-		Assert.assertEquals("string is not equal", TestConstants.stringLength257, message.getAppErrorText());
 		Assert.assertEquals("length is not 257", 257, message.getAppErrorText().length());
 	}
 
 	/**
 	 * Description: Set 32767 Chars as AppErrorText<br>
-	 * Expectation: passes because it is truncated later
+	 * Expectation: passes, is checked in SC
 	 */
-	@Test
+	@Test 
 	public void t76_AppErrorText() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Short.MAX_VALUE; i++) {
 			sb.append('a');
 		}
 		message.setAppErrorText(sb.toString());
-		Assert.assertEquals("length is not MAX_VALUE", Short.MAX_VALUE, message.getAppErrorText().length());
+		Assert.assertEquals("length is not 32767", Short.MAX_VALUE, message.getAppErrorText().length());
 	}
 
 	/**
@@ -340,8 +339,8 @@ public class APISCMessageTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Set AppErrorCode -1<br>
-	 * Expectation: passes because validation is in SC
+	 * Description: Set AppErrorCode -2<br>
+	 * Expectation: passes, is checked in SC
 	 */
 	@Test
 	public void t81_AppErrorCode() throws Exception {

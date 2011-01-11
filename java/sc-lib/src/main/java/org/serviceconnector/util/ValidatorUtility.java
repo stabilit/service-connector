@@ -49,45 +49,44 @@ public final class ValidatorUtility {
 	}
 
 	/**
-	 * Validate local date time.
+	 * Validate date time.
 	 * 
-	 * @param localDateTimeString
-	 *            the local date time string
+	 * @param dateTimeString
+	 *            the date time string
 	 * @return the date
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static Date validateLocalDateTime(String localDateTimeString) throws SCMPValidatorException {
-		if (localDateTimeString == null) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_LDT, "localDateTimeString must be set");
+	public static Date validateDateTime(String dateTimeString, SCMPError error) throws SCMPValidatorException {
+		if (dateTimeString == null) {
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "date time value is missing");
 		}
-		Date localDateTime = null;
+		Date dateTime = null;
 		try {
-			localDateTime = DateTimeUtility.parseDateString(localDateTimeString);
+			dateTime = DateTimeUtility.parseDateString(dateTimeString);
 		} catch (ParseException ex) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_LDT, localDateTimeString);
+			throw new SCMPValidatorException(SCMPError.HV_WRONG_LDT, dateTimeString + " should be="
+					+ Constants.SCMP_FORMAT_OF_DATE_TIME);
 		}
-		return localDateTime;
+		return dateTime;
 	}
 
 	/**
-	 * Validate cache expiration date time.
+	 * Validate date time.
 	 * 
-	 * @param cacheExpirationDateTime
-	 *            the cache expiration date time
+	 * @param dateTime
+	 *            the date and time
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validator exception
 	 */
-	public static void validateCacheExpirationDateTime(String cacheExpirationDateTime) throws SCMPValidatorException {
-		SimpleDateFormat format = new SimpleDateFormat(Constants.CED_DATE_FORMAT);
-		format.setLenient(false);
-
-		try {
-			format.parse(cacheExpirationDateTime);
-		} catch (Exception e) {
-			throw new SCMPValidatorException(SCMPError.HV_ERROR, "wrong format of cacheExpirationDateTime should be "
-					+ Constants.CED_DATE_FORMAT);
+	public static void validateDateTime(Date dateTime, SCMPError error) throws SCMPValidatorException {
+		if (dateTime == null) {
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "date time value is missing");
 		}
+		SimpleDateFormat SDF = new SimpleDateFormat(Constants.SCMP_FORMAT_OF_DATE_TIME);
+		@SuppressWarnings("unused")
+		Date cacheExpirationDateTime = null;
+		cacheExpirationDateTime = validateDateTime(SDF.format(dateTime), error);
 	}
 
 	/**
@@ -100,7 +99,7 @@ public final class ValidatorUtility {
 	 */
 	public static void validateIpAddressList(String ipAddressListString) throws SCMPValidatorException {
 		if (ipAddressListString == null) {
-			throw new SCMPValidatorException(SCMPError.HV_WRONG_IPLIST, "ipAddressListString must be set");
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "ipAddressList is missing");
 		}
 		Matcher m = PAT_IPLIST.matcher(ipAddressListString);
 		if (!m.matches()) {
@@ -123,7 +122,7 @@ public final class ValidatorUtility {
 	 */
 	public static int validateInt(int lowerLimitInc, String intStringValue, SCMPError error) throws SCMPValidatorException {
 		if (intStringValue == null) {
-			throw new SCMPValidatorException(error, "IntValue must be set");
+			throw new SCMPValidatorException(error, "numeric value is missing");
 		}
 		int intValue = 0;
 		try {
@@ -171,7 +170,7 @@ public final class ValidatorUtility {
 	public static int validateInt(int lowerLimitInc, String intStringValue, int upperLimitInc, SCMPError error)
 			throws SCMPValidatorException {
 		if (intStringValue == null) {
-			throw new SCMPValidatorException(error, "IntValue must be set");
+			throw new SCMPValidatorException(error, "numeric value is missing");
 		}
 		int intValue = 0;
 		try {
@@ -200,7 +199,8 @@ public final class ValidatorUtility {
 	public static void validateInt(int lowerLimitInc, int intValue, int upperLimitInc, SCMPError error)
 			throws SCMPValidatorException {
 		if (intValue < lowerLimitInc || intValue > upperLimitInc) {
-			throw new SCMPValidatorException(error, "IntValue " + intValue + " not within limits");
+			throw new SCMPValidatorException(error, "IntValue " + intValue + " is not in range (" + lowerLimitInc + "-"
+					+ upperLimitInc + ")");
 		}
 	}
 
@@ -242,13 +242,13 @@ public final class ValidatorUtility {
 			throws SCMPValidatorException {
 
 		if (stringValue == null) {
-			throw new SCMPValidatorException(error, "StringValue must be set");
+			throw new SCMPValidatorException(error, "string value is missing");
 		}
 		int length = stringValue.trim().getBytes().length;
 
 		if (length < minSizeInc || length > maxSizeInc) {
-			throw new SCMPValidatorException(error, "StringValue length " + length + " is not within limits " + minSizeInc + " to "
-					+ maxSizeInc);
+			throw new SCMPValidatorException(error, "StringValue length " + length + " is not in range (" + minSizeInc + "-"
+					+ maxSizeInc + ")");
 		}
 	}
 
@@ -264,7 +264,7 @@ public final class ValidatorUtility {
 	 */
 	public static void validateAllowedCharacters(String stringValue, SCMPError error) throws SCMPValidatorException {
 		if (stringValue == null) {
-			throw new SCMPValidatorException(error, "StringValue must be set");
+			throw new SCMPValidatorException(error, "string value is missing");
 		}
 		byte[] buffer = stringValue.getBytes();
 
@@ -276,14 +276,13 @@ public final class ValidatorUtility {
 	}
 
 	/**
-	 * Checks if is character is allowed.
+	 * Checks if character is in allowed range and not the equal sign (61).
 	 * 
 	 * @param ch
 	 *            the character to check
 	 * @return true, if is character allowed
 	 */
 	public static boolean isCharacterAllowed(byte ch) {
-		// check if character is in allowed range and not the equal sign (61)
 		return ch != 61 && ch >= 32 && ch < 127;
 	}
 }

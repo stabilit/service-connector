@@ -29,6 +29,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -87,12 +88,11 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 		reply.setMessageType(this.getKey());
 		if (scReply != null) {
-			// set cache expiration
+			reply.setBody(scReply.getData());
 			if (scReply.getCacheExpirationDateTime() != null) {
-				reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, cacheExpirationDateFormat.format(scReply
+				reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility.getDateTimeAsString(scReply
 						.getCacheExpirationDateTime()));
 			}
-			reply.setBody(scReply.getData());
 			if (scReply.getMessageInfo() != null) {
 				reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, scReply.getMessageInfo());
 			}
@@ -106,6 +106,7 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scReply.getAppErrorText());
 			}
 		}
+		// TODO JOT what happens when the scReply is null?
 		response.setSCMP(reply);
 	}
 
@@ -122,17 +123,13 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 			}
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
-			if (sessionId == null || sessionId.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_SESSION_ID, "sessionId must be set");
-			}
+			ValidatorUtility.validateStringLength(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			ValidatorUtility.validateInt(10, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(1000, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			if (serviceName == null || serviceName.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-			}
+			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 			// message info optional
 			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO.getValue());
 			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);

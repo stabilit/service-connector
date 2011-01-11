@@ -143,14 +143,12 @@ public class RegisterServerCommand extends CommandAdapter {
 		try {
 			// serviceName mandatory
 			String serviceName = (String) message.getServiceName();
-			if (serviceName == null || serviceName.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-			}
+			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 			// scVersion mandatory
 			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
 			SCMPMessage.SC_VERSION.isSupported(scVersion);
 			// localDateTime mandatory
-			ValidatorUtility.validateLocalDateTime(message.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME));
+			ValidatorUtility.validateDateTime(message.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME), SCMPError.HV_WRONG_LDT);
 			// maxSessions - validate with lower limit 1 mandatory
 			String maxSessionsValue = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
 			int maxSessions = ValidatorUtility.validateInt(1, maxSessionsValue, SCMPError.HV_WRONG_MAX_SESSIONS);

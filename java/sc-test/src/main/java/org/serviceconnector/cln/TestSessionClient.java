@@ -6,7 +6,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
 
 public class TestSessionClient extends TestAbstractClient {

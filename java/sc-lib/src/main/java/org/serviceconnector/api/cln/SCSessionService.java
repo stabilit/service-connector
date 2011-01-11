@@ -309,7 +309,7 @@ public class SCSessionService extends SCService {
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
 			ex.setSCErrorCode(SCMPError.BROKEN_SESSION.getErrorCode());
-			ex.setSCErrorText("refreshing session by echo failed");
+			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("cannot send echo message for service="+this.serviceName));
 			this.messageCallback.receive(ex);
 			return;
 		}
@@ -320,7 +320,7 @@ public class SCSessionService extends SCService {
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
 			ex.setSCErrorCode(SCMPError.BROKEN_SESSION.getErrorCode());
-			ex.setSCErrorText("refreshing session by echo failed");
+			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("sending echo message for service="+this.serviceName+" failed"));
 			this.messageCallback.receive(ex);
 			return;
 		}

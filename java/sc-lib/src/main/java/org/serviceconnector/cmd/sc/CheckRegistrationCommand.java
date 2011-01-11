@@ -29,6 +29,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.Server;
+import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class CheckRegistrationCommand. Validates the server registration. 
@@ -85,9 +86,7 @@ public class CheckRegistrationCommand extends CommandAdapter {
 		try {
 			// serviceName mandatory
 			String serviceName = (String) message.getServiceName();
-			if (serviceName == null || serviceName.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_SERVICE_NAME, "serviceName must be set");
-			}
+			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
