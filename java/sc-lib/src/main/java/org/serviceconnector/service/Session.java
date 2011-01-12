@@ -29,10 +29,12 @@ public class Session extends AbstractSession {
 	protected final static Logger logger = Logger.getLogger(Session.class);
 
 	private double sessionTimeoutSeconds;
+	private boolean pendingRequest;
 
 	public Session(String sessionInfo, String ipAdressList) {
 		super(sessionInfo, ipAdressList);
 		this.sessionTimeoutSeconds = 0;
+		this.pendingRequest = false;
 	}
 
 	/**
@@ -61,5 +63,24 @@ public class Session extends AbstractSession {
 	 */
 	public StatefulServer getStatefulServer() {
 		return (StatefulServer) this.server;
+	}
+
+	/**
+	 * Sets the pending request.
+	 * 
+	 * @param pendingRequest
+	 *            the new pending request
+	 */
+	public void setPendingRequest(boolean pendingRequest) {
+		this.pendingRequest = pendingRequest;
+	}
+
+	/**
+	 * Gets the pending request.
+	 * 
+	 * @return the pending request
+	 */
+	public boolean hasPendingRequest() {
+		return this.pendingRequest;
 	}
 }

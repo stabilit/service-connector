@@ -140,7 +140,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		}
 		// always cancel old timeouter before setting up a new one
 		this.cancelSessionTimeout(session);
-		logger.debug("schedule session timeout " + session.getId());
+		logger.debug("schedule session " + session.getId() + " timeout " + (long) session.getSessionTimeoutSeconds());
 		// sets up session timeout
 		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session));
 		// schedule sessionTimeouter in registry timer
@@ -214,9 +214,8 @@ public class SessionRegistry extends Registry<String, Session> {
 			SessionRegistry.this.removeSession(session);
 			Server server = session.getServer();
 			// aborts session on server
-			server.abortSession(session, "session timed out in registry");
+			server.abortSession(session, "session timed out in session registry");
 			SessionLogger.logTimeoutSession(this.getClass().getName(), session.getId());
-			SessionLogger.fatal("delay in millis " + this.session.getTimeout().getDelay(TimeUnit.MILLISECONDS));
 		}
 
 		/** {@inheritDoc} */

@@ -15,8 +15,6 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
-import junit.framework.Assert;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -27,17 +25,11 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
-import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.SCMgmtClient;
-import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
-@SuppressWarnings("unused")
 public class APIStressExecutionTest {
 
 	/** The Constant testLogger. */
@@ -98,7 +90,7 @@ public class APIStressExecutionTest {
 		for (int i = 0; i < clientCtxs.length; i++) {
 			ProcessCtx clientCtx = ctrl.startClient(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jClnProperties,
 					"client" + i, TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0,
-					TestConstants.sesServerName1, 20, 60, "f_execute10000MessagesAndExit");
+					TestConstants.sesServerName1, 10, 60, "f_execute10000MessagesAndExit");
 			clientCtxs[i] = clientCtx;
 		}
 		APIStressExecutionTest.ctrl.waitForClientTermination(clientCtxs);

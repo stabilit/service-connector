@@ -30,6 +30,7 @@ import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.CacheLogger;
+import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -77,6 +78,10 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
 		Session session = this.getSessionById(sessionId);
+		if (session.hasPendingRequest() == true) {
+			SessionLogger.warn("session " + sessionId + "has pending request");
+		}
+		session.setPendingRequest(true);
 		// cancel session timeout
 		this.sessionRegistry.cancelSessionTimeout(session);
 
@@ -89,10 +94,12 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			// try to load response from cache
 			try {
 				if (tryLoadingMessageFromCache(request, response, responderCallback)) {
+					session.setPendingRequest(false);
 					this.sessionRegistry.scheduleSessionTimeout(session);
 					return;
 				}
 			} catch (Exception e) {
+				session.setPendingRequest(false);
 				this.sessionRegistry.scheduleSessionTimeout(session);
 				throw e;
 			}
@@ -113,6 +120,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				break;
 			} catch (ConnectionPoolBusyException ex) {
 				if (i >= (tries - 1)) {
+					session.setPendingRequest(false);
 					// only one loop outstanding - don't continue throw current exception
 					// schedule session timeout
 					this.sessionRegistry.scheduleSessionTimeout(session);
@@ -122,6 +130,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					throw scmpCommandException;
 				}
 			} catch (Exception ex) {
+				session.setPendingRequest(false);
 				// schedule session timeout
 				this.sessionRegistry.scheduleSessionTimeout(session);
 				throw ex;
@@ -256,6 +265,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				// schedule session timeout
 				Session session = this.sessionRegistry.getSession(sessionId);
 				this.sessionRegistry.scheduleSessionTimeout(session);
+				session.setPendingRequest(false);
 				responderCallback.responseCallback(request, response);
 				CacheLogger.debug("Sent a cache message to the client (" + cacheId + " "
 						+ message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME) + ")");
@@ -330,6 +340,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			// schedule session timeout
 			Session session = this.sessionRegistry.getSession(this.sessionId);
 			this.sessionRegistry.scheduleSessionTimeout(session);
+			session.setPendingRequest(false);
 			this.callback.responseCallback(request, response);
 		}
 
@@ -360,6 +371,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			// schedule session timeout
 			Session session = this.sessionRegistry.getSession(this.sessionId);
 			this.sessionRegistry.scheduleSessionTimeout(session);
+			session.setPendingRequest(false);
 			this.receive(fault);
 		}
 	}
