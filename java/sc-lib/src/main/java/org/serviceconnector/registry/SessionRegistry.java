@@ -60,7 +60,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	 *            the session
 	 */
 	public void addSession(String key, Session session) {
-		SessionLogger.logCreateSession(this.getClass().getName(), session.getId());
+		SessionLogger.logCreateSession(this.getClass().getName(), session.getId(), session.getSessionTimeoutSeconds());
 		this.put(key, session);
 		if (session.getSessionTimeoutSeconds() != 0) {
 			this.scheduleSessionTimeout(session);
@@ -144,9 +144,10 @@ public class SessionRegistry extends Registry<String, Session> {
 		// sets up session timeout
 		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session));
 		// schedule sessionTimeouter in registry timer
-		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(
-				sessionTimeouter, (long) session.getSessionTimeoutSeconds(), TimeUnit.SECONDS);
+		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(sessionTimeouter,
+				(long) session.getSessionTimeoutSeconds(), TimeUnit.SECONDS);
 		session.setTimeout(timeout);
+		session.setTimeouterTask(sessionTimeouter);
 	}
 
 	/**
@@ -167,8 +168,13 @@ public class SessionRegistry extends Registry<String, Session> {
 		logger.debug("cancel session timeout " + session.getId());
 		boolean cancelSuccess = sessionTimeout.cancel(false);
 		if (cancelSuccess == false) {
-			logger.debug("cancel of session timeout failed :" + session.getId() + " delay millis: "
+			SessionLogger.warn("cancel of session timeout failed :" + session.getId() + " delay millis: "
 					+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
+			boolean remove = this.sessionScheduler.remove(session.getTimeouterTask());
+			if (remove == false) {
+				SessionLogger.warn("remove of session timeout failed :" + session.getId() + " delay millis: "
+						+ sessionTimeout.getDelay(TimeUnit.MILLISECONDS));
+			}
 		}
 		this.sessionScheduler.purge();
 		// important to set timeouter null - rescheduling of same instance not possible
@@ -210,6 +216,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			// aborts session on server
 			server.abortSession(session, "session timed out in registry");
 			SessionLogger.logTimeoutSession(this.getClass().getName(), session.getId());
+			SessionLogger.fatal("delay in millis " + this.session.getTimeout().getDelay(TimeUnit.MILLISECONDS));
 		}
 
 		/** {@inheritDoc} */

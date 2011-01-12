@@ -21,6 +21,10 @@ import java.util.concurrent.ScheduledFuture;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.util.TimeoutWrapper;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AbstractSession.
+ */
 public abstract class AbstractSession {
 
 	/** The id. */
@@ -35,8 +39,16 @@ public abstract class AbstractSession {
 	/** The session timeout. */
 	private ScheduledFuture<TimeoutWrapper> timeout;
 
+	/** The timeouter task. */
+	private TimeoutWrapper timeouterTask;
+
 	/**
 	 * Instantiates a new session.
+	 * 
+	 * @param sessionInfo
+	 *            the session info
+	 * @param ipAddressList
+	 *            the ip address list
 	 */
 	public AbstractSession(String sessionInfo, String ipAddressList) {
 		UUID uuid = UUID.randomUUID();
@@ -85,7 +97,7 @@ public abstract class AbstractSession {
 	}
 
 	/**
-	 * Sets the session timeout
+	 * Sets the session timeout.
 	 * 
 	 * @param timeout
 	 *            the new session timeout
@@ -112,7 +124,30 @@ public abstract class AbstractSession {
 		return sessionInfo;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Sets the timeouter task.
+	 * 
+	 * @param timeouterTask
+	 *            the new timeouter task
+	 */
+	public void setTimeouterTask(TimeoutWrapper timeouterTask) {
+		this.timeouterTask = timeouterTask;
+	}
+
+	/**
+	 * Gets the timeouter task.
+	 * 
+	 * @return the timeouter task
+	 */
+	public TimeoutWrapper getTimeouterTask() {
+		return this.timeouterTask;
+	}
+
+	/**
+	 * To string.
+	 * 
+	 * @return the string {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return id + ":" + server;

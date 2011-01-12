@@ -151,13 +151,19 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		logger.debug("cancel session timeout " + subscription.getId());
 		boolean cancelSuccess = subscriptionTimeout.cancel(false);
 		if (cancelSuccess == false) {
-			logger.debug("cancel of session timeout failed :" + subscription.getId() + " delay millis: "
+			SubscriptionLogger.warn("cancel of subscription timeout failed :" + subscription.getId() + " delay millis: "
 					+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS));
+			boolean remove = this.subscriptionScheduler.remove(subscription.getTimeouterTask());
+			if (remove == false) {
+				SubscriptionLogger.warn("remove of subscription timeout failed :" + subscription.getId() + " delay millis: "
+						+ subscriptionTimeout.getDelay(TimeUnit.MILLISECONDS));
+			}
 		}
-		// important to set timeout null - rescheduling of same instance not possible
-		subscription.setTimeout(null);
+
 		// tries removing canceled timeouts
 		this.subscriptionScheduler.purge();
+		// important to set timeout null - rescheduling of same instance not possible
+		subscription.setTimeout(null);
 		logger.debug("cancel subscription timeout " + subscription.getId());
 	}
 

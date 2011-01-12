@@ -131,7 +131,7 @@ public class TestSessionServer extends TestStatefulServer {
 					response.setAppErrorText(TestConstants.appErrorText);
 				}
 			}
-			SessionLogger.logCreateSession(this.getClass().getName(), request.getSessionId());
+			SessionLogger.logCreateSession(this.getClass().getName(), request.getSessionId(), -1);
 			return response;
 		}
 

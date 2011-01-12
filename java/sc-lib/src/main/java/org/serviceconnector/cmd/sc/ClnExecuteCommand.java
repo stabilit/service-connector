@@ -327,10 +327,10 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			}
 			scmpReply.setMessageType(getKey());
 			this.response.setSCMP(scmpReply);
-			this.callback.responseCallback(request, response);
 			// schedule session timeout
 			Session session = this.sessionRegistry.getSession(this.sessionId);
 			this.sessionRegistry.scheduleSessionTimeout(session);
+			this.callback.responseCallback(request, response);
 		}
 
 		/** {@inheritDoc} */
@@ -357,10 +357,10 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				logger.warn("not possible to set service name in EXC of execute command.");
 			}
 			fault.setSessionId(sessionId);
-			this.receive(fault);
 			// schedule session timeout
 			Session session = this.sessionRegistry.getSession(this.sessionId);
 			this.sessionRegistry.scheduleSessionTimeout(session);
+			this.receive(fault);
 		}
 	}
 }

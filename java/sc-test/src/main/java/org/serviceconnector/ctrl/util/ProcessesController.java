@@ -401,4 +401,19 @@ public class ProcessesController {
 			FileUtility.deletePIDfile(clnProcess.getPidFileName());
 		}
 	}
+
+	public void waitForClientTermination(ProcessCtx[] clientCtxs) {
+		for (ProcessCtx processCtx : clientCtxs) {
+			this.waitForClientTermination(processCtx);
+		}
+	}
+
+	public void waitForClientTermination(ProcessCtx clientCtx) {
+		try {
+			clientCtx.getProcess().waitFor();
+			testLogger.error("Client " + clientCtx.getProcessName() + " stopped.");
+		} catch (InterruptedException e) {
+			testLogger.error("Waiting for Client " + clientCtx.getProcessName() + "termination failed.");
+		}
+	}
 }

@@ -1,10 +1,18 @@
 package org.serviceconnector;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.text.DecimalFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
-import org.serviceconnector.Constants;
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.EnvironmentConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.SystemConfiguration;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPHeaderKey;
@@ -13,9 +21,14 @@ import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 public class TestUtil {
-
+	private static final String EXC_REGEX = ".*<-EXC.*";
+	private static final Pattern PAT_EXC = Pattern.compile(EXC_REGEX);
+	private static final String ERROR_REGEX = ".*ERROR.*";
+	private static final Pattern PAT_ERROR = Pattern.compile(ERROR_REGEX);
 	public static DecimalFormat dfMsg = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
 	public static DecimalFormat dfHeader = new DecimalFormat(Constants.SCMP_FORMAT_OF_HEADER_SIZE);
+	public static String fs = System.getProperty("file.separator");
+	public static String userDir = System.getProperty("user.dir");
 
 	public static String getSCMPString(SCMPHeaderKey headKey, String header, String body) {
 		int headerSize = 0;
@@ -64,4 +77,28 @@ public class TestUtil {
 		return sb.toString();
 	}
 
+	public static void checkLogFile(String log4jProperties, String logFileToCheck) throws Exception {
+
+		CompositeConfiguration compositeConfig = new CompositeConfiguration();
+		compositeConfig.addConfiguration(new EnvironmentConfiguration());
+		compositeConfig.addConfiguration(new PropertiesConfiguration(log4jProperties));
+		compositeConfig.addConfiguration(new SystemConfiguration());
+		// Read & parse properties file.
+		String logDirPath = userDir + fs + compositeConfig.getString(TestConstants.logDirectoryToken);
+
+		File fileToCheck = new File(logDirPath + fs + logFileToCheck);
+		BufferedReader br = new BufferedReader(new FileReader(fileToCheck));
+		String strLine;
+
+		while ((strLine = br.readLine()) != null) {
+			Matcher mEXC = PAT_EXC.matcher(strLine);
+			if (mEXC.matches()) {
+				throw new Exception("EXC found in " + logFileToCheck + "\n" + strLine);
+			}
+			Matcher mERROR = PAT_ERROR.matcher(strLine);
+			if (mERROR.matches()) {
+				throw new Exception("ERROR found in " + logFileToCheck + "\n" + strLine);
+			}
+		}
+	}
 }

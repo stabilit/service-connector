@@ -18,13 +18,14 @@ package org.serviceconnector.log;
 
 import java.util.Formatter;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 public class SessionLogger {
 
 	private static final Logger sessionLogger = Logger.getLogger(Loggers.SESSION.getValue());
 
-	private static String CREATE_SESSION_STR = "create session:%s";
+	private static String CREATE_SESSION_STR = "create session sid=%s eci=%s";
 	private static String DELETE_SESSION_STR = "delete session:%s";
 	private static String ABORT_SESSION_STR = "abort session:%s";
 	private static String TIMEOUT_SESSION_STR = "timeout session:%s";
@@ -39,10 +40,10 @@ public class SessionLogger {
 	 * @param className
 	 * @param sessionId
 	 */
-	public static synchronized void logCreateSession(String className, String sessionId) {
+	public static synchronized void logCreateSession(String className, String sessionId, double eci) {
 		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(CREATE_SESSION_STR, sessionId);
+			format.format(CREATE_SESSION_STR, sessionId, eci);
 			sessionLogger.debug(format.toString());
 			format.close();
 		}
@@ -87,10 +88,19 @@ public class SessionLogger {
 		}
 	}
 
-	/**
-	 * @return
-	 */
 	public static boolean isEnabled() {
 		return sessionLogger.isTraceEnabled();
+	}
+
+	public static void warn(String message) {
+		if (sessionLogger.isEnabledFor(Level.WARN)) {
+			sessionLogger.warn(message);
+		}
+	}
+
+	public static void fatal(String message) {
+		if (sessionLogger.isEnabledFor(Level.FATAL)) {
+			sessionLogger.fatal(message);
+		}
 	}
 }

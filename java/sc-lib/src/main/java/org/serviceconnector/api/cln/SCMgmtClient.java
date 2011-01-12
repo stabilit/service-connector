@@ -146,8 +146,9 @@ public class SCMgmtClient extends SCClient {
 
 	/**
 	 * Restart SC.
-	 *
-	 * @throws SCServiceException the sC service exception
+	 * 
+	 * @throws SCServiceException
+	 *             the sC service exception
 	 */
 	public void restartSC() throws SCServiceException {
 		if (this.attached == false) {
@@ -221,10 +222,10 @@ public class SCMgmtClient extends SCClient {
 			manageCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.requester.destroy();
-			throw new SCServiceException("kill SC failed", e);
+			throw new SCServiceException(instruction + " SC failed", e);
 		}
 		if (instruction.equalsIgnoreCase(Constants.KILL) || instruction.equalsIgnoreCase(Constants.RESTARTSC)) {
-			// kill SC doesn't reply a message
+			// kill SC & restartSC doesn't reply a message
 			return null;
 		}
 		SCMPMessage reply = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);

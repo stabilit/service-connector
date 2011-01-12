@@ -18,6 +18,7 @@ package org.serviceconnector.log;
 
 import java.util.Formatter;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 public class SubscriptionLogger {
@@ -109,6 +110,12 @@ public class SubscriptionLogger {
 			format.format(ABORT_SUBSCRIPTION_STR, id);
 			subscriptionLogger.debug(format.toString());
 			format.close();
+		}
+	}
+
+	public static void warn(String message) {
+		if (subscriptionLogger.isEnabledFor(Level.WARN)) {
+			subscriptionLogger.warn(message);
 		}
 	}
 }
