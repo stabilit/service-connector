@@ -131,7 +131,7 @@ public class ManageCommand extends CommandAdapter {
 		try {
 			SCMPMessage message = request.getMessage();
 			// ipAddressList mandatory
-			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST.getValue());
+			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point

@@ -25,6 +25,7 @@ import org.serviceconnector.scmp.ISCMPSynchronousCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
+import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class SynchronousCallback. Base functionality for getting messages synchronous. Means to wait for a call for the callback.
@@ -111,6 +112,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			if (reply == null) {
 				// time runs out before message got received
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.REQUEST_ABORT, "");
+				fault.setMessageType(SCMPMsgType.UNDEFINED);
 				logger.error("Operation did not complete in time, aborting");
 				return fault;
 			}

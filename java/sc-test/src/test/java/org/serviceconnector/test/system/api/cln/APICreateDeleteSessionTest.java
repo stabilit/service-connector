@@ -45,8 +45,8 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 	}
 
 	/**
-	 * Description: create session with service name = ""<br> 
-	 * Expectation:	throws SCServiceException
+	 * Description: create session with service name = ""<br>
+	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t02_createSession() throws Exception {
@@ -58,8 +58,8 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 	}
 
 	/**
-	 * Description: create session with service name = " "<br> 
-	 * Expectation:	throws SCServiceException
+	 * Description: create session with service name = " "<br>
+	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t03_createSession() throws Exception {
@@ -71,8 +71,8 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 	}
 
 	/**
-	 * Description: create session with service name = "The quick brown fox jumps over a lazy dog."<br> 
-	 * Expectation:	throws SCServiceException (too long)
+	 * Description: create session with service name = "The quick brown fox jumps over a lazy dog."<br>
+	 * Expectation: throws SCServiceException (too long)
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t04_createSession() throws Exception {
@@ -84,8 +84,8 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 	}
 
 	/**
-	 * Description: create session service with service name = "service = gaga"<br> 
-	 * Expectation:	throws SCMPValidatorException (contains "=")
+	 * Description: create session service with service name = "service = gaga"<br>
+	 * Expectation: throws SCMPValidatorException (contains "=")
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t05_createSession() throws Exception {
@@ -95,8 +95,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		msgCallback = new MsgCallback(sessionService);
 		response = sessionService.createSession(request, msgCallback);
 	}
-	
-	
+
 	/**
 	 * Description: Create session to publish service<br>
 	 * Expectation: throws SCServiceException
@@ -112,9 +111,8 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 
 	/**
 	 * Description: Create session to file service<br>
-	 * Expectation: throws SCServiceException (unfortunately this passes because file services uses sessions)
-	 * file service accepts create session (sessionService)
-	 * TODO JOT/TRN how do we distinguish between session for file services??
+	 * Expectation: throws SCServiceException (unfortunately this passes because file services uses sessions) file service accepts
+	 * create session (sessionService) TODO JOT/TRN how do we distinguish between session for file services??
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t07_createSession() throws Exception {
@@ -199,7 +197,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		response = sessionService.createSession(request, msgCallback);
 	}
-	
+
 	/**
 	 * Description: Create session with messageInfo = ""<br>
 	 * Expectation: throws SCServiceException
@@ -212,7 +210,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		response = sessionService.createSession(request, msgCallback);
 	}
-	
+
 	/**
 	 * Description: Create session with messageInfo = " "<br>
 	 * Expectation: throws SCServiceException
@@ -225,7 +223,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		response = sessionService.createSession(request, msgCallback);
 	}
-	
+
 	/**
 	 * Description: Create session with messageInfo = 257chars<br>
 	 * Expectation: throws SCServiceException
@@ -238,7 +236,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		response = sessionService.createSession(request, msgCallback);
 	}
-	
+
 	/**
 	 * Description: Create session with sessionInfo = ""<br>
 	 * Expectation: throws SCServiceException
@@ -251,7 +249,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		response = sessionService.createSession(request, msgCallback);
 	}
-	
+
 	/**
 	 * Description: Create session with sessionInfo = " "<br>
 	 * Expectation: throws SCServiceException
@@ -264,7 +262,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		response = sessionService.createSession(request, msgCallback);
 	}
-	
+
 	/**
 	 * Description: Create session with sessionInfo = 257char<br>
 	 * Expectation: throws SCServiceException
@@ -277,7 +275,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		response = sessionService.createSession(request, msgCallback);
 	}
-	
+
 	/**
 	 * Description: Create session with 60kB message<br>
 	 * Expectation: passes
@@ -361,7 +359,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		Assert.assertEquals("sessionId is the same", false, sessionId == response.getSessionId());
 		sessionService.deleteSession();
 	}
-	
+
 	/**
 	 * Description: Create session with service which has been disabled<br>
 	 * Expectation: throws SCServiceException
@@ -383,9 +381,9 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 
 	/**
 	 * Description: Create session with echo interval = 1<br>
-	 * Expectation: passes
+	 * Expectation: throws SCServiceException
 	 */
-	@Test
+	@Test(expected = SCServiceException.class)
 	public void t82_echoInterval() throws Exception {
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
@@ -393,8 +391,6 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		sessionService.setEchoIntervalInSeconds(1);
 		msgCallback = new MsgCallback(sessionService);
 		response = sessionService.createSession(request, msgCallback);
-		Assert.assertNotNull("the session ID is null", sessionService.getSessionId());
-		sessionService.deleteSession();
 	}
 
 	/**
@@ -412,18 +408,19 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 	}
 
 	/**
-	 * Description: Reject session by server<br>
+	 * Description: Create session with echo interval = 10<br>
 	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCServiceException.class)
-	public void t84_rejectSession() throws Exception {
-		SCMessage request = new SCMessage(TestConstants.pangram);
-		request.setCompressed(false);
+	@Test
+	public void t84_echoInterval() throws Exception {
+		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		request.setSessionInfo(TestConstants.rejectSessionCmd);
+		sessionService.setEchoIntervalInSeconds(10);
 		msgCallback = new MsgCallback(sessionService);
 		response = sessionService.createSession(request, msgCallback);
+		Assert.assertNotNull("the session ID is null", sessionService.getSessionId());
+		sessionService.deleteSession();
 	}
 
 	/**
@@ -449,7 +446,22 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		Assert.assertTrue("did not throw exception", passed);
 		sessionService.deleteSession();
 	}
-	
+
+	/**
+	 * Description: Reject session by server<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t86_rejectSession() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		request.setSessionInfo(TestConstants.rejectSessionCmd);
+		msgCallback = new MsgCallback(sessionService);
+		response = sessionService.createSession(request, msgCallback);
+	}
+
 	/**
 	 * Description: Delete session before create session<br>
 	 * Expectation: passes
@@ -480,7 +492,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		clientMgmt.attach();
 		clientMgmt.disableService(TestConstants.sesServiceName1);
 		clientMgmt.detach();
-		
+
 		// delete session
 		sessionService.deleteSession();
 		Assert.assertNull("the session ID is NOT null after deleteSession()", sessionService.getSessionId());

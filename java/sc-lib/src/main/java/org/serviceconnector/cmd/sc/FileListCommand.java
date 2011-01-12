@@ -67,7 +67,7 @@ public class FileListCommand extends CommandAdapter {
 		try {
 			SCMPMessage message = request.getMessage();
 			// operation timeout mandatory
-			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
+			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			ValidatorUtility.validateInt(1000, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();

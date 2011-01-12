@@ -36,14 +36,14 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 		SCMessage response = null;
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback = new MsgCallback(sessionService);
-		sessionService.setEchoIntervalInSeconds(2); // want be notified quickly!
+		sessionService.setEchoIntervalInSeconds(10); // want be notified quickly!
 		response = sessionService.createSession(request, msgCallback);
 		Assert.assertNotNull("the session ID is null", sessionService.getSessionId());
 
 		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
 		ctrl.stopSC(scCtx);
 
-		msgCallback.waitForMessage(5);
+		msgCallback.waitForMessage(12);
 		Assert.assertTrue("error code is not set", msgCallback.getScErrorCode() > 0);
 		Assert.assertNotNull("error text the not set", msgCallback.getScErrorText());
 	}

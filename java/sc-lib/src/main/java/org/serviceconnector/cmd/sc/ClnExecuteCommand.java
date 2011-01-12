@@ -79,7 +79,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		Session session = this.getSessionById(sessionId);
 		// cancel session timeout
 		this.sessionRegistry.cancelSessionTimeout(session);
-		
+
 		CacheManager cacheManager = null;
 		if (message.getCacheId() != null) {
 			cacheManager = AppContext.getCacheManager();
@@ -145,7 +145,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			String serviceName = message.getServiceName();
 			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
-			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
+			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			ValidatorUtility.validateInt(1000, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();

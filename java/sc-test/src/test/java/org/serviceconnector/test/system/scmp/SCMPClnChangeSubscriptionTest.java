@@ -81,22 +81,22 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 				TestConstants.pubServerName1);
 
 		subscribeCall.setSessionInfo(TestConstants.publishMsgWithDelayCmd);
-		subscribeCall.setNoDataIntervalSeconds(2);
+		subscribeCall.setNoDataIntervalSeconds(10);
 		// mask does not match
 		subscribeCall.setMask(TestConstants.mask1);
-		// publish 10 messages, wait 1 second after publish each message
-		subscribeCall.setRequestBody("10|1000");
+		// publish 10 messages, wait 11 second after publish each message
+		subscribeCall.setRequestBody("10|11000");
 		TestCallback cbk = new TestCallback(true);
 		subscribeCall.invoke(cbk, 1000);
-		SCMPMessage reply = cbk.getMessageSync(1000);
+		SCMPMessage reply = cbk.getMessageSync(2000);
 		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
 		// receive publication - no data
 		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
 				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
-		receivePublicationCall.invoke(cbk, 3000);
-		reply = cbk.getMessageSync(3000);
+		receivePublicationCall.invoke(cbk, 30000);
+		reply = cbk.getMessageSync(30000);
 		Assert.assertTrue(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
@@ -109,8 +109,8 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		// receive publication first message
 		receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION.newInstance(this.requester,
 				TestConstants.pubServerName1, sessionId);
-		receivePublicationCall.invoke(cbk, 1000);
-		reply = cbk.getMessageSync(1000);
+		receivePublicationCall.invoke(cbk, 10000);
+		reply = cbk.getMessageSync(10000);
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
 		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
@@ -130,7 +130,7 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 				TestConstants.pubServerName1);
 
 		subscribeCall.setSessionInfo(TestConstants.publishCompressedMsgCmd);
-		subscribeCall.setNoDataIntervalSeconds(2);
+		subscribeCall.setNoDataIntervalSeconds(10);
 		subscribeCall.setMask(TestConstants.mask);
 		subscribeCall.setRequestBody("100");
 		TestCallback cbk = new TestCallback(true);

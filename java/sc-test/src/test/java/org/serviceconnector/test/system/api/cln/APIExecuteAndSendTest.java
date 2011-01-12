@@ -17,6 +17,7 @@ package org.serviceconnector.test.system.api.cln;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCMgmtClient;
@@ -146,7 +147,6 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		sessionService.deleteSession();
 	}
 
-
 	/**
 	 * Description: exchange one message, return APP error code only<br>
 	 * Expectation: passes
@@ -190,10 +190,12 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
-		Assert.assertEquals("appErrorCode is not 0", 0, response.getAppErrorCode());
+		Assert.assertEquals("appErrorCode is not " + Constants.EMPTY_APP_ERROR_CODE, Constants.EMPTY_APP_ERROR_CODE, response
+				.getAppErrorCode());
 		Assert.assertEquals("appErrorText is not the same", TestConstants.appErrorText, response.getAppErrorText());
 		sessionService.deleteSession();
 	}
+
 	/**
 	 * Description: exchange message with body = new Object<br>
 	 * Expectation: throws SCServiceException

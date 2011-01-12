@@ -32,8 +32,8 @@ import org.serviceconnector.server.Server;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class CheckRegistrationCommand. Validates the server registration. 
- * Used by the server to check that SC is alive and the registration is valid.
+ * The Class CheckRegistrationCommand. Validates the server registration. Used by the server to check that SC is alive and the
+ * registration is valid.
  * 
  * @author JTrnka
  */
@@ -41,7 +41,7 @@ public class CheckRegistrationCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CheckRegistrationCommand.class);
-	
+
 	/**
 	 * Instantiates a new CheckRegistrationCommand.
 	 */
@@ -98,5 +98,5 @@ public class CheckRegistrationCommand extends CommandAdapter {
 			throw validatorException;
 		}
 	}
-	
+
 }

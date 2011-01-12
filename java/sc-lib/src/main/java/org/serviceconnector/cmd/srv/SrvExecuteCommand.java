@@ -125,13 +125,13 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLength(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
 			// operation timeout mandatory
-			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			ValidatorUtility.validateInt(1000, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(100, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 			// message info optional
-			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO.getValue());
+			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point

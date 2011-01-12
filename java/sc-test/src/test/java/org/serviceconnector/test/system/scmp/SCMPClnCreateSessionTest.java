@@ -185,7 +185,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("sessionInfo");
-		createSessionCall.setEchoIntervalSeconds(1);
+		createSessionCall.setEchoIntervalSeconds(10);
 		TestCallback cbk = new TestCallback();
 		createSessionCall.invoke(cbk, 4000);
 		SCMPMessage responseMessage = cbk.getMessageSync(3000);
@@ -193,7 +193,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 
 		String sessionId = responseMessage.getSessionId();
 		// wait until session times out and get cleaned up
-		Thread.sleep(3000);
+		Thread.sleep(13000);
 		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
 				TestConstants.sesServerName1, sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.echoCmd);

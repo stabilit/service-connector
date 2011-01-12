@@ -103,8 +103,8 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLength(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
 			// operation timeout mandatory
-			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT.getValue());
-			ValidatorUtility.validateInt(1000, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
+			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+			ValidatorUtility.validateInt(100, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// sc error code mandatory
 			String sec = (String) message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE);
 			if (sec == null || sec.equals("")) {

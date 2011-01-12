@@ -364,7 +364,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setNoDataIntervalInSeconds(1);
+		subMsgRequest.setNoDataIntervalInSeconds(10);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
