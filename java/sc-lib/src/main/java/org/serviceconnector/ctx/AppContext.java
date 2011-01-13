@@ -15,6 +15,8 @@
  */
 package org.serviceconnector.ctx;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -77,44 +79,46 @@ public final class AppContext {
 	// Factories
 	/** The command factory. */
 	private static FlyweightCommandFactory commandFactory;
-	
+
 	/** The Constant responderRegistry. */
 	private static final ResponderRegistry responderRegistry = new ResponderRegistry();
-	
+
 	/** The Constant connectionFactory. */
 	private static final ConnectionFactory connectionFactory = new ConnectionFactory();
-	
+
 	/** The Constant endpointFactory. */
 	private static final EndpointFactory endpointFactory = new EndpointFactory();
-	
+
 	/** The Constant frameDecoderFactory. */
 	private static final FlyweightFrameDecoderFactory frameDecoderFactory = new FlyweightFrameDecoderFactory();
-	
+
 	/** The Constant encoderDecoderFactory. */
 	private static final FlyweightEncoderDecoderFactory encoderDecoderFactory = new FlyweightEncoderDecoderFactory();
 
 	// Registries
 	/** The server registry. */
 	private static ServerRegistry serverRegistry = null;
-	
+
 	/** The service registry. */
 	private static ServiceRegistry serviceRegistry = null;
-	
+
 	/** The session registry. */
 	private static SessionRegistry sessionRegistry = null;
-	
+
 	/** The subscription registry. */
 	private static SubscriptionRegistry subscriptionRegistry = null;
-	
+
 	/** The srv service registry. */
 	private static SrvServiceRegistry srvServiceRegistry = new SrvServiceRegistry();
-	
+
 	/** The Constant scmpSessionCompositeRegistry. */
 	private static final SCMPSessionCompositeRegistry scmpSessionCompositeRegistry = new SCMPSessionCompositeRegistry();
 
 	// scmp cache
 	/** The Constant cacheManager. */
 	private static final CacheManager cacheManager = new CacheManager();
+	/** The executor to submit runnable objects. */
+	private static ExecutorService executor;
 
 	// initialize configurations in every case
 	static {
@@ -133,8 +137,9 @@ public final class AppContext {
 
 	/**
 	 * Inits the commands.
-	 *
-	 * @param commandFactory the command factory
+	 * 
+	 * @param commandFactory
+	 *            the command factory
 	 */
 	public static void initCommands(FlyweightCommandFactory commandFactory) {
 		if (AppContext.commandFactory != null) {
@@ -146,7 +151,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the command factory.
-	 *
+	 * 
 	 * @return the command factory
 	 */
 	public static FlyweightCommandFactory getCommandFactory() {
@@ -155,7 +160,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the connection factory.
-	 *
+	 * 
 	 * @return the connection factory
 	 */
 	public static ConnectionFactory getConnectionFactory() {
@@ -164,7 +169,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the encoder decoder factory.
-	 *
+	 * 
 	 * @return the encoder decoder factory
 	 */
 	public static FlyweightEncoderDecoderFactory getEncoderDecoderFactory() {
@@ -173,7 +178,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the frame decoder factory.
-	 *
+	 * 
 	 * @return the frame decoder factory
 	 */
 	public static FlyweightFrameDecoderFactory getFrameDecoderFactory() {
@@ -182,7 +187,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the endpoint factory.
-	 *
+	 * 
 	 * @return the endpoint factory
 	 */
 	public static EndpointFactory getEndpointFactory() {
@@ -191,7 +196,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the responder registry.
-	 *
+	 * 
 	 * @return the responder registry
 	 */
 	public static ResponderRegistry getResponderRegistry() {
@@ -200,7 +205,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the srv service registry.
-	 *
+	 * 
 	 * @return the srv service registry
 	 */
 	public static SrvServiceRegistry getSrvServiceRegistry() {
@@ -209,7 +214,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the server registry.
-	 *
+	 * 
 	 * @return the server registry
 	 */
 	public static ServerRegistry getServerRegistry() {
@@ -218,7 +223,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the service registry.
-	 *
+	 * 
 	 * @return the service registry
 	 */
 	public static ServiceRegistry getServiceRegistry() {
@@ -227,7 +232,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the session registry.
-	 *
+	 * 
 	 * @return the session registry
 	 */
 	public static SessionRegistry getSessionRegistry() {
@@ -236,7 +241,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the subscription registry.
-	 *
+	 * 
 	 * @return the subscription registry
 	 */
 	public static SubscriptionRegistry getSubscriptionRegistry() {
@@ -245,7 +250,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the sCMP session composite registry.
-	 *
+	 * 
 	 * @return the sCMP session composite registry
 	 */
 	public static SCMPSessionCompositeRegistry getSCMPSessionCompositeRegistry() {
@@ -254,7 +259,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the cache manager.
-	 *
+	 * 
 	 * @return the cache manager
 	 */
 	public static CacheManager getCacheManager() {
@@ -263,9 +268,11 @@ public final class AppContext {
 
 	/**
 	 * Inits the configuration.
-	 *
-	 * @param configFile the config file
-	 * @throws Exception the exception
+	 * 
+	 * @param configFile
+	 *            the config file
+	 * @throws Exception
+	 *             the exception
 	 */
 	public static void initConfiguration(String configFile) throws Exception {
 		AppContext.apacheCompositeConfig = new CompositeConfiguration();
@@ -286,7 +293,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the apache composite config.
-	 *
+	 * 
 	 * @return the apache composite config
 	 */
 	public static CompositeConfiguration getApacheCompositeConfig() {
@@ -295,7 +302,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the basic configuration.
-	 *
+	 * 
 	 * @return the basic configuration
 	 */
 	public static BasicConfiguration getBasicConfiguration() {
@@ -304,7 +311,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the cache configuration.
-	 *
+	 * 
 	 * @return the cache configuration
 	 */
 	public static CacheConfiguration getCacheConfiguration() {
@@ -313,7 +320,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the responder configuration.
-	 *
+	 * 
 	 * @return the responder configuration
 	 */
 	public static ResponderConfiguration getResponderConfiguration() {
@@ -322,7 +329,7 @@ public final class AppContext {
 
 	/**
 	 * Gets the requester configuration.
-	 *
+	 * 
 	 * @return the requester configuration
 	 */
 	public static RequesterConfiguration getRequesterConfiguration() {
@@ -331,8 +338,9 @@ public final class AppContext {
 
 	/**
 	 * Sets the sC environment.
-	 *
-	 * @param scEnvironment the new sC environment
+	 * 
+	 * @param scEnvironment
+	 *            the new sC environment
 	 */
 	public static void setSCEnvironment(boolean scEnvironment) {
 		AppContext.scEnvironment = scEnvironment;
@@ -346,11 +354,20 @@ public final class AppContext {
 
 	/**
 	 * Checks if is sc environment.
-	 *
+	 * 
 	 * @return true, if is sc environment
 	 */
 	public static boolean isScEnvironment() {
 		return AppContext.scEnvironment;
+	}
+
+	/**
+	 * Gets the executor.
+	 * 
+	 * @return the executor
+	 */
+	public static ExecutorService getExecutor() {
+		return AppContext.executor;
 	}
 
 	/**
@@ -365,6 +382,7 @@ public final class AppContext {
 			if (AppContext.eciScheduler == null) {
 				AppContext.eciScheduler = new ScheduledThreadPoolExecutor(1);
 			}
+			AppContext.executor = Executors.newCachedThreadPool();
 		}
 	}
 
@@ -385,6 +403,9 @@ public final class AppContext {
 				if (AppContext.eciScheduler != null) {
 					AppContext.eciScheduler.shutdownNow();
 					AppContext.eciScheduler = null;
+				}
+				if (AppContext.executor != null) {
+					AppContext.executor.shutdownNow();
 				}
 			}
 		}

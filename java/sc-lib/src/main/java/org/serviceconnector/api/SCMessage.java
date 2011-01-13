@@ -21,8 +21,6 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class SCMessage. A SCMessage is the basic transport unit to communicate with a Service Connector.

@@ -21,8 +21,8 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.util.SynchronousCallback;
 
 /**

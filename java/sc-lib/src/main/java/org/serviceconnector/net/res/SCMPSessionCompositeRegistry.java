@@ -18,8 +18,8 @@ package org.serviceconnector.net.res;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.registry.Registry;
-import org.serviceconnector.scmp.SCMPCompositeSender;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
+import org.serviceconnector.scmp.SCMPCompositeSender;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 
 /**

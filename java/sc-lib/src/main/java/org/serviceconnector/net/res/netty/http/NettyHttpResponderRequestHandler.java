@@ -49,23 +49,13 @@ public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandl
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyHttpResponse response = new NettyHttpResponse(event);
-		try {
-			HttpRequest httpRequest = (HttpRequest) event.getMessage();
-			Channel channel = ctx.getChannel();
-			InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
-			InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.getRemoteAddress();
-			IRequest request = new NettyHttpRequest(httpRequest, localSocketAddress, remoteSocketAddress);
-
-			// super class processes message
-			super.messageReceived(request, response, channel);
-		} catch (Exception e) {
-			logger.error("messageReceived", e);
-			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, e.getMessage());
-			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
-			scmpFault.setLocalDateTime();
-			response.setSCMP(scmpFault);
-			response.write();
-		}
+		HttpRequest httpRequest = (HttpRequest) event.getMessage();
+		Channel channel = ctx.getChannel();
+		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
+		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.getRemoteAddress();
+		IRequest request = new NettyHttpRequest(httpRequest, localSocketAddress, remoteSocketAddress);
+		// process request in super class
+		super.messageReceived(request, response, channel);
 	}
 
 	/** {@inheritDoc} */

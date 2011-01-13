@@ -38,11 +38,11 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
 import org.serviceconnector.scmp.SCMPBodyType;
-import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPPart;
 
 /**

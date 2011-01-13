@@ -48,21 +48,12 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		NettyTcpResponse response = new NettyTcpResponse(event);
-		try {
-			Channel channel = ctx.getChannel();
-			InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
-			InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.getRemoteAddress();
-			IRequest request = new NettyTcpRequest(event, localSocketAddress, remoteSocketAddress);
-			// super class processes message
-			super.messageReceived(request, response, channel);
-		} catch (Exception e) {
-			logger.error("messageReceived", e);
-			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, e.getMessage());
-			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
-			scmpFault.setLocalDateTime();
-			response.setSCMP(scmpFault);
-			response.write();
-		}
+		Channel channel = ctx.getChannel();
+		InetSocketAddress localSocketAddress = (InetSocketAddress) channel.getLocalAddress();
+		InetSocketAddress remoteSocketAddress = (InetSocketAddress) channel.getRemoteAddress();
+		IRequest request = new NettyTcpRequest(event, localSocketAddress, remoteSocketAddress);
+		// process request in super class
+		super.messageReceived(request, response, channel);
 	}
 
 	/** {@inheritDoc} */

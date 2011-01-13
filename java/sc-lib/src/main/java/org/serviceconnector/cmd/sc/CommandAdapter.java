@@ -38,7 +38,6 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.Session;
-import org.serviceconnector.service.SessionService;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.Subscription;
 
