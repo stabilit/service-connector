@@ -313,6 +313,7 @@ public class Cache {
 		}
 		String cacheId = cacheKey.getCacheId();
 		int size = cacheComposite.getSize();
+		CacheLogger.debug("Cache message (" + cacheKey + ") remove expired composite.");
 		CacheKey localCacheKey = new CacheKey(cacheId);
 		this.removeRegistry(cacheKey);
 		boolean ret = this.cacheImpl.remove(cacheKey);
@@ -320,9 +321,10 @@ public class Cache {
 			return;
 		}
 		CacheId scmpCacheId = new CacheId(cacheId);
-		for (int i = 1; i < size; i++) {
+		for (int i = 1; i <= size; i++) {
 			scmpCacheId.setSequenceNr(String.valueOf(i));
 			localCacheKey.setCacheId(scmpCacheId.getFullCacheId());
+			CacheLogger.debug("Cache message (" + cacheKey + ") remove expired message " + localCacheKey);
 			ret = this.cacheImpl.remove(localCacheKey);
 			if (ret == false) {
 				return;

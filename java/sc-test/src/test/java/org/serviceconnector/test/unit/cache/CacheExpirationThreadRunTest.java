@@ -150,6 +150,8 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 		}
+		CacheComposite cacheComposite = scmpCache.getComposite(msgCacheId.getCacheId());
+		Assert.assertNull(cacheComposite);
 		// get cache composite keys registry
 		Object[] compositeKeys = scmpCache.getCompositeKeys();
 		Assert.assertEquals(0, compositeKeys.length);
@@ -161,8 +163,6 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 		if (cacheMessage != null) {
 			Assert.fail("cache should be expired but is not");
 		}
-		CacheComposite cacheComposite = scmpCache.getComposite(msgCacheId.getCacheId());
-		Assert.assertNull(cacheComposite);
 	}
 
 }
