@@ -83,7 +83,7 @@ public class APIStressExecutionTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t01_10Clients10000Messages() throws Exception {
+	public void t01_1Clients10000Messages() throws Exception {
 		int numberOfClients = 10;
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
@@ -97,4 +97,25 @@ public class APIStressExecutionTest {
 		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
 		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
 	}
+
+	/**
+	 * Description: Create session (regular)<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t02_2Clients10000Messages() throws Exception {
+		int numberOfClients = 3;
+		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
+
+		for (int i = 0; i < clientCtxs.length; i++) {
+			ProcessCtx clientCtx = ctrl.startClient(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jClnProperties,
+					"client" + i, TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0,
+					TestConstants.sesServerName1, 50, 60, "f_execute10000MessagesAndExit");
+			clientCtxs[i] = clientCtx;
+		}
+		APIStressExecutionTest.ctrl.waitForClientTermination(clientCtxs);
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+	}
+
 }
