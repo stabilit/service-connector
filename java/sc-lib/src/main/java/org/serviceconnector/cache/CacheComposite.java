@@ -16,6 +16,7 @@
 package org.serviceconnector.cache;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -60,7 +61,10 @@ public class CacheComposite implements Serializable {
 	private long lastModifiedTimeMillis;
 
 	/** The expiration. */
-	private Date expiration;
+	private String expiration;
+	
+	/** The expiration timestamp UTC */
+	private long expirationTimestamp;
 
 	/** The cache state. */
 	private CACHE_STATE cacheState;
@@ -78,7 +82,7 @@ public class CacheComposite implements Serializable {
 	 * @param expiration
 	 *            the expiration
 	 */
-	public CacheComposite(Date expiration) {
+	public CacheComposite(String expiration) {
 		this.expiration = expiration;
 		this.size = 0;
 		this.cacheState = CACHE_STATE.UNDEFINDED;
@@ -112,7 +116,7 @@ public class CacheComposite implements Serializable {
 	 * 
 	 * @return the expiration
 	 */
-	public Date getExpiration() {
+	public String getExpiration() {
 		return expiration;
 	}
 
@@ -122,10 +126,35 @@ public class CacheComposite implements Serializable {
 	 * @param expiration
 	 *            the new expiration
 	 */
-	public void setExpiration(Date expiration) {
+	public void setExpiration(String expiration) {
 		this.expiration = expiration;
+		if (this.expiration == null) {
+			this.expirationTimestamp = 0;
+			return;
+		}
+		// transform expiration date to UTC and get timestamp
+		try {
+			Date expirationDateUTC = DateTimeUtility.parseDateStringUTC(expiration);
+			int timeZoneOffset = expirationDateUTC.getTimezoneOffset();
+			Date expirationDate = DateTimeUtility.parseDateString(expiration);
+    		timeZoneOffset = expirationDate.getTimezoneOffset();
+			long expirationTimestampUTC = expirationDateUTC.getTime();
+			this.expirationTimestamp = expirationDate.getTime();
+			long currentTimeMillis = System.currentTimeMillis();
+		} catch (ParseException e) {
+			CacheLogger.error("invalidate expiration date/time format", e);
+		}		
 	}
 
+	/**
+	 * Gets the expiration timestamp (UTC).
+	 *
+	 * @return the expiration timestamp
+	 */
+	public long getExpirationTimestamp() {
+		return expirationTimestamp;
+	}
+	
 	/**
 	 * Sets the cache state.
 	 * 
@@ -233,10 +262,13 @@ public class CacheComposite implements Serializable {
 		if (this.expiration == null) {
 			return false;
 		}
-		long currentMillis = System.currentTimeMillis();
-		long expirationMillis = this.expiration.getTime();
-		CacheLogger.debug("cache is expired check expirationTime = " + this.expiration + ", currentMillis = " + currentMillis + ", expirationMillis = " + expirationMillis);
-		return currentMillis > expirationMillis;
+		long currentMillis = System.currentTimeMillis(); // current time in millis UTC
+		long expirationMillis = this.getExpirationTimestamp(); // expiration timestamp 
+		if (currentMillis > expirationMillis) {
+			CacheLogger.debug("cache is expired, expirationTime = " + this.expiration + ", currentMillis = " + currentMillis + ", expirationMillis = " + expirationMillis);
+			return true;
+		}
+		return false;
 	}
 
 	/**

@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -34,7 +35,13 @@ public final class DateTimeUtility {
 
 	/** The Constant SDF. */
 	private static final SimpleDateFormat SDF = new SimpleDateFormat(Constants.SCMP_FORMAT_OF_DATE_TIME);
+	private static final SimpleDateFormat SDFUTC = new SimpleDateFormat(Constants.SCMP_FORMAT_OF_DATE_TIME_UTC);
 
+	static {
+		TimeZone timeZoneUTC = TimeZone.getTimeZone("UTC");
+		SDFUTC.setTimeZone(timeZoneUTC);
+	}
+	
 	/**
 	 * Instantiates a new date time utility.
 	 */
@@ -118,6 +125,22 @@ public final class DateTimeUtility {
 		synchronized (SDF) {
 			SDF.setLenient(false);
 			return SDF.parse(dateString);
+		}
+	}
+
+	/**
+	 * Parses the date string to UTC.
+	 * 
+	 * @param dateString
+	 *            the date string
+	 * @return the date
+	 * @throws ParseException
+	 *             the parse exception
+	 */
+	public static Date parseDateStringUTC(String dateString) throws ParseException {
+		synchronized (SDFUTC) {
+			SDFUTC.setLenient(false);
+			return SDFUTC.parse(dateString);
 		}
 	}
 

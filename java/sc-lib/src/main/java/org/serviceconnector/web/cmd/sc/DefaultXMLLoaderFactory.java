@@ -584,7 +584,7 @@ public class DefaultXMLLoaderFactory {
 			writer.writeEndElement(); // end of size
 			writer.writeStartElement("expiration");
 			if (cacheComposite.getExpiration() != null) {
-				writer.writeCharacters(DateTimeUtility.getDateTimeAsString(cacheComposite.getExpiration()));
+				writer.writeCharacters(cacheComposite.getExpiration());
 			}
 			writer.writeEndElement(); // end of expiration
 			writer.writeStartElement("creation");

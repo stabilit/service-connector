@@ -16,7 +16,9 @@
 package org.serviceconnector.srv;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -75,7 +77,9 @@ public class TestSessionServer extends TestStatefulServer {
 		}
 
 		ctr = new ThreadSafeCounter();
-		SCServer sc = new SCServer(TestConstants.HOST, this.port, this.listenerPort, this.connectionType);
+		List<String> nics = new ArrayList<String>();
+		nics.add("localhost");
+		SCServer sc = new SCServer(TestConstants.HOST, this.port, nics, this.listenerPort, this.connectionType);
 		try {
 			sc.setKeepAliveIntervalSeconds(10);
 			sc.setImmediateConnect(true);
@@ -226,10 +230,11 @@ public class TestSessionServer extends TestStatefulServer {
 				return request;
 			} else if (dataString.startsWith("cacheFor2Sec")) {
 				time.add(Calendar.SECOND, 2);
+				request.setCacheExpirationDateTime(time.getTime());
 			} else {
 				time.add(Calendar.HOUR_OF_DAY, 1);
+				request.setCacheExpirationDateTime(time.getTime());
 			}
-			request.setCacheExpirationDateTime(time.getTime());
 			return request;
 		}
 	}

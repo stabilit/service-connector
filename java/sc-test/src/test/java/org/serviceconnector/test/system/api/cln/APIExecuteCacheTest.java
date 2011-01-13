@@ -76,18 +76,19 @@ public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
 		sessionService = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback = new MsgCallback(sessionService);
 		response = sessionService.createSession(request, msgCallback);
-		request.setData(TestConstants.pangram);
+		request.setData("cacheFor2Sec");
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService.execute(request);
-		request.setData("cacheFor2Sec");
+		Assert.assertEquals("cacheFor2Sec", response.getData());
 		// wait until cache message expires
 		Thread.sleep(4010);
+		request.setData(TestConstants.pangram);
 		response = sessionService.execute(request);
 		Assert.assertEquals(TestConstants.pangram, response.getData());
 		sessionService.deleteSession();
 	}
-	
+
 	/**
 	 * Description: exchange large message with cacheId, server reply with cacheExpirationTime<br>
 	 * Expectation: get large message from cache
@@ -101,12 +102,12 @@ public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
 		msgCallback = new MsgCallback(sessionService);
 		response = sessionService.createSession(request, msgCallback);
 		String largeMessage = TestUtil.getLargeString();
-		request.setData(largeMessage);
+		request.setData(largeMessage); // internal cache timeout on server one hour
+		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService.execute(request);
 		request.setData("cacheForOneHour");
 		response = sessionService.execute(request);
-		request.setCacheId("700");
 		Assert.assertEquals(largeMessage, response.getData());
 		sessionService.deleteSession();
 	}

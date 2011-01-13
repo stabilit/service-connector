@@ -90,18 +90,23 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			cacheManager = AppContext.getCacheManager();
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
-			logger.info("client execute command with cache id = " + message.getCacheId());
-			// try to load response from cache
-			try {
-				if (tryLoadingMessageFromCache(request, response, responderCallback)) {
+			// caching is enabled, if message request is a large message, then
+			// ignore PRQ (part messages) and accept the ending REQ message only
+			// but do not ignore any POLL (PAC) messages
+			if (message.isPollRequest() == true || message.isPart() == false) {
+				logger.info("client execute command with cache id = " + message.getCacheId());
+				// try to load response from cache
+				try {
+					if (tryLoadingMessageFromCache(request, response, responderCallback)) {
+						session.setPendingRequest(false);
+						this.sessionRegistry.scheduleSessionTimeout(session);
+						return;
+					}
+				} catch (Exception e) {
 					session.setPendingRequest(false);
 					this.sessionRegistry.scheduleSessionTimeout(session);
-					return;
+					throw e;
 				}
-			} catch (Exception e) {
-				session.setPendingRequest(false);
-				this.sessionRegistry.scheduleSessionTimeout(session);
-				throw e;
 			}
 		}
 
@@ -184,8 +189,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 	}
 
 	/**
-	 * Try loading message from cache. This method tries to load the message from its cache. An exception is thrown if the message is
-	 * not full part of the cache. In case of a successful cache load the method return true otherwise false.
+	 * Try loading message from cache. This method tries to load the message from its cache. An exception is thrown if the message
+	 * is not full part of the cache. In case of a successful cache load the method return true otherwise false.
 	 * 
 	 * @param request
 	 *            the request
@@ -228,8 +233,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					}
 				}
 			}
-			if (cacheComposite.isLoaded()) {
-				CacheLogger.debug("cache composite (" + cacheId + ") found and loaded, expratoin time is "
+			if (cacheComposite.isLoaded() && cacheComposite.isExpired() == false) {
+				CacheLogger.debug("cache composite (" + cacheId + ") found and loaded, expiration time is "
 						+ cacheComposite.getExpiration());
 				// cache has been loaded, try to get cache message, get the first one if cache id belongs to composite id
 				// increment cache id sequence nr
@@ -330,7 +335,9 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 						CommandCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
 					} else {
 						CacheId messageCacheId = scmpCache.putMessage(scmpReply);
-						scmpReply.setCacheId(messageCacheId.getFullCacheId());
+						String fullCacheId = messageCacheId.getFullCacheId();
+						CacheLogger.debug("cache message put using full cache id = " + fullCacheId);
+						scmpReply.setCacheId(fullCacheId);
 					}
 				} catch (Exception e) {
 					CommandCallback.logger.error(e.toString());

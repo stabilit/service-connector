@@ -15,17 +15,17 @@
  */
 package org.serviceconnector.cache;
 
-import java.util.Date;
 import java.util.Iterator;
 
 import org.serviceconnector.cache.CacheComposite.CACHE_STATE;
 import org.serviceconnector.cache.impl.CacheImplFactory;
 import org.serviceconnector.cache.impl.ICacheImpl;
 import org.serviceconnector.log.CacheLogger;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
+import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class Cache.
@@ -211,6 +211,14 @@ public class Cache {
 			if (value != null && value instanceof CacheComposite) {
 				cacheComposite = (CacheComposite) value;
 			}
+			if (cacheComposite != null) {
+				if (cacheComposite.isExpired()) {
+					// we remove this composite from cache
+					CacheLogger.debug("cache put message but cache composite (" + cacheKey + ") is expired, cache composite will be removed!");
+					this.removeComposite(cacheKey);
+					cacheComposite = null;
+				}
+			}
 			if ((cacheComposite == null)) {
 				cacheComposite = new CacheComposite();
 				// insert cache composite
@@ -227,10 +235,10 @@ public class Cache {
 			int newSize = cacheComposite.getSize() + 1;
 			cacheComposite.setSize(newSize); // increment size
 			String cacheExpirationDateTime = message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
-			Date expirationDateTime = null;
 			if (cacheExpirationDateTime != null) {
-				expirationDateTime = DateTimeUtility.parseDateString(cacheExpirationDateTime);
-				cacheComposite.setExpiration(expirationDateTime);
+				// validate expiration date time format
+				ValidatorUtility.validateDateTime(cacheExpirationDateTime, SCMPError.HV_WRONG_CED);
+				cacheComposite.setExpiration(cacheExpirationDateTime);
 			}
 			CacheId msgCacheId = new CacheId(scmpCacheId.getCacheId(), String.valueOf(newSize));
 			CacheKey msgCacheKey = new CacheKey(msgCacheId.getFullCacheId());

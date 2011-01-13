@@ -55,7 +55,7 @@ public class CacheLogger {
 		}
 	}
 
-	public static void error(String message, CacheException e) {
+	public static void error(String message, Exception e) {
 		if (cacheLogger.isEnabledFor(Level.ERROR)) {
 			cacheLogger.error(message, e);
 		}

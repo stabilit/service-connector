@@ -231,6 +231,7 @@ public final class Constants {
 	public static final String SCMP_FORMAT_OF_MSG_SIZE = " 0000000";
 	public static final String SCMP_FORMAT_OF_HEADER_SIZE = " 00000";
 	public static final String SCMP_FORMAT_OF_DATE_TIME = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	public static final String SCMP_FORMAT_OF_DATE_TIME_UTC = "yyyy-MM-dd'T'HH:mm:ss";
 	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1
 	// =>
 	// 2147483647,
