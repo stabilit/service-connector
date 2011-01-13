@@ -229,6 +229,8 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				}
 			}
 			if (cacheComposite.isLoaded()) {
+				CacheLogger.debug("cache composite (" + cacheId + ") found and loaded, expratoin time is "
+						+ cacheComposite.getExpiration());
 				// cache has been loaded, try to get cache message, get the first one if cache id belongs to composite id
 				// increment cache id sequence nr
 				cacheId = cacheId.nextSequence();
@@ -267,8 +269,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				this.sessionRegistry.scheduleSessionTimeout(session);
 				session.setPendingRequest(false);
 				responderCallback.responseCallback(request, response);
-				CacheLogger.debug("Sent a cache message to the client (" + cacheId + " "
-						+ message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME) + ")");
+				CacheLogger.debug("Sent a cache message to the client (" + cacheId + ")");
 				return true; // message loaded from cache
 			}
 		}

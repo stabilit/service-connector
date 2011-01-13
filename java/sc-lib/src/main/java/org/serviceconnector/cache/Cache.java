@@ -169,6 +169,7 @@ public class Cache {
 		}
 		// check if cache is expired or not
 		if (cacheComposite.isExpired()) {
+			CacheLogger.debug("cache composite (" + compositeCacheKey + ") found in cache but is expired, expiration time is " + cacheComposite.getExpiration());
 			return null;
 		}
 		CacheKey msgCacheKey = new CacheKey(scmpCacheId.getFullCacheId());

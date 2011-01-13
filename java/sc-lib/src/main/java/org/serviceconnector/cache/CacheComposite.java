@@ -20,6 +20,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.log.CacheLogger;
 import org.serviceconnector.util.DateTimeUtility;
 
 // TODO: Auto-generated Javadoc
@@ -234,6 +235,7 @@ public class CacheComposite implements Serializable {
 		}
 		long currentMillis = System.currentTimeMillis();
 		long expirationMillis = this.expiration.getTime();
+		CacheLogger.debug("cache is expired check expirationTime = " + this.expiration + ", currentMillis = " + currentMillis + ", expirationMillis = " + expirationMillis);
 		return currentMillis > expirationMillis;
 	}
 
