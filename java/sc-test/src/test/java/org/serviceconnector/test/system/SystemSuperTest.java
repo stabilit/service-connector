@@ -36,9 +36,9 @@ public class SystemSuperTest {
 	protected static ProcessCtx scCtx;
 	protected int threadCount = 0;
 
-	@Rule 
+	@Rule
 	public TestName name = new TestName();
-	
+
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();

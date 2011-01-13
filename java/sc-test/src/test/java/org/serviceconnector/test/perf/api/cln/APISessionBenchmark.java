@@ -17,22 +17,11 @@ package org.serviceconnector.test.perf.api.cln;
 
 import java.util.Arrays;
 
-import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
-import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCSessionService;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ProcessesController;
-import org.serviceconnector.log.Loggers;
-import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.perf.api.APIPerfSuperClientTest;
 
 @SuppressWarnings("unused")

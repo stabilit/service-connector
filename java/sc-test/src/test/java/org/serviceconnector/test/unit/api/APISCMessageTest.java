@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.test.unit.SuperUnitTest;
 

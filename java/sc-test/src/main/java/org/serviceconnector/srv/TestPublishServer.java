@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
