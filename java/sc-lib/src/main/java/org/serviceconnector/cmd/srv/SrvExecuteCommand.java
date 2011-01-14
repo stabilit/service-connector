@@ -84,7 +84,6 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);
 		reply.setSessionId(reqMessage.getSessionId());
-		reply.setCacheId(reqMessage.getCacheId());
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 		reply.setMessageType(this.getKey());
 		if (scReply != null) {
@@ -93,6 +92,7 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 				reply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility.getDateTimeAsString(scReply
 						.getCacheExpirationDateTime()));
 			}
+			reply.setCacheId(scReply.getCacheId());
 			if (scReply.getMessageInfo() != null) {
 				reply.setHeader(SCMPHeaderAttributeKey.MSG_INFO, scReply.getMessageInfo());
 			}
@@ -106,7 +106,6 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scReply.getAppErrorText());
 			}
 		}
-		// TODO JOT what happens when the scReply is null?
 		response.setSCMP(reply);
 	}
 

@@ -155,7 +155,8 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * Execute with default operation timeout.
+	 * Execute with default operation timeout. Execute is a synchronous operation with the SC. Any reply will be received as return
+	 * of the methode.
 	 * 
 	 * @param requestMsg
 	 *            the request message
@@ -168,7 +169,7 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * Execute.
+	 * Execute. Execute is a synchronous operation with the SC. Any reply will be received as return of the methode.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            allowed time to complete operation
@@ -230,7 +231,8 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * Send with default operation timeout.
+	 * Send with default operation timeout. Send is an asynchronous operation with the SC. Any reply will be informed over the
+	 * callback.
 	 * 
 	 * @param requestMsg
 	 *            the request message
@@ -242,7 +244,7 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * Send. Asynchronous operation.
+	 * Send. Asynchronous operation. Send is an asynchronous operation with the SC. Any reply will be informed over the callback.
 	 * 
 	 * @param operationtTimeoutSeconds
 	 *            allowed time to complete operation
@@ -309,7 +311,7 @@ public class SCSessionService extends SCService {
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
 			ex.setSCErrorCode(SCMPError.BROKEN_SESSION.getErrorCode());
-			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("cannot send echo message for service="+this.serviceName));
+			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("cannot send echo message for service=" + this.serviceName));
 			this.messageCallback.receive(ex);
 			return;
 		}
@@ -320,7 +322,8 @@ public class SCSessionService extends SCService {
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
 			ex.setSCErrorCode(SCMPError.BROKEN_SESSION.getErrorCode());
-			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("sending echo message for service="+this.serviceName+" failed"));
+			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("sending echo message for service=" + this.serviceName
+					+ " failed"));
 			this.messageCallback.receive(ex);
 			return;
 		}
