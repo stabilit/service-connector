@@ -388,7 +388,7 @@ public class ProcessesController {
 			clnProcess.destroy();
 			clnProcess.waitFor();
 			testLogger.info(e.getMessage());
-			testLogger.error("Client " + clientName + "not started within " + timeout + " seconds! Timeout exceeded.");
+			testLogger.error(clientName + " not started within " + timeout + " seconds! Timeout exceeded.");
 			throw e;
 		}
 		return proc;
