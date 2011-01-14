@@ -188,7 +188,7 @@ public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);
 		SCMessage response = null;
-		// session service one stores "cacheFor1Hour" with cacheId 700
+		// session service one stores "cacheFor1Hour" with cacheId 700 
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
@@ -197,7 +197,9 @@ public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService1.execute(request);
 		Assert.assertEquals("cacheFor1Hour", response.getData());
-
+		
+		Thread.sleep(2000);
+		
 		// session service two stores "refreshCache700" with no cacheId, server refreshes cacheId 700
 		SCSessionService sessionService2 = client.newSessionService(TestConstants.sesServiceName1);
 		MsgCallback msgCallback2 = new MsgCallback(sessionService1);
@@ -247,6 +249,8 @@ public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.cacheCmd);
 		sessionService1.send(request);
 
+		Thread.sleep(10);
+		
 		// session service2 starts getting large message from cache with cacheId 700
 		SCSessionService sessionService2 = client.newSessionService(TestConstants.sesServiceName1);
 		MsgCallback msgCallback2 = new MsgCallback(sessionService1);

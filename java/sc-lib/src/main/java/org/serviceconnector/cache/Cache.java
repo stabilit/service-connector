@@ -212,17 +212,22 @@ public class Cache {
 				cacheComposite = (CacheComposite) value;
 			}
 			if (cacheComposite != null) {
+				if (cacheComposite.isLoaded()) {
+					// cache is loaded, we MUST replace this cache message
+					CacheLogger.warn("cache put message, cache (" + cacheId + ") is already loaded!");
+					throw new CacheLoadedException("cache put message, cache (" + cacheId + ") is already loaded!");
+				}
 				if (cacheComposite.isExpired()) {
 					// we remove this composite from cache
-					CacheLogger.debug("cache put message but cache composite (" + cacheKey + ") is expired, cache composite will be removed!");
-					this.removeComposite(cacheKey);
-					cacheComposite = null;
+					CacheLogger.debug("cache put message but cache composite (" + cacheKey + ") is expired!");
+					throw new CacheExpiredException("cache put message but cache composite (" + cacheKey + ") is expired!");
 				}
 			}
 			if ((cacheComposite == null)) {
 				cacheComposite = new CacheComposite();
 				// insert cache composite
 				cacheComposite.setSize(0);
+				cacheComposite.setCacheState(CACHE_STATE.LOADING);
 				this.putRegistry(cacheKey);
 				Statistics.getInstance().incrementCachedMessages(0);
 				this.cacheImpl.put(cacheKey, cacheComposite);
@@ -250,7 +255,7 @@ public class Cache {
 			this.cacheImpl.put(msgCacheKey, scmpCacheMessage);
 			// update last modification time
 			cacheComposite.setLastModified();
-			if (message.isPart() == false) {
+			if (message.isPart() == false && message.isPollRequest() == false) {
 				CacheLogger.debug("cache has been loaded, cacheId = " + cacheId);
 				cacheComposite.setCacheState(CACHE_STATE.LOADED);
 			}
@@ -601,10 +606,11 @@ public class Cache {
 	public void startLoading(String cacheId) {
 		try {
 			CacheComposite cacheComposite = this.getComposite(cacheId);
-			if (cacheComposite != null) {
-				return;
-			}
 			CacheKey cacheKey = new CacheKey(cacheId);
+			if (cacheComposite != null) {
+				// remove this cache composite
+				this.removeComposite(cacheKey);
+			}
 			cacheComposite = new CacheComposite();
 			cacheComposite.setSize(0);
 			cacheComposite.setCacheState(CACHE_STATE.LOADING);

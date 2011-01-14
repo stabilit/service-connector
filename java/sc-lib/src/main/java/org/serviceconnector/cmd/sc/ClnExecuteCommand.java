@@ -22,7 +22,9 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
+import org.serviceconnector.cache.CacheExpiredException;
 import org.serviceconnector.cache.CacheId;
+import org.serviceconnector.cache.CacheLoadedException;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.cmd.IAsyncCommand;
@@ -204,6 +206,11 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 	private boolean tryLoadingMessageFromCache(IRequest request, IResponse response, IResponderCallback responderCallback)
 			throws Exception {
 		SCMPMessage message = request.getMessage();
+		if (message.getCacheId() == null) {
+			CacheLogger.debug("message has no cache id, isReply = " + message.isReply() + ", isPart = " + message.isPart()
+					+ ", message = " + message.isPollRequest());
+			return false;
+		}
 		String sessionId = message.getSessionId();
 		CacheManager cacheManager = AppContext.getCacheManager();
 		String serviceName = message.getServiceName();
@@ -216,11 +223,13 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		}
 		CacheId cacheId = new CacheId(message.getCacheId());
 		CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
+
 		if (cacheComposite != null) {
 			synchronized (cacheManager) {
 				// check if cache is loading
 				if (cacheComposite.isLoading()) {
 					// check if it is a part request and sequence nr in cache equals cache composite size
+					CacheLogger.debug("cache is loading (" + cacheId + ")");
 					int size = cacheComposite.getSize();
 					int sequenceNr = cacheId.getSequenceNrInt();
 					if (!(message.isPart() && (sequenceNr == size))) {
@@ -230,6 +239,19 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 						scmpCommandException.setMessageType(this.getKey());
 						throw scmpCommandException;
 					}
+				}
+			}
+			if (cacheComposite.isLoaded() && cacheComposite.isExpired()) {
+				// cache has been loaded but its content message is expired, in case of a full cache id we
+				// must abort this communication, because we do not exactly know the state of the cache content
+				// for given cache id
+				if (cacheId.isCompositeId() == false) {
+					CacheLogger.warn("cache is expired and has unknown state, retry later, service name = "
+							+ message.getServiceName());
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
+							"cache is expired and has unknown state, retry later, service name = " + message.getServiceName());
+					scmpCommandException.setMessageType(this.getKey());
+					throw scmpCommandException;
 				}
 			}
 			if (cacheComposite.isLoaded() && cacheComposite.isExpired() == false) {
@@ -278,6 +300,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 			}
 		}
 		if (cacheComposite == null) {
+			CacheLogger.debug("cache does not exist, start loading from server");
 			// cache does not exist, this is the first request for it
 			scmpCache.startLoading(message.getCacheId());
 		}
@@ -333,12 +356,27 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					if (scmpCache == null) {
 						CommandCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
 					} else {
-						CacheId messageCacheId = scmpCache.putMessage(scmpReply);
+						CacheLogger.debug("cache message put reply, scmp reply cacheId = " + scmpReply.getCacheId()
+								+ ", isReply = " + scmpReply.isReply() + ", isPart = " + scmpReply.isPart() + ", isPollRequest = "
+								+ scmpReply.isPollRequest());
+						CacheId messageCacheId = null;
+						try {
+							messageCacheId = scmpCache.putMessage(scmpReply);
+						} catch (CacheLoadedException e) {
+							CacheLogger.warn("cache put message failed, already loaded, remove cache (" + scmpReply.getCacheId() + ") and start loading");
+							scmpCache.startLoading(scmpReply.getCacheId());
+							messageCacheId = scmpCache.putMessage(scmpReply);
+						} catch (CacheExpiredException e) {
+							CacheLogger.warn("cache put message failed, expired, remove cache (" + scmpReply.getCacheId() + ") and start loading");
+							scmpCache.startLoading(scmpReply.getCacheId());
+							messageCacheId = scmpCache.putMessage(scmpReply);
+						}
 						String fullCacheId = messageCacheId.getFullCacheId();
-						CacheLogger.debug("cache message put using full cache id = " + fullCacheId);
+						CacheLogger.debug("cache message put done using full cache id = " + fullCacheId);
 						scmpReply.setCacheId(fullCacheId);
 					}
 				} catch (Exception e) {
+					CacheLogger.debug("cache (" + scmpReply.getCacheId() + " message put did fail = " + e.toString());
 					CommandCallback.logger.error(e.toString());
 				}
 			}

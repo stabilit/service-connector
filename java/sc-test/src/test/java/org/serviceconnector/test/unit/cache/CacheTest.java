@@ -33,6 +33,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SessionService;
 import org.serviceconnector.test.unit.SuperUnitTest;
@@ -152,7 +153,13 @@ public class CacheTest extends SuperUnitTest {
 		for (int i = 1; i <= 10; i++) {
 			String partWrite = stringWrite + i;
 			byte[] buffer = partWrite.getBytes();
-			SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
+			SCMPMessage scmpMessageWrite = null;
+			if (i < 10) {
+			   scmpMessageWrite = new SCMPPart();
+			} else {
+			   scmpMessageWrite = new SCMPMessage();			
+			}
+			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 			scmpCache.putMessage(scmpMessageWrite);
@@ -193,7 +200,13 @@ public class CacheTest extends SuperUnitTest {
 		for (int i = 1; i <= 10000; i++) {
 			String partWrite = stringWrite + i;
 			byte[] buffer = partWrite.getBytes();
-			SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
+			SCMPMessage scmpMessageWrite = null;
+			if (i < 10000) {
+			   scmpMessageWrite = new SCMPPart();
+			} else {
+			   scmpMessageWrite = new SCMPMessage();			
+			}
+			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 			scmpCache.putMessage(scmpMessageWrite);
@@ -234,7 +247,13 @@ public class CacheTest extends SuperUnitTest {
 		for (int i = 1; i <= 10; i++) {
 			String partWrite = stringWrite + i;
 			byte[] buffer = partWrite.getBytes();
-			SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
+			SCMPMessage scmpMessageWrite = null;
+			if (i < 10) {
+			   scmpMessageWrite = new SCMPPart();
+			} else {
+			   scmpMessageWrite = new SCMPMessage();			
+			}
+			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 			scmpCache.putMessage(scmpMessageWrite);
