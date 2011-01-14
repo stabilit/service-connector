@@ -226,14 +226,32 @@ public class TestSessionServer extends TestStatefulServer {
 			String dataString = (String) request.getData();
 
 			if (dataString.equals("cidNoCed")) {
+				logger.info("cidNoCed");
 				// reply without setting CacheExpirationDateTime
 				return request;
 			} else if (dataString.startsWith("cacheFor2Sec")) {
+				logger.info("cacheFor2Sec");
 				time.add(Calendar.SECOND, 2);
 				request.setCacheExpirationDateTime(time.getTime());
-			} else {
+			} else if (dataString.startsWith("cacheFor1Hour")) {
+				logger.info("cacheFor1Hour");
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());
+			} else if (dataString.startsWith("cacheFor2Hour")) {
+				logger.info("cacheFor2Hour");
+				time.add(Calendar.HOUR_OF_DAY, 2);
+				request.setCacheExpirationDateTime(time.getTime());
+			} else if (dataString.startsWith("refreshCache700")) {
+				logger.info("refreshCache700");
+				time.add(Calendar.HOUR_OF_DAY, 1);
+				request.setCacheExpirationDateTime(time.getTime());
+				request.setCacheId("700");
+			} else if (dataString.startsWith("cacheLargeMessageFor1Hour")) {
+				logger.info("cacheLargeMessageFor1Hour");
+				time.add(Calendar.HOUR_OF_DAY, 1);
+				request.setCacheExpirationDateTime(time.getTime());
+				String largeMessage = TestUtil.getLargeString();
+				request.setData(largeMessage);
 			}
 			return request;
 		}
