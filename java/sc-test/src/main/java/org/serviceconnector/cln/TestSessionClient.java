@@ -65,10 +65,10 @@ public class TestSessionClient extends TestAbstractClient {
 		}
 	}
 
-	public void p_execute10000() throws Exception {
-		for (int i = 0; i < 10000000; i++) {
+	public void p_execute100000() throws Exception {
+		for (int i = 0; i < 100000; i++) {
 			service.execute(new SCMessage());
-			if (i % 100000 == 0) {
+			if (i % 10000 == 0) {
 				logger.log(Level.OFF, this.clientName + " sent message number " + i);
 			}
 		}
@@ -87,10 +87,10 @@ public class TestSessionClient extends TestAbstractClient {
 		this.p_exit();
 	}
 
-	public void f_execute10000MessagesAndExit() throws Exception {
+	public void f_execute100000MessagesAndExit() throws Exception {
 		this.p_initAttach();
 		this.p_createSession();
-		this.p_execute10000();
+		this.p_execute100000();
 		this.p_deleteSession();
 		this.p_detach();
 		this.p_exit();
