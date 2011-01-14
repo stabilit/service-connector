@@ -47,12 +47,12 @@ public abstract class StatefulService extends Service {
 	}
 
 	/**
-	 * Removes the server.
+	 * Removes the server. Removing server must be synchronized. Avoids exception for client in allocate server logic.
 	 * 
 	 * @param server
 	 *            the server
 	 */
-	public void removeServer(StatefulServer server) {
+	public synchronized void removeServer(StatefulServer server) {
 		this.listOfServers.remove(server);
 	}
 

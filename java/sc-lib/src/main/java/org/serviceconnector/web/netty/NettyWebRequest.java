@@ -28,7 +28,7 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.QueryStringDecoder;
 import org.serviceconnector.web.AbstractWebRequest;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class NettyWebRequest.
  */

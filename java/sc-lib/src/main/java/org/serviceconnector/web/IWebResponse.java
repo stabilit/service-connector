@@ -20,7 +20,7 @@ import java.io.OutputStream;
 
 import org.jboss.netty.handler.codec.http.Cookie;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Interface IWebResponse abstracts a web response.
  */

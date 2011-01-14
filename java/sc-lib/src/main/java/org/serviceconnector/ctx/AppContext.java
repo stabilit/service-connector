@@ -49,15 +49,12 @@ import org.serviceconnector.scmp.SCMPError;
  */
 public final class AppContext {
 
-	// indicates that AppContext is running in a SC environment
-	/** The sc environment. */
+	/** The SC environment. Indicates that AppContext is running in a SC environment */
 	private static boolean scEnvironment = false;
 
-	// communicator lock
-	/** The communicators lock. */
+	/** The communicators lock. communicator lock. */
 	public static Object communicatorsLock = new Object();
-	// current attached communicators
-	/** The attached communicators. */
+	/** The attached communicators. current attached communicators. */
 	public static AtomicInteger attachedCommunicators = new AtomicInteger();
 	/** The executer, triggers all operation timeout for sending. */
 	public static ScheduledThreadPoolExecutor otiScheduler;
@@ -79,38 +76,28 @@ public final class AppContext {
 	// Factories
 	/** The command factory. */
 	private static FlyweightCommandFactory commandFactory;
-
 	/** The Constant responderRegistry. */
 	private static final ResponderRegistry responderRegistry = new ResponderRegistry();
-
 	/** The Constant connectionFactory. */
 	private static final ConnectionFactory connectionFactory = new ConnectionFactory();
-
 	/** The Constant endpointFactory. */
 	private static final EndpointFactory endpointFactory = new EndpointFactory();
-
 	/** The Constant frameDecoderFactory. */
 	private static final FlyweightFrameDecoderFactory frameDecoderFactory = new FlyweightFrameDecoderFactory();
-
 	/** The Constant encoderDecoderFactory. */
 	private static final FlyweightEncoderDecoderFactory encoderDecoderFactory = new FlyweightEncoderDecoderFactory();
 
 	// Registries
 	/** The server registry. */
 	private static ServerRegistry serverRegistry = null;
-
 	/** The service registry. */
 	private static ServiceRegistry serviceRegistry = null;
-
 	/** The session registry. */
 	private static SessionRegistry sessionRegistry = null;
-
 	/** The subscription registry. */
 	private static SubscriptionRegistry subscriptionRegistry = null;
-
 	/** The srv service registry. */
 	private static SrvServiceRegistry srvServiceRegistry = new SrvServiceRegistry();
-
 	/** The Constant scmpSessionCompositeRegistry. */
 	private static final SCMPSessionCompositeRegistry scmpSessionCompositeRegistry = new SCMPSessionCompositeRegistry();
 
@@ -136,7 +123,7 @@ public final class AppContext {
 	}
 
 	/**
-	 * Inits the commands.
+	 * Initializes the commands.
 	 * 
 	 * @param commandFactory
 	 *            the command factory
@@ -267,10 +254,10 @@ public final class AppContext {
 	}
 
 	/**
-	 * Inits the configuration.
+	 * Initializes the configuration.
 	 * 
 	 * @param configFile
-	 *            the config file
+	 *            the configuration file
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -371,7 +358,7 @@ public final class AppContext {
 	}
 
 	/**
-	 * Inits the.
+	 * Initialize the application context.
 	 */
 	public static void init() {
 		synchronized (AppContext.communicatorsLock) {
@@ -387,7 +374,7 @@ public final class AppContext {
 	}
 
 	/**
-	 * Destroy.
+	 * Destroy the whole application context and release resources.
 	 */
 	public static void destroy() {
 		synchronized (AppContext.communicatorsLock) {

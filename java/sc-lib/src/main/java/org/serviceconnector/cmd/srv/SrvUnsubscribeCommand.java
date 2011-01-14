@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SrvPublishService;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -55,7 +56,7 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// look up srvService
@@ -86,6 +87,7 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 		} finally {
 			// delete session in SCMPSessionCompositeRegistry
 			SrvCommandAdapter.sessionCompositeRegistry.removeSession(sessionId);
+			responderCallback.responseCallback(request, response);
 		}
 	}
 

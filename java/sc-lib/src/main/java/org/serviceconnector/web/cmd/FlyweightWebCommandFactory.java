@@ -16,13 +16,12 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web.cmd;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.web.IWebRequest;
 
-// TODO: Auto-generated Javadoc
 /**
  * A factory for creating Command objects.
  */
@@ -35,7 +34,7 @@ public abstract class FlyweightWebCommandFactory {
 	protected static FlyweightWebCommandFactory webCommandFactory = null;
 
 	/** The web command map. */
-	private Map<String, IWebCommand> webCommandMap = new ConcurrentHashMap<String, IWebCommand>();
+	private Map<String, IWebCommand> webCommandMap = new HashMap<String, IWebCommand>();
 
 	/**
 	 * Instantiates a new command factory.

@@ -20,9 +20,8 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -30,10 +29,8 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.NoFreeServerException;
 import org.serviceconnector.service.PublishService;
-import org.serviceconnector.service.PublishTimeout;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ValidatorUtility;
@@ -63,7 +60,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		String mask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
@@ -80,82 +77,42 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		Subscription subscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList);
 		reqMessage.setSessionId(subscription.getId());
 
-		int noDataIntervalSeconds = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 
-		StatefulServer server = null;
-		CommandCallback callback = null;
-		try {
-			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		ClnSubscribeCommandCallback callback = null;
+		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
-			int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-			// Following loop implements the wait mechanism in case of a busy connection pool
-			int i = 0;
-			int otiOnServerMillis = 0;
-			do {
-				callback = new CommandCallback(true);
-				try {
-					otiOnServerMillis = oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-					server = service.allocateServerAndSubscribe(reqMessage, callback, subscription, otiOnServerMillis);
-					// no exception has been thrown - get out of wait loop
-					break;
-				} catch (NoFreeServerException ex) {
-					if (i >= (tries - 1)) {
-						// only one loop outstanding - don't continue throw current exception
-						throw ex;
-					}
-				} catch (ConnectionPoolBusyException ex) {
-					if (i >= (tries - 1)) {
-						// only one loop outstanding - don't continue throw current exception
-						logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
-						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
-								"service=" + reqMessage.getServiceName());
-						scmpCommandException.setMessageType(this.getKey());
-						throw scmpCommandException;
-					}
-				} catch (Exception ex) {
+		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		// Following loop implements the wait mechanism in case of a busy connection pool
+		int i = 0;
+		int otiOnServerMillis = 0;
+		do {
+			callback = new ClnSubscribeCommandCallback(request, response, responderCallback, subscription);
+			try {
+				otiOnServerMillis = oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+				service.allocateServerAndSubscribe(reqMessage, callback, subscription, otiOnServerMillis);
+				// no exception has been thrown - get out of wait loop
+				break;
+			} catch (NoFreeServerException ex) {
+				logger.warn("NoFreeServerException caught in wait mec of subscribe");
+				if (i >= (tries - 1)) {
+					// only one loop outstanding - don't continue throw current exception
 					throw ex;
 				}
-				// sleep for a while and then try again
-				Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-			} while (++i < tries);
-
-			SCMPMessage reply = callback.getMessageSync(otiOnServerMillis);
-
-			if (reply.isFault() == false) {
-				boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-				if (rejectSubscriptionFlag == false) {
-					// subscription has not been rejected, add server to subscription
-					subscription.setServer(server);
-					// finally add subscription to the registry
-					this.subscriptionRegistry.addSubscription(subscription.getId(), subscription);
-					SubscriptionQueue<SCMPMessage> subscriptionQueue = service.getSubscriptionQueue();
-					PublishTimeout publishTimeout = new PublishTimeout(subscriptionQueue, noDataIntervalSeconds
-							* Constants.SEC_TO_MILLISEC_FACTOR);
-					SubscriptionLogger.logSubscribe(serviceName, subscription.getId(), mask);
-					subscriptionQueue.subscribe(subscription.getId(), subscriptionMask, publishTimeout);
-				} else {
-					// subscription has been rejected - remove subscription id from header
-					reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-					// creation failed remove from server
-					server.removeSession(subscription);
+			} catch (ConnectionPoolBusyException ex) {
+				logger.warn("ConnectionPoolBusyException caught in wait mec of subscribe");
+				if (i >= (tries - 1)) {
+					// only one loop outstanding - don't continue throw current exception
+					logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
+							+ reqMessage.getServiceName());
+					scmpCommandException.setMessageType(this.getKey());
+					throw scmpCommandException;
 				}
-			} else {
-				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-				// creation failed remove from server
-				server.removeSession(subscription);
 			}
-			// forward reply to client
-			reply.setIsReply(true);
-			reply.setMessageType(getKey());
-			response.setSCMP(reply);
-		} catch (Exception e) {
-			if (server != null) {
-				// creation failed remove from server
-				server.removeSession(subscription);
-			}
-			throw e;
-		}
+			// sleep for a while and then try again
+			Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		} while (++i < tries);
 	}
 
 	/** {@inheritDoc} */

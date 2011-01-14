@@ -16,17 +16,23 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
+import org.serviceconnector.net.req.netty.IdleTimeoutException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.FileServer;
 import org.serviceconnector.server.Server;
@@ -59,7 +65,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String sessionId = reqMessage.getSessionId();
 		// lookup session and checks properness
@@ -87,14 +93,14 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		}
 
 		StatefulServer statefulServer = (StatefulServer) abstractServer;
-		CommandCallback callback;
+		ClnDeleteSessionCommandCallback callback;
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 		int otiOnServerMillis = 0;
 		do {
-			callback = new CommandCallback(true);
+			callback = new ClnDeleteSessionCommandCallback(request, response, responderCallback, session, statefulServer);
 			try {
 				otiOnServerMillis = oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 				statefulServer.deleteSession(reqMessage, callback, otiOnServerMillis);
@@ -110,25 +116,10 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
-			} catch (Exception ex) {
-				statefulServer.abortSessionsAndDestroy("deleting session failed" + ex);
-				throw ex;
 			}
 			// sleep for a while and then try again
 			Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		} while (++i < tries);
-
-		SCMPMessage reply = callback.getMessageSync(otiOnServerMillis);
-
-		if (reply.isFault()) {
-			statefulServer.abortSessionsAndDestroy("deleting session failed");
-		}
-		// free server from session
-		statefulServer.removeSession(session);
-		// forward server reply to client
-		reply.setIsReply(true);
-		reply.setMessageType(getKey());
-		response.setSCMP(reply);
 	}
 
 	/** {@inheritDoc} */
@@ -160,6 +151,80 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;
+		}
+	}
+
+	/**
+	 * The Class ClnDeleteSessionCommandCallback.
+	 */
+	public class ClnDeleteSessionCommandCallback implements ISCMPMessageCallback {
+
+		/** The callback. */
+		private IResponderCallback responderCallback;
+		/** The request. */
+		private IRequest request;
+		/** The response. */
+		private IResponse response;
+		/** The session. */
+		private Session session;
+		/** The server. */
+		private StatefulServer server;
+
+		/**
+		 * Instantiates a new cln delete session command callback.
+		 * 
+		 * @param request
+		 *            the request
+		 * @param response
+		 *            the response
+		 * @param callback
+		 *            the callback
+		 * @param session
+		 *            the session
+		 * @param server
+		 *            the server
+		 */
+		public ClnDeleteSessionCommandCallback(IRequest request, IResponse response, IResponderCallback callback, Session session,
+				StatefulServer server) {
+			this.responderCallback = callback;
+			this.request = request;
+			this.response = response;
+			this.session = session;
+			this.server = server;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void receive(SCMPMessage reply) {
+			// free server from session
+			server.removeSession(session);
+			String serviceName = reply.getServiceName();
+			// forward server reply to client
+			reply.setIsReply(true);
+			reply.setServiceName(serviceName);
+			reply.setMessageType(getKey());
+			this.response.setSCMP(reply);
+			this.responderCallback.responseCallback(request, response);
+			if (reply.isFault()) {
+				// delete session failed destroy server
+				server.abortSessionsAndDestroy("deleting session failed");
+			}
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void receive(Exception ex) {
+			SCMPMessage fault = null;
+			if (ex instanceof IdleTimeoutException) {
+				// operation timeout handling
+				fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT_EXPIRED,
+						"Operation timeout expired on SC cln delete session");
+			} else if (ex instanceof IOException) {
+				fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln delete session");
+			} else {
+				fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln delete session failed");
+			}
+			this.receive(fault);
 		}
 	}
 }

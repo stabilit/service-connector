@@ -23,14 +23,13 @@ package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;
-import org.serviceconnector.scmp.ISCMPMessageCallback;
+import org.serviceconnector.cmd.sc.ClnCreateSessionCommandCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.StatefulServer;
 
 /**
- * The Class SessionService. SessionService is a remote interface to a session service and provides communication
- * functions.
+ * The Class SessionService. SessionService is a remote interface to a session service and provides communication functions.
  */
 public class SessionService extends StatefulService {
 
@@ -58,32 +57,37 @@ public class SessionService extends StatefulService {
 	 *            the session
 	 * @param timeoutInMillis
 	 *            the timeout in milliseconds
-	 * @return the server
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized StatefulServer allocateServerAndCreateSession(SCMPMessage msgToForward, ISCMPMessageCallback callback,
+	public synchronized void allocateServerAndCreateSession(SCMPMessage msgToForward, ClnCreateSessionCommandCallback callback,
 			Session session, int timeoutInMillis) throws Exception {
-
-		if (this.listOfServers.size() == 0) {
+		int numberOfServer = this.listOfServers.size();
+		if (numberOfServer == 0) {
 			// no server registered for this service
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SERVER, "service="
 					+ msgToForward.getServiceName());
 			scmpCommandException.setMessageType(msgToForward.getMessageType());
 			throw scmpCommandException;
 		}
-		for (int i = 0; i < this.listOfServers.size(); i++) {
+		for (int i = 0; i < numberOfServer; i++) {
 			this.serverIndex++;
-			if (this.serverIndex >= this.listOfServers.size()) {
+			if (this.serverIndex >= numberOfServer) {
 				// serverIndex reached the end of list no more servers
 				this.serverIndex = 0;
 			}
 			StatefulServer server = this.listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
-				server.createSession(msgToForward, callback, timeoutInMillis);
-				// store session - successful creation is not done here remove in command if not successful!!
+				callback.setServer(server);
 				server.addSession(session);
-				return server;
+				try {
+					server.createSession(msgToForward, callback, timeoutInMillis);
+				} catch (Exception e) {
+					server.removeSession(session);
+					callback.setServer(null);
+					throw e;
+				}
+				return;
 			}
 		}
 		// no free session available

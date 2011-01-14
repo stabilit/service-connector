@@ -27,7 +27,7 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.web.IWebResponse;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class NettyWebResponse.
  */

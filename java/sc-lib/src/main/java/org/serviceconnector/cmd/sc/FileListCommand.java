@@ -18,6 +18,7 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -42,7 +43,7 @@ public class FileListCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
 		FileService fileService = this.validateFileService(message.getServiceName());
 		SCMPMessage reply = null;
@@ -58,6 +59,7 @@ public class FileListCommand extends CommandAdapter {
 			reply.setIsReply(true);
 			reply.setMessageType(getKey());
 			response.setSCMP(reply);
+			responderCallback.responseCallback(request, response);
 		}
 	}
 

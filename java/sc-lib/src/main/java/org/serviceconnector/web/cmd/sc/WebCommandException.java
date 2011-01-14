@@ -15,7 +15,7 @@
  */
 package org.serviceconnector.web.cmd.sc;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class WebCommandException.
  */

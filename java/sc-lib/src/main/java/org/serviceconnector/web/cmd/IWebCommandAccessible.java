@@ -18,7 +18,7 @@ package org.serviceconnector.web.cmd;
 
 import org.serviceconnector.web.IWebRequest;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Interface IAuthorized.
  * 

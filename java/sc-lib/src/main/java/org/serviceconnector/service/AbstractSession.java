@@ -21,7 +21,7 @@ import java.util.concurrent.ScheduledFuture;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.util.TimeoutWrapper;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class AbstractSession.
  */

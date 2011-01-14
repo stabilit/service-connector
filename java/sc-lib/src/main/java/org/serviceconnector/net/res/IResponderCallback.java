@@ -25,12 +25,19 @@ import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 
 /**
- * The Interface IResponderCallback. Interface should be implemented by responders they wants to support asynchronous
- * commands.
+ * The Interface IResponderCallback. Interface should be implemented by responders they wants to support asynchronous commands.
  * 
  * @author JTraber
  */
 public interface IResponderCallback {
 
+	/**
+	 * Response callback.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 */
 	public abstract void responseCallback(IRequest request, IResponse response);
 }

@@ -25,6 +25,7 @@ import org.serviceconnector.conf.CommunicatorConfig;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.res.IResponder;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -64,7 +65,7 @@ public class RegisterServerCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		InetSocketAddress socketAddress = request.getRemoteSocketAddress();
 
 		SCMPMessage message = request.getMessage();
@@ -115,15 +116,17 @@ public class RegisterServerCommand extends CommandAdapter {
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 		response.setSCMP(scmpReply);
+		responderCallback.responseCallback(request, response);
 	}
 
 	/**
 	 * Validate server not registered.
 	 * 
-	 * @param server
-	 *            the server
-	 * @throws SCMPCommunicationException
-	 *             the SCMP communication exception
+	 * @param key
+	 *            the key
+	 * @return the server by key and validate not registered
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
 	 */
 	private Server getServerByKeyAndValidateNotRegistered(String key) throws SCMPCommandException {
 		Server server = this.serverRegistry.getServer(key);

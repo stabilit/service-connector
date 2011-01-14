@@ -28,7 +28,7 @@ import net.sf.ehcache.config.DiskStoreConfiguration;
 
 import org.serviceconnector.cache.ICacheConfiguration;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class EHCacheSCMPCacheImpl.
  */

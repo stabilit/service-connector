@@ -21,6 +21,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SrvSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -56,7 +57,7 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// look up srvService
@@ -106,6 +107,7 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 		reply.setServiceName(serviceName);
 		reply.setMessageType(this.getKey());
 		response.setSCMP(reply);
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */

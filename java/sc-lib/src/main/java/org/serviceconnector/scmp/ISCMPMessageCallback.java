@@ -26,12 +26,12 @@ public interface ISCMPMessageCallback {
 	/**
 	 * Callback. This method gets informed when a message received.
 	 * 
-	 * @param scmpReply
+	 * @param reply
 	 *            the scmp reply
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void receive(SCMPMessage scmpReply) throws Exception;
+	public abstract void receive(SCMPMessage reply) throws Exception;
 
 	/**
 	 * Callback. This method gets informed in case of an error.

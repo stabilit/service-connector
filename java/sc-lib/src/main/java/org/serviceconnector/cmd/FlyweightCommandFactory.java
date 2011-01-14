@@ -17,23 +17,23 @@
 package org.serviceconnector.cmd;
 
 import java.security.InvalidParameterException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.jboss.netty.util.internal.ConcurrentHashMap;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * A factory for creating FlyweightCommand objects. Factory is based on the Flyweight pattern
- * (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). Commands are only instantiated one time.
- * Factory is always returning the same instance from a map.
+ * (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). Commands are only instantiated one time. Factory is always
+ * returning the same instance from a map.
  */
 public abstract class FlyweightCommandFactory {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(FlyweightCommandFactory.class);
 	/** The map stores base instances by a key. */
-	protected static Map<String, ICommand> commands = new ConcurrentHashMap<String, ICommand>();
+	protected static Map<String, ICommand> commands = new HashMap<String, ICommand>();
 
 	public FlyweightCommandFactory() {
 	}

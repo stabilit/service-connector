@@ -26,7 +26,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class WebUtil.
  */

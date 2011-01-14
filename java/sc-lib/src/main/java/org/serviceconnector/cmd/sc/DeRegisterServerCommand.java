@@ -21,6 +21,7 @@ import java.net.InetSocketAddress;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -58,7 +59,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 		InetSocketAddress socketAddress = request.getRemoteSocketAddress();
@@ -77,6 +78,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 		scmpReply.setMessageType(getKey());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		response.setSCMP(scmpReply);
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */

@@ -42,7 +42,7 @@ import org.serviceconnector.web.WebUtil;
 import org.serviceconnector.web.cmd.IWebCommandAccessibleContext;
 import org.serviceconnector.web.ctx.WebContext;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class DefaultWebCommand. Responsible for validation and execution of any pure http web command. This Class uses a xml based
  * model and the view is built using xsl transformation.

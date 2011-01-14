@@ -16,10 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd;
 
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPMsgType;
-
 
 /**
  * The Interface ICommand.
@@ -40,12 +40,12 @@ public interface ICommand {
 	 *            the request
 	 * @param response
 	 *            the response
+	 * @param responderCallback
+	 *            callback to the responder
 	 * @throws Exception
-	 *             the exception
 	 */
-	public void run(IRequest request, IResponse response) throws Exception;
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception;
 
-	
 	/**
 	 * Validate request.
 	 * 
@@ -55,15 +55,7 @@ public interface ICommand {
 	 *             the exception
 	 */
 	public void validate(IRequest request) throws Exception;
-	
-		
-	/**
-	 * Checks if command is asynchronous.
-	 * 
-	 * @return true, if command is asynchronous
-	 */
-	public boolean isAsynchronous();
-	
+
 	/**
 	 * Checks if command passes through message parts
 	 * 

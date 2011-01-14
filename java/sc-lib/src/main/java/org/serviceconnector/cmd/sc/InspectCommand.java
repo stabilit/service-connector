@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.Registry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -62,7 +63,7 @@ public class InspectCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
 
@@ -80,6 +81,8 @@ public class InspectCommand extends CommandAdapter {
 			// dump internal registries
 			scmpReply.setBody(inspectString);
 			response.setSCMP(scmpReply);
+			// initiate responder to send reply
+			responderCallback.responseCallback(request, response);
 			return;
 		}
 
@@ -104,6 +107,8 @@ public class InspectCommand extends CommandAdapter {
 				scmpReply = new SCMPMessageFault(SCMPError.NOT_FOUND, "service=" + serviceName + " not found");
 			}
 			response.setSCMP(scmpReply);
+			// initiate responder to send reply
+			responderCallback.responseCallback(request, response);
 			return;
 		}
 
@@ -122,6 +127,8 @@ public class InspectCommand extends CommandAdapter {
 			StatefulService statefulService = (StatefulService) service;
 			scmpReply.setBody(statefulService.getCountAvailableSessions() + "/" + statefulService.getCountAllocatedSessions());
 			response.setSCMP(scmpReply);
+			// initiate responder to send reply
+			responderCallback.responseCallback(request, response);
 			return;
 		}
 	}

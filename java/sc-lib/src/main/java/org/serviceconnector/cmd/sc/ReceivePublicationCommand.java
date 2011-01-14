@@ -17,7 +17,6 @@
 package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.SubscriptionQueue;
@@ -37,7 +36,7 @@ import org.serviceconnector.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class ReceivePublicationCommand extends CommandAdapter implements IAsyncCommand {
+public class ReceivePublicationCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ReceivePublicationCommand.class);
@@ -56,13 +55,7 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean isAsynchronous() {
-		return true;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void run(IRequest request, IResponse response, IResponderCallback communicatorCallback) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String subscriptionId = reqMessage.getSessionId();
 		SCMPMessage message = null;
@@ -100,7 +93,7 @@ public class ReceivePublicationCommand extends CommandAdapter implements IAsyncC
 		// set up subscription timeout again
 		this.subscriptionRegistry.scheduleSubscriptionTimeout(subscriptionId);
 		// message already gotten from queue no asynchronous process necessary call callback right away
-		communicatorCallback.responseCallback(request, response);
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */

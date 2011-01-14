@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -66,7 +67,7 @@ public class ManageCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
 		String ipAddress = (String) reqMsg.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
@@ -123,6 +124,8 @@ public class ManageCommand extends CommandAdapter {
 			scmpReply = new SCMPMessageFault(SCMPError.NOT_FOUND, "service:" + serviceName + " not found");
 		}
 		response.setSCMP(scmpReply);
+		// initiate responder to send reply
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */

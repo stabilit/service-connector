@@ -62,9 +62,7 @@ public class SessionRegistry extends Registry<String, Session> {
 	public void addSession(String key, Session session) {
 		SessionLogger.logCreateSession(this.getClass().getName(), session.getId(), session.getSessionTimeoutSeconds());
 		this.put(key, session);
-		if (session.getSessionTimeoutSeconds() != 0) {
-			this.scheduleSessionTimeout(session);
-		}
+		this.scheduleSessionTimeout(session);
 	}
 
 	/**

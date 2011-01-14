@@ -18,6 +18,7 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -35,12 +36,6 @@ public class DetachCommand extends CommandAdapter {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(DetachCommand.class);
 	
-	/**
-	 * Instantiates a new DetachCommand.
-	 */
-	public DetachCommand() {
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
@@ -49,12 +44,14 @@ public class DetachCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey());
 		response.setSCMP(scmpReply);
+		// initiate responder to send reply
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */

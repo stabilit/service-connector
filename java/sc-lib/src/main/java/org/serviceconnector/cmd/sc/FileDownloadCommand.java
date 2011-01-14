@@ -18,6 +18,7 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -42,7 +43,7 @@ public class FileDownloadCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
 		FileSession session = (FileSession) this.getSessionById(message.getSessionId());
 		// cancel session timeout
@@ -63,6 +64,7 @@ public class FileDownloadCommand extends CommandAdapter {
 			response.setSCMP(reply);
 			// schedule session timeout
 			this.sessionRegistry.scheduleSessionTimeout(session);
+			responderCallback.responseCallback(request, response);
 		}
 	}
 

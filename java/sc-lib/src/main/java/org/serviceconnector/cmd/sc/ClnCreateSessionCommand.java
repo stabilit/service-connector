@@ -21,6 +21,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -29,7 +30,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.FileServer;
-import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.FileSession;
 import org.serviceconnector.service.NoFreeServerException;
@@ -63,7 +63,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// check service is present
@@ -107,84 +107,47 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 
 		// create session
 		Session session = new Session(sessionInfo, ipAddressList);
+		session.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());
 		reqMessage.setSessionId(session.getId());
 		// no need to forward echo attributes
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 
 		// tries allocating a server for this session
-		StatefulServer server = null;
-		CommandCallback callback = null;
-		try {
-			int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		ClnCreateSessionCommandCallback callback = null;
 
-			int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-			// Following loop implements the wait mechanism in case of a busy connection pool
-			int i = 0;
-			int otiOnServerMillis = 0;
-			do {
-				callback = new CommandCallback(true);
-				try {
-					otiOnServerMillis = oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-					server = ((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session,
-							otiOnServerMillis);
-					// no exception has been thrown - get out of wait loop
-					break;
-				} catch (NoFreeServerException ex) {
-					logger.warn("NoFreeServerException caught in wait mec of create session");
-					if (i >= (tries - 1)) {
-						// only one loop outstanding - don't continue throw current exception
-						throw ex;
-					}
-				} catch (ConnectionPoolBusyException ex) {
-					logger.warn("ConnectionPoolBusyException caught in wait mec of create session");
-					if (i >= (tries - 1)) {
-						// only one loop outstanding - don't continue throw current exception
-						logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
-						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
-								"service=" + reqMessage.getServiceName());
-						scmpCommandException.setMessageType(this.getKey());
-						throw scmpCommandException;
-					}
-				} catch (Exception ex) {
+		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+
+		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		// Following loop implements the wait mechanism in case of a busy connection pool
+		int i = 0;
+		int otiOnServerMillis = 0;
+		do {
+			callback = new ClnCreateSessionCommandCallback(request, response, responderCallback, session);
+			try {
+				otiOnServerMillis = oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+				((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session, otiOnServerMillis);
+				// no exception has been thrown - get out of wait loop
+				break;
+			} catch (NoFreeServerException ex) {
+				logger.warn("NoFreeServerException caught in wait mec of create session");
+				if (i >= (tries - 1)) {
+					// only one loop outstanding - don't continue throw current exception
 					throw ex;
 				}
-				// sleep for a while and then try again
-				Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-			} while (++i < tries);
-
-			SCMPMessage reply = callback.getMessageSync(otiOnServerMillis);
-
-			if (reply.isFault()) {
-				// response is an error - remove session id from header
-				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-				// remove session from server
-				server.removeSession(session);
-			} else {
-				boolean rejectSessionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
-				if (rejectSessionFlag) {
-					// session has been rejected by the server - remove session id from header
-					reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
-					// remove session from server
-					server.removeSession(session);
-				} else {
-					// session has not accepted, add server to session
-					session.setServer(server);
-					session.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());
-					// finally add session to the registry
-					this.sessionRegistry.addSession(session.getId(), session);
+			} catch (ConnectionPoolBusyException ex) {
+				logger.warn("ConnectionPoolBusyException caught in wait mec of create session");
+				if (i >= (tries - 1)) {
+					// only one loop outstanding - don't continue throw current exception
+					logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
+							+ reqMessage.getServiceName());
+					scmpCommandException.setMessageType(this.getKey());
+					throw scmpCommandException;
 				}
 			}
-			// forward server reply to client
-			reply.setIsReply(true);
-			reply.setMessageType(getKey());
-			response.setSCMP(reply);
-		} catch (Exception e) {
-			if (server != null) {
-				// creation failed remove from server
-				server.removeSession(session);
-			}
-			throw e;
-		}
+			// sleep for a while and then try again
+			Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		} while (++i < tries);
 	}
 
 	/** {@inheritDoc} */

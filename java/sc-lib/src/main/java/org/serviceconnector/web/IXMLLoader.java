@@ -23,7 +23,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.factory.IFactoryable;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Interface IXMLLoader.
  */

@@ -74,7 +74,7 @@ import org.serviceconnector.web.NotFoundException;
 import org.serviceconnector.web.WebUtil;
 import org.serviceconnector.web.ctx.WebContext;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * A factory for creating DefaultXMLLoader objects.
  */

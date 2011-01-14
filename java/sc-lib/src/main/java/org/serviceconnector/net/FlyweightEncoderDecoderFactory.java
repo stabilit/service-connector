@@ -17,16 +17,16 @@
 package org.serviceconnector.net;
 
 import java.security.InvalidParameterException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.scmp.SCMPMessage;
 
 /**
  * A factory for creating FlyweightEncoderDecoder objects. Factory is based on the Flyweight pattern
- * (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). EncoderDecoders are only instantiated one
- * time. Factory is always returning the same instance from a map.
+ * (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). EncoderDecoders are only instantiated one time. Factory is
+ * always returning the same instance from a map.
  */
 public final class FlyweightEncoderDecoderFactory {
 
@@ -46,7 +46,7 @@ public final class FlyweightEncoderDecoderFactory {
 	 * Instantiates a new FlyweightEncoderDecoderFactory.
 	 */
 	public FlyweightEncoderDecoderFactory() {
-		FlyweightEncoderDecoderFactory.encoderDecoders = new ConcurrentHashMap<String, IEncoderDecoder>();
+		FlyweightEncoderDecoderFactory.encoderDecoders = new HashMap<String, IEncoderDecoder>();
 		IEncoderDecoder encoderDecoder = new DefaultMessageEncoderDecoder();
 		this.addEncoderDecoder(DEFAULT, encoderDecoder);
 		encoderDecoder = new LargeMessageEncoderDecoder();

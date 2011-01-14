@@ -21,7 +21,9 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SrvPublishService;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -57,7 +59,7 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws SCMPCommandException {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// look up srvService
@@ -104,6 +106,7 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 			}
 		}
 		response.setSCMP(reply);
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */
@@ -130,7 +133,7 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 			// mask mandatory
 			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-			//TODO JAN/JOT ams actual mask mandatory
+			// TODO JAN/JOT ams actual mask mandatory
 			// sessionInfo optional
 			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);

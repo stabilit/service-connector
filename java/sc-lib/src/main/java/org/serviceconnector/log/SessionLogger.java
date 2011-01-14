@@ -103,4 +103,10 @@ public class SessionLogger {
 			sessionLogger.fatal(message);
 		}
 	}
+
+	public static void error(String message) {
+		if (sessionLogger.isEnabledFor(Level.ERROR)) {
+			sessionLogger.error(message);
+		}
+	}
 }

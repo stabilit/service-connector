@@ -18,6 +18,7 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -29,8 +30,7 @@ import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class AttachCommand. Responsible for validation and execution of attach command. Allows attaching (virtual
- * attach) to SC.
+ * The Class AttachCommand. Responsible for validation and execution of attach command. Allows attaching (virtual attach) to SC.
  * 
  * @author JTraber
  */
@@ -38,12 +38,6 @@ public class AttachCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AttachCommand.class);
-
-	/**
-	 * Instantiates a new AttachCommand.
-	 */
-	public AttachCommand() {
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -53,13 +47,15 @@ public class AttachCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) {
 		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		scmpReply.setMessageType(getKey());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());
 		response.setSCMP(scmpReply);
+		// initiate responder to send reply
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */
@@ -86,5 +82,4 @@ public class AttachCommand extends CommandAdapter {
 			throw valExc;
 		}
 	}
-
 }

@@ -22,6 +22,7 @@ import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
@@ -85,6 +86,15 @@ public abstract class CommandAdapter implements ICommand {
 		return session;
 	}
 
+	/**
+	 * Gets the subscription by id.
+	 * 
+	 * @param subscriptionId
+	 *            the subscription id
+	 * @return the subscription by id
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
 	protected Subscription getSubscriptionById(String subscriptionId) throws SCMPCommandException {
 		Subscription subscription = this.subscriptionRegistry.getSubscription(subscriptionId);
 
@@ -218,9 +228,13 @@ public abstract class CommandAdapter implements ICommand {
 		return (FileService) service;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
+	 */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
@@ -228,12 +242,6 @@ public abstract class CommandAdapter implements ICommand {
 	@Override
 	public void validate(IRequest request) throws Exception {
 		throw new SCMPValidatorException(SCMPError.HV_ERROR, "validator is not implemented");
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean isAsynchronous() {
-		return false;
 	}
 
 	/** {@inheritDoc} */

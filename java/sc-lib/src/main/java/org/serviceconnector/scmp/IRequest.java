@@ -39,7 +39,7 @@ public interface IRequest {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCMPMessage getMessage() throws Exception;
+	public SCMPMessage getMessage();
 
 	/**
 	 * Sets the scmp message in the request.
@@ -62,14 +62,6 @@ public interface IRequest {
 	 * @return the remote socket address
 	 */
 	public InetSocketAddress getRemoteSocketAddress();
-
-	/**
-	 * Reads the content of the request.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void read() throws Exception;
 
 	/**
 	 * Load content on socket to the request. Decodes network frame into an scmp.

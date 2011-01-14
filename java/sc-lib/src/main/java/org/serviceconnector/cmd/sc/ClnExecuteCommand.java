@@ -27,7 +27,6 @@ import org.serviceconnector.cache.CacheId;
 import org.serviceconnector.cache.CacheLoadedException;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
-import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
@@ -57,16 +56,10 @@ import org.serviceconnector.util.ValidatorUtility;
  * 
  * @author JTraber
  */
-public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
+public class ClnExecuteCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(ClnExecuteCommand.class);
-
-	/**
-	 * Instantiates a new ClnExecuteCommand.
-	 */
-	public ClnExecuteCommand() {
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -81,7 +74,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		String sessionId = reqMessage.getSessionId();
 		Session session = this.getSessionById(sessionId);
 		if (session.hasPendingRequest() == true) {
-			SessionLogger.warn("session " + sessionId + "has pending request");
+			SessionLogger.error("session " + sessionId + "has pending request");
 		}
 		session.setPendingRequest(true);
 		// cancel session timeout
@@ -111,7 +104,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				}
 			}
 		}
-
+		ClnExecuteCommandCallback callback = null;
 		StatefulServer server = session.getStatefulServer();
 		// try sending to the server
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
@@ -120,7 +113,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 		do {
-			ClnExecuteCommandCallback callback = new ClnExecuteCommandCallback(request, response, responderCallback, sessionId);
+			callback = new ClnExecuteCommandCallback(request, response, responderCallback, sessionId);
 			try {
 				server.execute(reqMessage, callback, oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
@@ -132,16 +125,11 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					// schedule session timeout
 					this.sessionRegistry.scheduleSessionTimeout(session);
 					logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
-							"service=" + reqMessage.getServiceName());
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
+							+ reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
-			} catch (Exception ex) {
-				session.setPendingRequest(false);
-				// schedule session timeout
-				this.sessionRegistry.scheduleSessionTimeout(session);
-				throw ex;
 			}
 			// sleep for a while and then try again
 			Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
@@ -183,15 +171,9 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean isAsynchronous() {
-		return true;
-	}
-
 	/**
-	 * Try loading message from cache. This method tries to load the message from its cache. An exception is thrown if the message
-	 * is not full part of the cache. In case of a successful cache load the method return true otherwise false.
+	 * Try loading message from cache. This method tries to load the message from its cache. An exception is thrown if the message is
+	 * not full part of the cache. In case of a successful cache load the method return true otherwise false.
 	 * 
 	 * @param request
 	 *            the request
@@ -233,9 +215,10 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 					int size = cacheComposite.getSize();
 					int sequenceNr = cacheId.getSequenceNrInt();
 					if (!(message.isPart() && (sequenceNr == size))) {
-						CacheLogger.info("cache is loading, retry later, service=" + message.getServiceName()+" cacheId=" + message.getCacheId());
-						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING,
-								"service=" + message.getServiceName()+" cacheId=" + message.getCacheId());
+						CacheLogger.info("cache is loading, retry later, service=" + message.getServiceName() + " cacheId="
+								+ message.getCacheId());
+						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service="
+								+ message.getServiceName() + " cacheId=" + message.getCacheId());
 						scmpCommandException.setMessageType(this.getKey());
 						throw scmpCommandException;
 					}
@@ -295,7 +278,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				this.sessionRegistry.scheduleSessionTimeout(session);
 				session.setPendingRequest(false);
 				responderCallback.responseCallback(request, response);
-				CacheLogger.debug("Sent a cache message to the client cacheId="+cacheId);
+				CacheLogger.debug("Sent a cache message to the client cacheId=" + cacheId);
 				return true; // message loaded from cache
 			}
 		}
@@ -313,7 +296,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 	private class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 
 		/** The callback. */
-		private IResponderCallback callback;
+		private IResponderCallback responderCallback;
 		/** The request. */
 		private IRequest request;
 		/** The response. */
@@ -334,7 +317,7 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 		 *            the callback
 		 */
 		public ClnExecuteCommandCallback(IRequest request, IResponse response, IResponderCallback callback, String sessionId) {
-			this.callback = callback;
+			this.responderCallback = callback;
 			this.request = request;
 			this.response = response;
 			this.sessionId = sessionId;
@@ -342,51 +325,55 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 
 		/** {@inheritDoc} */
 		@Override
-		public void receive(SCMPMessage scmpReply) {
+		public void receive(SCMPMessage reply) {
+			String serviceName = reply.getServiceName();
 			// check for cache id
 			CacheManager cacheManager = null;
-			if (scmpReply.getCacheId() != null) {
+			if (reply.getCacheId() != null) {
 				// try save reply in cache
 				cacheManager = AppContext.getCacheManager();
 			}
 			if (cacheManager != null && cacheManager.isCacheEnabled()) {
 				try {
-					String serviceName = scmpReply.getServiceName();
 					Cache scmpCache = cacheManager.getCache(serviceName);
 					if (scmpCache == null) {
 						CommandCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
 					} else {
-						CacheLogger.debug("cache message put reply, scmp reply cacheId = " + scmpReply.getCacheId()
-								+ ", isReply = " + scmpReply.isReply() + ", isPart = " + scmpReply.isPart() + ", isPollRequest = "
-								+ scmpReply.isPollRequest());
+						CacheLogger.debug("cache message put reply, scmp reply cacheId = " + reply.getCacheId() + ", isReply = "
+								+ reply.isReply() + ", isPart = " + reply.isPart() + ", isPollRequest = " + reply.isPollRequest());
 						CacheId messageCacheId = null;
 						try {
-							messageCacheId = scmpCache.putMessage(scmpReply);
+							messageCacheId = scmpCache.putMessage(reply);
 						} catch (CacheLoadedException e) {
-							CacheLogger.warn("cache put message failed, already loaded, remove cache (" + scmpReply.getCacheId() + ") and start loading");
-							scmpCache.startLoading(scmpReply.getCacheId());
-							messageCacheId = scmpCache.putMessage(scmpReply);
+							CacheLogger.warn("cache put message failed, already loaded, remove cache (" + reply.getCacheId()
+									+ ") and start loading");
+							scmpCache.startLoading(reply.getCacheId());
+							messageCacheId = scmpCache.putMessage(reply);
 						} catch (CacheExpiredException e) {
-							CacheLogger.warn("cache put message failed, expired, remove cache (" + scmpReply.getCacheId() + ") and start loading");
-							scmpCache.startLoading(scmpReply.getCacheId());
-							messageCacheId = scmpCache.putMessage(scmpReply);
+							CacheLogger.warn("cache put message failed, expired, remove cache (" + reply.getCacheId()
+									+ ") and start loading");
+							scmpCache.startLoading(reply.getCacheId());
+							messageCacheId = scmpCache.putMessage(reply);
 						}
 						String fullCacheId = messageCacheId.getFullCacheId();
 						CacheLogger.debug("cache message put done using full cache id = " + fullCacheId);
-						scmpReply.setCacheId(fullCacheId);
+						reply.setCacheId(fullCacheId);
 					}
 				} catch (Exception e) {
-					CacheLogger.debug("cache (" + scmpReply.getCacheId() + " message put did fail = " + e.toString());
+					CacheLogger.debug("cache (" + reply.getCacheId() + " message put did fail = " + e.toString());
 					CommandCallback.logger.error(e.toString());
 				}
 			}
-			scmpReply.setMessageType(getKey());
-			this.response.setSCMP(scmpReply);
+			// forward server reply to client
+			reply.setIsReply(true);
+			reply.setMessageType(getKey());
+			reply.setServiceName(serviceName);
+			this.response.setSCMP(reply);
 			// schedule session timeout
 			Session session = this.sessionRegistry.getSession(this.sessionId);
 			this.sessionRegistry.scheduleSessionTimeout(session);
 			session.setPendingRequest(false);
-			this.callback.responseCallback(request, response);
+			this.responderCallback.responseCallback(request, response);
 		}
 
 		/** {@inheritDoc} */
@@ -398,25 +385,10 @@ public class ClnExecuteCommand extends CommandAdapter implements IAsyncCommand {
 				fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT_EXPIRED, "Operation timeout expired on SC");
 			} else if (ex instanceof IOException) {
 				fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server");
-			} else if (ex instanceof ConnectionPoolBusyException) {
-				fault = new SCMPMessageFault(ex, SCMPError.NO_FREE_CONNECTION);
 			} else {
 				fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing CLN_EXECUTE");
 			}
-			// set serviceName for EXC
-			try {
-				SCMPMessage message;
-				message = request.getMessage();
-				fault.setServiceName(message.getServiceName());
-				fault.setMessageType(message.getMessageType());
-			} catch (Exception e) {
-				logger.warn("not possible to getMessage for EXC");
-			}
 			fault.setSessionId(sessionId);
-			// schedule session timeout
-			Session session = this.sessionRegistry.getSession(this.sessionId);
-			this.sessionRegistry.scheduleSessionTimeout(session);
-			session.setPendingRequest(false);
 			this.receive(fault);
 		}
 	}

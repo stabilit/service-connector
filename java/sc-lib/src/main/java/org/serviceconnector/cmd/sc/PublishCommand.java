@@ -18,6 +18,7 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -54,7 +55,7 @@ public class PublishCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 		// lookup service and checks properness
@@ -77,6 +78,7 @@ public class PublishCommand extends CommandAdapter {
 		reply.setIsReply(true);
 		reply.setServiceName(message.getServiceName());
 		response.setSCMP(reply);
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */

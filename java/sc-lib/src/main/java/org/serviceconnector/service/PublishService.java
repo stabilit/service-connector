@@ -18,15 +18,15 @@ package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;
+import org.serviceconnector.cmd.sc.ClnSubscribeCommandCallback;
 import org.serviceconnector.registry.SubscriptionQueue;
-import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.StatefulServer;
 
 /**
- * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides
- * communication functions.
+ * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
+ * functions.
  */
 public class PublishService extends StatefulService {
 
@@ -62,38 +62,44 @@ public class PublishService extends StatefulService {
 	 * Allocate server and subscribe.
 	 * 
 	 * @param msgToForward
-	 *            the message to forward
+	 *            the msg to forward
 	 * @param callback
 	 *            the callback
 	 * @param subscription
 	 *            the subscription
 	 * @param timeoutMillis
-	 *            the timeout milliseconds
-	 * @return the server
+	 *            the timeout millis
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized StatefulServer allocateServerAndSubscribe(SCMPMessage msgToForward, ISCMPMessageCallback callback,
+	public synchronized void allocateServerAndSubscribe(SCMPMessage msgToForward, ClnSubscribeCommandCallback callback,
 			Subscription subscription, int timeoutMillis) throws Exception {
-
-		if (this.listOfServers.size() == 0) {
+		int numberOfServer = this.listOfServers.size();
+		if (numberOfServer == 0) {
 			// no server registered for this service
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SERVER, "service="
 					+ msgToForward.getServiceName());
 			scmpCommandException.setMessageType(msgToForward.getMessageType());
 			throw scmpCommandException;
 		}
-		for (int i = 0; i < this.listOfServers.size(); i++) {
+		for (int i = 0; i < numberOfServer; i++) {
 			this.serverIndex++;
-			if (this.serverIndex >= this.listOfServers.size()) {
+			if (this.serverIndex >= numberOfServer) {
 				// serverIndex reached the end of list no more servers
 				this.serverIndex = 0;
 			}
 			StatefulServer server = this.listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
-				server.subscribe(msgToForward, callback, timeoutMillis);
+				callback.setServer(server);
 				server.addSession(subscription);
-				return server;
+				try {
+					server.subscribe(msgToForward, callback, timeoutMillis);
+				} catch (Exception e) {
+					server.removeSession(subscription);
+					callback.setServer(null);
+					throw e;
+				}
+				return;
 			}
 		}
 		// no free server available

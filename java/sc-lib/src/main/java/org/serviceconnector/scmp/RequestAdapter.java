@@ -29,7 +29,7 @@ public abstract class RequestAdapter implements IRequest {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(RequestAdapter.class);
-	
+
 	/** The scmp message. */
 	private SCMPMessage message;
 	/** The local socket address. */
@@ -48,10 +48,7 @@ public abstract class RequestAdapter implements IRequest {
 
 	/** {@inheritDoc} */
 	@Override
-	public SCMPMessage getMessage() throws Exception {
-		if (this.message == null) {
-			load();
-		}
+	public SCMPMessage getMessage() {
 		return this.message;
 	}
 
@@ -71,14 +68,6 @@ public abstract class RequestAdapter implements IRequest {
 	@Override
 	public InetSocketAddress getRemoteSocketAddress() {
 		return remoteSocketAddress;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void read() throws Exception {
-		if (message == null) {
-			load();
-		}
 	}
 
 	/** {@inheritDoc} */

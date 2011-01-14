@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.jboss.netty.handler.codec.http.Cookie;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Interface IWebRequest abstracts a web request.
  */

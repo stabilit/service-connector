@@ -44,7 +44,7 @@ import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class AbstractXMLLoader.
  */

@@ -21,7 +21,9 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SrvPublishService;
 import org.serviceconnector.api.srv.SrvService;
 import org.serviceconnector.api.srv.SrvSessionService;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -56,7 +58,7 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws SCMPCommandException {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// look up srvService
@@ -88,6 +90,7 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		response.setSCMP(reply);
 		// delete session in SCMPSessionCompositeRegistry
 		SrvCommandAdapter.sessionCompositeRegistry.removeSession(sessionId);
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */

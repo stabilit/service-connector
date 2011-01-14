@@ -26,6 +26,7 @@ import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.IResponder;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -42,25 +43,19 @@ public abstract class SrvCommandAdapter implements ICommand {
 
 	/** The session composite registry. */
 	protected static SCMPSessionCompositeRegistry sessionCompositeRegistry = AppContext.getSCMPSessionCompositeRegistry();
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public abstract SCMPMsgType getKey();
 
 	/** {@inheritDoc} */
 	@Override
-	public abstract void run(IRequest request, IResponse response) throws Exception;
+	public abstract void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception;
 
 	/** {@inheritDoc} */
 	@Override
 	public void validate(IRequest request) throws Exception {
 		throw new SCMPValidatorException(SCMPError.HV_ERROR, "validator is not implemented");
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean isAsynchronous() {
-		return false;
 	}
 
 	/** {@inheritDoc} */

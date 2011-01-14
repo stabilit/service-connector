@@ -3,7 +3,6 @@ package org.serviceconnector.net.res.netty;
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cmd.IAsyncCommand;
 import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.PerformanceLogger;
@@ -45,10 +44,10 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 	@Override
 	public void run() {
 		try {
+			// loading message
+			request.load();
 			SCMPMessage scmpReq = request.getMessage();
-
 			String sessionId = scmpReq.getSessionId();
-
 			SCMPMessageSequenceNr msgSequenceNr = NettyResponderRequestHandlerTask.compositeRegistry.getSCMPMsgSequenceNr(sessionId);
 
 			if (scmpReq == null) {
@@ -74,7 +73,6 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 			responderRegistry.setThreadLocal(channel.getParent().getId());
 
-			request.read();
 			ICommand command = AppContext.getCommandFactory().getCommand(request.getKey());
 			// gets the command
 			if (command == null) {
@@ -121,43 +119,29 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 				NettyResponderRequestHandlerTask.compositeRegistry.removeSCMPLargeRequest(sessionId);
 			}
 			// validate request and run command
-			try {
-				if (Constants.COMMAND_VALIDATION_ENABLED) {
-					command.validate(request);
-				}
-				performanceLogger.begin(this.getClass().getSimpleName(), "run");
-				if (command.isAsynchronous()) {
-					((IAsyncCommand) command).run(request, response, this);
-					return;
-				}
-				command.run(request, response);
-				performanceLogger.end(this.getClass().getSimpleName(), "run");
-			} catch (HasFaultResponseException ex) {
-				// exception carries response inside
-				logger.warn("messageReceived " + ex.toString());
-				ex.setSessionIdAndServiceName(request);
-				ex.setFaultResponse(response);
+			if (Constants.COMMAND_VALIDATION_ENABLED) {
+				command.validate(request);
 			}
-			if (response.isLarge() && command.isPassThroughPartMsg() == false) {
-				// response is large, create a large response for reply
-				SCMPCompositeSender largeResponse = new SCMPCompositeSender(response.getSCMP());
-				SCMPMessage firstSCMP = largeResponse.getFirst();
-				response.setSCMP(firstSCMP);
-				// handling msgSequenceNr
-				if (SCMPMessageSequenceNr.necessaryToWrite(firstSCMP.getMessageType())) {
-					// no incrementation necessary - already done inside commands
-					firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
-				}
-				// adding compositeReceiver to the composite registry
-				NettyResponderRequestHandlerTask.compositeRegistry.addSCMPLargeResponse(sessionId, largeResponse);
-			}
-			response.write();
-		} catch (Exception e) {
+			performanceLogger.begin(this.getClass().getName(), "run");
+			command.run(request, response, this);
+			performanceLogger.end(this.getClass().getName(), "run");
+		} catch (HasFaultResponseException ex) {
+			// exception carries response inside
+			logger.warn("run " + ex.toString());
+			ex.setSessionIdAndServiceName(request);
+			ex.setFaultResponse(response);
 			try {
-				SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, e.getMessage());
-				scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
-				scmpFault.setLocalDateTime();
-				response.setSCMP(scmpFault);
+				response.write();
+			} catch (Exception e) {
+				logger.error("Sending a response failed.", ex);
+			}
+		} catch (Exception e2) {
+			logger.warn("run " + e2.toString());
+			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, e2.getMessage());
+			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
+			scmpFault.setLocalDateTime();
+			response.setSCMP(scmpFault);
+			try {
 				response.write();
 			} catch (Exception ex) {
 				logger.error("Sending a response failed.", ex);
@@ -216,45 +200,27 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 	/** {@inheritDoc} */
 	@Override
 	public void responseCallback(IRequest request, IResponse response) {
-		try {
-			SCMPMessage scmpRequest = request.getMessage();
-			String sessionId = scmpRequest.getSessionId();
-			if (response.isLarge()) {
-				// response is large, create a large response for reply
-				SCMPCompositeSender largeResponse = new SCMPCompositeSender(response.getSCMP());
-				SCMPMessage firstSCMP = largeResponse.getFirst();
-				response.setSCMP(firstSCMP);
-				// adding compositeReceiver to the composite registry
-				NettyResponderRequestHandlerTask.compositeRegistry.addSCMPLargeResponse(sessionId, largeResponse);
+
+		SCMPMessage scmpRequest = request.getMessage();
+		String sessionId = scmpRequest.getSessionId();
+		SCMPMessageSequenceNr msgSequenceNr = NettyResponderRequestHandlerTask.compositeRegistry.getSCMPMsgSequenceNr(sessionId);
+		if (response.isLarge() && AppContext.isScEnvironment() == false) {
+			// response is large & not on SC, create a large response for reply
+			SCMPCompositeSender largeResponse = new SCMPCompositeSender(response.getSCMP());
+			SCMPMessage firstSCMP = largeResponse.getFirst();
+			response.setSCMP(firstSCMP);
+			if (SCMPMessageSequenceNr.necessaryToWrite(firstSCMP.getMessageType())) {
+				// no incrementation necessary - already done inside commands
+				firstSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			}
+			// adding compositeReceiver to the composite registry
+			NettyResponderRequestHandlerTask.compositeRegistry.addSCMPLargeResponse(sessionId, largeResponse);
+		}
+		try {
+			// reply to client
 			response.write();
 		} catch (Exception ex) {
-			logger.error("send response", ex);
-			this.faultResponseCallback(response, ex);
-		}
-	}
-
-	/**
-	 * Callback in case of an error.
-	 * 
-	 * @param response
-	 *            the response
-	 * @param ex
-	 *            the error
-	 */
-	private void faultResponseCallback(IResponse response, Exception ex) {
-		if (ex instanceof HasFaultResponseException) {
-			((HasFaultResponseException) ex).setFaultResponse(response);
-		} else {
-			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, ex.getMessage());
-			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
-			scmpFault.setLocalDateTime();
-			response.setSCMP(scmpFault);
-		}
-		try {
-			response.write();
-		} catch (Throwable th) {
-			logger.error("send fault", th);
+			logger.error("send response failed", ex);
 		}
 	}
 

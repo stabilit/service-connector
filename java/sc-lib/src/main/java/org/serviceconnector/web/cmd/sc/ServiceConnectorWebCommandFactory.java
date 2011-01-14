@@ -30,10 +30,10 @@ import org.serviceconnector.web.cmd.IWebCommand;
 import org.serviceconnector.web.cmd.IWebCommandAccessible;
 import org.serviceconnector.web.cmd.IWebCommandAccessibleContext;
 
-// TODO: Auto-generated Javadoc
+
 /**
- * A factory for creating ServiceConnectorWebCommand objects. Provides access to
- * concrete instances of Service Connector Web commands.
+ * A factory for creating ServiceConnectorWebCommand objects. Provides access to concrete instances of Service Connector Web
+ * commands.
  * 
  * @author JTraber
  */
@@ -180,7 +180,5 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 				return respConfig.getPassword();
 			}
 		}
-
 	}
-
 }

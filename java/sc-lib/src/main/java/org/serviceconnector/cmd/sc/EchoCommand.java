@@ -18,6 +18,7 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -52,7 +53,7 @@ public class EchoCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
 		String sessionId = message.getSessionId();
 		Session session = this.getSessionById(sessionId);
@@ -62,6 +63,7 @@ public class EchoCommand extends CommandAdapter {
 		response.setSCMP(message);
 		// schedule session timeout
 		this.sessionRegistry.scheduleSessionTimeout(session);
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */

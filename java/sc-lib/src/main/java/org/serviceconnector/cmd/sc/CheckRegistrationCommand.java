@@ -21,6 +21,7 @@ import java.net.InetSocketAddress;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -42,12 +43,6 @@ public class CheckRegistrationCommand extends CommandAdapter {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CheckRegistrationCommand.class);
 
-	/**
-	 * Instantiates a new CheckRegistrationCommand.
-	 */
-	public CheckRegistrationCommand() {
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
@@ -56,7 +51,7 @@ public class CheckRegistrationCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response) throws Exception {
+	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws SCMPCommandException {
 		InetSocketAddress socketAddress = request.getRemoteSocketAddress();
 
 		SCMPMessage message = request.getMessage();
@@ -77,6 +72,8 @@ public class CheckRegistrationCommand extends CommandAdapter {
 		scmpReply.setMessageType(getKey());
 		scmpReply.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 		response.setSCMP(scmpReply);
+		// initiate responder to send reply
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */
@@ -98,5 +95,4 @@ public class CheckRegistrationCommand extends CommandAdapter {
 			throw validatorException;
 		}
 	}
-
 }

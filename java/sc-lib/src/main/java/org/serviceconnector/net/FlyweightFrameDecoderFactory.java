@@ -17,16 +17,16 @@
 package org.serviceconnector.net;
 
 import java.security.InvalidParameterException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 
 /**
  * The Class FrameDecoderFactory. Factory is based on the Flyweight pattern
- * (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). FrameDecoders are only instantiated one time.
- * Factory is always returning the same instance from a map.
+ * (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). FrameDecoders are only instantiated one time. Factory is
+ * always returning the same instance from a map.
  * 
  * @author JTraber
  */
@@ -37,7 +37,7 @@ public final class FlyweightFrameDecoderFactory {
 	private static Map<String, IFrameDecoder> frameDecoders;
 
 	public FlyweightFrameDecoderFactory() {
-		FlyweightFrameDecoderFactory.frameDecoders = new ConcurrentHashMap<String, IFrameDecoder>();
+		FlyweightFrameDecoderFactory.frameDecoders = new HashMap<String, IFrameDecoder>();
 		IFrameDecoder frameDecoder = new DefaultFrameDecoder();
 		this.addFrameDecoder(Constants.TCP, frameDecoder);
 		frameDecoder = new HttpFrameDecoder();

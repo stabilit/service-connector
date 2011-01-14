@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 import org.serviceconnector.registry.Registry;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class CacheCompositeRegistry.
  */

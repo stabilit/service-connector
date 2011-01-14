@@ -81,6 +81,9 @@ public class ConnectionFactory {
 		ConnectionFactory.channelFactory = null;
 	}
 
+	/**
+	 * Initialize the connection factory.
+	 */
 	public static void init() {
 		if (ConnectionFactory.channelFactory == null) {
 			ConnectionFactory.channelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors
