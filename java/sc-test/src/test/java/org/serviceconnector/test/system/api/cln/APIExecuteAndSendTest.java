@@ -37,18 +37,18 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setDataLength(TestConstants.pangram.length());
 		request.setCompressed(false);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
-		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -61,18 +61,18 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setDataLength(TestConstants.pangram.length());
 		request.setCompressed(true);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
-		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -85,18 +85,18 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setDataLength(TestConstants.dataLength1MB);
 		request.setCompressed(false);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(new SCMessage(), msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(new SCMessage(), msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
-		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -109,18 +109,18 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setDataLength(TestConstants.dataLength1MB);
 		request.setCompressed(true);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(new SCMessage(), msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(new SCMessage(), msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
-		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -132,19 +132,19 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setDataLength(TestConstants.pangram.length());
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoAppErrorCmd);
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
-		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("appErrorCode is not the same", TestConstants.appErrorCode, response.getAppErrorCode());
 		Assert.assertEquals("appErrorText is not the same", TestConstants.appErrorText, response.getAppErrorText());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -156,19 +156,19 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setDataLength(TestConstants.pangram.length());
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoAppError1Cmd);
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
-		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("appErrorCode is not the same", TestConstants.appErrorCode, response.getAppErrorCode());
 		Assert.assertEquals("appErrorText is not null", null, response.getAppErrorText());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -180,20 +180,20 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setDataLength(TestConstants.pangram.length());
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoAppError2Cmd);
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
-		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("appErrorCode is not " + Constants.EMPTY_APP_ERROR_CODE, Constants.EMPTY_APP_ERROR_CODE, response
 				.getAppErrorCode());
 		Assert.assertEquals("appErrorText is not the same", TestConstants.appErrorText, response.getAppErrorText());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -204,12 +204,12 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t008_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData(new Object());
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 	}
 
 	/**
@@ -220,12 +220,12 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t009_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setMessageInfo("");
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 	}
 
 	/**
@@ -236,12 +236,12 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t010_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setMessageInfo(" ");
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 	}
 
 	/**
@@ -252,12 +252,12 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t011_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setMessageInfo(TestConstants.stringLength257);
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 	}
 
 	/**
@@ -268,12 +268,12 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t012_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setCacheId("");
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 	}
 
 	/**
@@ -284,12 +284,12 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t013_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setCacheId(" ");
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 	}
 
 	/**
@@ -300,12 +300,12 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t014_execute() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setCacheId(TestConstants.stringLength257);
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 	}
 
 	/**
@@ -317,9 +317,9 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setDataLength(TestConstants.pangram.length());
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 
 		// disable service
 		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
@@ -329,11 +329,11 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 
 		// execute
 		request.setMessageInfo(TestConstants.echoCmd);
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -344,8 +344,8 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t040_executeBeforeCreateSession() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		response = sessionService.execute(request);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		response = sessionService1.execute(request);
 	}
 
 	/**
@@ -358,18 +358,18 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setDataLength(TestConstants.pangram.length());
 		request.setCompressed(false);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
-		String sessionId = sessionService.getSessionId();
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		String sessionId = sessionService1.getSessionId();
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 		Assert.assertEquals("sessionId is not the same", sessionId, response.getSessionId());
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -382,16 +382,16 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setCompressed(false);
 
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo(TestConstants.rejectSessionCmd);
-		msgCallback = new MsgCallback(sessionService);
+		msgCallback1 = new MsgCallback(sessionService1);
 		try {
-			response = sessionService.createSession(request, msgCallback);
+			response = sessionService1.createSession(request, msgCallback1);
 		} catch (Exception e) {
 			// ignore rejection
 		}
 		request.setMessageInfo(TestConstants.echoCmd);
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 	}
 
 	/**
@@ -403,12 +403,12 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
-		response = sessionService.execute(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
+		response = sessionService1.execute(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
 	}
 
 	/**
@@ -420,13 +420,13 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setCompressed(false);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
 		try {
-			response = sessionService.execute(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
+			response = sessionService1.execute(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
 		} catch (SCServiceException e) {
 			// will get here after 3000 ms,
 			Thread.sleep(5000); // wait 5000ms to allow server sleep request completion
@@ -434,11 +434,11 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("hallo");
 		request.setDataLength(((String) request.getData()).length());
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -450,13 +450,13 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
 		try {
-			response = sessionService.execute(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
+			response = sessionService1.execute(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
 		} catch (SCServiceException e) {
 			// will get here after 3000 ms
 			// continue immediatelly
@@ -464,11 +464,11 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("hallo");
 		request.setDataLength(((String) request.getData()).length());
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -481,20 +481,20 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setDataLength(TestConstants.pangram.length());
 		request.setCompressed(false);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoAppErrorCmd);
-		sessionService.send(request);
-		msgCallback.waitForMessage(10);
-		response = msgCallback.getResponse();
+		sessionService1.send(request);
+		msgCallback1.waitForMessage(10);
+		response = msgCallback1.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
-		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -507,20 +507,20 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setDataLength(TestConstants.pangram.length());
 		request.setCompressed(true);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
-		sessionService.send(request);
-		msgCallback.waitForMessage(10);
-		response = msgCallback.getResponse();
+		sessionService1.send(request);
+		msgCallback1.waitForMessage(10);
+		response = msgCallback1.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
-		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -533,20 +533,20 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setDataLength(TestConstants.dataLength1MB);
 		request.setCompressed(false);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(new SCMessage(), msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(new SCMessage(), msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
-		sessionService.send(request);
-		msgCallback.waitForMessage(20);
-		response = msgCallback.getResponse();
+		sessionService1.send(request);
+		msgCallback1.waitForMessage(20);
+		response = msgCallback1.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
-		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -559,20 +559,20 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setDataLength(TestConstants.dataLength1MB);
 		request.setCompressed(true);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(new SCMessage(), msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(new SCMessage(), msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
-		sessionService.send(request);
-		msgCallback.waitForMessage(20);
-		response = msgCallback.getResponse();
+		sessionService1.send(request);
+		msgCallback1.waitForMessage(20);
+		response = msgCallback1.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
-		Assert.assertEquals("sessionId is not the same", sessionService.getSessionId(), response.getSessionId());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -583,8 +583,8 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t120_sendBeforeCreateSession() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		sessionService.send(request);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		sessionService1.send(request);
 	}
 
 	/**
@@ -596,9 +596,9 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setDataLength(TestConstants.pangram.length());
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 
 		// disable service
 		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
@@ -608,13 +608,13 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 
 		// send
 		request.setMessageInfo(TestConstants.echoCmd);
-		sessionService.send(request);
-		msgCallback.waitForMessage(10);
-		response = msgCallback.getResponse();
+		sessionService1.send(request);
+		msgCallback1.waitForMessage(10);
+		response = msgCallback1.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -625,16 +625,16 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t140_rejectSession() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		request.setSessionInfo(TestConstants.rejectSessionCmd);
-		msgCallback = new MsgCallback(sessionService);
+		msgCallback1 = new MsgCallback(sessionService1);
 		try {
-			response = sessionService.createSession(request, msgCallback);
+			response = sessionService1.createSession(request, msgCallback1);
 		} catch (Exception e) {
 			// ignore rejection
 		}
 		request.setMessageInfo(TestConstants.echoCmd);
-		sessionService.send(request);
+		sessionService1.send(request);
 	}
 
 	/**
@@ -646,20 +646,20 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setDataLength(TestConstants.pangram.length());
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
-		String sessionId = sessionService.getSessionId();
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		String sessionId = sessionService1.getSessionId();
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setSessionId("aaaa0000-bb11-cc22-dd33-eeeeee444444");
-		sessionService.send(request);
-		msgCallback.waitForMessage(10);
-		response = msgCallback.getResponse();
+		sessionService1.send(request);
+		msgCallback1.waitForMessage(10);
+		response = msgCallback1.getResponse();
 		Assert.assertEquals("sessionId is not the same", sessionId, response.getSessionId());
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -670,14 +670,14 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t150_operationTimeout() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
-		sessionService.send(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
-		msgCallback.waitForMessage(10);
-		response = msgCallback.getResponse();
+		sessionService1.send(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
+		msgCallback1.waitForMessage(10);
+		response = msgCallback1.getResponse();
 		// TODO TRN check SC error
 	}
 
@@ -689,14 +689,14 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t151_operationTimeout() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
-		sessionService.send(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
-		msgCallback.waitForMessage(10); // will wait max 10 seconds for response
-		response = msgCallback.getResponse();
+		sessionService1.send(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
+		msgCallback1.waitForMessage(10); // will wait max 10 seconds for response
+		response = msgCallback1.getResponse();
 		Thread.sleep(4000); // wait 4000ms to allow server sleep request completion
 
 		// second message
@@ -704,13 +704,13 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("hallo"); // send second message
 		request.setDataLength(((String) request.getData()).length());
-		sessionService.send(request);
-		msgCallback.waitForMessage(10); // will wait max 10 seconds for the second response
-		response = msgCallback.getResponse();
+		sessionService1.send(request);
+		msgCallback1.waitForMessage(10); // will wait max 10 seconds for the second response
+		response = msgCallback1.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 
 	/**
@@ -721,23 +721,23 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	public void t152_operationTimeout() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
-		sessionService = client.newSessionService(TestConstants.sesServiceName1);
-		msgCallback = new MsgCallback(sessionService);
-		response = sessionService.createSession(request, msgCallback);
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
 		request.setMessageInfo(TestConstants.sleepCmd);
 		request.setData("5000"); // server will sleep 5000ms
-		sessionService.send(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
-		msgCallback.waitForMessage(10); // will wait max 10 seconds for response
-		response = msgCallback.getResponse();
+		sessionService1.send(3, request); // SC oti = 3*0.8*1000 = 2400ms => will return exception
+		msgCallback1.waitForMessage(10); // will wait max 10 seconds for response
+		response = msgCallback1.getResponse();
 
 		// second message
 		messageReceived = false;
 		request.setMessageInfo(TestConstants.echoCmd);
 		request.setData("gaga");
 		request.setDataLength(((String) request.getData()).length());
-		sessionService.send(request);
-		msgCallback.waitForMessage(10); // will wait max 10 seconds for response
-		response = msgCallback.getResponse();
+		sessionService1.send(request);
+		msgCallback1.waitForMessage(10); // will wait max 10 seconds for response
+		response = msgCallback1.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
@@ -745,10 +745,10 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		// third message (synchronous)
 		request.setData("abraka-dabra");
 		request.setDataLength(((String) request.getData()).length());
-		response = sessionService.execute(request);
+		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
-		sessionService.deleteSession();
+		sessionService1.deleteSession();
 	}
 }

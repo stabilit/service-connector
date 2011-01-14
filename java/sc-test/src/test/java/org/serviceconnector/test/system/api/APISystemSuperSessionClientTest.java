@@ -32,9 +32,9 @@ import org.serviceconnector.test.system.SystemSuperTest;
 public class APISystemSuperSessionClientTest extends SystemSuperTest {
 
 	protected SCClient client;
-	protected SCSessionService sessionService = null;
+	protected SCSessionService sessionService1 = null;
 	protected ProcessCtx sesSrvCtx;
-	protected MsgCallback msgCallback = null;
+	protected MsgCallback msgCallback1 = null;
 	protected static boolean messageReceived = false;
 	
 	@Before
@@ -51,10 +51,10 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 	@After
 	public void afterOneTest() throws Exception {
 		try {
-			sessionService.deleteSession();
+			sessionService1.deleteSession();
 		} catch (Exception e1) {
 		}
-		sessionService = null;
+		sessionService1 = null;
 		try {
 			client.detach();
 		} catch (Exception e) {
