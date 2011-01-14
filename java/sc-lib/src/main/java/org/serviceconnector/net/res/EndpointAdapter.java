@@ -123,13 +123,13 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 		try {
 			bool = this.answer.poll(baseConf.getConnectionTimeoutMillis(), TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "cannot start listener on port="+this.port);
 		}
 		if (bool == null) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "startup listener timed out");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "startup listener timed out on port="+this.port);
 		}
 		if (bool == false) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "listener could not start up succesfully");
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "cannot start listener on port="+this.port);
 		}
 	}
 

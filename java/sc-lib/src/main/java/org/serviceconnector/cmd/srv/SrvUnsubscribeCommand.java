@@ -96,9 +96,7 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 		try {
 			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
-			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
-			}
+			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);

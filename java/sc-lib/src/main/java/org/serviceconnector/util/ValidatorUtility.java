@@ -57,10 +57,11 @@ public final class ValidatorUtility {
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static Date validateDateTime(String dateTimeString, SCMPError error) throws SCMPValidatorException {
+	public static void validateDateTime(String dateTimeString, SCMPError error) throws SCMPValidatorException {
 		if (dateTimeString == null) {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "date time value is missing");
 		}
+		@SuppressWarnings("unused")
 		Date dateTime = null;
 		try {
 			dateTime = DateTimeUtility.parseDateString(dateTimeString);
@@ -68,7 +69,6 @@ public final class ValidatorUtility {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_LDT, dateTimeString + " should be="
 					+ Constants.SCMP_FORMAT_OF_DATE_TIME);
 		}
-		return dateTime;
 	}
 
 	/**
@@ -84,11 +84,104 @@ public final class ValidatorUtility {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "date time value is missing");
 		}
 		SimpleDateFormat SDF = new SimpleDateFormat(Constants.SCMP_FORMAT_OF_DATE_TIME);
-		@SuppressWarnings("unused")
-		Date cacheExpirationDateTime = null;
-		cacheExpirationDateTime = validateDateTime(SDF.format(dateTime), error);
+		validateDateTime(SDF.format(dateTime), error);
 	}
 
+	/**
+	 * Validate long.
+	 * 
+	 * @param lowerLimitInc
+	 *            the lower inclusive limit
+	 * @param longStringValue
+	 *            the integer string value to validate
+	 * @param upperLimitInc
+	 *            the upper inclusive limit
+	 * @param error
+	 *            the error to be thrown in case of an invalidation
+	 * @throws SCMPValidatorException
+	 *             the SCMP validator exception
+	 */
+	public static void validateLong(long lowerLimitInc, String longStringValue, SCMPError error)
+			throws SCMPValidatorException {
+		if (longStringValue == null) {
+			throw new SCMPValidatorException(error, "numeric value is missing");
+		}
+		long longValue = 0;
+		try {
+			longValue = Long.parseLong(longStringValue);
+		} catch (NumberFormatException ex) {
+			throw new SCMPValidatorException(error, "LongValue=" + longStringValue + " must be numeric");
+		}
+		ValidatorUtility.validateLong(lowerLimitInc, longValue, error);
+	}
+
+	/**
+	 * Validate long.
+	 * 
+	 * @param lowerLimitInc
+	 *            the lower limit inclusive
+	 * @param longValue
+	 *            the integer value
+	 * @param error
+	 *            the error
+	 * @throws SCMPValidatorException
+	 *             the SCMP validator exception
+	 */
+	public static void validateLong(long lowerLimitInc, long longValue, SCMPError error)
+			throws SCMPValidatorException {
+		if (longValue < lowerLimitInc) {
+			throw new SCMPValidatorException(error, "LongValue=" + longValue + " too low");
+		}
+	}
+	
+	/**
+	 * Validate long.
+	 * 
+	 * @param lowerLimitInc
+	 *            the lower inclusive limit
+	 * @param longStringValue
+	 *            the integer string value to validate
+	 * @param upperLimitInc
+	 *            the upper inclusive limit
+	 * @param error
+	 *            the error to be thrown in case of an invalidation
+	 * @throws SCMPValidatorException
+	 *             the SCMP validator exception
+	 */
+	public static void validateLong(long lowerLimitInc, String longStringValue, long upperLimitInc, SCMPError error)
+			throws SCMPValidatorException {
+		if (longStringValue == null) {
+			throw new SCMPValidatorException(error, "numeric value is missing");
+		}
+		long longValue = 0;
+		try {
+			longValue = Long.parseLong(longStringValue);
+		} catch (NumberFormatException ex) {
+			throw new SCMPValidatorException(error, "LongValue=" + longStringValue + " must be numeric");
+		}
+		ValidatorUtility.validateLong(lowerLimitInc, longValue, upperLimitInc, error);
+	}
+	
+	/**
+	 * Validate long.
+	 * 
+	 * @param lowerLimitInc
+	 *            the lower limit inclusive
+	 * @param longValue
+	 *            the integer value
+	 * @param error
+	 *            the error
+	 * @throws SCMPValidatorException
+	 *             the SCMP validator exception
+	 */
+	public static void validateLong(long lowerLimitInc, long longValue, long upperLimitInc, SCMPError error)
+			throws SCMPValidatorException {
+		if (longValue < lowerLimitInc || longValue > upperLimitInc) {
+			throw new SCMPValidatorException(error, "LongValue=" + longValue + " is not in range (" + lowerLimitInc + "-"
+					+ upperLimitInc + ")");
+		}
+	}
+	
 	/**
 	 * Validate ip address list.
 	 * 
@@ -116,11 +209,10 @@ public final class ValidatorUtility {
 	 *            the integer string value
 	 * @param error
 	 *            the error to be thrown in case of an invalidation
-	 * @return the valid integer
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static int validateInt(int lowerLimitInc, String intStringValue, SCMPError error) throws SCMPValidatorException {
+	public static void validateInt(int lowerLimitInc, String intStringValue, SCMPError error) throws SCMPValidatorException {
 		if (intStringValue == null) {
 			throw new SCMPValidatorException(error, "numeric value is missing");
 		}
@@ -128,10 +220,9 @@ public final class ValidatorUtility {
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
-			throw new SCMPValidatorException(error, "IntValue " + intStringValue + " must be numeric");
+			throw new SCMPValidatorException(error, "IntValue=" + intStringValue + " must be numeric");
 		}
 		ValidatorUtility.validateInt(lowerLimitInc, intValue, error);
-		return intValue;
 	}
 
 	/**
@@ -148,7 +239,7 @@ public final class ValidatorUtility {
 	 */
 	public static void validateInt(int lowerLimitInc, int intValue, SCMPError error) throws SCMPValidatorException {
 		if (intValue < lowerLimitInc) {
-			throw new SCMPValidatorException(error, "IntValue " + intValue + " too low");
+			throw new SCMPValidatorException(error, "IntValue=" + intValue + " too low");
 		}
 	}
 
@@ -163,11 +254,10 @@ public final class ValidatorUtility {
 	 *            the upper inclusive limit
 	 * @param error
 	 *            the error to be thrown in case of an invalidation
-	 * @return the valid integer
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static int validateInt(int lowerLimitInc, String intStringValue, int upperLimitInc, SCMPError error)
+	public static void validateInt(int lowerLimitInc, String intStringValue, int upperLimitInc, SCMPError error)
 			throws SCMPValidatorException {
 		if (intStringValue == null) {
 			throw new SCMPValidatorException(error, "numeric value is missing");
@@ -176,10 +266,9 @@ public final class ValidatorUtility {
 		try {
 			intValue = Integer.parseInt(intStringValue);
 		} catch (NumberFormatException ex) {
-			throw new SCMPValidatorException(error, "IntValue " + intStringValue + " must be numeric");
+			throw new SCMPValidatorException(error, "IntValue=" + intStringValue + " must be numeric");
 		}
 		ValidatorUtility.validateInt(lowerLimitInc, intValue, upperLimitInc, error);
-		return intValue;
 	}
 
 	/**
@@ -199,7 +288,7 @@ public final class ValidatorUtility {
 	public static void validateInt(int lowerLimitInc, int intValue, int upperLimitInc, SCMPError error)
 			throws SCMPValidatorException {
 		if (intValue < lowerLimitInc || intValue > upperLimitInc) {
-			throw new SCMPValidatorException(error, "IntValue " + intValue + " is not in range (" + lowerLimitInc + "-"
+			throw new SCMPValidatorException(error, "IntValue=" + intValue + " is not in range (" + lowerLimitInc + "-"
 					+ upperLimitInc + ")");
 		}
 	}
@@ -247,7 +336,7 @@ public final class ValidatorUtility {
 		int length = stringValue.trim().getBytes().length;
 
 		if (length < minSizeInc || length > maxSizeInc) {
-			throw new SCMPValidatorException(error, "StringValue length " + length + " is not in range (" + minSizeInc + "-"
+			throw new SCMPValidatorException(error, "StringValue length=" + length + " is not in range (" + minSizeInc + "-"
 					+ maxSizeInc + ")");
 		}
 	}
@@ -270,7 +359,7 @@ public final class ValidatorUtility {
 
 		for (int i = 0; i < buffer.length; i++) {
 			if (ValidatorUtility.isCharacterAllowed(buffer[i]) == false) {
-				throw new SCMPValidatorException(error, "String value contains forbidden character " + new String(buffer));
+				throw new SCMPValidatorException(error, "String value contains forbidden character=" + new String(buffer));
 			}
 		}
 	}
@@ -282,7 +371,7 @@ public final class ValidatorUtility {
 	 *            the character to check
 	 * @return true, if is character allowed
 	 */
-	public static boolean isCharacterAllowed(byte ch) {
+	private static boolean isCharacterAllowed(byte ch) {
 		return ch != 61 && ch >= 32 && ch < 127;
 	}
 }

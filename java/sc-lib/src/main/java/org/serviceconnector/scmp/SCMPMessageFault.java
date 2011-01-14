@@ -46,6 +46,16 @@ public class SCMPMessageFault extends SCMPMessage {
 	 * 
 	 * @param error
 	 *            the error code
+	 */
+	public SCMPMessageFault(SCMPError error) {
+		this.setError(error);
+	}
+
+	/**
+	 * Instantiates a new SCMP fault message.
+	 * 
+	 * @param error
+	 *            the error code
 	 * @param additionalInfo
 	 *            the additional info
 	 */
@@ -53,6 +63,19 @@ public class SCMPMessageFault extends SCMPMessage {
 		this.setError(error, additionalInfo);
 	}
 
+	/**
+	 * Instantiates a new SCMP fault.
+	 * 
+	 * @param e
+	 *            the e
+	 * @param error
+	 *            the error
+	 */
+	public SCMPMessageFault(Exception e, SCMPError error) {
+		this.setError(error);
+		this.exception = e;
+	}
+	
 	/**
 	 * Instantiates a new SCMP fault.
 	 * 

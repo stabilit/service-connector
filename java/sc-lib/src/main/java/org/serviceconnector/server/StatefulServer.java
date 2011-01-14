@@ -291,8 +291,7 @@ public class StatefulServer extends Server {
 			// no need for forwarding message id
 			SCMPMessage abortMessage = new SCMPMessage();
 			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText() + " [" + reason
-					+ "]");
+			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText(reason));
 			abortMessage.setServiceName(this.getServiceName());
 			abortMessage.setSessionId(session.getId());
 			abortMessage
@@ -319,7 +318,7 @@ public class StatefulServer extends Server {
 		// set up server abort session message
 		SCMPMessage abortMessage = new SCMPMessage();
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText() + " [" + reason + "]");
+		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText(reason));
 		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, AppContext.getBasicConfiguration().getSrvAbortTimeout());
 
 		for (AbstractSession session : this.sessions) {

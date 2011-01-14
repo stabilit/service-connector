@@ -18,9 +18,6 @@ package org.serviceconnector.test.unit;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-
-import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -47,19 +44,12 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 	 * Expectation: passes
 	 */
 	@Test
-	@SuppressWarnings("deprecation")
-	public final void t01_validateLocalDateTimeTest() {
+	public final void t01_validateLocalDateTimeTest() throws SCMPValidatorException {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(System.currentTimeMillis());
 		java.util.Date date = cal.getTime();
-
 		String localDateTimeString = SDF.format(date);
-		try {
-			Date validDate = ValidatorUtility.validateDateTime(localDateTimeString, SCMPError.HV_WRONG_LDT);
-			Assert.assertEquals(date.toGMTString(), validDate.toGMTString());
-		} catch (SCMPValidatorException ex) {
-			logger.error("validateLocalDateTimeTest", ex);
-		}
+		ValidatorUtility.validateDateTime(localDateTimeString, SCMPError.HV_WRONG_LDT);
 	}
 
 	/**
@@ -67,138 +57,184 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t10_validateIpAddressList() {
-		try {
-			// simply one ip address
-			ValidatorUtility.validateIpAddressList("127.0.0.1");
-			// two ip addresses
-			ValidatorUtility.validateIpAddressList("127.0.0.1/10.0.0.13");
-			// five ip addresses, several correct formats
-			ValidatorUtility.validateIpAddressList("127.0.0.1/10.0.0.1/1.1.1.1/150.100.100.103/1.123.120.121");
-		} catch (SCMPValidatorException e) {
-			Assert.fail("Should not throw exception");
-		}
-
-		try {
-			// wrong format of ip address, too many digits
-			ValidatorUtility.validateIpAddressList("127.0.0.1545");
-			Assert.fail("Should throw exception");
-		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_IPLIST.getErrorText() + " [127.0.0.1545]", e.getMessage());
-		}
-
-		try {
-			// wrong format of ip address, missing digits
-			ValidatorUtility.validateIpAddressList("127.0.0");
-			Assert.fail("Should throw exception");
-		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_IPLIST.getErrorText() + " [127.0.0]", e.getMessage());
-		}
-
-		try {
-			// wrong format of ip address, delimiter forbidden
-			ValidatorUtility.validateIpAddressList("127.0.0.1/");
-			Assert.fail("Should throw exception");
-		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_IPLIST.getErrorText() + " [127.0.0.1/]", e.getMessage());
-		}
+	public void t02_validateIpAddressList() throws SCMPValidatorException {
+		// simply one ip address
+		ValidatorUtility.validateIpAddressList("127.0.0.1");
+		// two ip addresses
+		ValidatorUtility.validateIpAddressList("127.0.0.1/10.0.0.13");
+		// five ip addresses, several correct formats
+		ValidatorUtility.validateIpAddressList("127.0.0.1/10.0.0.1/1.1.1.1/150.100.100.103/1.123.120.121");
 	}
+
+	/**
+	 * Description: Validate ip address list wrong format of ip address, too many digits<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t03_validateIpAddressList() throws SCMPValidatorException {
+		ValidatorUtility.validateIpAddressList("127.0.0.1545");
+	}
+
+	/**
+	 * Description: Validate ip address list wrong format of ip address, missing digits<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t04_validateIpAddressList() throws SCMPValidatorException {
+		ValidatorUtility.validateIpAddressList("127.0.0");
+	}
+	
+	/**
+	 * Description: Validate ip address list delimiter forbidden<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t05_validateIpAddressList() throws SCMPValidatorException {
+		ValidatorUtility.validateIpAddressList("127.0.0.1/");
+	}
+
 
 	/**
 	 * Description: Validate integer test<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t20_validateIntTest() {
-		// validate int value with lower limit
-		try {
-			// greater than lowerLimit
-			ValidatorUtility.validateInt(0, "1", SCMPError.HV_WRONG_MAX_SESSIONS);
-		} catch (SCMPValidatorException e) {
-			Assert.fail("Should not throw exception");
-		}
-
-		try {
-			// lower than lowerLimit
-			ValidatorUtility.validateInt(0, "-1", SCMPError.HV_WRONG_MAX_SESSIONS);
-			Assert.fail("Should throw exception");
-		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_MAX_SESSIONS.getErrorText() + " [IntValue -1 too low]", e.getMessage());
-		}
-
-		try {
-			// no nummeric value
-			ValidatorUtility.validateInt(0, "", SCMPError.HV_WRONG_MAX_SESSIONS);
-			Assert.fail("Should throw exception");
-		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_MAX_SESSIONS.getErrorText() + " [IntValue  must be numeric]", e.getMessage());
-		}
-
-		// validate int value with lower & upper limit
-		try {
-			// greater than lowerLimit and lower than upperLimit
-			ValidatorUtility.validateInt(0, "1", 2, SCMPError.HV_WRONG_PORTNR);
-		} catch (SCMPValidatorException e) {
-			Assert.fail("Should not throw exception");
-		}
-
-		try {
-			// lower than lowerLimit
-			ValidatorUtility.validateInt(0, "-1", 2, SCMPError.HV_WRONG_PORTNR);
-			Assert.fail("Should throw exception");
-		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue -1 is not in range (0-2)]", e.getMessage());
-		}
-
-		try {
-			// higher than upperLimit
-			ValidatorUtility.validateInt(0, "3", 2, SCMPError.HV_WRONG_PORTNR);
-			Assert.fail("Should throw exception");
-		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue 3 is not in range (0-2)]", e.getMessage());
-		}
-
-		try {
-			// no nummeric value
-			ValidatorUtility.validateInt(0, "", 1, SCMPError.HV_WRONG_PORTNR);
-			Assert.fail("Should throw exception");
-		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_PORTNR.getErrorText() + " [IntValue  must be numeric]", e.getMessage());
-		}
+	public void t20_validateIntTest() throws SCMPValidatorException {
+		ValidatorUtility.validateInt(0, "1", SCMPError.HV_WRONG_MAX_SESSIONS);
 	}
 
+	
+	/**
+	 * Description: Validate integer test lower than lowerLimit<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t21_validateIntTest() throws SCMPValidatorException {
+		ValidatorUtility.validateInt(0, "-1", SCMPError.HV_WRONG_MAX_SESSIONS);
+	}
+
+	/**
+	 * Description: Validate integer no nummeric value<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t22_validateIntTest() throws SCMPValidatorException {
+		ValidatorUtility.validateInt(0, "", SCMPError.HV_WRONG_MAX_SESSIONS);
+	}
+	
+	/**
+	 * Description: Validate integer value with lower & upper limit<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t23_validateIntTest() throws SCMPValidatorException {
+		ValidatorUtility.validateInt(0, "1", 2, SCMPError.HV_WRONG_PORTNR);
+	}
+
+	
+	/**
+	 * Description: Validate integer lower than lowerLimit<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t24_validateIntTest() throws SCMPValidatorException {
+		ValidatorUtility.validateInt(0, "-1", 2, SCMPError.HV_WRONG_PORTNR);
+	}
+
+	
+	/**
+	 * Description: Validate integer higher than upperLimit<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t25_validateIntTest() throws SCMPValidatorException {
+		ValidatorUtility.validateInt(0, "3", 2, SCMPError.HV_WRONG_PORTNR);
+	}
+
+	/**
+	 * Description: Validate integer no nummeric value<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t26_validateIntTest() throws SCMPValidatorException {
+		ValidatorUtility.validateInt(0, "", 1, SCMPError.HV_WRONG_PORTNR);
+	}
+
+	
+	/**
+	 * Description: Validate integer test<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t30_validateLongTest() throws SCMPValidatorException {
+		ValidatorUtility.validateLong(0, "1", SCMPError.HV_WRONG_MAX_SESSIONS);
+	}
+	
+	/**
+	 * Description: Validate integer test lower than lowerLimit<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t31_validateLongTest() throws SCMPValidatorException {
+		ValidatorUtility.validateLong(0, "-1", SCMPError.HV_WRONG_MAX_SESSIONS);
+	}
+
+	/**
+	 * Description: Validate integer no nummeric value<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t32_validateLongTest() throws SCMPValidatorException {
+		ValidatorUtility.validateLong(0, "", SCMPError.HV_WRONG_MAX_SESSIONS);
+	}
+	
+	/**
+	 * Description: Validate integer value with lower & upper limit<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t33_validateLongTest() throws SCMPValidatorException {
+		ValidatorUtility.validateLong(0, "1", 2, SCMPError.HV_WRONG_PORTNR);
+	}
+
+	
+	/**
+	 * Description: Validate integer lower than lowerLimit<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t34_validateLongTest() throws SCMPValidatorException {
+		ValidatorUtility.validateLong(0, "-1", 2, SCMPError.HV_WRONG_PORTNR);
+	}
+	
 	/**
 	 * Description: Validate string test<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t30_validateStringTest() {
-
-		try {
-			// length is between 1 and 4
-			ValidatorUtility.validateStringLength(1, "abc", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
-			// length is between 1 and 4
-			ValidatorUtility.validateStringLength(1, "a", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
-		} catch (SCMPValidatorException e) {
-			Assert.fail("Should not throw exception");
-		}
-
-		try {
-			// length is shorter than 2
-			ValidatorUtility.validateStringLength(2, "a", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
-			Assert.fail("Should throw exception");
-		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_SESSION_INFO.getErrorText()
-					+ " [StringValue length 1 is not in range (2-4)]", e.getMessage());
-		}
-
-		try {
-			// length is longer than 2
-			ValidatorUtility.validateStringLength(1, "abc", 2, SCMPError.HV_WRONG_SESSION_INFO);
-			Assert.fail("Should throw exception");
-		} catch (SCMPValidatorException e) {
-			Assert.assertEquals(SCMPError.HV_WRONG_SESSION_INFO.getErrorText()
-					+ " [StringValue length 3 is not in range (1-2)]", e.getMessage());
-		}
+	public void t40_validateStringTest() throws SCMPValidatorException {
+		// length is between 1 and 4
+		ValidatorUtility.validateStringLength(1, "abc", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
+		// length is between 1 and 4
+		ValidatorUtility.validateStringLength(1, "a", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
 	}
+
+	/**
+	 * Description: Validate string test length is shorter than 2<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t41_validateStringTest() throws SCMPValidatorException {
+		ValidatorUtility.validateStringLength(2, "a", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
+	}
+
+	/**
+	 * Description: Validate string test length is longer than 2<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t42t40_validateStringTest_validateStringTest() throws SCMPValidatorException {
+		ValidatorUtility.validateStringLength(1, "abc", 2, SCMPError.HV_WRONG_SESSION_INFO);
+	}
+
 }

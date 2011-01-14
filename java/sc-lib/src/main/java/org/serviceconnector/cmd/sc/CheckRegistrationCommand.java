@@ -67,7 +67,7 @@ public class CheckRegistrationCommand extends CommandAdapter {
 		Server server = this.serverRegistry.getServer(serverKey);
 		if (server == null) {
 			// server does not exist =>
-			SCMPCommandException cmdExc = new SCMPCommandException(SCMPError.NO_SERVER, "server key " + serverKey);
+			SCMPCommandException cmdExc = new SCMPCommandException(SCMPError.NO_SERVER, "server=" + serverKey);
 			cmdExc.setMessageType(getKey());
 			throw cmdExc;
 		}

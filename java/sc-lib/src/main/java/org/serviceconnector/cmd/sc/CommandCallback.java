@@ -34,13 +34,6 @@ public class CommandCallback extends SynchronousCallback {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(CommandCallback.class);
 
-	/** The Constant ERROR_STRING. */
-	protected static final String ERROR_STRING_TIMEOUT = "Operation timeout expired on SC";
-	/** The Constant ERROR_STRING_CONNECTION. */
-	protected static final String ERROR_STRING_CONNECTION = "broken connection";
-	/** The Constant ERROR_STRING_FAIL. */
-	protected static final String ERROR_STRING_FAIL = "executing command failed";
-
 	public CommandCallback() {
 		super();
 	}
@@ -55,13 +48,13 @@ public class CommandCallback extends SynchronousCallback {
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT_EXPIRED, ERROR_STRING_TIMEOUT);
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT_EXPIRED, "Operation timeout expired on SC");
 		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, ERROR_STRING_CONNECTION);
+			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection");
 		} else if (ex instanceof ConnectionPoolBusyException) {
-			fault = new SCMPMessageFault(ex, SCMPError.SC_ERROR, ERROR_STRING_FAIL);
+			fault = new SCMPMessageFault(ex, SCMPError.NO_FREE_CONNECTION);
 		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, ERROR_STRING_FAIL);
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing command failed");
 		}
 		super.receive(fault);
 	}

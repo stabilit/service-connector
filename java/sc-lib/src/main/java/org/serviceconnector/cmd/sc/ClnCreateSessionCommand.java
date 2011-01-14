@@ -102,7 +102,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			// TODO JOT cascaded service
 			break;
 		default:
-			throw new SCMPCommandException(SCMPError.SC_ERROR, "create session command not allowed for service " + serviceName);
+			throw new SCMPCommandException(SCMPError.SC_ERROR, "create session not allowed for service " + serviceName);
 		}
 
 		// create session
@@ -139,8 +139,9 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 					logger.warn("ConnectionPoolBusyException caught in wait mec of create session");
 					if (i >= (tries - 1)) {
 						// only one loop outstanding - don't continue throw current exception
+						logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
-								"no free connection on server for service " + reqMessage.getServiceName());
+								"service=" + reqMessage.getServiceName());
 						scmpCommandException.setMessageType(this.getKey());
 						throw scmpCommandException;
 					}
@@ -193,9 +194,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			SCMPMessage message = request.getMessage();
 			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
-			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
-			}
+			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = (String) message.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);

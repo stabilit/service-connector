@@ -53,7 +53,13 @@ public class CacheLogger {
 			cacheLogger.info(message);
 		}
 	}
-
+	
+	public static void error(String message) {
+		if (cacheLogger.isEnabledFor(Level.ERROR)) {
+			cacheLogger.error(message);
+		}
+	}
+	
 	public static void error(String message, Exception e) {
 		if (cacheLogger.isEnabledFor(Level.ERROR)) {
 			cacheLogger.error(message, e);

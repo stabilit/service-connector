@@ -70,7 +70,7 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
 			logger.error("connect failed to " + this.localSocketAddress.toString(), ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect failed to "
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP="
 					+ this.localSocketAddress.toString());
 		}
 		if (ConnectionLogger.isEnabled()) {

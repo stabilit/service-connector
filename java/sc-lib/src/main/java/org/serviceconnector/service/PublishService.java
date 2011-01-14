@@ -78,7 +78,7 @@ public class PublishService extends StatefulService {
 
 		if (this.listOfServers.size() == 0) {
 			// no server registered for this service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SERVER, "for service "
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_SERVER, "service="
 					+ msgToForward.getServiceName());
 			scmpCommandException.setMessageType(msgToForward.getMessageType());
 			throw scmpCommandException;
@@ -97,7 +97,7 @@ public class PublishService extends StatefulService {
 			}
 		}
 		// no free server available
-		NoFreeServerException noFreeSessionExc = new NoFreeServerException(SCMPError.NO_FREE_SERVER, "for service "
+		NoFreeServerException noFreeSessionExc = new NoFreeServerException(SCMPError.NO_FREE_SERVER, "service="
 				+ msgToForward.getServiceName());
 		noFreeSessionExc.setMessageType(msgToForward.getMessageType());
 		throw noFreeSessionExc;

@@ -88,10 +88,8 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	HV_WRONG_SERVICE_NAME("441", "Invalid service name value."),
 	/** The HV_WRONG_MESSAGE_INFO. */
 	HV_WRONG_MESSAGE_INFO("442", "Invalid message info value."),
-	
 	/** The HV_WRONG_MESSAGE_SEQUENCE_NR. */
-	HV_WRONG_MESSAGE_SEQUENCE_NR("443", "Invalid message sequence number value."),	// TODO TRN
-	
+	HV_WRONG_MESSAGE_SEQUENCE_NR("443", "Invalid message sequence number value."),
 	/** The HV_WRONG_REMOTE_FILE_NAME. */
 	HV_WRONG_REMOTE_FILE_NAME("444", "Invalid remote file name value."),
 	/** The HV_WRONG_MESSAGE_ID. */
@@ -107,26 +105,27 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The V_WRONG_CONFIGURATION_FILE_FORMAT. */
 	V_WRONG_CONFIGURATION_FILE("450", "Invalid configuration file."),
 
-	/** 5xx errors caused by server */
+
 	/** The SERVER_ERROR. */
 	SERVER_ERROR("500", "Server error occured."),
 	/** The service is DISABLED. */
 	SERVICE_DISABLED("501", "Service is disabled."),
-	
 	/** The OPERATION_TIMEOUT_EXPIRED. */
 	OPERATION_TIMEOUT_EXPIRED("504", "The server did not timely respond to the request."),
 	/** The UPLOAD_FILE_FAILED. */
 	UPLOAD_FILE_FAILED("505", "Uploading file failed."),
-	/** 6xx errors caused by service connector */
+
+	
+	/** The SC_ERROR. */
 	SC_ERROR("600", "Service connector error."),
-	/** The NO_FREE_SERVER. */
+	/** The NO_SERVER. */
 	NO_SERVER("601", "No server."),
-	/** The SERVER_ALREADY_REGISTERED for this service. */
-	SERVER_ALREADY_REGISTERED("602", "Server already registered for the service."),
-	/** The NO_FREE_SESSION. */
+	/** The NO_FREE_SERVER. */
 	NO_FREE_SERVER("603", "No free server available."),
 	/** The NO_FREE_CONNECTION. */
-	NO_FREE_CONNECTION("608", "No free connection available."),
+	NO_FREE_CONNECTION("608", "No free connection to server available."),
+	/** The SERVER_ALREADY_REGISTERED for this service. */
+	SERVER_ALREADY_REGISTERED("602", "Server already registered for the service."),
 	/** The FRAME_DECODER. */
 	FRAME_DECODER("606", "Unable to decode frame, SCMP headline is wrong."),
 	/** The SESSION_ABORT. */
@@ -136,7 +135,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The CACHE_ERROR. */
 	CACHE_ERROR("620", "Cache Error."),
 	/** The CACHE_LOADING. */
-	CACHE_LOADING("621", "Cache Loading.");
+	CACHE_LOADING("621", "Cache Loading. Retry later");
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPError.class);

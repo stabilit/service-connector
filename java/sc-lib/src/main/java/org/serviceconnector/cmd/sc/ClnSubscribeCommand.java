@@ -107,8 +107,9 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				} catch (ConnectionPoolBusyException ex) {
 					if (i >= (tries - 1)) {
 						// only one loop outstanding - don't continue throw current exception
+						logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
-								"no free connection on server for service " + reqMessage.getServiceName());
+								"service=" + reqMessage.getServiceName());
 						scmpCommandException.setMessageType(this.getKey());
 						throw scmpCommandException;
 					}
@@ -165,9 +166,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		try {
 			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
-			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
-			}
+			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);

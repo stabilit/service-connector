@@ -98,7 +98,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		} catch (Exception ex) {
 			logger.error("immediate connect", ex);
 			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
-					"immediate connect failed for server key " + serverKey);
+					"immediate connect to server=" + serverKey);
 			communicationException.setMessageType(getKey());
 			throw communicationException;
 		}
@@ -129,7 +129,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		Server server = this.serverRegistry.getServer(key);
 		if (server != null) {
 			// server registered two times for this service
-			SCMPCommandException cmdExc = new SCMPCommandException(SCMPError.SERVER_ALREADY_REGISTERED, "server key " + key);
+			SCMPCommandException cmdExc = new SCMPCommandException(SCMPError.SERVER_ALREADY_REGISTERED, "server=" + key);
 			cmdExc.setMessageType(getKey());
 			throw cmdExc;
 		}
@@ -151,11 +151,12 @@ public class RegisterServerCommand extends CommandAdapter {
 			ValidatorUtility.validateDateTime(message.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME), SCMPError.HV_WRONG_LDT);
 			// maxSessions - validate with lower limit 1 mandatory
 			String maxSessionsValue = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
-			int maxSessions = ValidatorUtility.validateInt(1, maxSessionsValue, SCMPError.HV_WRONG_MAX_SESSIONS);
+			ValidatorUtility.validateInt(1, maxSessionsValue, SCMPError.HV_WRONG_MAX_SESSIONS);
+			int maxSessions = Integer.parseInt(maxSessionsValue); 
 			// maxConnections - validate with lower limit 1 & higher limit maxSessions mandatory
 			String maxConnectionsValue = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_CONNECTIONS);
-			int maxConnections = ValidatorUtility.validateInt(1, maxConnectionsValue, maxSessions,
-					SCMPError.HV_WRONG_MAX_CONNECTIONS);
+			ValidatorUtility.validateInt(1, maxConnectionsValue, maxSessions, SCMPError.HV_WRONG_MAX_CONNECTIONS);
+			int maxConnections = Integer.parseInt(maxConnectionsValue);				
 			if (maxConnections == 1 && maxSessions != 1) {
 				// invalid configuration
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MAX_SESSIONS, "maxSessions must be 1 if maxConnections is 1");

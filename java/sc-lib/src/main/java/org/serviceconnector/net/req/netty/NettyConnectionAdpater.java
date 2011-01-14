@@ -103,7 +103,7 @@ public abstract class NettyConnectionAdpater implements IConnection {
 			this.operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis());
 		} catch (CommunicationException ex) {
 			logger.error("disconnect", ex);
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect failed from "
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect from IP="
 					+ this.localSocketAddress.toString());
 		}
 		if (ConnectionLogger.isEnabled()) {

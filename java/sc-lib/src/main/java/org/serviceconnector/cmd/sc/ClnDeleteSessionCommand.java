@@ -60,8 +60,8 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response) throws Exception {
-		SCMPMessage message = request.getMessage();
-		String sessionId = message.getSessionId();
+		SCMPMessage reqMessage = request.getMessage();
+		String sessionId = reqMessage.getSessionId();
 		// lookup session and checks properness
 		Session session = this.getSessionById(sessionId);
 		// delete entry from session registry
@@ -88,7 +88,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 
 		StatefulServer statefulServer = (StatefulServer) abstractServer;
 		CommandCallback callback;
-		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
@@ -97,15 +97,16 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			callback = new CommandCallback(true);
 			try {
 				otiOnServerMillis = oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-				statefulServer.deleteSession(message, callback, otiOnServerMillis);
+				statefulServer.deleteSession(reqMessage, callback, otiOnServerMillis);
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					statefulServer.abortSessionsAndDestroy("deleting session failed, connection pool to server busy");
+					logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
-							"no free connection on server for service " + message.getServiceName());
+							"service=" + reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
@@ -137,9 +138,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		try {
 			// msgSequenceNr mandatory
 			String msgSequenceNr = message.getMessageSequenceNr();
-			if (msgSequenceNr == null || msgSequenceNr.equals("")) {
-				throw new SCMPValidatorException(SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR, "msgSequenceNr must be set");
-			}
+			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = (String) message.getServiceName();
 			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
