@@ -238,7 +238,7 @@ public abstract class CommandAdapter implements ICommand {
 
 	
 	/** {@inheritDoc} */
-	// @Override TODO JOT DRINGEND
+	// @Override TODO JOT DRINGEND ich habe @Override auskommentiert, weil es sonst nicht kompiliert
 	public void run(IRequest request, IResponse response) throws Exception {
 		throw new UnsupportedOperationException("not allowed");
 	}
@@ -250,7 +250,7 @@ public abstract class CommandAdapter implements ICommand {
 	}
 
 	/** {@inheritDoc} */
-	// @Override TODO JOT DRINGEND
+	// @Override TODO JOT DRINGEND ich habe @Override auskommentiert, weil es sonst nicht kompiliert
 	public boolean isAsynchronous() {
 		return false;
 	}
