@@ -170,7 +170,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.invoke(cbk, 1000);
 		SCMPMessage reply = cbk.getMessageSync(3000);
 		Assert.assertTrue(reply.isFault());
-		TestUtil.verifyError(reply, SCMPError.NOT_FOUND, SCMPMsgType.REGISTER_SERVER);
+		TestUtil.verifyError(reply, SCMPError.SERVICE_NOT_FOUND, SCMPMsgType.REGISTER_SERVER);
 	}
 
 	/**
@@ -230,6 +230,6 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		SCMPMessage reply = cbk.getMessageSync(8000);
 		Assert.assertTrue(reply.isFault());
 		Assert.assertEquals(SCMPMsgType.DEREGISTER_SERVER.getValue(), reply.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
-		Assert.assertEquals(SCMPError.NOT_FOUND.getErrorCode(), reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
+		Assert.assertEquals(SCMPError.SERVER_NOT_FOUND.getErrorCode(), reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 	}
 }

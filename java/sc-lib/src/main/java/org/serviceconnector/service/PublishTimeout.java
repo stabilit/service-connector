@@ -89,23 +89,23 @@ public class PublishTimeout implements ITimeout {
 			logger.debug("timeout publishTimer datapointer subscriptionId " + subscriptionId);
 			Subscription subscription = subscriptionRegistry.getSubscription(subscriptionId);
 			if (subscription == null) {
-				logger.debug("subscription not found - subscription has already been deleted subscriptionId " + subscriptionId);
+				logger.debug("subscription not found - already deleted subscriptionId=" + subscriptionId);
 				// subscription has already been deleted
-				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.NOT_FOUND, "subscription not found");
+				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SUBSCRIPTION_NOT_FOUND, subscriptionId);
 				fault.setMessageType(reqMsg.getMessageType());
 				response.setSCMP(fault);
 			} else {
 				// tries polling from queue
 				SCMPMessage message = this.subscriptionQueue.getMessage(subscriptionId);
 				if (message == null) {
-					logger.debug("no message found on queue - subscription timeout set up no data message subscriptionId "
+					logger.debug("no message found on queue - subscription timeout set up no data message subscriptionId="
 							+ subscriptionId);
 					// no message found on queue - subscription timeout set up no data message
 					reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 					reqMsg.setIsReply(true);
 					this.response.setSCMP(reqMsg);
 				} else {
-					logger.debug("message found on queue - subscription timeout set up reply message subscriptionId "
+					logger.debug("message found on queue - subscription timeout set up reply message subscriptionId="
 							+ subscriptionId);
 					// set up reply
 					SCMPMessage reply = null;

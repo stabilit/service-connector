@@ -382,7 +382,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 			SCMPMessage fault = null;
 			if (ex instanceof IdleTimeoutException) {
 				// operation timeout handling
-				fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT_EXPIRED, "Operation timeout expired on SC");
+				fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC");
 			} else if (ex instanceof IOException) {
 				fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server");
 			} else {

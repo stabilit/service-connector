@@ -84,9 +84,7 @@ public class InspectCommand extends CommandAdapter {
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
 			return;
-		}
-
-		if (bodyString.startsWith(Constants.STATE)) {
+		} else if (bodyString.startsWith(Constants.STATE)) {
 			// state for service requested
 			String serviceName = bodyString.substring(6);
 			logger.debug("state request for service:" + serviceName);
@@ -103,24 +101,21 @@ public class InspectCommand extends CommandAdapter {
 					logger.debug("service:" + serviceName + "is state unknown");
 				}
 			} else {
-				logger.debug("service:" + serviceName + " not found");
-				scmpReply = new SCMPMessageFault(SCMPError.NOT_FOUND, "service=" + serviceName + " not found");
+				logger.debug("service=" + serviceName + " not found");
+				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			}
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
 			return;
-		}
-
-		if (bodyString.startsWith(Constants.SESSIONS)) {
+		} else if (bodyString.startsWith(Constants.SESSIONS)) {
 			// state for service requested
 			String serviceName = bodyString.substring(9);
 			logger.debug("sessions request for service:" + serviceName);
 			Service service = this.getService(serviceName);
 			if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE) {
-				// no service known with incoming serviceName
-				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service=" + serviceName
-						+ " is not known service");
+				// wrong service type
+				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName);
 				scmpCommandException.setMessageType(getKey());
 				throw scmpCommandException;
 			}
@@ -130,9 +125,13 @@ public class InspectCommand extends CommandAdapter {
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
 			return;
+		} else {
+			logger.error("wrong inspect command body=" + bodyString); // body has bad syntax
+			scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_INSPECT_COMMAND, bodyString);
+			response.setSCMP(scmpReply);
 		}
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
 	public void validate(IRequest request) throws Exception {

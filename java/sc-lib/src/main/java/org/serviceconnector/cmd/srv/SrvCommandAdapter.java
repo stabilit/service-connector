@@ -78,12 +78,9 @@ public abstract class SrvCommandAdapter implements ICommand {
 		IResponder responder = AppContext.getResponderRegistry().getCurrentResponder();
 		int listenerPort = responder.getResponderConfig().getPort();
 		SrvService srvService = srvServiceRegistry.getSrvService(serviceName + "_" + listenerPort);
-
 		if (srvService == null) {
-			// incoming srvService not found
-			logger.warn("command error: service " + serviceName + "_" + listenerPort + " not found in service registry");
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, serviceName
-					+ " not found in service registry");
+			logger.warn("service=" + serviceName + " port=" + listenerPort + " not found in registry");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			scmpCommandException.setMessageType(this.getKey());
 			throw scmpCommandException;
 		}
@@ -101,12 +98,9 @@ public abstract class SrvCommandAdapter implements ICommand {
 	 */
 	protected SrvSessionService getSrvSessionServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
-
 		if (srvService instanceof SrvSessionService == false) {
-			// incoming srvService not found
-			logger.warn("command error: service " + serviceName + " not found in service registry");
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, serviceName
-					+ " not found in service registry");
+			logger.warn("service=" + serviceName + " not found in registry");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			scmpCommandException.setMessageType(this.getKey());
 			throw scmpCommandException;
 		}
@@ -125,10 +119,8 @@ public abstract class SrvCommandAdapter implements ICommand {
 	protected SrvPublishService getSrvPublishServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
 		if (srvService instanceof SrvPublishService == false) {
-			// incoming srvService not found
-			logger.warn("command error: service " + serviceName + " not found in service registry");
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, serviceName
-					+ " not found in service registry");
+			logger.warn("service=" + serviceName + " not found in registry");
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			scmpCommandException.setMessageType(this.getKey());
 			throw scmpCommandException;
 		}

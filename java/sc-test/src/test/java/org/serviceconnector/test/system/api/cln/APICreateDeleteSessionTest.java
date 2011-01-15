@@ -45,45 +45,6 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 	}
 
 	/**
-	 * Description: create session with service name = ""<br>
-	 * Expectation: throws SCServiceException
-	 */
-	@Test(expected = SCServiceException.class)
-	public void t02_createSession() throws Exception {
-		SCMessage request = new SCMessage();
-		SCMessage response = null;
-		sessionService1 = client.newSessionService("");
-		msgCallback1 = new MsgCallback(sessionService1);
-		response = sessionService1.createSession(request, msgCallback1);
-	}
-
-	/**
-	 * Description: create session with service name = " "<br>
-	 * Expectation: throws SCServiceException
-	 */
-	@Test(expected = SCServiceException.class)
-	public void t03_createSession() throws Exception {
-		SCMessage request = new SCMessage();
-		SCMessage response = null;
-		sessionService1 = client.newSessionService(" ");
-		msgCallback1 = new MsgCallback(sessionService1);
-		response = sessionService1.createSession(request, msgCallback1);
-	}
-
-	/**
-	 * Description: create session with service name = "The quick brown fox jumps over a lazy dog."<br>
-	 * Expectation: throws SCServiceException (too long)
-	 */
-	@Test(expected = SCServiceException.class)
-	public void t04_createSession() throws Exception {
-		SCMessage request = new SCMessage();
-		SCMessage response = null;
-		sessionService1 = client.newSessionService(TestConstants.pangram);
-		msgCallback1 = new MsgCallback(sessionService1);
-		response = sessionService1.createSession(request, msgCallback1);
-	}
-
-	/**
 	 * Description: create session service with service name = "service = gaga"<br>
 	 * Expectation: throws SCMPValidatorException (contains "=")
 	 */

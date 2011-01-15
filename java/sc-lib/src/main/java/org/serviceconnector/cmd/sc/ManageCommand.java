@@ -99,8 +99,8 @@ public class ManageCommand extends CommandAdapter {
 
 		Matcher m = MANAGE_PATTERN.matcher(bodyString);
 		if (!m.matches()) {
-			logger.error("wrong body syntax:" + bodyString); // body has bad syntax
-			scmpReply = new SCMPMessageFault(SCMPError.NOT_FOUND, "wrong body syntax");
+			logger.error("wrong manage command body=" + bodyString); // body has bad syntax
+			scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_MANAGE_COMMAND, bodyString);
 			response.setSCMP(scmpReply);
 			return;
 		}
@@ -120,8 +120,8 @@ public class ManageCommand extends CommandAdapter {
 				this.serviceRegistry.getService(serviceName).setState(ServiceState.DISABLED);
 			}
 		} else {
-			logger.debug("service:" + serviceName + " not found");
-			scmpReply = new SCMPMessageFault(SCMPError.NOT_FOUND, "service:" + serviceName + " not found");
+			logger.debug("service=" + serviceName + " not found");
+			scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
 		}
 		response.setSCMP(scmpReply);
 		// initiate responder to send reply

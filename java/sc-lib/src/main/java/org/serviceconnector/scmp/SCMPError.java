@@ -30,19 +30,25 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	UNDEFINED("000", "Undefined error."),
 	/** 4xx errors caused by incomming request */
 	/** The bad request. */
-	BAD_REQUEST("400", "Bad request. The incomming request could not be understood due to malformed syntax."),
-	/** The NOT_FOUND. */
-	NOT_FOUND("404", "Not found."), 		// TODO TRN splitt
+	BAD_REQUEST("400", "Bad request. The incoming request could not be understood due to malformed syntax."),
+	/** The SERVICE_NOT_FOUND. */
+	SERVICE_NOT_FOUND("401", "Service not found."),
+	/** The SESSION_NOT_FOUND. */
+	SESSION_NOT_FOUND("402", "Session not found."),
+	/** The SESSION_NOT_FOUND. */
+	SUBSCRIPTION_NOT_FOUND("403", "Subscription not found."),
+	/** The SESSION_NOT_FOUND. */
+	SERVER_NOT_FOUND("404", "Server not found."),
 	/** The REQUEST_TIMEOUT. */
-	REQUEST_TIMEOUT("408", "The SC did not timely respond to the request."),
+	REQUEST_TIMEOUT("405", "The SC did not timely respond to the request."),
 	/** The REQUEST_ABORT. */
-	REQUEST_ABORT("409", "Operation request did not terminate in time."),
+	REQUEST_WAIT_ABORT("406", "Emergency abort of the request"),
 	/** The BROKEN_SESSION. */
-	BROKEN_SESSION("410", "Session is broken."),
+	BROKEN_SESSION("407", "Session is broken."),
 	/** The BROKEN_SUBSCRIPTION. */
-	BROKEN_SUBSCRIPTION("411", "Subscription is broken."),
+	BROKEN_SUBSCRIPTION("408", "Subscription is broken."),
 
-	/** 420-450 Validation errors. (HV = Header Validation) */
+	/** 420-470 Validation errors. (HV = Header Validation) */
 	HV_ERROR("420", "Validation error."),
 	/** The HV_WRONG_SC_VERSION_FORMAT. */
 	HV_WRONG_SC_VERSION_FORMAT("421", "Invalid SC version format."),
@@ -69,73 +75,81 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The HV_WRONG_MAX_CONNECTIONS. */
 	HV_WRONG_MAX_CONNECTIONS("432", "Invalid maxConnections value."),
 	/** The HV_WRONG_OPERATION_TIMEOUT. */
-	HV_WRONG_OPERATION_TIMEOUT("433", "Invalid operation timeout value."),
+	HV_WRONG_OPERATION_TIMEOUT("433", "Invalid operationTimeout value."),
 	/** The HV_WRONG_ECHO_TIMEOUT. */
 	HV_WRONG_ECHO_TIMEOUT("434", "Invalid echoTimeout value."),
 	/** The HV_WRONG_ECHO_INTERVAL. */
 	HV_WRONG_ECHO_INTERVAL("435", "Invalid echoInterval value."),
 	/** The HV_WRONG_PORTNR. */
-	HV_WRONG_PORTNR("436", "Invalid portNr field."),
+	HV_WRONG_PORTNR("436", "Invalid portNr."),
 	/** The HV_WRONG_KEEPALIVE_INTERVAL. */
-	HV_WRONG_KEEPALIVE_INTERVAL("437", "Invalid keepalive interval value."),
+	HV_WRONG_KEEPALIVE_INTERVAL("437", "Invalid keepaliveInterval value."),
 	/** The HV_WRONG_NODATA_INTERVAL. */
-	HV_WRONG_NODATA_INTERVAL("438", "Invalid not data interval value."),
+	HV_WRONG_NODATA_INTERVAL("438", "Invalid notDataInterval value."),
 	/** The HV_WRONG_MASK. */
 	HV_WRONG_MASK("439", "Invalid mask."),
 	/** The HV_WRONG_SESSION_INFO. */
-	HV_WRONG_SESSION_INFO("440", "Invalid session info value."),
+	HV_WRONG_SESSION_INFO("440", "Invalid sessionInfo value."),
 	/** The HV_WRONG_SERVICE_NAME. */
-	HV_WRONG_SERVICE_NAME("441", "Invalid service name value."),
+	HV_WRONG_SERVICE_NAME("441", "Invalid serviceName value."),
 	/** The HV_WRONG_MESSAGE_INFO. */
-	HV_WRONG_MESSAGE_INFO("442", "Invalid message info value."),
+	HV_WRONG_MESSAGE_INFO("442", "Invalid messageInfo value."),
 	/** The HV_WRONG_MESSAGE_SEQUENCE_NR. */
-	HV_WRONG_MESSAGE_SEQUENCE_NR("443", "Invalid message sequence number value."),
+	HV_WRONG_MESSAGE_SEQUENCE_NR("443", "Invalid messageSequenceNumber."),
 	/** The HV_WRONG_REMOTE_FILE_NAME. */
-	HV_WRONG_REMOTE_FILE_NAME("444", "Invalid remote file name value."),
+	HV_WRONG_REMOTE_FILE_NAME("444", "Invalid remoteFileName value."),
 	/** The HV_WRONG_MESSAGE_ID. */
-	HV_WRONG_SESSION_ID("445", "Invalid session id value."),
+	HV_WRONG_SESSION_ID("445", "Invalid sessionId value."),
 	/** The HV_WRONG_SC_ERROR_CODE. */
-	HV_WRONG_SC_ERROR_CODE("446", "Invalid sc error code value."),
+	HV_WRONG_SC_ERROR_CODE("446", "Invalid scErrorCode value."),
 	/** The HV_WRONG_SC_ERROR_TEXT. */
-	HV_WRONG_SC_ERROR_TEXT("447", "Invalid sc error text value."),
+	HV_WRONG_SC_ERROR_TEXT("447", "Invalid scErrorText value."),
 	/** The HV_WRONG_APP_ERROR_CODE. */
-	HV_WRONG_APP_ERROR_CODE("448", "Invalid application error code value."),	// not used
+	HV_WRONG_APP_ERROR_CODE("448", "Invalid appErrorCode value."),	// not used
 	/** The HV_WRONG_APP_ERROR_TEXT. */
-	HV_WRONG_APP_ERROR_TEXT("449", "Invalid application error text value."),	// not used
+	HV_WRONG_APP_ERROR_TEXT("449", "Invalid appErrorText value."),	// not used
+	
 	/** The V_WRONG_CONFIGURATION_FILE_FORMAT. */
-	V_WRONG_CONFIGURATION_FILE("450", "Invalid configuration file."),
+	V_WRONG_CONFIGURATION_FILE("460", "Invalid configuration file."),
+	/** The V_WRONG_INSPECT_COMMAND. */
+	V_WRONG_INSPECT_COMMAND("461", "Invalid inspect command."),
+	/** The V_WRONG_MANAGE_COMMAND. */
+	V_WRONG_MANAGE_COMMAND("462", "Invalid manage command."),
+	/** The V_SERVICE_TYPE. */
+	V_WRONG_SERVICE_TYPE("463", "Invalid service type."),
+	/** The V_SERVER_TYPE. */
+	V_WRONG_SERVER_TYPE("464", "Invalid server type."), 
 
-
+	
 	/** The SERVER_ERROR. */
-	SERVER_ERROR("500", "Server error occured."),
+	SERVER_ERROR("500", "Server error."),
 	/** The service is DISABLED. */
 	SERVICE_DISABLED("501", "Service is disabled."),
 	/** The OPERATION_TIMEOUT_EXPIRED. */
-	OPERATION_TIMEOUT_EXPIRED("504", "The server did not timely respond to the request."),
+	OPERATION_TIMEOUT("504", "The server did not timely respond to the request."),
 	/** The UPLOAD_FILE_FAILED. */
-	UPLOAD_FILE_FAILED("505", "Uploading file failed."),
-
+	UPLOAD_FILE_FAILED("505", "Upload file failed."),
 	
 	/** The SC_ERROR. */
-	SC_ERROR("600", "Service connector error."),
+	SC_ERROR("600", "Service Connector error."),
 	/** The NO_SERVER. */
 	NO_SERVER("601", "No server."),
 	/** The NO_FREE_SERVER. */
-	NO_FREE_SERVER("603", "No free server available."),
+	NO_FREE_SERVER("602", "No free server available."),
 	/** The NO_FREE_CONNECTION. */
-	NO_FREE_CONNECTION("608", "No free connection to server available."),
+	NO_FREE_CONNECTION("603", "No free connection to server available."),
 	/** The SERVER_ALREADY_REGISTERED for this service. */
-	SERVER_ALREADY_REGISTERED("602", "Server already registered for the service."),
+	SERVER_ALREADY_REGISTERED("604", "Server is already registered for the service."),
 	/** The FRAME_DECODER. */
-	FRAME_DECODER("606", "Unable to decode frame, SCMP headline is wrong."),
+	FRAME_DECODER("605", "Unable to decode message, SCMP headline is wrong."),
 	/** The SESSION_ABORT. */
-	SESSION_ABORT("607", "Session aborted."),
+	SESSION_ABORT("606", "Session aborted."),
 	/** The CONNECTION_EXCEPTION. */
-	CONNECTION_EXCEPTION("610", "Connection error."),
+	CONNECTION_EXCEPTION("607", "Connection error."),
 	/** The CACHE_ERROR. */
-	CACHE_ERROR("620", "Cache Error."),
+	CACHE_ERROR("608", "Cache error."),
 	/** The CACHE_LOADING. */
-	CACHE_LOADING("621", "Cache Loading. Retry later");
+	CACHE_LOADING("609", "Cache Loading. Retry later");
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPError.class);

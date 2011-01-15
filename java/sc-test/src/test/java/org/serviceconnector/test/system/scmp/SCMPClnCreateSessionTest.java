@@ -96,7 +96,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	 * Expectation: passes, returns error
 	 */
 	@Test
-	public void t02_WrongServiceName() throws Exception {
+	public void t02_ServiceNameMissing() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
 				this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
@@ -111,8 +111,43 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	}
 	
 	/**
+	 * Description: create session - service name = ""<br>
+	 * Expectation: passes, returns error
+	 */
+	@Test
+	public void t03_ServiceNameEmpty() throws Exception {
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
+				this.requester, TestConstants.sesServerName1);
+		createSessionCall.getRequest().setServiceName("");
+		createSessionCall.setEchoIntervalSeconds(300);
+		TestCallback cbk = new TestCallback();
+		createSessionCall.invoke(cbk, 1000);
+		SCMPMessage fault = cbk.getMessageSync(3000);
+		Assert.assertTrue(fault.isFault());
+		TestUtil.verifyError(fault, SCMPError.HV_WRONG_SERVICE_NAME, SCMPMsgType.CLN_CREATE_SESSION);
+	}
+
+	/**
+	 * Description: create session - service name = " "<br>
+	 * Expectation: passes, returns error
+	 */
+	@Test
+	public void t04_ServiceNameBlank() throws Exception {
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
+				this.requester, TestConstants.sesServerName1);
+		createSessionCall.getRequest().setServiceName(" ");
+		createSessionCall.setEchoIntervalSeconds(300);
+		TestCallback cbk = new TestCallback();
+		createSessionCall.invoke(cbk, 1000);
+		SCMPMessage fault = cbk.getMessageSync(3000);
+		Assert.assertTrue(fault.isFault());
+		TestUtil.verifyError(fault, SCMPError.HV_WRONG_SERVICE_NAME, SCMPMsgType.CLN_CREATE_SESSION);
+	}
+
+	
+	/**
 	 * Description: create session - serviceName too long<br>
-	 * Expectation: passes, returns invalid scmp release nr error
+	 * Expectation: passes, returns error
 	 */
 	@Test
 	public void t05_ServiceNameTooLong() throws Exception {
@@ -134,6 +169,24 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		TestUtil.verifyError(fault, SCMPError.SERVER_ERROR, SCMPMsgType.UNDEFINED);
 	}
 
+	/**
+	 * Description: create session - service name = gaga<br>
+	 * Expectation: passes, returns error
+	 */
+	@Test
+	public void t06_NonExistingServiceName() throws Exception {
+		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
+				this.requester, TestConstants.sesServerName1);
+		createSessionCall.getRequest().setServiceName("Gaga");
+		createSessionCall.setEchoIntervalSeconds(300);
+		TestCallback cbk = new TestCallback();
+		createSessionCall.invoke(cbk, 1000);
+		SCMPMessage fault = cbk.getMessageSync(3000);
+		Assert.assertTrue(fault.isFault());
+		TestUtil.verifyError(fault, SCMPError.SERVICE_NOT_FOUND, SCMPMsgType.CLN_CREATE_SESSION);
+	}
+
+	
 	/**
 	 * Description: create session - delete session<br>
 	 * Expectation: passes
@@ -200,6 +253,6 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		clnExecuteCall.setRequestBody(TestConstants.pangram);
 		clnExecuteCall.invoke(cbk, 1000);
 		SCMPMessage msg = cbk.getMessageSync(3000);
-		TestUtil.verifyError(msg, SCMPError.NOT_FOUND, SCMPMsgType.CLN_EXECUTE);
+		TestUtil.verifyError(msg, SCMPError.SESSION_NOT_FOUND, SCMPMsgType.CLN_EXECUTE);
 	}
 }

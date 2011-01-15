@@ -113,11 +113,15 @@ public class DeRegisterServerCommand extends CommandAdapter {
 	 */
 	public StatefulServer getStatefulServerByName(String key) throws SCMPCommandException {
 		Server server = this.serverRegistry.getServer(key);
-
-		if (server == null || (server.getType().equals(ServerType.STATEFUL_SERVER) == false)) {
-			// no available server for this service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "server not registered, key="
-					+ key);
+		if (server == null) {
+			// server not found in registry
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVER_NOT_FOUND, key);
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		if (server.getType().equals(ServerType.STATEFUL_SERVER) == false) {
+			// server is wrong type
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVER_TYPE, key);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}

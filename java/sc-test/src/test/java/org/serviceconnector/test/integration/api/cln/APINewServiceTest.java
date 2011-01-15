@@ -79,16 +79,6 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	}
 
 	/**
-	 * Description: create new session service with service name = "service = gaga"<br> 
-	 * Expectation:	throws SCMPValidatorException (contains "=")
-	 */
-	@Test (expected = SCMPValidatorException.class)
-	public void t105_newSessionService() throws Exception {
-		client.newSessionService("service = gaga");
-	}
-
-
-	/**
 	 * Description: create new session service with service name = "session-1"<br> 
 	 * Expectation:	successful creation
 	 */
@@ -173,15 +163,6 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	}
 
 	/**
-	 * Description: create new publish service with service name = "service = gaga"<br> 
-	 * Expectation:	throws SCMPValidatorException (contains "=")
-	 */
-	@Test (expected = SCMPValidatorException.class)
-	public void t205_newPublisService() throws Exception {
-		client.newPublishService("service = gaga");
-	}
-
-	/**
 	 * Description: create new publish service with service name = "publish-1"<br> 
 	 * Expectation:	successful creation
 	 */
@@ -263,15 +244,6 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 		client.newFileService(TestConstants.pangram);
 	}
 
-	/**
-	 * Description: create new file service with service name = "service = gaga"<br> 
-	 * Expectation:	throws SCMPValidatorException (contains "=")
-	 */
-	@Test (expected = SCMPValidatorException.class)
-	public void t305_newFileService() throws Exception {
-		client.newPublishService("service = gaga");
-	}
-	
 	/**
 	 * Description: create new file service with service name = "file-1"<br> 
 	 * Expectation:	successful creation

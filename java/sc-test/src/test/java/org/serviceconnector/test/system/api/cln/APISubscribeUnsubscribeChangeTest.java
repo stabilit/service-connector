@@ -53,48 +53,6 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	}
 
 	/**
-	 * Description: create publish service with name = ""<br>
-	 * Expectation: throws SCServiceException
-	 */
-	@Test(expected = SCServiceException.class)
-	public void t03_subscribe() throws Exception {
-		publishService = client.newPublishService("");
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
-		subMsgRequest.setMask(TestConstants.mask);
-		SCSubscribeMessage subMsgResponse = null;
-		msgCallback = new MsgCallback(publishService);
-		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-	}
-
-	/**
-	 * Description: create publish service with name = " "<br>
-	 * Expectation: throws SCServiceException
-	 */
-	@Test(expected = SCServiceException.class)
-	public void t04_subscribe() throws Exception {
-		publishService = client.newPublishService(" ");
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
-		subMsgRequest.setMask(TestConstants.mask);
-		SCSubscribeMessage subMsgResponse = null;
-		msgCallback = new MsgCallback(publishService);
-		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-	}
-
-	/**
-	 * Description: create publish service with name = "The quick brown fox jumps over a lazy dog."<br>
-	 * Expectation: throws SCServiceException (too long)
-	 */
-	@Test(expected = SCServiceException.class)
-	public void t05_subscribe() throws Exception {
-		publishService = client.newPublishService(TestConstants.pangram);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
-		subMsgRequest.setMask(TestConstants.mask);
-		SCSubscribeMessage subMsgResponse = null;
-		msgCallback = new MsgCallback(publishService);
-		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-	}
-
-	/**
 	 * Description: create publish service with name = "service = gaga"<br>
 	 * Expectation: throws SCServiceException (contains "=")
 	 */
@@ -125,44 +83,12 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	}
 
 	/**
-	 * Description: subscribe with service name = ""<br>
-	 * Expectation: throws SCServiceException
-	 */
-	@Test(expected = SCServiceException.class)
-	public void t09_subscribe() throws Exception {
-		publishService = client.newPublishService("");
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
-		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setMask(" ");
-		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setNoDataIntervalInSeconds(100);
-		msgCallback = new MsgCallback(publishService);
-		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-	}
-
-	/**
 	 * Description: subscribe with file service name<br>
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
 	public void t10_subscribe() throws Exception {
 		publishService = client.newPublishService(TestConstants.filServiceName1);
-		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
-		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setMask(" ");
-		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
-		subMsgRequest.setNoDataIntervalInSeconds(100);
-		msgCallback = new MsgCallback(publishService);
-		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-	}
-
-	/**
-	 * Description: subscribe with service name = " "<br>
-	 * Expectation: throws SCServiceException
-	 */
-	@Test(expected = SCServiceException.class)
-	public void t11_subscribe() throws Exception {
-		publishService = client.newPublishService(" ");
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(" ");
@@ -663,9 +589,6 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
-		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
 		subMsgRequest.setMask(null);
 		subMsgResponse = publishService.changeSubscription(subMsgRequest);
@@ -700,10 +623,6 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
-		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
-
 		publishService.unsubscribe();
 		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 
@@ -823,9 +742,6 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		subMsgRequest.setNoDataIntervalInSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
-		Assert.assertNotNull("the session ID is null", publishService.getSessionId());
-		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
-		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
 		subMsgRequest.setMask(TestConstants.mask1);
 		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);

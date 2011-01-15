@@ -392,7 +392,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 1000);
 		SCMPMessage responseMessage = cbk.getMessageSync(2000);
-		TestUtil.verifyError(responseMessage, SCMPError.OPERATION_TIMEOUT_EXPIRED, SCMPMsgType.CLN_EXECUTE);
+		TestUtil.verifyError(responseMessage, SCMPError.OPERATION_TIMEOUT, SCMPMsgType.CLN_EXECUTE);
 	}
 
 	/**
