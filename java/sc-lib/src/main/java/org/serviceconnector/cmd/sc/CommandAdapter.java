@@ -22,7 +22,6 @@ import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
@@ -39,6 +38,7 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.Session;
+import org.serviceconnector.service.SessionService;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.Subscription;
 
@@ -74,35 +74,23 @@ public abstract class CommandAdapter implements ICommand {
 	 */
 	protected Session getSessionById(String sessionId) throws SCMPCommandException {
 		Session session = sessionRegistry.getSession(sessionId);
-
 		if (session == null) {
-			// incoming session not found
-			logger.warn("command error: no session found for id :" + sessionId);
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "no session found for "
-					+ sessionId);
+			// session not found in registry
+			logger.info("session not found sid=" + sessionId);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SESSION_NOT_FOUND, sessionId);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
 		return session;
 	}
 
-	/**
-	 * Gets the subscription by id.
-	 * 
-	 * @param subscriptionId
-	 *            the subscription id
-	 * @return the subscription by id
-	 * @throws SCMPCommandException
-	 *             the sCMP command exception
-	 */
 	protected Subscription getSubscriptionById(String subscriptionId) throws SCMPCommandException {
 		Subscription subscription = this.subscriptionRegistry.getSubscription(subscriptionId);
 
 		if (subscription == null) {
-			// incoming session not found
-			logger.warn("command error: no subscription found for id :" + subscriptionId);
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "no subscription found for "
-					+ subscriptionId);
+			// subscription not found in registry
+			logger.info("subscription not found sid=" + subscriptionId);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SUBSCRIPTION_NOT_FOUND, subscriptionId);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -135,9 +123,8 @@ public abstract class CommandAdapter implements ICommand {
 	protected Service getService(String serviceName) throws SCMPCommandException {
 		Service service = this.serviceRegistry.getService(serviceName);
 		if (service == null) {
-			// no service known with incoming serviceName
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service: " + serviceName
-					+ " not found");
+			// service not found in registry
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
@@ -166,6 +153,27 @@ public abstract class CommandAdapter implements ICommand {
 	}
 
 	/**
+	 * Validate session service.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return the session service
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
+	protected SessionService validateSessionService(String serviceName) throws SCMPCommandException {
+		Service service = this.validateService(serviceName);
+		if (service.getType() != ServiceType.SESSION_SERVICE) {
+			// service is not session service
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName
+					+ " is not session service");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		return (SessionService) service;
+	}
+	
+	/**
 	 * Validate publish service.
 	 * 
 	 * @param serviceName
@@ -177,34 +185,13 @@ public abstract class CommandAdapter implements ICommand {
 	protected PublishService validatePublishService(String serviceName) throws SCMPCommandException {
 		Service service = this.validateService(serviceName);
 		if (service.getType() != ServiceType.PUBLISH_SERVICE) {
-			// no service known with incoming serviceName
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service=" + serviceName
+			// service is not pblish service
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName
 					+ " is not publish service");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
 		}
 		return (PublishService) service;
-	}
-
-	/**
-	 * Gets the stateful service. This method does not control the state of the service.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @return the stateful service
-	 * @throws SCMPCommandException
-	 *             the sCMP command exception
-	 */
-	protected StatefulService getStatefulService(String serviceName) throws SCMPCommandException {
-		Service service = this.getService(serviceName);
-		if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE) {
-			// no service known with incoming serviceName
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service=" + serviceName
-					+ " is not publish service");
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
-		}
-		return (StatefulService) service;
 	}
 
 	/**
@@ -219,8 +206,8 @@ public abstract class CommandAdapter implements ICommand {
 	protected FileService validateFileService(String serviceName) throws SCMPCommandException {
 		Service service = this.validateService(serviceName);
 		if (service.getType() != ServiceType.FILE_SERVICE) {
-			// no service known with incoming serviceName
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NOT_FOUND, "service=" + serviceName
+			// service is not file service
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName
 					+ " is not file service");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
@@ -229,12 +216,30 @@ public abstract class CommandAdapter implements ICommand {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Gets the stateful service. This method does not control the state of the service.
 	 * 
-	 * @throws Exception
+	 * @param serviceName
+	 *            the service name
+	 * @return the stateful service
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
 	 */
+	protected StatefulService getStatefulService(String serviceName) throws SCMPCommandException {
+		Service service = this.getService(serviceName);
+		if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE) {
+			// service is not the right type
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName
+					+ " is not session or publish service");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		return (StatefulService) service;
+	}
+
+	
+	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
+	public void run(IRequest request, IResponse response) throws Exception {
 		throw new UnsupportedOperationException("not allowed");
 	}
 
@@ -242,6 +247,12 @@ public abstract class CommandAdapter implements ICommand {
 	@Override
 	public void validate(IRequest request) throws Exception {
 		throw new SCMPValidatorException(SCMPError.HV_ERROR, "validator is not implemented");
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean isAsynchronous() {
+		return false;
 	}
 
 	/** {@inheritDoc} */
