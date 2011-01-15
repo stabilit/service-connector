@@ -238,7 +238,7 @@ public abstract class CommandAdapter implements ICommand {
 
 	
 	/** {@inheritDoc} */
-	@Override
+	// @Override TODO JOT DRINGEND
 	public void run(IRequest request, IResponse response) throws Exception {
 		throw new UnsupportedOperationException("not allowed");
 	}
@@ -250,7 +250,7 @@ public abstract class CommandAdapter implements ICommand {
 	}
 
 	/** {@inheritDoc} */
-	@Override
+	// @Override TODO JOT DRINGEND
 	public boolean isAsynchronous() {
 		return false;
 	}

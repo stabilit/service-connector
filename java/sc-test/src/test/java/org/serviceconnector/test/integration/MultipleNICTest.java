@@ -53,22 +53,6 @@ public class MultipleNICTest extends IntegrationSuperTest {
 					req.destroy();
 				} catch (Exception e) {
 					Assert.fail("Connection to NIC : " + inetAddress.getHostAddress() + " failed!");
-					// TODO TRN/JOT at home or by Jana getting here with: java.net.ConnectException: Connection refused: no further information
-					/*
-					 Ethernet adapter LAN:
-					 Connection-specific DNS Suffix  . : DSL2740B
-					 Description . . . . . . . . . . . : Intel(R) 82566MM Gigabit Network 
-					 Physical Address. . . . . . . . . : 00-17-A4-EB-E6-36
-					 Dhcp Enabled. . . . . . . . . . . : Yes
-					 Autoconfiguration Enabled . . . . : Yes
-					 IP Address. . . . . . . . . . . . : 10.10.0.7
-					 Subnet Mask . . . . . . . . . . . : 255.255.0.0
-					 Default Gateway . . . . . . . . . : 10.10.0.2
-					 DHCP Server . . . . . . . . . . . : 10.10.0.2
-					 DNS Servers . . . . . . . . . . . : 10.10.0.2
-					 Lease Obtained. . . . . . . . . . : Saturday, 25 December, 2010 9:05:41
-					 Lease Expires . . . . . . . . . . : Sunday, 26 December, 2010 9:05:41the NIC 10.10.0.7 
-					 */ 
 				}
 			}
 		}

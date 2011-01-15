@@ -132,11 +132,17 @@ public final class Constants {
 	public static final String CLI_CONFIG_ARG = "-sc.configuration";
 
 	/**
-	 * File containing the Sc process PID. Created at startup and deleted on
+	 * File containing the SC process PID. Created at startup and deleted on
 	 * exit or error. Used to check is sc is running.
 	 */
 	public static final String PID_FILE_NAME = "sc.pid";
 
+	/**
+	 * File containing the SC dump. Created with the dump command
+	 */
+	public static final String DUMP_FILE_NAME = "scDump.xml";
+
+	
 	/** The Constant IPV6_LOOPBACK_NIC. */
 	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
 
@@ -168,6 +174,8 @@ public final class Constants {
 	public static final String ROOT_CONNECTION_TIMEOUT_MILLIS = "root.connectionTimeoutMillis";
 	public static final String ROOT_SUBSCRIPTION_TIMEOUT_MILLIS = "root.subscriptionTimeoutMillis";
 	public static final String ROOT_KEEP_ALIVE_TIMEOUT_MILLIS = "root.keepAliveTimeoutMillis";
+	public static final String ROOT_DUMP_FILE_PATH = "root.scDumpPath";
+	public static final String ROOT_PID_FILE_PATH = "root.pidPath";
 
 	public static final String PROPERTY_LISTENERS = "listeners";
 	public static final String PROPERTY_SERVICE_NAMES = "serviceNames";
