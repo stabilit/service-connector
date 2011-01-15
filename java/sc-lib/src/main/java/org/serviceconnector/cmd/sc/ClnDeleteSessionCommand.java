@@ -217,7 +217,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			SCMPMessage fault = null;
 			if (ex instanceof IdleTimeoutException) {
 				// operation timeout handling
-				fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT_EXPIRED,
+				fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT,
 						"Operation timeout expired on SC cln delete session");
 			} else if (ex instanceof IOException) {
 				fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln delete session");
