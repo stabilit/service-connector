@@ -35,8 +35,7 @@ public class FileUtility {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(FileUtility.class);
-
-
+	
 	/**
 	 *
 	 * @param filename
@@ -92,7 +91,7 @@ public class FileUtility {
 			}
 			Thread.sleep(100);
 		}
-		throw new TimeoutException("File:" + filename + " does still exist after " + nrSeconds + " seconds timeout.");
+		throw new TimeoutException("File=" + filename + " does still exist after " + nrSeconds + " seconds timeout.");
 	}
 	
 	/**
@@ -110,7 +109,7 @@ public class FileUtility {
 			fw = new FileWriter(pidFile);
 			fw.write("pid: " + pid);
 			fw.flush();
-			logger.log(Level.OFF, "Create PID-file: " + fileNameFull + " PID:" + pid);
+			logger.log(Level.OFF, "Create PID-file=" + fileNameFull + " PID=" + pid);
 		} finally {
 			if (fw != null) {
 				fw.close();
@@ -126,11 +125,10 @@ public class FileUtility {
 			File pidFile = new File(fileNameFull);
 			if (pidFile.exists()) {
 				pidFile.delete();
-				logger.info("Delete PID-file: " + fileNameFull);
+				logger.info("Delete PID-file=" + fileNameFull);
 			}
 		} catch (Exception e) {
 			// ignore any error
-			e.printStackTrace();
 		}
 	}
 	

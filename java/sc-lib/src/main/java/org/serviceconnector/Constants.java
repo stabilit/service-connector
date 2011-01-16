@@ -74,8 +74,7 @@ public final class Constants {
 	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 60;
 
 	/**
-	 * The default number of subsequent keep alive before the connection is
-	 * closed.
+	 * The default number of subsequent keep alive before the connection is closed.
 	 */
 	public static final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
 
@@ -88,13 +87,15 @@ public final class Constants {
 	/** The message compression */
 	public static final boolean DEFAULT_COMPRESSION_FLAG = true;
 
+	/** The write PID */
+	public static final boolean DEFAULT_WRITE_PID_FLAG = false;
+	
 	/*
 	 * Various Constants *********
 	 */
 	/**
 	 * Technical operation timeout. <br>
-	 * It is the time a single WRITE/READ/CLOSE/OPEN can take. Must be
-	 * reasonably sort.
+	 * It is the time a single WRITE/READ/CLOSE/OPEN can take. Must be reasonably sort.
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
 
@@ -138,7 +139,7 @@ public final class Constants {
 	public static final String PID_FILE_NAME = "sc.pid";
 
 	/**
-	 * File containing the SC dump. Created with the dump command
+	 * File containing the SC dump. Created with the dump console command or with WEBGUI
 	 */
 	public static final String DUMP_FILE_NAME = "scDump.xml";
 
@@ -173,6 +174,7 @@ public final class Constants {
 	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
 	public static final String ROOT_CONNECTION_TIMEOUT_MILLIS = "root.connectionTimeoutMillis";
 	public static final String ROOT_SUBSCRIPTION_TIMEOUT_MILLIS = "root.subscriptionTimeoutMillis";
+	public static final String ROOT_SERVER_ABORT_TIMEOUT_MILLIS = "root.serverAbortTimeoutMillis";
 	public static final String ROOT_KEEP_ALIVE_TIMEOUT_MILLIS = "root.keepAliveTimeoutMillis";
 	public static final String ROOT_DUMP_FILE_PATH = "root.scDumpPath";
 	public static final String ROOT_PID_FILE_PATH = "root.pidPath";

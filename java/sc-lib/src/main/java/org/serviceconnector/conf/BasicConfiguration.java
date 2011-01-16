@@ -28,7 +28,11 @@ public class BasicConfiguration {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(BasicConfiguration.class);
 	/** The write pid. */
-	private boolean writePID = false;
+	private boolean writePID = Constants.DEFAULT_WRITE_PID_FLAG;
+	/** The pid file path. */
+	private String pidPath = null;
+	/** The dump file path. */
+	private String dumpPath = null;
 
 	/**
 	 * Multiplier to calculate the operation timeout.<br>
@@ -61,6 +65,83 @@ public class BasicConfiguration {
 	 * Instantiates a new basic configuration.
 	 */
 	public BasicConfiguration() {
+	}
+
+	/**
+	 * inits the configuration.
+	 * 
+	 * @param compositeConfiguration
+	 *            the composite configuration
+	 */
+	public void init(CompositeConfiguration compositeConfiguration) {
+		// writePID
+		Boolean localWritePID = compositeConfiguration.getBoolean(Constants.ROOT_WRITEPID, null);
+		if (localWritePID != null && this.writePID != localWritePID) {
+			this.writePID = localWritePID;
+			logger.info("writePID set to " + localWritePID);
+		}
+		
+		// pidPath
+		String localPidPath = compositeConfiguration.getString(Constants.ROOT_PID_FILE_PATH, null);
+		if (localPidPath != null && this.pidPath != localPidPath) {
+			this.pidPath = localPidPath;
+			logger.info("pidPath set to " + localPidPath);
+		}
+		
+		// dumpPath
+		String localDumpPath = compositeConfiguration.getString(Constants.ROOT_DUMP_FILE_PATH, null);
+		if (localDumpPath != null && this.dumpPath != localDumpPath) {
+			this.dumpPath = localDumpPath;
+			logger.info("dumpPath set to " + localDumpPath);
+		}
+		
+		// operationTimeoutMultiplier
+		Double localOTIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_OPERATION_TIMEOUT_MULTIPLIER, null);
+		if (localOTIMultiplier != null && this.operationTimeoutMultiplier != localOTIMultiplier) {
+			this.operationTimeoutMultiplier = localOTIMultiplier;
+			logger.info("operationTimeoutMultiplier set to " + localOTIMultiplier);
+		}
+
+		// echoIntervalMultiplier
+		Double localECIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_ECHO_INTERVAL_MULTIPLIER, null);
+		if (localECIMultiplier != null && this.echoIntervalMultiplier != localECIMultiplier) {
+			this.echoIntervalMultiplier = localECIMultiplier;
+			logger.info("echoIntervalMultiplier set to " + localECIMultiplier);
+		}
+
+		// connectionTimeoutMillis
+		Integer localConnectionTimeoutMultiplier = compositeConfiguration.getInteger(Constants.ROOT_CONNECTION_TIMEOUT_MILLIS, null);
+		if (localConnectionTimeoutMultiplier != null && this.connectionTimeoutMillis != localConnectionTimeoutMultiplier) {
+			this.connectionTimeoutMillis = localConnectionTimeoutMultiplier;
+			logger.info("connectionTimeoutMillis set to " + localConnectionTimeoutMultiplier);
+		}
+
+		// subscriptionTimeout
+		Integer localSubscriptionTimeout = compositeConfiguration.getInteger(Constants.ROOT_SUBSCRIPTION_TIMEOUT_MILLIS, null);
+		if (localSubscriptionTimeout != null && this.subscriptionTimeoutMillis != localSubscriptionTimeout) {
+			this.subscriptionTimeoutMillis = localSubscriptionTimeout;
+			logger.info("subscriptionTimeout set to " + localSubscriptionTimeout);
+		}
+
+		// commandValidation
+		Boolean localCMDValidation = compositeConfiguration.getBoolean(Constants.ROOT_COMMAND_VALIDATION_ENABLED, null);
+		if (localCMDValidation != null && this.commandValidation != localCMDValidation) {
+			this.commandValidation = localCMDValidation;
+			logger.info("commandValidation set to " + localCMDValidation);
+		}
+		// keepAliveTimeout in milliseconds
+		Integer localKeepAliveTimeoutMillis = compositeConfiguration.getInteger(Constants.ROOT_KEEP_ALIVE_TIMEOUT_MILLIS, null);
+		if (localKeepAliveTimeoutMillis != null && this.keepAliveTimeoutMillis != localKeepAliveTimeoutMillis) {
+			this.keepAliveTimeoutMillis = localKeepAliveTimeoutMillis;
+			logger.info("keepAliveTimeoutMillis set to " + localKeepAliveTimeoutMillis);
+		}
+
+		// serverAbortTimeout
+		Integer localSrvAbortTimeout = compositeConfiguration.getInteger(Constants.ROOT_SERVER_ABORT_TIMEOUT_MILLIS, null);
+		if (localSrvAbortTimeout != null && this.srvAbortTimeout != localSrvAbortTimeout) {
+			this.srvAbortTimeout = localSrvAbortTimeout;
+			logger.info("srvAbortTimeout set to " + localSrvAbortTimeout);
+		}
 	}
 
 	/**
@@ -136,65 +217,21 @@ public class BasicConfiguration {
 	}
 
 	/**
-	 * inits the configuration.
+	 * Gets the PID file path
 	 * 
-	 * @param compositeConfiguration
-	 *            the composite configuration
+	 * @return the PID file path
 	 */
-	public void init(CompositeConfiguration compositeConfiguration) {
-		// writePID
-		Boolean localWritePID = compositeConfiguration.getBoolean(Constants.ROOT_WRITEPID, null);
-		if (localWritePID != null && this.writePID != localWritePID) {
-			this.writePID = localWritePID;
-			logger.info("writePID set to " + localWritePID);
-		}
-
-		// operationTimeoutMultiplier
-		Double localOTIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_OPERATION_TIMEOUT_MULTIPLIER, null);
-		if (localOTIMultiplier != null && this.operationTimeoutMultiplier != localOTIMultiplier) {
-			this.operationTimeoutMultiplier = localOTIMultiplier;
-			logger.info("operationTimeoutMultiplier set to " + localOTIMultiplier);
-		}
-
-		// echoIntervalMultiplier
-		Double localECIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_ECHO_INTERVAL_MULTIPLIER, null);
-		if (localECIMultiplier != null && this.echoIntervalMultiplier != localECIMultiplier) {
-			this.echoIntervalMultiplier = localECIMultiplier;
-			logger.info("echoIntervalMultiplier set to " + localECIMultiplier);
-		}
-
-		// connectionTimeoutMillis
-		Integer localConnectionTimeoutMultiplier = compositeConfiguration.getInteger(Constants.ROOT_CONNECTION_TIMEOUT_MILLIS, null);
-		if (localConnectionTimeoutMultiplier != null && this.connectionTimeoutMillis != localConnectionTimeoutMultiplier) {
-			this.connectionTimeoutMillis = localConnectionTimeoutMultiplier;
-			logger.info("connectionTimeoutMillis set to " + localConnectionTimeoutMultiplier);
-		}
-
-		// subscriptionTimeout
-		Integer localSubscriptionTimeout = compositeConfiguration.getInteger(Constants.ROOT_SUBSCRIPTION_TIMEOUT_MILLIS, null);
-		if (localSubscriptionTimeout != null && this.subscriptionTimeoutMillis != localSubscriptionTimeout) {
-			this.subscriptionTimeoutMillis = localSubscriptionTimeout;
-			logger.info("subscriptionTimeout set to " + localSubscriptionTimeout);
-		}
-
-		// commandValidation
-		Boolean localCMDValidation = compositeConfiguration.getBoolean(Constants.ROOT_COMMAND_VALIDATION_ENABLED, null);
-		if (localCMDValidation != null && this.commandValidation != localCMDValidation) {
-			this.commandValidation = localCMDValidation;
-			logger.info("commandValidation set to " + localCMDValidation);
-		}
-		// keepAliveTimeout in milliseconds
-		Integer localKeepAliveTimeoutMillis = compositeConfiguration.getInteger(Constants.ROOT_KEEP_ALIVE_TIMEOUT_MILLIS, null);
-		if (localKeepAliveTimeoutMillis != null && this.keepAliveTimeoutMillis != localKeepAliveTimeoutMillis) {
-			this.keepAliveTimeoutMillis = localKeepAliveTimeoutMillis;
-			logger.info("keepAliveTimeoutMillis set to " + localKeepAliveTimeoutMillis);
-		}
-
-		// serverAbortTimeout
-		Integer localSrvAbortTimeout = compositeConfiguration.getInteger(Constants.ROOT_COMMAND_VALIDATION_ENABLED, null);
-		if (localSrvAbortTimeout != null && this.srvAbortTimeout != localSrvAbortTimeout) {
-			this.srvAbortTimeout = localSrvAbortTimeout;
-			logger.info("srvAbortTimeout set to " + localSrvAbortTimeout);
-		}
+	public String getPidPath() {
+		return pidPath;
 	}
+
+	/**
+	 * Gets the dump file path
+	 * 
+	 * @return the dump file path
+	 */
+	public String getDumpPath() {
+		return dumpPath;
+	}
+
 }

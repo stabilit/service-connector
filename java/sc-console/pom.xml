@@ -16,6 +16,10 @@
 		<skipTests>true</skipTests>
 	</properties>
 
+	<organization>
+		<name>STABILIT Informatik AG</name>
+		<url>www.stabilit.ch</url>
+	</organization>
 	<build>
 		<plugins>
 			<plugin>
