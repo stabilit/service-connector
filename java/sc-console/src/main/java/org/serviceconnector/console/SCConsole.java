@@ -38,6 +38,14 @@ public class SCConsole {
 	 *            java -jar scconsole.jar -h localhost -p 7000 restartSC<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 dump<br>
 	 *            java -jar scconsole.jar -l log4j-sc.properties -c sc.properties startSC<br>
+	 *            
+	 * @returns system exit status<br>
+	 * 				0 = success
+	 * 				1 = error parsing arguments
+	 * 				3 = invalid command
+	 * 				4 = service not found
+	 * 				5 = unexpected error 
+	 *            
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
