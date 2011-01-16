@@ -116,6 +116,20 @@ public class SCMgmtClient extends SCClient {
 	}
 
 	/**
+	 * Request dump.
+	 * 
+	 * @throws SCServiceException
+	 *             the SC service exception
+	 */
+	public void dump() throws SCServiceException {
+		if (this.attached == false) {
+			throw new SCServiceException("client not attached - dump not possible.");
+		}
+		this.manageCall(Constants.DUMP);
+	}
+
+	
+	/**
 	 * Kill SC.
 	 * 
 	 * @throws Exception
@@ -133,7 +147,6 @@ public class SCMgmtClient extends SCClient {
 		} catch (Exception e) {
 			// ignore exception
 		}
-		// 4. post process, reply to client
 		this.attached = false;
 		// destroy connection pool
 		this.requester.destroy();
@@ -162,7 +175,6 @@ public class SCMgmtClient extends SCClient {
 		} catch (Exception e) {
 			// ignore exception
 		}
-		// 4. post process, reply to client
 		this.attached = false;
 		// destroy connection pool
 		this.requester.destroy();

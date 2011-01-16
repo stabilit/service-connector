@@ -48,8 +48,8 @@ public class ManageCommand extends CommandAdapter {
 	protected final static Logger logger = Logger.getLogger(ManageCommand.class);
 
 	/** The Constant MANAGE_REGEX_STRING. */
-	private static final String MANAGE_REGEX_STRING = "(" + Constants.ENABLE + "|" + Constants.DISABLE + ")" + Constants.EQUAL_SIGN
-			+ "(.*)";
+	private static final String MANAGE_REGEX_STRING = Constants.DUMP + "|" + "(" + Constants.ENABLE + "|" + Constants.DISABLE + ")"
+			+ Constants.EQUAL_SIGN + "(.*)";
 	/** The Constant MANAGE_PATTERN. */
 	private static final Pattern MANAGE_PATTERN = Pattern.compile(MANAGE_REGEX_STRING, Pattern.CASE_INSENSITIVE);
 
@@ -87,7 +87,8 @@ public class ManageCommand extends CommandAdapter {
 
 		if ((ipAddress.equals(localHost.getHostAddress())) && (bodyString.equalsIgnoreCase(Constants.RESTARTSC))) {
 			// restart SC is allowed from localhost only!
-			logger.info("SC restart by restartSC console command");
+			logger.info("SC restart requested by restartSC console command");
+			// TODO JOT mut get JVM params of running SC. hardcoded values will not wor at SIX
 			String log4jFilePath = System.getProperty("log4j.configuration");
 			String log4jFile = log4jFilePath.substring(log4jFilePath.lastIndexOf("\\") + 1);
 			String configFile = SystemInfo.getConfigFileName().substring(SystemInfo.getConfigFileName().lastIndexOf("\\") + 1);
@@ -102,21 +103,21 @@ public class ManageCommand extends CommandAdapter {
 			logger.error("wrong manage command body=" + bodyString); // body has bad syntax
 			scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_MANAGE_COMMAND, bodyString);
 			response.setSCMP(scmpReply);
+			// TODO JOT do we not need to invoke responderCallback.responseCallback(request, response); like in the case down here?
 			return;
 		}
 
 		String command = m.group(1);
 		String serviceName = m.group(2);
-
 		if (this.serviceRegistry.containsKey(serviceName)) {
 			// service exists
 			if (command.equalsIgnoreCase(Constants.ENABLE)) {
 				// enable service
-				logger.info("enable service:" + serviceName);
+				logger.info("enable service=" + serviceName);
 				this.serviceRegistry.getService(serviceName).setState(ServiceState.ENABLED);
 			} else {
 				// disable service
-				logger.info("disable service:" + serviceName);
+				logger.info("disable service=" + serviceName);
 				this.serviceRegistry.getService(serviceName).setState(ServiceState.DISABLED);
 			}
 		} else {

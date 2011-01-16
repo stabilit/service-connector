@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.console;
 
@@ -36,6 +36,7 @@ public class SCConsole {
 	 *            java -jar scconsole.jar -h localhost -p 7000 sessions=abc<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 kill<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 restartSC<br>
+	 *            java -jar scconsole.jar -h localhost -p 7000 dump<br>
 	 *            java -jar scconsole.jar -l log4j-sc.properties -c sc.properties startSC<br>
 	 * @throws Exception
 	 */
@@ -103,14 +104,15 @@ public class SCConsole {
 	private static int run(String arg0, String arg1, String bodyString) throws Exception {
 
 		/** The Constant COMMAND_REGEX_STRING. */
-		String regex = "(" + Constants.KILL + "|" + Constants.STARTSC + "|" + Constants.RESTARTSC + "|(" + Constants.ENABLE + "|"
-				+ Constants.DISABLE + "|" + Constants.STATE + "|" + Constants.SESSIONS + ")" + Constants.EQUAL_SIGN + "(.*))";
+		String regex = "(" + Constants.KILL + "|" + Constants.STARTSC + "|" + Constants.RESTARTSC + "|" + Constants.DUMP + "|("
+				+ Constants.ENABLE + "|" + Constants.DISABLE + "|" + Constants.STATE + "|" + Constants.SESSIONS + ")"
+				+ Constants.EQUAL_SIGN + "(.*))";
 		int status = 0;
 
 		Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 		Matcher m = pattern.matcher(bodyString);
 		if (!m.matches()) {
-			showError("invalid or no command (enable|disable|state|sessions|startSC|restartSC|kill)");
+			showError("invalid or no command (enable|disable|state|sessions|startSC|restartSC|kill|dump)");
 			return 3;
 		}
 		String command = m.group(1);
@@ -121,6 +123,7 @@ public class SCConsole {
 			if (command.equalsIgnoreCase(Constants.STARTSC)) {
 				System.out.println("SC start requested");
 				Thread.sleep(1000);
+				// TODO JOT mut get JVM params of previously running SC in cli-args or elsewhere. Hardcoded values will not wor at SIX
 				String startSCCmd = "java -Dlog4j.configuration=file:..\\config\\" + arg0
 						+ " -jar ..\\bin\\sc.jar -sc.configuration ..\\config\\" + arg1;
 				Runtime.getRuntime().exec(startSCCmd);
@@ -136,6 +139,10 @@ public class SCConsole {
 			} else if (command.equalsIgnoreCase(Constants.KILL)) {
 				client.killSC();
 				System.out.println("SC exit requested");
+			} else if (command.equalsIgnoreCase(Constants.DUMP)) {
+				client.dump();
+				System.out.println("SC dump requested");
+				client.detach();
 			} else if (function.equalsIgnoreCase(Constants.ENABLE)) {
 				client.enableService(serviceName);
 				System.out.println("Service [" + serviceName + "] has been enabled");
@@ -177,11 +184,12 @@ public class SCConsole {
 	private static void showError(String msg) {
 		System.err.println("error: " + msg);
 		System.out
-				.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>|kill|restartSC>");
+				.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>|dump|kill|restartSC>");
 		System.out.println("\nsamples: java -jar scconsole.jar -h localhost -p 7000 enable=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 disable=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 state=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 sessions=abc");
+		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 dump");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 kill");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 restartSC");
 		System.out.println("         java -jar scconsole.jar startSC");

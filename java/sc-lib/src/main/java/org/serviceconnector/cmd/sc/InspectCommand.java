@@ -84,7 +84,7 @@ public class InspectCommand extends CommandAdapter {
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
 			return;
-		} else if (bodyString.startsWith(Constants.STATE)) {
+		} else if (bodyString.equalsIgnoreCase(Constants.STATE)) {
 			// state for service requested
 			String serviceName = bodyString.substring(6);
 			logger.debug("state request for service:" + serviceName);
@@ -108,7 +108,7 @@ public class InspectCommand extends CommandAdapter {
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
 			return;
-		} else if (bodyString.startsWith(Constants.SESSIONS)) {
+		} else if (bodyString.equalsIgnoreCase(Constants.SESSIONS)) {
 			// state for service requested
 			String serviceName = bodyString.substring(9);
 			logger.debug("sessions request for service:" + serviceName);
