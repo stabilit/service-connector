@@ -88,7 +88,9 @@ public enum SCMPHeaderAttributeKey {
 	/** The SESSION_ID. */
 	SESSION_ID("sid"),
 	/** The SESSION_INFO. */
-	SESSION_INFO("sin");
+	SESSION_INFO("sin"),
+	/** The URL_PATH. */
+	URL_PATH("urp");
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPHeaderAttributeKey.class);
