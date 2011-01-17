@@ -28,7 +28,6 @@ import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -236,23 +235,11 @@ public abstract class CommandAdapter implements ICommand {
 		return (StatefulService) service;
 	}
 
-	
-	/** {@inheritDoc} */
-	// @Override TODO JOT DRINGEND @Override auskommentiert, weil es sonst nicht kompiliert
-	public void run(IRequest request, IResponse response) throws Exception {
-		throw new UnsupportedOperationException("not allowed");
-	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void validate(IRequest request) throws Exception {
 		throw new SCMPValidatorException(SCMPError.HV_ERROR, "validator is not implemented");
-	}
-
-	/** {@inheritDoc} */
-	// @Override TODO JOT DRINGEND @Override auskommentiert, weil es sonst nicht kompiliert
-	public boolean isAsynchronous() {
-		return false;
 	}
 
 	/** {@inheritDoc} */
