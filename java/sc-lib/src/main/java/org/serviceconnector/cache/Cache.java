@@ -219,11 +219,16 @@ public class Cache {
 				}
 				if (cacheComposite.isExpired()) {
 					// we remove this composite from cache
-					CacheLogger.debug("cache put message but cache composite (" + cacheKey + ") is expired!");
-					throw new CacheExpiredException("cache put message but cache composite (" + cacheKey + ") is expired!");
+					CacheLogger.debug("cache put message, cache composite (" + cacheKey + ") is expired!");
+					throw new CacheExpiredException("cache put message, cache composite (" + cacheKey + ") is expired!");
 				}
 			}
 			if ((cacheComposite == null)) {
+				// this is the first message, check if expiration date time is availabled
+				String cacheExpirationDateTime = message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
+				if (cacheExpirationDateTime == null) {
+					throw new CacheException("no expiration date time");
+				}
 				cacheComposite = new CacheComposite();
 				// insert cache composite
 				cacheComposite.setSize(0);
@@ -240,10 +245,20 @@ public class Cache {
 			int newSize = cacheComposite.getSize() + 1;
 			cacheComposite.setSize(newSize); // increment size
 			String cacheExpirationDateTime = message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
-			if (cacheExpirationDateTime != null) {
+			if (newSize == 1 && cacheExpirationDateTime == null) {
+				this.removeComposite(cacheKey);
+				throw new CacheException("no expiration date time, composite has been removed");			    
+			}
+			// check for expiration date time, but only if this is the first message part
+			if (newSize == 1 && cacheExpirationDateTime != null) {
 				// validate expiration date time format
 				ValidatorUtility.validateDateTime(cacheExpirationDateTime, SCMPError.HV_WRONG_CED);
 				cacheComposite.setExpiration(cacheExpirationDateTime);
+				if (cacheComposite.isExpired()) {
+					CacheLogger.info("Put message (" + scmpCacheId + ") in cache is expired, expiration time " + cacheExpirationDateTime);
+					this.removeComposite(cacheKey);
+					throw new CacheException("cache composite is expired");					
+				}
 			}
 			CacheId msgCacheId = new CacheId(scmpCacheId.getCacheId(), String.valueOf(newSize));
 			CacheKey msgCacheKey = new CacheKey(msgCacheId.getFullCacheId());
