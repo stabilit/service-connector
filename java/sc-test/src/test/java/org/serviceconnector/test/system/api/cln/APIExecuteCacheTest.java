@@ -55,13 +55,13 @@ public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
-		request.setData("cacheForOneHour");
+		request.setData("cacheFor1Hour");
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService1.execute(request);
-		request.setData("cacheForTwoHour");
+		request.setData("cacheFor2Hour");
 		response = sessionService1.execute(request);
-		Assert.assertEquals("cacheForOneHour", response.getData());
+		Assert.assertEquals("cacheFor1Hour", response.getData());
 		sessionService1.deleteSession();
 	}
 
@@ -91,11 +91,43 @@ public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
 	}
 
 	/**
+	 * Description: exchange message with cacheId, server replies with cacheExpirationTime - 1 Hour<br>
+	 * In a second step insert a normal not expired cache message<br/>
+	 * Expectation: server cache message expired
+	 */
+	@Test
+	public void t06_cache() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		// request expired server message, cache should still be empty
+		request.setData("cacheExpired1Hour");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		response = sessionService1.execute(request);
+		Assert.assertEquals("cacheExpired1Hour", response.getData());
+		// request valid server cache message, will be stored in cache
+		request.setData("cacheFor1Hour");
+		response = sessionService1.execute(request);
+		Assert.assertEquals("cacheFor1Hour", response.getData());
+		// request expired server message again, previous message should still remain in cache
+		request.setData("cacheExpired1Hour");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		response = sessionService1.execute(request);
+
+		sessionService1.deleteSession();
+	}
+
+	/**
 	 * Description: exchange large message with cacheId, server reply with cacheExpirationTime<br>
 	 * Expectation: get large message from cache
 	 */
 	@Test
-	public void t05_cacheLargeMessage() throws Exception {
+	public void t07_cacheLargeMessage() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);
 		SCMessage response = null;
