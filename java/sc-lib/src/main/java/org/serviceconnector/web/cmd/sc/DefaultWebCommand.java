@@ -513,7 +513,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			if (transformer == null) {
 				transformer = XSLTTransformerFactory.getInstance().newTransformer(this.getXSLPath(""));				
 			} else {
-				logger.info("transform using xslt " + xslPath);
+				logger.debug("transform using xslt " + xslPath);
 			}
 			if (transformer == null) {
                 throw new NotFoundException("xslt resource " + xslPath + " not found");

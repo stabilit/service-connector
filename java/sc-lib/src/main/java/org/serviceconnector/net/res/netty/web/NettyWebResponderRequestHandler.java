@@ -73,7 +73,7 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 		if (ce != null) {
 			String encodedCookies = ce.encode();
 			if (encodedCookies != null && encodedCookies.length() > 0) {
-				logger.info(encodedCookies);
+				logger.debug(encodedCookies);
 				httpResponse.addHeader("Set-Cookie", encodedCookies);
 			}
 		}
@@ -85,7 +85,7 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
-		logger.info(th.toString());
+		logger.debug(th.toString());
 		NettyHttpResponse response = new NettyHttpResponse(e);
 		if (th instanceof ClosedChannelException) {
 			// never reply in case of channel closed exception

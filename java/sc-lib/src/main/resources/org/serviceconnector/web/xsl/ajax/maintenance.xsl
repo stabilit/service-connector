@@ -19,11 +19,28 @@
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
-	            <th class="sc_table">File Service Listing</th>
+	            <th class="sc_table">File Service Listing (Remote)</th>
 	            <th class="sc_table">&#160;</th>
-	            <th class="sc_table">SC Configuration Listing</th>
+	            <th class="sc_table">SC Configuration Listing (Local)</th>
 	          </tr>
 	          <tr>
+	            <td valign="top">
+	              <table border="0" cellspacing="0" cellpadding="0" style="background:white; width:100%;border-left:1px solid #666666">
+	                <xsl:for-each select="$body/resource/files/file">
+	                  <tr>
+	                    <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">
+	                      &#160;-&#160;
+	                    </td>
+	                    <td style="border-bottom:1px solid #666666;padding:4px;text-align:left;">
+	                      <xsl:value-of select="."/>
+	                    </td>
+	                  </tr>
+	                </xsl:for-each>
+	              </table>
+	            </td>
+	            <td valign="top" style="text-align:center;width:100px;">
+	              <input class="sc_form_button" style="height:80px; margin:10px;" name="DownloadAndReplace" type="button" value="&lt;&lt; Download and Replace Selected &lt;&lt;" onclick="javascript:downloadAndReplaceSelected('{$serviceParam}')"></input>
+	            </td>
 	            <td valign="top">
 	              <table border="0" cellspacing="0" cellpadding="0" style="background:white; width:100%;border-right:1px solid #666666">
 	                <xsl:for-each select="$body/service/files/file">
@@ -32,23 +49,6 @@
 	                      <input id="fs:{.}:fs" type="checkbox"></input>
 	                    </td>
 	                    <td style="border-bottom:1px solid #666666;padding:4px;text-align:left;"><xsl:value-of select="."/></td>
-	                  </tr>
-	                </xsl:for-each>
-	              </table>
-	            </td>
-	            <td valign="top" style="text-align:center;width:100px;">
-	              <input class="sc_form_button" style="height:80px; margin:10px;" name="DownloadAndReplace" type="button" value="Download and Replace Selected &gt;&gt;" onclick="javascript:downloadAndReplaceSelected('{$serviceParam}')"></input>
-	            </td>
-	            <td valign="top">
-	              <table border="0" cellspacing="0" cellpadding="0" style="background:white; width:100%;border-left:1px solid #666666">
-	                <xsl:for-each select="$body/resource/files/file">
-	                  <tr>
-	                    <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">
-	                      <input type="checkbox"></input>
-	                    </td>
-	                    <td style="border-bottom:1px solid #666666;padding:4px;text-align:left;">
-	                      <xsl:value-of select="."/>
-	                    </td>
 	                  </tr>
 	                </xsl:for-each>
 	              </table>

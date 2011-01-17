@@ -97,7 +97,7 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 			this.sessionId = uuid.toString();
 			this.creationTime = System.currentTimeMillis();
 			this.accessTime = this.creationTime;
-			logger.info("New web session created, id = " + this.sessionId);
+			logger.debug("New web session created, id = " + this.sessionId);
 		}
 
 		/** {@inheritDoc} */

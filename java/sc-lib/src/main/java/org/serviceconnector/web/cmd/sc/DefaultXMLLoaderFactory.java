@@ -74,7 +74,6 @@ import org.serviceconnector.web.NotFoundException;
 import org.serviceconnector.web.WebUtil;
 import org.serviceconnector.web.ctx.WebContext;
 
-
 /**
  * A factory for creating DefaultXMLLoader objects.
  */
@@ -858,7 +857,7 @@ public class DefaultXMLLoaderFactory {
 			writer.writeEndElement(); // action
 			try {
 				if ("gc".equals(action)) {
-					logger.info("run gc");
+					logger.debug("run gc");
 					System.gc();
 					writer.writeStartElement("status");
 					writer.writeCharacters("success");
@@ -866,23 +865,23 @@ public class DefaultXMLLoaderFactory {
 					writer.writeStartElement("messages");
 					writer.writeStartElement("message");
 					writer.writeCharacters("GC did run.");
-					writer.writeEndElement();  // message
+					writer.writeEndElement(); // message
 					writer.writeEndElement(); // messages
 				}
 				if ("terminate".equals(action)) {
-					logger.info("SC terminated by user interface");
+					logger.debug("SC terminated by user interface");
 					writer.writeStartElement("status");
 					writer.writeCharacters("success");
 					writer.writeEndElement();
 					writer.writeStartElement("messages");
 					writer.writeStartElement("message");
 					writer.writeCharacters("SC has been terminated.");
-					writer.writeEndElement();  // message
+					writer.writeEndElement(); // message
 					writer.writeEndElement(); // messages
 					System.exit(1);
 				}
 				if ("resetCache".equals(action)) {
-					logger.info("reset cache by user interface");
+					logger.debug("reset cache by user interface");
 					CacheManager cacheManager = AppContext.getCacheManager();
 					cacheManager.clearAll();
 					writer.writeStartElement("status");
@@ -891,11 +890,11 @@ public class DefaultXMLLoaderFactory {
 					writer.writeStartElement("messages");
 					writer.writeStartElement("message");
 					writer.writeCharacters("Cache has been cleared.");
-					writer.writeEndElement();  // message
+					writer.writeEndElement(); // message
 					writer.writeEndElement(); // messages
 				}
 				if ("resetTranslet".equals(action)) {
-					logger.info("reset translet by user interface");
+					logger.debug("reset translet by user interface");
 					XSLTTransformerFactory.getInstance().clearTranslet();
 					writer.writeStartElement("status");
 					writer.writeCharacters("success");
@@ -903,24 +902,24 @@ public class DefaultXMLLoaderFactory {
 					writer.writeStartElement("messages");
 					writer.writeStartElement("message");
 					writer.writeCharacters("Translet have been reset.");
-					writer.writeEndElement();  // message
+					writer.writeEndElement(); // message
 					writer.writeEndElement(); // messages
 				}
 				if ("downloadAndReplace".equals(action)) {
-					logger.info("download and replace configuration");
+					logger.debug("download and replace configuration");
 					downloadAndReplace(writer, request);
 					writer.writeStartElement("status");
 					writer.writeCharacters("success");
 					writer.writeEndElement();
 				}
-			} catch (Exception e) {				
+			} catch (Exception e) {
 				writer.writeStartElement("status");
 				writer.writeCharacters("failure");
 				writer.writeEndElement();
 				writer.writeStartElement("messages");
 				writer.writeStartElement("message");
 				writer.writeCharacters(e.getMessage());
-				writer.writeEndElement();  // message
+				writer.writeEndElement(); // message
 				writer.writeEndElement(); // messages
 			}
 			writer.writeEndElement();
@@ -957,25 +956,30 @@ public class DefaultXMLLoaderFactory {
 			writer.writeEndElement();
 			if (fileList != null) {
 				for (String file : fileList) {
-					if (file.startsWith("fs:") && file.endsWith(":fs")) {						
+					if (file.startsWith("fs:") && file.endsWith(":fs")) {
 						try {
 							file = file.substring(3, file.length() - 3);
 							String path = fileService.getPath() + file;
 							// download file
 							URL downloadURL = new URL("http://" + fileServer.getHost() + ":" + fileServer.getPortNr() + "/" + path);
 							String configFileName = SystemInfo.getConfigFileName();
-							URL resourceURL = WebUtil.getResourceURL(configFileName);
-							String resourceURLString = resourceURL.toString();
-							String resourceURLPath = resourceURLString.substring(0, resourceURLString.length()-configFileName.length());
-							URL configURL = new URL(resourceURLPath + file);
-							downloadAndReplaceSingleFile(writer, downloadURL, configURL, file);
+							File configFile = new File(configFileName);
+							File localDestionationFile = null;
+							if (configFile.isAbsolute()) {
+								localDestionationFile = new File(configFile.getParent() + File.separator + file);
+							} else {
+								URL resourceURL = WebUtil.getResourceURL(configFileName);							
+								File resourceURLFile = new File(resourceURL.toURI());
+								localDestionationFile = new File(resourceURLFile.getParent() + File.separator + file); 
+							}
+							downloadAndReplaceSingleFile(writer, downloadURL, localDestionationFile);
 						} catch (Exception e) {
-							writer.writeStartElement("message");							
+							writer.writeStartElement("message");
 							writer.writeCharacters(file + " did fail, " + e.getMessage());
 							writer.writeEndElement();
 						}
 					} else {
-						writer.writeStartElement("message");							
+						writer.writeStartElement("message");
 						writer.writeCharacters(file + "  invalid format");
 						writer.writeEndElement();
 					}
@@ -984,31 +988,30 @@ public class DefaultXMLLoaderFactory {
 			writer.writeEndElement();
 		}
 
-		private void downloadAndReplaceSingleFile(XMLStreamWriter writer, URL url, URL configURL, String file) throws Exception {
-		    File configFile = new File(configURL.toURI());
-		    String status = "successful (copied)";
-		    if (configFile.exists()) {
-		    	status = "successful (replaced)";
-		    }
-		    try {
-				FileOutputStream fos = new FileOutputStream(configFile);
-				HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+		private void downloadAndReplaceSingleFile(XMLStreamWriter writer, URL srcUrl, File dstFile) throws Exception {
+			String status = "successful (copied)";
+			if (dstFile.exists()) {
+				status = "successful (replaced)";
+			}
+			try {
+				FileOutputStream fos = new FileOutputStream(dstFile);
+				HttpURLConnection httpCon = (HttpURLConnection) srcUrl.openConnection();
 				httpCon.connect();
 				InputStream in = httpCon.getInputStream();
 				byte[] fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
 				int readBytes = -1;
 				while ((readBytes = in.read(fullBuffer)) > 0) {
-				    fos.write(fullBuffer, 0, readBytes);
+					fos.write(fullBuffer, 0, readBytes);
 				}
 				in.close();
 				fos.close();
-				writer.writeStartElement("message");							
-				writer.writeCharacters(file + "  " + status);
+				writer.writeStartElement("message");
+				writer.writeCharacters(dstFile.getName() + "  " + status);
 				writer.writeEndElement();
 			} catch (Exception e) {
 				status = "failed";
-				writer.writeStartElement("message");							
-				writer.writeCharacters(file + "  " + status);
+				writer.writeStartElement("message");
+				writer.writeCharacters(dstFile.getName() + "  " + status);
 				writer.writeEndElement();
 				throw e;
 			}

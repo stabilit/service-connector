@@ -108,7 +108,7 @@ public class NettyWebResponse implements IWebResponse {
 
 	@Override
 	public void redirect(String path) {
-		logger.info("redirect location = " + path);
+		logger.debug("redirect location = " + path);
 		response.setStatus(HttpResponseStatus.FOUND);
 		response.addHeader("Location", path);
 	}
