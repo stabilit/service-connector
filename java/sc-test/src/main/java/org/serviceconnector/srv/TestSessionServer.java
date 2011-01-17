@@ -252,6 +252,14 @@ public class TestSessionServer extends TestStatefulServer {
 				request.setCacheExpirationDateTime(time.getTime());
 				String largeMessage = TestUtil.getLargeString();
 				request.setData(largeMessage);
+			} else if (dataString.startsWith("cacheExpired1Hour")) {
+				logger.info("cacheExpired1Hour");
+				time.add(Calendar.HOUR_OF_DAY, -1);
+				request.setCacheExpirationDateTime(time.getTime());
+			} else {
+				// no special key, we set default expiration time to 1 hour, otherwise SC will not accept the message for its cache
+				time.add(Calendar.HOUR_OF_DAY, 1);
+				request.setCacheExpirationDateTime(time.getTime());
 			}
 			return request;
 		}
