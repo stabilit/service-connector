@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit.cache;
 
+import java.util.Date;
 import java.util.Iterator;
 
 import junit.framework.Assert;
@@ -37,6 +38,8 @@ import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SessionService;
 import org.serviceconnector.test.unit.SuperUnitTest;
+import org.serviceconnector.util.DateTimeUtility;
+import org.serviceconnector.util.TimeMillis;
 
 /**
  * The Class CacheTest tests the core cache functionality.
@@ -91,6 +94,9 @@ public class CacheTest extends SuperUnitTest {
 
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
+				DateTimeUtility.getDateTimeAsString(expirationDate));
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
@@ -122,6 +128,9 @@ public class CacheTest extends SuperUnitTest {
 
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
+				DateTimeUtility.getDateTimeAsString(expirationDate));
 		CacheId msgCacheId1 = scmpCache1.putMessage(scmpMessageWrite);
 		CacheId msgCacheId2 = scmpCache2.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
@@ -150,6 +159,8 @@ public class CacheTest extends SuperUnitTest {
 	public void t03_partSCMPCacheWriteTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the part buffer nr = ";
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		String expirationDateTimeString = DateTimeUtility.getDateTimeAsString(expirationDate);
 		for (int i = 1; i <= 10; i++) {
 			String partWrite = stringWrite + i;
 			byte[] buffer = partWrite.getBytes();
@@ -162,6 +173,7 @@ public class CacheTest extends SuperUnitTest {
 			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, expirationDateTimeString);
 			scmpCache.putMessage(scmpMessageWrite);
 		}
 		// get composite cache of given id
@@ -197,6 +209,8 @@ public class CacheTest extends SuperUnitTest {
 	public void t04_largePartSCMPCacheWriteTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the part buffer nr = ";
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		String expirationDateTimeString = DateTimeUtility.getDateTimeAsString(expirationDate);
 		for (int i = 1; i <= 10000; i++) {
 			String partWrite = stringWrite + i;
 			byte[] buffer = partWrite.getBytes();
@@ -209,6 +223,7 @@ public class CacheTest extends SuperUnitTest {
 			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, expirationDateTimeString);
 			scmpCache.putMessage(scmpMessageWrite);
 		}
 		// get composite cache of given id
@@ -244,6 +259,8 @@ public class CacheTest extends SuperUnitTest {
 	public void t05_partSCMPCacheWriteUsingIteratorTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the part buffer nr = ";
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		String expirationDateTimeString = DateTimeUtility.getDateTimeAsString(expirationDate);
 		for (int i = 1; i <= 10; i++) {
 			String partWrite = stringWrite + i;
 			byte[] buffer = partWrite.getBytes();
@@ -256,6 +273,7 @@ public class CacheTest extends SuperUnitTest {
 			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, expirationDateTimeString);
 			scmpCache.putMessage(scmpMessageWrite);
 		}
 		// get composite cache of given id

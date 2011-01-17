@@ -127,7 +127,7 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 
 	/**
 	 * Description: Simple cache write test, expired<br>
-	 * Write a message into the cache using a dummy id and nr. Set the expiration date and time one hour to the past.
+	 * Write a message into the cache using a dummy id and nr. Set the expiration date and time one second to the future.
 	 * Wait 2 seconds, in the meantime the cache expiration thread should run and remove the expired message and its composite.
 	 * Try to read the composite from its cache again but this should fail because the message and its composite has been removed.<br>
 	 *  
@@ -142,7 +142,7 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		Date now = new Date();
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, -TimeMillis.MINUTE.getMillis());
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, +TimeMillis.SECOND.getMillis());
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
 				DateTimeUtility.getDateTimeAsString(expirationDate));
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);

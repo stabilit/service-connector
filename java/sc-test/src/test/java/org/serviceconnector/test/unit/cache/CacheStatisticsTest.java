@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit.cache;
 
+import java.util.Date;
+
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -33,6 +35,8 @@ import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SessionService;
 import org.serviceconnector.test.unit.SuperUnitTest;
+import org.serviceconnector.util.DateTimeUtility;
+import org.serviceconnector.util.TimeMillis;
 
 /**
  * The class CacheStatisticsTest tests the cache statistics functionality.
@@ -69,11 +73,9 @@ public class CacheStatisticsTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Cache element size test.
-	 * Write 1 message (element) into the cache and check the cache element size.
-	 * The element size MUST return 3, one for the message, one for the composite and
-	 * one for the internal CacheCompositeRegistry.<br>
-	 *  
+	 * Description: Cache element size test. Write 1 message (element) into the cache and check the cache element size. The element
+	 * size MUST return 3, one for the message, one for the composite and one for the internal CacheCompositeRegistry.<br>
+	 * 
 	 * Expectation: passes
 	 */
 	@Test
@@ -89,6 +91,9 @@ public class CacheStatisticsTest extends SuperUnitTest {
 
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		String expirationDateTimeString = DateTimeUtility.getDateTimeAsString(expirationDate);
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, expirationDateTimeString);
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
@@ -100,11 +105,9 @@ public class CacheStatisticsTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Cache part element size test.
-	 * Write 10 messages (elements) into the cache and check the cache element size.
-	 * The element size MUST return 12, 10 for the messages, one for the composite and
-	 * one for the internal CacheCompositeRegistry.<br>
-	 *  
+	 * Description: Cache part element size test. Write 10 messages (elements) into the cache and check the cache element size. The
+	 * element size MUST return 12, 10 for the messages, one for the composite and one for the internal CacheCompositeRegistry.<br>
+	 * 
 	 * Expectation: passes
 	 */
 	@Test
@@ -113,18 +116,21 @@ public class CacheStatisticsTest extends SuperUnitTest {
 		int elementSize = scmpCache.getElementSize();
 		Assert.assertEquals(0, elementSize);
 		String stringWrite = "this is the part buffer nr = ";
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		String expirationDateTimeString = DateTimeUtility.getDateTimeAsString(expirationDate);
 		for (int i = 1; i <= 10; i++) {
 			String partWrite = stringWrite + i;
 			byte[] buffer = partWrite.getBytes();
 			SCMPMessage scmpMessageWrite = null;
 			if (i < 10) {
-			   scmpMessageWrite = new SCMPPart();
+				scmpMessageWrite = new SCMPPart();
 			} else {
-			   scmpMessageWrite = new SCMPMessage();			
+				scmpMessageWrite = new SCMPMessage();
 			}
 			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, expirationDateTimeString);
 			scmpCache.putMessage(scmpMessageWrite);
 		}
 		elementSize = scmpCache.getElementSize();
@@ -132,11 +138,10 @@ public class CacheStatisticsTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Huge cache part element size test.
-	 * Write 1000 messages (elements) into the cache and check the cache element size.
-	 * The element size MUST return 12, 10 for the messages, one for the composite and
-	 * one for the internal CacheCompositeRegistry.<br>
-	 *  
+	 * Description: Huge cache part element size test. Write 1000 messages (elements) into the cache and check the cache element
+	 * size. The element size MUST return 12, 10 for the messages, one for the composite and one for the internal
+	 * CacheCompositeRegistry.<br>
+	 * 
 	 * Expectation: passes
 	 */
 	@Test
@@ -145,18 +150,21 @@ public class CacheStatisticsTest extends SuperUnitTest {
 		int elementSize = scmpCache.getElementSize();
 		Assert.assertEquals(0, elementSize);
 		String stringWrite = "this is the part buffer nr = ";
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		String expirationDateTimeString = DateTimeUtility.getDateTimeAsString(expirationDate);
 		for (int i = 1; i <= 10000; i++) {
 			String partWrite = stringWrite + i;
 			byte[] buffer = partWrite.getBytes();
 			SCMPMessage scmpMessageWrite = null;
 			if (i < 10000) {
-			   scmpMessageWrite = new SCMPPart();
+				scmpMessageWrite = new SCMPPart();
 			} else {
-			   scmpMessageWrite = new SCMPMessage();			
+				scmpMessageWrite = new SCMPMessage();
 			}
 			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, expirationDateTimeString);
 			scmpCache.putMessage(scmpMessageWrite);
 		}
 		elementSize = scmpCache.getElementSize();
@@ -165,4 +173,61 @@ public class CacheStatisticsTest extends SuperUnitTest {
 		long memoryStoreSize = scmpCache.getMemoryStoreSize();
 		long memorySizeInBytes = scmpCache.getSizeInBytes();
 	}
+
+	/**
+	 * Description: Cache parameter test, cache id is missing Write 1 message (element) without CACHE_ID The message won't be
+	 * accepted and throw an exception.<br>
+	 * 
+	 * Expectation: passes
+	 */
+	@Test
+	public void t04_noCacheId() throws CacheException {
+		Cache scmpCache = this.cacheManager.getCache("dummy");
+		int elementSize = scmpCache.getElementSize();
+		Assert.assertEquals(0, elementSize);
+		long diskStoreSize = scmpCache.getDiskStoreSize();
+		long memoryStoreSize = scmpCache.getMemoryStoreSize();
+		String stringWrite = "this is the buffer";
+		byte[] buffer = stringWrite.getBytes();
+		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
+
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		String expirationDateTimeString = DateTimeUtility.getDateTimeAsString(expirationDate);
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, expirationDateTimeString);
+		try {
+			CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
+			Assert.fail("message has no cache id, but no exception has been thrown");
+		} catch (Exception e) {
+		}
+	}
+	/**
+	 * Description: Cache parameter test, cache expiration datetime is missing. 
+	 * Write 1 message (element) without CACHE_EXPIRATION_DATETIME The message won't be
+	 * accepted and throw an exception.<br>
+	 * 
+	 * Expectation: passes
+	 */
+	@Test
+	public void t05_noExpirationDateTime() throws CacheException {
+		Cache scmpCache = this.cacheManager.getCache("dummy");
+		int elementSize = scmpCache.getElementSize();
+		Assert.assertEquals(0, elementSize);
+		long diskStoreSize = scmpCache.getDiskStoreSize();
+		long memoryStoreSize = scmpCache.getMemoryStoreSize();
+		String stringWrite = "this is the buffer";
+		byte[] buffer = stringWrite.getBytes();
+		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
+
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		String expirationDateTimeString = DateTimeUtility.getDateTimeAsString(expirationDate);
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+		try {
+			CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
+			Assert.fail("message has no cache id, but no exception has been thrown");
+		} catch (Exception e) {
+		}
+	}
+
 }
