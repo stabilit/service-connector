@@ -71,6 +71,22 @@ public class ProcessesController {
 		return properties.getProperty(TestConstants.configPortToken);
 	}
 
+	public boolean isSCDisabled() {
+	    String scDisabled = System.getProperty("scDisabled");
+	    if (scDisabled == null) {
+	    	return false;
+	    }
+	    return "true".equals(scDisabled.toLowerCase());
+	}
+	
+	public String getSCConfigurationFile() {
+	    String scConfiguration = System.getProperty("scConfiguration");
+	    if (scConfiguration == null) {
+	    	return TestConstants.SCProperties;
+	    }
+	    return scConfiguration;
+	}
+	
 	public ProcessCtx startSC(String log4jSCProperties, String scProperties) throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
