@@ -33,13 +33,13 @@ public class WebConfiguration {
 	 * If this flag is true then all xsl transformations will be cached internal otherwise not.
 	 * 
 	 */
-	private boolean transletEnabled;
+	private boolean xslTransformationCacheEnabled;
 
 	/**
 	 * Instantiates a new sCMP cache configuration.
 	 */
 	public WebConfiguration() {
-		this.transletEnabled = Constants.DEFAULT_WEB_TRANSLET_ENABLED;
+		this.xslTransformationCacheEnabled = Constants.DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED;
 	}
 
 	/**
@@ -51,10 +51,10 @@ public class WebConfiguration {
 	 *             the exception
 	 */
 	public synchronized void init(CompositeConfiguration compositeConfiguration) throws Exception {
-			Boolean transletEnabled = compositeConfiguration.getBoolean(Constants.WEB_TRANSLET_ENABLED, null);
-			if (transletEnabled != null) {
-				this.transletEnabled = transletEnabled;
-				logger.info("web translet enabled set to " + transletEnabled);
+			Boolean xslTransformationCacheEnabled = compositeConfiguration.getBoolean(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED, null);
+			if (xslTransformationCacheEnabled != null) {
+				this.xslTransformationCacheEnabled = xslTransformationCacheEnabled;
+				logger.info("web xsl transformation cache enabled set to " + xslTransformationCacheEnabled);
 			}
 	}
 
@@ -64,7 +64,7 @@ public class WebConfiguration {
 	 * @return true, if is translet enabled
 	 */
 	public boolean isTransletEnabled() {
-		return transletEnabled;
+		return xslTransformationCacheEnabled;
 	}
 
 }

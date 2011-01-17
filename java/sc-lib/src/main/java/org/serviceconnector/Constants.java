@@ -221,9 +221,9 @@ public final class Constants {
 	public static final String CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = "cache.expirationCheckIntervalSeconds";
 
 	// web default values
-	public static final boolean DEFAULT_WEB_TRANSLET_ENABLED = true;
+	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;
     // web property keys
-	public static final String WEB_TRANSLET_ENABLED = "web.translet.enabled";
+	public static final String WEB_XSL_TRANSFORMATION_CACHE_ENABLED = "web.xslTransformationCache.enabled";
 
 	/*
 	 * SCMP protocol constants ***********************
