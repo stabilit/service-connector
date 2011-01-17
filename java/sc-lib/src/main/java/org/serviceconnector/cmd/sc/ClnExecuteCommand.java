@@ -360,7 +360,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 						reply.setCacheId(fullCacheId);
 					}
 				} catch (Exception e) {
-					CacheLogger.debug("cache (" + reply.getCacheId() + " message put did fail = " + e.toString());
+					CacheLogger.debug("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
 					CommandCallback.logger.error(e.toString());
 				}
 			}
