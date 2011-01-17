@@ -104,7 +104,7 @@ public class FileUtility {
 			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
 			long pid = Long.parseLong(processName.split("@")[0]);
 
-			// create the pid file
+			// create the pid file			
 			File pidFile = new File(fileNameFull);
 			fw = new FileWriter(pidFile);
 			fw.write("pid: " + pid);
