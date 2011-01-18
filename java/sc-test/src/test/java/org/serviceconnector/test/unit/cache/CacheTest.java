@@ -80,9 +80,8 @@ public class CacheTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Simple cache write test.
-	 * Write a message into the cache using a dummy id and nr and read the message from cache again, checking if both contents
-	 * (body) equals. Verify if cache size is 1.<br>
+	 * Description: Simple cache write test. Write a message into the cache using a dummy id and nr and read the message from cache
+	 * again, checking if both contents (body) equals. Verify if cache size is 1.<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -112,14 +111,37 @@ public class CacheTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Simple cache write test into two separate cache instances (Cache).
-	 * Write the same message into two cache instances using dummy nr and id. Read both messages from its cache instance and check
-	 * for equality.<br>
+	 * Description: Simple cache write test without expiration datetime Write a message into the cache using a dummy id and nr but
+	 * without expiration date time<br>
+	 * The message won't be written to the cache and an exception is thrown Expectation: passes
+	 */
+	@Test
+	public void t02_noCedCacheWriteTest() throws CacheException {
+		Cache scmpCache = this.cacheManager.getCache("dummy");
+		String stringWrite = "this is the buffer";
+		byte[] buffer = stringWrite.getBytes();
+		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
+
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+		try {
+			CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
+			Assert.fail("put message should fail, but did not");
+		} catch (Exception e) {
+		}
+		// get composite cache of given id
+		CacheComposite cacheComposite = scmpCache.getComposite("dummy.cache.id");
+		Assert.assertNull(cacheComposite);
+	}
+
+	/**
+	 * Description: Simple cache write test into two separate cache instances (Cache). Write the same message into two cache
+	 * instances using dummy nr and id. Read both messages from its cache instance and check for equality.<br>
 	 * 
 	 * Expectation: passes
 	 */
 	@Test
-	public void t02_duplicateCacheWriteTest() throws CacheException {
+	public void t03_duplicateCacheWriteTest() throws CacheException {
 		Cache scmpCache1 = this.cacheManager.getCache("dummy1");
 		Cache scmpCache2 = this.cacheManager.getCache("dummy2");
 		String stringWrite = "this is the buffer";
@@ -147,16 +169,16 @@ public class CacheTest extends SuperUnitTest {
 	}
 
 	/**
-	 * Description: Large message (parts) cache write test.
-	 * Write 10 part messages into the cache using a dummy cache id and nr's. All messages belong to the same cache id building a
-	 * tree. Inside the cache a composite node is created and 10 message instances were assigned to this composite node. This test
-	 * reads the composite and tries to get all assigned part messages. Each part message will be identified by a concatenated key
-	 * using format CACHE_ID/SEQUENCE NR. All messages bodies were tested for equality.<br>
+	 * Description: Large message (parts) cache write test. Write 10 part messages into the cache using a dummy cache id and nr's.
+	 * All messages belong to the same cache id building a tree. Inside the cache a composite node is created and 10 message
+	 * instances were assigned to this composite node. This test reads the composite and tries to get all assigned part messages.
+	 * Each part message will be identified by a concatenated key using format CACHE_ID/SEQUENCE NR. All messages bodies were tested
+	 * for equality.<br>
 	 * 
 	 * Expectation: passes
 	 */
 	@Test
-	public void t03_partSCMPCacheWriteTest() throws CacheException {
+	public void t10_partSCMPCacheWriteTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the part buffer nr = ";
 		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
@@ -166,9 +188,9 @@ public class CacheTest extends SuperUnitTest {
 			byte[] buffer = partWrite.getBytes();
 			SCMPMessage scmpMessageWrite = null;
 			if (i < 10) {
-			   scmpMessageWrite = new SCMPPart();
+				scmpMessageWrite = new SCMPPart();
 			} else {
-			   scmpMessageWrite = new SCMPMessage();			
+				scmpMessageWrite = new SCMPMessage();
 			}
 			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
@@ -206,7 +228,7 @@ public class CacheTest extends SuperUnitTest {
 	 * @see CacheTest#testPartSCMPCacheWrite()
 	 */
 	@Test
-	public void t04_largePartSCMPCacheWriteTest() throws CacheException {
+	public void t11_largePartSCMPCacheWriteTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the part buffer nr = ";
 		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
@@ -216,9 +238,9 @@ public class CacheTest extends SuperUnitTest {
 			byte[] buffer = partWrite.getBytes();
 			SCMPMessage scmpMessageWrite = null;
 			if (i < 10000) {
-			   scmpMessageWrite = new SCMPPart();
+				scmpMessageWrite = new SCMPPart();
 			} else {
-			   scmpMessageWrite = new SCMPMessage();			
+				scmpMessageWrite = new SCMPMessage();
 			}
 			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
@@ -253,10 +275,10 @@ public class CacheTest extends SuperUnitTest {
 	 * 
 	 * Expectation: passes
 	 * 
-	 * @see CacheTest#testPartSCMPCacheWrite() 
+	 * @see CacheTest#testPartSCMPCacheWrite()
 	 */
 	@Test
-	public void t05_partSCMPCacheWriteUsingIteratorTest() throws CacheException {
+	public void t12_partSCMPCacheWriteUsingIteratorTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the part buffer nr = ";
 		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
@@ -266,9 +288,9 @@ public class CacheTest extends SuperUnitTest {
 			byte[] buffer = partWrite.getBytes();
 			SCMPMessage scmpMessageWrite = null;
 			if (i < 10) {
-			   scmpMessageWrite = new SCMPPart();
+				scmpMessageWrite = new SCMPPart();
 			} else {
-			   scmpMessageWrite = new SCMPMessage();			
+				scmpMessageWrite = new SCMPMessage();
 			}
 			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
