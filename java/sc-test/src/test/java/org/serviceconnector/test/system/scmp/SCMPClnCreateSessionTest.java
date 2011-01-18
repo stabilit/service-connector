@@ -50,10 +50,11 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
-				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
-				.getValue(), 0));
+		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1,
+				TestConstants.sesServiceName1);
+		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP,
+				ConnectionType.NETTY_HTTP.getValue(), 0));
 		AppContext.init();
 	}
 
@@ -71,7 +72,6 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		sesSrvCtx = null;
 		super.afterOneTest();
 	}
-
 
 	/**
 	 * Description: create session - echo time interval wrong<br>
@@ -109,7 +109,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		Assert.assertTrue(fault.isFault());
 		TestUtil.verifyError(fault, SCMPError.HV_WRONG_SERVICE_NAME, SCMPMsgType.CLN_CREATE_SESSION);
 	}
-	
+
 	/**
 	 * Description: create session - service name = ""<br>
 	 * Expectation: passes, returns error
@@ -144,7 +144,6 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		TestUtil.verifyError(fault, SCMPError.HV_WRONG_SERVICE_NAME, SCMPMsgType.CLN_CREATE_SESSION);
 	}
 
-	
 	/**
 	 * Description: create session - serviceName too long<br>
 	 * Expectation: passes, returns error
@@ -156,9 +155,10 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		// set serviceName null
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 98<<10; i++) {
+		for (int i = 0; i < 98 << 10; i++) {
 			sb.append(i);
-			if(sb.length() > 100000) break;
+			if (sb.length() > 10000)
+				break;
 		}
 		createSessionCall.getRequest().setServiceName(sb.toString());
 		createSessionCall.setEchoIntervalSeconds(300);
@@ -166,7 +166,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		createSessionCall.invoke(cbk, 1000);
 		SCMPMessage fault = cbk.getMessageSync(3000);
 		Assert.assertTrue(fault.isFault());
-		TestUtil.verifyError(fault, SCMPError.SERVER_ERROR, SCMPMsgType.UNDEFINED);
+		TestUtil.verifyError(fault, SCMPError.HV_WRONG_SERVICE_NAME, SCMPMsgType.CLN_CREATE_SESSION);
 	}
 
 	/**
@@ -186,7 +186,6 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		TestUtil.verifyError(fault, SCMPError.SERVICE_NOT_FOUND, SCMPMsgType.CLN_CREATE_SESSION);
 	}
 
-	
 	/**
 	 * Description: create session - delete session<br>
 	 * Expectation: passes
