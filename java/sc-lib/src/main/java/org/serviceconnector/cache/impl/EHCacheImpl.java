@@ -47,9 +47,17 @@ public class EHCacheImpl implements ICacheImpl {
 	private Cache cache;
 
 	/**
-	 * Instantiates a new eH cache scmp cache impl. <cache name="scCache" maxElementsInMemory="10000" eternal="false"
-	 * timeToIdleSeconds="120" timeToLiveSeconds="120" overflowToDisk="true" maxElementsOnDisk="10000000" diskPersistent="true"
-	 * diskExpiryThreadIntervalSeconds="120" memoryStoreEvictionPolicy="LRU"/>
+	 * Instantiates a new eH cache scmp cache impl. 
+	 * <cache name="scCache" 
+	 * maxElementsInMemory="10000" 
+	 * eternal="false"
+	 * timeToIdleSeconds="120" 
+	 * timeToLiveSeconds="120" 
+	 * overflowToDisk="true" 
+	 * maxElementsOnDisk="10000000" 
+	 * diskPersistent="true"
+	 * diskExpiryThreadIntervalSeconds="120" 
+	 * memoryStoreEvictionPolicy="LRU"/>
 	 * 
 	 * @param cacheConfiguration
 	 *            the scmp cache configuration

@@ -18,6 +18,8 @@ package org.serviceconnector.conf;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.FileUtility;
 
 /**
@@ -30,8 +32,10 @@ public class BasicConfiguration {
 	protected final static Logger logger = Logger.getLogger(BasicConfiguration.class);
 	/** The write pid. */
 	private boolean writePID = Constants.DEFAULT_WRITE_PID_FLAG;
-	/** The log path. */
-	private String logPath = null;
+	/** The Pid file path. */
+	private String pidPath = null;
+	/** The dump file path. */
+	private String dumpPath = null;
 
 	/**
 	 * Multiplier to calculate the operation timeout.<br>
@@ -61,7 +65,12 @@ public class BasicConfiguration {
 	 * If server does not reply within this time, the server will be cleaned up.
 	 */
 	private int srvAbortOTIMillis = Constants.DEFAULT_SERVER_ABORT_OTI_MILLIS;
-
+	/**
+	 * the maximum size of a message (part)
+	 * Larger messages will be splitted . <br>
+	 */
+	private int maxMessageSize = Constants.DEFAULT_MAX_MESSAGE_SIZE;
+	
 	/**
 	 * Instantiates a new basic configuration.
 	 */
@@ -74,20 +83,39 @@ public class BasicConfiguration {
 	 * @param compositeConfiguration
 	 *            the composite configuration
 	 */
-	public void init(CompositeConfiguration compositeConfiguration) {
+	public void init(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException {
 		// writePID
 		Boolean localWritePID = compositeConfiguration.getBoolean(Constants.ROOT_WRITEPID, null);
 		if (localWritePID != null && this.writePID != localWritePID) {
 			this.writePID = localWritePID;
 			logger.info("writePID set to " + localWritePID);
 		}
-			
-		// logPath
-		String localLogPath = compositeConfiguration.getString(Constants.ROOT_LOG_PATH, null);
-		if (localLogPath != null && this.logPath != localLogPath) {
-			this.logPath = FileUtility.adjustPath(localLogPath);
-			logger.info("logPath set to " + localLogPath);
+
+		// pidPath
+		String localPidPath = compositeConfiguration.getString(Constants.ROOT_PID_PATH, null);
+		if (localPidPath == null && this.writePID) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
+					+ Constants.ROOT_PID_PATH + " is missing");
 		}
+		if (this.pidPath != localPidPath) {
+			this.pidPath = FileUtility.adjustPath(localPidPath);
+			logger.info("pidPath set to " + localPidPath);
+		}
+
+		// dumpPath
+		String localdumpPath = compositeConfiguration.getString(Constants.ROOT_DUMP_PATH, null);
+		if (this.dumpPath != localdumpPath) {
+			this.dumpPath = FileUtility.adjustPath(localdumpPath);
+			logger.info("dumpPath set to " + localdumpPath);
+		}
+
+		
+		// maxMessageSize
+		Integer localMaxMessageSize = compositeConfiguration.getInteger(Constants.ROOT_MAX_MESSAGE_SIZE, null);
+		if (localMaxMessageSize != null && this.maxMessageSize != localMaxMessageSize) {
+			this.maxMessageSize = localMaxMessageSize;
+			logger.info("maxMessageSize set to " + localMaxMessageSize);
+		}		
 		
 		// operationTimeoutMultiplier
 		Double localOTIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_OPERATION_TIMEOUT_MULTIPLIER, null);
@@ -211,12 +239,30 @@ public class BasicConfiguration {
 	}
 
 	/**
-	 * Gets the log direcory path
+	 * Gets the path to the directory where pid file should be written to
 	 * 
-	 * @return the log path
+	 * @return the pid path
 	 */
-	public String getLogPath() {
-		return logPath;
+	public String getPidPath() {
+		return pidPath;
+	}
+	
+	/**
+	 * Gets the path to the directory where dump file should be written to
+	 * 
+	 * @return the dump path
+	 */
+	public String getDumpPath() {
+		return dumpPath;
+	}
+
+	/**
+	 * Gets the maximum message size
+	 * 
+	 * @return the maximum message size
+	 */
+	public int getMaxMessageSize() {
+		return maxMessageSize;
 	}
 
 }

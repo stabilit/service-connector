@@ -90,6 +90,9 @@ public final class Constants {
 	/** The write PID */
 	public static final boolean DEFAULT_WRITE_PID_FLAG = false;
 	
+	/** Default max message size */
+	public static final int DEFAULT_MAX_MESSAGE_SIZE = 60 << 10; // 64K
+	
 	/*
 	 * Various Constants *********
 	 */
@@ -168,6 +171,7 @@ public final class Constants {
 	 * Constants for syntax in sc.properies ************************************
 	 */
 	public static final String ROOT_WRITEPID = "root.writePID";
+	public static final String ROOT_MAX_MESSAGE_SIZE = "root.maxMessageSize";
 	public static final String ROOT_OPERATION_TIMEOUT_MULTIPLIER = "root.operationTimeoutMultiplier";
 	public static final String ROOT_ECHO_INTERVAL_MULTIPLIER = "root.echoIntervalMultiplier";
 	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
@@ -175,7 +179,8 @@ public final class Constants {
 	public static final String ROOT_SUBSCRIPTION_TIMEOUT_MILLIS = "root.subscriptionTimeoutMillis";
 	public static final String ROOT_SERVER_ABORT_OTI_MILLIS = "root.serverAbortOTIMillis";
 	public static final String ROOT_KEEP_ALIVE_OTI_MILLIS = "root.keepAliveOTIMillis";
-	public static final String ROOT_LOG_PATH = "root.logPath";
+	public static final String ROOT_PID_PATH = "root.pidPath";
+	public static final String ROOT_DUMP_PATH = "root.dumpPath";
 
 	public static final String PROPERTY_LISTENERS = "listeners";
 	public static final String PROPERTY_SERVICE_NAMES = "serviceNames";

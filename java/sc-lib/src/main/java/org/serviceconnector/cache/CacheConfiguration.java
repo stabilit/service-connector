@@ -18,6 +18,8 @@ package org.serviceconnector.cache;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class CacheConfiguration.
@@ -56,16 +58,22 @@ public class CacheConfiguration implements ICacheConfiguration {
 	}
 
 	/**
-	 * Loads cache parameters from properties file.</br> Service Connector cache parameters: </br> cache.enabled=true</br>
-	 * cache.name=scCache cache.diskPersistent=true </br> cache.diskPath=../../dev/cache </br> cache.timeIdleSeconds=60 </br>
-	 * cache.timeToLiveSeconds=120</br> cache.maxElementsInMemory=10000 </br> cache.maxElementsOnDisk=1000000
+	 * Loads cache parameters from properties file.</br> 
+	 * Service Connector cache parameters: </br> 
+	 * cache.enabled=true</br>
+	 * cache.name=scCache cache.diskPersistent=true </br> 
+	 * cache.diskPath=../../dev/cache </br> 
+	 * cache.timeIdleSeconds=60 </br>
+	 * cache.timeToLiveSeconds=120</br> 
+	 * cache.maxElementsInMemory=10000 </br> 
+	 * cache.maxElementsOnDisk=1000000
 	 * 
 	 * @param fileName
 	 *            the file name
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void init(CompositeConfiguration compositeConfiguration) throws Exception {
+	public synchronized void init(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException {
 
 		Boolean cacheEnabled = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED, null);
 		if (cacheEnabled != null && this.cacheEnabled != cacheEnabled) {
@@ -86,6 +94,10 @@ public class CacheConfiguration implements ICacheConfiguration {
 		}
 
 		String sDiskPath = compositeConfiguration.getString(Constants.CACHE_DISK_PATH, null);
+		if (sDiskPath == null && this.diskPersistent == true) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
+					+ Constants.CACHE_DISK_PATH + " is missing");
+		}
 		if (sDiskPath != null && sDiskPath != this.diskPath) {
 			this.diskPath = sDiskPath;
 			logger.info("diskPath set to " + this.diskPath);

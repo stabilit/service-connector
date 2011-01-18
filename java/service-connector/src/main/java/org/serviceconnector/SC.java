@@ -139,7 +139,7 @@ public final class SC {
 		}
 		if (AppContext.getBasicConfiguration().isWritePID()) {
 			String fs = System.getProperty("file.separator");
-			FileUtility.createPIDfile(AppContext.getBasicConfiguration().getLogPath() + fs + Constants.PID_FILE_NAME);
+			FileUtility.createPIDfile(AppContext.getBasicConfiguration().getPidPath() + fs + Constants.PID_FILE_NAME);
 		}
 		logger.log(Level.OFF, "Service Connector is running ...");
 	}
@@ -217,7 +217,7 @@ public final class SC {
 			AppContext.getCacheManager().destroy();
 			try {
 				if (AppContext.getBasicConfiguration() != null) {
-					FileUtility.deletePIDfile(AppContext.getBasicConfiguration().getLogPath() + fs + Constants.PID_FILE_NAME);
+					FileUtility.deletePIDfile(AppContext.getBasicConfiguration().getPidPath() + fs + Constants.PID_FILE_NAME);
 				}
 			} catch (Exception e) {
 			}
