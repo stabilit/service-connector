@@ -15,6 +15,7 @@
  */
 package org.serviceconnector.ctrl.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
@@ -53,15 +54,20 @@ public class ProcessesController {
 	}
 
 	/**
-	 * get path of the log directory configured in the log4j file
+	 * get path of the pid file directory configured in the property file
 	 */
-	private String getLogDirPath(String log4jProperties) throws Exception {
+	private String getPidPath(String propertyFile) throws Exception {
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
 		compositeConfig.addConfiguration(new EnvironmentConfiguration());
-		compositeConfig.addConfiguration(new PropertiesConfiguration(log4jProperties));
+		compositeConfig.addConfiguration(new PropertiesConfiguration(propertyFile));
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		// Read & parse properties file.
-		return userDir + fs + compositeConfig.getString(TestConstants.logDirectoryToken);
+		String pidPath = compositeConfig.getString(Constants.ROOT_PID_PATH);
+		File configFile = new File(pidPath);
+		if (configFile.isDirectory() == false) {
+			throw new Exception("wrong property for key=" + Constants.ROOT_PID_PATH);
+		}
+		return configFile.getAbsolutePath();
 	}
 
 	private String getPortFromConfFile(String scPropertiesFullName) throws Exception {
@@ -72,21 +78,21 @@ public class ProcessesController {
 	}
 
 	public boolean isSCDisabled() {
-	    String scDisabled = System.getProperty("scDisabled");
-	    if (scDisabled == null) {
-	    	return false;
-	    }
-	    return "true".equals(scDisabled.toLowerCase());
+		String scDisabled = System.getProperty("scDisabled");
+		if (scDisabled == null) {
+			return false;
+		}
+		return "true".equals(scDisabled.toLowerCase());
 	}
-	
+
 	public String getSCConfigurationFile() {
-	    String scConfiguration = System.getProperty("scConfiguration");
-	    if (scConfiguration == null) {
-	    	return TestConstants.SCProperties;
-	    }
-	    return scConfiguration;
+		String scConfiguration = System.getProperty("scConfiguration");
+		if (scConfiguration == null) {
+			return TestConstants.SCProperties;
+		}
+		return scConfiguration;
 	}
-	
+
 	public ProcessCtx startSC(String log4jSCProperties, String scProperties) throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
@@ -111,7 +117,7 @@ public class ProcessesController {
 		}
 		proc.setLog4jFileName(log4jFileFullName);
 
-		String logDirPath = this.getLogDirPath(log4jSCProperties);
+		String logDirPath = this.getPidPath(scProperties);
 		String pidFileFullName = logDirPath + fs + Constants.PID_FILE_NAME;
 		proc.setPidFileName(pidFileFullName);
 
