@@ -362,6 +362,7 @@ public class StatefulServer extends Server {
 				}
 			}
 		} catch (SCMPCommandException scmpCommandException) {
+			Server.logger.warn("ConnectionPoolBusyException in aborting session wait mec");
 			// ConnectionPoolBusyException after wait mec - try opening a new connection
 			RequesterContext reqContext = this.requester.getContext();
 			// set up a new requester to make the SAS - only 1 connection is allowed
@@ -370,6 +371,7 @@ public class StatefulServer extends Server {
 			try {
 				this.serverAbortSessionWithSpecialRequester(SASRequester, abortMessage, callback, oti);
 			} catch (ConnectionPoolBusyException e) {
+				Server.logger.warn("ConnectionPoolBusyException in aborting session wait mec over special connection");
 				if (this.service.getType() == ServiceType.SESSION_SERVICE) {
 					this.abortSessionsAndDestroy("Session abort over a new connection failed");
 				}
@@ -379,12 +381,14 @@ public class StatefulServer extends Server {
 				// session server - validate reply of server
 				SCMPMessage reply = callback.getMessageSync(oti);
 				if (reply.isFault()) {
+					Server.logger.warn("Fault in aborting session wait mec over special connection");
 					// error in server abort session - destroy server
 					this.abortSessionsAndDestroy("Session abort over a new connection failed");
 				}
 			}
 		} catch (Exception e) {
 			if (this.service.getType() == ServiceType.SESSION_SERVICE) {
+				Server.logger.error("Exceptiont in aborting session wait mec over special connection", e);
 				// session server - destroy server in case of an error
 				this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
 			}
@@ -424,7 +428,7 @@ public class StatefulServer extends Server {
 				this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 						.getSrvAbortOTIMillis());
 			} catch (ConnectionPoolBusyException e) {
-				Server.logger.info("aborting session failed because of busy connection pool");
+				Server.logger.warn("aborting session failed because of busy connection pool");
 			}
 			SessionLogger.logAbortSession(this.getClass().getName(), abortMessage.getSessionId());
 		}
