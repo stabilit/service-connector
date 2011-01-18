@@ -211,25 +211,4 @@ public class FileUtility {
 		}
 		return path;
 	}
-
-	/**
-	 * Adjusts relative path to absolute path
-	 * 
-	 * @param path
-	 * @return adjusted path
-	 */
-	public static String adjustPath(String path) {
-		String fs = System.getProperty("file.separator");
-		String cd = System.getProperty("user.dir");
-		String retPath = null;
-		if (path.startsWith("./")) {
-			retPath = cd + fs + path.substring(2); // prefix relative path with userdir
-		} else if (path.startsWith("../")) {
-			retPath = cd + fs + path.substring(3); // prefix relative path with userdir
-		} else {
-			retPath = path; // is absolute path
-		}
-		return retPath;
-	}
-
 }

@@ -15,12 +15,13 @@ jettz *       Copyright © 2010 STABILIT Informatik AG, Switzerland              
  */
 package org.serviceconnector.conf;
 
+import java.io.File;
+
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.util.FileUtility;
 
 /**
  * root.writePID=true root.operationTimeoutMultiplier=0.8 root.echoIntervalMultiplier=1.2 root.connectionTimeoutMillis=10000
@@ -49,9 +50,10 @@ public class BasicConfiguration {
 	private double echoIntervalMultiplier = Constants.DEFAULT_ECHO_INTERVAL_MULTIPLIER;
 	/** Timeout to prevent stocking in technical connect process. */
 	private int connectionTimeoutMillis = Constants.DEFAULT_CONNECT_TIMEOUT_MILLIS;
-	/** The subscription timeout. 
-	 * Monitors the maximum time between receive publication. 
-	 * If this timeout expires, subscription is deleted*/
+	/**
+	 * The subscription timeout. Monitors the maximum time between receive publication. If this timeout expires, subscription is
+	 * deleted
+	 */
 	private int subscriptionTimeoutMillis = Constants.DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS;
 	/** The command validation. */
 	private boolean commandValidation = Constants.COMMAND_VALIDATION_ENABLED;
@@ -66,11 +68,10 @@ public class BasicConfiguration {
 	 */
 	private int srvAbortOTIMillis = Constants.DEFAULT_SERVER_ABORT_OTI_MILLIS;
 	/**
-	 * the maximum size of a message (part)
-	 * Larger messages will be splitted . <br>
+	 * the maximum size of a message (part) Larger messages will be splitted . <br>
 	 */
 	private int maxMessageSize = Constants.DEFAULT_MAX_MESSAGE_SIZE;
-	
+
 	/**
 	 * Instantiates a new basic configuration.
 	 */
@@ -94,29 +95,42 @@ public class BasicConfiguration {
 		// pidPath
 		String localPidPath = compositeConfiguration.getString(Constants.ROOT_PID_PATH, null);
 		if (localPidPath == null && this.writePID) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
-					+ Constants.ROOT_PID_PATH + " is missing");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.ROOT_PID_PATH
+					+ " is missing");
 		}
 		if (this.pidPath != localPidPath) {
-			this.pidPath = FileUtility.adjustPath(localPidPath);
-			logger.info("pidPath set to " + localPidPath);
+			File configFile = new File(localPidPath);
+			if (configFile.isDirectory() == false) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
+						+ Constants.ROOT_PID_PATH + " is not a directory");
+			}
+			this.pidPath = configFile.getAbsolutePath();
+			logger.info("pidPath set to " + this.pidPath);
 		}
 
 		// dumpPath
 		String localdumpPath = compositeConfiguration.getString(Constants.ROOT_DUMP_PATH, null);
+		if (localdumpPath == null) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.ROOT_DUMP_PATH
+					+ " is missing");
+		}
 		if (this.dumpPath != localdumpPath) {
-			this.dumpPath = FileUtility.adjustPath(localdumpPath);
-			logger.info("dumpPath set to " + localdumpPath);
+			File dumpFile = new File(localdumpPath);
+			if (dumpFile.isDirectory() == false) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
+						+ Constants.ROOT_DUMP_PATH + " is not a directory");
+			}
+			this.dumpPath = dumpFile.getAbsolutePath();
+			logger.info("dumpPath set to " + this.dumpPath);
 		}
 
-		
 		// maxMessageSize
 		Integer localMaxMessageSize = compositeConfiguration.getInteger(Constants.ROOT_MAX_MESSAGE_SIZE, null);
 		if (localMaxMessageSize != null && this.maxMessageSize != localMaxMessageSize) {
 			this.maxMessageSize = localMaxMessageSize;
 			logger.info("maxMessageSize set to " + localMaxMessageSize);
-		}		
-		
+		}
+
 		// operationTimeoutMultiplier
 		Double localOTIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_OPERATION_TIMEOUT_MULTIPLIER, null);
 		if (localOTIMultiplier != null && this.operationTimeoutMultiplier != localOTIMultiplier) {
@@ -246,7 +260,7 @@ public class BasicConfiguration {
 	public String getPidPath() {
 		return pidPath;
 	}
-	
+
 	/**
 	 * Gets the path to the directory where dump file should be written to
 	 * 
