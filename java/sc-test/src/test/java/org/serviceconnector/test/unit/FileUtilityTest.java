@@ -24,23 +24,5 @@ import org.serviceconnector.util.FileUtility;
 
 public class FileUtilityTest extends SuperUnitTest {
 	
-	/**
-	 * Description: adjust absolute path<br>
-	 * Expectation: returns unchanged pass
-	 */
-	@Test
-	public void t01_adjustAbsolutePath() throws SCMPValidatorException {
-		Assert.assertEquals("path is not the same", System.getProperty("user.dir"), FileUtility.adjustPath(System.getProperty("user.dir")));
-	}
-
-	/**
-	 * Description: adjust relative path<br>
-	 * Expectation: returns user-dir + relative path
-	 */
-	@Test
-	public void t01_adjustrelativePath() throws SCMPValidatorException {
-		Assert.assertEquals("path is not the same", System.getProperty("user.dir")+"\\log", FileUtility.adjustPath("../log"));
-	}
-
 	
 }
