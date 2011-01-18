@@ -295,6 +295,8 @@ public class ClnExecuteCommand extends CommandAdapter {
 	 */
 	private class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 
+		/** The Constant logger. */
+		protected final Logger logger = Logger.getLogger(ClnExecuteCommandCallback.class);
 		/** The callback. */
 		private IResponderCallback responderCallback;
 		/** The request. */
@@ -337,7 +339,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 				try {
 					Cache scmpCache = cacheManager.getCache(serviceName);
 					if (scmpCache == null) {
-						CommandCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
+						this.logger.error("cache write failed, no cache, service name = " + serviceName);
 					} else {
 						CacheLogger.debug("cache message put reply, scmp reply cacheId = " + reply.getCacheId() + ", isReply = "
 								+ reply.isReply() + ", isPart = " + reply.isPart() + ", isPollRequest = " + reply.isPollRequest());
@@ -361,7 +363,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 					}
 				} catch (Exception e) {
 					CacheLogger.debug("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
-					CommandCallback.logger.error(e.toString());
+					this.logger.error(e.toString());
 				}
 			}
 			// forward server reply to client

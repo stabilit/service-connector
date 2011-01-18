@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPSrvAbortSessionCall;
 import org.serviceconnector.call.SCMPSrvChangeSubscriptionCall;
@@ -29,10 +30,14 @@ import org.serviceconnector.call.SCMPSrvDeleteSessionCall;
 import org.serviceconnector.call.SCMPSrvExecuteCall;
 import org.serviceconnector.call.SCMPSrvSubscribeCall;
 import org.serviceconnector.call.SCMPSrvUnsubscribeCall;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.sc.CommandCallback;
+import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
+import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
@@ -42,6 +47,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.PublishService;
+import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.Subscription;
@@ -50,6 +56,8 @@ public class StatefulServer extends Server {
 
 	private static SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
+	/** The basic configuration. */
+	protected BasicConfiguration basicConf = AppContext.getBasicConfiguration();
 	/** The sessions, list of sessions allocated to the server. */
 	private List<AbstractSession> sessions;
 	/** The max sessions. */
@@ -263,12 +271,35 @@ public class StatefulServer extends Server {
 	 *            the message
 	 * @param callback
 	 *            the callback
+	 * @throws ConnectionPoolBusyException
 	 */
-	public void serverAbortSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) {
+	public void serverAbortSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
+		this.serverAbortSessionWithSpecialRequester(this.requester, message, callback, timeoutMillis);
+	}
+
+	/**
+	 * Server abort session with special requester.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param message
+	 *            the message
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout milliseconds
+	 * @throws ConnectionPoolBusyException
+	 *             the connection pool busy exception
+	 */
+	void serverAbortSessionWithSpecialRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
+			int timeoutMillis) throws ConnectionPoolBusyException {
 		SCMPSrvAbortSessionCall srvAbortSessionCall = (SCMPSrvAbortSessionCall) SCMPCallFactory.SRV_ABORT_SESSION.newInstance(
 				this.requester, message);
 		try {
 			srvAbortSessionCall.invoke(callback, timeoutMillis);
+		} catch (ConnectionPoolBusyException ex) {
+			throw ex;
 		} catch (Exception th) {
 			callback.receive(th);
 		}
@@ -286,26 +317,77 @@ public class StatefulServer extends Server {
 		StatefulServer.subscriptionRegistry.removeSubscription(session.getId());
 		// delete session on this server
 		this.removeSession(session);
-		CommandCallback callback = new CommandCallback(true);
+		CommandCallback callback = null;
+
+		int oti = this.basicConf.getSrvAbortOTIMillis();
+		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		int i = 0;
+		int otiOnServerMillis = 0;
+		// set up abort message
+		SCMPMessage abortMessage = new SCMPMessage();
+		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
+		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText(reason));
+		abortMessage.setServiceName(this.getServiceName());
+		abortMessage.setSessionId(session.getId());
+		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
 		try {
-			// no need for forwarding message id
-			SCMPMessage abortMessage = new SCMPMessage();
-			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
-			abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText(reason));
-			abortMessage.setServiceName(this.getServiceName());
-			abortMessage.setSessionId(session.getId());
-			abortMessage
-					.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
-			this.serverAbortSession(abortMessage, callback, AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
+			// Following loop implements the wait mechanism in case of a busy connection pool
+			do {
+				callback = new CommandCallback(true);
+				try {
+					otiOnServerMillis = oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+					this.serverAbortSession(abortMessage, callback, otiOnServerMillis);
+					// no exception has been thrown - get out of wait loop
+					break;
+				} catch (ConnectionPoolBusyException ex) {
+					logger.warn("ConnectionPoolBusyException caught in wait mec of session abort");
+					if (i >= (tries - 1)) {
+						// only one loop outstanding - don't continue throw current exception
+						logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + abortMessage.getServiceName()));
+						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
+								"service=" + abortMessage.getServiceName());
+						throw scmpCommandException;
+					}
+				}
+				// sleep for a while and then try again
+				Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+			} while (++i < tries);
+
+			if (this.service.getType() == ServiceType.SESSION_SERVICE) {
+				// session server - validate reply of server
+				SCMPMessage reply = callback.getMessageSync(oti);
+				if (reply.isFault()) {
+					// error in server abort session - destroy server
+					this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
+				}
+			}
+		} catch (SCMPCommandException scmpCommandException) {
+			// ConnectionPoolBusyException after wait mec - try opening a new connection
+			RequesterContext reqContext = this.requester.getContext();
+			// set up a new requester to make the SAS - only 1 connection is allowed
+			Requester SASRequester = new Requester(new RequesterContext(host, portNr, reqContext.getConnectionType(), reqContext
+					.getKeepAliveIntervalInSeconds(), 1));
+			try {
+				this.serverAbortSessionWithSpecialRequester(SASRequester, abortMessage, callback, oti);
+			} catch (ConnectionPoolBusyException e) {
+				if (this.service.getType() == ServiceType.SESSION_SERVICE) {
+					this.abortSessionsAndDestroy("Session abort over a new connection failed");
+				}
+				return;
+			}
+			if (this.service.getType() == ServiceType.SESSION_SERVICE) {
+				// session server - validate reply of server
+				SCMPMessage reply = callback.getMessageSync(oti);
+				if (reply.isFault()) {
+					// error in server abort session - destroy server
+					this.abortSessionsAndDestroy("Session abort over a new connection failed");
+				}
+			}
 		} catch (Exception e) {
-			// server session abort failed - clean up server
-			this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason + ". exception:" + e);
-			return;
-		}
-		SCMPMessage reply = callback.getMessageSync(AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
-		if (reply.isFault()) {
-			// error in server abort session operation
-			this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
+			if (this.service.getType() == ServiceType.SESSION_SERVICE) {
+				// session server - destroy server in case of an error
+				this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
+			}
 		}
 	}
 
@@ -331,14 +413,19 @@ public class StatefulServer extends Server {
 				}
 				SubscriptionQueue<SCMPMessage> queue = ((PublishService) ((StatefulServer) session.getServer()).getService())
 						.getSubscriptionQueue();
+				// unsubscribe subscription
 				queue.unsubscribe(session.getId());
 			} else {
 				StatefulServer.sessionRegistry.removeSession((Session) session);
 			}
 			abortMessage.setSessionId(session.getId());
 			abortMessage.setServiceName(this.getServiceName());
-			this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
-					.getSrvAbortOTIMillis());
+			try {
+				this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
+						.getSrvAbortOTIMillis());
+			} catch (ConnectionPoolBusyException e) {
+				Server.logger.info("aborting session failed because of busy connection pool");
+			}
 			SessionLogger.logAbortSession(this.getClass().getName(), abortMessage.getSessionId());
 		}
 		this.destroy();

@@ -84,7 +84,7 @@ public class InspectCommand extends CommandAdapter {
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
 			return;
-		} else if (bodyString.equalsIgnoreCase(Constants.STATE)) {
+		} else if (bodyString.startsWith(Constants.STATE)) {
 			// state for service requested
 			String serviceName = bodyString.substring(6);
 			logger.debug("state request for service:" + serviceName);
@@ -108,7 +108,7 @@ public class InspectCommand extends CommandAdapter {
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
 			return;
-		} else if (bodyString.equalsIgnoreCase(Constants.SESSIONS)) {
+		} else if (bodyString.startsWith(Constants.SESSIONS)) {
 			// state for service requested
 			String serviceName = bodyString.substring(9);
 			logger.debug("sessions request for service:" + serviceName);
@@ -129,9 +129,11 @@ public class InspectCommand extends CommandAdapter {
 			logger.error("wrong inspect command body=" + bodyString); // body has bad syntax
 			scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_INSPECT_COMMAND, bodyString);
 			response.setSCMP(scmpReply);
+			// initiate responder to send reply
+			responderCallback.responseCallback(request, response);
 		}
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void validate(IRequest request) throws Exception {

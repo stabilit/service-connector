@@ -29,6 +29,7 @@ import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPManageCall;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
@@ -44,6 +45,7 @@ public class SCMPManageTest extends IntegrationSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
+		AppContext.init();
 		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
 				.getValue(), 0));
 	}

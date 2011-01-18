@@ -36,7 +36,6 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled("notExistingService"));
-		client.detach();
 	}
 
 	/**
@@ -48,7 +47,6 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		client.enableService("notExistingService");
-		client.detach();
 	}
 	
 	/**
@@ -60,7 +58,6 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		client.disableService("notExistingService");
-		client.detach();
 	}
 
 	/**
