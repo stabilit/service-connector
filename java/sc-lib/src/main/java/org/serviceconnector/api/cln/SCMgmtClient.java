@@ -88,7 +88,6 @@ public class SCMgmtClient extends SCClient {
 	 */
 	public boolean isServiceEnabled(String serviceName) throws SCServiceException {
 		if (this.attached == false) {
-			// isServiceEnabled not possible - client not attached
 			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
 		}
 		String body = this.inspectCall(Constants.STATE + Constants.EQUAL_SIGN + serviceName);
@@ -109,12 +108,30 @@ public class SCMgmtClient extends SCClient {
 	 */
 	public String getWorkload(String serviceName) throws SCServiceException {
 		if (this.attached == false) {
-			// isServiceEnabled not possible - client not attached
 			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
 		}
 		return this.inspectCall(Constants.SESSIONS + Constants.EQUAL_SIGN + serviceName);
 	}
 
+	/**
+	 * Clears the cache for given service name.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @throws SCServiceException
+	 *             the SC service exception
+	 */
+	public void clearCache(String serviceName) throws SCServiceException {
+		if (this.attached == false) {
+			throw new SCServiceException("client not attached - clearCache not possible.");
+		}
+		String body = this.manageCall(Constants.CLEAR_CACHE + Constants.EQUAL_SIGN + serviceName);
+		if (body != null) {
+			throw new SCServiceException(body);
+		}
+	}
+
+	
 	/**
 	 * Request dump.
 	 * 
@@ -137,40 +154,11 @@ public class SCMgmtClient extends SCClient {
 	 */
 	public void killSC() throws SCServiceException {
 		if (this.attached == false) {
-			// killSC not possible - client not attached
 			throw new SCServiceException("client not attached - killSC not possible.");
 		}
 		this.manageCall(Constants.KILL);
 		try {
 			// sleep to assure kill is sent
-			Thread.sleep(1000);
-		} catch (Exception e) {
-			// ignore exception
-		}
-		this.attached = false;
-		// destroy connection pool
-		this.requester.destroy();
-		synchronized (AppContext.communicatorsLock) {
-			AppContext.attachedCommunicators.decrementAndGet();
-			// release resources
-			AppContext.destroy();
-		}
-	}
-
-	/**
-	 * Restart SC.
-	 * 
-	 * @throws SCServiceException
-	 *             the sC service exception
-	 */
-	public void restartSC() throws SCServiceException {
-		if (this.attached == false) {
-			// restartSC not possible - client not attached
-			throw new SCServiceException("client not attached - restartSC not possible.");
-		}
-		this.manageCall(Constants.RESTARTSC);
-		try {
-			// sleep to assure restart is sent
 			Thread.sleep(1000);
 		} catch (Exception e) {
 			// ignore exception
@@ -236,8 +224,8 @@ public class SCMgmtClient extends SCClient {
 			this.requester.destroy();
 			throw new SCServiceException(instruction + " SC failed", e);
 		}
-		if (instruction.equalsIgnoreCase(Constants.KILL) || instruction.equalsIgnoreCase(Constants.RESTARTSC)) {
-			// kill SC & restartSC doesn't reply a message
+		if (instruction.equalsIgnoreCase(Constants.KILL)) {
+			// kill SC doesn't reply a message
 			return null;
 		}
 		SCMPMessage reply = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);

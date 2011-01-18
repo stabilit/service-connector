@@ -14,17 +14,33 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.console;
+package org.serviceconnector.test.unit;
 
-public final class ConsoleConstants {
+import junit.framework.Assert;
+
+import org.junit.Test;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.util.FileUtility;
+
+public class FileUtilityTest extends SuperUnitTest {
 	
-	private ConsoleConstants() {
-		// instantiating not allowed
+	/**
+	 * Description: adjust absolute path<br>
+	 * Expectation: returns unchanged pass
+	 */
+	@Test
+	public void t01_adjustAbsolutePath() throws SCMPValidatorException {
+		Assert.assertEquals("path is not the same", System.getProperty("user.dir"), FileUtility.adjustPath(System.getProperty("user.dir")));
 	}
+
+	/**
+	 * Description: adjust relative path<br>
+	 * Expectation: returns user-dir + relative path
+	 */
+	@Test
+	public void t01_adjustrelativePath() throws SCMPValidatorException {
+		Assert.assertEquals("path is not the same", System.getProperty("user.dir")+"\\log", FileUtility.adjustPath("../log"));
+	}
+
 	
-	/** File qualifier for command line argument host */
-	public static final String CLI_HOST_ARG = "-h";
-	
-	/** File qualifier for command line argument port */
-	public static final String CLI_PORT_ARG = "-p";
 }

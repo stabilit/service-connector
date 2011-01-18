@@ -295,14 +295,14 @@ public class StatefulServer extends Server {
 			abortMessage.setServiceName(this.getServiceName());
 			abortMessage.setSessionId(session.getId());
 			abortMessage
-					.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, AppContext.getBasicConfiguration().getSrvAbortTimeout());
-			this.serverAbortSession(abortMessage, callback, AppContext.getBasicConfiguration().getSrvAbortTimeout());
+					.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
+			this.serverAbortSession(abortMessage, callback, AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
 		} catch (Exception e) {
 			// server session abort failed - clean up server
 			this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason + ". exception:" + e);
 			return;
 		}
-		SCMPMessage reply = callback.getMessageSync(AppContext.getBasicConfiguration().getSrvAbortTimeout());
+		SCMPMessage reply = callback.getMessageSync(AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
 		if (reply.isFault()) {
 			// error in server abort session operation
 			this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
@@ -319,7 +319,7 @@ public class StatefulServer extends Server {
 		SCMPMessage abortMessage = new SCMPMessage();
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT, SCMPError.SESSION_ABORT.getErrorText(reason));
-		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, AppContext.getBasicConfiguration().getSrvAbortTimeout());
+		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
 
 		for (AbstractSession session : this.sessions) {
 			// delete session in global registries
@@ -338,7 +338,7 @@ public class StatefulServer extends Server {
 			abortMessage.setSessionId(session.getId());
 			abortMessage.setServiceName(this.getServiceName());
 			this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
-					.getSrvAbortTimeout());
+					.getSrvAbortOTIMillis());
 			SessionLogger.logAbortSession(this.getClass().getName(), abortMessage.getSessionId());
 		}
 		this.destroy();

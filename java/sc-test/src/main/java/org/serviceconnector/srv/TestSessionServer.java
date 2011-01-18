@@ -71,7 +71,7 @@ public class TestSessionServer extends TestStatefulServer {
 	public void run() {
 		// add exit handler
 		try {
-			this.addExitHandler(FileUtility.getPath() + fs + this.serverName + ".pid");
+			this.addExitHandler(FileUtility.getLogPath() + fs + this.serverName + ".pid");
 		} catch (SCMPValidatorException e1) {
 			logger.fatal("unable to get path to pid file", e1);
 		}
@@ -96,7 +96,7 @@ public class TestSessionServer extends TestStatefulServer {
 					server.deregister();
 				}
 			}
-			FileUtility.createPIDfile(FileUtility.getPath() + fs + this.serverName + ".pid");
+			FileUtility.createPIDfile(FileUtility.getLogPath() + fs + this.serverName + ".pid");
 			logger.log(Level.OFF, "TestSessionServer is running ...");
 			// server.destroy();
 		} catch (Exception e) {

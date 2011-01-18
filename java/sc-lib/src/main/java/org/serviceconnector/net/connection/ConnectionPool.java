@@ -421,7 +421,7 @@ public class ConnectionPool {
 		try {
 			ConnectionPoolCallback callback = new ConnectionPoolCallback();
 			connection.send(keepAliveMessage, callback);
-			callback.getMessageSync(AppContext.getBasicConfiguration().getKeepAliveTimeoutMillis());
+			callback.getMessageSync(AppContext.getBasicConfiguration().getKeepAliveOTIMillis());
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception ex) {

@@ -36,9 +36,9 @@ public class TestAbstractClient extends Thread {
 	public void run() {
 		try {
 			try {
-				FileUtility.createPIDfile(FileUtility.getPath() + fs + this.clientName + ".pid");
+				FileUtility.createPIDfile(FileUtility.getLogPath() + fs + this.clientName + ".pid");
 				// add exit handler
-				this.addExitHandler(FileUtility.getPath() + fs + this.clientName + ".pid");
+				this.addExitHandler(FileUtility.getLogPath() + fs + this.clientName + ".pid");
 			} catch (SCMPValidatorException e1) {
 				logger.fatal("unable to get path to pid file", e1);
 			} catch (Exception e) {

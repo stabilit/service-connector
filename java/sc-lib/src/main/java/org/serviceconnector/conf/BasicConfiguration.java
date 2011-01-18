@@ -18,6 +18,7 @@ package org.serviceconnector.conf;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.util.FileUtility;
 
 /**
  * root.writePID=true root.operationTimeoutMultiplier=0.8 root.echoIntervalMultiplier=1.2 root.connectionTimeoutMillis=10000
@@ -29,10 +30,8 @@ public class BasicConfiguration {
 	protected final static Logger logger = Logger.getLogger(BasicConfiguration.class);
 	/** The write pid. */
 	private boolean writePID = Constants.DEFAULT_WRITE_PID_FLAG;
-	/** The pid file path. */
-	private String pidPath = null;
-	/** The dump file path. */
-	private String dumpPath = null;
+	/** The log path. */
+	private String logPath = null;
 
 	/**
 	 * Multiplier to calculate the operation timeout.<br>
@@ -46,7 +45,9 @@ public class BasicConfiguration {
 	private double echoIntervalMultiplier = Constants.DEFAULT_ECHO_INTERVAL_MULTIPLIER;
 	/** Timeout to prevent stocking in technical connect process. */
 	private int connectionTimeoutMillis = Constants.DEFAULT_CONNECT_TIMEOUT_MILLIS;
-	/** The subscription timeout. */
+	/** The subscription timeout. 
+	 * Monitors the maximum time between receive publication. 
+	 * If this timeout expires, subscription is deleted*/
 	private int subscriptionTimeoutMillis = Constants.DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS;
 	/** The command validation. */
 	private boolean commandValidation = Constants.COMMAND_VALIDATION_ENABLED;
@@ -54,12 +55,12 @@ public class BasicConfiguration {
 	 * Used to observe the reply of a keep alive message. <br>
 	 * If the peer does not reply within this time, connection will be cleaned up.
 	 */
-	private int keepAliveTimeoutMillis = Constants.DEFAULT_KEEP_ALIVE_TIMEOUT_MILLIS;
+	private int keepAliveOTIMillis = Constants.DEFAULT_KEEP_ALIVE_OTI_MILLIS;
 	/**
 	 * Used to observe the reply of a abort session. <br>
 	 * If server does not reply within this time, the server will be cleaned up.
 	 */
-	private int srvAbortTimeout = Constants.DEFAULT_SERVER_ABORT_OTI_MILLIS;
+	private int srvAbortOTIMillis = Constants.DEFAULT_SERVER_ABORT_OTI_MILLIS;
 
 	/**
 	 * Instantiates a new basic configuration.
@@ -80,19 +81,12 @@ public class BasicConfiguration {
 			this.writePID = localWritePID;
 			logger.info("writePID set to " + localWritePID);
 		}
-		
-		// pidPath
-		String localPidPath = compositeConfiguration.getString(Constants.ROOT_PID_FILE_PATH, null);
-		if (localPidPath != null && this.pidPath != localPidPath) {
-			this.pidPath = localPidPath;
-			logger.info("pidPath set to " + localPidPath);
-		}
-		
-		// dumpPath
-		String localDumpPath = compositeConfiguration.getString(Constants.ROOT_DUMP_FILE_PATH, null);
-		if (localDumpPath != null && this.dumpPath != localDumpPath) {
-			this.dumpPath = localDumpPath;
-			logger.info("dumpPath set to " + localDumpPath);
+			
+		// logPath
+		String localLogPath = compositeConfiguration.getString(Constants.ROOT_LOG_PATH, null);
+		if (localLogPath != null && this.logPath != localLogPath) {
+			this.logPath = FileUtility.adjustPath(localLogPath);
+			logger.info("logPath set to " + localLogPath);
 		}
 		
 		// operationTimeoutMultiplier
@@ -130,17 +124,17 @@ public class BasicConfiguration {
 			logger.info("commandValidation set to " + localCMDValidation);
 		}
 		// keepAliveTimeout in milliseconds
-		Integer localKeepAliveTimeoutMillis = compositeConfiguration.getInteger(Constants.ROOT_KEEP_ALIVE_TIMEOUT_MILLIS, null);
-		if (localKeepAliveTimeoutMillis != null && this.keepAliveTimeoutMillis != localKeepAliveTimeoutMillis) {
-			this.keepAliveTimeoutMillis = localKeepAliveTimeoutMillis;
-			logger.info("keepAliveTimeoutMillis set to " + localKeepAliveTimeoutMillis);
+		Integer localKeepAliveOTIMillis = compositeConfiguration.getInteger(Constants.ROOT_KEEP_ALIVE_OTI_MILLIS, null);
+		if (localKeepAliveOTIMillis != null && this.keepAliveOTIMillis != localKeepAliveOTIMillis) {
+			this.keepAliveOTIMillis = localKeepAliveOTIMillis;
+			logger.info("keepAliveTimeoutMillis set to " + localKeepAliveOTIMillis);
 		}
 
 		// serverAbortTimeout
-		Integer localSrvAbortTimeout = compositeConfiguration.getInteger(Constants.ROOT_SERVER_ABORT_TIMEOUT_MILLIS, null);
-		if (localSrvAbortTimeout != null && this.srvAbortTimeout != localSrvAbortTimeout) {
-			this.srvAbortTimeout = localSrvAbortTimeout;
-			logger.info("srvAbortTimeout set to " + localSrvAbortTimeout);
+		Integer localSrvAbortOTIMillis = compositeConfiguration.getInteger(Constants.ROOT_SERVER_ABORT_OTI_MILLIS, null);
+		if (localSrvAbortOTIMillis != null && this.srvAbortOTIMillis != localSrvAbortOTIMillis) {
+			this.srvAbortOTIMillis = localSrvAbortOTIMillis;
+			logger.info("srvAbortOTIMillis set to " + localSrvAbortOTIMillis);
 		}
 	}
 
@@ -199,12 +193,12 @@ public class BasicConfiguration {
 	}
 
 	/**
-	 * Gets the keep alive timeout in milliseconds.
+	 * Gets the keep alive oti in milliseconds.
 	 * 
-	 * @return the keep alive timeout in milliseconds
+	 * @return the keep alive oti in milliseconds
 	 */
-	public int getKeepAliveTimeoutMillis() {
-		return keepAliveTimeoutMillis;
+	public int getKeepAliveOTIMillis() {
+		return keepAliveOTIMillis;
 	}
 
 	/**
@@ -212,26 +206,17 @@ public class BasicConfiguration {
 	 * 
 	 * @return the srv abort timeout
 	 */
-	public int getSrvAbortTimeout() {
-		return srvAbortTimeout;
+	public int getSrvAbortOTIMillis() {
+		return srvAbortOTIMillis;
 	}
 
 	/**
-	 * Gets the PID file path
+	 * Gets the log direcory path
 	 * 
-	 * @return the PID file path
+	 * @return the log path
 	 */
-	public String getPidPath() {
-		return pidPath;
-	}
-
-	/**
-	 * Gets the dump file path
-	 * 
-	 * @return the dump file path
-	 */
-	public String getDumpPath() {
-		return dumpPath;
+	public String getLogPath() {
+		return logPath;
 	}
 
 }

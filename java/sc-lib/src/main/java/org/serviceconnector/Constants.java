@@ -66,9 +66,9 @@ public final class Constants {
 	public static final int DEFAULT_NO_DATA_INTERVAL_SECONDS = 300;
 
 	/**
-	 * Default value used if no DEFAULT_KEEP_ALIVE_TIMEOUT_MILLIS is configured.
+	 * Default value used if no DEFAULT_KEEP_ALIVE_OTI_MILLIS is configured.
 	 */
-	public static final int DEFAULT_KEEP_ALIVE_TIMEOUT_MILLIS = 2000;
+	public static final int DEFAULT_KEEP_ALIVE_OTI_MILLIS = 2000;
 
 	/** The default keep alive interval, 0 = not active. */
 	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 60;
@@ -159,10 +159,9 @@ public final class Constants {
 	public static final String ENABLE = "enable";
 	public static final String STATE = "state";
 	public static final String SESSIONS = "sessions";
+	public static final String CLEAR_CACHE = "clear";
 	public static final String KILL = "kill";
 	public static final String DUMP = "dump";
-	public static final String RESTARTSC = "restartSC";
-	public static final String STARTSC = "startSC";
 	public static final String EQUAL_SIGN = "=";
 
 	/*
@@ -174,10 +173,9 @@ public final class Constants {
 	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
 	public static final String ROOT_CONNECTION_TIMEOUT_MILLIS = "root.connectionTimeoutMillis";
 	public static final String ROOT_SUBSCRIPTION_TIMEOUT_MILLIS = "root.subscriptionTimeoutMillis";
-	public static final String ROOT_SERVER_ABORT_TIMEOUT_MILLIS = "root.serverAbortTimeoutMillis";
-	public static final String ROOT_KEEP_ALIVE_TIMEOUT_MILLIS = "root.keepAliveTimeoutMillis";
-	public static final String ROOT_DUMP_FILE_PATH = "root.scDumpPath";
-	public static final String ROOT_PID_FILE_PATH = "root.pidPath";
+	public static final String ROOT_SERVER_ABORT_OTI_MILLIS = "root.serverAbortOTIMillis";
+	public static final String ROOT_KEEP_ALIVE_OTI_MILLIS = "root.keepAliveOTIMillis";
+	public static final String ROOT_LOG_PATH = "root.logPath";
 
 	public static final String PROPERTY_LISTENERS = "listeners";
 	public static final String PROPERTY_SERVICE_NAMES = "serviceNames";
@@ -202,7 +200,6 @@ public final class Constants {
 
 	// default cache values
 	public static final boolean DEFAULT_CACHE_ENABLED = true;
-
 	public static final String DEFAULT_CACHE_NAME = "scCache";
 	public static final boolean DEFAULT_CACHE_DISK_PERSISTENT = true;
 	public static final String DEFAULT_CACHE_DISK_PATH = "cache";

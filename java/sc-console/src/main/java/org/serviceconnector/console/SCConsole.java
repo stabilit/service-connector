@@ -34,8 +34,8 @@ public class SCConsole {
 	 *            java -jar scconsole.jar -h localhost -p 7000 disable=abc<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 state=abc<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 sessions=abc<br>
+	 *            java -jar scconsole.jar -h localhost -p 7000 clear=abc<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 kill<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 restartSC<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 dump<br>
 	 *            java -jar scconsole.jar -l log4j-sc.properties -c sc.properties startSC<br>
 	 *            
@@ -69,25 +69,10 @@ public class SCConsole {
 			System.exit(1);
 		}
 
-		// check log4j file
-		String log4jFile = CommandLineUtil.getArg(args, ConsoleConstants.CLI_LOG4J_ARG);
-		// check property file
-		String propertyFile = CommandLineUtil.getArg(args, ConsoleConstants.CLI_PROP_ARG);
 		// check host
 		String host = CommandLineUtil.getArg(args, ConsoleConstants.CLI_HOST_ARG);
 		// check port
 		String port = CommandLineUtil.getArg(args, ConsoleConstants.CLI_PORT_ARG);
-
-		if (log4jFile == null && propertyFile != null) {
-			showError("Log4jFile argument is missing");
-			System.exit(1);
-		} else if (log4jFile != null && propertyFile == null) {
-			showError("Property file argument is missing");
-			System.exit(1);
-		} else if (log4jFile != null && propertyFile != null) {
-			int status = SCConsole.run(log4jFile, propertyFile, bodyString);
-			System.exit(status);
-		}
 
 		if (host == null) {
 			showError("Host argument is missing");
@@ -112,8 +97,8 @@ public class SCConsole {
 	private static int run(String arg0, String arg1, String bodyString) throws Exception {
 
 		/** The Constant COMMAND_REGEX_STRING. */
-		String regex = "(" + Constants.KILL + "|" + Constants.STARTSC + "|" + Constants.RESTARTSC + "|" + Constants.DUMP + "|("
-				+ Constants.ENABLE + "|" + Constants.DISABLE + "|" + Constants.STATE + "|" + Constants.SESSIONS + ")"
+		String regex = "(" + Constants.KILL + "|" + Constants.DUMP + "|("
+				+ Constants.ENABLE + "|" + Constants.DISABLE + "|" + Constants.STATE + "|" + Constants.SESSIONS + "|" + Constants.CLEAR_CACHE + ")"
 				+ Constants.EQUAL_SIGN + "(.*))";
 		int status = 0;
 
@@ -128,28 +113,19 @@ public class SCConsole {
 		String serviceName = m.group(3);
 
 		try {
-			if (command.equalsIgnoreCase(Constants.STARTSC)) {
-				System.out.println("SC start requested");
-				Thread.sleep(1000);
-				// TODO JOT mut get JVM params of previously running SC in cli-args or elsewhere. Hardcoded values will not wor at SIX
-				String startSCCmd = "java -Dlog4j.configuration=file:..\\config\\" + arg0
-						+ " -jar ..\\bin\\sc.jar -sc.configuration ..\\config\\" + arg1;
-				Runtime.getRuntime().exec(startSCCmd);
-				return status;
-			}
-
 			SCMgmtClient client = new SCMgmtClient(arg0, Integer.parseInt(arg1), ConnectionType.NETTY_TCP);
 			client.attach(5);
 
-			if (command.equalsIgnoreCase(Constants.RESTARTSC)) {
-				client.restartSC();
-				System.out.println("SC restart requested");
-			} else if (command.equalsIgnoreCase(Constants.KILL)) {
+			if (command.equalsIgnoreCase(Constants.KILL)) {
 				client.killSC();
 				System.out.println("SC exit requested");
 			} else if (command.equalsIgnoreCase(Constants.DUMP)) {
 				client.dump();
 				System.out.println("SC dump requested");
+				client.detach();
+			} else if (function.equalsIgnoreCase(Constants.CLEAR_CACHE)) {
+				client.clearCache(serviceName);
+				System.out.println("Cache for service [" + serviceName + "] has been cleared");
 				client.detach();
 			} else if (function.equalsIgnoreCase(Constants.ENABLE)) {
 				client.enableService(serviceName);

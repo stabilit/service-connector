@@ -33,7 +33,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.ServiceState;
-import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -82,19 +81,6 @@ public class ManageCommand extends CommandAdapter {
 		if ((ipAddress.equals(localHost.getHostAddress())) && (bodyString.equalsIgnoreCase(Constants.KILL))) {
 			// kill request is allowed from localhost only!
 			logger.info("SC stopped by kill console command");
-			System.exit(0);
-		}
-
-		if ((ipAddress.equals(localHost.getHostAddress())) && (bodyString.equalsIgnoreCase(Constants.RESTARTSC))) {
-			// restart SC is allowed from localhost only!
-			logger.info("SC restart requested by restartSC console command");
-			// TODO JOT mut get JVM params of running SC. hardcoded values will not wor at SIX
-			String log4jFilePath = System.getProperty("log4j.configuration");
-			String log4jFile = log4jFilePath.substring(log4jFilePath.lastIndexOf("\\") + 1);
-			String configFile = SystemInfo.getConfigFileName().substring(SystemInfo.getConfigFileName().lastIndexOf("\\") + 1);
-			String startSCCmd = "java -jar ..\\bin\\scconsole.jar -l " + log4jFile + " -p " + configFile + " startSC";
-			logger.debug("startSCCmd: " + startSCCmd);
-			Runtime.getRuntime().exec(startSCCmd);
 			System.exit(0);
 		}
 
