@@ -123,11 +123,6 @@ public final class SC {
 		// initialize statistics
 		Statistics statistics = Statistics.getInstance();
 		statistics.setStartupDateTime(new Timestamp(Calendar.getInstance().getTime().getTime()));
-		// load cache manager
-		AppContext.getCacheManager().initialize();
-
-		// clean up and initialize cache
-		// Cache cache = Cache.initialize();
 
 		// create configured responders / listeners
 		List<CommunicatorConfig> responderList = AppContext.getResponderConfiguration().getResponderConfigList();

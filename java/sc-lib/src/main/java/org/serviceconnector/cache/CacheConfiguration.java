@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.cache;
 
@@ -30,19 +30,19 @@ public class CacheConfiguration implements ICacheConfiguration {
 	protected final static Logger logger = Logger.getLogger(CacheConfiguration.class);
 
 	/** The cache enabled. */
-	private boolean cacheEnabled;
+	protected boolean cacheEnabled;
 	/** The cache name. */
-	private String cacheName = null;
+	protected String cacheName = null;
 	/** The disk path. */
-	private String diskPath = null;
+	protected String diskPath = null;
 	/** The disk persistent. */
-	private boolean diskPersistent;
+	protected boolean diskPersistent;
 	/** The max elements in memory. */
-	private int maxElementsInMemory;
+	protected int maxElementsInMemory;
 	/** The max elements on disk. */
-	private int maxElementsOnDisk;
+	protected int maxElementsOnDisk;
 	/** The expiration thread interval (timeout) in seconds. */
-	private int expirationCheckIntervalSeconds;
+	protected int expirationCheckIntervalSeconds;
 
 	/**
 	 * Instantiates a new sCMP cache configuration.
@@ -57,14 +57,14 @@ public class CacheConfiguration implements ICacheConfiguration {
 	}
 
 	/**
-	 * Loads cache parameters from properties file.</br> 
-	 * Service Connector cache parameters: </br> 
+	 * Loads cache parameters from properties file.</br>
+	 * Service Connector cache parameters: </br>
 	 * cache.enabled=true</br>
-	 * cache.name=scCache cache.diskPersistent=true </br> 
-	 * cache.diskPath=../../dev/cache </br> 
+	 * cache.name=scCache cache.diskPersistent=true </br>
+	 * cache.diskPath=../../dev/cache </br>
 	 * cache.timeIdleSeconds=60 </br>
-	 * cache.timeToLiveSeconds=120</br> 
-	 * cache.maxElementsInMemory=10000 </br> 
+	 * cache.timeToLiveSeconds=120</br>
+	 * cache.maxElementsInMemory=10000 </br>
 	 * cache.maxElementsOnDisk=1000000
 	 * 
 	 * @param fileName
@@ -93,9 +93,9 @@ public class CacheConfiguration implements ICacheConfiguration {
 		}
 		// diskPath
 		String sDiskPath = compositeConfiguration.getString(Constants.CACHE_DISK_PATH, null);
-		if (sDiskPath == null && this.diskPersistent == true) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
-					+ Constants.CACHE_DISK_PATH + " is missing");
+		if (sDiskPath == null && this.diskPersistent && this.cacheEnabled) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + Constants.CACHE_DISK_PATH
+					+ " is missing");
 		}
 		if (sDiskPath != null && sDiskPath != this.diskPath) {
 			this.diskPath = sDiskPath;

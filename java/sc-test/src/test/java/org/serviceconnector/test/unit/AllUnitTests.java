@@ -65,8 +65,7 @@ import org.serviceconnector.test.unit.scmp.SCMPVersionTest;
 		ValidatorUtilityTest.class,
 		DecodeSCMPVersionTest.class,
 		LinkedQueueTest.class,
-		SCVersionTest.class,
-		FileUtilityTest.class
+		SCVersionTest.class
  })
 public class AllUnitTests {
 }

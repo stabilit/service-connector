@@ -45,20 +45,6 @@ public class CacheManager {
 		this.expirationTimeoutRun = null;
 	}
 
-	/**
-	 * Inits the scmp cache map according the service registry.
-	 */
-	public void initialize() throws Exception {
-		CacheConfiguration cacheConfiguration = AppContext.getCacheConfiguration();
-		if (cacheConfiguration == null) {
-			CacheLogger.debug("initialize using default configuration");
-			cacheConfiguration = new CacheConfiguration();
-		} else {
-			CacheLogger.debug("initialize using application context cache configuration");
-		}
-		initialize(cacheConfiguration);
-	}
-
 	public void initialize(CacheConfiguration cacheConfiguration) throws Exception {
 		this.cacheConfiguration = cacheConfiguration;
 		if (this.cacheConfiguration == null) {

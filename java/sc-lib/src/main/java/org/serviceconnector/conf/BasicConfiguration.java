@@ -1,17 +1,17 @@
 /*
-jettz *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * jettz * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.conf;
 
@@ -100,7 +100,7 @@ public class BasicConfiguration {
 		}
 		if (this.pidPath != localPidPath) {
 			File configFile = new File(localPidPath);
-			if (configFile.isDirectory() == false) {
+			if (configFile.exists() == true && configFile.isDirectory() == false) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
 						+ Constants.ROOT_PID_PATH + " is not a directory");
 			}
@@ -116,7 +116,7 @@ public class BasicConfiguration {
 		}
 		if (this.dumpPath != localdumpPath) {
 			File dumpFile = new File(localdumpPath);
-			if (dumpFile.isDirectory() == false) {
+			if (dumpFile.exists() == true && dumpFile.isDirectory() == false) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
 						+ Constants.ROOT_DUMP_PATH + " is not a directory");
 			}
@@ -146,7 +146,8 @@ public class BasicConfiguration {
 		}
 
 		// connectionTimeoutMillis
-		Integer localConnectionTimeoutMultiplier = compositeConfiguration.getInteger(Constants.ROOT_CONNECTION_TIMEOUT_MILLIS, null);
+		Integer localConnectionTimeoutMultiplier = compositeConfiguration
+				.getInteger(Constants.ROOT_CONNECTION_TIMEOUT_MILLIS, null);
 		if (localConnectionTimeoutMultiplier != null && this.connectionTimeoutMillis != localConnectionTimeoutMultiplier) {
 			this.connectionTimeoutMillis = localConnectionTimeoutMultiplier;
 			logger.info("connectionTimeoutMillis set to " + localConnectionTimeoutMultiplier);

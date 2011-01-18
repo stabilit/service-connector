@@ -23,6 +23,7 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.TestCacheConfiguration;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheException;
 import org.serviceconnector.cache.CacheId;
@@ -61,7 +62,7 @@ public class CacheStatisticsTest extends SuperUnitTest {
 		Service service = new SessionService("dummy");
 		serviceRegistry.addService("dummy", service);
 		cacheManager = new CacheManager();
-		cacheManager.initialize();
+		cacheManager.initialize(new TestCacheConfiguration());
 	}
 
 	/**

@@ -16,11 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.unit;
 
-import junit.framework.Assert;
-
-import org.junit.Test;
-import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.util.FileUtility;
 
 public class FileUtilityTest extends SuperUnitTest {
 	
