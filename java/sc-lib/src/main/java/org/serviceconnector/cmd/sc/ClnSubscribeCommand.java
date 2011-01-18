@@ -73,11 +73,12 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
 		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 		String sessionInfo = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
+		int noi = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		// create subscription
-		Subscription subscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList);
+		Subscription subscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList, noi);
 		reqMessage.setSessionId(subscription.getId());
 
-		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 
 		ClnSubscribeCommandCallback callback = null;
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);

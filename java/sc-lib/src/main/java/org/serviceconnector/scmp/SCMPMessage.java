@@ -114,11 +114,12 @@ public class SCMPMessage {
 	public String getCacheId() {
 		return this.getHeader(SCMPHeaderAttributeKey.CACHE_ID);
 	}
-	
+
 	/**
 	 * Sets the cache id.
-	 *
-	 * @param cacheId the new cache id
+	 * 
+	 * @param cacheId
+	 *            the new cache id
 	 */
 	public void setCacheId(String cacheId) {
 		if (cacheId == null) {
@@ -126,7 +127,6 @@ public class SCMPMessage {
 		}
 		this.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId);
 	}
-
 
 	/**
 	 * Checks if the message is a fault.
@@ -245,12 +245,12 @@ public class SCMPMessage {
 	}
 
 	public boolean isCompressed() {
-	    if (this.header.keySet().contains(SCMPHeaderAttributeKey.COMPRESSION.getValue())) {
-	    	return true;
-	    }
-	    return false;
+		if (this.header.keySet().contains(SCMPHeaderAttributeKey.COMPRESSION.getValue())) {
+			return true;
+		}
+		return false;
 	}
-	
+
 	/**
 	 * Removes the attribute with the specified name from the header.
 	 * 

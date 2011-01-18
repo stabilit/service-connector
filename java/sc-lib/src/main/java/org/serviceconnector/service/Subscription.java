@@ -21,6 +21,8 @@ public class Subscription extends AbstractSession {
 
 	/** The mask in bytes. */
 	private SubscriptionMask mask;
+	/** The no data interval. */
+	private int noDataInterval = 0;
 
 	/**
 	 * Instantiates a new subscription.
@@ -28,9 +30,10 @@ public class Subscription extends AbstractSession {
 	 * @param mask
 	 *            the mask
 	 */
-	public Subscription(SubscriptionMask mask, String sessionInfo, String ipAddressList) {
+	public Subscription(SubscriptionMask mask, String sessionInfo, String ipAddressList, int noDataInterval) {
 		super(sessionInfo, ipAddressList);
 		this.mask = mask;
+		this.noDataInterval = noDataInterval;
 	}
 
 	/**
@@ -66,5 +69,9 @@ public class Subscription extends AbstractSession {
 	 */
 	public void setIpAddressList(String ipAddressList) {
 		this.ipAddressList = ipAddressList;
+	}
+	
+	public int getNoDataInterval() {
+		return noDataInterval;
 	}
 }

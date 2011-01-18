@@ -64,8 +64,7 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
 	@Override
 	public void receive(SCMPMessage reply) {
 		String serviceName = reply.getServiceName();
-		SCMPMessage reqMessage = request.getMessage();
-		int noDataIntervalSeconds = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+		int noDataIntervalSeconds = this.subscription.getNoDataInterval();
 
 		if (reply.isFault() == false) {
 			boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
