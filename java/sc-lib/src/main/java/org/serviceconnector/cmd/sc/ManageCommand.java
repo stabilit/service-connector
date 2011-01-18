@@ -103,7 +103,8 @@ public class ManageCommand extends CommandAdapter {
 			logger.error("wrong manage command body=" + bodyString); // body has bad syntax
 			scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_MANAGE_COMMAND, bodyString);
 			response.setSCMP(scmpReply);
-			// TODO JOT do we not need to invoke responderCallback.responseCallback(request, response); like in the case down here?
+			// initiate responder to send reply
+			responderCallback.responseCallback(request, response);
 			return;
 		}
 
