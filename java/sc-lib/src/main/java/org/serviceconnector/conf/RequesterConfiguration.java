@@ -53,14 +53,14 @@ public class RequesterConfiguration {
 	/**
 	 * Inits the.
 	 * 
-	 * @param apacheCompositeConfig
+	 * @param compositeConfig
 	 *            the apache composite config
 	 * @throws SCMPValidatorException
 	 *             the sCMP validator exception
 	 */
-	public void init(CompositeConfiguration apacheCompositeConfig) throws SCMPValidatorException {
+	public void init(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
-		List<String> requesterList = apacheCompositeConfig.getList(Constants.PROPERTY_REMOTE_NODES);
+		List<String> requesterList = compositeConfig.getList(Constants.PROPERTY_REMOTE_NODES);
 		if (requesterList == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
 					+ Constants.PROPERTY_REMOTE_NODES + " is missing");
@@ -73,13 +73,13 @@ public class RequesterConfiguration {
 
 			try {
 				// get port
-				commConfig.setPort(apacheCompositeConfig.getInt(requesterName + Constants.PROPERTY_QUALIFIER_PORT));
+				commConfig.setPort(compositeConfig.getInt(requesterName + Constants.PROPERTY_QUALIFIER_PORT));
 			} catch (Exception e) {
 				logger.error(e.toString());
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.getMessage());
 			}
 			// get connectionType
-			String connectionType = apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
+			String connectionType = compositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
 			if (connectionType == null) {
 				logger.error(requesterName + " connectionType not set");
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, requesterName + " connectionType not set");
@@ -87,7 +87,7 @@ public class RequesterConfiguration {
 			commConfig.setConnectionType(connectionType);
 
 			// get host for requester
-			String host = apacheCompositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_HOST);
+			String host = compositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_HOST);
 			if (host == null) {
 				logger.error(requesterName + " host not set");
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, requesterName + " host not set");
@@ -95,17 +95,25 @@ public class RequesterConfiguration {
 			List<String> hosts = new ArrayList<String>();
 			hosts.add(host);
 			commConfig.setInterfaces(hosts);
-			try {
-				// get max connection pool size
-				commConfig.setMaxPoolSize(apacheCompositeConfig.getInt(requesterName
-						+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE));
-				// get keep alive interval
-				commConfig.setKeepAliveIntervalSeconds(apacheCompositeConfig.getInt(requesterName
-						+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS));
-			} catch (Exception e) {
-				logger.error(e.toString());
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.getMessage());
+
+			// get max connection pool size
+			Integer localMaxPoolSize = compositeConfig.getInteger(requesterName
+					+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE, null);
+			if (localMaxPoolSize == null) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + requesterName
+						+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE + " is missing");
 			}
+			commConfig.setMaxPoolSize(localMaxPoolSize);
+
+			// get keep alive interval
+			Integer localKeepAliveIntervalSeconds = compositeConfig.getInteger(requesterName
+					+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS, null);
+			if (localKeepAliveIntervalSeconds == null) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + requesterName
+						+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS + " is missing");
+			}
+			commConfig.setKeepAliveIntervalSeconds(localMaxPoolSize);
+
 			// adding requester to list
 			this.requesterConfigList.add(commConfig);
 		}

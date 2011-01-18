@@ -54,9 +54,9 @@ public class ResponderConfiguration {
 		return this.responderConfigList;
 	}
 
-	public void init(CompositeConfiguration apacheCompositeConfig) throws SCMPValidatorException {
+	public void init(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
-		List<String> respondersList = apacheCompositeConfig.getList(Constants.PROPERTY_LISTENERS);
+		List<String> respondersList = compositeConfig.getList(Constants.PROPERTY_LISTENERS);
 		if (respondersList == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
 					+ Constants.PROPERTY_LISTENERS + " is missing");
@@ -68,7 +68,7 @@ public class ResponderConfiguration {
 			CommunicatorConfig commConfig = new CommunicatorConfig(responderName);
 
 			// get interfaces for responder
-			List<String> interfaces = apacheCompositeConfig.getList(responderName + Constants.PROPERTY_QUALIFIER_INTERFACES, null);
+			List<String> interfaces = compositeConfig.getList(responderName + Constants.PROPERTY_QUALIFIER_INTERFACES, null);
 			if (interfaces == null) {
 				// interfaces not set in configuration file - listen to all NIC's
 				interfaces = new ArrayList<String>();
@@ -93,17 +93,17 @@ public class ResponderConfiguration {
 			commConfig.setInterfaces(interfaces);
 
 			// get port, connectionType, username & password
-			this.readPortConnectionTypeAndCredentials(apacheCompositeConfig, responderName, commConfig);
+			this.readPortConnectionTypeAndCredentials(compositeConfig, responderName, commConfig);
 
 			// get remote host for responder
-			String remoteHost = apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
+			String remoteHost = compositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
 			// remote host is optional
 			if (remoteHost != null) {
 				// create configuration for remote host
 				CommunicatorConfig remoteHostConfig = new CommunicatorConfig(remoteHost);
 				// get host for remoteHost
 
-				String host = apacheCompositeConfig.getString(remoteHost + Constants.PROPERTY_QUALIFIER_HOST);
+				String host = compositeConfig.getString(remoteHost + Constants.PROPERTY_QUALIFIER_HOST);
 				if (host == null) {
 					logger.error(responderName + " host not set");
 					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, responderName + " host not set");
@@ -113,13 +113,13 @@ public class ResponderConfiguration {
 				remoteHostConfig.setInterfaces(hosts);
 
 				// get port, connectionType, username & password
-				this.readPortConnectionTypeAndCredentials(apacheCompositeConfig, responderName, remoteHostConfig);
+				this.readPortConnectionTypeAndCredentials(compositeConfig, responderName, remoteHostConfig);
 				try {
 					// get keep alive interval
-					remoteHostConfig.setKeepAliveIntervalSeconds(apacheCompositeConfig.getInt(remoteHost
+					remoteHostConfig.setKeepAliveIntervalSeconds(compositeConfig.getInt(remoteHost
 							+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS));
 					// get max connection pool size
-					remoteHostConfig.setMaxPoolSize(apacheCompositeConfig.getInt(remoteHost
+					remoteHostConfig.setMaxPoolSize(compositeConfig.getInt(remoteHost
 							+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE));
 				} catch (Exception e) {
 					logger.error(e.toString());

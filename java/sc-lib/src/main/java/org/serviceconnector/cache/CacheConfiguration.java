@@ -32,9 +32,9 @@ public class CacheConfiguration implements ICacheConfiguration {
 	/** The cache enabled. */
 	private boolean cacheEnabled;
 	/** The cache name. */
-	private String cacheName;
+	private String cacheName = null;
 	/** The disk path. */
-	private String diskPath;
+	private String diskPath = null;
 	/** The disk persistent. */
 	private boolean diskPersistent;
 	/** The max elements in memory. */
@@ -50,7 +50,6 @@ public class CacheConfiguration implements ICacheConfiguration {
 	public CacheConfiguration() {
 		this.cacheEnabled = Constants.DEFAULT_CACHE_ENABLED;
 		this.cacheName = Constants.DEFAULT_CACHE_NAME;
-		this.diskPath = Constants.DEFAULT_CACHE_DISK_PATH;
 		this.diskPersistent = Constants.DEFAULT_CACHE_DISK_PERSISTENT;
 		this.maxElementsInMemory = Constants.DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY;
 		this.maxElementsOnDisk = Constants.DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK;
@@ -74,25 +73,25 @@ public class CacheConfiguration implements ICacheConfiguration {
 	 *             the exception
 	 */
 	public synchronized void init(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException {
-
+		// enabled
 		Boolean cacheEnabled = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED, null);
 		if (cacheEnabled != null && this.cacheEnabled != cacheEnabled) {
 			this.cacheEnabled = cacheEnabled;
 			logger.info("cacheEnabled set to " + cacheEnabled);
 		}
-
+		// name
 		String sCacheName = compositeConfiguration.getString(Constants.CACHE_NAME, null);
 		if (sCacheName != null && sCacheName != this.cacheName) {
 			this.cacheName = sCacheName;
 			logger.info("cacheName set to " + this.cacheName);
 		}
-
+		// diskPersistent
 		Boolean diskPersistent = compositeConfiguration.getBoolean(Constants.CACHE_DISK_PERSISTENT, null);
 		if (diskPersistent != null && diskPersistent != this.diskPersistent) {
 			this.diskPersistent = diskPersistent;
 			logger.info("diskPersistent set to " + this.diskPersistent);
 		}
-
+		// diskPath
 		String sDiskPath = compositeConfiguration.getString(Constants.CACHE_DISK_PATH, null);
 		if (sDiskPath == null && this.diskPersistent == true) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
@@ -102,19 +101,19 @@ public class CacheConfiguration implements ICacheConfiguration {
 			this.diskPath = sDiskPath;
 			logger.info("diskPath set to " + this.diskPath);
 		}
-
+		// maxElementsInMemory
 		Integer maxElementsInMemory = compositeConfiguration.getInteger(Constants.CACHE_MAX_ELEMENTS_IN_MEMORY, null);
 		if (maxElementsInMemory != null && maxElementsInMemory != this.maxElementsInMemory) {
 			this.maxElementsInMemory = maxElementsInMemory;
 			logger.info("maxElementsInMemory set to " + this.maxElementsInMemory);
 		}
-
+		// maxElementsOnDisk
 		Integer maxElementsOnDisk = compositeConfiguration.getInteger(Constants.CACHE_MAX_ELEMENTS_ON_DISK, null);
 		if (maxElementsOnDisk != null && maxElementsOnDisk != this.maxElementsOnDisk) {
 			this.maxElementsOnDisk = maxElementsOnDisk;
 			logger.info("maxElementsOnDisk set to " + this.maxElementsOnDisk);
 		}
-
+		// expirationCheckIntervalSeconds
 		Integer expirationThreadIntervalSeconds = compositeConfiguration.getInteger(
 				Constants.CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS, null);
 		if (expirationThreadIntervalSeconds != null && expirationThreadIntervalSeconds != this.expirationCheckIntervalSeconds) {
