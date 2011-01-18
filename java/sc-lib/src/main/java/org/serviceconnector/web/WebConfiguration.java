@@ -43,7 +43,7 @@ public class WebConfiguration {
 	}
 
 	/**
-	 * Loads web parameters from properties file.</br> Service Connector web parameters: </br> web.translet.enabled=true</br>
+	 * Loads web parameters from properties file.</br> Service Connector web parameters: </br> web.xslTransformationCache.enabled=true</br>
 	 * 
 	 * @param fileName
 	 *            the file name
