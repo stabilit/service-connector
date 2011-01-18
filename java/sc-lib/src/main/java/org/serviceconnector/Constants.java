@@ -109,7 +109,7 @@ public final class Constants {
 	public static final int WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS = 200;
 
 	/** Maximum size of a message. Larger data is treated as large message */
-	public static final int MAX_MESSAGE_SIZE = 60 << 10; // 64K
+	public static final int MAX_MESSAGE_SIZE = DEFAULT_MAX_MESSAGE_SIZE;
 
 	/** flag to enable / disable command validation. */
 	public static final boolean COMMAND_VALIDATION_ENABLED = true;
