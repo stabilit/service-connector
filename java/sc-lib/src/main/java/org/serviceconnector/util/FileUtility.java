@@ -17,6 +17,9 @@ package org.serviceconnector.util;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.concurrent.TimeoutException;
 
@@ -35,9 +38,8 @@ public class FileUtility {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(FileUtility.class);
-	
+
 	/**
-	 *
 	 * @param filename
 	 * @return true if the given file exists
 	 */
@@ -45,30 +47,77 @@ public class FileUtility {
 		File file = new File(filename);
 		if (file.exists()) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
+	
+	public static URL locate(String resourceName) {
+		URL url = FileUtility.locateFromAbsolutePath(resourceName);
+		if (url == null) {
+			url = FileUtility.locateFromCurrentClasspath(resourceName);
+		}
+		return url;
+	}
+
+	public static URL locateFromAbsolutePath(String resourceName) {
+		URL url = null;
+		// attempt to load from an absolute path
+		if (url == null) {
+			File file = new File(resourceName);
+			if (file.isAbsolute() && file.exists()) // already absolute?
+			{
+				try {
+					url = toURL(file);
+				} catch (MalformedURLException e) {
+					url = null;
+				}
+			}
+		}
+		return url;
+	}
+
+	public static URL locateFromCurrentClasspath(String resourceName) {
+		URL url = null;
+		// attempt to load from the context classpath
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		if (loader != null) {
+			url = loader.getResource(resourceName);
+		}
+		return url;
+	}
+
+	static URL toURL(File file) throws MalformedURLException {
+		try {
+			Method toURI = file.getClass().getMethod("toURI", (Class[]) null);
+			Object uri = toURI.invoke(file, (Class[]) null);
+			Method toURL = uri.getClass().getMethod("toURL", (Class[]) null);
+			URL url = (URL) toURL.invoke(uri, (Class[]) null);
+	
+			return url;
+		} catch (Exception e) {
+			throw new MalformedURLException(e.getMessage());
+		}
+	}
 
 	/**
-	 *
 	 * @param filename
 	 * @return true if the given file does not exist
 	 */
-	public static boolean notExists(String filename){
+	public static boolean notExists(String filename) {
 		return !exists(filename);
 	}
-	
 
 	/**
-	 * 
-	 * @param filename to look for
-	 * @param nrSeconds to wait (check is done in 1 second interval)
-	 * @throws Exception if the file does not exist after the given time
+	 * @param filename
+	 *            to look for
+	 * @param nrSeconds
+	 *            to wait (check is done in 1 second interval)
+	 * @throws Exception
+	 *             if the file does not exist after the given time
 	 */
 	public static void waitExists(String filename, int nrSeconds) throws Exception {
-		for (int i = 0; i < (nrSeconds*10); i++) {
+		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (exists(filename)) {
 				return;
 			}
@@ -77,15 +126,16 @@ public class FileUtility {
 		throw new TimeoutException("File:" + filename + " does not exist after " + nrSeconds + " seconds timeout.");
 	}
 
-
 	/**
-	 * 
-	 * @param filename to look for
-	 * @param nrSeconds to wait (check is done in 1 second interval)
-	 * @throws Exception if the file still exists after the given time
+	 * @param filename
+	 *            to look for
+	 * @param nrSeconds
+	 *            to wait (check is done in 1 second interval)
+	 * @throws Exception
+	 *             if the file still exists after the given time
 	 */
 	public static void waitNotExists(String filename, int nrSeconds) throws Exception {
-		for (int i = 0; i < (nrSeconds*10); i++) {
+		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (notExists(filename)) {
 				return;
 			}
@@ -93,10 +143,11 @@ public class FileUtility {
 		}
 		throw new TimeoutException("File=" + filename + " does still exist after " + nrSeconds + " seconds timeout.");
 	}
-	
+
 	/**
 	 * Create file containing the PID. Is used for testing purpose to verify that process is running properly.
-	 * @return 
+	 * 
+	 * @return
 	 */
 	public static void createPIDfile(String fileNameFull) throws Exception {
 		FileWriter fw = null;
@@ -104,7 +155,7 @@ public class FileUtility {
 			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
 			long pid = Long.parseLong(processName.split("@")[0]);
 
-			// create the pid file			
+			// create the pid file
 			File pidFile = new File(fileNameFull);
 			fw = new FileWriter(pidFile);
 			fw.write("pid: " + pid);
@@ -131,11 +182,11 @@ public class FileUtility {
 			// ignore any error
 		}
 	}
-	
+
 	/**
 	 * @return directory configured for appender in the current log4j configuration file
 	 */
-	public static String getLogPath() throws SCMPValidatorException{
+	public static String getLogPath() throws SCMPValidatorException {
 		Category rootLogger = logger.getParent();
 		Enumeration<?> appenders = rootLogger.getAllAppenders();
 		FileAppender fileAppender = null;
@@ -153,14 +204,13 @@ public class FileUtility {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "invalid log directory=" + fileName);
 		}
 		String path = null;
-		if (fileName.lastIndexOf(":") == -1) {	
-			path = System.getProperty("user.dir") + fs + fileName.substring(0, index); 	// relative path
+		if (fileName.lastIndexOf(":") == -1) {
+			path = System.getProperty("user.dir") + fs + fileName.substring(0, index); // relative path
 		} else {
-			path = fileName.substring(0, index);					//absolute path
+			path = fileName.substring(0, index); // absolute path
 		}
 		return path;
 	}
-
 
 	/**
 	 * Adjusts relative path to absolute path
@@ -172,14 +222,14 @@ public class FileUtility {
 		String fs = System.getProperty("file.separator");
 		String cd = System.getProperty("user.dir");
 		String retPath = null;
-		if (path.startsWith("./") ) {
-			retPath = cd + fs + path.substring(2); 		// prefix relative path with userdir
+		if (path.startsWith("./")) {
+			retPath = cd + fs + path.substring(2); // prefix relative path with userdir
 		} else if (path.startsWith("../")) {
-			retPath = cd + fs + path.substring(3); 		// prefix relative path with userdir
+			retPath = cd + fs + path.substring(3); // prefix relative path with userdir
 		} else {
 			retPath = path; // is absolute path
 		}
 		return retPath;
 	}
-	
+
 }
