@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
+import java.util.List;
+
 import org.serviceconnector.conf.CommunicatorConfig;
 
 /**
@@ -82,6 +84,6 @@ public interface IResponder {
 	 *
 	 * @return the endpoint
 	 */
-	public IEndpoint getEndpoint();
+	public List<IEndpoint> getEndpoints();
 
 }

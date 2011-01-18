@@ -50,6 +50,7 @@ import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.cache.ICacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
+import org.serviceconnector.net.res.IEndpoint;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.registry.ServerRegistry;
@@ -366,8 +367,13 @@ public class DefaultXMLLoaderFactory {
 				writer.writeStartElement("responderConfig");
 				this.writeBean(writer, responder.getResponderConfig());
 				writer.writeEndElement();
-				writer.writeStartElement("endPoint");
-				this.writeBean(writer, responder.getEndpoint());
+				writer.writeStartElement("endPoints");
+				List<IEndpoint> endPointList = responder.getEndpoints();
+				for (IEndpoint endPoint : endPointList) {					
+					writer.writeStartElement("endPoint");
+					this.writeBean(writer, endPoint);
+					writer.writeEndElement();
+				}
 				writer.writeEndElement();
 				writer.writeEndElement();
 			}

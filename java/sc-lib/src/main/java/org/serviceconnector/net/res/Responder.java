@@ -17,6 +17,7 @@
 package org.serviceconnector.net.res;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -111,8 +112,7 @@ public class Responder implements IResponder {
 	 * 
 	 * @return the endpoint
 	 */
-	public IEndpoint getEndpoint() {
-		// TODO DANI liste hier zurückgeben und im loadBody verarbeiten
-		return endpoints.get(0);
+	public List<IEndpoint> getEndpoints() {
+		return Collections.unmodifiableList(endpoints);
 	}
 }

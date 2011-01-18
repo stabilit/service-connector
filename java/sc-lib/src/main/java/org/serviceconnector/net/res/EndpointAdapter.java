@@ -179,12 +179,30 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 		this.resp = resp;
 	}
 
+	/**
+	 * Gets the host.
+	 *
+	 * @return the host
+	 */
+	public String getHost() {
+		return host;
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public void setHost(String host) {
 		this.host = host;
 	}
 
+	/**
+	 * Gets the port.
+	 *
+	 * @return the port
+	 */
+	public int getPort() {
+		return port;
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public void setPort(int port) {
