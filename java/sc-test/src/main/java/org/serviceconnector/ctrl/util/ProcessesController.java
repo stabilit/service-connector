@@ -422,6 +422,7 @@ public class ProcessesController {
 			clnProcess.getProcess().waitFor();
 			FileUtility.deletePIDfile(clnProcess.getPidFileName());
 		}
+		testLogger.error("Client " + clnProcess.getProcessName() + "stopped.");
 	}
 
 	public void waitForClientTermination(ProcessCtx[] clientCtxs) {
