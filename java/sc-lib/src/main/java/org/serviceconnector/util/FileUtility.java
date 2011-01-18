@@ -157,6 +157,9 @@ public class FileUtility {
 
 			// create the pid file
 			File pidFile = new File(fileNameFull);
+			if (pidFile.exists() == false) {
+				pidFile.createNewFile();
+			}
 			fw = new FileWriter(pidFile);
 			fw.write("pid: " + pid);
 			fw.flush();
