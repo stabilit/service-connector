@@ -54,7 +54,7 @@ public class ResponderConfiguration {
 		return this.responderConfigList;
 	}
 
-	public void init(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
+	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
 		List<String> respondersList = compositeConfig.getList(Constants.PROPERTY_LISTENERS);
 		if (respondersList == null) {

@@ -366,17 +366,19 @@ public class StatefulServer extends Server {
 			// ConnectionPoolBusyException after wait mec - try opening a new connection
 			RequesterContext reqContext = this.requester.getContext();
 			// set up a new requester to make the SAS - only 1 connection is allowed
-			Requester SASRequester = new Requester(new RequesterContext(host, portNr, reqContext.getConnectionType(), reqContext
+			Requester sasRequester = new Requester(new RequesterContext(host, portNr, reqContext.getConnectionType(), reqContext
 					.getKeepAliveIntervalInSeconds(), 1));
 			try {
-				this.serverAbortSessionWithSpecialRequester(SASRequester, abortMessage, callback, oti);
+				this.serverAbortSessionWithSpecialRequester(sasRequester, abortMessage, callback, oti);
 			} catch (ConnectionPoolBusyException e) {
+				sasRequester.destroy();
 				Server.logger.warn("ConnectionPoolBusyException in aborting session wait mec over special connection");
 				if (this.service.getType() == ServiceType.SESSION_SERVICE) {
 					this.abortSessionsAndDestroy("Session abort over a new connection failed");
 				}
 				return;
 			}
+			sasRequester.destroy();
 			if (this.service.getType() == ServiceType.SESSION_SERVICE) {
 				// session server - validate reply of server
 				SCMPMessage reply = callback.getMessageSync(oti);

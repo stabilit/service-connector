@@ -93,8 +93,6 @@ public class ClnExecuteCommand extends CommandAdapter {
 				// try to load response from cache
 				try {
 					if (tryLoadingMessageFromCache(request, response, responderCallback)) {
-						session.setPendingRequest(false);
-						this.sessionRegistry.scheduleSessionTimeout(session);
 						return;
 					}
 				} catch (Exception e) {

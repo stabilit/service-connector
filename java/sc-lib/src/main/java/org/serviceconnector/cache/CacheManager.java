@@ -45,7 +45,7 @@ public class CacheManager {
 		this.expirationTimeoutRun = null;
 	}
 
-	public void initialize(CacheConfiguration cacheConfiguration) throws Exception {
+	public void load(CacheConfiguration cacheConfiguration) throws Exception {
 		this.cacheConfiguration = cacheConfiguration;
 		if (this.cacheConfiguration == null) {
 			this.cacheConfiguration = new CacheConfiguration();

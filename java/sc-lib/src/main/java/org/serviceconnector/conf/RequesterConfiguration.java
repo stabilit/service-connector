@@ -58,7 +58,7 @@ public class RequesterConfiguration {
 	 * @throws SCMPValidatorException
 	 *             the sCMP validator exception
 	 */
-	public void init(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
+	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
 		List<String> requesterList = compositeConfig.getList(Constants.PROPERTY_REMOTE_NODES);
 		if (requesterList == null) {

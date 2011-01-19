@@ -84,7 +84,7 @@ public class BasicConfiguration {
 	 * @param compositeConfiguration
 	 *            the composite configuration
 	 */
-	public void init(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException {
+	public void load(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException {
 		// writePID
 		Boolean localWritePID = compositeConfiguration.getBoolean(Constants.ROOT_WRITEPID, null);
 		if (localWritePID != null && this.writePID != localWritePID) {

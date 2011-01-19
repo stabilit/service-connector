@@ -72,7 +72,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void init(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException {
+	public synchronized void load(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException {
 		// enabled
 		Boolean cacheEnabled = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED, null);
 		if (cacheEnabled != null && this.cacheEnabled != cacheEnabled) {

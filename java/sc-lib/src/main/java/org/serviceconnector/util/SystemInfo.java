@@ -33,40 +33,70 @@ import org.apache.log4j.Logger;
  */
 public class SystemInfo {
 
+	/** The Constant log. */
 	private final static Logger log = Logger.getLogger(SystemInfo.class);
 
-	private static final String JAVA_VERSION = "java.version";
-	private static final String JAVA_VM_VERSION = "java.vm.version";
-	private static final String USER_DIR = "user.dir";
-	private static final String OS_NAME = "os.name";
-	private static final String SUN_OS_PATCH_LEVEL = "sun.os.patch.level";
-	private static final String USER_TIMEZONE = "user.timezone";
-	private static final String USER_COUNTRY = "user.country";
+	/** The Constant JAVA_VERSION. */
+	private static final String JAVA_VERSION = "java.version";	
+	/** The Constant JAVA_VM_VERSION. */
+	private static final String JAVA_VM_VERSION = "java.vm.version";	
+	/** The Constant USER_DIR. */
+	private static final String USER_DIR = "user.dir";	
+	/** The Constant OS_NAME. */
+	private static final String OS_NAME = "os.name";	
+	/** The Constant SUN_OS_PATCH_LEVEL. */
+	private static final String SUN_OS_PATCH_LEVEL = "sun.os.patch.level";	
+	/** The Constant USER_TIMEZONE. */
+	private static final String USER_TIMEZONE = "user.timezone";	
+	/** The Constant USER_COUNTRY. */
+	private static final String USER_COUNTRY = "user.country";	
+	/** The Constant OS_ARCH. */
 	private static final String OS_ARCH = "os.arch";
 
-	private static String configFileName;
-	private static String javaVersion;
+	/** The config file name. */
+	private static String configFileName;	
+	/** The java version. */
+	private static String javaVersion;	
+	/** The vm version. */
 	private static String vmVersion;
-	private static String localHostId;
-	private static long maxMemory;
-	private static String os;
+	/** The local host id. */
+	private static String localHostId;	
+	/** The max memory. */
+	private static long maxMemory;	
+	/** The os. */
+	private static String os;	
+	/** The os patch level. */
 	private static String osPatchLevel;
-	private static String cpuType;
-	private static String userDir;
-	private static String countrySetting;
-	private static String userTimezone;
-	private static int utcOffset;
-	private static boolean useDST;
-	private static long freeMemory;
-	private static long totalMemory;
-	private static long availableDiskSpace;
-	private static Date localDate;
+		/** The cpu type. */
+	private static String cpuType;	
+	/** The user dir. */
+	private static String userDir;	
+	/** The country setting. */
+	private static String countrySetting;	
+	/** The user timezone. */
+	private static String userTimezone;	
+	/** The utc offset. */
+	private static int utcOffset;	
+	/** The use dst. */
+	private static boolean useDST;	
+	/** The free memory. */
+	private static long freeMemory;	
+	/** The total memory. */
+	private static long totalMemory;	
+	/** The available disk space. */
+	private static long availableDiskSpace;	
+	/** The local date. */
+	private static Date localDate;	
+	/** The available processors. */
 	private static int availableProcessors;
 
 	static {
 		loadInfos();
 	}
 
+	/**
+	 * Load infos.
+	 */
 	private static void loadInfos() {
 
 		Properties sysprops = System.getProperties();

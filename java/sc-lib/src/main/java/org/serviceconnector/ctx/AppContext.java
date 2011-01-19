@@ -272,10 +272,6 @@ public final class AppContext {
 		} catch (Exception e) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.toString());
 		}
-		AppContext.basicConfiguration.init(AppContext.apacheCompositeConfig);
-		AppContext.cacheConfiguration.init(AppContext.apacheCompositeConfig);
-		AppContext.responderConfiguration.init(AppContext.apacheCompositeConfig);
-		AppContext.requesterConfiguration.init(AppContext.apacheCompositeConfig);
 	}
 
 	/**
