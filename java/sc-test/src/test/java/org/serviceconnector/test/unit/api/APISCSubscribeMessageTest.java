@@ -23,7 +23,6 @@ import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCSubscribeMessage;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.test.unit.SuperUnitTest;
 
 public class APISCSubscribeMessageTest extends SuperUnitTest {
@@ -73,16 +72,17 @@ public class APISCSubscribeMessageTest extends SuperUnitTest {
 	@Test
 	public void t13_mask() throws Exception {
 		message.setMask(TestConstants.stringLength256);
+		Assert.assertEquals("mask is not equal", TestConstants.stringLength256, message.getMask());
 	}
 
 	/**
 	 * Description: Set mask = abc%xy <br>
-	 * Expectation: throws SCMPValidatorException
+	 * Expectation: passes, because it is validated in subscribe() method
 	 */
-	//TODO JOT/JAN discussion - where are we gonna validate the percent sign?
-	@Test(expected = SCMPValidatorException.class)
+	@Test
 	public void t15_mask() throws Exception {
 		message.setMask("abc%xy");
+		Assert.assertEquals("mask is not equal", "abc%xy", message.getMask());
 	}
 
 	/**
@@ -92,5 +92,6 @@ public class APISCSubscribeMessageTest extends SuperUnitTest {
 	@Test
 	public void t17_noDataInteval() throws Exception {
 		message.setNoDataIntervalInSeconds(1);
+		Assert.assertEquals("interval is not equal", 1, message.getNoDataIntervalInSeconds());
 	}
 }

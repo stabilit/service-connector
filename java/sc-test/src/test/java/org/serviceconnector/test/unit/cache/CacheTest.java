@@ -126,6 +126,7 @@ public class CacheTest extends SuperUnitTest {
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		try {
+			@SuppressWarnings("unused")
 			CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 			Assert.fail("put message should fail, but did not");
 		} catch (Exception e) {

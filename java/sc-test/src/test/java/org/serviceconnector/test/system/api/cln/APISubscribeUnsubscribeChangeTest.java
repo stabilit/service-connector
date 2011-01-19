@@ -57,7 +57,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException (contains "=")
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t06_subscribe() throws Exception {
+	public void t06_subscribeWrongservice() throws Exception {
 		publishService = client.newPublishService("service = gaga");
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();
 		subMsgRequest.setMask(TestConstants.mask);
@@ -71,7 +71,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws InvalidParameterException
 	 */
 	@Test(expected = InvalidParameterException.class)
-	public void t08_subscribe() throws Exception {
+	public void t08_subscribeNullService() throws Exception {
 		publishService = client.newPublishService(null);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -87,7 +87,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t10_subscribe() throws Exception {
+	public void t10_subscribeWrongServiceType() throws Exception {
 		publishService = client.newPublishService(TestConstants.filServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -103,7 +103,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t12_subscribe() throws Exception {
+	public void t12_subscribeNonExistingService() throws Exception {
 		publishService = client.newPublishService("gaga");
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -119,7 +119,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t13_subscribe() throws Exception {
+	public void t13_subscribeWrongServiceType() throws Exception {
 		publishService = client.newPublishService(TestConstants.sesServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -135,7 +135,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws InvalidParameterException
 	 */
 	@Test(expected = InvalidParameterException.class)
-	public void t15_subscribe() throws Exception {
+	public void t15_subscribeInvalidCallback() throws Exception {
 		publishService = client.newPublishService(TestConstants.filServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -175,7 +175,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t17_subscribe() throws Exception {
+	public void t17_subscribeEmptySessionInfo() throws Exception {
 		publishService = client.newPublishService(TestConstants.filServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -190,7 +190,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t18_subscribe() throws Exception {
+	public void t18_subscribeBlankSessionInfo() throws Exception {
 		publishService = client.newPublishService(TestConstants.filServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -205,7 +205,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t19_subscribe() throws Exception {
+	public void t19_subscribeSessionInfoTooLong() throws Exception {
 		publishService = client.newPublishService(TestConstants.filServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -220,7 +220,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t20_subscribe() throws Exception {
+	public void t20_subscribeNullMask() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -236,7 +236,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t21_subscribe() throws Exception {
+	public void t21_subscribeNoMask() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -251,7 +251,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t22_subscribe() throws Exception {
+	public void t22_subscribeBlankMask() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -267,7 +267,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t23_subscribe() throws Exception {
+	public void t23_subscribeMaskTooLong() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -278,6 +278,23 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 	}
 
+	/**
+	 * Description: subscribe with mask = abc%xy<br>
+	 * Expectation: throws SCServiceException
+	 */
+	@Test(expected = SCServiceException.class)
+	public void t23_subscribeMaskIllegalCharacter() throws Exception {
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask("abc%xy");
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		msgCallback = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
+	}
+
+	
 	/**
 	 * Description: subscribe service with noDataInterval = 1 sec<br>
 	 * Expectation: passes

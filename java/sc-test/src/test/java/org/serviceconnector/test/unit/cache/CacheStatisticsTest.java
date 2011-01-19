@@ -80,6 +80,7 @@ public class CacheStatisticsTest extends SuperUnitTest {
 	 * Expectation: passes
 	 */
 	@Test
+	@SuppressWarnings("unused")
 	public void t01_elementSizeTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		int elementSize = scmpCache.getElementSize();
@@ -146,6 +147,7 @@ public class CacheStatisticsTest extends SuperUnitTest {
 	 * Expectation: passes
 	 */
 	@Test
+	@SuppressWarnings("unused")
 	public void t03_largePartElementSizeTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		int elementSize = scmpCache.getElementSize();
@@ -182,6 +184,7 @@ public class CacheStatisticsTest extends SuperUnitTest {
 	 * Expectation: passes
 	 */
 	@Test
+	@SuppressWarnings("unused")
 	public void t04_noCacheId() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		int elementSize = scmpCache.getElementSize();
@@ -210,6 +213,7 @@ public class CacheStatisticsTest extends SuperUnitTest {
 	 * Expectation: passes
 	 */
 	@Test
+	@SuppressWarnings("unused")
 	public void t05_noExpirationDateTime() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		int elementSize = scmpCache.getElementSize();

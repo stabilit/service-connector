@@ -25,11 +25,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestCacheConfiguration;
 import org.serviceconnector.cache.Cache;
-import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheException;
 import org.serviceconnector.cache.CacheId;
 import org.serviceconnector.cache.CacheManager;
-import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -85,6 +83,7 @@ public class CacheLoadingTest extends SuperUnitTest {
 	 * Expectation: passes
 	 */
 	@Test
+	
 	public void t01_cacheLoadingTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the buffer";
@@ -96,6 +95,7 @@ public class CacheLoadingTest extends SuperUnitTest {
 		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, TimeMillis.HOUR.getMillis());
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
 				DateTimeUtility.getDateTimeAsString(expirationDate));
+		@SuppressWarnings("unused")
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		Assert.assertEquals(true, scmpCache.isLoaded("dummy.cache.id"));						
 	}

@@ -131,6 +131,7 @@ public class CacheExpirationTest extends SuperUnitTest {
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
 				DateTimeUtility.getDateTimeAsString(expirationDate));
 		try {
+			@SuppressWarnings("unused")
 			CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 			Assert.fail("cache put should be expired but is not");
 		} catch (Exception e) {
