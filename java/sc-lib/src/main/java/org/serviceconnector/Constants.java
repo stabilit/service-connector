@@ -163,9 +163,12 @@ public final class Constants {
 	public static final String STATE = "state";
 	public static final String SESSIONS = "sessions";
 	public static final String CLEAR_CACHE = "clear";
+	public static final String INSPECT_CACHE = "inspect_cache";
 	public static final String KILL = "kill";
 	public static final String DUMP = "dump";
 	public static final String EQUAL_SIGN = "=";
+	public static final String AMPERSAND_SIGN = "&";
+	public static final String DEFAULT_ENCODING = "UTF-8";
 
 	/*
 	 * Constants for syntax in sc.properies ************************************

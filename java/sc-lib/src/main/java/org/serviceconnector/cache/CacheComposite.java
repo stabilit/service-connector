@@ -36,7 +36,7 @@ public class CacheComposite implements Serializable {
 	/**
 	 * The Enum CACHE_STATE.
 	 */
-	enum CACHE_STATE {
+	public enum CACHE_STATE {
 		/** The UNDEFINDED. */
 		UNDEFINDED,		
 		/** The LOADING. */

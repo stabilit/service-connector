@@ -20,8 +20,14 @@ import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cache.Cache;
+import org.serviceconnector.cache.CacheComposite;
+import org.serviceconnector.cache.CacheException;
+import org.serviceconnector.cache.CacheManager;
+import org.serviceconnector.cache.CacheComposite.CACHE_STATE;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.Registry;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -36,6 +42,8 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.StatefulService;
+import org.serviceconnector.util.URLCallString;
+import org.serviceconnector.util.URLParameterString;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -67,6 +75,10 @@ public class InspectCommand extends CommandAdapter {
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
 
+		URLCallString urlCallString = new URLCallString();
+		urlCallString.parseString(bodyString);
+		String callKey = urlCallString.getCallKey();
+
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
 		InetAddress localHost = InetAddress.getLocalHost();
@@ -84,7 +96,8 @@ public class InspectCommand extends CommandAdapter {
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
 			return;
-		} else if (bodyString.startsWith(Constants.STATE)) {
+		}
+		if (bodyString.startsWith(Constants.STATE)) {
 			// state for service requested
 			String serviceName = bodyString.substring(6);
 			logger.debug("state request for service:" + serviceName);
@@ -108,7 +121,8 @@ public class InspectCommand extends CommandAdapter {
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
 			return;
-		} else if (bodyString.startsWith(Constants.SESSIONS)) {
+		}
+		if (bodyString.startsWith(Constants.SESSIONS)) {
 			// state for service requested
 			String serviceName = bodyString.substring(9);
 			logger.debug("sessions request for service:" + serviceName);
@@ -125,13 +139,23 @@ public class InspectCommand extends CommandAdapter {
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
 			return;
-		} else {
-			logger.error("wrong inspect command body=" + bodyString); // body has bad syntax
-			scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_INSPECT_COMMAND, bodyString);
+		}
+		if (Constants.INSPECT_CACHE.equalsIgnoreCase(callKey)) {
+			String serviceName = urlCallString.getParameter(0);
+			String cacheId = urlCallString.getParameter(1);
+			logger.debug("cache inspect for serviceName: " + serviceName + ", cacheId:" + cacheId);
+			String cacheInspectString = getCacheInspectString(serviceName, cacheId);
+			scmpReply.setBody(cacheInspectString);
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
 		}
+
+		logger.error("wrong inspect command body=" + bodyString); // body has bad syntax
+		scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_INSPECT_COMMAND, bodyString);
+		response.setSCMP(scmpReply);
+		// initiate responder to send reply
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */
@@ -151,6 +175,58 @@ public class InspectCommand extends CommandAdapter {
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;
+		}
+	}
+
+	/**
+	 * Gets the cache inspect string for given serviceName and cacheId.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @param cacheId
+	 *            the cache id
+	 * @return the cache inspect string
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
+	private String getCacheInspectString(String serviceName, String cacheId) throws SCMPCommandException {
+		CacheManager cacheManager = AppContext.getCacheManager();
+		if (cacheManager == null) {
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_MANAGER_ERROR,
+					"no cache manager (null)");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		Cache cache = cacheManager.getCache(serviceName);
+		if (cache == null) {
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR, serviceName);
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		try {
+			CacheComposite cacheComposite = cache.getComposite(cacheId);
+			if (cacheComposite == null) {
+				URLParameterString parameterString = new URLParameterString();
+				parameterString.put("cacheId", cacheId);
+				parameterString.put("return", "notfound");
+				return parameterString.toString();
+			}
+			CACHE_STATE cacheState = cacheComposite.getCacheState();
+			// Date creationTime = cacheComposite.getCreationTime();
+			// Date lastModifiedTime = cacheComposite.getLastModifiedTime();
+			String expirationDateTime = cacheComposite.getExpiration();
+			int size = cacheComposite.getSize();
+			URLParameterString parameterString = new URLParameterString();
+			parameterString.put("return", "success");
+			parameterString.put("cacheId", cacheId);
+			parameterString.put("cacheState", cacheState.toString());
+			parameterString.put("cacheSize", String.valueOf(size));
+			parameterString.put("cacheExpiration", expirationDateTime);
+			return parameterString.toString();
+		} catch (CacheException e) {
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR, e.toString());
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
 		}
 	}
 

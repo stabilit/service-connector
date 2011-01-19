@@ -19,7 +19,7 @@ package org.serviceconnector.util;
 import org.apache.log4j.Logger;
 
 /**
- * The Class ConsoleUtil. Helper class to extract content of virtual machine arguments.
+ * The Class CommandLineUtil. Helper class to extract content of virtual machine arguments.
  * 
  * @author JTraber
  */

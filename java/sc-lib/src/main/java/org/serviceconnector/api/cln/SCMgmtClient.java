@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.cln;
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPCallFactory;
@@ -27,6 +29,8 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.service.ServiceState;
+import org.serviceconnector.util.URLCallString;
+import org.serviceconnector.util.URLParameterString;
 
 /**
  * Management client to an SC.
@@ -114,6 +118,29 @@ public class SCMgmtClient extends SCClient {
 	}
 
 	/**
+	 * inspects the cache for given service name and cacheId.
+	 *
+	 * @param serviceName the service name
+	 * @param cacheId the cache id
+	 * @throws SCServiceException the SC service exception
+	 */
+	public URLParameterString inspectCache(String serviceName, String cacheId) throws SCServiceException {
+		if (this.attached == false) {
+			throw new SCServiceException("client not attached - inspectCache not possible.");
+		}
+		URLCallString callString = new URLCallString(Constants.INSPECT_CACHE, serviceName, cacheId);
+		String body = this.inspectCall(callString.toString());
+		if (body == null) {
+			throw new SCServiceException(body);
+		}
+		try {
+			return new URLParameterString(body);
+		} catch (UnsupportedEncodingException e) {
+			throw new SCServiceException(e.toString());
+		}
+	}
+
+	/**
 	 * Clears the cache for given service name.
 	 * 
 	 * @param serviceName
@@ -130,7 +157,6 @@ public class SCMgmtClient extends SCClient {
 			throw new SCServiceException(body);
 		}
 	}
-
 	
 	/**
 	 * Request dump.

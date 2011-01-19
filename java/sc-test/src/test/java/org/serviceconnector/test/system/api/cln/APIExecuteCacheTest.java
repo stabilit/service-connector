@@ -15,17 +15,45 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.cache.CacheComposite.CACHE_STATE;
+import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
+import org.serviceconnector.util.URLParameterString;
 
 @SuppressWarnings("unused")
 public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
 
+	protected SCMgmtClient mgmtClient;
+
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		mgmtClient = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+		mgmtClient.attach();
+	}
+	
+	@After
+	public void afterOneTest() throws Exception {
+		try {
+			if (mgmtClient != null) {
+			   mgmtClient.detach();
+			}
+		} catch (Exception e) {
+		}
+		mgmtClient = null;
+		super.afterOneTest();
+	}
+
+	
 	/**
 	 * Description: exchange message with cacheId, server reply without cacheExpirationTime<br>
 	 * Expectation: no caching of the message
@@ -297,4 +325,44 @@ public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
 		response = msgCallback1.getResponse();
 		Assert.assertEquals(largeMessage, response.getData());
 	}
+	
+	/**
+	 * Description: exchange message with cacheId, server replies with cacheExpirationTime - 1 Hour<br>
+	 * In a second step insert a normal not expired cache message<br/>
+	 * Expectation: server cache message expired
+	 */
+	@Test
+	public void t20_cacheServerTimeoutReply() throws Exception {
+		// inspect cache		
+        URLParameterString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+        Assert.assertEquals(inspectResponse.getValue("return"), "notfound");
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		// ask for message from cache, the server does reply after 10 seconds
+		// but this is too late
+		request.setData("cacheTimeoutReply");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		try {
+		    response = sessionService1.execute(5, request);
+		    Assert.fail("execution timeout not thrown");
+		} catch(Exception e) {			
+		}
+		// wait 10s
+		Thread.sleep(10000);
+		// inspect cache, cache composite should be available but in loading state		
+		inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+        Assert.assertEquals(inspectResponse.getValue("return"), "success");
+        Assert.assertEquals(inspectResponse.getValue("cacheState"), CACHE_STATE.LOADING.toString());
+        // wait other 10s, SC server timeout should expire and cache composite removed from cache
+        Thread.sleep(10);
+        inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+        Assert.assertEquals(inspectResponse.getValue("return"), "notfound");
+		sessionService1.deleteSession();
+	}
+	
 }

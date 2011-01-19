@@ -149,7 +149,9 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The CACHE_ERROR. */
 	CACHE_ERROR("608", "Cache error."),
 	/** The CACHE_LOADING. */
-	CACHE_LOADING("609", "Cache Loading. Retry later");
+	CACHE_LOADING("609", "Cache Loading. Retry later"),
+	/** The CACHE_MANAGER_ERROR. */
+	CACHE_MANAGER_ERROR("610", "Cache Manager error.");
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(SCMPError.class);
