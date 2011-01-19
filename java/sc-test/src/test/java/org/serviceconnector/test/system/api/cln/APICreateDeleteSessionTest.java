@@ -22,6 +22,7 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
@@ -48,7 +49,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 	 * Description: create session service with service name = "service = gaga"<br>
 	 * Expectation: throws SCMPValidatorException (contains "=")
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t05_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		SCMessage response = null;

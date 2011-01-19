@@ -23,9 +23,9 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.TestCacheConfiguration;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
-import org.serviceconnector.cache.CacheConfiguration;
 import org.serviceconnector.cache.CacheException;
 import org.serviceconnector.cache.CacheId;
 import org.serviceconnector.cache.CacheKey;
@@ -62,13 +62,12 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		AppContext.init();
 		AppContext.setSCEnvironment(true);
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		Service service = new SessionService("dummy");
 		serviceRegistry.addService("dummy", service);
 		cacheManager = new CacheManager();
-		CacheConfiguration cacheConfiguration = new CacheConfiguration();
+		TestCacheConfiguration cacheConfiguration = new TestCacheConfiguration();
 		cacheConfiguration.setExpirationCheckIntervalSeconds(1);
 		cacheManager.load(cacheConfiguration);
 	}
