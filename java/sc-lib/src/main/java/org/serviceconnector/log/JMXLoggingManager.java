@@ -29,10 +29,8 @@ public class JMXLoggingManager implements ILoggingManagerMXBean {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setConnectionLoggerLevel(String levelValue) {
-		Logger connectionLogger = LogManager.getLogger(Loggers.CONNECTION.getValue());
-		Level level = Level.toLevel(levelValue, connectionLogger.getLevel());
-		LogManager.getLogger(Loggers.CONNECTION.getValue()).setLevel(level);
+	public String getRootLoggerLevel() {
+		return LogManager.getRootLogger().getLevel().toString();
 	}
 
 	/** {@inheritDoc} */
@@ -73,10 +71,26 @@ public class JMXLoggingManager implements ILoggingManagerMXBean {
 
 	/** {@inheritDoc} */
 	@Override
+	public void setRootLoggerLevel(String levelValue) {
+		Logger rootLogger = LogManager.getRootLogger();
+		Level level = Level.toLevel(levelValue, rootLogger.getLevel());
+		rootLogger.setLevel(level);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setConnectionLoggerLevel(String levelValue) {
+		Logger connectionLogger = LogManager.getLogger(Loggers.CONNECTION.getValue());
+		Level level = Level.toLevel(levelValue, connectionLogger.getLevel());
+		connectionLogger.setLevel(level);
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public void setCacheLoggerLevel(String levelValue) {
 		Logger cacheLogger = LogManager.getLogger(Loggers.CACHE.getValue());
 		Level level = Level.toLevel(levelValue, cacheLogger.getLevel());
-		LogManager.getLogger(Loggers.CACHE.getValue()).setLevel(level);
+		cacheLogger.setLevel(level);
 	}
 
 	/** {@inheritDoc} */
@@ -84,7 +98,7 @@ public class JMXLoggingManager implements ILoggingManagerMXBean {
 	public void setMessageLoggerLevel(String levelValue) {
 		Logger messageLogger = LogManager.getLogger(Loggers.MESSAGE.getValue());
 		Level level = Level.toLevel(levelValue, messageLogger.getLevel());
-		LogManager.getLogger(Loggers.MESSAGE.getValue()).setLevel(level);
+		messageLogger.setLevel(level);
 	}
 
 	/** {@inheritDoc} */
@@ -92,7 +106,7 @@ public class JMXLoggingManager implements ILoggingManagerMXBean {
 	public void setPerformanceLoggerLevel(String levelValue) {
 		Logger performanceLogger = LogManager.getLogger(Loggers.PERFORMANCE.getValue());
 		Level level = Level.toLevel(levelValue, performanceLogger.getLevel());
-		LogManager.getLogger(Loggers.PERFORMANCE.getValue()).setLevel(level);
+		performanceLogger.setLevel(level);
 	}
 
 	/** {@inheritDoc} */
@@ -100,7 +114,7 @@ public class JMXLoggingManager implements ILoggingManagerMXBean {
 	public void setSessionLoggerLevel(String levelValue) {
 		Logger sessionLogger = LogManager.getLogger(Loggers.SESSION.getValue());
 		Level level = Level.toLevel(levelValue, sessionLogger.getLevel());
-		LogManager.getLogger(Loggers.SESSION.getValue()).setLevel(level);
+		sessionLogger.setLevel(level);
 	}
 
 	/** {@inheritDoc} */
@@ -108,6 +122,6 @@ public class JMXLoggingManager implements ILoggingManagerMXBean {
 	public void setSubscriptionLoggerLevel(String levelValue) {
 		Logger subscriptionLogger = LogManager.getLogger(Loggers.SUBSCRIPTION.getValue());
 		Level level = Level.toLevel(levelValue, subscriptionLogger.getLevel());
-		LogManager.getLogger(Loggers.SUBSCRIPTION.getValue()).setLevel(level);
+		subscriptionLogger.setLevel(level);
 	}
 }
