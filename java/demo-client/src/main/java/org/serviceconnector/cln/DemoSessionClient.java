@@ -15,6 +15,8 @@
  */
 package org.serviceconnector.cln;
 
+import java.util.Calendar;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCClient;
@@ -60,7 +62,7 @@ public class DemoSessionClient {
 
 			SCMessage requestMsg = new SCMessage();
 			SCMessage responseMsg = new SCMessage();
-			
+
 			for (int i = 0; i < 5; i++) {
 				requestMsg.setData("body nr : " + i);
 				responseMsg = service.execute(requestMsg); // regular synchronous call
@@ -74,13 +76,23 @@ public class DemoSessionClient {
 				logger.info("Message sent async: " + requestMsg.getData());
 				Thread.sleep(2000);
 			}
+
+			requestMsg.setData("cache message body");
+			requestMsg.setCacheId("700");
+			responseMsg = service.execute(requestMsg); // regular synchronous call
+			logger.info("Message sent to put in cache: " + requestMsg.getData());
+			logger.info("Message received: " + responseMsg.getData());
+
+			responseMsg = service.execute(requestMsg); // regular synchronous call
+			logger.info("Message sent with cacheId: " + requestMsg.getData());
+			logger.info("Message received from cache: " + responseMsg.getData());
 		} catch (Exception e) {
 			logger.error("run", e);
 		} finally {
 			try {
 				SCMessage msg = new SCMessage();
-				msg.setSessionInfo("kill server"); 
-				service.deleteSession(5,msg); 
+				msg.setSessionInfo("kill server");
+				service.deleteSession(5, msg);
 				sc.detach(2); // detaches from SC, stops communication
 			} catch (Exception e) {
 				logger.error("cleanup", e);
