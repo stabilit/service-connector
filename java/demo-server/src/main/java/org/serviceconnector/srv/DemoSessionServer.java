@@ -15,6 +15,8 @@
  */
 package org.serviceconnector.srv;
 
+import java.util.Calendar;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.srv.SCServer;
@@ -102,6 +104,11 @@ public class DemoSessionServer extends Thread {
 		@Override
 		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
 			Object data = request.getData();
+			if (request.getCacheId() != null) {
+				Calendar time = Calendar.getInstance();
+				time.add(Calendar.HOUR_OF_DAY, 1);
+				request.setCacheExpirationDateTime(time.getTime());
+			}
 			System.out.println("DemoSessionServer.SrvCallback.execute() " + data);
 			return request;
 		}
