@@ -98,25 +98,29 @@ public final class SC {
 		if (configFileName == null) {
 			throw new SCServiceException("Configuration file is missing");
 		}
-		// indicates that AppContext is running in a SC environment
-		AppContext.setSCEnvironment(true);
-
 		// write system information to log
 		SystemInfo.setConfigFileName(configFileName);
 		SC.writeSystemInfoToLog();
 
-		// Initialize service connector command factory
-		AppContext.initCommands(new ServiceConnectorCommandFactory());
+		// indicates that AppContext is running in a SC environment
+		AppContext.setSCEnvironment(true);
 		AppContext.initConfiguration(configFileName);
-
-		WebContext.initConfiguration(configFileName);
-		WebContext.initContext(new ServiceConnectorWebCommandFactory());
-
+		AppContext.getBasicConfiguration().load(AppContext.getApacheCompositeConfig());
+		AppContext.getCacheConfiguration().load(AppContext.getApacheCompositeConfig());
+		AppContext.getResponderConfiguration().load(AppContext.getApacheCompositeConfig());
+		AppContext.getRequesterConfiguration().load(AppContext.getApacheCompositeConfig());
 		// load servers
 		ServerLoader.load(AppContext.getApacheCompositeConfig());
 		// load services
 		ServiceLoader.load(AppContext.getApacheCompositeConfig());
+		// load cache configuration in cache manager after service are loaded
+		AppContext.getCacheManager().load(AppContext.getCacheConfiguration());
 
+		// Initialize service connector command factory
+		AppContext.initCommands(new ServiceConnectorCommandFactory());
+		// Initialize web command factory
+		WebContext.initConfiguration(configFileName);
+		WebContext.initContext(new ServiceConnectorWebCommandFactory());
 		// initialize JMX
 		SC.initializeJMX();
 
