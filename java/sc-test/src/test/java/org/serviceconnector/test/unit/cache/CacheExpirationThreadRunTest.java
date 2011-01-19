@@ -62,6 +62,7 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
+		AppContext.init();
 		AppContext.setSCEnvironment(true);
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		Service service = new SessionService("dummy");
@@ -128,7 +129,7 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 	/**
 	 * Description: Simple cache write test, expired<br>
 	 * Write a message into the cache using a dummy id and nr. Set the expiration date and time one second to the future.
-	 * Wait 2 seconds, in the meantime the cache expiration thread should run and remove the expired message and its composite.
+	 * Wait 3 seconds, in the meantime the cache expiration thread should run and remove the expired message and its composite.
 	 * Try to read the composite from its cache again but this should fail because the message and its composite has been removed.<br>
 	 *  
 	 * Expectation: passes
@@ -147,7 +148,7 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 				DateTimeUtility.getDateTimeAsString(expirationDate));
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 		}
 		CacheComposite cacheComposite = scmpCache.getComposite(msgCacheId.getCacheId());

@@ -17,9 +17,12 @@ package org.serviceconnector.test.unit;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.TestName;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.Loggers;
 
 public class SuperUnitTest {
@@ -29,9 +32,13 @@ public class SuperUnitTest {
 
 	protected int threadCount = 0;
 
-	@Rule 
+	@Rule
 	public TestName name = new TestName();
-	
+
+	@BeforeClass
+	public static void beforeAllTests() throws Exception {
+		AppContext.init();
+	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
@@ -42,6 +49,11 @@ public class SuperUnitTest {
 	@After
 	public void afterOneTest() {
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
+	}
+
+	@AfterClass
+	public static void afterAllTests() throws Exception {
+		AppContext.destroy();
 	}
 
 }
