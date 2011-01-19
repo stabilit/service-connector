@@ -65,7 +65,7 @@ public class CacheManagerTest extends SuperUnitTest {
 		CacheConfiguration cacheConfiguration = new CacheConfiguration();
 		cacheConfiguration.setExpirationCheckIntervalSeconds(2);
 		try {
-			cacheManager.initialize(cacheConfiguration);
+			cacheManager.load(cacheConfiguration);
 			Thread.sleep(5000);
 		} catch (Exception e) {
 			Assert.fail(e.toString());

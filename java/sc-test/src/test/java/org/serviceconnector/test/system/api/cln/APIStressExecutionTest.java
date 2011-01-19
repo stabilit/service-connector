@@ -75,7 +75,7 @@ public class APIStressExecutionTest extends SystemSuperTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t05_1Clients100000Messages() throws Exception {
+	public void t05_10Clients100000Messages() throws Exception {
 		int numberOfClients = 10;
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 

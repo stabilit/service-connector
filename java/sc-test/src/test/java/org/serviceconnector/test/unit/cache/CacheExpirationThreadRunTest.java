@@ -69,7 +69,7 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 		cacheManager = new CacheManager();
 		CacheConfiguration cacheConfiguration = new CacheConfiguration();
 		cacheConfiguration.setExpirationCheckIntervalSeconds(1);
-		cacheManager.initialize(cacheConfiguration);
+		cacheManager.load(cacheConfiguration);
 	}
 
 	/**

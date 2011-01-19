@@ -68,7 +68,7 @@ public class CacheLoadingTest extends SuperUnitTest {
 		service = new SessionService("dummy2");
 		serviceRegistry.addService("dummy2", service);
 		cacheManager = new CacheManager();
-		cacheManager.initialize(new TestCacheConfiguration());
+		cacheManager.load(new TestCacheConfiguration());
 	}
 
 	@After
