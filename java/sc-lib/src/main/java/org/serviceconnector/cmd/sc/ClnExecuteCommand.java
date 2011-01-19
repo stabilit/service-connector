@@ -303,6 +303,10 @@ public class ClnExecuteCommand extends CommandAdapter {
 		private IResponse response;
 		/** The session id. */
 		private String sessionId;
+		/** The request cache id. */
+		private String requestCacheId;		
+		/** The request service name. */
+		private String requestServiceName;
 
 		private SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 
@@ -321,6 +325,13 @@ public class ClnExecuteCommand extends CommandAdapter {
 			this.request = request;
 			this.response = response;
 			this.sessionId = sessionId;
+			if (this.request != null) {
+				SCMPMessage message = this.request.getMessage();
+				if (message != null) {
+					this.requestCacheId = message.getCacheId();
+					this.requestServiceName = message.getServiceName();
+				}
+			}
 		}
 
 		/** {@inheritDoc} */
@@ -330,30 +341,31 @@ public class ClnExecuteCommand extends CommandAdapter {
 			// check for cache id
 			CacheManager cacheManager = null;
 			String cacheId = reply.getCacheId();
-			if (reply.isFault() && cacheId == null) {
-				SCMPMessage message = request.getMessage();
-				cacheId = message.getCacheId();
-				if (serviceName == null) {
-					serviceName = message.getServiceName();
-				}
-			}
-			if (cacheId != null) {
+			if (cacheId != null || this.requestCacheId != null) {
 				// try save reply in cache
 				cacheManager = AppContext.getCacheManager();
 			}
 			if (cacheManager != null && cacheManager.isCacheEnabled()) {
 				try {
+					if (serviceName == null && this.requestServiceName != null) {
+						// this should never happen
+						serviceName = this.requestServiceName;
+					}
 					Cache scmpCache = cacheManager.getCache(serviceName);
 					if (scmpCache == null) {
 						this.logger.error("cache write failed, no cache, service name = " + serviceName);
 					} else {
 						// check if reply is fault
-						if (reply.isFault()) {
+						if (reply.isFault() || (cacheId == null && this.requestCacheId != null)) {
+							if (cacheId == null) {
+								cacheId = this.requestCacheId;
+							}
 							// remove cacheId from cache
-							CacheComposite cacheComposite = scmpCache.getComposite(cacheId); 
+							CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 							if (cacheComposite != null) {
-							    scmpCache.removeComposite(cacheId);
-							    CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + cacheId + ") and start loading");
+								scmpCache.removeComposite(cacheId);
+								CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + cacheId
+										+ ") and start loading");
 							}
 						} else {
 							CacheLogger.debug("cache message put reply, scmp reply cacheId = " + reply.getCacheId()
