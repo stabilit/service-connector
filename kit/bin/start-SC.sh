@@ -3,7 +3,7 @@
 #
 # you can pass parameters on the command line like
 #     -DlogDirectory=c:/temp
-# and use them in the property files as ${logDirectory}
+# and use them in the sc.properties files as ${sys:logDirectory} and in log4j.properties as ${logDirectory}
 #
 # start sc
 java -Dlog4j.configuration=file:../config/log4j-sc.properties -jar ../bin/sc.jar -sc.configuration ../config/sc.properties
