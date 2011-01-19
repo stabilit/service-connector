@@ -24,6 +24,7 @@ import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheExpiredException;
 import org.serviceconnector.cache.CacheId;
+import org.serviceconnector.cache.CacheKey;
 import org.serviceconnector.cache.CacheLoadedException;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
@@ -170,8 +171,8 @@ public class ClnExecuteCommand extends CommandAdapter {
 	}
 
 	/**
-	 * Try loading message from cache. This method tries to load the message from its cache. An exception is thrown if the message is
-	 * not full part of the cache. In case of a successful cache load the method return true otherwise false.
+	 * Try loading message from cache. This method tries to load the message from its cache. An exception is thrown if the message
+	 * is not full part of the cache. In case of a successful cache load the method return true otherwise false.
 	 * 
 	 * @param request
 	 *            the request
@@ -329,7 +330,15 @@ public class ClnExecuteCommand extends CommandAdapter {
 			String serviceName = reply.getServiceName();
 			// check for cache id
 			CacheManager cacheManager = null;
-			if (reply.getCacheId() != null) {
+			String cacheId = reply.getCacheId();
+			if (reply.isFault() && cacheId == null) {
+				SCMPMessage message = request.getMessage();
+				cacheId = message.getCacheId();
+				if (serviceName == null) {
+					serviceName = message.getServiceName();
+				}
+			}
+			if (cacheId != null) {
 				// try save reply in cache
 				cacheManager = AppContext.getCacheManager();
 			}
@@ -339,25 +348,36 @@ public class ClnExecuteCommand extends CommandAdapter {
 					if (scmpCache == null) {
 						this.logger.error("cache write failed, no cache, service name = " + serviceName);
 					} else {
-						CacheLogger.debug("cache message put reply, scmp reply cacheId = " + reply.getCacheId() + ", isReply = "
-								+ reply.isReply() + ", isPart = " + reply.isPart() + ", isPollRequest = " + reply.isPollRequest());
-						CacheId messageCacheId = null;
-						try {
-							messageCacheId = scmpCache.putMessage(reply);
-						} catch (CacheLoadedException e) {
-							CacheLogger.warn("cache put message failed, already loaded, remove cache (" + reply.getCacheId()
-									+ ") and start loading");
-							scmpCache.startLoading(reply.getCacheId());
-							messageCacheId = scmpCache.putMessage(reply);
-						} catch (CacheExpiredException e) {
-							CacheLogger.warn("cache put message failed, expired, remove cache (" + reply.getCacheId()
-									+ ") and start loading");
-							scmpCache.startLoading(reply.getCacheId());
-							messageCacheId = scmpCache.putMessage(reply);
+						// check if reply is fault
+						if (reply.isFault()) {
+							// remove cacheId from cache
+							CacheComposite cacheComposite = scmpCache.getComposite(cacheId); 
+							if (cacheComposite != null) {
+							    scmpCache.removeComposite(cacheId);
+							    CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + cacheId + ") and start loading");
+							}
+						} else {
+							CacheLogger.debug("cache message put reply, scmp reply cacheId = " + reply.getCacheId()
+									+ ", isReply = " + reply.isReply() + ", isPart = " + reply.isPart() + ", isPollRequest = "
+									+ reply.isPollRequest());
+							CacheId messageCacheId = null;
+							try {
+								messageCacheId = scmpCache.putMessage(reply);
+							} catch (CacheLoadedException e) {
+								CacheLogger.warn("cache put message failed, already loaded, remove cache (" + reply.getCacheId()
+										+ ") and start loading");
+								scmpCache.startLoading(reply.getCacheId());
+								messageCacheId = scmpCache.putMessage(reply);
+							} catch (CacheExpiredException e) {
+								CacheLogger.warn("cache put message failed, expired, remove cache (" + reply.getCacheId()
+										+ ") and start loading");
+								scmpCache.startLoading(reply.getCacheId());
+								messageCacheId = scmpCache.putMessage(reply);
+							}
+							String fullCacheId = messageCacheId.getFullCacheId();
+							CacheLogger.debug("cache message put done using full cache id = " + fullCacheId);
+							reply.setCacheId(fullCacheId);
 						}
-						String fullCacheId = messageCacheId.getFullCacheId();
-						CacheLogger.debug("cache message put done using full cache id = " + fullCacheId);
-						reply.setCacheId(fullCacheId);
 					}
 				} catch (Exception e) {
 					CacheLogger.debug("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());

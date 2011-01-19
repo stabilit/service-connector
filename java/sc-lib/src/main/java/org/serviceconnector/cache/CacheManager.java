@@ -110,6 +110,9 @@ public class CacheManager {
 	 * @return the cache
 	 */
 	public Cache getCache(String serviceName) {
+		if (serviceName == null) {
+			return null;
+		}
 		return this.cacheMap.get(serviceName);
 	}
 

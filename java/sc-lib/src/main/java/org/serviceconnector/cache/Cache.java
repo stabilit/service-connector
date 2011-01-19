@@ -290,6 +290,10 @@ public class Cache {
 	 * @param cacheKey
 	 *            the cache key
 	 */
+	public void removeComposite(String cacheId) {
+		this.removeComposite(new CacheKey(cacheId));
+	}
+	
 	public synchronized void removeComposite(CacheKey cacheKey) {
 		// remove all parts
 		CacheComposite cacheComposite = null;

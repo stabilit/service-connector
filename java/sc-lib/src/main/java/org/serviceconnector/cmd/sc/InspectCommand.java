@@ -149,6 +149,7 @@ public class InspectCommand extends CommandAdapter {
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
+			return;
 		}
 
 		logger.error("wrong inspect command body=" + bodyString); // body has bad syntax
