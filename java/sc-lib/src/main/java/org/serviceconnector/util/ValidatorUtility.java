@@ -104,7 +104,7 @@ public final class ValidatorUtility {
 	public static void validateLong(long lowerLimitInc, String longStringValue, SCMPError error)
 			throws SCMPValidatorException {
 		if (longStringValue == null) {
-			throw new SCMPValidatorException(error, "numeric value is missing");
+			throw new SCMPValidatorException(error, "Numeric value is missing");
 		}
 		long longValue = 0;
 		try {
@@ -151,7 +151,7 @@ public final class ValidatorUtility {
 	public static void validateLong(long lowerLimitInc, String longStringValue, long upperLimitInc, SCMPError error)
 			throws SCMPValidatorException {
 		if (longStringValue == null) {
-			throw new SCMPValidatorException(error, "numeric value is missing");
+			throw new SCMPValidatorException(error, "Numeric value is missing");
 		}
 		long longValue = 0;
 		try {
@@ -214,7 +214,7 @@ public final class ValidatorUtility {
 	 */
 	public static void validateInt(int lowerLimitInc, String intStringValue, SCMPError error) throws SCMPValidatorException {
 		if (intStringValue == null) {
-			throw new SCMPValidatorException(error, "numeric value is missing");
+			throw new SCMPValidatorException(error, "Numeric value is missing");
 		}
 		int intValue = 0;
 		try {
@@ -260,7 +260,7 @@ public final class ValidatorUtility {
 	public static void validateInt(int lowerLimitInc, String intStringValue, int upperLimitInc, SCMPError error)
 			throws SCMPValidatorException {
 		if (intStringValue == null) {
-			throw new SCMPValidatorException(error, "numeric value is missing");
+			throw new SCMPValidatorException(error, "Numeric value is missing");
 		}
 		int intValue = 0;
 		try {
@@ -331,35 +331,43 @@ public final class ValidatorUtility {
 			throws SCMPValidatorException {
 
 		if (stringValue == null) {
-			throw new SCMPValidatorException(error, "string value is missing");
+			throw new SCMPValidatorException(error, "String value is missing");
 		}
 		int length = stringValue.trim().getBytes().length;
-
 		if (length < minSizeInc || length > maxSizeInc) {
 			throw new SCMPValidatorException(error, "StringValue length=" + length + " is not in range (" + minSizeInc + "-"
 					+ maxSizeInc + ")");
 		}
+		byte[] buffer = stringValue.getBytes();
+		for (int i = 0; i < buffer.length; i++) {
+			if (ValidatorUtility.isCharacterAllowed(buffer[i]) == false) {
+				throw new SCMPValidatorException(error, "String value contains forbidden character=" + new String(buffer));
+			}
+		}
 	}
 
+
 	/**
-	 * Validate allowed characters.
+	 * Validate subscription mask.
 	 * 
-	 * @param stringValue
-	 *            the string value
+	 * @param mask
+	 *            the mask value
 	 * @param error
 	 *            the error
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static void validateAllowedCharacters(String stringValue, SCMPError error) throws SCMPValidatorException {
-		if (stringValue == null) {
-			throw new SCMPValidatorException(error, "string value is missing");
+	public static void validateMask(String mask, SCMPError error) throws SCMPValidatorException {
+		if (mask == null) {
+			throw new SCMPValidatorException(error, "Mask value is missing");
 		}
-		byte[] buffer = stringValue.getBytes();
-
+		if (mask.indexOf("%") > -1) {
+			throw new SCMPValidatorException(error, "Mask value contains % character=" + mask);
+		}
+		byte[] buffer = mask.getBytes();
 		for (int i = 0; i < buffer.length; i++) {
 			if (ValidatorUtility.isCharacterAllowed(buffer[i]) == false) {
-				throw new SCMPValidatorException(error, "String value contains forbidden character=" + new String(buffer));
+				throw new SCMPValidatorException(error, "Mask value contains forbidden character=" + mask);
 			}
 		}
 	}
@@ -374,4 +382,5 @@ public final class ValidatorUtility {
 	private static boolean isCharacterAllowed(byte ch) {
 		return ch != 61 && ch >= 32 && ch < 127;
 	}
+
 }

@@ -23,6 +23,7 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCPublishService;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
@@ -217,9 +218,9 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 
 	/**
 	 * Description: subscribe with mask = null<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t20_subscribeNullMask() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
@@ -233,9 +234,9 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 
 	/**
 	 * Description: subscribe with no mask<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t21_subscribeNoMask() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
@@ -280,9 +281,9 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 
 	/**
 	 * Description: subscribe with mask = abc%xy<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t23_subscribeMaskIllegalCharacter() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
@@ -323,7 +324,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t26_noDataInterval() throws Exception {
+	public void t26_noDataIntervalNegative() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -339,7 +340,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t27_noDataInterval() throws Exception {
+	public void t27_noDataIntervalZero() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -435,7 +436,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
-		subMsgRequest.setMask(null);
+		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
 		subMsgRequest.setNoDataIntervalInSeconds(10);
 		msgCallback = new MsgCallback(publishService);
@@ -593,10 +594,10 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 
 	/**
 	 * Description: change subscription with mask = null<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
-	public void t71_changeSubscription() throws Exception {
+	@Test(expected = SCMPValidatorException.class)
+	public void t71_changeSubscriptionNullMask() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		subMsgRequest.setDataLength(TestConstants.pangram.length());
@@ -616,7 +617,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t72_changeSubscription() throws Exception {
+	public void t72_changeSubscriptionNoSubscribe() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
@@ -630,7 +631,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t73_changeSubscription() throws Exception {
+	public void t73_changeSubscriptionAfterUnsubscribe() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		subMsgRequest.setDataLength(TestConstants.pangram.length());
@@ -652,7 +653,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: passes
 	 */
 	@Test
-	public void t74_changeSubscription() throws Exception {
+	public void t74_changeSubscriptionSameMask() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		subMsgRequest.setDataLength(TestConstants.pangram.length());
@@ -707,6 +708,26 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 
 		publishService.unsubscribe();
 		Assert.assertNull("the session ID is not null", publishService.getSessionId());
+	}
+
+	/**
+	 * Description: change subscription with mask = abc%xy<br>
+	 * Expectation: throws SCMPValidatorException
+	 */
+	@Test(expected = SCMPValidatorException.class)
+	public void t76_changeSubscriptionMaskIllegalCharacter() throws Exception {
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
+		SCSubscribeMessage subMsgResponse = null;
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setSessionInfo(TestConstants.doNothingCmd);
+		subMsgRequest.setNoDataIntervalInSeconds(100);
+		msgCallback = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
+
+		subMsgRequest.setMask("abc%xy");
+		subMsgResponse = publishService.changeSubscription(subMsgRequest);
 	}
 
 	/**
