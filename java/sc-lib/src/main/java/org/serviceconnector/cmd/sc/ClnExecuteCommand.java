@@ -24,7 +24,6 @@ import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheExpiredException;
 import org.serviceconnector.cache.CacheId;
-import org.serviceconnector.cache.CacheKey;
 import org.serviceconnector.cache.CacheLoadedException;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
