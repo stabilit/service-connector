@@ -55,9 +55,9 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 
 	/**
 	 * Description: create publish service with name = "service = gaga"<br>
-	 * Expectation: throws SCServiceException (contains "=")
+	 * Expectation: throws SCMPValidatorException (contains "=")
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t06_subscribeWrongservice() throws Exception {
 		publishService = client.newPublishService("service = gaga");
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage();

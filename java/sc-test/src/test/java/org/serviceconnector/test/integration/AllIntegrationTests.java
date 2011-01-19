@@ -30,6 +30,7 @@ import org.serviceconnector.test.integration.api.srv.APIMultipleSCsServerTest;
 import org.serviceconnector.test.integration.api.srv.APIPublishServerTest;
 import org.serviceconnector.test.integration.api.srv.APIRegisterPublishServerTest;
 import org.serviceconnector.test.integration.api.srv.APIRegisterSessionServerTest;
+import org.serviceconnector.test.integration.console.SCConsoleTest;
 import org.serviceconnector.test.integration.scmp.SCMPAttachDetachTest;
 import org.serviceconnector.test.integration.scmp.SCMPManageTest;
 import org.serviceconnector.test.integration.scmp.SCMPRegisterDeregisterServerTest;
@@ -64,8 +65,8 @@ import org.serviceconnector.test.integration.scmp.SCMPSCVersionTest;
 		// Other tests
 		ConnectionPoolTest.class,
 		ConnectionTest.class,
-		MultipleNICTest.class
-		
+		MultipleNICTest.class,
+		SCConsoleTest.class
 })
 public class AllIntegrationTests {
 }

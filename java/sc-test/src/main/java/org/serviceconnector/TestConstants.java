@@ -19,6 +19,7 @@ public class TestConstants {
 	public static final String HOST = "localhost";
 	public static final int PORT_SC_HTTP = 7000;
 	public static final int PORT_SC_TCP = 9000;
+	public static final int PORT_SC_MGMT = 81;
 	public static final int PORT_MIN = 1;
 	public static final int PORT_MAX = 65535;
 	public static final int PORT_SES_SRV_TCP = 30000;

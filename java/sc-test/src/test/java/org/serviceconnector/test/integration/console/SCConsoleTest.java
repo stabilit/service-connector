@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  */
-package org.serviceconnector.test.console;
+package org.serviceconnector.test.integration.console;
 
 import java.security.Permission;
 
@@ -22,11 +22,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.Constants;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.console.SCConsole;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.test.integration.IntegrationSuperTest;
 
-public class SCConsoleTest {
+public class SCConsoleTest extends IntegrationSuperTest {
 
 	protected static class ExitException extends SecurityException {
 		/**
@@ -61,12 +63,14 @@ public class SCConsoleTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
 		System.setSecurityManager(new NoExitSecurityManager());
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
 		System.setSecurityManager(null);
+		super.afterOneTest();
 	}
 
 	/**
@@ -370,7 +374,7 @@ public class SCConsoleTest {
 	@Test
 	public void t22_start() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_HTTP,
+			SCConsole.main(new String[] { "-h", String.valueOf(TestConstants.HOST), "-p", String.valueOf(TestConstants.PORT_SC_HTTP),
 					Constants.STATE + "=something", Constants.STATE + "=something" });
 		} catch (ExitException e) {
 			Assert.assertEquals(1, e.status);
@@ -381,12 +385,11 @@ public class SCConsoleTest {
 	 * Description: start console with "-h localhost -p 7000 state=something" parameters<br>
 	 * (HTTP port)<br>
 	 * Expectation: throws exception with exitCode = 5 "Communication error" <br>
-	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t23_start() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_HTTP,
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_HTTP),
 					Constants.STATE + "=something" });
 		} catch (ExitException e) {
 			Assert.assertEquals(5, e.status);
@@ -397,12 +400,11 @@ public class SCConsoleTest {
 	 * Description: start console with "-h localhost -p 81 state=something" parameters<br>
 	 * (management port)<br>
 	 * Expectation: throws exception with exitCode = 5 "Communication error" <br>
-	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t24_start() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_MGMT,
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_MGMT),
 					Constants.STATE + "=something" });
 		} catch (ExitException e) {
 			Assert.assertEquals(5, e.status);
@@ -413,12 +415,11 @@ public class SCConsoleTest {
 	 * Description: start console with "-h localhost -p 9000 state=gaga" parameters<br>
 	 * (unknown service name)<br>
 	 * Expectation: throws exception with exitCode = 4 "Unknown service" <br>
-	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t25_state() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, Constants.STATE + "=gaga" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP), Constants.STATE + "=gaga" });
 		} catch (ExitException e) {
 			Assert.assertEquals(4, e.status);
 		}
@@ -427,12 +428,11 @@ public class SCConsoleTest {
 	/**
 	 * Description: start console with "-h 127.0.0.1 -p 9000 state=session-1" parameters<br>
 	 * Expectation: passes though with exitCode = 0 "Success" <br>
-	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t26_state() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", TestConstants.PORT_SC_TCP, Constants.STATE + "=session-1" });
+			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", String.valueOf(TestConstants.PORT_SC_TCP), Constants.STATE + "=session-1" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
@@ -441,23 +441,22 @@ public class SCConsoleTest {
 	/**
 	 * Description: disable and re-enable the session service "session-1"<br>
 	 * Expectation: passes though with exitCode = 0 "Success".<br>
-	 * Pre-condition: SC must be running!<br>
 	 * Post-condition: session service "session-1" is enabled again
 	 */
 	@Test
 	public void t50_enable_disable_command() throws Exception {
-		SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, Integer.parseInt(TestConstants.PORT_SC_TCP),
+		SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP,
 				ConnectionType.NETTY_TCP);
 		client.attach();
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
 					Constants.DISABLE + "=session-1" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
 		Assert.assertEquals(false, client.isServiceEnabled("session-1"));
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
 					Constants.ENABLE + "=session-1" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
@@ -469,12 +468,11 @@ public class SCConsoleTest {
 	/**
 	 * Description: start console with "-h localhost -p 9000 sessions=session-1" parameters<br>
 	 * Expectation: passes though with exitCode = 0 "Success" <br>
-	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t52_sessions_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
 					Constants.SESSIONS + "=session-1" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
@@ -484,12 +482,11 @@ public class SCConsoleTest {
 	/**
 	 * Description: start console with "-h localhost -p 9000 sessions=publish-1<br>
 	 * Expectation: passes though with exitCode = 0 "Success" <br>
-	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t53_sessions_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
 					Constants.SESSIONS + "=publish-1" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
@@ -500,12 +497,11 @@ public class SCConsoleTest {
 	 * Description: start console with "-h localhost -p 9000 sessions=notExistingService<br>
 	 * (unknown service name)<br>
 	 * Expectation: throws exception with exitCode = 4 "Unknown service"<br>
-	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t54_sessions_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP,
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
 					Constants.SESSIONS + "=notExistingService" });
 		} catch (ExitException e) {
 			Assert.assertEquals(4, e.status);
@@ -516,12 +512,11 @@ public class SCConsoleTest {
 	 * Description: start console with "-h localhost -p 9000 gaga=notExistingService<br>
 	 * (unknown command)<br>
 	 * Expectation: throws exception with exitCode = 3 "invalid command"<br>
-	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t55_undefined_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, "gaga=notExistingService" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP), "gaga=notExistingService" });
 		} catch (ExitException e) {
 			Assert.assertEquals(3, e.status);
 		}
@@ -531,12 +526,11 @@ public class SCConsoleTest {
 	 * Description: start console with "-h localhost -p 9000 gaga=session-1<br>
 	 * (unknown command)<br>
 	 * Expectation: throws exception with exitCode = 3 "invalid command" <br>
-	 * Pre-condition: SC must be running!
 	 */
 	@Test
 	public void t56_undefined_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, "gaga=session-1" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP), "gaga=session-1" });
 		} catch (ExitException e) {
 			Assert.assertEquals(3, e.status);
 		}
@@ -545,13 +539,12 @@ public class SCConsoleTest {
 	/**
 	 * Description: start console with "-h localhost -p 9000 kill<br>
 	 * Expectation: passes though with exitCode = 0 "Success" <br>
-	 * Pre-condition: SC must be running!<br>
 	 * Post-condition: SC will be killed!
 	 */
 	@Test
 	public void t99_kill_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", TestConstants.PORT_SC_TCP, Constants.KILL });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP), Constants.KILL });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
