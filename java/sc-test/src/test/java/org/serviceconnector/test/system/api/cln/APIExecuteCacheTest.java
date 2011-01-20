@@ -387,7 +387,7 @@ public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
 	 * Expectation: server cache replies different cache id
 	 */
 	@Test
-	public void t20_cacheServerRepliesOtherCacheId() throws Exception {
+	public void t21_cacheServerRepliesOtherCacheId() throws Exception {
 		// inspect cache		
         URLParameterString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
         Assert.assertEquals(inspectResponse.getValue("return"), "notfound");

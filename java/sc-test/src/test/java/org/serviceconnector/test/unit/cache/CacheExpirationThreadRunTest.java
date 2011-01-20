@@ -175,7 +175,7 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t03_expiredLoadingCacheWriteTest() throws CacheException {
+	public void t03_expiredLoadingCacheTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the buffer";
 		byte[] buffer = stringWrite.getBytes();
