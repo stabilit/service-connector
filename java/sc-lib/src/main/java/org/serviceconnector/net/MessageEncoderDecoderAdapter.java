@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,11 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net;
 
 import java.io.BufferedWriter;
@@ -46,6 +41,8 @@ import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPPart;
 
 /**
+ * The Class MessageEncoderDecoderAdapter.
+ * 
  * @author JTraber
  */
 public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
@@ -53,8 +50,13 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(MessageEncoderDecoderAdapter.class);
 
+	/** The df msg size. */
 	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
+
+	/** The df header size. */
 	private DecimalFormat dfHeaderSize = new DecimalFormat(Constants.SCMP_FORMAT_OF_HEADER_SIZE);
+
+	/** The default frame decoder. */
 	protected IFrameDecoder defaultFrameDecoder = AppContext.getFrameDecoderFactory().getFrameDecoder(Constants.TCP);
 
 	/** {@inheritDoc} */
@@ -113,8 +115,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 					// looping until <LF> got found
 					if (buffer[inLoopIndex] == 0x0A) {
 						// <LF> found
-						metaMap.put(new String(buffer, keyOff, (index - keyOff), CHARSET), new String(buffer, index + 1,
-								(inLoopIndex - 1) - index, CHARSET));
+						metaMap.put(new String(buffer, keyOff, (index - keyOff), Constants.CHARSET), new String(buffer, index + 1,
+								(inLoopIndex - 1) - index, Constants.CHARSET));
 						// updating outer loop index
 						index = inLoopIndex;
 						// updating offset for next key, +1 for <LF>
@@ -129,7 +131,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			// looping until <LF> found, looking for header flag
 			if (buffer[index] == 0x0A) {
 				// <LF> found
-				metaMap.put(new String(buffer, keyOff, (index - keyOff), CHARSET), null);
+				metaMap.put(new String(buffer, keyOff, (index - keyOff), Constants.CHARSET), null);
 				// updating offset for next key, +1 for <LF>
 				keyOff = index + 1;
 			}
@@ -150,7 +152,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			int bodySize = is.read(body);
 			if (scmpMsg.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION)) {
 				if (AppContext.isScEnvironment() == false) {
-					// message compression required
+					// message decompression required
 					Inflater decompresser = new Inflater();
 					decompresser.setInput(body, 0, bodySize);
 					ByteArrayOutputStream bos = new ByteArrayOutputStream(Constants.MAX_MESSAGE_SIZE);
@@ -188,16 +190,37 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		return scmpMsg;
 	}
 
+	/**
+	 * Write head line.
+	 * 
+	 * @param bw
+	 *            the bw
+	 * @param headerKey
+	 *            the header key
+	 * @param messageSize
+	 *            the message size
+	 * @param headerSize
+	 *            the header size
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	protected void writeHeadLine(BufferedWriter bw, SCMPHeaderKey headerKey, int messageSize, int headerSize) throws IOException {
 		bw.write(headerKey.toString());
 		bw.write(dfMsgSize.format(messageSize));
 		bw.write(dfHeaderSize.format(headerSize));
 		bw.write(" ");
 		bw.write(SCMPMessage.SCMP_VERSION.toString());
-		bw.write("\n");
+		bw.write(Constants.LINE_BREAK_SIGN);
 		bw.flush();
 	}
 
+	/**
+	 * Write header.
+	 * 
+	 * @param metaMap
+	 *            the meta map
+	 * @return the string builder
+	 */
 	protected StringBuilder writeHeader(Map<String, String> metaMap) {
 		StringBuilder sb = new StringBuilder();
 
@@ -207,14 +230,27 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			String value = entry.getValue();
 			sb.append(entry.getKey());
 			if (value != null) {
-				sb.append(EQUAL_SIGN);
+				sb.append(Constants.EQUAL_SIGN);
 				sb.append(value);
 			}
-			sb.append("\n");
+			sb.append(Constants.LINE_BREAK_SIGN);
 		}
 		return sb;
 	}
 
+	/**
+	 * Compress body.
+	 * 
+	 * @param bodyBuffer
+	 *            the body buffer
+	 * @param bodyOffset
+	 *            the body offset
+	 * @param bodyLength
+	 *            the body length
+	 * @return the byte[]
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	protected byte[] compressBody(byte[] bodyBuffer, int bodyOffset, int bodyLength) throws IOException {
 		byte[] output = null;
 		// message compression required
