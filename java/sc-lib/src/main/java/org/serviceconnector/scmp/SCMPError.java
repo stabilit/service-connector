@@ -63,7 +63,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The HV_WRONG_SCMP_RELEASE_NR. */
 	HV_WRONG_SCMP_RELEASE_NR("426", "Incompatible SCMP release nr."),
 	/** The HV_WRONG_SCMP_VERSION_NR. */
-	HV_WRONG_SCMP_VERSION_NR("427", "Incompatible SCMP version nr."),	
+	HV_WRONG_SCMP_VERSION_NR("427", "Incompatible SCMP version nr."),
 	/** The HV_WRONG_LDT. */
 	HV_WRONG_LDT("428", "Invalid localDateTime format."),
 	/** The HV_WRONG_CED. */
@@ -105,10 +105,10 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The HV_WRONG_SC_ERROR_TEXT. */
 	HV_WRONG_SC_ERROR_TEXT("447", "Invalid scErrorText value."),
 	/** The HV_WRONG_APP_ERROR_CODE. */
-	HV_WRONG_APP_ERROR_CODE("448", "Invalid appErrorCode value."),	// not used
+	HV_WRONG_APP_ERROR_CODE("448", "Invalid appErrorCode value."), // not used
 	/** The HV_WRONG_APP_ERROR_TEXT. */
-	HV_WRONG_APP_ERROR_TEXT("449", "Invalid appErrorText value."),	// not used
-	
+	HV_WRONG_APP_ERROR_TEXT("449", "Invalid appErrorText value."), // not used
+
 	/** The V_WRONG_CONFIGURATION_FILE_FORMAT. */
 	V_WRONG_CONFIGURATION_FILE("460", "Invalid configuration file."),
 	/** The V_WRONG_INSPECT_COMMAND. */
@@ -118,9 +118,8 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	/** The V_SERVICE_TYPE. */
 	V_WRONG_SERVICE_TYPE("463", "Invalid service type."),
 	/** The V_SERVER_TYPE. */
-	V_WRONG_SERVER_TYPE("464", "Invalid server type."), 
+	V_WRONG_SERVER_TYPE("464", "Invalid server type."),
 
-	
 	/** The SERVER_ERROR. */
 	SERVER_ERROR("500", "Server error."),
 	/** The service is DISABLED. */
@@ -129,7 +128,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	OPERATION_TIMEOUT("504", "The server did not timely respond to the request."),
 	/** The UPLOAD_FILE_FAILED. */
 	UPLOAD_FILE_FAILED("505", "Upload file failed."),
-	
+
 	/** The SC_ERROR. */
 	SC_ERROR("600", "Service Connector error."),
 	/** The NO_SERVER. */
@@ -204,7 +203,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	public String getErrorText(String additionalInfo) {
 		return errorText + " [" + additionalInfo + "]";
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public String getValue() {
@@ -217,6 +216,13 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 		return SCMPError.getSCMPErrorByCode(code);
 	}
 
+	/**
+	 * Gets the SCMP error by code.
+	 * 
+	 * @param errorCode
+	 *            the error code
+	 * @return the SCMP error by code
+	 */
 	public static SCMPError getSCMPErrorByCode(String errorCode) {
 		SCMPError scmpError = reverseMap.get(errorCode);
 		if (scmpError == null) {
