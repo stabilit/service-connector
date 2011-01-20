@@ -91,10 +91,10 @@ public final class Constants {
 
 	/** The write PID */
 	public static final boolean DEFAULT_WRITE_PID_FLAG = false;
-	
+
 	/** Default max message size */
 	public static final int DEFAULT_MAX_MESSAGE_SIZE = 60 << 10; // 64K
-	
+
 	/*
 	 * Various Constants *********
 	 */
@@ -106,7 +106,7 @@ public final class Constants {
 
 	/** Empty application error code. */
 	public static final int EMPTY_APP_ERROR_CODE = -9999;
-	
+
 	/** The wait time in a loop waiting for a busy connection. */
 	public static final int WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS = 200;
 
@@ -148,7 +148,6 @@ public final class Constants {
 	 */
 	public static final String DUMP_FILE_NAME = "scDump.xml";
 
-	
 	/** The Constant IPV6_LOOPBACK_NIC. */
 	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
 
@@ -156,6 +155,11 @@ public final class Constants {
 	 * FILE_LIST_DELIMITER, separates file names in file list SCFileService.
 	 */
 	public static final String FILE_LIST_DELIMITER = "\\|";
+
+	/** The Constant CHARSET. */
+	public static final String CHARSET = "ISO-8859-1";
+	/** The Constant LINE_BREAK_SIGN. */
+	public static final String LINE_BREAK_SIGN = "\n";
 
 	/*
 	 * console command constants *************************
@@ -217,7 +221,7 @@ public final class Constants {
 	public static final int DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = 300;
 	// for internal use in class Cache
 	public static final int DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS = 60000;
-    // cache property keys
+	// cache property keys
 	public static final String CACHE_ENABLED = "cache.enabled";
 	public static final String CACHE_NAME = "cache.name";
 	public static final String CACHE_DISK_PERSISTENT = "cache.diskPersistent";
@@ -228,7 +232,7 @@ public final class Constants {
 
 	// web default values
 	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;
-    // web property keys
+	// web property keys
 	public static final String WEB_XSL_TRANSFORMATION_CACHE_ENABLED = "web.xslTransformationCache.enabled";
 
 	/*

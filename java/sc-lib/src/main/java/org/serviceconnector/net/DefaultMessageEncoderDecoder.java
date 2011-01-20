@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.MessageLogger;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -48,7 +49,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void encode(OutputStream os, Object obj) throws Exception {
-		OutputStreamWriter osw = new OutputStreamWriter(os, CHARSET);
+		OutputStreamWriter osw = new OutputStreamWriter(os, Constants.CHARSET);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPMessage scmpMsg = (SCMPMessage) obj;
 

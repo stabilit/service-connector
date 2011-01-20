@@ -24,10 +24,6 @@ import java.io.OutputStream;
  * The Interface IEncoderDecoder. Abstracts EncoderDecoder implementations.
  */
 public interface IEncoderDecoder {
-	/** The Constant EQUAL_SIGN. */
-	public static final String EQUAL_SIGN = "=";
-	/** The Constant CHARSET. */
-	public static final String CHARSET = "ISO-8859-1";
 
 	/**
 	 * Encode object to output stream.

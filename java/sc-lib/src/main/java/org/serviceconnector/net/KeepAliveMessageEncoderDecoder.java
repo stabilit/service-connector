@@ -21,9 +21,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
-
 
 /**
  * The Class DefaultEncoderDecoder. Defines default SCMP encoding/decoding of object into/from stream.
@@ -34,7 +34,7 @@ public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(KeepAliveMessageEncoderDecoder.class);
-	
+
 	/**
 	 * Instantiates a new default encoder decoder.
 	 */
@@ -44,7 +44,7 @@ public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter
 	/** {@inheritDoc} */
 	@Override
 	public void encode(OutputStream os, Object obj) throws Exception {
-		OutputStreamWriter osw = new OutputStreamWriter(os, CHARSET);
+		OutputStreamWriter osw = new OutputStreamWriter(os, Constants.CHARSET);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPKeepAlive keepAlive = (SCMPKeepAlive) obj;
 		if (keepAlive.isReply()) {
