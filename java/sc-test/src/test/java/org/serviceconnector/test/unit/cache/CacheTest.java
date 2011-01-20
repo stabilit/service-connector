@@ -279,6 +279,7 @@ public class CacheTest extends SuperUnitTest {
 	 * 
 	 * @see CacheTest#testPartSCMPCacheWrite()
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void t12_partSCMPCacheWriteUsingIteratorTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
@@ -309,6 +310,7 @@ public class CacheTest extends SuperUnitTest {
 		while (cacheIterator.hasNext()) {
 			index++;
 			String partWrite = stringWrite + index;
+			@SuppressWarnings("unused")
 			byte[] buffer = partWrite.getBytes();
 			CacheMessage cacheMessage = cacheIterator.next();
 			if (cacheMessage == null) {
