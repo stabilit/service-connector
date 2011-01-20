@@ -126,7 +126,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 		} catch (IOException ex) {
 			logger.error("encode", ex);
 			scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
-			throw new EncodingDecodingException("io error when decoding message", ex);
+			throw new EncodingDecodingException("io error when encoding message", ex);
 		}
 		scmpMsg.setInternalStatus(SCMPInternalStatus.getInternalStatus(headerKey));
 		return;

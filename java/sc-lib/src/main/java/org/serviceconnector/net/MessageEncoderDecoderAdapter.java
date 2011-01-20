@@ -185,7 +185,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			}
 		} catch (Exception ex) {
 			logger.error("decode", ex);
-			throw ex;
+			throw new EncodingDecodingException("io error when decoding message", ex);
 		}
 		return scmpMsg;
 	}
