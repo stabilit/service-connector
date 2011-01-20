@@ -56,9 +56,11 @@ public final class Constants {
 	/** Default timeout for creation of a connection to peer. */
 	public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 5000;
 
-	/** Maximal time between subsequent receive publication. 
-	 * After this time subscription is marked as dead. 
-	 * This is analogous to echoInterval in session services*/
+	/**
+	 * Maximal time between subsequent receive publication.
+	 * After this time subscription is marked as dead.
+	 * This is analogous to echoInterval in session services
+	 */
 	public static final int DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS = 60000;
 
 	/**
@@ -253,9 +255,6 @@ public final class Constants {
 	public static final String SCMP_FORMAT_OF_HEADER_SIZE = " 00000";
 	public static final String SCMP_FORMAT_OF_DATE_TIME = "yyyy-MM-dd HH:mm:ss.SSSZ";
 	public static final String SCMP_FORMAT_OF_DATE_TIME_UTC = "yyyy-MM-dd HH:mm:ss";
-	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1
-	// =>
-	// 2147483647,
-	// 2GB
+	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
 
 }
