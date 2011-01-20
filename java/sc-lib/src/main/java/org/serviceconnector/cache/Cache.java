@@ -577,6 +577,13 @@ public class Cache {
 				return false;
 			}
 			if (cacheComposite.isLoading()) {
+				// check if loading timeout did expire
+				if (cacheComposite.isLoadingExpired()) {
+					// modification timeout expired, remove this composite from cache
+					this.removeComposite(new CacheKey(cacheId));
+					CacheLogger.warn("cache has been removed, reason: cache is loading but loading timeout exceeded, cacheId = "
+							+ cacheId);
+				}
 				// check if last modification timeout expired
 				if (cacheComposite.isModificationExpired()) {
 					// modification timeout expired, remove this composite from cache
