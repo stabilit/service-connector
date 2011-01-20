@@ -117,7 +117,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *            the service name
 	 * @return the service
 	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 *             the SCMP command exception
 	 */
 	protected Service getService(String serviceName) throws SCMPCommandException {
 		Service service = this.serviceRegistry.getService(serviceName);
@@ -158,7 +158,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *            the service name
 	 * @return the session service
 	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 *             the SCMP command exception
 	 */
 	protected SessionService validateSessionService(String serviceName) throws SCMPCommandException {
 		Service service = this.validateService(serviceName);
@@ -179,7 +179,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *            the service name
 	 * @return the publish service
 	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 *             the SCMP command exception
 	 */
 	protected PublishService validatePublishService(String serviceName) throws SCMPCommandException {
 		Service service = this.validateService(serviceName);
@@ -200,7 +200,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *            the service name
 	 * @return the publish service
 	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 *             the SCMP command exception
 	 */
 	protected FileService validateFileService(String serviceName) throws SCMPCommandException {
 		Service service = this.validateService(serviceName);
@@ -221,7 +221,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *            the service name
 	 * @return the stateful service
 	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 *             the SCMP command exception
 	 */
 	protected StatefulService getStatefulService(String serviceName) throws SCMPCommandException {
 		Service service = this.getService(serviceName);

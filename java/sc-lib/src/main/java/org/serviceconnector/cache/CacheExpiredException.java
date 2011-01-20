@@ -18,14 +18,14 @@ package org.serviceconnector.cache;
 public class CacheExpiredException extends CacheException {
 
 	/**
-	 * Instantiates a new sCMP cache exception.
+	 * Instantiates a new SCMP cache exception.
 	 */
 	public CacheExpiredException() {
 		super();
 	}
 
 	/**
-	 * Instantiates a new sCMP cache exception.
+	 * Instantiates a new SCMP cache exception.
 	 *
 	 * @param message the message
 	 */

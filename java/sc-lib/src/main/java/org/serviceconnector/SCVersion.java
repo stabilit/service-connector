@@ -93,7 +93,7 @@ public enum SCVersion {
 	 * @param scVersion
 	 *            the text in format 999.999-999 e.g. 1.5-003
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validator exception
 	 */
 	public void isSupported(String scVersion) throws SCMPValidatorException {
 		if (scVersion == null) {

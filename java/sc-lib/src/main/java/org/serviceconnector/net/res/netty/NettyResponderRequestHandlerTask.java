@@ -156,7 +156,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 	 *            the request
 	 * @param response
 	 *            the response
-	 * @return the sCMP large response
+	 * @return the SCMP large response
 	 * @throws Exception
 	 *             the exception
 	 */

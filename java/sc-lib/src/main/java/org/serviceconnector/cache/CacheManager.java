@@ -36,7 +36,7 @@ public class CacheManager {
 	private ExpirationTimeoutRun expirationTimeoutRun;
 
 	/**
-	 * Instantiates a new sCMP cache manager.
+	 * Instantiates a new SCMP cache manager.
 	 */
 	public CacheManager() {
 		// load scmp caches from configuration

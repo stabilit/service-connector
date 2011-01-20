@@ -62,7 +62,7 @@ public enum SCMPVersion {
 	 * @param scmpVersion
 	 *            the scmp version to be checked
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validator exception
 	 */
 	public void isSupported(byte[] buffer) throws SCMPValidatorException {
 

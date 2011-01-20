@@ -56,9 +56,9 @@ public class RequesterContext {
 	}
 
 	/**
-	 * Gets the sCMP msg sequence nr.
+	 * Gets the SCMP msg sequence nr.
 	 * 
-	 * @return the sCMP msg sequence nr
+	 * @return the SCMP msg sequence nr
 	 */
 	public SCMPMessageSequenceNr getSCMPMsgSequenceNr() {
 		return this.msgSequenceNr;

@@ -92,16 +92,17 @@ public class Cache {
 	 */
 	public CacheComposite getComposite(String cacheId) throws CacheException {
 		if (cacheId == null) {
-			throw new CacheException("no cache id");
+			throw new CacheException("no cacheId");
 		}
 		return getComposite(new CacheId(cacheId));
 	}
 
 	public synchronized CacheComposite getComposite(CacheId cacheId) throws CacheException {
 		if (cacheId == null) {
-			throw new CacheException("no cache id");
+			throw new CacheException("no cacheId");
 		}
 		CacheKey compositeCacheKey = null;
+		@SuppressWarnings("unused")
 		CacheComposite cacheComposite = null;
 		// check if this message is part of cache
 		compositeCacheKey = new CacheKey(cacheId.getCacheId());
@@ -126,7 +127,7 @@ public class Cache {
 	 */
 	public synchronized CacheMessage getMessage(String cacheId) throws CacheException {
 		if (cacheId == null) {
-			throw new CacheException("no cache id");
+			throw new CacheException("no cacheId");
 		}
 		CacheId scmpCacheId = new CacheId(cacheId);
 		CacheMessage message = this.getMessage(scmpCacheId);
@@ -169,7 +170,7 @@ public class Cache {
 		}
 		// check if cache is expired or not
 		if (cacheComposite.isExpired()) {
-			CacheLogger.debug("cache composite (" + compositeCacheKey + ") found in cache but is expired, expiration time is " + cacheComposite.getExpiration());
+			CacheLogger.debug("expired composite=" + compositeCacheKey + " found in cache, expiration time=" + cacheComposite.getExpiration());
 			return null;
 		}
 		CacheKey msgCacheKey = new CacheKey(scmpCacheId.getFullCacheId());
@@ -188,20 +189,20 @@ public class Cache {
 	 * 
 	 * @param message
 	 *            the scmp reply
-	 * @return the sCMP cache id
+	 * @return the SCMP cache id
 	 * @throws CacheException
-	 *             the sCMP cache exception
+	 *             the SCMP cache exception
 	 */
 	public synchronized CacheId putMessage(SCMPMessage message) throws CacheException {
 		try {
 			String cacheId = message.getCacheId();
 			if (cacheId == null) {
-				throw new CacheException("no cache id");
+				throw new CacheException("no cacheId");
 			}
 			CacheId scmpCacheId = new CacheId(cacheId);
 			String messageSequenceNr = message.getMessageSequenceNr();
 			if (messageSequenceNr == null) {
-				throw new CacheException("no message id");
+				throw new CacheException("no messageSequenceNr");
 			}
 			CacheKey cacheKey = null;
 			CacheComposite cacheComposite = null;
@@ -214,20 +215,20 @@ public class Cache {
 			if (cacheComposite != null) {
 				if (cacheComposite.isLoaded()) {
 					// cache is loaded, we MUST replace this cache message
-					CacheLogger.warn("cache put message, cache (" + cacheId + ") is already loaded!");
-					throw new CacheLoadedException("cache put message, cache (" + cacheId + ") is already loaded!");
+					CacheLogger.warn("cacheId=" + cacheId + " is already loaded!");
+					throw new CacheLoadedException("cacheId=" + cacheId + " is already loaded!");
 				}
 				if (cacheComposite.isExpired()) {
 					// we remove this composite from cache
-					CacheLogger.debug("cache put message, cache composite (" + cacheKey + ") is expired!");
-					throw new CacheExpiredException("cache put message, cache composite (" + cacheKey + ") is expired!");
+					CacheLogger.debug("cache composite=" + cacheKey + " is expired!");
+					throw new CacheExpiredException("cache composite=" + cacheKey + " is expired!");
 				}
 			}
 			if ((cacheComposite == null)) {
 				// this is the first message, check if expiration date time is availabled
 				String cacheExpirationDateTime = message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
 				if (cacheExpirationDateTime == null) {
-					throw new CacheException("no expiration date time");
+					throw new CacheException("cacheExpirationDateTime is missing");
 				}
 				cacheComposite = new CacheComposite();
 				// insert cache composite
@@ -247,7 +248,7 @@ public class Cache {
 			String cacheExpirationDateTime = message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
 			if (newSize == 1 && cacheExpirationDateTime == null) {
 				this.removeComposite(cacheKey);
-				throw new CacheException("no expiration date time, composite has been removed");			    
+				throw new CacheException("cacheExpirationDateTime is missing, composite has been removed");			    
 			}
 			// check for expiration date time, but only if this is the first message part
 			if (newSize == 1 && cacheExpirationDateTime != null) {
@@ -255,9 +256,9 @@ public class Cache {
 				ValidatorUtility.validateDateTime(cacheExpirationDateTime, SCMPError.HV_WRONG_CED);
 				cacheComposite.setExpiration(cacheExpirationDateTime);
 				if (cacheComposite.isExpired()) {
-					CacheLogger.info("Put message (" + scmpCacheId + ") in cache is expired, expiration time " + cacheExpirationDateTime);
+					CacheLogger.info("composite=" + scmpCacheId + " is expired, expiration=" + cacheExpirationDateTime);
 					this.removeComposite(cacheKey);
-					throw new CacheException("cache composite is expired");					
+					throw new CacheException("composite=" + scmpCacheId + " is expired");					
 				}
 			}
 			CacheId msgCacheId = new CacheId(scmpCacheId.getCacheId(), String.valueOf(newSize));
@@ -271,11 +272,11 @@ public class Cache {
 			// update last modification time
 			cacheComposite.setLastModified();
 			if (message.isPart() == false && message.isPollRequest() == false) {
-				CacheLogger.debug("cache has been loaded, cacheId = " + cacheId);
+				CacheLogger.debug("cache has been loaded, cacheId=" + cacheId);
 				cacheComposite.setCacheState(CACHE_STATE.LOADED);
 			}
 			this.cacheImpl.put(cacheKey, cacheComposite);
-			CacheLogger.info("Put message (" + scmpCacheId + ") in cache, expiration time " + cacheExpirationDateTime);
+			CacheLogger.info("Put cacheId=" + scmpCacheId + " expiration=" + cacheExpirationDateTime);
 			return msgCacheId;
 		} catch (CacheException e) {
 			throw e;
@@ -346,7 +347,7 @@ public class Cache {
 		}		
 		String cacheId = cacheKey.getCacheId();
 		int size = cacheComposite.getSize();
-		CacheLogger.debug("Cache message (" + cacheKey + ") remove expired composite.");
+		CacheLogger.debug("Remove expired composite=" + cacheKey);
 		CacheKey localCacheKey = new CacheKey(cacheId);
 		this.removeRegistry(cacheKey);
 		boolean ret = this.cacheImpl.remove(cacheKey);
@@ -357,13 +358,13 @@ public class Cache {
 		for (int i = 1; i <= size; i++) {
 			scmpCacheId.setSequenceNr(String.valueOf(i));
 			localCacheKey.setCacheId(scmpCacheId.getFullCacheId());
-			CacheLogger.debug("Cache message (" + cacheKey + ") remove expired message " + localCacheKey);
+			CacheLogger.debug("Remove expired composite" + cacheKey + " cacheId=" + localCacheKey);
 			ret = this.cacheImpl.remove(localCacheKey);
 			if (ret == false) {
 				return;
 			}
 		}
-		CacheLogger.info("Cache message (" + cacheKey + ") got removed because of expiration time");
+		CacheLogger.info("Expired composite=" + cacheKey + " succesfully removed");
 		return;
 	}
 
@@ -588,7 +589,7 @@ public class Cache {
 				if (cacheComposite.isModificationExpired()) {
 					// modification timeout expired, remove this composite from cache
 					this.removeComposite(new CacheKey(cacheId));
-					CacheLogger.warn("cache has been removed, reason: cache is loading but response timeout exceeded, cacheId = "
+					CacheLogger.warn("remove composite while loading cache due timeout expiration, cacheId="
 							+ cacheId);
 				}
 				return true;
@@ -644,7 +645,7 @@ public class Cache {
 			this.putRegistry(cacheKey);
 			Statistics.getInstance().incrementCachedMessages(0);
 			this.cacheImpl.put(cacheKey, cacheComposite);
-			CacheLogger.debug("start loading cache, cacheId = " + cacheId);
+			CacheLogger.debug("start loading cache, cacheId=" + cacheId);
 		} catch (CacheException e) {
 			CacheLogger.error("startLoading", e);
 		}

@@ -37,14 +37,14 @@ public class SCMPReceivePublicationCall extends SCMPSessionCallAdapter {
 	protected final static Logger logger = Logger.getLogger(SCMPReceivePublicationCall.class);
 	
 	/**
-	 * Instantiates a new sCMP receive publication call.
+	 * Instantiates a new SCMP receive publication call.
 	 */
 	public SCMPReceivePublicationCall() {
 		this(null, null, null);
 	}
 
 	/**
-	 * Instantiates a new sCMP receive publication call.
+	 * Instantiates a new SCMP receive publication call.
 	 * 
 	 * @param requester
 	 *            the requester

@@ -42,21 +42,12 @@ public class RequesterConfiguration {
 	}
 
 	/**
-	 * Gets the responder configuration list.
-	 * 
-	 * @return the responder configuration list
-	 */
-	public List<CommunicatorConfig> getRequesterConfigList() {
-		return this.requesterConfigList;
-	}
-
-	/**
 	 * Inits the.
 	 * 
 	 * @param compositeConfig
 	 *            the apache composite config
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validator exception
 	 */
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
@@ -70,7 +61,7 @@ public class RequesterConfiguration {
 		for (String requesterName : requesterList) {
 			requesterName = requesterName.trim(); // remove blanks in name
 			CommunicatorConfig commConfig = new CommunicatorConfig(requesterName);
-
+	
 			try {
 				// get port
 				commConfig.setPort(compositeConfig.getInt(requesterName + Constants.PROPERTY_QUALIFIER_PORT));
@@ -85,7 +76,7 @@ public class RequesterConfiguration {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, requesterName + " connectionType not set");
 			}
 			commConfig.setConnectionType(connectionType);
-
+	
 			// get host for requester
 			String host = compositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_HOST);
 			if (host == null) {
@@ -95,7 +86,7 @@ public class RequesterConfiguration {
 			List<String> hosts = new ArrayList<String>();
 			hosts.add(host);
 			commConfig.setInterfaces(hosts);
-
+	
 			// get max connection pool size
 			Integer localMaxPoolSize = compositeConfig.getInteger(requesterName
 					+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE, null);
@@ -104,7 +95,7 @@ public class RequesterConfiguration {
 						+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE + " is missing");
 			}
 			commConfig.setMaxPoolSize(localMaxPoolSize);
-
+	
 			// get keep alive interval
 			Integer localKeepAliveIntervalSeconds = compositeConfig.getInteger(requesterName
 					+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS, null);
@@ -113,9 +104,18 @@ public class RequesterConfiguration {
 						+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS + " is missing");
 			}
 			commConfig.setKeepAliveIntervalSeconds(localMaxPoolSize);
-
+	
 			// adding requester to list
 			this.requesterConfigList.add(commConfig);
 		}
+	}
+
+	/**
+	 * Gets the responder configuration list.
+	 * 
+	 * @return the responder configuration list
+	 */
+	public List<CommunicatorConfig> getRequesterConfigList() {
+		return this.requesterConfigList;
 	}
 }

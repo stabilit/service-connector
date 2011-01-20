@@ -133,7 +133,7 @@ public final class SC {
 		for (CommunicatorConfig respConfig : responderList) {
 			IResponder responder = new Responder(respConfig);
 			responder.create();
-			logger.info("Start listener " + respConfig.getName() + " on " + respConfig.getInterfaces() + ":" + respConfig.getPort());
+			logger.info("Start listener=" + respConfig.getName() + " on= " + respConfig.getInterfaces() + ":" + respConfig.getPort());
 			responder.startListenAsync();
 		}
 		if (AppContext.getBasicConfiguration().isWritePID()) {
@@ -172,23 +172,23 @@ public final class SC {
 	 *             the exception
 	 */
 	private static void writeSystemInfoToLog() throws Exception {
-		logger.log(Level.OFF, "SC configuration: " + SystemInfo.getConfigFileName());
-		logger.log(Level.OFF, "Java version: " + SystemInfo.getJavaVersion());
-		logger.log(Level.OFF, "VM version: " + SystemInfo.getVmVersion());
-		logger.log(Level.OFF, "Local host: " + SystemInfo.getLocalHostId());
-		logger.log(Level.OFF, "OS: " + SystemInfo.getOs());
-		logger.log(Level.OFF, "OS patch level: " + SystemInfo.getOsPatchLevel());
-		logger.log(Level.OFF, "CPU type: " + SystemInfo.getCpuType());
-		logger.log(Level.OFF, "User dir: " + SystemInfo.getUserDir());
-		logger.log(Level.OFF, "Country setting: " + SystemInfo.getCountrySetting());
-		logger.log(Level.OFF, "User timezone: " + SystemInfo.getUserTimezone());
-		logger.log(Level.OFF, "UTC Offset: " + SystemInfo.getUtcOffset());
-		logger.log(Level.OFF, "Local date: " + SystemInfo.getLocalDate());
-		logger.log(Level.OFF, "Available processors: " + SystemInfo.getAvailableProcessors());
-		logger.log(Level.OFF, "Max memory: " + SystemInfo.getMaxMemory());
-		logger.log(Level.OFF, "Free memory: " + SystemInfo.getFreeMemory());
-		logger.log(Level.OFF, "Total memory: " + SystemInfo.getTotalMemory());
-		logger.log(Level.OFF, "Available disk memory: " + SystemInfo.getAvailableDiskSpace());
+		logger.info( "SC configuration=" + SystemInfo.getConfigFileName());
+		logger.info( "Java version=" + SystemInfo.getJavaVersion());
+		logger.info( "VM version=" + SystemInfo.getVmVersion());
+		logger.info( "Local host=" + SystemInfo.getLocalHostId());
+		logger.info( "OS=" + SystemInfo.getOs());
+		logger.info( "OS patch level=" + SystemInfo.getOsPatchLevel());
+		logger.info( "CPU type=" + SystemInfo.getCpuType());
+		logger.info( "User dir=" + SystemInfo.getUserDir());
+		logger.info( "Country setting=" + SystemInfo.getCountrySetting());
+		logger.info( "User timezone=" + SystemInfo.getUserTimezone());
+		logger.info( "UTC Offset=" + SystemInfo.getUtcOffset());
+		logger.info( "Local date=" + SystemInfo.getLocalDate());
+		logger.info( "Available processors=" + SystemInfo.getAvailableProcessors());
+		logger.info( "Max memory=" + SystemInfo.getMaxMemory());
+		logger.info( "Free memory=" + SystemInfo.getFreeMemory());
+		logger.info( "Total memory=" + SystemInfo.getTotalMemory());
+		logger.info( "Available disk memory=" + SystemInfo.getAvailableDiskSpace());
 	}
 
 	private static void showError(String msg) {

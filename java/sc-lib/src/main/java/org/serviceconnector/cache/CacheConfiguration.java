@@ -16,6 +16,7 @@
 package org.serviceconnector.cache;
 
 import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -45,7 +46,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 	protected int expirationCheckIntervalSeconds;
 
 	/**
-	 * Instantiates a new sCMP cache configuration.
+	 * Instantiates a new SCMP cache configuration.
 	 */
 	public CacheConfiguration() {
 		this.cacheEnabled = Constants.DEFAULT_CACHE_ENABLED;
@@ -60,7 +61,8 @@ public class CacheConfiguration implements ICacheConfiguration {
 	 * Loads cache parameters from properties file.</br>
 	 * Service Connector cache parameters: </br>
 	 * cache.enabled=true</br>
-	 * cache.name=scCache cache.diskPersistent=true </br>
+	 * cache.name=scCache</br>
+	 * cache.diskPersistent=true </br>
 	 * cache.diskPath=../../dev/cache </br>
 	 * cache.timeIdleSeconds=60 </br>
 	 * cache.timeToLiveSeconds=120</br>
@@ -77,20 +79,9 @@ public class CacheConfiguration implements ICacheConfiguration {
 		Boolean cacheEnabled = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED, null);
 		if (cacheEnabled != null && this.cacheEnabled != cacheEnabled) {
 			this.cacheEnabled = cacheEnabled;
-			logger.info("cacheEnabled set to " + cacheEnabled);
 		}
-		// name
-		String sCacheName = compositeConfiguration.getString(Constants.CACHE_NAME, null);
-		if (sCacheName != null && sCacheName != this.cacheName) {
-			this.cacheName = sCacheName;
-			logger.info("cacheName set to " + this.cacheName);
-		}
-		// diskPersistent
-		Boolean diskPersistent = compositeConfiguration.getBoolean(Constants.CACHE_DISK_PERSISTENT, null);
-		if (diskPersistent != null && diskPersistent != this.diskPersistent) {
-			this.diskPersistent = diskPersistent;
-			logger.info("diskPersistent set to " + this.diskPersistent);
-		}
+		logger.log(Level.OFF,Constants.CACHE_DISK_PATH + "cacheEnabled=" + this.cacheEnabled);
+		
 		// diskPath
 		String sDiskPath = compositeConfiguration.getString(Constants.CACHE_DISK_PATH, null);
 		if (sDiskPath == null && this.diskPersistent && this.cacheEnabled) {
@@ -99,27 +90,30 @@ public class CacheConfiguration implements ICacheConfiguration {
 		}
 		if (sDiskPath != null && sDiskPath != this.diskPath) {
 			this.diskPath = sDiskPath;
-			logger.info("diskPath set to " + this.diskPath);
 		}
+		logger.log(Level.OFF,Constants.CACHE_DISK_PATH + "diskPath=" + this.diskPath);
+		
 		// maxElementsInMemory
 		Integer maxElementsInMemory = compositeConfiguration.getInteger(Constants.CACHE_MAX_ELEMENTS_IN_MEMORY, null);
 		if (maxElementsInMemory != null && maxElementsInMemory != this.maxElementsInMemory) {
 			this.maxElementsInMemory = maxElementsInMemory;
-			logger.info("maxElementsInMemory set to " + this.maxElementsInMemory);
 		}
+		logger.log(Level.OFF,Constants.CACHE_DISK_PATH + "maxElementsInMemory=" + this.maxElementsInMemory);
+		
 		// maxElementsOnDisk
 		Integer maxElementsOnDisk = compositeConfiguration.getInteger(Constants.CACHE_MAX_ELEMENTS_ON_DISK, null);
 		if (maxElementsOnDisk != null && maxElementsOnDisk != this.maxElementsOnDisk) {
 			this.maxElementsOnDisk = maxElementsOnDisk;
-			logger.info("maxElementsOnDisk set to " + this.maxElementsOnDisk);
 		}
+		logger.log(Level.OFF,Constants.CACHE_DISK_PATH + "maxElementsOnDisk=" + this.maxElementsOnDisk);
+		
 		// expirationCheckIntervalSeconds
 		Integer expirationThreadIntervalSeconds = compositeConfiguration.getInteger(
 				Constants.CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS, null);
 		if (expirationThreadIntervalSeconds != null && expirationThreadIntervalSeconds != this.expirationCheckIntervalSeconds) {
 			this.expirationCheckIntervalSeconds = expirationThreadIntervalSeconds;
-			logger.info("expirationThreadIntervalSeconds set to " + this.expirationCheckIntervalSeconds);
 		}
+		logger.log(Level.OFF,Constants.CACHE_DISK_PATH + "expirationCheckIntervalSeconds=" + this.expirationCheckIntervalSeconds);
 	}
 
 	/** {@inheritDoc} */

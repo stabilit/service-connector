@@ -153,17 +153,19 @@ public class EHCacheImpl implements ICacheImpl {
 				diskStoreConfiguration.setPath(cacheConfiguration.getDiskPath());
 				configuration.addDiskStore(diskStoreConfiguration);
 				configuration.setName(cacheConfiguration.getCacheName());
-				CacheConfiguration ehCacheConfiguration = new CacheConfiguration(cacheConfiguration.getCacheName(),
+				
+				// default Cache configuration is required for CacheManager
+				CacheConfiguration defaultConfiguration = new CacheConfiguration(cacheConfiguration.getCacheName(),
 						cacheConfiguration.getMaxElementsInMemory());
-				ehCacheConfiguration.setEternal(false); // ignore any timeouts
-				ehCacheConfiguration.setTimeToIdleSeconds(60);
-				ehCacheConfiguration.setTimeToLiveSeconds(120);
-				ehCacheConfiguration.setOverflowToDisk(true);
-				ehCacheConfiguration.setMaxElementsInMemory(cacheConfiguration.getMaxElementsInMemory());
-				ehCacheConfiguration.setMaxElementsOnDisk(cacheConfiguration.getMaxElementsOnDisk());
-				ehCacheConfiguration.setDiskPersistent(cacheConfiguration.isDiskPersistent());
-				ehCacheConfiguration.setName(cacheConfiguration.getCacheName());
-				configuration.setDefaultCacheConfiguration(ehCacheConfiguration);
+				defaultConfiguration.setEternal(false);
+				defaultConfiguration.setTimeToIdleSeconds(60);
+				defaultConfiguration.setTimeToLiveSeconds(120);
+				defaultConfiguration.setOverflowToDisk(true);
+				defaultConfiguration.setMaxElementsInMemory(cacheConfiguration.getMaxElementsInMemory());
+				defaultConfiguration.setMaxElementsOnDisk(cacheConfiguration.getMaxElementsOnDisk());
+				defaultConfiguration.setDiskPersistent(cacheConfiguration.isDiskPersistent());
+				defaultConfiguration.setName(cacheConfiguration.getCacheName());
+				configuration.setDefaultCacheConfiguration(defaultConfiguration);
 				configuration.setUpdateCheck(false); // disable update checker
 				manager = new CacheManager(configuration);
 			}

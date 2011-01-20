@@ -126,7 +126,7 @@ public class RegisterServerCommand extends CommandAdapter {
 	 *            the key
 	 * @return the server by key and validate not registered
 	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 *             the SCMP command exception
 	 */
 	private Server getServerByKeyAndValidateNotRegistered(String key) throws SCMPCommandException {
 		Server server = this.serverRegistry.getServer(key);

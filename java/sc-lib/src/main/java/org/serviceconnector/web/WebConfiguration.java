@@ -16,6 +16,7 @@
 package org.serviceconnector.web;
 
 import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 
@@ -36,7 +37,7 @@ public class WebConfiguration {
 	private boolean xslTransformationCacheEnabled;
 
 	/**
-	 * Instantiates a new sCMP cache configuration.
+	 * Instantiates a new SCMP cache configuration.
 	 */
 	public WebConfiguration() {
 		this.xslTransformationCacheEnabled = Constants.DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED;
@@ -51,11 +52,12 @@ public class WebConfiguration {
 	 *             the exception
 	 */
 	public synchronized void init(CompositeConfiguration compositeConfiguration) throws Exception {
-			Boolean xslTransformationCacheEnabled = compositeConfiguration.getBoolean(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED, null);
-			if (xslTransformationCacheEnabled != null) {
-				this.xslTransformationCacheEnabled = xslTransformationCacheEnabled;
-				logger.info("web xsl transformation cache enabled set to " + xslTransformationCacheEnabled);
-			}
+		Boolean xslTransformationCacheEnabled = compositeConfiguration.getBoolean(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED,
+				null);
+		if (xslTransformationCacheEnabled != null) {
+			this.xslTransformationCacheEnabled = xslTransformationCacheEnabled;
+		}
+		logger.info(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED+ "=" + this.xslTransformationCacheEnabled);
 	}
 
 	/**

@@ -45,15 +45,6 @@ public class ResponderConfiguration {
 	public ResponderConfiguration() {
 	}
 
-	/**
-	 * Gets the responder configuration list.
-	 * 
-	 * @return the responder configuration list
-	 */
-	public List<CommunicatorConfig> getResponderConfigList() {
-		return this.responderConfigList;
-	}
-
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
 		List<String> respondersList = compositeConfig.getList(Constants.PROPERTY_LISTENERS);
@@ -149,9 +140,18 @@ public class ResponderConfiguration {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, responderName + " connectionType not set");
 		}
 		commConfig.setConnectionType(connectionType);
-
+	
 		// get user & password
 		commConfig.setUsername(apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_USERNAME));
 		commConfig.setPassword(apacheCompositeConfig.getString(responderName + Constants.PROPERTY_QUALIFIER_PASSWORD));
+	}
+
+	/**
+	 * Gets the responder configuration list.
+	 * 
+	 * @return the responder configuration list
+	 */
+	public List<CommunicatorConfig> getResponderConfigList() {
+		return this.responderConfigList;
 	}
 }

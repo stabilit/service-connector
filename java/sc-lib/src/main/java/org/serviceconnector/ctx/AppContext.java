@@ -236,9 +236,9 @@ public final class AppContext {
 	}
 
 	/**
-	 * Gets the sCMP session composite registry.
+	 * Gets the SCMP session composite registry.
 	 * 
-	 * @return the sCMP session composite registry
+	 * @return the SCMP session composite registry
 	 */
 	public static SCMPSessionCompositeRegistry getSCMPSessionCompositeRegistry() {
 		return AppContext.scmpSessionCompositeRegistry;

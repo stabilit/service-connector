@@ -109,7 +109,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 	 *            the key
 	 * @return the stateful server by name
 	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 *             the SCMP command exception
 	 */
 	public StatefulServer getStatefulServerByName(String key) throws SCMPCommandException {
 		Server server = this.serverRegistry.getServer(key);

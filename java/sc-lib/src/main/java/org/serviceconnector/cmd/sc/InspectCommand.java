@@ -188,7 +188,7 @@ public class InspectCommand extends CommandAdapter {
 	 *            the cache id
 	 * @return the cache inspect string
 	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 *             the SCMP command exception
 	 */
 	private String getCacheInspectString(String serviceName, String cacheId) throws SCMPCommandException {
 		CacheManager cacheManager = AppContext.getCacheManager();

@@ -17,7 +17,6 @@ package org.serviceconnector.cache;
 
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -30,6 +29,11 @@ import org.serviceconnector.util.DateTimeUtility;
  * The Class CacheComposite.
  */
 public class CacheComposite implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(CacheComposite.class);
@@ -73,14 +77,14 @@ public class CacheComposite implements Serializable {
 	/** The loading timeout (ms). */
 	private long loadingTimeout;
 	/**
-	 * Instantiates a new sCMP cache root.
+	 * Instantiates a new SCMP cache root.
 	 */
 	public CacheComposite() {
 		this(null);
 	}
 
 	/**
-	 * Instantiates a new sCMP cache root.
+	 * Instantiates a new SCMP cache root.
 	 * 
 	 * @param expiration
 	 *            the expiration
@@ -141,7 +145,7 @@ public class CacheComposite implements Serializable {
 			Date expirationDate = DateTimeUtility.parseDateString(expiration);
 			this.expirationTimestamp = expirationDate.getTime();
 		} catch (ParseException e) {
-			CacheLogger.error("invalidate expiration date/time format", e);
+			CacheLogger.error("invalidate expiration date/time format="+expiration, e);
 		}		
 	}
 
@@ -285,7 +289,7 @@ public class CacheComposite implements Serializable {
 		long currentMillis = System.currentTimeMillis(); // current time in millis UTC
 		long expirationMillis = this.getExpirationTimestamp(); // expiration timestamp 
 		if (currentMillis > expirationMillis) {
-			CacheLogger.debug("cache is expired, expirationTime = " + this.expiration + ", currentMillis = " + currentMillis + ", expirationMillis = " + expirationMillis);
+			CacheLogger.debug("cache is expired, expirationTime=" + this.expiration + ", currentMillis=" + currentMillis + ", expirationMillis=" + expirationMillis);
 			return true;
 //		} else {
 //			CacheLogger.debug("cache is not expired, expirationTime = " + this.expiration + ", expirationMillis = " + expirationMillis + ", currentTime = " + currentTime + ", currentMillis = " + currentMillis);		
@@ -311,7 +315,7 @@ public class CacheComposite implements Serializable {
 		long currentMillis = System.currentTimeMillis(); // current time in millis UTC
 		long creationMillis = this.getCreationTimestamp(); // creation timestamp 
 		if (currentMillis > creationMillis) {
-			CacheLogger.debug("cache loading is expired, creationTime = " + this.creationTime + ", currentMillis = " + currentMillis + ", creationMillis = " + creationMillis);
+			CacheLogger.debug("cache loading is expired, creationTime=" + this.creationTime + ", currentMillis=" + currentMillis + ", creationMillis=" + creationMillis);
 			return true;
 		}
 		return false;

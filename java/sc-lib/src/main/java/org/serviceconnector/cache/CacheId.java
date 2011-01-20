@@ -33,7 +33,6 @@ public class CacheId implements Serializable {
 
 	private String cacheId;
 	private String sequenceNr;
-	/** The string builder. */
 	private StringBuilder fullCacheId;
 
 	/**
@@ -55,7 +54,7 @@ public class CacheId implements Serializable {
 	}
 
 	/**
-	 * Instantiates a new sCMP cache id.
+	 * Instantiates a new SCMP cache id.
 	 * 
 	 * @param cacheId
 	 *            the cache id

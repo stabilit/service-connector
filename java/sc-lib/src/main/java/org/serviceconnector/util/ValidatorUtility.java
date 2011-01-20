@@ -235,7 +235,7 @@ public final class ValidatorUtility {
 	 * @param error
 	 *            the error
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validator exception
 	 */
 	public static void validateInt(int lowerLimitInc, int intValue, SCMPError error) throws SCMPValidatorException {
 		if (intValue < lowerLimitInc) {
@@ -283,7 +283,7 @@ public final class ValidatorUtility {
 	 * @param error
 	 *            the error
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validator exception
 	 */
 	public static void validateInt(int lowerLimitInc, int intValue, int upperLimitInc, SCMPError error)
 			throws SCMPValidatorException {
@@ -305,7 +305,7 @@ public final class ValidatorUtility {
 	 * @param error
 	 *            the error
 	 * @throws SCMPValidatorException
-	 *             the sCMP validator exception
+	 *             the SCMP validator exception
 	 */
 	public static void validateStringLengthIgnoreNull(int minSizeInc, String stringValue, int maxSizeInc, SCMPError error)
 			throws SCMPValidatorException {

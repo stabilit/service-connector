@@ -71,7 +71,7 @@ public abstract class SrvCommandAdapter implements ICommand {
 	 *            the service name
 	 * @return the srv service by service name
 	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 *             the SCMP command exception
 	 */
 	protected SrvService getSrvServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
@@ -94,7 +94,7 @@ public abstract class SrvCommandAdapter implements ICommand {
 	 *            the service name
 	 * @return the srv session service by service name
 	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 *             the SCMP command exception
 	 */
 	protected SrvSessionService getSrvSessionServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
@@ -114,7 +114,7 @@ public abstract class SrvCommandAdapter implements ICommand {
 	 *            the service name
 	 * @return the srv publish service by service name
 	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 *             the SCMP command exception
 	 */
 	protected SrvPublishService getSrvPublishServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvService srvService = this.getSrvServiceByServiceName(serviceName);

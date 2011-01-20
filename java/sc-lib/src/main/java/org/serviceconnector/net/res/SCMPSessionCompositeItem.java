@@ -70,9 +70,9 @@ public class SCMPSessionCompositeItem {
 	}
 
 	/**
-	 * Gets the sCMP large request.
+	 * Gets the SCMP large request.
 	 * 
-	 * @return the sCMP large request
+	 * @return the SCMP large request
 	 */
 	public SCMPCompositeSender getSCMPLargeResponse() {
 		return largeResponse;
@@ -91,7 +91,7 @@ public class SCMPSessionCompositeItem {
 	 * Sets the SCMP large response.
 	 * 
 	 * @param largeRequest
-	 *            the new sCMP large response
+	 *            the new SCMP large response
 	 */
 	public void setSCMPLargeRequest(SCMPCompositeReceiver largeRequest) {
 		this.largeRequest = largeRequest;

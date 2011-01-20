@@ -164,7 +164,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	private static final ReverseEnumMap<String, SCMPError> reverseMap = new ReverseEnumMap<String, SCMPError>(SCMPError.class);
 
 	/**
-	 * Instantiates a new sCMP error code.
+	 * Instantiates a new SCMP error code.
 	 * 
 	 * @param errorCode
 	 *            the error code

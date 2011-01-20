@@ -26,7 +26,7 @@ public class CacheKey implements Serializable {
 	private String cacheId;
 
 	/**
-	 * Instantiates a new sCMP cache key.
+	 * Instantiates a new SCMP cache key.
 	 * 
 	 * @param cacheId
 	 *            the cache id
