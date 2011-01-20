@@ -38,8 +38,8 @@ public class ConnectionFactory {
 
 	/**
 	 * NETTY stuff<br>
-	 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming connections on a socket. A
-	 * worker thread performs non-blocking read and write on a channel.
+	 * Configures client with Thread Pool, Boss Threads and Worker Threads. A boss thread accepts incoming connections on a socket.
+	 * A worker thread performs non-blocking read and write on a channel.
 	 */
 	private static NioClientSocketChannelFactory channelFactory;
 	/** The Constant timer, responsible component to observe timeouts in a connection. */
@@ -75,10 +75,14 @@ public class ConnectionFactory {
 	 * http://docs.jboss.org/netty/3.2/api/org/jboss/netty/channel/socket/nio/NioClientSocketChannelFactory.html
 	 */
 	public static void shutdownConnectionFactory() {
-		ConnectionFactory.timer.stop();
-		ConnectionFactory.timer = null;
-		ConnectionFactory.channelFactory.releaseExternalResources();
-		ConnectionFactory.channelFactory = null;
+		if (ConnectionFactory.timer != null) {
+			ConnectionFactory.timer.stop();
+			ConnectionFactory.timer = null;
+		}
+		if (ConnectionFactory.channelFactory != null) {
+			ConnectionFactory.channelFactory.releaseExternalResources();
+			ConnectionFactory.channelFactory = null;
+		}
 	}
 
 	/**
