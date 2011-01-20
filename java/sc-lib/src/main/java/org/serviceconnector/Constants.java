@@ -56,7 +56,9 @@ public final class Constants {
 	/** Default timeout for creation of a connection to peer. */
 	public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 5000;
 
-	/** Maximal time between subsequent receive publication. After this time subscription is marked as dead. */
+	/** Maximal time between subsequent receive publication. 
+	 * After this time subscription is marked as dead. 
+	 * This is analogous to echoInterval in session services*/
 	public static final int DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS = 60000;
 
 	/**
