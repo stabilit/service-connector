@@ -256,6 +256,14 @@ public class TestSessionServer extends TestStatefulServer {
 				logger.info("cacheExpired1Hour");
 				time.add(Calendar.HOUR_OF_DAY, -1);
 				request.setCacheExpirationDateTime(time.getTime());
+			} else if (dataString.startsWith("cacheServerReplyOther")) {
+				logger.info("cacheServerReplyOther");
+				time.add(Calendar.HOUR_OF_DAY, 1);
+				request.setCacheExpirationDateTime(time.getTime());
+				String cacheId = request.getCacheId();
+				int iCacheId = Integer.parseInt(cacheId);
+				iCacheId += 100;
+				request.setCacheId(String.valueOf(iCacheId));
 			} else if (dataString.startsWith("cacheTimeoutReply")) {
 				logger.info("cacheTimeoutReply");
 				try {

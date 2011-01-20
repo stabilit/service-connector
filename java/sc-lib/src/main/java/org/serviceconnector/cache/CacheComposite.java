@@ -17,6 +17,7 @@ package org.serviceconnector.cache;
 
 import java.io.Serializable;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -134,13 +135,8 @@ public class CacheComposite implements Serializable {
 		}
 		// transform expiration date to UTC and get timestamp
 		try {
-			Date expirationDateUTC = DateTimeUtility.parseDateStringUTC(expiration);
-			int timeZoneOffset = expirationDateUTC.getTimezoneOffset();
 			Date expirationDate = DateTimeUtility.parseDateString(expiration);
-    		timeZoneOffset = expirationDate.getTimezoneOffset();
-			long expirationTimestampUTC = expirationDateUTC.getTime();
 			this.expirationTimestamp = expirationDate.getTime();
-			long currentTimeMillis = System.currentTimeMillis();
 		} catch (ParseException e) {
 			CacheLogger.error("invalidate expiration date/time format", e);
 		}		
@@ -262,11 +258,16 @@ public class CacheComposite implements Serializable {
 		if (this.expiration == null) {
 			return false;
 		}
+//		Calendar c = Calendar.getInstance();
+//		Date currentTime = c.getTime();
+//		long currentMillis = currentTime.getTime();
 		long currentMillis = System.currentTimeMillis(); // current time in millis UTC
 		long expirationMillis = this.getExpirationTimestamp(); // expiration timestamp 
 		if (currentMillis > expirationMillis) {
 			CacheLogger.debug("cache is expired, expirationTime = " + this.expiration + ", currentMillis = " + currentMillis + ", expirationMillis = " + expirationMillis);
 			return true;
+//		} else {
+//			CacheLogger.debug("cache is not expired, expirationTime = " + this.expiration + ", expirationMillis = " + expirationMillis + ", currentTime = " + currentTime + ", currentMillis = " + currentMillis);		
 		}
 		return false;
 	}

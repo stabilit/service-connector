@@ -21,8 +21,8 @@ import java.io.Serializable;
 import org.apache.log4j.Logger;
 
 /**
- * The Class SCMPCacheId. Responsible to provide correct cache id for a specific request/response. Cache id is
- * unique for every message. Format: CacheId / SequenceNr.
+ * The Class SCMPCacheId. Responsible to provide correct cache id for a specific request/response. Cache id is unique for every
+ * message. Format: CacheId / SequenceNr.
  * 
  * @author JTraber
  */
@@ -30,7 +30,7 @@ public class CacheId implements Serializable {
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(CacheId.class);
-	
+
 	private String cacheId;
 	private String sequenceNr;
 	/** The string builder. */
@@ -40,7 +40,7 @@ public class CacheId implements Serializable {
 	 * Instantiates a new cache id.
 	 */
 	public CacheId() {
-		this(null,null);
+		this(null, null);
 	}
 
 	public CacheId(String cacheId) {
@@ -53,31 +53,47 @@ public class CacheId implements Serializable {
 			this.sequenceNr = null;
 		}
 	}
-	
+
 	/**
 	 * Instantiates a new sCMP cache id.
-	 *
-	 * @param cacheId the cache id
-	 * @param sequenceNr the sequence nr
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 * @param sequenceNr
+	 *            the sequence nr
 	 */
 	public CacheId(String cacheId, String sequenceNr) {
 		this.cacheId = cacheId;
 		this.sequenceNr = sequenceNr;
 		this.fullCacheId = null;
 	}
-	
+
+	/**
+	 * Checks if both cache ids were equal
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 * @return true, if successful
+	 */
+	public boolean equalsCacheId(CacheId cacheId) {
+		if (this.cacheId == null || cacheId == null) {
+			return false;
+		}
+		return this.cacheId.equals(cacheId.cacheId);
+	}
+
 	/**
 	 * Gets the cache id.
-	 *
+	 * 
 	 * @return the cache id
 	 */
 	public String getCacheId() {
 		return cacheId;
 	}
-	
+
 	/**
 	 * Gets the full cache id.
-	 *
+	 * 
 	 * @return the full cache id
 	 */
 	public String getFullCacheId() {
@@ -98,7 +114,7 @@ public class CacheId implements Serializable {
 
 	/**
 	 * Gets the sequence nr.
-	 *
+	 * 
 	 * @return the sequence nr
 	 */
 	public String getSequenceNr() {
@@ -107,7 +123,7 @@ public class CacheId implements Serializable {
 
 	/**
 	 * Gets the sequence nr int.
-	 *
+	 * 
 	 * @return the sequence nr int
 	 */
 	public int getSequenceNrInt() {
@@ -122,8 +138,9 @@ public class CacheId implements Serializable {
 
 	/**
 	 * Sets the sequence nr.
-	 *
-	 * @param sequenceNr the new sequence nr
+	 * 
+	 * @param sequenceNr
+	 *            the new sequence nr
 	 */
 	public void setSequenceNr(String sequenceNr) {
 		this.sequenceNr = sequenceNr;
@@ -138,7 +155,7 @@ public class CacheId implements Serializable {
 
 	/**
 	 * Next sequence.
-	 *
+	 * 
 	 * @return the cache id
 	 */
 	public CacheId nextSequence() {
@@ -146,15 +163,16 @@ public class CacheId implements Serializable {
 			this.setSequenceNr(String.valueOf(1));
 			return this;
 		}
-		this.setSequenceNr(String.valueOf(this.getSequenceNrInt()+1));
+		this.setSequenceNr(String.valueOf(this.getSequenceNrInt() + 1));
 		return this;
 	}
 
 	/**
 	 * Checks if is composite id.
-	 *
+	 * 
 	 * @return true, if is composite id
-	 * @throws CacheException the cache exception
+	 * @throws CacheException
+	 *             the cache exception
 	 */
 	public boolean isCompositeId() throws CacheException {
 		String cacheId = this.getCacheId();
@@ -174,7 +192,9 @@ public class CacheId implements Serializable {
 		this.fullCacheId = null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

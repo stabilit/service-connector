@@ -24,6 +24,7 @@ import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheExpiredException;
 import org.serviceconnector.cache.CacheId;
+import org.serviceconnector.cache.CacheKey;
 import org.serviceconnector.cache.CacheLoadedException;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
@@ -365,9 +366,25 @@ public class ClnExecuteCommand extends CommandAdapter {
 							if (cacheComposite != null) {
 								scmpCache.removeComposite(cacheId);
 								CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + cacheId
-										+ ") and start loading");
+										+ ")");
 							}
 						} else {
+							// check if clients cache id is different to servers reply cache id, if 
+							// so delete cache entry for clients id
+							if (cacheId != null && this.requestCacheId != null && cacheId != this.requestCacheId) {
+								CacheId replyCacheId = new CacheId(cacheId);
+								CacheId requestCacheId = new CacheId(this.requestCacheId);
+								if (replyCacheId.equalsCacheId(requestCacheId) == false) {
+									// remove clients cache id from cache
+									// remove cacheId from cache
+									CacheComposite cacheComposite = scmpCache.getComposite(this.requestCacheId);
+									if (cacheComposite != null) {
+										scmpCache.removeComposite(this.requestCacheId);
+										CacheLogger.warn("cache composite (" + this.requestCacheId + ") removed, server did reply different cache id, cache (" + cacheId
+												+ ")");
+									}									
+								}
+							}
 							CacheLogger.debug("cache message put reply, scmp reply cacheId = " + reply.getCacheId()
 									+ ", isReply = " + reply.isReply() + ", isPart = " + reply.isPart() + ", isPollRequest = "
 									+ reply.isPollRequest());

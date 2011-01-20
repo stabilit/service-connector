@@ -349,9 +349,9 @@ public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
 	}
 	
 	/**
-	 * Description: exchange message with cacheId, server replies with cacheExpirationTime - 1 Hour<br>
-	 * In a second step insert a normal not expired cache message<br/>
-	 * Expectation: server cache message expired
+	 * Description: exchange message with cacheId, server does not reply within given timeout<br>
+     * Inspect the cache and verify that no cache entry is available for given cacheId.<br/>
+	 * Expectation: server cache reply timeout, no cache entry
 	 */
 	@Test
 	public void t20_cacheServerTimeoutReply() throws Exception {
@@ -380,5 +380,36 @@ public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
         Assert.assertEquals(inspectResponse.getValue("return"), "notfound");
 		sessionService1.deleteSession();
 	}
-	
+
+	/**
+	 * Description: exchange message with cacheId, server replies with different cacheId<br>
+	 * Save server reply in cache under servers cache id and not under clients cache id.<br/>
+	 * Expectation: server cache replies different cache id
+	 */
+	@Test
+	public void t20_cacheServerRepliesOtherCacheId() throws Exception {
+		// inspect cache		
+        URLParameterString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+        Assert.assertEquals(inspectResponse.getValue("return"), "notfound");
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		// ask for message from cache for cacheId 700, the server replies with cacheId 800 (700 + 100)
+		request.setData("cacheServerReplyOther");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+	    response = sessionService1.execute(request);
+		Assert.assertEquals("cacheServerReplyOther", response.getData());
+	    // inspect cache with cacheId 700
+        inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+        Assert.assertEquals(inspectResponse.getValue("return"), "notfound");
+	    // inspect cache with cacheId 800
+        inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "800");
+        Assert.assertEquals(inspectResponse.getValue("return"), "success");
+		sessionService1.deleteSession();
+	}
+
 }
