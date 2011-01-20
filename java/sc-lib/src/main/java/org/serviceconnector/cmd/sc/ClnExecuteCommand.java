@@ -284,7 +284,8 @@ public class ClnExecuteCommand extends CommandAdapter {
 		if (cacheComposite == null) {
 			CacheLogger.debug("cache does not exist, start loading from server");
 			// cache does not exist, this is the first request for it
-			scmpCache.startLoading(message.getCacheId());
+			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+			scmpCache.startLoading(message.getCacheId(), oti);
 		}
 		return false; // message not loaded from cache
 	}
@@ -307,7 +308,9 @@ public class ClnExecuteCommand extends CommandAdapter {
 		/** The request cache id. */
 		private String requestCacheId;		
 		/** The request service name. */
-		private String requestServiceName;
+		private String requestServiceName;		
+		/** The request oti. */
+		private int requestOTI;
 
 		private SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 
@@ -331,6 +334,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 				if (message != null) {
 					this.requestCacheId = message.getCacheId();
 					this.requestServiceName = message.getServiceName();
+					this.requestOTI = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 				}
 			}
 		}
@@ -394,12 +398,12 @@ public class ClnExecuteCommand extends CommandAdapter {
 							} catch (CacheLoadedException e) {
 								CacheLogger.warn("cache put message failed, already loaded, remove cache (" + reply.getCacheId()
 										+ ") and start loading");
-								scmpCache.startLoading(reply.getCacheId());
+								scmpCache.startLoading(reply.getCacheId(), this.requestOTI);
 								messageCacheId = scmpCache.putMessage(reply);
 							} catch (CacheExpiredException e) {
 								CacheLogger.warn("cache put message failed, expired, remove cache (" + reply.getCacheId()
 										+ ") and start loading");
-								scmpCache.startLoading(reply.getCacheId());
+								scmpCache.startLoading(reply.getCacheId(), this.requestOTI);
 								messageCacheId = scmpCache.putMessage(reply);
 							}
 							String fullCacheId = messageCacheId.getFullCacheId();

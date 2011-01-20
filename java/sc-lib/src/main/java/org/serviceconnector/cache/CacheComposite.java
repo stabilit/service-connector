@@ -70,6 +70,8 @@ public class CacheComposite implements Serializable {
 	/** The cache state. */
 	private CACHE_STATE cacheState;
 
+	/** The loading timeout (ms). */
+	private long loadingTimeout;
 	/**
 	 * Instantiates a new sCMP cache root.
 	 */
@@ -91,6 +93,7 @@ public class CacheComposite implements Serializable {
 		this.creationTimeMillis = this.creationTime.getTime();
 		this.lastModifiedTime = this.creationTime;
 		this.lastModifiedTimeMillis = this.creationTimeMillis;
+		this.loadingTimeout = -1L;
 	}
 
 	/**
@@ -150,7 +153,7 @@ public class CacheComposite implements Serializable {
 	public long getExpirationTimestamp() {
 		return expirationTimestamp;
 	}
-	
+		
 	/**
 	 * Sets the cache state.
 	 * 
@@ -202,7 +205,7 @@ public class CacheComposite implements Serializable {
 	 *
 	 * @return the creation time millis
 	 */
-	public long getCreationTimeMillis() {
+	public long getCreationTimestamp() {
 		return creationTimeMillis;
 	}
 	
@@ -231,6 +234,24 @@ public class CacheComposite implements Serializable {
 		this.lastModifiedTime = DateTimeUtility.getCurrentTime();
 		this.lastModifiedTimeMillis = this.lastModifiedTime.getTime();
 		
+	}
+
+	/**
+	 * Gets the loading timeout.
+	 *
+	 * @return the loading timeout
+	 */
+	public long getLoadingTimeout() {
+		return loadingTimeout;
+	}
+	
+	/**
+	 * Sets the loading timeout.
+	 *
+	 * @param loadingTimeout the new loading timeout
+	 */
+	public void setLoadingTimeout(int loadingTimeout) {
+		this.loadingTimeout = loadingTimeout;
 	}
 	
 	/*
@@ -268,6 +289,30 @@ public class CacheComposite implements Serializable {
 			return true;
 //		} else {
 //			CacheLogger.debug("cache is not expired, expirationTime = " + this.expiration + ", expirationMillis = " + expirationMillis + ", currentTime = " + currentTime + ", currentMillis = " + currentMillis);		
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if loading timeout did expire.
+	 * 
+	 * @return true, if loading timeout did expire
+	 */
+	public boolean isLoadingExpired() {
+		if (this.isLoading() == false) {
+			return false;
+		}
+		if (this.loadingTimeout <= 0L) {
+			return false;
+		}
+		if (this.creationTime == null) {
+			return false;
+		}
+		long currentMillis = System.currentTimeMillis(); // current time in millis UTC
+		long creationMillis = this.getCreationTimestamp(); // creation timestamp 
+		if (currentMillis > creationMillis) {
+			CacheLogger.debug("cache loading is expired, creationTime = " + this.creationTime + ", currentMillis = " + currentMillis + ", creationMillis = " + creationMillis);
+			return true;
 		}
 		return false;
 	}

@@ -584,9 +584,15 @@ public class DefaultXMLLoaderFactory {
 			writer.writeStartElement("key");
 			writer.writeCharacters(cacheKey.getCacheId());
 			writer.writeEndElement();
+			writer.writeStartElement("state");
+			writer.writeCharacters(cacheComposite.getCacheState().toString());
+			writer.writeEndElement(); // end of state
 			writer.writeStartElement("size");
 			writer.writeCharacters(String.valueOf(cacheComposite.getSize()));
 			writer.writeEndElement(); // end of size
+			writer.writeStartElement("loadingTimeout");
+			writer.writeCharacters(String.valueOf(cacheComposite.getLoadingTimeout()));
+			writer.writeEndElement(); // end of loadingTimeout
 			writer.writeStartElement("expiration");
 			if (cacheComposite.getExpiration() != null) {
 				writer.writeCharacters(cacheComposite.getExpiration());

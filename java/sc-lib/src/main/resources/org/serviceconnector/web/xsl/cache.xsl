@@ -87,8 +87,10 @@
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
 	            <th class="sc_table">ID</th>
+	            <th class="sc_table">Status</th>
 	            <th class="sc_table">Messages</th>
 	            <th class="sc_table">Expiration</th>
+	            <th class="sc_table">Loading Timeout (ms)</th>            
 	            <th class="sc_table">Creation</th>            
 	            <th class="sc_table">Last Modified</th>            
 	          </tr>          
@@ -123,6 +125,7 @@
     <xsl:template name="composite_row">
 	    <xsl:param name="class"/>
 	    <td class="{$class}"><xsl:value-of select="key"/></td>
+	    <td class="{$class}"><xsl:value-of select="state"/></td>
 	    <td class="{$class}">
 	      <xsl:choose>
 	        <xsl:when test="size &gt; 0">
@@ -134,6 +137,7 @@
           </xsl:choose>       	    
 	    </td>
 	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="expiration"/></xsl:call-template></td>
+	    <td class="{$class}"><xsl:value-of select="loadingTimeout"/></td>
 	    <td class="{$class}"><xsl:value-of select="creation"/></td>
 	    <td class="{$class}"><xsl:value-of select="lastModified"/></td>
 	</xsl:template>

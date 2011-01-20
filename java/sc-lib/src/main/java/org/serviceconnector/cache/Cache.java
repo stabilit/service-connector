@@ -341,9 +341,9 @@ public class Cache {
 		if (cacheComposite == null) {
 			return;
 		}
-		if (cacheComposite.isExpired() == false) {
+		if (cacheComposite.isExpired() == false && cacheComposite.isLoadingExpired() == false) {
 			return;
-		}
+		}		
 		String cacheId = cacheKey.getCacheId();
 		int size = cacheComposite.getSize();
 		CacheLogger.debug("Cache message (" + cacheKey + ") remove expired composite.");
@@ -622,7 +622,7 @@ public class Cache {
 	 * @param cacheId
 	 *            the cache id
 	 */
-	public void startLoading(String cacheId) {
+	public void startLoading(String cacheId, int loadingTimeout) {
 		try {
 			CacheComposite cacheComposite = this.getComposite(cacheId);
 			CacheKey cacheKey = new CacheKey(cacheId);
@@ -632,6 +632,7 @@ public class Cache {
 			}
 			cacheComposite = new CacheComposite();
 			cacheComposite.setSize(0);
+			cacheComposite.setLoadingTimeout(loadingTimeout);
 			cacheComposite.setCacheState(CACHE_STATE.LOADING);
 			this.putRegistry(cacheKey);
 			Statistics.getInstance().incrementCachedMessages(0);

@@ -23,6 +23,7 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.serviceconnector.Constants;
 import org.serviceconnector.TestCacheConfiguration;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
@@ -155,7 +156,6 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 		// get cache composite keys registry
 		Object[] compositeKeys = scmpCache.getCompositeKeys();
 		Assert.assertEquals(0, compositeKeys.length);
-
 		SCMPMessage scmpMessageRead = new SCMPMessage();
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, msgCacheId.getFullCacheId());
@@ -163,6 +163,39 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 		if (cacheMessage != null) {
 			Assert.fail("cache should be expired but is not");
 		}
+	}
+
+	/**
+	 * Description: Simple cache write test, expired<br>
+	 * Write a message into the cache using a dummy id and nr. Set the expiration date and time one hour to the future.
+	 * and the loading timeout to 2 seconds.
+	 * Wait 3 seconds, in the meantime the cache expiration thread should run and remove the expired loading message and its composite.
+	 * Try to read the composite from its cache again but this should fail because the message and its composite has been removed.<br>
+	 *  
+	 * Expectation: passes
+	 */
+	@Test
+	public void t03_expiredLoadingCacheWriteTest() throws CacheException {
+		Cache scmpCache = this.cacheManager.getCache("dummy");
+		String stringWrite = "this is the buffer";
+		byte[] buffer = stringWrite.getBytes();
+		SCMPMessage scmpMessageWrite = new SCMPMessage(buffer);
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+		Date now = new Date();
+		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, +TimeMillis.HOUR.getMillis());
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
+				DateTimeUtility.getDateTimeAsString(expirationDate));
+		scmpCache.startLoading("dummy.cache.id", 2000);
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+		}
+		CacheComposite cacheComposite = scmpCache.getComposite("dummy.cache.id");
+		Assert.assertNull(cacheComposite);
+		// get cache composite keys registry
+		Object[] compositeKeys = scmpCache.getCompositeKeys();
+		Assert.assertEquals(0, compositeKeys.length);
 	}
 
 }
