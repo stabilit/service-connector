@@ -72,7 +72,7 @@ public class SCMessage {
 	/** The reject flag used to reject a create session / subscribe. */
 	private boolean reject;
 	/**
-	 * The cache expiration date time, format on wire yyyy-MM-dd'T'hh:mm:ss.SSSZ. Sent by the server, it represents the absolute
+	 * The cache expiration date time, format on wire yyyy-MM-dd hh:mm:ss.SSSZ. Sent by the server, it represents the absolute
 	 * expiration date and time of the message in cache. It must be set together with cacheId attribute.
 	 */
 	private Date cacheExpirationDateTime;

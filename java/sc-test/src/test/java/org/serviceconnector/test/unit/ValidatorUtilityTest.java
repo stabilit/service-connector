@@ -37,7 +37,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 	/** The FOUR. */
 	private static final int FOUR = 4;
 	/** The SDF. */
-	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 
 	/**
 	 * Description: Validate local date time test<br>
