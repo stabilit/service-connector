@@ -128,6 +128,8 @@ public class SCClient {
 			SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				this.requester.destroy();
+				// release resources
+				AppContext.destroy();
 				SCServiceException ex = new SCServiceException("attach to " + host + ":" + port + " failed");
 				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
