@@ -23,7 +23,6 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.Constants;
 import org.serviceconnector.TestCacheConfiguration;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
@@ -75,6 +74,7 @@ public class CacheExpirationTest extends SuperUnitTest {
 	@After
 	public void afterTest() {
 		cacheManager.destroy();
+		AppContext.setSCEnvironment(false);
 		super.afterOneTest();
 	}
 

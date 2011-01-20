@@ -25,6 +25,7 @@ import org.junit.rules.TestName;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.Loggers;
 
 public class IntegrationSuperTest {
@@ -41,11 +42,12 @@ public class IntegrationSuperTest {
 	
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
-		ctrl = new ProcessesController();
+		ctrl = new ProcessesController();		
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
+		AppContext.init();
 		testLogger.info(">> " + name.getMethodName() + " <<");
 		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
@@ -59,6 +61,7 @@ public class IntegrationSuperTest {
 		}
 		scCtx = null;
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
+		AppContext.destroy();
 	}
 
 	@AfterClass

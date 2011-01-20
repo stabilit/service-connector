@@ -15,6 +15,7 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
@@ -24,6 +25,8 @@ public class MultipleNICTest extends IntegrationSuperTest {
 
 	@Before
 	public void beforeOneTest() throws Exception {
+		AppContext.init();
+		testLogger.info(">> " + name.getMethodName() + " <<");
 		threadCount = Thread.activeCount();
 		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCNoInterfacesProperties);
 	}
