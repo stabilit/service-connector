@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web.netty;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,6 @@ import org.jboss.netty.handler.codec.http.CookieDecoder;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.QueryStringDecoder;
 import org.serviceconnector.web.AbstractWebRequest;
-
 
 /**
  * The Class NettyWebRequest.
@@ -60,7 +60,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 			// http post
 			ChannelBuffer content = request.getContent();
 			if (content.readable()) {
-				String param = content.toString("UTF-8");
+				String param = content.toString(Charset.forName("UTF-8"));
 				QueryStringDecoder queryStringDecoder = new QueryStringDecoder("/?" + param);
 				Map<String, List<String>> postParams = queryStringDecoder.getParameters();
 				this.parameters.putAll(postParams);
@@ -69,7 +69,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 				CookieDecoder cd = new CookieDecoder();
 				String cookie = this.request.getHeader("Cookie");
 				if (cookie != null) {
-				    this.cookies = cd.decode(cookie);
+					this.cookies = cd.decode(cookie);
 				}
 			} catch (Exception e) {
 				this.cookies = null;
