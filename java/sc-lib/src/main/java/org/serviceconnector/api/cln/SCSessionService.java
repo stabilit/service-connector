@@ -206,7 +206,7 @@ public class SCSessionService extends SCService {
 			clnExecuteCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.triggerSessionTimeout();
-			throw new SCServiceException("execute reuest failed ", e);
+			throw new SCServiceException("execute request failed ", e);
 		}
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
