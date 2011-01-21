@@ -77,6 +77,9 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		int eci = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL);
 
 		switch (abstractService.getType()) {
+		case CASCADED_SERVICE:
+			// TODO JOT cascaded service
+			break;
 		case SESSION_SERVICE:
 			// code for type session service is below switch statement
 			break;
@@ -97,10 +100,8 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			reply.setMessageType(getKey());
 			reply.setSessionId(fileSession.getId());
 			response.setSCMP(reply);
+			responderCallback.responseCallback(request, response);
 			return;
-		case CASCADED_SERVICE:
-			// TODO JOT cascaded service
-			break;
 		default:
 			throw new SCMPCommandException(SCMPError.SC_ERROR, "create session not allowed for service " + serviceName);
 		}

@@ -76,6 +76,8 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		Server abstractServer = session.getServer();
 
 		switch (abstractServer.getType()) {
+		case CASCADED_SC:
+			// TODO JOT cascaded service
 		case STATEFUL_SERVER:
 			// code for type session service is below switch statement
 			break;
@@ -87,9 +89,8 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			reply.setIsReply(true);
 			reply.setMessageType(getKey());
 			response.setSCMP(reply);
+			responderCallback.responseCallback(request, response);
 			return;
-		case CASCADED_SC:
-			// TODO JOT cascaded service
 		}
 
 		StatefulServer statefulServer = (StatefulServer) abstractServer;
