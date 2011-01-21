@@ -102,6 +102,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			response.setSCMP(reply);
 			responderCallback.responseCallback(request, response);
 			return;
+		case UNDEFINED:
 		default:
 			throw new SCMPCommandException(SCMPError.SC_ERROR, "create session not allowed for service " + serviceName);
 		}
