@@ -2,12 +2,11 @@ Service Connector
 =================
 
 List of functions NOT implemented in current version:
-- SC cascading, proxy services
+- SC cascading, cascaded services
 - Tomcat server API
 
 Known Problems:
-- caching poorly tested
-- file services poorly tested
+- see release notes
 
 
 Special configuration in current version
