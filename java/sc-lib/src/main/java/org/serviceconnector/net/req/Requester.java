@@ -170,8 +170,9 @@ public class Requester implements IRequester {
 
 		/**
 		 * Sets the operation timeout.
-		 *
-		 * @param operationTimeoutTask the new operation timeout
+		 * 
+		 * @param operationTimeoutTask
+		 *            the new operation timeout
 		 */
 		public void setOperationTimeout(ScheduledFuture<TimeoutWrapper> operationTimeoutTask) {
 			this.operationTimeout = operationTimeoutTask;
@@ -199,11 +200,7 @@ public class Requester implements IRequester {
 		@Override
 		public void timeout() {
 			this.disconnectConnection();
-			try {
-				this.scmpCallback.receive(new IdleTimeoutException("idle timeout. operation - could not be completed."));
-			} catch (Exception e) {
-				this.scmpCallback.receive(e);
-			}
+			this.scmpCallback.receive(new IdleTimeoutException("idle timeout. operation - could not be completed."));
 		}
 	}
 

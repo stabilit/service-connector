@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.cmd.proxy.ClnCreateSessionCommandProxyCallback;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -29,7 +30,9 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.FileServer;
+import org.serviceconnector.service.CascadedSessionService;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.FileSession;
 import org.serviceconnector.service.NoFreeServerException;
@@ -75,11 +78,15 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
 		String sessionInfo = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 		int eci = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.ECHO_INTERVAL);
+		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
 		switch (abstractService.getType()) {
-		case CASCADED_SERVICE:
-			// TODO JOT cascaded service
-			break;
+		case CASCADED_SESSION_SERVICE:
+			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
+			ClnCreateSessionCommandProxyCallback callback = new ClnCreateSessionCommandProxyCallback(request, response,
+					responderCallback);
+			cascadedSC.createSession(reqMessage, callback, oti);
+			return;
 		case SESSION_SERVICE:
 			// code for type session service is below switch statement
 			break;
@@ -116,8 +123,6 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 
 		// tries allocating a server for this session
 		ClnCreateSessionCommandCallback callback = null;
-
-		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
 		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool

@@ -43,14 +43,11 @@ public class FileService extends Service {
 	 * @param type
 	 *            the type
 	 */
-	public FileService(String name, String path, String scUploadScript, String scGetFileListScript) {
+	public FileService(String name, FileServer server, String path, String scUploadScript, String scGetFileListScript) {
 		super(name, ServiceType.FILE_SERVICE);
 		this.path = path;
 		this.scUploadScript = scUploadScript;
 		this.scGetFileListScript = scGetFileListScript;
-	}
-
-	public void setServer(FileServer server) {
 		this.server = server;
 	}
 

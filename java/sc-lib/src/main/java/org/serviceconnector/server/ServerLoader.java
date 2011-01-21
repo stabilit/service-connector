@@ -1,23 +1,22 @@
 /*
- *-----------------------------------------------------------------------------*
- *                                                                             *
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
+ * -----------------------------------------------------------------------------*
+ * *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
+ * -----------------------------------------------------------------------------*
+ * /*
+ * /**
  */
 package org.serviceconnector.server;
 
@@ -55,7 +54,7 @@ public class ServerLoader {
 
 		for (String serverName : serverNames) {
 			serverName = serverName.trim(); // remove blanks in serverName
-			
+
 			int portNr = Integer.parseInt((String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_PORT));
 			String host = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_HOST);
 			String connectionType = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
@@ -63,14 +62,15 @@ public class ServerLoader {
 			if (connectionType == null) {
 				connectionType = ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE.getValue();
 			}
-			String maxConnectionsValue = (String) config
-					.getString(serverName + Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE);
+			String maxConnectionsValue = (String) config.getString(serverName
+					+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE);
 			int maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 			if (maxConnectionsValue != null) {
 				maxConnections = Integer.parseInt(maxConnectionsValue);
 			}
 
-			String keepAliveIntervalValue = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS);
+			String keepAliveIntervalValue = (String) config.getString(serverName
+					+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS);
 			int keepAliveInterval = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
 			if (keepAliveIntervalValue != null) {
 				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
@@ -93,9 +93,8 @@ public class ServerLoader {
 						keepAliveInterval);
 				break;
 			case CASCADED_SC:
-				// TODO JOT .. cascaded handling
-				// server = new CascadedSC(serviceName);
-				continue;
+				server = new CascadedSC(socketAddress, serverName, portNr, maxConnections, connectionType, keepAliveInterval);
+				break;
 			case WEB_SERVER:
 				// nothing to do in case of a web server is registered in specific endpoint
 				continue;

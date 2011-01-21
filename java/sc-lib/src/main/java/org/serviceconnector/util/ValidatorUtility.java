@@ -61,10 +61,8 @@ public final class ValidatorUtility {
 		if (dateTimeString == null) {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "date time value is missing");
 		}
-		@SuppressWarnings("unused")
-		Date dateTime = null;
 		try {
-			dateTime = DateTimeUtility.parseDateString(dateTimeString);
+			DateTimeUtility.parseDateString(dateTimeString);
 		} catch (ParseException ex) {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_LDT, dateTimeString + " should be="
 					+ Constants.SCMP_FORMAT_OF_DATE_TIME);
@@ -101,8 +99,7 @@ public final class ValidatorUtility {
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static void validateLong(long lowerLimitInc, String longStringValue, SCMPError error)
-			throws SCMPValidatorException {
+	public static void validateLong(long lowerLimitInc, String longStringValue, SCMPError error) throws SCMPValidatorException {
 		if (longStringValue == null) {
 			throw new SCMPValidatorException(error, "Numeric value is missing");
 		}
@@ -127,13 +124,12 @@ public final class ValidatorUtility {
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
-	public static void validateLong(long lowerLimitInc, long longValue, SCMPError error)
-			throws SCMPValidatorException {
+	public static void validateLong(long lowerLimitInc, long longValue, SCMPError error) throws SCMPValidatorException {
 		if (longValue < lowerLimitInc) {
 			throw new SCMPValidatorException(error, "LongValue=" + longValue + " too low");
 		}
 	}
-	
+
 	/**
 	 * Validate long.
 	 * 
@@ -161,7 +157,7 @@ public final class ValidatorUtility {
 		}
 		ValidatorUtility.validateLong(lowerLimitInc, longValue, upperLimitInc, error);
 	}
-	
+
 	/**
 	 * Validate long.
 	 * 
@@ -181,7 +177,7 @@ public final class ValidatorUtility {
 					+ upperLimitInc + ")");
 		}
 	}
-	
+
 	/**
 	 * Validate ip address list.
 	 * 
@@ -345,7 +341,6 @@ public final class ValidatorUtility {
 			}
 		}
 	}
-
 
 	/**
 	 * Validate subscription mask.

@@ -1,16 +1,21 @@
 package org.serviceconnector.service;
 
+import org.serviceconnector.server.CascadedSC;
+
 public class CascadedSessionService extends Service {
 
-	public CascadedSessionService(String name, ServiceType type) {
-		super(name, type);
+	protected CascadedSC cascadedSC;
+
+	public CascadedSessionService(String name, CascadedSC cascadedSC) {
+		super(name, ServiceType.CASCADED_SESSION_SERVICE);
+		this.cascadedSC = cascadedSC;
 	}
 
-	public void forwardSynchron() {
-
+	public void setCascadedSC(CascadedSC cascadedSC) {
+		this.cascadedSC = cascadedSC;
 	}
 
-	public void forwardAsynchron() {
-
+	public CascadedSC getCascadedSC() {
+		return cascadedSC;
 	}
 }

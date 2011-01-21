@@ -32,7 +32,9 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 
 	SESSION_SERVICE("session"), //
 	PUBLISH_SERVICE("publish"), //
-	CASCADED_SERVICE("cascaded"), //
+	CASCADED_SESSION_SERVICE("cascadedSession"), //
+	CASCADED_PUBLISH_SERVICE("cascadedPublish"), //
+	CASCADED_FILE_SERVICE("cascadedFile"), //
 	FILE_SERVICE("file"), //
 	UNDEFINED("undefined");
 

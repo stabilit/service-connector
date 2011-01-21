@@ -1,23 +1,22 @@
 /*
- *-----------------------------------------------------------------------------*
- *                                                                             *
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
+ * -----------------------------------------------------------------------------*
+ * *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
+ * -----------------------------------------------------------------------------*
+ * /*
+ * /**
  */
 package org.serviceconnector.service;
 
@@ -31,6 +30,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.FileServer;
 import org.serviceconnector.server.Server;
 
@@ -65,6 +65,21 @@ public class ServiceLoader {
 			// instantiate right type of service
 			Service service = null;
 			switch (serviceType) {
+			case CASCADED_SESSION_SERVICE:
+				String remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
+				Server server = AppContext.getServerRegistry().getServer(remoteHost);
+				if (server == null) {
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteHost
+							+ " configured for service=" + serviceName + " is not configured");
+				}
+				service = new CascadedSessionService(serviceName, (CascadedSC) server);
+				break;
+			case CASCADED_PUBLISH_SERVICE:
+				// TODO JOT
+				continue;
+			case CASCADED_FILE_SERVICE:
+				// TODO JOT
+				continue;
 			case SESSION_SERVICE:
 				service = new SessionService(serviceName);
 				break;
@@ -83,14 +98,13 @@ public class ServiceLoader {
 					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
 							+ Constants.PROPERTY_QUALIFIER_LIST_SCRIPT + " is missing for service=" + serviceName);
 				}
-				service = new FileService(serviceName, path, scUploadFileScriptName, scGetFileListScriptName);
-				String remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
-				Server server = AppContext.getServerRegistry().getServer(remoteHost);
+				remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
+				server = AppContext.getServerRegistry().getServer(remoteHost);
 				if (server == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host="+ remoteHost
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteHost
 							+ " configured for service=" + serviceName + " is not configured");
 				}
-				((FileService) service).setServer((FileServer) server);
+				service = new FileService(serviceName, (FileServer) server, path, scUploadFileScriptName, scGetFileListScriptName);
 				break;
 			case UNDEFINED:
 			default:

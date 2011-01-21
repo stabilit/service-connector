@@ -15,14 +15,6 @@ public class CascadedPublishService extends Service {
 	public void subscribe() {
 
 	}
-
-	public void forwadSynchron() {
-
-	}
-
-	public void forwardAsynchron() {
-
-	}
 	
 	/**
 	 * Gets the subscription queue.
