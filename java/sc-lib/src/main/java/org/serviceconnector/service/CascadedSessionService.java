@@ -6,7 +6,7 @@ public class CascadedSessionService extends Service {
 		super(name, type);
 	}
 
-	public void forwadSynchron() {
+	public void forwardSynchron() {
 
 	}
 
