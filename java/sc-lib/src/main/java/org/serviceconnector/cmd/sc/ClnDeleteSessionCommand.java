@@ -91,6 +91,10 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			response.setSCMP(reply);
 			responderCallback.responseCallback(request, response);
 			return;
+		case UNDEFINED:
+		default:
+			throw new SCMPCommandException(SCMPError.SC_ERROR, "delete session not allowed for service "
+					+ abstractServer.getServiceName());
 		}
 
 		StatefulServer statefulServer = (StatefulServer) abstractServer;
@@ -112,8 +116,8 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 					// only one loop outstanding - don't continue throw current exception
 					statefulServer.abortSessionsAndDestroy("deleting session failed, connection pool to server busy");
 					logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
-							"service=" + reqMessage.getServiceName());
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
+							+ reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
@@ -218,8 +222,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			SCMPMessage fault = null;
 			if (ex instanceof IdleTimeoutException) {
 				// operation timeout handling
-				fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT,
-						"Operation timeout expired on SC cln delete session");
+				fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln delete session");
 			} else if (ex instanceof IOException) {
 				fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln delete session");
 			} else {
