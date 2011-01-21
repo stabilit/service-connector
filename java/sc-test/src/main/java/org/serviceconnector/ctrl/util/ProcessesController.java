@@ -17,6 +17,8 @@ package org.serviceconnector.ctrl.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -64,6 +66,9 @@ public class ProcessesController {
 		// Read & parse properties file.
 		String pidPath = compositeConfig.getString(Constants.ROOT_PID_PATH);
 		File configFile = new File(pidPath);
+		if(configFile.exists() == false) {
+			configFile.mkdir();
+		}
 		if (configFile.isDirectory() == false) {
 			throw new Exception("wrong property for key=" + Constants.ROOT_PID_PATH);
 		}
@@ -93,9 +98,32 @@ public class ProcessesController {
 		return scConfiguration;
 	}
 
-	public ProcessCtx startSC(String log4jSCProperties, String scProperties) throws Exception {
+	public Map<String, ProcessCtx> startSCEnvironment(String scParams[]) throws Exception {
+		if (scParams.length % 3 != 0) {
+			testLogger.error("Number of parameters (" + scParams.length + ") in propFiles array wrong: " + scParams);
+			throw new Exception("Number of parameters (" + scParams.length + ") in propFiles array wrong: " + scParams);
+		}
+
+		Map<String, ProcessCtx> proccessContexts = new HashMap<String, ProcessCtx>();
+		for (int i = 0; i < scParams.length; i += 3) {
+			String scName = scParams[i];
+			String log4jSCProperties = scParams[i + 1];
+			String scProperties = scParams[i + 2];
+			proccessContexts.put(scName, this.startSC(scName, log4jSCProperties, scProperties));
+		}
+		return proccessContexts;
+	}
+
+	public void stopSCEnvironment(Map<String, ProcessCtx> scContexts) throws Exception {
+		for (ProcessCtx scContext : scContexts.values()) {
+			this.stopSC(scContext);
+		}
+	}
+
+	public ProcessCtx startSC(String scName, String log4jSCProperties, String scProperties) throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
+		proc.setProcessName(scName);
 
 		String scRunableFullName = userDir + fs + "target" + fs + TestConstants.scRunable;
 		if (FileUtility.notExists(scRunableFullName)) {
@@ -140,12 +168,12 @@ public class ProcessesController {
 		int timeout = 15; // seconds
 		try {
 			FileUtility.waitExists(pidFileFullName, timeout);
-			testLogger.info("SC started");
+			testLogger.info(scName + " started");
 		} catch (Exception e) {
 			process.destroy();
 			process.waitFor();
 			testLogger.info(e.getMessage());
-			testLogger.error("SC not started within " + timeout + " seconds! Timeout exceeded.");
+			testLogger.error(scName + " not started within " + timeout + " seconds! Timeout exceeded.");
 			throw e;
 		}
 		return proc;
@@ -160,10 +188,10 @@ public class ProcessesController {
 				client.killSC();
 				FileUtility.waitNotExists(scProcess.getPidFileName(), timeout);
 			}
-			testLogger.info("SC stopped");
+			testLogger.info(scProcess.getProcessName() + " stopped");
 		} catch (Exception e) {
 			testLogger.info(e.getMessage());
-			testLogger.error("Cannot stop SC! Timeout exceeded.");
+			testLogger.error("Cannot stop " + scProcess.getProcessName() + "! Timeout exceeded.");
 		} finally {
 			if (scProcess.isRunning()) {
 				scProcess.getProcess().destroy();

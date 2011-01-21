@@ -42,7 +42,7 @@ public class APIPerfSuperTest {
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}
 
 	@Before

@@ -15,6 +15,8 @@
  */
 package org.serviceconnector.test.system;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -33,8 +35,9 @@ public class SystemSuperTest {
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	protected static ProcessesController ctrl;
-	protected static ProcessCtx scCtx;
+	protected static Map<String, ProcessCtx> scCtxs;
 	protected int threadCount = 0;
+	protected static String scParams[];
 
 	@Rule
 	public TestName name = new TestName();
@@ -42,22 +45,23 @@ public class SystemSuperTest {
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
+		scParams = new String[] { TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties };
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		testLogger.info(">> " + name.getMethodName() + " <<");
 		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtxs = ctrl.startSCEnvironment(scParams);
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
 		try {
-			ctrl.stopSC(scCtx);
+			ctrl.stopSCEnvironment(scCtxs);
 		} catch (Exception e) {
 		}
-		scCtx = null;
+		scCtxs = null;
 		testLogger.info("Number of threads :" + Thread.activeCount() + " created :" + (Thread.activeCount() - threadCount));
 	}
 

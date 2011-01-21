@@ -64,7 +64,7 @@ public class SCMPClnSubscribeTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties, TestConstants.pubServerName1,
 				TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.pubServerName1);
 		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP

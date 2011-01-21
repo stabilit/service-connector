@@ -1,33 +1,57 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.test.system.api.cln;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
+@RunWith(Parameterized.class)
 public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest {
+
+	public APICreateDeleteSessionTest(String propFiles[]) {
+		SystemSuperTest.scParams = propFiles;
+	}
+
+	@Parameters
+	public static Collection<Object[]> getParameters() {
+		String[] mainSCParams = new String[] { TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties };
+		String[] mainSCAndProxyParams = new String[] { mainSCParams[0], mainSCParams[1], mainSCParams[2], TestConstants.PROXY_1,
+				TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties };
+
+		Collection<Object[]> col = Arrays.asList(new Object[] { mainSCParams }, //
+				new Object[] { mainSCAndProxyParams });
+		// Collection<Object[]> col = Arrays.asList(new Object[] { mainSCAndProxyParams }, new Object[] {});
+		return col;
+	}
 
 	/**
 	 * Description: Create session (regular)<br>

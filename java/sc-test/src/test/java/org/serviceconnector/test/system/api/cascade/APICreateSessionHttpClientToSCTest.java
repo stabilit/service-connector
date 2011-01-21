@@ -53,7 +53,7 @@ public class APICreateSessionHttpClientToSCTest {
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
 				TestConstants.sesServiceName1);

@@ -84,4 +84,8 @@ public class TestConstants {
 	public static final String scRunable = "sc.jar";
 	public static final String serverRunable = "test-server.jar";
 	public static final String clientRunable = "test-client.jar";
+	
+	// SC names
+	public static final String MAIN_SC = "mainSC";
+	public static final String PROXY_1 = "proxy1";
 }

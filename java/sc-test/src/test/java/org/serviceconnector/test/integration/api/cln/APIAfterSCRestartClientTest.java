@@ -39,7 +39,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
@@ -57,7 +57,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		client.detach();
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		client.attach();
 		Assert.assertEquals("Client is attached", true, client.isAttached());
@@ -74,7 +74,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
@@ -90,7 +90,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		client.detach();
 		Assert.assertEquals("Client is attached", false, client.isAttached());
@@ -107,7 +107,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		client.enableService(TestConstants.sesServiceName1);
 		Assert.assertEquals("Service is not enabled", true, client.isServiceEnabled(TestConstants.sesServiceName1));
@@ -124,7 +124,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		client.disableService(TestConstants.sesServiceName1);
 		Assert.assertEquals("Service is not disabled", false, client.isServiceEnabled(TestConstants.sesServiceName1));
@@ -141,7 +141,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		client.getWorkload(TestConstants.sesServiceName1);
 	}
@@ -155,7 +155,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		client.attach();
 		Assert.assertEquals("Client is attached", true, client.isAttached());
@@ -173,7 +173,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		client.detach();
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		client.attach();
 		Assert.assertEquals("Client is attached", true, client.isAttached());
@@ -190,7 +190,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		Assert.assertEquals("Client is attached", true, client.isAttached());
 	}
@@ -206,7 +206,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		client.detach();
 	}
@@ -222,7 +222,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		client.enableService(TestConstants.sesServiceName1);
 		Assert.assertEquals("Service is not enabled", true, client.isServiceEnabled(TestConstants.sesServiceName1));
@@ -239,7 +239,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		client.disableService(TestConstants.sesServiceName1);
 		Assert.assertEquals("Service is not disabled", false, client.isServiceEnabled(TestConstants.sesServiceName1));
@@ -256,7 +256,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 		
 		client.getWorkload(TestConstants.sesServiceName1);
 

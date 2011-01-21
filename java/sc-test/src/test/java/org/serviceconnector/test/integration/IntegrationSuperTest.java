@@ -50,7 +50,7 @@ public class IntegrationSuperTest {
 		AppContext.init();
 		testLogger.info(">> " + name.getMethodName() + " <<");
 		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
 	}
 
 	@After

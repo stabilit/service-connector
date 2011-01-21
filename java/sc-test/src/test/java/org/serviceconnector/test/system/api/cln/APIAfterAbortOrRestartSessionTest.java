@@ -36,7 +36,7 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 
 		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
-		ctrl.stopSC(scCtx);
+		ctrl.stopSC(scCtxs.get(TestConstants.MAIN_SC));
 		
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
@@ -56,7 +56,7 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		response = sessionService1.createSession(request, msgCallback1);
 
 		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
-		ctrl.stopSC(scCtx);
+		ctrl.stopSC(scCtxs.get(TestConstants.MAIN_SC));
 
 		request.setMessageInfo(TestConstants.echoCmd);
 		response = sessionService1.execute(request);
@@ -79,7 +79,7 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		MsgCallback cbk = new MsgCallback(sessionService1);
 
 		ctrl.stopServer(sesSrvCtx); 	// stop test server now, it cannot be stopped without SC later
-		ctrl.stopSC(scCtx);
+		ctrl.stopSC(scCtxs.get(TestConstants.MAIN_SC));
 
 		sessionService1.send(request);
 	}
@@ -97,7 +97,7 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 		response = sessionService1.createSession(request, msgCallback1);
 
 		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
-		ctrl.stopSC(scCtx);
+		ctrl.stopSC(scCtxs.get(TestConstants.MAIN_SC));
 
 		sessionService1.deleteSession();
 	}

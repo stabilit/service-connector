@@ -39,8 +39,8 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	
 	@Before
 	public void beforeOneTest() throws Exception {
-		scCtx1 = ctrl.startSC(TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		scCtx2 = ctrl.startSC(TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
+		scCtx1 = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx2 = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties);
 		client1 = null;
 		client2 = null;	
 	}
