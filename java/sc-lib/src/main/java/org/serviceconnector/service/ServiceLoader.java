@@ -103,7 +103,6 @@ public class ServiceLoader {
 			if (enable == null || enable.equals("true")) {
 				service.setState(ServiceState.ENABLED); // default is enabled
 				logger.trace("state enabled for service=" + serviceName);
-
 			} else {
 				service.setState(ServiceState.DISABLED);
 				logger.trace("state disabled for service=" + serviceName);
