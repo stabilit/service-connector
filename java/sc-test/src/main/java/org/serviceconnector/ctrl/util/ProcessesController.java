@@ -18,6 +18,7 @@ package org.serviceconnector.ctrl.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -66,7 +67,7 @@ public class ProcessesController {
 		// Read & parse properties file.
 		String pidPath = compositeConfig.getString(Constants.ROOT_PID_PATH);
 		File configFile = new File(pidPath);
-		if(configFile.exists() == false) {
+		if (configFile.exists() == false) {
 			configFile.mkdir();
 		}
 		if (configFile.isDirectory() == false) {
@@ -160,8 +161,8 @@ public class ProcessesController {
 		 * [3] SC runnable
 		 * [4] -sc.configuration
 		 */
-		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + scRunableFullName
-				+ " " + Constants.CLI_CONFIG_ARG + " " + scPropertiesFullName;
+		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + scRunableFullName + " "
+				+ Constants.CLI_CONFIG_ARG + " " + scPropertiesFullName;
 
 		Process process = Runtime.getRuntime().exec(command);
 		proc.setProcess(process);
@@ -202,6 +203,24 @@ public class ProcessesController {
 				} catch (Exception e) {
 				}
 			}
+		}
+	}
+
+	public Map<String, ProcessCtx> startServerEnvironment(List<ServerDefinition> serverDefs) throws Exception {
+
+		Map<String, ProcessCtx> proccessContexts = new HashMap<String, ProcessCtx>();
+		for (ServerDefinition srvDef : serverDefs) {
+			ProcessCtx srvProcess = this.startServer(srvDef.getServerType(), srvDef.getLog4jproperty(), srvDef.getServerName(),
+					srvDef.getServerPort(), srvDef.getScPort(), srvDef.getMaxSessions(), srvDef.getMaxConnections(), srvDef
+							.getConnectionType(), srvDef.getServiceNames());
+			proccessContexts.put(srvDef.getServerName(), srvProcess);
+		}
+		return proccessContexts;
+	}
+
+	public void stopServerEnvironment(Map<String, ProcessCtx> srvContexts) throws Exception {
+		for (ProcessCtx srvContext : srvContexts.values()) {
+			this.stopServer(srvContext);
 		}
 	}
 
@@ -272,6 +291,7 @@ public class ProcessesController {
 		proc.setProcessName(serverName);
 		proc.setConnectionType(connectionType);
 		proc.setCommunicatorType(serverType);
+		proc.setSCPort(scPort);
 		/*
 		 * start server process Arguments:
 		 * [0] -Dlog4j.configuration=file
@@ -309,7 +329,7 @@ public class ProcessesController {
 		int timeout = 15; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileName())) {
-				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
+				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, srvProcess.getSCPort(), srvProcess.getConnectionType());
 				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
 				clientMgmt.enableService(serviceName); // service might be disabled during tests

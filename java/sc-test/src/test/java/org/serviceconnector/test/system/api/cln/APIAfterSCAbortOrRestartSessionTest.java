@@ -31,7 +31,7 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 	 */
 	@Test
 	public void t01_notifyClientAfterSCcrash() throws Exception {
-		SCMessage request = new SCMessage();	
+		SCMessage request = new SCMessage();
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback1 = new MsgCallback(sessionService1);
@@ -39,7 +39,7 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 		response = sessionService1.createSession(request, msgCallback1);
 		Assert.assertNotNull("the session ID is null", sessionService1.getSessionId());
 
-		ctrl.stopServer(sesSrvCtx); // stop test server now, it cannot be stopped without SC later
+		ctrl.stopServer(sesSrvCtxs.get(0)); // stop test server now, it cannot be stopped without SC later
 		ctrl.stopSC(scCtxs.get("SC1"));
 
 		msgCallback1.waitForMessage(12);

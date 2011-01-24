@@ -93,13 +93,13 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		String sessionId = reply.getSessionId();
 
 		// receive publication - no data
-		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
+		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION_CALL
 				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 30000);
 		reply = cbk.getMessageSync(30000);
 		Assert.assertTrue(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
-		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
+		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION_CALL
 				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
 		// mask matches now
 		changeSubscriptionCall.setMask(TestConstants.mask);
@@ -107,7 +107,7 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		TestUtil.checkReply(cbk.getMessageSync(1000));
 
 		// receive publication first message
-		receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION.newInstance(this.requester,
+		receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION_CALL.newInstance(this.requester,
 				TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 10000);
 		reply = cbk.getMessageSync(10000);
@@ -139,7 +139,7 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
-		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
+		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION_CALL
 				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
 		// mask matches now
 		changeSubscriptionCall.setMask(TestConstants.mask);
@@ -147,7 +147,7 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		changeSubscriptionCall.setRequestBody("2000");
 		changeSubscriptionCall.invoke(cbk, 3000);
 
-		changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION.newInstance(this.requester,
+		changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION_CALL.newInstance(this.requester,
 				TestConstants.pubServerName1, sessionId);
 		changeSubscriptionCall.setMask(TestConstants.mask);
 		TestCallback cbk1 = new TestCallback(true);

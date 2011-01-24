@@ -15,8 +15,10 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -29,6 +31,7 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
@@ -37,19 +40,35 @@ import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 @RunWith(Parameterized.class)
 public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest {
 
-	public APICreateDeleteSessionTest(String propFiles[]) {
+	public APICreateDeleteSessionTest(String propFiles[], List<ServerDefinition> serverDefinitions) {
 		SystemSuperTest.scParams = propFiles;
+		this.serverDefinitions = serverDefinitions;
 	}
 
 	@Parameters
 	public static Collection<Object[]> getParameters() {
 		String[] mainSCParams = new String[] { TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties };
-		String[] mainSCAndProxyParams = new String[] { mainSCParams[0], mainSCParams[1], mainSCParams[2], TestConstants.PROXY_1,
-				TestConstants.log4jSCcascadedProperties, TestConstants.SCcascadedProperties };
 
-		Collection<Object[]> col = Arrays.asList(new Object[] { mainSCParams }, //
-				new Object[] { mainSCAndProxyParams });
-		// Collection<Object[]> col = Arrays.asList(new Object[] { mainSCAndProxyParams }, new Object[] {});
+		String[] mainSCAndProxyParams = new String[] { TestConstants.CASC_1, TestConstants.log4jSCcascadedProperties,
+				TestConstants.SCcascadedProperties, TestConstants.PROXY_1, TestConstants.log4jSCProxyProperties,
+				TestConstants.SCProxyProperties };
+
+		List<ServerDefinition> srvDefs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
+				TestConstants.sesServiceName1);
+		srvDefs.add(srvDef);
+
+		List<ServerDefinition> srvToCascDefs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToProxyDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
+				TestConstants.PORT_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
+		srvToCascDefs.add(srvToProxyDef);
+
+		Collection<Object[]> col = Arrays.asList(new Object[] { mainSCParams, srvDefs }, //
+				new Object[] { mainSCAndProxyParams, srvToCascDefs });
+//		Collection<Object[]> col = Arrays.asList(new Object[] { mainSCAndProxyParams, srvToCascDefs }, new Object[] {
+//				mainSCAndProxyParams, srvToCascDefs });
 		return col;
 	}
 

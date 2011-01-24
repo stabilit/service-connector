@@ -149,7 +149,7 @@ public class SCMPClnSubscribeTest {
 		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 		// receive publication - no data
-		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
+		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION_CALL
 				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 30000);
 		reply = cbk.getMessageSync(3000);
@@ -184,7 +184,7 @@ public class SCMPClnSubscribeTest {
 		String sessionId = reply.getSessionId();
 
 		// receive publication - get message
-		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
+		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION_CALL
 				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 1000);
 		reply = cbk.getMessageSync(1000);
@@ -256,7 +256,7 @@ public class SCMPClnSubscribeTest {
 		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
-		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
+		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION_CALL
 				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 2000);
 		reply = cbk.getMessageSync(2000);
