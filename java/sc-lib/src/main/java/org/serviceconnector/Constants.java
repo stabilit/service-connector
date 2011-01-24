@@ -137,7 +137,7 @@ public final class Constants {
 	public static final String TCP = "tcp";
 
 	/** File qualifier for command line argument configuration file. */
-	public static final String CLI_CONFIG_ARG = "-sc.configuration";
+	public static final String CLI_CONFIG_ARG = "-config";
 
 	/**
 	 * File containing the SC process PID. Created at startup and deleted on

@@ -161,7 +161,7 @@ public class ProcessesController {
 		 * [4] -sc.configuration
 		 */
 		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + scRunableFullName
-				+ " -sc.configuration " + scPropertiesFullName;
+				+ " " + Constants.CLI_CONFIG_ARG + " " + scPropertiesFullName;
 
 		Process process = Runtime.getRuntime().exec(command);
 		proc.setProcess(process);
