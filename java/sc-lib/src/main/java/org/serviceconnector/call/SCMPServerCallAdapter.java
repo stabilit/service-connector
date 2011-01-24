@@ -18,8 +18,8 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-
 
 /**
  * The Class SCMPCallAdapter. Provides basic functionality for direct calls to a backend server.
@@ -30,12 +30,16 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPServerCallAdapter.class);
-	
+
 	/**
 	 * Instantiates a new SCMPServerCallAdapter.
 	 */
 	public SCMPServerCallAdapter() {
-		this(null, null);
+	}
+
+	public SCMPServerCallAdapter(IRequester requester, String serviceName) {
+		this(requester);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
 	/**

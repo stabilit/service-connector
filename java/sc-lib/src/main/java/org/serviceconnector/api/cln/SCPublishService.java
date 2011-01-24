@@ -185,7 +185,7 @@ public class SCPublishService extends SCService {
 		ValidatorUtility.validateMask(mask, SCMPError.HV_WRONG_MASK);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
-		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION
+		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		changeSubscriptionCall.setMask(scSubscribeMessage.getMask());
 		changeSubscriptionCall.setCompressed(scSubscribeMessage.isCompressed());
@@ -233,7 +233,7 @@ public class SCPublishService extends SCService {
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCPublishServiceCallback callback = new SCPublishServiceCallback(this, this.messageCallback);
-		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION
+		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION_CALL
 				.newInstance(this.requester, this.serviceName, this.sessionId);
 		try {
 			receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR

@@ -131,7 +131,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 					// only one loop outstanding - don't continue throw current exception
 					// schedule session timeout
 					this.sessionRegistry.scheduleSessionTimeout(session);
-					logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
+					logger.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
 							+ reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());

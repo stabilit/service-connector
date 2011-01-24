@@ -62,11 +62,11 @@ public final class SCMPCallFactory {
 	/** The CLN_SUBSCRIBE_CALL. */
 	public static final ISCMPCall CLN_SUBSCRIBE_CALL = new SCMPClnSubscribeCall();
 	/** The Constant CLN_CHANGE_SUBSCRIPTION. */
-	public static final ISCMPCall CLN_CHANGE_SUBSCRIPTION = new SCMPClnChangeSubscriptionCall();
+	public static final ISCMPCall CLN_CHANGE_SUBSCRIPTION_CALL = new SCMPClnChangeSubscriptionCall();
 	/** The CLN_UNSUBSCRIBE_CALL. */
 	public static final ISCMPCall CLN_UNSUBSCRIBE_CALL = new SCMPClnUnsubscribeCall();
 	/** The RECEIVE_PUBLICATION. */
-	public static final ISCMPCall RECEIVE_PUBLICATION = new SCMPReceivePublicationCall();
+	public static final ISCMPCall RECEIVE_PUBLICATION_CALL = new SCMPReceivePublicationCall();
 	/** The UPLOAD_CALL. */
 	public static final ISCMPCall FILE_UPLOAD_CALL = new SCMPFileUploadCall();
 	/** The FILE_DOWNLOAD_CALL. */
@@ -81,7 +81,7 @@ public final class SCMPCallFactory {
 	/** The SRV_DELETE_SESSION_CALL. */
 	public static final ISCMPCall SRV_DELETE_SESSION_CALL = new SCMPSrvDeleteSessionCall();
 	/** The SRV_ABORT_SESSION. */
-	public static final ISCMPCall SRV_ABORT_SESSION = new SCMPSrvAbortSessionCall();
+	public static final ISCMPCall SRV_ABORT_SESSION_CALL = new SCMPSrvAbortSessionCall();
 	/** The Constant SRV_EXECUTE_CALL. */
 	public static final ISCMPCall SRV_EXECUTE_CALL = new SCMPSrvExecuteCall();
 

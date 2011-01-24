@@ -136,13 +136,13 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (NoFreeServerException ex) {
-				logger.warn("NoFreeServerException caught in wait mec of create session");
+				logger.debug("NoFreeServerException caught in wait mec of create session");
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					throw ex;
 				}
 			} catch (ConnectionPoolBusyException ex) {
-				logger.warn("ConnectionPoolBusyException caught in wait mec of create session");
+				logger.debug("ConnectionPoolBusyException caught in wait mec of create session");
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));

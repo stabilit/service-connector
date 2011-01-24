@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
@@ -29,7 +30,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
+public class SCMPClnCreateSessionCall extends SCMPServerCallAdapter {
 
 	/** The Constant logger. */
 	@SuppressWarnings("unused")
@@ -39,7 +40,10 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	 * Instantiates a new SCMPClnCreateSessionCall.
 	 */
 	public SCMPClnCreateSessionCall() {
-		this(null, null);
+	}
+
+	public SCMPClnCreateSessionCall(IRequester req, SCMPMessage receivedMessage) {
+		super(req, receivedMessage);
 	}
 
 	/**
@@ -70,6 +74,12 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
+	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
+		return new SCMPClnCreateSessionCall(req, receivedMessage);
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_CREATE_SESSION;
 	}
@@ -81,7 +91,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 	 *            the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
-		if(sessionInfo == null) {
+		if (sessionInfo == null) {
 			return;
 		}
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);

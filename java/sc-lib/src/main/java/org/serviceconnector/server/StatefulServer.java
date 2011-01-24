@@ -294,7 +294,7 @@ public class StatefulServer extends Server {
 	 */
 	void serverAbortSessionWithSpecialRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
 			int timeoutMillis) throws ConnectionPoolBusyException {
-		SCMPSrvAbortSessionCall srvAbortSessionCall = (SCMPSrvAbortSessionCall) SCMPCallFactory.SRV_ABORT_SESSION.newInstance(
+		SCMPSrvAbortSessionCall srvAbortSessionCall = (SCMPSrvAbortSessionCall) SCMPCallFactory.SRV_ABORT_SESSION_CALL.newInstance(
 				this.requester, message);
 		try {
 			srvAbortSessionCall.invoke(callback, timeoutMillis);
