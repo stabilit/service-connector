@@ -146,8 +146,10 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 		this.response.setSCMP(reply);
 		// schedule session timeout
 		Session session = this.sessionRegistry.getSession(this.sessionId);
-		this.sessionRegistry.scheduleSessionTimeout(session);
-		session.setPendingRequest(false);
+		if (session != null) {
+			this.sessionRegistry.scheduleSessionTimeout(session);
+			session.setPendingRequest(false);
+		}
 		this.responderCallback.responseCallback(request, response);
 	}
 
