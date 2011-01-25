@@ -24,6 +24,8 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.EnvironmentConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
+import org.jboss.netty.logging.InternalLoggerFactory;
+import org.jboss.netty.logging.Log4JLoggerFactory;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cache.CacheConfiguration;
 import org.serviceconnector.cache.CacheManager;
@@ -113,6 +115,8 @@ public final class AppContext {
 
 	// initialize configurations in every case
 	static {
+		// configures NETTY logging to use log4j framework
+		InternalLoggerFactory.setDefaultFactory(new Log4JLoggerFactory());
 		AppContext.basicConfiguration = new BasicConfiguration();
 		AppContext.cacheConfiguration = new CacheConfiguration();
 		AppContext.responderConfiguration = new ResponderConfiguration();
