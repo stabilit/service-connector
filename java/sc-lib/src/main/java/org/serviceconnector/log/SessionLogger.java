@@ -44,7 +44,7 @@ public class SessionLogger {
 		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(CREATE_SESSION_STR, sessionId, eci);
-			sessionLogger.debug(format.toString());
+			sessionLogger.trace(format.toString());
 			format.close();
 		}
 	}
@@ -57,7 +57,7 @@ public class SessionLogger {
 		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(DELETE_SESSION_STR, sessionId);
-			sessionLogger.debug(format.toString());
+			sessionLogger.trace(format.toString());
 			format.close();
 		}
 	}
@@ -70,7 +70,7 @@ public class SessionLogger {
 		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(TIMEOUT_SESSION_STR, sessionId);
-			sessionLogger.debug(format.toString());
+			sessionLogger.trace(format.toString());
 			format.close();
 		}
 	}
@@ -83,7 +83,7 @@ public class SessionLogger {
 		if (sessionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(ABORT_SESSION_STR, sessionId);
-			sessionLogger.debug(format.toString());
+			sessionLogger.trace(format.toString());
 			format.close();
 		}
 	}
@@ -107,6 +107,12 @@ public class SessionLogger {
 	public static void error(String message) {
 		if (sessionLogger.isEnabledFor(Level.ERROR)) {
 			sessionLogger.error(message);
+		}
+	}
+
+	public static void debug(String message) {
+		if (sessionLogger.isEnabledFor(Level.DEBUG)) {
+			sessionLogger.debug(message);
 		}
 	}
 }

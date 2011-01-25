@@ -47,7 +47,7 @@ public class SubscriptionLogger {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(SUBSCRIBE_STR, sessionId, serviceName, mask);
-			subscriptionLogger.debug(format.toString());
+			subscriptionLogger.trace(format.toString());
 			format.close();
 		}
 	}
@@ -61,7 +61,7 @@ public class SubscriptionLogger {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(CHANGE_SUBSCRIBE_STR, sessionId, serviceName, mask);
-			subscriptionLogger.debug(format.toString());
+			subscriptionLogger.trace(format.toString());
 			format.close();
 		}
 	}
@@ -74,7 +74,7 @@ public class SubscriptionLogger {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(UNSUBSCRIBE_STR, sessionId, serviceName);
-			subscriptionLogger.debug(format.toString());
+			subscriptionLogger.trace(format.toString());
 			format.close();
 		}
 	}
@@ -90,7 +90,7 @@ public class SubscriptionLogger {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(CREATE_SUBSCRIPTION_STR, id);
-			subscriptionLogger.debug(format.toString());
+			subscriptionLogger.trace(format.toString());
 			format.close();
 		}
 	}
@@ -99,7 +99,7 @@ public class SubscriptionLogger {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(DELETE_SUBSCRIPTION_STR, id);
-			subscriptionLogger.debug(format.toString());
+			subscriptionLogger.trace(format.toString());
 			format.close();
 		}
 	}
@@ -108,7 +108,7 @@ public class SubscriptionLogger {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
 			format.format(ABORT_SUBSCRIPTION_STR, id);
-			subscriptionLogger.debug(format.toString());
+			subscriptionLogger.trace(format.toString());
 			format.close();
 		}
 	}
@@ -116,6 +116,12 @@ public class SubscriptionLogger {
 	public static void warn(String message) {
 		if (subscriptionLogger.isEnabledFor(Level.WARN)) {
 			subscriptionLogger.warn(message);
+		}
+	}
+	
+	public static void debug(String message) {
+		if (subscriptionLogger.isEnabledFor(Level.DEBUG)) {
+			subscriptionLogger.debug(message);
 		}
 	}
 }
