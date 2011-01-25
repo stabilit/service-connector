@@ -48,8 +48,8 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 		super(requester, serviceName);
 	}
 
-	public SCMPClnCreateSessionCall(IRequester req, SCMPMessage receivedMessage) {
-		super(req, receivedMessage);
+	public SCMPClnCreateSessionCall(IRequester req, SCMPMessage messageToForward) {
+		super(req, messageToForward);
 	}
 
 	/** {@inheritDoc} */

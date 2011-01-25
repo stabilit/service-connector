@@ -71,10 +71,10 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 				TestConstants.PORT_SC0_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 
-		Collection<Object[]> col = Arrays.asList(new Object[] { sc0Defs, srvToSC0Defs }, //
-				new Object[] { scCascDefs, srvToSC0CascDefs });
-		// Collection<Object[]> col = Arrays.asList(new Object[] { scCascDefs, srvToSC0CascDefs }, new Object[] {
-		// scCascDefs, srvToSC0CascDefs });
+		// Collection<Object[]> col = Arrays.asList(new Object[] { sc0Defs, srvToSC0Defs }, new Object[] { scCascDefs,
+		// srvToSC0CascDefs });
+		Collection<Object[]> col = Arrays.asList(new Object[] { scCascDefs, srvToSC0CascDefs }, new Object[] { scCascDefs,
+				srvToSC0CascDefs });
 		return col;
 	}
 

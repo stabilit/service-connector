@@ -94,6 +94,6 @@ public class TestConstants {
 	
 	// SC names
 	public static final String SC0 = "sc0";
-	public static final String SC1_CASC = "proxy1";
-	public static final String SC0_CASC = "cascSC";
+	public static final String SC1_CASC = "sc1Casc";
+	public static final String SC0_CASC = "sc0Casc";
 }

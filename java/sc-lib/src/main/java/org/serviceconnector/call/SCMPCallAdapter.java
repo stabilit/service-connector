@@ -92,12 +92,12 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * 
 	 * @param req
 	 *            the requester
-	 * @param message
+	 * @param messageToForward
 	 *            the message
 	 */
-	public SCMPCallAdapter(IRequester requester, SCMPMessage message) {
+	public SCMPCallAdapter(IRequester requester, SCMPMessage messageToForward) {
 		this.requester = requester;
-		this.requestMessage = new SCMPMessage();
+		this.requestMessage = messageToForward;
 	}
 
 	/** {@inheritDoc} */
