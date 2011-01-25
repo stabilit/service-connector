@@ -17,11 +17,9 @@
 
 package org.serviceconnector.call;
 
-import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-
 
 /**
  * The Interface ISCMPCall. Basic functionality of a SCMPCall.
@@ -29,50 +27,6 @@ import org.serviceconnector.scmp.SCMPMsgType;
  * @author JTraber
  */
 public interface ISCMPCall {
-
-	/**
-	 * New instance.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @return the iSCMP call
-	 */
-	public ISCMPCall newInstance(IRequester requester);
-
-	/**
-	 * New instance of a call.
-	 * 
-	 * @param requester
-	 *            the requester to use for the call
-	 * @param serviceName
-	 *            the service name
-	 * @return the scmp call
-	 */
-	public ISCMPCall newInstance(IRequester requester, String serviceName);
-
-	/**
-	 * New instance.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param sessionId
-	 *            the session id
-	 * @param serviceName
-	 *            the service name
-	 * @return the scmp call
-	 */
-	public ISCMPCall newInstance(IRequester requester, String serviceName, String sessionId);
-
-	/**
-	 * New instance. Is used on SC because received message is used to create a forward call.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param receivedMessage
-	 *            the scmp message
-	 * @return the iSCMP call
-	 */
-	public ISCMPCall newInstance(IRequester requester, SCMPMessage receivedMessage);
 
 	/**
 	 * Invoke asynchronous.

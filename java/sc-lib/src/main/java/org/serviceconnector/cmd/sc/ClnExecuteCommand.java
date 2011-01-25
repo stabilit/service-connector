@@ -25,7 +25,7 @@ import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.cmd.proxy.ClnExecuteCommandProxyCallback;
+import org.serviceconnector.cmd.casc.ClnExecuteCommandCascCallback;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.CacheLogger;
 import org.serviceconnector.log.SessionLogger;
@@ -71,17 +71,16 @@ public class ClnExecuteCommand extends CommandAdapter {
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		// check service is present
 		Service abstractService = this.validateService(serviceName);
-		String sessionId = reqMessage.getSessionId();
 
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
 			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
-			ClnExecuteCommandProxyCallback callback = new ClnExecuteCommandProxyCallback(request, response, responderCallback,
-					sessionId);
+			ClnExecuteCommandCascCallback callback = new ClnExecuteCommandCascCallback(request, response, responderCallback);
 			cascadedSC.execute(reqMessage, callback, oti);
 			return;
 		}
 
+		String sessionId = reqMessage.getSessionId();
 		Session session = this.getSessionById(sessionId);
 		if (session.hasPendingRequest() == true) {
 			SessionLogger.error("session " + sessionId + "has pending request");
@@ -114,15 +113,14 @@ public class ClnExecuteCommand extends CommandAdapter {
 		}
 		ClnExecuteCommandCallback callback = null;
 		StatefulServer server = session.getStatefulServer();
-		// try sending to the server
-		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-
+		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
+		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 		do {
 			callback = new ClnExecuteCommandCallback(request, response, responderCallback, sessionId);
 			try {
-				server.execute(reqMessage, callback, oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
+				server.execute(reqMessage, callback, otiOnSCMillis - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {

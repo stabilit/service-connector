@@ -27,17 +27,10 @@ import org.serviceconnector.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPSrvAbortSessionCall extends SCMPServerCallAdapter {
+public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPSrvAbortSessionCall.class);
-
-	/**
-	 * Instantiates a new SCMPSrvAbortSessionCall.
-	 */
-	public SCMPSrvAbortSessionCall() {
-		this(null, null);
-	}
 
 	/**
 	 * Instantiates a new SCMP srv abort session call.
@@ -49,12 +42,6 @@ public class SCMPSrvAbortSessionCall extends SCMPServerCallAdapter {
 	 */
 	public SCMPSrvAbortSessionCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req, SCMPMessage message) {
-		return new SCMPSrvAbortSessionCall(req, message);
 	}
 
 	/** {@inheritDoc} */

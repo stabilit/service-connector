@@ -21,7 +21,6 @@ import java.security.InvalidParameterException;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCSubscribeMessage;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
@@ -111,8 +110,7 @@ public class SCPublishService extends SCService {
 		this.requester.getContext().getSCMPMsgSequenceNr().reset();
 		// 2. initialize call & invoke
 		SCServiceCallback callback = new SCServiceCallback(true);
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
-				this.serviceName);
+		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, this.serviceName);
 		subscribeCall.setMask(scSubscribeMessage.getMask());
 		subscribeCall.setSessionInfo(scSubscribeMessage.getSessionInfo());
 		subscribeCall.setNoDataIntervalSeconds(scSubscribeMessage.getNoDataIntervalInSeconds());
@@ -185,8 +183,8 @@ public class SCPublishService extends SCService {
 		ValidatorUtility.validateMask(mask, SCMPError.HV_WRONG_MASK);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
-		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION_CALL
-				.newInstance(this.requester, this.serviceName, this.sessionId);
+		SCMPClnChangeSubscriptionCall changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester, this.serviceName,
+				this.sessionId);
 		changeSubscriptionCall.setMask(scSubscribeMessage.getMask());
 		changeSubscriptionCall.setCompressed(scSubscribeMessage.isCompressed());
 		changeSubscriptionCall.setRequestBody(scSubscribeMessage.getData());
@@ -233,8 +231,8 @@ public class SCPublishService extends SCService {
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCPublishServiceCallback callback = new SCPublishServiceCallback(this, this.messageCallback);
-		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION_CALL
-				.newInstance(this.requester, this.serviceName, this.sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, this.serviceName,
+				this.sessionId);
 		try {
 			receivePublicationCall.invoke(callback, Constants.SEC_TO_MILLISEC_FACTOR
 					* (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.noDataIntervalSeconds));
@@ -243,7 +241,8 @@ public class SCPublishService extends SCService {
 			this.sessionActive = false;
 			SCServiceException ex = new SCServiceException("receive publication failed");
 			ex.setSCErrorCode(SCMPError.BROKEN_SUBSCRIPTION.getErrorCode());
-			ex.setSCErrorText(SCMPError.BROKEN_SUBSCRIPTION.getErrorText("receive publication for service="+this.serviceName+" failed"));
+			ex.setSCErrorText(SCMPError.BROKEN_SUBSCRIPTION.getErrorText("receive publication for service=" + this.serviceName
+					+ " failed"));
 			this.messageCallback.receive(ex);
 			return;
 		}
@@ -307,8 +306,7 @@ public class SCPublishService extends SCService {
 		// 2. initialize call & invoke
 		try {
 			SCServiceCallback callback = new SCServiceCallback(true);
-			SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
-					this.requester, this.serviceName, this.sessionId);
+			SCMPClnUnsubscribeCall unsubscribeCall = new SCMPClnUnsubscribeCall(this.requester, this.serviceName, this.sessionId);
 			if (scSubscribeMessage != null) {
 				unsubscribeCall.setSessionInfo(scSubscribeMessage.getSessionInfo());
 			}

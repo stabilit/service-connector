@@ -40,7 +40,7 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 		
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
@@ -57,7 +57,7 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 		
 		server.stopListener();
 		Assert.assertEquals("SessionServer is registered", false, server.isListening());
@@ -74,7 +74,7 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 		server.setImmediateConnect(true);
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 		
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
@@ -94,7 +94,7 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 		server.setImmediateConnect(false);
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 		
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
@@ -118,7 +118,7 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 		
 		sessionServer.deregister();
 		Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
@@ -133,7 +133,7 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_HTTP); 
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 		
 		server.startListener();
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
@@ -150,7 +150,7 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 		
 		server.stopListener();
 		Assert.assertEquals("SessionServer is registered", false, server.isListening());
@@ -167,7 +167,7 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 		server.setImmediateConnect(true);
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 		
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
@@ -187,7 +187,7 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 		server.setImmediateConnect(false);
 		
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 		
 		Assert.assertEquals("SessionServer is not registered", true, server.isListening());
 		sessionServer = server.newSessionServer(TestConstants.sesServiceName1);
@@ -210,7 +210,7 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 		sessionServer.register(1, 1, cbk);
 		Assert.assertEquals("SessionServer is not registered", true, sessionServer.isRegistered());
 		ctrl.stopSC(scCtx);
-		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 		sessionServer.deregister();
 		Assert.assertEquals("SessionServer is registered", false, sessionServer.isRegistered());
 	}

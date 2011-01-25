@@ -31,17 +31,10 @@ import org.serviceconnector.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPSrvCreateSessionCall extends SCMPServerCallAdapter {
+public class SCMPSrvCreateSessionCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPSrvCreateSessionCall.class);
-	
-	/**
-	 * Instantiates a new SCMPSrvCreateSessionCall.
-	 */
-	public SCMPSrvCreateSessionCall() {
-		this(null, null);
-	}
 
 	/**
 	 * Instantiates a new SCMPSrvCreateSessionCall.
@@ -53,12 +46,6 @@ public class SCMPSrvCreateSessionCall extends SCMPServerCallAdapter {
 	 */
 	public SCMPSrvCreateSessionCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
-		return new SCMPSrvCreateSessionCall(req, receivedMessage);
 	}
 
 	/** {@inheritDoc} */

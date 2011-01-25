@@ -36,13 +36,6 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPInspectCall.
-	 */
-	public SCMPInspectCall() {
-		this(null);
-	}
-
-	/**
-	 * Instantiates a new SCMPInspectCall.
 	 * 
 	 * @param req
 	 *            the requester to use when invoking call
@@ -57,12 +50,6 @@ public class SCMPInspectCall extends SCMPCallAdapter {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke(scmpCallback, timeoutInMillis);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req) {
-		return new SCMPInspectCall(req);
 	}
 
 	/** {@inheritDoc} */

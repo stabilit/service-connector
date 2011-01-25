@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
@@ -55,10 +54,11 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
-				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
-				.getValue(), 0));
+		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1,
+				TestConstants.sesServiceName1);
+		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP,
+				ConnectionType.NETTY_HTTP.getValue(), 0));
 		AppContext.init();
 		this.createSession();
 	}
@@ -86,8 +86,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t01_StringMessageCompressed() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.echoCmd);
 		clnExecuteCall.setRequestBody(TestConstants.stringLength257);
 		clnExecuteCall.setCompressed(true);
@@ -104,8 +103,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t02_ByteMessageCompressed() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.echoCmd);
 		String largeString = TestUtil.getLargeString();
 		clnExecuteCall.setRequestBody(largeString.getBytes());
@@ -122,8 +120,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t10_StreamMessage() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.echoCmd);
 		String largeString = TestUtil.getLargeString();
 		ByteArrayInputStream in = new ByteArrayInputStream(largeString.getBytes());
@@ -140,8 +137,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t15_100AsynchronousMessages() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.echoCmd);
 		clnExecuteCall.setRequestBody(TestConstants.pangram);
 		ExecuteCallback callback = new ExecuteCallback();
@@ -163,8 +159,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t16_100LargeMessagesAsynchronous() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.echoCmd);
 		String largeString = TestUtil.getLargeString();
 		clnExecuteCall.setRequestBody(largeString);
@@ -187,8 +182,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t20_EXCOnServer() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.raiseExceptionCmd);
 		TestCallback cbk = new TestCallback(false);
 		clnExecuteCall.invoke(cbk, 1000);
@@ -203,8 +197,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t30_AppErrorCodeText() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.echoAppErrorCmd);
 		TestCallback cbk = new TestCallback(false);
 		clnExecuteCall.invoke(cbk, 1000);
@@ -220,8 +213,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t40_SmallRequestLargeResponseUncompressed() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.largeResponseCmd);
 		clnExecuteCall.setRequestBody("test body");
 		clnExecuteCall.setCompressed(false);
@@ -246,8 +238,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t41_LargeRequestSmallResponseUncompressed() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		String largeString = TestUtil.getLargeString();
 		clnExecuteCall.setRequestBody(largeString);
 		clnExecuteCall.setCompressed(false);
@@ -265,8 +256,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t42_LargeRequestLargeResponseUncompressed() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		String largeString = TestUtil.getLargeString();
 		clnExecuteCall.setMessageInfo(TestConstants.largeResponseCmd);
 		clnExecuteCall.setRequestBody(largeString);
@@ -290,8 +280,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t50_SmallRequestLargeResponseCompressed() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.largeResponseCmd);
 		clnExecuteCall.setRequestBody("test body");
 		TestCallback cbk = new TestCallback(false);
@@ -315,8 +304,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t51_LargeRequestSmallResponseCompressed() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		String largeString = TestUtil.getLargeString();
 		clnExecuteCall.setRequestBody(largeString);
 		TestCallback cbk = new TestCallback(false);
@@ -333,8 +321,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t52_LargeRequestLargeResponseCompressed() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		String largeString = TestUtil.getLargeString();
 		clnExecuteCall.setMessageInfo(TestConstants.largeResponseCmd);
 		clnExecuteCall.setRequestBody(largeString);
@@ -357,8 +344,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t70_WaitsForConnectionTimeout() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.sleepCmd);
 		clnExecuteCall.setRequestBody("2000");
 		TestCallback cbk = new TestCallback();
@@ -366,8 +352,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 
 		// to assure second create is not faster
 		Thread.sleep(20);
-		clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		TestCallback cbk1 = new TestCallback();
 		clnExecuteCall.invoke(cbk1, 1000);
 
@@ -385,8 +370,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t80_OTITimesOut() throws Exception {
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.sleepCmd);
 		clnExecuteCall.setRequestBody("2000");
 		TestCallback cbk = new TestCallback();
@@ -402,8 +386,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 *             the exception
 	 */
 	private void createSession() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(3600);
 		TestCallback cbk = new TestCallback();
@@ -419,8 +402,8 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 *             the exception
 	 */
 	private void deleteSession() throws Exception {
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1, this.sessionId);
+		SCMPClnDeleteSessionCall deleteSessionCall = new SCMPClnDeleteSessionCall(this.requester, TestConstants.sesServerName1,
+				this.sessionId);
 		TestCallback cbk = new TestCallback();
 		deleteSessionCall.invoke(cbk, 1000);
 		cbk.getMessageSync(3000);

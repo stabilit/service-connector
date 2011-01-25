@@ -30,7 +30,6 @@ import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPAttachCall;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
@@ -78,7 +77,7 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 	@Test
 	public void t01_AttachDetach() throws Exception {
 		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, this.port, this.connectionType.getValue(), 0));
-		SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
+		SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);
 		TestCallback callback = new TestCallback();
 		attachCall.invoke(callback, 1000);
 		SCMPMessage result = callback.getMessageSync(3000);
@@ -89,7 +88,7 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 		Assert.assertEquals(SCMPMsgType.ATTACH.getValue(), result.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		ValidatorUtility.validateDateTime(result.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME), SCMPError.HV_WRONG_LDT);
 
-		SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
+		SCMPDetachCall detachCall = new SCMPDetachCall(this.requester);
 		detachCall.invoke(callback, 1000);
 		result = callback.getMessageSync(3000);
 		TestUtil.checkReply(result);

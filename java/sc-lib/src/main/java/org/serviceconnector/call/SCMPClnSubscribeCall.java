@@ -24,8 +24,10 @@ package org.serviceconnector.call;
 import java.net.InetAddress;
 
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 
@@ -38,13 +40,6 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPClnSubscribeCall.
-	 */
-	public SCMPClnSubscribeCall() {
-		this(null, null);
-	}
-
-	/**
-	 * Instantiates a new SCMPClnSubscribeCall.
 	 * 
 	 * @param requester
 	 *            the requester
@@ -53,6 +48,10 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 	 */
 	public SCMPClnSubscribeCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);
+	}
+
+	public SCMPClnSubscribeCall(Requester requester, SCMPMessage msgToForward) {
+		super(requester, msgToForward);
 	}
 
 	/**
@@ -69,21 +68,7 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke(scmpCallback, timeoutInMillis);
 	}
-
-	/**
-	 * New instance.
-	 * 
-	 * @param requester
-	 *            the requester
-	 * @param serviceName
-	 *            the service name
-	 * @return the iSCMP call {@inheritDoc}
-	 */
-	@Override
-	public ISCMPCall newInstance(IRequester requester, String serviceName) {
-		return new SCMPClnSubscribeCall(requester, serviceName);
-	}
-
+	
 	/**
 	 * Sets the session info.
 	 * 

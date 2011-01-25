@@ -1,6 +1,4 @@
-package org.serviceconnector.cmd.proxy;
-
-import java.io.IOException;
+package org.serviceconnector.cmd.casc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cache.Cache;
@@ -11,36 +9,21 @@ import org.serviceconnector.cache.CacheLoadedException;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.CacheLogger;
-import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
-import org.serviceconnector.scmp.ISCMPMessageCallback;
-import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMessageFault;
-import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class ClnExecuteCommandProxyCallback.
  */
-public class ClnExecuteCommandProxyCallback implements ISCMPMessageCallback {
+public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 
 	/** The Constant logger. */
-	protected final Logger logger = Logger.getLogger(ClnExecuteCommandProxyCallback.class);
-	/** The callback. */
-	private IResponderCallback responderCallback;
-	/** The request. */
-	private IRequest request;
-	/** The response. */
-	private IResponse response;
-	/** The session id. */
-	private String sessionId;
+	protected final Logger logger = Logger.getLogger(ClnExecuteCommandCascCallback.class);
 	/** The request cache id. */
 	private String requestCacheId;
-	/** The request service name. */
-	private String requestServiceName;
 	/** The request oti. */
 	private int requestOTI;
 
@@ -54,20 +37,17 @@ public class ClnExecuteCommandProxyCallback implements ISCMPMessageCallback {
 	 * @param callback
 	 *            the callback
 	 */
-	public ClnExecuteCommandProxyCallback(IRequest request, IResponse response, IResponderCallback callback, String sessionId) {
-		this.responderCallback = callback;
-		this.request = request;
-		this.response = response;
-		this.sessionId = sessionId;
+	public ClnExecuteCommandCascCallback(IRequest request, IResponse response, IResponderCallback callback) {
+		super(request, response, callback);
 		SCMPMessage message = this.request.getMessage();
 		this.requestCacheId = message.getCacheId();
-		this.requestServiceName = message.getServiceName();
 		this.requestOTI = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
+		String serviceName = this.request.getMessage().getServiceName();
 		// check for cache id
 		CacheManager cacheManager = null;
 		String cacheId = reply.getCacheId();
@@ -77,9 +57,9 @@ public class ClnExecuteCommandProxyCallback implements ISCMPMessageCallback {
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
 			try {
-				Cache scmpCache = cacheManager.getCache(this.requestServiceName);
+				Cache scmpCache = cacheManager.getCache(serviceName);
 				if (scmpCache == null) {
-					this.logger.error("cache write failed, no cache, service name = " + this.requestServiceName);
+					this.logger.error("cache write failed, no cache, service name = " + serviceName);
 				} else {
 					// check if reply is fault
 					if (reply.isFault() || (cacheId == null && this.requestCacheId != null)) {
@@ -137,25 +117,9 @@ public class ClnExecuteCommandProxyCallback implements ISCMPMessageCallback {
 		}
 		// forward server reply to client
 		reply.setIsReply(true);
-		reply.setMessageType(SCMPMsgType.CLN_EXECUTE);
-		reply.setServiceName(this.requestServiceName);
+		reply.setMessageType(this.msgType);
+		reply.setServiceName(serviceName);
 		this.response.setSCMP(reply);
 		this.responderCallback.responseCallback(request, response);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void receive(Exception ex) {
-		SCMPMessage fault = null;
-		if (ex instanceof IdleTimeoutException) {
-			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC");
-		} else if (ex instanceof IOException) {
-			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection to server");
-		} else {
-			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing CLN_EXECUTE");
-		}
-		fault.setSessionId(sessionId);
-		this.receive(fault);
 	}
 }

@@ -21,7 +21,6 @@ import java.security.InvalidParameterException;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPAttachCall;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
@@ -117,7 +116,7 @@ public class SCClient {
 			this.requester = new SCRequester(new RequesterContext(this.host, this.port, this.connectionType.getValue(),
 					keepAliveIntervalSeconds, this.maxConnections));
 			SCServiceCallback callback = new SCServiceCallback(true);
-			SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(this.requester);
+			SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);
 			try {
 				attachCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
@@ -175,7 +174,7 @@ public class SCClient {
 		// 2. initialize call & invoke
 		try {
 			SCServiceCallback callback = new SCServiceCallback(true);
-			SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(this.requester);
+			SCMPDetachCall detachCall = new SCMPDetachCall(this.requester);
 			try {
 				detachCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {

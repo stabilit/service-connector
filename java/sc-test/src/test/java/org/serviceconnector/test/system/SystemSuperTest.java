@@ -49,8 +49,8 @@ public class SystemSuperTest {
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
 		scDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition scDef = new ServiceConnectorDefinition(TestConstants.MAIN_SC, TestConstants.SCProperties,
-				TestConstants.log4jSCProperties);
+		ServiceConnectorDefinition scDef = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
+				TestConstants.log4jSC0Properties);
 		scDefs.add(scDef);
 	}
 

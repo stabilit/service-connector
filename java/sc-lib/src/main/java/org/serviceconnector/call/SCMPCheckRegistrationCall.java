@@ -29,14 +29,7 @@ public class SCMPCheckRegistrationCall extends SCMPCallAdapter  {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPCheckRegistrationCall.class);
-	
-	/**
-	 * Instantiates a new SCMPCheckRegistrationCall.
-	 */
-	public SCMPCheckRegistrationCall() {
-		this(null, null);
-	}
-	
+		
 	/**
 	 * Instantiates a new SCMPCheckRegistrationCall.
 	 * 
@@ -45,12 +38,6 @@ public class SCMPCheckRegistrationCall extends SCMPCallAdapter  {
 	 */
 	public SCMPCheckRegistrationCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req, String serviceName) {
-		return new SCMPCheckRegistrationCall(req, serviceName);
 	}
 
 	/** {@inheritDoc} */

@@ -23,7 +23,6 @@ package org.serviceconnector.api.srv;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCPublishMessage;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPPublishCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
@@ -126,7 +125,7 @@ public class SCPublishServer extends SCSessionServer {
 		}
 		synchronized (this.scServer) {
 			// get lock on scServer - only one server is allowed to communicate over the initial connection
-			SCMPPublishCall publishCall = (SCMPPublishCall) SCMPCallFactory.PUBLISH_CALL.newInstance(this.requester, serviceName);
+			SCMPPublishCall publishCall = new SCMPPublishCall(this.requester, serviceName);
 			publishCall.setRequestBody(publishMessage.getData());
 			publishCall.setMask(publishMessage.getMask());
 			publishCall.setMessageInfo(publishMessage.getMessageInfo());

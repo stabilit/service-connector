@@ -27,18 +27,8 @@ public class SCMPFileUploadCall extends SCMPCallAdapter {
 	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCMPFileUploadCall.class);
 
-	public SCMPFileUploadCall() {
-		this(null, null, null);
-	}
-
 	public SCMPFileUploadCall(IRequester requester, String serviceName, String sessionId) {
 		super(requester, serviceName, sessionId);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester requester, String serviceName, String sessionId) {
-		return new SCMPFileUploadCall(requester, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */

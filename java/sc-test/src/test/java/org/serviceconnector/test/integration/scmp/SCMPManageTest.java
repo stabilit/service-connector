@@ -25,7 +25,6 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPManageCall;
@@ -46,8 +45,8 @@ public class SCMPManageTest extends IntegrationSuperTest {
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		AppContext.init();
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
-				.getValue(), 0));
+		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP,
+				ConnectionType.NETTY_HTTP.getValue(), 0));
 	}
 
 	@After
@@ -66,7 +65,7 @@ public class SCMPManageTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t01_ManageCallDisableEnableService() throws Exception {
-		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(this.requester);
+		SCMPManageCall manageCall = new SCMPManageCall(this.requester);
 		TestCallback cbk = new TestCallback();
 
 		// disable service
@@ -91,7 +90,7 @@ public class SCMPManageTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t02_ManageCallDisableServiceVerifyByInspect() throws Exception {
-		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(this.requester);
+		SCMPManageCall manageCall = new SCMPManageCall(this.requester);
 		TestCallback cbk = new TestCallback();
 
 		// disable service
@@ -101,7 +100,7 @@ public class SCMPManageTest extends IntegrationSuperTest {
 		TestUtil.checkReply(result);
 
 		// state of enableService
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(this.requester);
+		SCMPInspectCall inspectCall = new SCMPInspectCall(this.requester);
 		inspectCall.setRequestBody(Constants.STATE + Constants.EQUAL_SIGN + TestConstants.sesServerName1);
 		inspectCall.invoke(cbk, 1000);
 		result = cbk.getMessageSync(3000);
@@ -115,8 +114,7 @@ public class SCMPManageTest extends IntegrationSuperTest {
 	 *             the exception
 	 */
 	private SCMPMessage clnCreateSession() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(3600);
 		TestCallback cbk = new TestCallback();

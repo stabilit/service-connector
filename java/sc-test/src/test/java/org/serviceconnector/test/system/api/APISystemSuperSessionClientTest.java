@@ -40,20 +40,20 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 	protected static Map<String, ProcessCtx> sesSrvCtxs;
 	protected MsgCallback msgCallback1 = null;
 	protected static boolean messageReceived = false;
-	protected List<ServerDefinition> serverDefinitions;
+	protected List<ServerDefinition> srvDefs;
 
 	public APISystemSuperSessionClientTest() {
-		this.serverDefinitions = new ArrayList<ServerDefinition>();
+		this.srvDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
 				TestConstants.sesServiceName1);
-		this.serverDefinitions.add(srvDef);
+		this.srvDefs.add(srvDef);
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		sesSrvCtxs = ctrl.startServerEnvironment(serverDefinitions);
+		sesSrvCtxs = ctrl.startServerEnvironment(srvDefs);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		messageReceived = false;

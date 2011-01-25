@@ -36,25 +36,12 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPAttachCall.
-	 */
-	public SCMPAttachCall() {
-		this(null);
-	}
-
-	/**
-	 * Instantiates a new SCMPAttachCall.
 	 * 
 	 * @param req
 	 *            the requester to use when invoking call
 	 */
 	public SCMPAttachCall(IRequester req) {
 		super(req);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester requester) {
-		return new SCMPAttachCall(requester);
 	}
 	
 	/** {@inheritDoc} */

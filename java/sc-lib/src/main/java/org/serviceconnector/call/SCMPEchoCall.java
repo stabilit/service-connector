@@ -20,27 +20,21 @@ import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
-
 
 /**
  * The Class SCMPEchoCall. Call sends an echo.
  * 
  * @author JTraber
  */
-public class SCMPEchoCall extends SCMPSessionCallAdapter {
+public class SCMPEchoCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPEchoCall.class);
-	
-	/**
-	 * Instantiates a SCMPClnEchoCall.
-	 */
-	public SCMPEchoCall() {
-		this(null, null, null);
-	}
 
 	/**
 	 * Instantiates a new SCMPEchoCall.
@@ -56,18 +50,16 @@ public class SCMPEchoCall extends SCMPSessionCallAdapter {
 		super(req, serviceName, sessionId);
 	}
 
+	public SCMPEchoCall(Requester requester, SCMPMessage msgToForward) {
+		super(requester, msgToForward);
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke(scmpCallback, timeoutInMillis);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req, String serviceName, String sessionId) {
-		return new SCMPEchoCall(req, serviceName, sessionId);
 	}
 
 	/** {@inheritDoc} */

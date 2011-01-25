@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.serviceconnector.Constants;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPSrvAbortSessionCall;
 import org.serviceconnector.call.SCMPSrvChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPSrvCreateSessionCall;
@@ -134,8 +133,7 @@ public class StatefulServer extends Server {
 	 */
 	public void createSession(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
-		SCMPSrvCreateSessionCall createSessionCall = (SCMPSrvCreateSessionCall) SCMPCallFactory.SRV_CREATE_SESSION_CALL.newInstance(
-				requester, msgToForward);
+		SCMPSrvCreateSessionCall createSessionCall = new SCMPSrvCreateSessionCall(requester, msgToForward);
 		try {
 			createSessionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (ConnectionPoolBusyException ex) {
@@ -157,8 +155,7 @@ public class StatefulServer extends Server {
 	 */
 	public void deleteSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
-		SCMPSrvDeleteSessionCall deleteSessionCall = (SCMPSrvDeleteSessionCall) SCMPCallFactory.SRV_DELETE_SESSION_CALL.newInstance(
-				requester, message);
+		SCMPSrvDeleteSessionCall deleteSessionCall = new SCMPSrvDeleteSessionCall(requester, message);
 
 		try {
 			deleteSessionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
@@ -181,8 +178,7 @@ public class StatefulServer extends Server {
 	 */
 	public void subscribe(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
-		SCMPSrvSubscribeCall subscribeCall = (SCMPSrvSubscribeCall) SCMPCallFactory.SRV_SUBSCRIBE_CALL.newInstance(requester,
-				msgToForward);
+		SCMPSrvSubscribeCall subscribeCall = new SCMPSrvSubscribeCall(requester, msgToForward);
 		try {
 			subscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (ConnectionPoolBusyException ex) {
@@ -204,8 +200,7 @@ public class StatefulServer extends Server {
 	 */
 	public void unsubscribe(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
-		SCMPSrvUnsubscribeCall unsubscribeCall = (SCMPSrvUnsubscribeCall) SCMPCallFactory.SRV_UNSUBSCRIBE_CALL.newInstance(
-				requester, message);
+		SCMPSrvUnsubscribeCall unsubscribeCall = new SCMPSrvUnsubscribeCall(this.requester, message);
 
 		try {
 			unsubscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
@@ -230,8 +225,7 @@ public class StatefulServer extends Server {
 	 */
 	public void changeSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
-		SCMPSrvChangeSubscriptionCall changeSubscriptionCall = (SCMPSrvChangeSubscriptionCall) SCMPCallFactory.SRV_CHANGE_SUBSCRIPTION_CALL
-				.newInstance(requester, message);
+		SCMPSrvChangeSubscriptionCall changeSubscriptionCall = new SCMPSrvChangeSubscriptionCall(this.requester, message);
 
 		try {
 			changeSubscriptionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
@@ -253,7 +247,7 @@ public class StatefulServer extends Server {
 	 * @throws ConnectionPoolBusyException
 	 */
 	public void execute(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
-		SCMPSrvExecuteCall srvExecuteCall = (SCMPSrvExecuteCall) SCMPCallFactory.SRV_EXECUTE_CALL.newInstance(requester, message);
+		SCMPSrvExecuteCall srvExecuteCall = new SCMPSrvExecuteCall(this.requester, message);
 		try {
 			srvExecuteCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (ConnectionPoolBusyException ex) {
@@ -294,8 +288,7 @@ public class StatefulServer extends Server {
 	 */
 	void serverAbortSessionWithSpecialRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
 			int timeoutMillis) throws ConnectionPoolBusyException {
-		SCMPSrvAbortSessionCall srvAbortSessionCall = (SCMPSrvAbortSessionCall) SCMPCallFactory.SRV_ABORT_SESSION_CALL.newInstance(
-				this.requester, message);
+		SCMPSrvAbortSessionCall srvAbortSessionCall = new SCMPSrvAbortSessionCall(this.requester, message);
 		try {
 			srvAbortSessionCall.invoke(callback, timeoutMillis);
 		} catch (ConnectionPoolBusyException ex) {

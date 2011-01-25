@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.cmd.proxy.ClnCreateSessionCommandProxyCallback;
+import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -83,7 +83,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
 			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
-			ClnCreateSessionCommandProxyCallback callback = new ClnCreateSessionCommandProxyCallback(request, response,
+			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response,
 					responderCallback);
 			cascadedSC.createSession(reqMessage, callback, oti);
 			return;
@@ -124,15 +124,15 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		// tries allocating a server for this session
 		ClnCreateSessionCommandCallback callback = null;
 
-		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
+		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
-		int otiOnServerMillis = 0;
 		do {
 			callback = new ClnCreateSessionCommandCallback(request, response, responderCallback, session);
 			try {
-				otiOnServerMillis = oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-				((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session, otiOnServerMillis);
+				((SessionService) abstractService).allocateServerAndCreateSession(reqMessage, callback, session, otiOnSCMillis
+						- (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (NoFreeServerException ex) {

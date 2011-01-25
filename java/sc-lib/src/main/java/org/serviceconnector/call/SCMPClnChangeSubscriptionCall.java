@@ -1,23 +1,22 @@
 /*
- *-----------------------------------------------------------------------------*
- *                                                                             *
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
+ * -----------------------------------------------------------------------------*
+ * *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
+ * -----------------------------------------------------------------------------*
+ * /*
+ * /**
  */
 package org.serviceconnector.call;
 
@@ -25,8 +24,10 @@ import java.net.InetAddress;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
@@ -34,17 +35,10 @@ import org.serviceconnector.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPClnChangeSubscriptionCall extends SCMPSessionCallAdapter {
+public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPClnChangeSubscriptionCall.class);
-
-	/**
-	 * Instantiates a new SCMPClnChangeSubscriptionCall.
-	 */
-	public SCMPClnChangeSubscriptionCall() {
-		this(null, null, null);
-	}
 
 	/**
 	 * Instantiates a new SCMPClnChangeSubscriptionCall.
@@ -56,6 +50,10 @@ public class SCMPClnChangeSubscriptionCall extends SCMPSessionCallAdapter {
 	 */
 	public SCMPClnChangeSubscriptionCall(IRequester req, String serviceName, String sessionId) {
 		super(req, serviceName, sessionId);
+	}
+
+	public SCMPClnChangeSubscriptionCall(Requester requester, SCMPMessage msgToForward) {
+		super(requester, msgToForward);
 	}
 
 	/**
@@ -72,12 +70,6 @@ public class SCMPClnChangeSubscriptionCall extends SCMPSessionCallAdapter {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke(scmpCallback, timeoutInMillis);
 	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester requester, String serviceName, String sessionId) {
-		return new SCMPClnChangeSubscriptionCall(requester, serviceName, sessionId);
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -92,7 +84,7 @@ public class SCMPClnChangeSubscriptionCall extends SCMPSessionCallAdapter {
 	 *            the new session info
 	 */
 	public void setSessionInfo(String sessionInfo) {
-		if(sessionInfo == null) {
+		if (sessionInfo == null) {
 			return;
 		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
@@ -105,7 +97,7 @@ public class SCMPClnChangeSubscriptionCall extends SCMPSessionCallAdapter {
 	 *            the new mask
 	 */
 	public void setMask(String mask) {
-		if(mask == null) {
+		if (mask == null) {
 			return;
 		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MASK, mask);

@@ -33,25 +33,12 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPRegisterServerCall.
-	 */
-	public SCMPRegisterServerCall() {
-		this(null, null);
-	}
-
-	/**
-	 * Instantiates a new SCMPRegisterServerCall.
 	 * 
 	 * @param req
 	 *            the requesters to use when invoking call
 	 */
 	public SCMPRegisterServerCall(IRequester req, String serviceName) {
 		super(req, serviceName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req, String serviceName) {
-		return new SCMPRegisterServerCall(req, serviceName);
 	}
 
 	/** {@inheritDoc} */

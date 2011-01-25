@@ -18,6 +18,7 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -26,6 +27,9 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.CascadedSC;
+import org.serviceconnector.service.CascadedSessionService;
+import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -55,6 +59,18 @@ public class EchoCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
+		String serviceName = message.getServiceName();
+		// check service is present
+		Service abstractService = this.validateService(serviceName);
+
+		switch (abstractService.getType()) {
+		case CASCADED_SESSION_SERVICE:
+			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
+			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response, responderCallback);
+			cascadedSC.echo(message, callback, oti);
+			return;
+		}
 		String sessionId = message.getSessionId();
 		Session session = this.getSessionById(sessionId);
 		// cancel session timeout

@@ -75,15 +75,14 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 
 		ClnUnsubscribeCommandCallback callback;
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-		// Following loop implements the wait mechanism in case of a busy connection pool
+		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
+		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
-		int otiOnServerMillis = 0;
+		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
 			callback = new ClnUnsubscribeCommandCallback(request, response, responderCallback, subscription, server);
 			try {
-				otiOnServerMillis = oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-				server.unsubscribe(reqMessage, callback, otiOnServerMillis);
+				server.unsubscribe(reqMessage, callback, otiOnSCMillis - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
@@ -91,8 +90,8 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 					// only one loop outstanding - don't continue throw current exception
 					server.abortSession(subscription, "unsubscribe subscription failed, busy connection pool to server");
 					logger.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
-					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
-							"service=" + reqMessage.getServiceName());
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
+							+ reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}

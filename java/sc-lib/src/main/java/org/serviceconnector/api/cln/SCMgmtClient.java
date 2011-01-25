@@ -20,7 +20,6 @@ import java.io.UnsupportedEncodingException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPManageCall;
 import org.serviceconnector.ctx.AppContext;
@@ -209,7 +208,7 @@ public class SCMgmtClient extends SCClient {
 	 *             the sC service exception
 	 */
 	private String inspectCall(String instruction) throws SCServiceException {
-		SCMPInspectCall inspectCall = (SCMPInspectCall) SCMPCallFactory.INSPECT_CALL.newInstance(this.requester);
+		SCMPInspectCall inspectCall = new SCMPInspectCall(this.requester);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			inspectCall.setRequestBody(instruction);
@@ -241,7 +240,7 @@ public class SCMgmtClient extends SCClient {
 	 *             the SC service exception
 	 */
 	private String manageCall(String instruction) throws SCServiceException {
-		SCMPManageCall manageCall = (SCMPManageCall) SCMPCallFactory.MANAGE_CALL.newInstance(this.requester);
+		SCMPManageCall manageCall = new SCMPManageCall(this.requester);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			manageCall.setRequestBody(instruction);

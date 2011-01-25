@@ -79,19 +79,18 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		Subscription subscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList, noi);
 		reqMessage.setSessionId(subscription.getId());
 
-
 		ClnSubscribeCommandCallback callback = null;
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
-		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-		// Following loop implements the wait mechanism in case of a busy connection pool
+		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
+		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
-		int otiOnServerMillis = 0;
+		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
 			callback = new ClnSubscribeCommandCallback(request, response, responderCallback, subscription);
 			try {
-				otiOnServerMillis = oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-				service.allocateServerAndSubscribe(reqMessage, callback, subscription, otiOnServerMillis);
+				service.allocateServerAndSubscribe(reqMessage, callback, subscription, otiOnSCMillis
+						- (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (NoFreeServerException ex) {

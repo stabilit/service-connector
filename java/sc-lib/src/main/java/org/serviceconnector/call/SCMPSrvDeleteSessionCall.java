@@ -27,17 +27,10 @@ import org.serviceconnector.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPSrvDeleteSessionCall extends SCMPServerCallAdapter {
+public class SCMPSrvDeleteSessionCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPSrvDeleteSessionCall.class);
-	
-	/**
-	 * Instantiates a new SCMPSrvDeleteSessionCall.
-	 */
-	public SCMPSrvDeleteSessionCall() {
-		this(null, null);
-	}
 
 	/**
 	 * Instantiates a new SCMPSrvDeleteSessionCall.
@@ -49,12 +42,6 @@ public class SCMPSrvDeleteSessionCall extends SCMPServerCallAdapter {
 	 */
 	public SCMPSrvDeleteSessionCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
-		return new SCMPSrvDeleteSessionCall(req, receivedMessage);
 	}
 
 	/** {@inheritDoc} */

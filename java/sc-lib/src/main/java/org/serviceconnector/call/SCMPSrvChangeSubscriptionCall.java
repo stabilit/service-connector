@@ -36,17 +36,10 @@ import org.serviceconnector.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPSrvChangeSubscriptionCall extends SCMPServerCallAdapter {
+public class SCMPSrvChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPSrvChangeSubscriptionCall.class);
-	
-	/**
-	 * Instantiates a new SCMPSrvChangeSubscriptionCall.
-	 */
-	public SCMPSrvChangeSubscriptionCall() {
-		this(null, null);
-	}
 
 	/**
 	 * Instantiates a new SCMPSrvChangeSubscriptionCall.
@@ -69,12 +62,6 @@ public class SCMPSrvChangeSubscriptionCall extends SCMPServerCallAdapter {
 		ipList += "/" + localHost.getHostAddress();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
 		super.invoke(scmpCallback, timeoutInMillis);
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester requester, SCMPMessage receivedMessage) {
-		return new SCMPSrvChangeSubscriptionCall(requester, receivedMessage);
 	}
 
 	/** {@inheritDoc} */

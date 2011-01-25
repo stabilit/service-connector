@@ -2,13 +2,13 @@ package org.serviceconnector.server;
 
 import java.net.InetSocketAddress;
 
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
+import org.serviceconnector.call.SCMPEchoCall;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.AbstractSession;
@@ -25,8 +25,7 @@ public class CascadedSC extends Server {
 	}
 
 	public void createSession(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL
-				.newInstance(requester, msgToForward);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(requester, msgToForward);
 		try {
 			createSessionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (Exception e) {
@@ -35,9 +34,8 @@ public class CascadedSC extends Server {
 		}
 	}
 
-	public void deleteSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) {
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-				.newInstance(requester, message);
+	public void deleteSession(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
+		SCMPClnDeleteSessionCall deleteSessionCall = new SCMPClnDeleteSessionCall(requester, msgToForward);
 		try {
 			deleteSessionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (Exception e) {
@@ -46,8 +44,8 @@ public class CascadedSC extends Server {
 		}
 	}
 
-	public void execute(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) {
-		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(requester, message);
+	public void execute(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
+		SCMPClnExecuteCall executeCall = new SCMPClnExecuteCall(requester, msgToForward);
 		try {
 			executeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (Exception th) {
@@ -55,10 +53,19 @@ public class CascadedSC extends Server {
 			callback.receive(th);
 		}
 	}
+	
+	public void echo(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
+		SCMPEchoCall echoCall = new SCMPEchoCall(requester, msgToForward);
+		try {
+			echoCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+		} catch (Exception e) {
+			// create session failed
+			callback.receive(e);
+		}
+	}
 
 	public void subscribe(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(requester,
-				msgToForward);
+		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(requester, msgToForward);
 		try {
 			subscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
 		} catch (Exception e) {
@@ -67,9 +74,8 @@ public class CascadedSC extends Server {
 		}
 	}
 
-	public void unsubscribe(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) {
-		SCMPClnUnsubscribeCall unsubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
-				requester, message);
+	public void unsubscribe(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
+		SCMPClnUnsubscribeCall unsubscribeCall = new SCMPClnUnsubscribeCall(requester, msgToForward);
 
 		try {
 			unsubscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
@@ -79,9 +85,8 @@ public class CascadedSC extends Server {
 		}
 	}
 
-	public void changeSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) {
-		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION_CALL
-				.newInstance(requester, message);
+	public void changeSubscription(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
+		SCMPClnChangeSubscriptionCall changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(requester, msgToForward);
 
 		try {
 			changeSubscriptionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));

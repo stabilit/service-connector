@@ -48,13 +48,6 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/**
 	 * Instantiates a new SCMPCallAdapter.
-	 */
-	public SCMPCallAdapter() {
-		this(null, null, null);
-	}
-
-	/**
-	 * Instantiates a new SCMPCallAdapter.
 	 * 
 	 * @param requester
 	 *            the requester
@@ -93,28 +86,18 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		this.requestMessage.setSessionId(sessionId);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester requester) {
-		throw new UnsupportedOperationException("not allowed");
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester requester, String serviceName) {
-		throw new UnsupportedOperationException("not allowed");
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester requester, SCMPMessage receivedMessage) {
-		throw new UnsupportedOperationException("not allowed");
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester requester, String serviceName, String sessionId) {
-		throw new UnsupportedOperationException("not allowed");
+	/**
+	 * Instantiates a new SCMPCallAdapter. Constructor is necessary because in SC you need to hand over received
+	 * message.
+	 * 
+	 * @param req
+	 *            the requester
+	 * @param message
+	 *            the message
+	 */
+	public SCMPCallAdapter(IRequester requester, SCMPMessage message) {
+		this.requester = requester;
+		this.requestMessage = new SCMPMessage();
 	}
 
 	/** {@inheritDoc} */
@@ -160,7 +143,8 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	/**
 	 * The Class SCMPGroupCall. A group call is a summary of individual single calls. Each single call can be a large or small
 	 * message request and response. But all of them are handled as partial messages, large calls will be split into partial calls
-	 * (PRQ). The client uses group calls if the active communication is open end. Closing the group will send the completing request
+	 * (PRQ). The client uses group calls if the active communication is open end. Closing the group will send the completing
+	 * request
 	 * (REQ). <br>
 	 * Communication sample: <br>
 	 * openGroup (no transport) <br>
@@ -257,30 +241,6 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		@Override
 		public SCMPMessage getResponse() {
 			return this.parentCall.getResponse();
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public ISCMPCall newInstance(IRequester requester, String sessionId) {
-			throw new UnsupportedOperationException("not allowed");
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public ISCMPCall newInstance(IRequester requester, SCMPMessage scmpMessage) {
-			throw new UnsupportedOperationException("not allowed");
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public ISCMPCall newInstance(IRequester requester, String serviceName, String sessionId) {
-			throw new UnsupportedOperationException("not allowed");
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		public ISCMPCall newInstance(IRequester requester) {
-			throw new UnsupportedOperationException("not allowed");
 		}
 	}
 

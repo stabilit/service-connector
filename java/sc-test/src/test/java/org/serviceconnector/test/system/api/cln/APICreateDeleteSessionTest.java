@@ -41,42 +41,42 @@ import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 @RunWith(Parameterized.class)
 public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest {
 
-	public APICreateDeleteSessionTest(List<ServiceConnectorDefinition> scDefinitions, List<ServerDefinition> serverDefinitions) {
+	public APICreateDeleteSessionTest(List<ServiceConnectorDefinition> scDefinitions, List<ServerDefinition> srvDefinitions) {
 		SystemSuperTest.scDefs = scDefinitions;
-		this.serverDefinitions = serverDefinitions;
+		this.srvDefs = srvDefinitions;
 	}
 
 	@Parameters
 	public static Collection<Object[]> getParameters() {
-		List<ServiceConnectorDefinition> scDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition scDef = new ServiceConnectorDefinition(TestConstants.MAIN_SC, TestConstants.SCProperties,
-				TestConstants.log4jSCProperties);
-		scDefs.add(scDef);
+		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
+				TestConstants.log4jSC0Properties);
+		sc0Defs.add(sc0Def);
 
-		List<ServiceConnectorDefinition> scCascAndProxyDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition scCascDef = new ServiceConnectorDefinition(TestConstants.CASC_1,
-				TestConstants.SCcascadedProperties, TestConstants.log4jSCcascadedProperties);
-		ServiceConnectorDefinition scProxyDef = new ServiceConnectorDefinition(TestConstants.PROXY_1,
-				TestConstants.SCProxyProperties, TestConstants.log4jSCProxyProperties);
-		scCascAndProxyDefs.add(scCascDef);
-		scCascAndProxyDefs.add(scProxyDef);
+		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
+				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
+		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
+				TestConstants.SC1CASCProperties, TestConstants.log4jSC1CASCProperties);
+		scCascDefs.add(sc0CascDef);
+		scCascDefs.add(sc1CascDef);
 
-		List<ServerDefinition> srvDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
-				TestConstants.sesServiceName1);
-		srvDefs.add(srvDef);
-
-		List<ServerDefinition> srvToCascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToProxyDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
-		srvToCascDefs.add(srvToProxyDef);
+				TestConstants.PORT_SC_TCP, 100, 10, TestConstants.sesServiceName1);
+		srvToSC0Defs.add(srvToSC0Def);
 
-		Collection<Object[]> col = Arrays.asList(new Object[] { scDefs, srvDefs }, //
-				new Object[] { scCascAndProxyDefs, srvToCascDefs });
-//		Collection<Object[]> col = Arrays.asList(new Object[] { scCascAndProxyDefs, srvToCascDefs }, new Object[] {
-//				scCascAndProxyDefs, srvToCascDefs });
+		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
+				TestConstants.PORT_SC0_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
+		srvToSC0CascDefs.add(srvToSC0CascDef);
+
+		Collection<Object[]> col = Arrays.asList(new Object[] { sc0Defs, srvToSC0Defs }, //
+				new Object[] { scCascDefs, srvToSC0CascDefs });
+		// Collection<Object[]> col = Arrays.asList(new Object[] { scCascDefs, srvToSC0CascDefs }, new Object[] {
+		// scCascDefs, srvToSC0CascDefs });
 		return col;
 	}
 

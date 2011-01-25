@@ -30,13 +30,6 @@ public class SCMPDeRegisterServerCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPDeRegisterServerCall.class);
-	
-	/**
-	 * Instantiates a new SCMPDeRegisterServerCall.
-	 */
-	public SCMPDeRegisterServerCall() {
-		this(null, null);
-	}
 
 	/**
 	 * Instantiates a new SCMPDeRegisterServerCall.
@@ -48,12 +41,6 @@ public class SCMPDeRegisterServerCall extends SCMPCallAdapter {
 	 */
 	public SCMPDeRegisterServerCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester requester, String serviceName) {
-		return new SCMPDeRegisterServerCall(requester, serviceName);
 	}
 
 	/** {@inheritDoc} */

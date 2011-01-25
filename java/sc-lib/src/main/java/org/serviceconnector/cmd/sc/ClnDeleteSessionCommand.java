@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.cmd.proxy.ClnDeleteSessionCommandProxyCallback;
+import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -68,8 +68,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
 			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
-			ClnDeleteSessionCommandProxyCallback callback = new ClnDeleteSessionCommandProxyCallback(request, response,
-					responderCallback);
+			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response, responderCallback);
 			cascadedSC.deleteSession(reqMessage, callback, oti);
 			return;
 		}
@@ -105,15 +104,16 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 
 		StatefulServer statefulServer = (StatefulServer) abstractServer;
 		ClnDeleteSessionCommandCallback callback;
-		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+
+		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
+		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
-		int otiOnServerMillis = 0;
 		do {
 			callback = new ClnDeleteSessionCommandCallback(request, response, responderCallback, session, statefulServer);
 			try {
-				otiOnServerMillis = oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
-				statefulServer.deleteSession(reqMessage, callback, otiOnServerMillis);
+				statefulServer.deleteSession(reqMessage, callback, otiOnSCMillis
+						- (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {

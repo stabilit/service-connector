@@ -21,23 +21,15 @@ import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
-
 /**
  * The Class SCMPSrvUnsubscribeCall. Call unsubscribes client from service.
  * 
  * @author JTraber
  */
-public class SCMPSrvUnsubscribeCall extends SCMPServerCallAdapter {
+public class SCMPSrvUnsubscribeCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPSrvUnsubscribeCall.class);
-	
-	/**
-	 * Instantiates a new SCMPSrvUnsubscribeCall.
-	 */
-	public SCMPSrvUnsubscribeCall() {
-		this(null, null);
-	}
 
 	/**
 	 * Instantiates a new SCMPSrvUnsubscribeCall.
@@ -49,12 +41,6 @@ public class SCMPSrvUnsubscribeCall extends SCMPServerCallAdapter {
 	 */
 	public SCMPSrvUnsubscribeCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
-		return new SCMPSrvUnsubscribeCall(req, receivedMessage);
 	}
 
 	/** {@inheritDoc} */

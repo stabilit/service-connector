@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
@@ -79,8 +78,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t01_WrongECI() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		createSessionCall.setEchoIntervalSeconds(0);
 		createSessionCall.getRequest().setServiceName("session-1");
@@ -97,8 +95,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t02_ServiceNameMissing() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		// set serviceName null
 		createSessionCall.getRequest().setServiceName(null);
@@ -116,8 +113,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t03_ServiceNameEmpty() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.getRequest().setServiceName("");
 		createSessionCall.setEchoIntervalSeconds(300);
 		TestCallback cbk = new TestCallback();
@@ -133,8 +129,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t04_ServiceNameBlank() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.getRequest().setServiceName(" ");
 		createSessionCall.setEchoIntervalSeconds(300);
 		TestCallback cbk = new TestCallback();
@@ -150,8 +145,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t05_ServiceNameTooLong() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		// set serviceName null
 		StringBuilder sb = new StringBuilder();
@@ -175,8 +169,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t06_NonExistingServiceName() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.getRequest().setServiceName("Gaga");
 		createSessionCall.setEchoIntervalSeconds(300);
 		TestCallback cbk = new TestCallback();
@@ -192,8 +185,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t10_CreateSessionDeleteSession() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(3000);
 		TestCallback cbk = new TestCallback();
@@ -202,8 +194,8 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		String sessId = responseMessage.getSessionId();
 		TestUtil.checkReply(responseMessage);
 
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
-				this.requester, responseMessage.getServiceName(), sessId);
+		SCMPClnDeleteSessionCall deleteSessionCall = new SCMPClnDeleteSessionCall(this.requester, responseMessage.getServiceName(),
+				sessId);
 		deleteSessionCall.invoke(cbk, 2000);
 		responseMessage = cbk.getMessageSync(4000);
 		TestUtil.checkReply(responseMessage);
@@ -215,8 +207,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t20_SessionRejected() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo(TestConstants.rejectSessionCmd);
 		createSessionCall.setEchoIntervalSeconds(300);
 		TestCallback cbk = new TestCallback();
@@ -234,8 +225,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t30_SessionTimesOut() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(10);
 		TestCallback cbk = new TestCallback();
@@ -246,8 +236,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		String sessionId = responseMessage.getSessionId();
 		// wait until session times out and get cleaned up
 		Thread.sleep(13000);
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.echoCmd);
 		clnExecuteCall.setRequestBody(TestConstants.pangram);
 		clnExecuteCall.invoke(cbk, 1000);

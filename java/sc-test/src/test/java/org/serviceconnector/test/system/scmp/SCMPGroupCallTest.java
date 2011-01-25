@@ -25,7 +25,6 @@ import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.ISCMPCall;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
@@ -45,14 +44,15 @@ public class SCMPGroupCallTest extends SystemSuperTest {
 	private ProcessCtx sesSrvCtx;
 	private SCRequester requester;
 	private String sessionId;
-	
+
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties, TestConstants.sesServerName1,
-				TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
-				.getValue(), 0));
+		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1,
+				TestConstants.sesServiceName1);
+		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP,
+				ConnectionType.NETTY_HTTP.getValue(), 0));
 		AppContext.init();
 		this.createSession();
 	}
@@ -74,15 +74,13 @@ public class SCMPGroupCallTest extends SystemSuperTest {
 		super.afterOneTest();
 	}
 
-
 	/**
 	 * Description: execute group call - open group send each letter alone and close group<br>
 	 * Expectation: passes
 	 */
 	@Test
 	public void t01_GroupCall() throws Exception {
-		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall executeCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		executeCall.setMessageInfo(TestConstants.echoCmd);
 		ISCMPCall groupCall = executeCall.openGroup();
 
@@ -112,8 +110,7 @@ public class SCMPGroupCallTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t10_GroupCallLargeRequest() throws Exception {
-		SCMPClnExecuteCall executeCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				TestConstants.sesServerName1, this.sessionId);
+		SCMPClnExecuteCall executeCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		executeCall.setMessageInfo(TestConstants.echoCmd);
 		ISCMPCall groupCall = executeCall.openGroup();
 
@@ -140,8 +137,7 @@ public class SCMPGroupCallTest extends SystemSuperTest {
 	 *             the exception
 	 */
 	private void createSession() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(3600);
 		TestCallback cbk = new TestCallback();
@@ -157,8 +153,8 @@ public class SCMPGroupCallTest extends SystemSuperTest {
 	 *             the exception
 	 */
 	private void deleteSession() throws Exception {
-		SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1, this.sessionId);
+		SCMPClnDeleteSessionCall deleteSessionCall = new SCMPClnDeleteSessionCall(this.requester, TestConstants.sesServerName1,
+				this.sessionId);
 		TestCallback cbk = new TestCallback();
 		deleteSessionCall.invoke(cbk, 1000);
 		cbk.getMessageSync(3000);

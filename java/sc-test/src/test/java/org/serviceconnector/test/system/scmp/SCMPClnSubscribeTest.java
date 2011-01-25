@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
@@ -64,11 +63,12 @@ public class SCMPClnSubscribeTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties);
-		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties, TestConstants.pubServerName1,
-				TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1, TestConstants.pubServerName1);
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
-				.getValue(), 0));
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
+		srvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
+				TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1,
+				TestConstants.pubServerName1);
+		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP,
+				ConnectionType.NETTY_HTTP.getValue(), 0));
 	}
 
 	@After
@@ -102,8 +102,7 @@ public class SCMPClnSubscribeTest {
 	 */
 	@Test
 	public void t01_MaskNotSet() throws Exception {
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
-				TestConstants.pubServerName1);
+		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(50);
 		TestCallback cbk = new TestCallback(true);
@@ -119,8 +118,7 @@ public class SCMPClnSubscribeTest {
 	 */
 	@Test
 	public void t02_NOINotSet() throws Exception {
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
-				TestConstants.pubServerName1);
+		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setMask(TestConstants.mask);
 		subscribeCall.setNoDataIntervalSeconds(0);
@@ -137,8 +135,7 @@ public class SCMPClnSubscribeTest {
 	 */
 	@Test
 	public void t10_ReceiveNoData() throws Exception {
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
-				TestConstants.pubServerName1);
+		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(1);
@@ -149,15 +146,14 @@ public class SCMPClnSubscribeTest {
 		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 		// receive publication - no data
-		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION_CALL
-				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
+				TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 30000);
 		reply = cbk.getMessageSync(3000);
 		TestUtil.checkReply(reply);
 		Assert.assertTrue(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
-		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
-				this.requester, TestConstants.pubServerName1, sessionId);
+		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
 		unSubscribeCall.invoke(cbk, 3000);
 		reply = cbk.getMessageSync(3000);
 		TestUtil.checkReply(reply);
@@ -169,8 +165,7 @@ public class SCMPClnSubscribeTest {
 	 */
 	@Test
 	public void t11_ReceiveMessage() throws Exception {
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
-				TestConstants.pubServerName1);
+		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(1);
@@ -184,15 +179,14 @@ public class SCMPClnSubscribeTest {
 		String sessionId = reply.getSessionId();
 
 		// receive publication - get message
-		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION_CALL
-				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
+				TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 1000);
 		reply = cbk.getMessageSync(1000);
 		TestUtil.checkReply(reply);
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
-		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
-				this.requester, TestConstants.pubServerName1, sessionId);
+		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
 		unSubscribeCall.invoke(cbk, 3000);
 		reply = cbk.getMessageSync(3000);
 		TestUtil.checkReply(reply);
@@ -204,8 +198,7 @@ public class SCMPClnSubscribeTest {
 	 */
 	@Test
 	public void t30_FailsNoFreeServer() throws Exception {
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
-				TestConstants.pubServerName1);
+		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(2);
@@ -214,8 +207,7 @@ public class SCMPClnSubscribeTest {
 		subscribeCall.setRequestBody("2000");
 		subscribeCall.invoke(cbk, 3000);
 
-		subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
-				TestConstants.pubServerName1);
+		subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
 
 		subscribeCall.setSessionInfo("SNBZHP - TradingClientGUI 10.2.7");
 		subscribeCall.setNoDataIntervalSeconds(2);
@@ -231,20 +223,18 @@ public class SCMPClnSubscribeTest {
 		Assert.assertTrue(reply1.isFault());
 		TestUtil.verifyError(reply1, SCMPError.NO_FREE_SERVER, SCMPMsgType.CLN_SUBSCRIBE);
 
-		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
-				this.requester, TestConstants.pubServerName1, sessionId);
+		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
 		unSubscribeCall.invoke(cbk, 3000);
 		TestUtil.checkReply(cbk.getMessageSync(3000));
 	}
 
 	/**
-	 * Description: subscribe  - receives large message<br>
+	 * Description: subscribe - receives large message<br>
 	 * Expectation: passes
 	 */
 	@Test
 	public void t40_GetLargeMessage() throws Exception {
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
-				TestConstants.pubServerName1);
+		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
 
 		subscribeCall.setSessionInfo(TestConstants.publishLargeMsgCmd);
 		subscribeCall.setNoDataIntervalSeconds(10);
@@ -256,15 +246,14 @@ public class SCMPClnSubscribeTest {
 		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
-		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION_CALL
-				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
+				TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 2000);
 		reply = cbk.getMessageSync(2000);
 		Assert.assertTrue(reply.isLargeMessage());
 		Assert.assertEquals(TestUtil.getLargeString(), reply.getBody());
 
-		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
-				this.requester, TestConstants.pubServerName1, sessionId);
+		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
 		unSubscribeCall.invoke(cbk, 3000);
 		TestUtil.checkReply(cbk.getMessageSync(3000));
 	}

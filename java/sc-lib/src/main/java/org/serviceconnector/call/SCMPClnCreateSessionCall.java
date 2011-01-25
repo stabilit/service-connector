@@ -30,21 +30,11 @@ import org.serviceconnector.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPClnCreateSessionCall extends SCMPServerCallAdapter {
+public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCMPClnCreateSessionCall.class);
-
-	/**
-	 * Instantiates a new SCMPClnCreateSessionCall.
-	 */
-	public SCMPClnCreateSessionCall() {
-	}
-
-	public SCMPClnCreateSessionCall(IRequester req, SCMPMessage receivedMessage) {
-		super(req, receivedMessage);
-	}
 
 	/**
 	 * Instantiates a new SCMPClnCreateSessionCall.
@@ -58,24 +48,16 @@ public class SCMPClnCreateSessionCall extends SCMPServerCallAdapter {
 		super(requester, serviceName);
 	}
 
+	public SCMPClnCreateSessionCall(IRequester req, SCMPMessage receivedMessage) {
+		super(req, receivedMessage);
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke(scmpCallback, timeoutInMillis);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester requester, String serviceName) {
-		return new SCMPClnCreateSessionCall(requester, serviceName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
-		return new SCMPClnCreateSessionCall(req, receivedMessage);
 	}
 
 	/** {@inheritDoc} */

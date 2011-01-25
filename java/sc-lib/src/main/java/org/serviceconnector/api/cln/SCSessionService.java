@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
@@ -118,8 +117,7 @@ public class SCSessionService extends SCService {
 		this.messageCallback = messageCallback;
 		this.requester.getContext().getSCMPMsgSequenceNr().reset();
 		// 2. initialize call & invoke
-		SCMPClnCreateSessionCall createSessionCall = (SCMPClnCreateSessionCall) SCMPCallFactory.CLN_CREATE_SESSION_CALL.newInstance(
-				this.requester, this.serviceName);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, this.serviceName);
 		createSessionCall.setRequestBody(scMessage.getData());
 		createSessionCall.setCompressed(scMessage.isCompressed());
 		createSessionCall.setSessionInfo(scMessage.getSessionInfo());
@@ -195,8 +193,7 @@ public class SCSessionService extends SCService {
 		this.cancelSessionTimeout(true);
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				this.serviceName, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, this.serviceName, this.sessionId);
 		clnExecuteCall.setMessageInfo(scMessage.getMessageInfo());
 		clnExecuteCall.setCacheId(scMessage.getCacheId());
 		clnExecuteCall.setCompressed(scMessage.isCompressed());
@@ -271,8 +268,7 @@ public class SCSessionService extends SCService {
 		// important to set pendingRequest true in case of asynchronous communication
 		this.pendingRequest = true;
 		// 2. initialize call & invoke
-		SCMPClnExecuteCall clnExecuteCall = (SCMPClnExecuteCall) SCMPCallFactory.CLN_EXECUTE_CALL.newInstance(this.requester,
-				this.serviceName, this.sessionId);
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, this.serviceName, this.sessionId);
 		clnExecuteCall.setMessageInfo(scMessage.getMessageInfo());
 		clnExecuteCall.setCacheId(scMessage.getCacheId());
 		clnExecuteCall.setCompressed(scMessage.isCompressed());
@@ -301,8 +297,7 @@ public class SCSessionService extends SCService {
 		}
 		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
-		SCMPEchoCall clnEchoCall = (SCMPEchoCall) SCMPCallFactory.ECHO_CALL.newInstance(this.requester, this.serviceName,
-				this.sessionId);
+		SCMPEchoCall clnEchoCall = new SCMPEchoCall(this.requester, this.serviceName, this.sessionId);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			clnEchoCall.invoke(callback, this.echoTimeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
@@ -394,8 +389,8 @@ public class SCSessionService extends SCService {
 		try {
 			// 2. initialize call & invoke
 			SCServiceCallback callback = new SCServiceCallback(true);
-			SCMPClnDeleteSessionCall deleteSessionCall = (SCMPClnDeleteSessionCall) SCMPCallFactory.CLN_DELETE_SESSION_CALL
-					.newInstance(this.requester, this.serviceName, this.sessionId);
+			SCMPClnDeleteSessionCall deleteSessionCall = new SCMPClnDeleteSessionCall(this.requester, this.serviceName,
+					this.sessionId);
 			if (scMessage != null) {
 				// message might be null for deleteSession operation
 				deleteSessionCall.setSessionInfo(scMessage.getSessionInfo());

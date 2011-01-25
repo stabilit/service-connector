@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
@@ -51,8 +50,8 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		pubSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH, TestConstants.log4jSrvProperties,
 				TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1,
 				TestConstants.pubServiceName1);
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
-				.getValue(), 0));
+		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP,
+				ConnectionType.NETTY_HTTP.getValue(), 0));
 		AppContext.init();
 	}
 
@@ -77,8 +76,7 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t01_GetMessageAfterChange() throws Exception {
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
-				TestConstants.pubServerName1);
+		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
 
 		subscribeCall.setSessionInfo(TestConstants.publishMsgWithDelayCmd);
 		subscribeCall.setNoDataIntervalSeconds(10);
@@ -93,28 +91,26 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		String sessionId = reply.getSessionId();
 
 		// receive publication - no data
-		SCMPReceivePublicationCall receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION_CALL
-				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
+				TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 30000);
 		reply = cbk.getMessageSync(30000);
 		Assert.assertTrue(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
-		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION_CALL
-				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
+		SCMPClnChangeSubscriptionCall changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester,
+				TestConstants.pubServerName1, sessionId);
 		// mask matches now
 		changeSubscriptionCall.setMask(TestConstants.mask);
 		changeSubscriptionCall.invoke(cbk, 1000);
 		TestUtil.checkReply(cbk.getMessageSync(1000));
 
 		// receive publication first message
-		receivePublicationCall = (SCMPReceivePublicationCall) SCMPCallFactory.RECEIVE_PUBLICATION_CALL.newInstance(this.requester,
-				TestConstants.pubServerName1, sessionId);
+		receivePublicationCall = new SCMPReceivePublicationCall(this.requester, TestConstants.pubServerName1, sessionId);
 		receivePublicationCall.invoke(cbk, 10000);
 		reply = cbk.getMessageSync(10000);
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
-		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
-				this.requester, TestConstants.pubServerName1, sessionId);
+		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
 		unSubscribeCall.invoke(cbk, 1000);
 		reply = cbk.getMessageSync(1000);
 		TestUtil.checkReply(reply);
@@ -126,8 +122,7 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 	 */
 	@Test
 	public void t20_ChangeTwiceFailsNoFreeConnection() throws Exception {
-		SCMPClnSubscribeCall subscribeCall = (SCMPClnSubscribeCall) SCMPCallFactory.CLN_SUBSCRIBE_CALL.newInstance(this.requester,
-				TestConstants.pubServerName1);
+		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
 
 		subscribeCall.setSessionInfo(TestConstants.publishCompressedMsgCmd);
 		subscribeCall.setNoDataIntervalSeconds(10);
@@ -139,16 +134,15 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
 
-		SCMPClnChangeSubscriptionCall changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION_CALL
-				.newInstance(this.requester, TestConstants.pubServerName1, sessionId);
+		SCMPClnChangeSubscriptionCall changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester,
+				TestConstants.pubServerName1, sessionId);
 		// mask matches now
 		changeSubscriptionCall.setMask(TestConstants.mask);
 		changeSubscriptionCall.setSessionInfo(TestConstants.sleepCmd);
 		changeSubscriptionCall.setRequestBody("2000");
 		changeSubscriptionCall.invoke(cbk, 3000);
 
-		changeSubscriptionCall = (SCMPClnChangeSubscriptionCall) SCMPCallFactory.CLN_CHANGE_SUBSCRIPTION_CALL.newInstance(this.requester,
-				TestConstants.pubServerName1, sessionId);
+		changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester, TestConstants.pubServerName1, sessionId);
 		changeSubscriptionCall.setMask(TestConstants.mask);
 		TestCallback cbk1 = new TestCallback(true);
 		changeSubscriptionCall.invoke(cbk1, 1000);
@@ -158,8 +152,7 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		Assert.assertTrue(reply.isFault());
 		TestUtil.verifyError(reply, SCMPError.NO_FREE_CONNECTION, SCMPMsgType.CLN_CHANGE_SUBSCRIPTION);
 
-		SCMPClnUnsubscribeCall unSubscribeCall = (SCMPClnUnsubscribeCall) SCMPCallFactory.CLN_UNSUBSCRIBE_CALL.newInstance(
-				this.requester, TestConstants.pubServerName1, sessionId);
+		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
 		unSubscribeCall.invoke(cbk, 1000);
 		reply = cbk.getMessageSync(1000);
 		TestUtil.checkReply(reply);

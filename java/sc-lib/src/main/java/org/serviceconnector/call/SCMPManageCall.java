@@ -34,13 +34,6 @@ public class SCMPManageCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPManageCall.
-	 */
-	public SCMPManageCall() {
-		this(null);
-	}
-
-	/**
-	 * Instantiates a new SCMPManageCall.
 	 * 
 	 * @param req
 	 *            the client to use when invoking call
@@ -55,12 +48,6 @@ public class SCMPManageCall extends SCMPCallAdapter {
 		InetAddress localHost = InetAddress.getLocalHost();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		super.invoke(scmpCallback, timeoutInMillis);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req) {
-		return new SCMPManageCall(req);
 	}
 
 	/** {@inheritDoc} */

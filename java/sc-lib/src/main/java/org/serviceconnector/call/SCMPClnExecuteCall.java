@@ -27,58 +27,41 @@ import org.serviceconnector.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPClnExecuteCall extends SCMPServerCallAdapter {
+public class SCMPClnExecuteCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPClnExecuteCall.class);
-	
-	/**
-	 * Instantiates a new SCMPClnExecuteCall.
-	 */
-	public SCMPClnExecuteCall() {
-		this(null, null, null);
-	}
 
 	/**
 	 * Instantiates a new SCMPClnExecuteCall.
-	 *
-	 * @param req the requester to use when invoking call
-	 * @param serviceName the service name
-	 * @param sessionId the session id
+	 * 
+	 * @param req
+	 *            the requester to use when invoking call
+	 * @param serviceName
+	 *            the service name
+	 * @param sessionId
+	 *            the session id
 	 */
 	public SCMPClnExecuteCall(IRequester req, String serviceName, String sessionId) {
 		super(req, serviceName, sessionId);
 	}
-	
+
+	/**
+	 * Instantiates a new sCMP cln execute call.
+	 * 
+	 * @param req
+	 *            the req
+	 * @param receivedMessage
+	 *            the received message
+	 */
 	public SCMPClnExecuteCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);
 	}
 
 	/**
-	 * New instance.
-	 *
-	 * @param client the client
-	 * @param serviceName the service name
-	 * @param sessionId the session id
-	 * @return the iSCMP call
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ISCMPCall newInstance(IRequester client, String serviceName, String sessionId) {
-		return new SCMPClnExecuteCall(client, serviceName, sessionId);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
-		return new SCMPClnExecuteCall(req, receivedMessage);
-	}
-	
-	/**
 	 * Gets the message type.
-	 *
-	 * @return the message type
-	 * {@inheritDoc}
+	 * 
+	 * @return the message type {@inheritDoc}
 	 */
 	@Override
 	public SCMPMsgType getMessageType() {
@@ -92,7 +75,7 @@ public class SCMPClnExecuteCall extends SCMPServerCallAdapter {
 	 *            the new message info
 	 */
 	public void setMessageInfo(String messageInfo) {
-		if(messageInfo == null) {
+		if (messageInfo == null) {
 			return;
 		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.MSG_INFO, messageInfo);
@@ -100,11 +83,12 @@ public class SCMPClnExecuteCall extends SCMPServerCallAdapter {
 
 	/**
 	 * Sets the cache id.
-	 *
-	 * @param cacheId the new cache id
+	 * 
+	 * @param cacheId
+	 *            the new cache id
 	 */
 	public void setCacheId(String cacheId) {
-		if(cacheId == null) {
+		if (cacheId == null) {
 			return;
 		}
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId);
@@ -121,12 +105,12 @@ public class SCMPClnExecuteCall extends SCMPServerCallAdapter {
 			this.requestMessage.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 		}
 	}
-	
+
 	/**
 	 * Sets the request body.
-	 *
-	 * @param obj the new request body
-	 * {@inhertiDoc} *
+	 * 
+	 * @param obj
+	 *            the new request body {@inhertiDoc} *
 	 */
 	@Override
 	public void setRequestBody(Object obj) {

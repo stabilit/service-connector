@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
 import org.serviceconnector.net.ConnectionType;
@@ -44,8 +43,8 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
-				.getValue(), 0));
+		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP,
+				ConnectionType.NETTY_HTTP.getValue(), 0));
 	}
 
 	@After
@@ -64,8 +63,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t01_RegisterServerCallKeepAliveIntervalNotSet() throws Exception {
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPRegisterServerCall registerServerCall = new SCMPRegisterServerCall(this.requester, TestConstants.sesServerName1);
 		TestCallback cbk = new TestCallback();
 
 		registerServerCall.setMaxSessions(10);
@@ -86,8 +84,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t02_RegisterServerCallInvalidMaxSessions() throws Exception {
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPRegisterServerCall registerServerCall = new SCMPRegisterServerCall(this.requester, TestConstants.sesServerName1);
 		TestCallback cbk = new TestCallback();
 
 		registerServerCall.setPortNumber(9100);
@@ -109,8 +106,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t03_RegisterServerCallInvalidMaxConnections() throws Exception {
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPRegisterServerCall registerServerCall = new SCMPRegisterServerCall(this.requester, TestConstants.sesServerName1);
 		TestCallback cbk = new TestCallback();
 
 		registerServerCall.setPortNumber(9100);
@@ -132,8 +128,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t04_RegisterServerCallInvalidPortNumber() throws Exception {
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
-				this.requester, TestConstants.sesServerName1);
+		SCMPRegisterServerCall registerServerCall = new SCMPRegisterServerCall(this.requester, TestConstants.sesServerName1);
 		TestCallback cbk = new TestCallback();
 
 		registerServerCall.setPortNumber(910000);
@@ -155,8 +150,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t05_RegisterServerCallForUnknownService() throws Exception {
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
-				this.requester, "notConfiguredServiceName");
+		SCMPRegisterServerCall registerServerCall = new SCMPRegisterServerCall(this.requester, "notConfiguredServiceName");
 		TestCallback cbk = new TestCallback();
 
 		registerServerCall.setMaxSessions(10);
@@ -179,8 +173,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t20_RegisterServerCallDeregisterServerCall() throws Exception {
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
-				this.requester, TestConstants.pubServerName1);
+		SCMPRegisterServerCall registerServerCall = new SCMPRegisterServerCall(this.requester, TestConstants.pubServerName1);
 		TestCallback cbk = new TestCallback();
 
 		registerServerCall.setMaxSessions(10);
@@ -194,8 +187,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.invoke(cbk, 8000);
 		TestUtil.checkReply(cbk.getMessageSync(10000));
 
-		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
-				.newInstance(this.requester, TestConstants.pubServerName1);
+		SCMPDeRegisterServerCall deRegisterServerCall = new SCMPDeRegisterServerCall(this.requester, TestConstants.pubServerName1);
 		deRegisterServerCall.invoke(cbk, 2000);
 		TestUtil.checkReply(cbk.getMessageSync(5000));
 	}
@@ -206,8 +198,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t30_DeRegisterServerCallTwice() throws Exception {
-		SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL.newInstance(
-				this.requester, TestConstants.pubServerName1);
+		SCMPRegisterServerCall registerServerCall = new SCMPRegisterServerCall(this.requester, TestConstants.pubServerName1);
 		TestCallback cbk = new TestCallback();
 
 		registerServerCall.setMaxSessions(10);
@@ -221,8 +212,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		registerServerCall.invoke(cbk, 8000);
 		TestUtil.checkReply(cbk.getMessageSync(10000));
 		// first deregister server call
-		SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
-				.newInstance(this.requester, TestConstants.pubServerName1);
+		SCMPDeRegisterServerCall deRegisterServerCall = new SCMPDeRegisterServerCall(this.requester, TestConstants.pubServerName1);
 		deRegisterServerCall.invoke(cbk, 5000);
 		TestUtil.checkReply(cbk.getMessageSync(8000));
 		// second deregister server call

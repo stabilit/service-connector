@@ -33,13 +33,6 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 
 	/**
 	 * Instantiates a new SCMPPublishCall.
-	 */
-	public SCMPPublishCall() {
-		this(null, null);
-	}
-
-	/**
-	 * Instantiates a new SCMPPublishCall.
 	 * 
 	 * @param req
 	 *            the requester
@@ -48,12 +41,6 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 	 */
 	public SCMPPublishCall(IRequester req, String serviceName) {
 		super(req, serviceName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester requester, String serviceName) {
-		return new SCMPPublishCall(requester, serviceName);
 	}
 
 	/** {@inheritDoc} */

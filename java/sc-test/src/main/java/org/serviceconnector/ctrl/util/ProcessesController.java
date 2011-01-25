@@ -94,7 +94,7 @@ public class ProcessesController {
 	public String getSCConfigurationFile() {
 		String scConfiguration = System.getProperty("scConfiguration");
 		if (scConfiguration == null) {
-			return TestConstants.SCProperties;
+			return TestConstants.SC0Properties;
 		}
 		return scConfiguration;
 	}

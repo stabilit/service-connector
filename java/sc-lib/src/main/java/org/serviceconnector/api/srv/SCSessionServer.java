@@ -22,7 +22,6 @@ import javax.activity.InvalidActivityException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPCheckRegistrationCall;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
@@ -174,8 +173,7 @@ public class SCSessionServer {
 				AppContext.init();
 				this.requester.getContext().getSCMPMsgSequenceNr().reset();
 
-				SCMPRegisterServerCall registerServerCall = (SCMPRegisterServerCall) SCMPCallFactory.REGISTER_SERVER_CALL
-						.newInstance(this.requester, this.serviceName);
+				SCMPRegisterServerCall registerServerCall = new SCMPRegisterServerCall(this.requester, this.serviceName);
 
 				registerServerCall.setMaxSessions(maxSessions);
 				registerServerCall.setMaxConnections(maxConnections);
@@ -228,8 +226,7 @@ public class SCSessionServer {
 		}
 		synchronized (this.scServer) {
 			// get lock on scServer - only one server is allowed to communicate over the initial connection
-			SCMPCheckRegistrationCall checkRegistrationCall = (SCMPCheckRegistrationCall) SCMPCallFactory.CHECK_REGISTRATION_CALL
-					.newInstance(this.requester, this.serviceName);
+			SCMPCheckRegistrationCall checkRegistrationCall = new SCMPCheckRegistrationCall(this.requester, this.serviceName);
 			SCServerCallback callback = new SCServerCallback(true);
 			try {
 				checkRegistrationCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
@@ -276,8 +273,7 @@ public class SCSessionServer {
 				// remove srvService from registry
 				srvServiceRegistry.removeSrvService(this.serviceName + "_" + this.scServer.getListenerPort());
 
-				SCMPDeRegisterServerCall deRegisterServerCall = (SCMPDeRegisterServerCall) SCMPCallFactory.DEREGISTER_SERVER_CALL
-						.newInstance(this.requester, this.serviceName);
+				SCMPDeRegisterServerCall deRegisterServerCall = new SCMPDeRegisterServerCall(this.requester, this.serviceName);
 				SCServerCallback callback = new SCServerCallback(true);
 				try {
 					deRegisterServerCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);

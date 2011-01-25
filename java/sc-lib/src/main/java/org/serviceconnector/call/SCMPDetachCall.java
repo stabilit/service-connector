@@ -30,13 +30,6 @@ public class SCMPDetachCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPDetachCall.class);
-	
-	/**
-	 * Instantiates a new SCMPDetachCall.
-	 */
-	public SCMPDetachCall() {
-		this(null);
-	}
 
 	/**
 	 * Instantiates a new SCMPDetachCall.
@@ -46,12 +39,6 @@ public class SCMPDetachCall extends SCMPCallAdapter {
 	 */
 	public SCMPDetachCall(IRequester req) {
 		super(req);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public ISCMPCall newInstance(IRequester req) {
-		return new SCMPDetachCall(req);
 	}
 
 	/** {@inheritDoc} */

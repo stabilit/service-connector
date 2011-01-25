@@ -13,7 +13,6 @@ import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPAttachCall;
-import org.serviceconnector.call.SCMPCallFactory;
 import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
@@ -28,7 +27,7 @@ public class MultipleNICTest extends IntegrationSuperTest {
 		AppContext.init();
 		testLogger.info(">> " + name.getMethodName() + " <<");
 		threadCount = Thread.activeCount();
-		scCtx = ctrl.startSC(TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCNoInterfacesProperties);
+		scCtx = ctrl.startSC(TestConstants.SC0, TestConstants.log4jSC0Properties, TestConstants.SCNoInterfacesProperties);
 	}
 	
 	/**
@@ -46,11 +45,11 @@ public class MultipleNICTest extends IntegrationSuperTest {
 				try {
 					IRequester req = new Requester(new RequesterContext(inetAddress.getHostAddress(), TestConstants.PORT_SC_HTTP,
 							ConnectionType.NETTY_HTTP.getValue(), 0));
-					SCMPAttachCall attachCall = (SCMPAttachCall) SCMPCallFactory.ATTACH_CALL.newInstance(req);
+					SCMPAttachCall attachCall = new SCMPAttachCall(req);
 					attachCall.invoke(cbk, 1000);
 					TestUtil.checkReply(cbk.getMessageSync(1000));
 
-					SCMPDetachCall detachCall = (SCMPDetachCall) SCMPCallFactory.DETACH_CALL.newInstance(req);
+					SCMPDetachCall detachCall = new SCMPDetachCall(req);
 					detachCall.invoke(cbk, 1000);
 					TestUtil.checkReply(cbk.getMessageSync(1000));
 					req.destroy();
