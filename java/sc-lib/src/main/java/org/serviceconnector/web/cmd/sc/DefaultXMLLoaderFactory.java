@@ -210,7 +210,7 @@ public class DefaultXMLLoaderFactory {
 					writer.writeCData(String.valueOf(subscriptionQueue.getSize()));
 					writer.writeEndElement();
 				}
-				if (service.getServiceName().equals(serviceParameter)) {
+				if (service.getName().equals(serviceParameter)) {
 					// take a look into
 					writer.writeStartElement("details");
 					if (service instanceof StatefulService) {

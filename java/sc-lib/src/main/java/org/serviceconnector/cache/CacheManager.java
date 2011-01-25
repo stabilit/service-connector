@@ -58,7 +58,7 @@ public class CacheManager {
 		Service services[] = serviceRegistry.getServices();
 		for (int i = 0; i < services.length; i++) {
 			Service service = services[i];
-			String serviceName = service.getServiceName();
+			String serviceName = service.getName();
 			ServiceType serviceType = service.getType();
 			if (serviceType == ServiceType.SESSION_SERVICE) {
 				Cache cache = new Cache(this, serviceName);

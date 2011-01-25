@@ -61,7 +61,7 @@ public abstract class Service {
 	 * 
 	 * @return the service name
 	 */
-	public String getServiceName() {
+	public String getName() {
 		return name;
 	}
 

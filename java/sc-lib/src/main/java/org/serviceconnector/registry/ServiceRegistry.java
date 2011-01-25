@@ -83,7 +83,7 @@ public final class ServiceRegistry extends Registry<String, Service> {
 	 *            the service
 	 */
 	public void removeService(Service service) {
-		this.removeService(service.getServiceName());
+		this.removeService(service.getName());
 	}
 
 	/**

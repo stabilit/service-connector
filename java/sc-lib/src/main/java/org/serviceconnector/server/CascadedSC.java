@@ -1,6 +1,9 @@
 package org.serviceconnector.server;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
@@ -13,7 +16,10 @@ import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.AbstractSession;
 
-public class CascadedSC extends Server {
+public class CascadedSC extends Server implements IStatefulServer {
+
+	/** The subscriptions, list of subscriptions allocated on cascaded SC. */
+	private List<AbstractSession> subscriptions;
 
 	// TODO JOT must have a requester for session service forward
 	// TODO JOT must have a polling client for publish service needs
@@ -22,6 +28,7 @@ public class CascadedSC extends Server {
 			int keepAliveInterval) {
 		super(ServerType.CASCADED_SC, socketAddress, serverName, portNr, maxConnections, connectionType, keepAliveInterval);
 		this.serverKey = serverName;
+		this.subscriptions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 	}
 
 	public void createSession(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
@@ -53,7 +60,7 @@ public class CascadedSC extends Server {
 			callback.receive(th);
 		}
 	}
-	
+
 	public void echo(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
 		SCMPEchoCall echoCall = new SCMPEchoCall(requester, msgToForward);
 		try {
@@ -65,6 +72,10 @@ public class CascadedSC extends Server {
 	}
 
 	public void subscribe(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
+
+		// no polling client first subscriber
+		// new polling subscribe with subscriber mask .. polling client subscription id
+
 		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(requester, msgToForward);
 		try {
 			subscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
@@ -106,10 +117,43 @@ public class CascadedSC extends Server {
 		// change subscription to cascadedSC
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void abortSession(AbstractSession session, String reason) {
-		// TODO JOT subscription timeout what todo??? JAN
 		// delete subscription, unsubscribe local and on cascadeSC, nothing more
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void addSession(AbstractSession session) {
+		this.subscriptions.add(session);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void removeSession(AbstractSession session) {
+		if (this.subscriptions == null) {
+			// might be the case if server got already destroyed
+			return;
+		}
+		this.subscriptions.remove(session);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<AbstractSession> getSessions() {
+		return this.subscriptions;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean hasFreeSession() {
+		return true;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getMaxSessions() {
+		return Integer.MAX_VALUE;
+	}
 }

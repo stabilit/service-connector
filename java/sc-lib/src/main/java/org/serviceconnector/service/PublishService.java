@@ -28,7 +28,7 @@ import org.serviceconnector.server.StatefulServer;
  * The Class PublishService. PublishService is a remote interface in client API to a publish service and provides communication
  * functions.
  */
-public class PublishService extends StatefulService {
+public class PublishService extends StatefulService implements IPublishService {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(PublishService.class);

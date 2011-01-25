@@ -171,7 +171,7 @@ public abstract class CommandAdapter implements ICommand {
 		}
 		return (SessionService) service;
 	}
-	
+
 	/**
 	 * Validate publish service.
 	 * 
@@ -183,9 +183,23 @@ public abstract class CommandAdapter implements ICommand {
 	 */
 	protected PublishService validatePublishService(String serviceName) throws SCMPCommandException {
 		Service service = this.validateService(serviceName);
+		return this.validatePublishService(service);
+	}
+
+	/**
+	 * Validate publish service.
+	 * 
+	 * @param service
+	 *            the service
+	 * @return the publish service
+	 * @throws SCMPCommandException
+	 *             the sCMP command exception
+	 */
+	protected PublishService validatePublishService(Service service) throws SCMPCommandException {
 		if (service.getType() != ServiceType.PUBLISH_SERVICE) {
-			// service is not pblish service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName
+			// service is not publish service
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, service
+					.getName()
 					+ " is not publish service");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
@@ -234,7 +248,6 @@ public abstract class CommandAdapter implements ICommand {
 		}
 		return (StatefulService) service;
 	}
-
 
 	/** {@inheritDoc} */
 	@Override

@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.log.SessionLogger;
-import org.serviceconnector.server.Server;
+import org.serviceconnector.server.IServer;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
@@ -142,8 +142,8 @@ public class SessionRegistry extends Registry<String, Session> {
 		// sets up session timeout
 		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session));
 		// schedule sessionTimeouter in registry timer
-		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(sessionTimeouter,
-				(long) session.getSessionTimeoutSeconds(), TimeUnit.SECONDS);
+		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.sessionScheduler.schedule(
+				sessionTimeouter, (long) session.getSessionTimeoutSeconds(), TimeUnit.SECONDS);
 		session.setTimeout(timeout);
 		session.setTimeouterTask(sessionTimeouter);
 	}
@@ -210,7 +210,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			 * 2. abort session on backend server<br>
 			 */
 			SessionRegistry.this.removeSession(session);
-			Server server = session.getServer();
+			IServer server = session.getServer();
 			// aborts session on server
 			server.abortSession(session, "session timed out in session registry");
 			SessionLogger.logTimeoutSession(this.getClass().getName(), session.getId());

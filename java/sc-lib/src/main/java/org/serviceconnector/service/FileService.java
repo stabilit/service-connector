@@ -74,7 +74,7 @@ public class FileService extends Service {
 		}
 		// no free server available
 		NoFreeServerException noFreeSereverExc = new NoFreeServerException(SCMPError.NO_FREE_SERVER, "service="
-				+ this.getServiceName());
+				+ this.getName());
 		noFreeSereverExc.setMessageType(SCMPMsgType.CLN_CREATE_SESSION);
 		throw noFreeSereverExc;
 	}

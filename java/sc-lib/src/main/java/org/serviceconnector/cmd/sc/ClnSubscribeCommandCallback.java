@@ -1,3 +1,19 @@
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
@@ -17,8 +33,8 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.server.StatefulServer;
-import org.serviceconnector.service.PublishService;
+import org.serviceconnector.server.IStatefulServer;
+import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.PublishTimeout;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
@@ -37,7 +53,9 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
 	/** The subscription. */
 	private Subscription subscription;
 	/** The server. */
-	private StatefulServer server;
+	private IStatefulServer server;
+	/** The service. */
+	private IPublishService service;
 	/** The subscription registry. */
 	private SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 
@@ -71,8 +89,7 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
 			if (rejectSubscriptionFlag == false) {
 				// subscription has not been rejected, add server to subscription
 				subscription.setServer(server);
-				SubscriptionQueue<SCMPMessage> subscriptionQueue = ((PublishService) this.server.getService())
-						.getSubscriptionQueue();
+				SubscriptionQueue<SCMPMessage> subscriptionQueue = this.service.getSubscriptionQueue();
 				PublishTimeout publishTimeout = new PublishTimeout(subscriptionQueue, noDataIntervalSeconds
 						* Constants.SEC_TO_MILLISEC_FACTOR);
 				SubscriptionMask subscriptionMask = subscription.getMask();
@@ -120,7 +137,17 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
 	 * @param server
 	 *            the new server
 	 */
-	public void setServer(StatefulServer server) {
+	public void setServer(IStatefulServer server) {
 		this.server = server;
+	}
+
+	/**
+	 * Sets the service.
+	 * 
+	 * @param service
+	 *            the new service
+	 */
+	public void setService(IPublishService service) {
+		this.service = service;
 	}
 }

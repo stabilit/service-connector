@@ -32,7 +32,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.FileServer;
-import org.serviceconnector.server.Server;
+import org.serviceconnector.server.IServer;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.CascadedSessionService;
 import org.serviceconnector.service.Service;
@@ -79,7 +79,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		// delete entry from session registry
 		this.sessionRegistry.removeSession(session);
 
-		Server abstractServer = session.getServer();
+		IServer abstractServer = session.getServer();
 
 		switch (abstractServer.getType()) {
 		case STATEFUL_SERVER:

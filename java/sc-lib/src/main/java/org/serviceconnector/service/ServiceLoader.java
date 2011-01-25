@@ -123,7 +123,7 @@ public class ServiceLoader {
 				service.setState(ServiceState.DISABLED);
 				logger.trace("state disabled for service=" + serviceName);
 			}
-			serviceRegistry.addService(service.getServiceName(), service);
+			serviceRegistry.addService(service.getName(), service);
 		}
 	}
 

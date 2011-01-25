@@ -51,7 +51,7 @@ import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.Subscription;
 
-public class StatefulServer extends Server {
+public class StatefulServer extends Server implements IStatefulServer {
 
 	private static SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
@@ -71,22 +71,14 @@ public class StatefulServer extends Server {
 		this.service = null;
 	}
 
-	/**
-	 * Adds an allocated session to the server.
-	 * 
-	 * @param session
-	 *            the session
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void addSession(AbstractSession session) {
 		this.sessions.add(session);
 	}
 
-	/**
-	 * Removes an allocated session from the server.
-	 * 
-	 * @param session
-	 *            the session
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void removeSession(AbstractSession session) {
 		if (this.sessions == null) {
 			// might be the case if server got already destroyed
@@ -94,30 +86,21 @@ public class StatefulServer extends Server {
 		}
 		this.sessions.remove(session);
 	}
-
-	/**
-	 * Gets the sessions.
-	 * 
-	 * @return the sessions
-	 */
+	
+	/** {@inheritDoc} */
+	@Override
 	public List<AbstractSession> getSessions() {
 		return this.sessions;
 	}
 
-	/**
-	 * Checks for free session.
-	 * 
-	 * @return true, if successful
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public boolean hasFreeSession() {
 		return this.sessions.size() < this.maxSessions;
 	}
 
-	/**
-	 * Gets the max sessions.
-	 * 
-	 * @return the max sessions
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public int getMaxSessions() {
 		return this.maxSessions;
 	}
@@ -298,12 +281,8 @@ public class StatefulServer extends Server {
 		}
 	}
 
-	/**
-	 * Abort session.
-	 * 
-	 * @param abortMessage
-	 *            the abort message
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void abortSession(AbstractSession session, String reason) {
 		// delete session in global registries
 		StatefulServer.sessionRegistry.removeSession(session.getId());

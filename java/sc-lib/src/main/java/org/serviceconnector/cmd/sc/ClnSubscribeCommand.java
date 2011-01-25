@@ -29,8 +29,12 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.CascadedSC;
+import org.serviceconnector.service.CascadedPublishService;
+import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.NoFreeServerException;
 import org.serviceconnector.service.PublishService;
+import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ValidatorUtility;
@@ -63,24 +67,41 @@ public class ClnSubscribeCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
-		String mask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
-		// check service is present
-		PublishService service = this.validatePublishService(serviceName);
 
-		SubscriptionMask subscriptionMask = new SubscriptionMask(mask);
+		// check service is present
+		Service abstractService = this.validateService(serviceName);
+
 		// enhance ipAddressList
 		String ipAddressList = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
 		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
+		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+
+		String mask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
+		SubscriptionMask subscriptionMask = new SubscriptionMask(mask);
 		String sessionInfo = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 		int noi = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		// create subscription
 		Subscription subscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList, noi);
-		reqMessage.setSessionId(subscription.getId());
 
+		switch (abstractService.getType()) {
+		case CASCADED_PUBLISH_SERVICE:
+			// publish service is cascaded
+			ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback(request, response, responderCallback,
+					subscription);
+			CascadedSC cascadedSC = ((CascadedPublishService) abstractService).getCascadedSC();
+			callback.setServer(cascadedSC);
+			callback.setService((IPublishService) abstractService);
+			// TODO JOT/JAN modify reqMessage - right attributes for polling client
+			cascadedSC.subscribe(reqMessage, callback, oti);
+			return;
+		}
+		// put subscription id only if message goes to server
+		reqMessage.setSessionId(subscription.getId());
+		// check service is present
+		PublishService service = this.validatePublishService(abstractService);
 		ClnSubscribeCommandCallback callback = null;
-		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
@@ -88,6 +109,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
 			callback = new ClnSubscribeCommandCallback(request, response, responderCallback, subscription);
+			callback.setService(service);
 			try {
 				service.allocateServerAndSubscribe(reqMessage, callback, subscription, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));

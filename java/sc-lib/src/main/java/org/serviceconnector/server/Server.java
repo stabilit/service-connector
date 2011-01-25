@@ -24,7 +24,6 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.net.req.RequesterContext;
-import org.serviceconnector.service.AbstractSession;
 
 /**
  * The Class Server. Represents a server instance on a backend Server. Serves a service. Has control over the max of sessions and
@@ -32,7 +31,7 @@ import org.serviceconnector.service.AbstractSession;
  * 
  * @author JTraber
  */
-public abstract class Server {
+public abstract class Server implements IServer {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(Server.class);
@@ -106,16 +105,6 @@ public abstract class Server {
 	}
 
 	/**
-	 * Abort session on server.
-	 * 
-	 * @param session
-	 *            the session
-	 * @param reason
-	 *            the reason
-	 */
-	public abstract void abortSession(AbstractSession session, String reason);
-
-	/**
 	 * Destroy server.
 	 */
 	public void destroy() {
@@ -152,24 +141,23 @@ public abstract class Server {
 		return maxConnections;
 	}
 
-	/**
-	 * Gets the service name.
-	 * 
-	 * @return the service name
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public String getServiceName() {
 		return serviceName;
 	}
 
-	/**
-	 * Gets the type.
-	 * 
-	 * @return the type
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public ServerType getType() {
 		return this.type;
 	}
 
+	/**
+	 * Gets the server key.
+	 * 
+	 * @return the server key
+	 */
 	public String getServerKey() {
 		return serverKey;
 	}
