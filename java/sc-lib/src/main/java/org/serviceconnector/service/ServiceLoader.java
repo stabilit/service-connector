@@ -62,11 +62,14 @@ public class ServiceLoader {
 			String serviceTypeString = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_TYPE);
 			ServiceType serviceType = ServiceType.getServiceType(serviceTypeString);
 
+			String remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST, null);
 			// instantiate right type of service
 			Service service = null;
+
+			serviceType = ServiceLoader.adaptServiceTypeIfCascService(serviceType, remoteHost);
+
 			switch (serviceType) {
 			case CASCADED_SESSION_SERVICE:
-				String remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
 				Server server = AppContext.getServerRegistry().getServer(remoteHost);
 				if (server == null) {
 					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteHost
@@ -98,7 +101,6 @@ public class ServiceLoader {
 					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
 							+ Constants.PROPERTY_QUALIFIER_LIST_SCRIPT + " is missing for service=" + serviceName);
 				}
-				remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST);
 				server = AppContext.getServerRegistry().getServer(remoteHost);
 				if (server == null) {
 					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteHost
@@ -123,5 +125,33 @@ public class ServiceLoader {
 			}
 			serviceRegistry.addService(service.getServiceName(), service);
 		}
+	}
+
+	/**
+	 * Adapt service type if cascaded service. SC uses more service type internal. This method figures out if changing of service
+	 * type is necessary for current service.
+	 * 
+	 * @param serviceType
+	 *            the service type
+	 * @param remoteHost
+	 *            the remote host
+	 * @return the service type
+	 */
+	private static ServiceType adaptServiceTypeIfCascService(ServiceType serviceType, String remoteHost) {
+		switch (serviceType) {
+		case SESSION_SERVICE:
+			if (remoteHost != null) {
+				return ServiceType.CASCADED_SESSION_SERVICE;
+			}
+		case PUBLISH_SERVICE:
+			if (remoteHost != null) {
+				return ServiceType.CASCADED_PUBLISH_SERVICE;
+			}
+		case FILE_SERVICE:
+			if (remoteHost != null) {
+				return ServiceType.CASCADED_FILE_SERVICE;
+			}
+		}
+		return serviceType;
 	}
 }
