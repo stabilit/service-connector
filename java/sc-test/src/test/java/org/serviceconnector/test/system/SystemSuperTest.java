@@ -15,6 +15,8 @@
  */
 package org.serviceconnector.test.system;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -27,6 +29,7 @@ import org.junit.rules.TestName;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ProcessesController;
+import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.log.Loggers;
 
 public class SystemSuperTest {
@@ -37,7 +40,7 @@ public class SystemSuperTest {
 	protected static ProcessesController ctrl;
 	protected static Map<String, ProcessCtx> scCtxs;
 	protected int threadCount = 0;
-	protected static String scParams[];
+	protected static List<ServiceConnectorDefinition> scDefs;
 
 	@Rule
 	public TestName name = new TestName();
@@ -45,14 +48,17 @@ public class SystemSuperTest {
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		scParams = new String[] { TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties };
+		scDefs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition scDef = new ServiceConnectorDefinition(TestConstants.MAIN_SC, TestConstants.SCProperties,
+				TestConstants.log4jSCProperties);
+		scDefs.add(scDef);
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		testLogger.info(">> " + name.getMethodName() + " <<");
 		threadCount = Thread.activeCount();
-		scCtxs = ctrl.startSCEnvironment(scParams);
+		scCtxs = ctrl.startSCEnvironment(scDefs);
 	}
 
 	@After

@@ -32,6 +32,7 @@ import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ServerDefinition;
+import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
@@ -40,18 +41,25 @@ import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 @RunWith(Parameterized.class)
 public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest {
 
-	public APICreateDeleteSessionTest(String propFiles[], List<ServerDefinition> serverDefinitions) {
-		SystemSuperTest.scParams = propFiles;
+	public APICreateDeleteSessionTest(List<ServiceConnectorDefinition> scDefinitions, List<ServerDefinition> serverDefinitions) {
+		SystemSuperTest.scDefs = scDefinitions;
 		this.serverDefinitions = serverDefinitions;
 	}
 
 	@Parameters
 	public static Collection<Object[]> getParameters() {
-		String[] mainSCParams = new String[] { TestConstants.MAIN_SC, TestConstants.log4jSCProperties, TestConstants.SCProperties };
+		List<ServiceConnectorDefinition> scDefs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition scDef = new ServiceConnectorDefinition(TestConstants.MAIN_SC, TestConstants.SCProperties,
+				TestConstants.log4jSCProperties);
+		scDefs.add(scDef);
 
-		String[] mainSCAndProxyParams = new String[] { TestConstants.CASC_1, TestConstants.log4jSCcascadedProperties,
-				TestConstants.SCcascadedProperties, TestConstants.PROXY_1, TestConstants.log4jSCProxyProperties,
-				TestConstants.SCProxyProperties };
+		List<ServiceConnectorDefinition> scCascAndProxyDefs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition scCascDef = new ServiceConnectorDefinition(TestConstants.CASC_1,
+				TestConstants.SCcascadedProperties, TestConstants.log4jSCcascadedProperties);
+		ServiceConnectorDefinition scProxyDef = new ServiceConnectorDefinition(TestConstants.PROXY_1,
+				TestConstants.SCProxyProperties, TestConstants.log4jSCProxyProperties);
+		scCascAndProxyDefs.add(scCascDef);
+		scCascAndProxyDefs.add(scProxyDef);
 
 		List<ServerDefinition> srvDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
@@ -65,10 +73,10 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 				TestConstants.PORT_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
 		srvToCascDefs.add(srvToProxyDef);
 
-		Collection<Object[]> col = Arrays.asList(new Object[] { mainSCParams, srvDefs }, //
-				new Object[] { mainSCAndProxyParams, srvToCascDefs });
-//		Collection<Object[]> col = Arrays.asList(new Object[] { mainSCAndProxyParams, srvToCascDefs }, new Object[] {
-//				mainSCAndProxyParams, srvToCascDefs });
+		Collection<Object[]> col = Arrays.asList(new Object[] { scDefs, srvDefs }, //
+				new Object[] { scCascAndProxyDefs, srvToCascDefs });
+//		Collection<Object[]> col = Arrays.asList(new Object[] { scCascAndProxyDefs, srvToCascDefs }, new Object[] {
+//				scCascAndProxyDefs, srvToCascDefs });
 		return col;
 	}
 

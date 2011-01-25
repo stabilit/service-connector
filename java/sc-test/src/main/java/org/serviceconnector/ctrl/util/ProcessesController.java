@@ -99,17 +99,13 @@ public class ProcessesController {
 		return scConfiguration;
 	}
 
-	public Map<String, ProcessCtx> startSCEnvironment(String scParams[]) throws Exception {
-		if (scParams.length % 3 != 0) {
-			testLogger.error("Number of parameters (" + scParams.length + ") in propFiles array wrong: " + scParams);
-			throw new Exception("Number of parameters (" + scParams.length + ") in propFiles array wrong: " + scParams);
-		}
-
+	public Map<String, ProcessCtx> startSCEnvironment(List<ServiceConnectorDefinition> scDefs) throws Exception {
 		Map<String, ProcessCtx> proccessContexts = new HashMap<String, ProcessCtx>();
-		for (int i = 0; i < scParams.length; i += 3) {
-			String scName = scParams[i];
-			String log4jSCProperties = scParams[i + 1];
-			String scProperties = scParams[i + 2];
+
+		for (ServiceConnectorDefinition serviceConnectorDefinition : scDefs) {
+			String scName = serviceConnectorDefinition.getName();
+			String log4jSCProperties = serviceConnectorDefinition.getLog4jFileName();
+			String scProperties = serviceConnectorDefinition.getProperyFileName();
 			proccessContexts.put(scName, this.startSC(scName, log4jSCProperties, scProperties));
 		}
 		return proccessContexts;
@@ -329,7 +325,8 @@ public class ProcessesController {
 		int timeout = 15; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileName())) {
-				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, srvProcess.getSCPort(), srvProcess.getConnectionType());
+				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, srvProcess.getSCPort(), srvProcess
+						.getConnectionType());
 				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
 				clientMgmt.enableService(serviceName); // service might be disabled during tests

@@ -15,18 +15,69 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCMgmtClient;
+import org.serviceconnector.ctrl.util.ServerDefinition;
+import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.service.SCServiceException;
+import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
+@RunWith(Parameterized.class)
 public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 
+	public APIExecuteAndSendTest(List<ServiceConnectorDefinition> scDefinitions, List<ServerDefinition> serverDefinitions) {
+		SystemSuperTest.scDefs = scDefinitions;
+		this.serverDefinitions = serverDefinitions;
+	}
+
+	@Parameters
+	public static Collection<Object[]> getParameters() {
+		List<ServiceConnectorDefinition> scDefs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition scDef = new ServiceConnectorDefinition(TestConstants.MAIN_SC, TestConstants.SCProperties,
+				TestConstants.log4jSCProperties);
+		scDefs.add(scDef);
+
+		List<ServiceConnectorDefinition> scCascAndProxyDefs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition scCascDef = new ServiceConnectorDefinition(TestConstants.CASC_1,
+				TestConstants.SCcascadedProperties, TestConstants.log4jSCcascadedProperties);
+		ServiceConnectorDefinition scProxyDef = new ServiceConnectorDefinition(TestConstants.PROXY_1,
+				TestConstants.SCProxyProperties, TestConstants.log4jSCProxyProperties);
+		scCascAndProxyDefs.add(scCascDef);
+		scCascAndProxyDefs.add(scProxyDef);
+
+		List<ServerDefinition> srvDefs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
+				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
+				TestConstants.sesServiceName1);
+		srvDefs.add(srvDef);
+
+		List<ServerDefinition> srvToCascDefs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToProxyDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
+				TestConstants.PORT_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
+		srvToCascDefs.add(srvToProxyDef);
+
+		Collection<Object[]> col = Arrays.asList(new Object[] { scDefs, srvDefs }, //
+				new Object[] { scCascAndProxyDefs, srvToCascDefs });
+//		Collection<Object[]> col = Arrays.asList(new Object[] { scCascAndProxyDefs, srvToCascDefs }, new Object[] {
+//				scCascAndProxyDefs, srvToCascDefs });
+		return col;
+	}
+	
 	/**
 	 * Description: exchange one uncompressed message<br>
 	 * Expectation: passes
