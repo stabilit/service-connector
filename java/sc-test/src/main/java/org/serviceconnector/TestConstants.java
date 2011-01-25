@@ -27,20 +27,20 @@ public class TestConstants {
 	public static final int PORT_SES_SRV_HTTP = 40000;
 	public static final int PORT_PUB_SRV_HTTP = 40001;
 	
-	public static final int PORT_CASC_HTTP = 7001;
-	public static final int PORT_CASC_TCP = 9001;
+	public static final int PORT_SC0_CASC_HTTP = 7001;
+	public static final int PORT_SC0_CASC_TCP = 9001;
 
 	public static final String COMMUNICATOR_TYPE_SESSION = "session";
 	public static final String COMMUNICATOR_TYPE_PUBLISH = "publish";	
 
 	public static final String log4jClnProperties = "log4j-cln.properties";
 	public static final String log4jSrvProperties = "log4j-srv.properties";
-	public static final String log4jSCProperties = "log4j-sc.properties";
-	public static final String log4jSCProxyProperties = "log4j-sc-proxy.properties";
-	public static final String log4jSCcascadedProperties = "log4j-sc-casc.properties";
-	public static final String SCProperties = "sc.properties";
-	public static final String SCProxyProperties = "sc-proxy.properties";
-	public static final String SCcascadedProperties = "sc-casc.properties";
+	public static final String log4jSC0Properties = "log4j-sc.properties";
+	public static final String log4jSC1CASCProperties = "log4j-sc-proxy.properties";
+	public static final String log4jSC0CASCProperties = "log4j-sc-casc.properties";
+	public static final String SC0Properties = "sc.properties";
+	public static final String SC1CASCProperties = "sc-proxy.properties";
+	public static final String SC0CASCProperties = "sc-casc.properties";
 	public static final String SCNoInterfacesProperties = "sc-nointerfaces.properties";
 	
 	public static final String sesServiceName1 = "session-1";
@@ -91,7 +91,7 @@ public class TestConstants {
 	public static final String clientRunable = "test-client.jar";
 	
 	// SC names
-	public static final String MAIN_SC = "mainSC";
-	public static final String PROXY_1 = "proxy1";
-	public static final String CASC_1 = "cascSC";
+	public static final String SC0 = "sc0";
+	public static final String SC1_CASC = "proxy1";
+	public static final String SC0_CASC = "cascSC";
 }
