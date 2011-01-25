@@ -29,18 +29,19 @@ public class TestConstants {
 	
 	public static final int PORT_SC0_CASC_HTTP = 7001;
 	public static final int PORT_SC0_CASC_TCP = 9001;
+	public static final int PORT_SC0_CASC_MGMT = 82;
 
 	public static final String COMMUNICATOR_TYPE_SESSION = "session";
 	public static final String COMMUNICATOR_TYPE_PUBLISH = "publish";	
 
 	public static final String log4jClnProperties = "log4j-cln.properties";
 	public static final String log4jSrvProperties = "log4j-srv.properties";
-	public static final String log4jSC0Properties = "log4j-sc.properties";
-	public static final String log4jSC1CASCProperties = "log4j-sc-proxy.properties";
-	public static final String log4jSC0CASCProperties = "log4j-sc-casc.properties";
-	public static final String SC0Properties = "sc.properties";
-	public static final String SC1CASCProperties = "sc-proxy.properties";
-	public static final String SC0CASCProperties = "sc-casc.properties";
+	public static final String log4jSC0Properties = "log4j-sc0.properties";
+	public static final String log4jSC1CASCProperties = "log4j-sc1-casc.properties";
+	public static final String log4jSC0CASCProperties = "log4j-sc0-casc.properties";
+	public static final String SC0Properties = "sc0.properties";
+	public static final String SC1CASCProperties = "sc1-casc.properties";
+	public static final String SC0CASCProperties = "sc0-casc.properties";
 	public static final String SCNoInterfacesProperties = "sc-nointerfaces.properties";
 	
 	public static final String sesServiceName1 = "session-1";
