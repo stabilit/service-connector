@@ -42,6 +42,10 @@ public abstract class SCMPServerCallAdapter extends SCMPCallAdapter {
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, serviceName);
 	}
 
+	public SCMPServerCallAdapter(IRequester req, String serviceName, String sessionId) {
+		super(req, serviceName, sessionId);
+	}
+
 	/**
 	 * @param requester
 	 */

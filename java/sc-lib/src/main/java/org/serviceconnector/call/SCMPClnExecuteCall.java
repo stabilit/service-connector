@@ -19,6 +19,7 @@ package org.serviceconnector.call;
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
@@ -26,7 +27,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
  * 
  * @author JTraber
  */
-public class SCMPClnExecuteCall extends SCMPSessionCallAdapter {
+public class SCMPClnExecuteCall extends SCMPServerCallAdapter {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(SCMPClnExecuteCall.class);
@@ -48,6 +49,10 @@ public class SCMPClnExecuteCall extends SCMPSessionCallAdapter {
 	public SCMPClnExecuteCall(IRequester req, String serviceName, String sessionId) {
 		super(req, serviceName, sessionId);
 	}
+	
+	public SCMPClnExecuteCall(IRequester req, SCMPMessage receivedMessage) {
+		super(req, receivedMessage);
+	}
 
 	/**
 	 * New instance.
@@ -63,6 +68,12 @@ public class SCMPClnExecuteCall extends SCMPSessionCallAdapter {
 		return new SCMPClnExecuteCall(client, serviceName, sessionId);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public ISCMPCall newInstance(IRequester req, SCMPMessage receivedMessage) {
+		return new SCMPClnExecuteCall(req, receivedMessage);
+	}
+	
 	/**
 	 * Gets the message type.
 	 *
