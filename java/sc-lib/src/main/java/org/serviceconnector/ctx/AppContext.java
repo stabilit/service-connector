@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.EnvironmentConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.log4j.Logger;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cache.CacheConfiguration;
 import org.serviceconnector.cache.CacheManager;
@@ -49,6 +50,9 @@ import org.serviceconnector.scmp.SCMPError;
  */
 public final class AppContext {
 
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(AppContext.class);
+	
 	/** The SC environment. Indicates that AppContext is running in a SC environment */
 	private static boolean scEnvironment = false;
 
@@ -393,4 +397,12 @@ public final class AppContext {
 			}
 		}
 	}
+	
+	/**
+	 * dumps the entire application context.
+	 */
+	public static void dump() {
+		logger.info("SC dump created into file=?");
+	}
+
 }

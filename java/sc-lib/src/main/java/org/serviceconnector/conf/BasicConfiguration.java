@@ -18,7 +18,6 @@ package org.serviceconnector.conf;
 import java.io.File;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
