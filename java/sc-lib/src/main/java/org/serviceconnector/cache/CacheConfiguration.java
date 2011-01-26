@@ -24,6 +24,10 @@ import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class CacheConfiguration.
+ * 
+ * This is the main cache configuration class, keeping all required configuration parameters.
+ * 
+ * This class is used to setup cache manager {@link CacheManager} instances.
  */
 public class CacheConfiguration implements ICacheConfiguration {
 
@@ -42,7 +46,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 	protected int expirationCheckIntervalSeconds;
 
 	/**
-	 * Instantiates a new SCMP cache configuration.
+	 * Instantiates a new cache configuration.
 	 */
 	public CacheConfiguration() {
 		this.cacheEnabled = Constants.DEFAULT_CACHE_ENABLED;

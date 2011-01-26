@@ -22,6 +22,11 @@ package org.serviceconnector.web.cmd.sc;
 public class WebCommandException extends Exception {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4819887993950715812L;
+
+	/**
 	 * Instantiates a new not found exception.
 	 */
 	public WebCommandException() {

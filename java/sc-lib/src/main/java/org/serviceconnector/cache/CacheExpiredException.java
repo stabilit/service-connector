@@ -15,7 +15,15 @@
  */
 package org.serviceconnector.cache;
 
+/**
+ * The Class CacheExpiredException.
+ */
 public class CacheExpiredException extends CacheException {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -16989349079433186L;
 
 	/**
 	 * Instantiates a new SCMP cache exception.

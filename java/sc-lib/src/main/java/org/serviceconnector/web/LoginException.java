@@ -22,6 +22,11 @@ package org.serviceconnector.web;
 public class LoginException extends Exception {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7805640643661623372L;
+
+	/**
 	 * Instantiates a new login exception.
 	 */
 	public LoginException() {

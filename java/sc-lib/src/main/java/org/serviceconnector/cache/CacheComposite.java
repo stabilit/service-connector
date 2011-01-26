@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.cache;
 
@@ -24,9 +24,11 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.log.CacheLogger;
 import org.serviceconnector.util.DateTimeUtility;
 
-
 /**
- * The Class CacheComposite.
+ * The Class CacheComposite represents the cache head instance for each cache entry.
+ * Every message in the cache belongs to a composite instance. Each composite is identified
+ * by its unique {@link CacheId} (String). Each message is identified by <CacheId>/<SequenceNr>. The CacheId
+ * links to the cache composite instance. A message can't exist without the heading composite instance.
  */
 public class CacheComposite implements Serializable {
 
@@ -43,7 +45,7 @@ public class CacheComposite implements Serializable {
 	 */
 	public enum CACHE_STATE {
 		/** The UNDEFINDED. */
-		UNDEFINDED,		
+		UNDEFINDED,
 		/** The LOADING state, the cache is loading. */
 		LOADING,
 		/** The LOADED state, the cache has been loaded and is accessible. */
@@ -59,23 +61,27 @@ public class CacheComposite implements Serializable {
 	/** The creation time (ms), {@link CacheComposite#creationTime} */
 	private long creationTimeMillis;
 
-	/** The last modified time, tells what time the last messages has been put. {@link Cache#putMessage(org.serviceconnector.scmp.SCMPMessage)}  */
+	/**
+	 * The last modified time, tells what time the last messages has been put.
+	 * {@link Cache#putMessage(org.serviceconnector.scmp.SCMPMessage)}
+	 */
 	private Date lastModifiedTime;
 
 	/** The last modified time (ms), {@link CacheComposite#lastModifiedTime} */
 	private long lastModifiedTimeMillis;
 
-	/** The expiration date/time string. {@link Constants#SCMP_FORMAT_OF_DATE_TIME}*/
+	/** The expiration date/time string. {@link Constants#SCMP_FORMAT_OF_DATE_TIME} */
 	private String expiration;
-	
-	/** The expiration timestamp UTC */
+
+	/** The expiration timestamp, this is the timestamp in milliseconds sind 1.1.1970 */
 	private long expirationTimestamp;
 
-	/** The cache state. */
+	/** The cache state. {@link CACHE_STATE} */
 	private CACHE_STATE cacheState;
 
-	/** The loading timeout (ms). */
+	/** The loading timeout (ms). This timeout tells, how long we can wait in the loading state. */
 	private long loadingTimeout;
+
 	/**
 	 * Instantiates a new SCMP cache root.
 	 */
@@ -129,7 +135,8 @@ public class CacheComposite implements Serializable {
 	}
 
 	/**
-	 * Sets the expiration.
+	 * Sets the expiration date time.
+	 * Inside this method the expiration timestamp will be set.
 	 * 
 	 * @param expiration
 	 *            the new expiration
@@ -140,24 +147,24 @@ public class CacheComposite implements Serializable {
 			this.expirationTimestamp = 0;
 			return;
 		}
-		// transform expiration date to UTC and get timestamp
+		// transform expiration date and get timestamp
 		try {
 			Date expirationDate = DateTimeUtility.parseDateString(expiration);
 			this.expirationTimestamp = expirationDate.getTime();
 		} catch (ParseException e) {
-			CacheLogger.error("invalidate expiration date/time format="+expiration, e);
-		}		
+			CacheLogger.error("invalidate expiration date/time format=" + expiration, e);
+		}
 	}
 
 	/**
-	 * Gets the expiration timestamp (UTC).
-	 *
+	 * Gets the expiration timestamp
+	 * 
 	 * @return the expiration timestamp
 	 */
 	public long getExpirationTimestamp() {
 		return expirationTimestamp;
 	}
-		
+
 	/**
 	 * Sets the cache state.
 	 * 
@@ -167,10 +174,10 @@ public class CacheComposite implements Serializable {
 	public void setCacheState(CACHE_STATE cacheState) {
 		this.cacheState = cacheState;
 	}
-	
+
 	/**
-	 * Gets the cache state.
-	 *
+	 * Gets the cache state. {@link CACHE_STATE}
+	 * 
 	 * @return the cache state
 	 */
 	public CACHE_STATE getCacheState() {
@@ -178,7 +185,7 @@ public class CacheComposite implements Serializable {
 	}
 
 	/**
-	 * Checks if is loading.
+	 * Checks if this composite is loading. {@link CACHE_STATE}
 	 * 
 	 * @return true, if is loading
 	 */
@@ -187,7 +194,7 @@ public class CacheComposite implements Serializable {
 	}
 
 	/**
-	 * Checks if is loaded.
+	 * Checks if is this composite is loaded and is accessible. {@link CACHE_STATE}
 	 * 
 	 * @return true, if is loaded
 	 */
@@ -197,67 +204,68 @@ public class CacheComposite implements Serializable {
 
 	/**
 	 * Gets the creation time.
-	 *
+	 * 
 	 * @return the creation time
 	 */
 	public Date getCreationTime() {
 		return creationTime;
 	}
-	
+
 	/**
 	 * Gets the creation time millis.
-	 *
+	 * 
 	 * @return the creation time millis
 	 */
 	public long getCreationTimestamp() {
 		return creationTimeMillis;
 	}
-	
+
 	/**
 	 * Gets the last modified time.
-	 *
+	 * 
 	 * @return the last modified time
 	 */
 	public Date getLastModifiedTime() {
 		return lastModifiedTime;
 	}
-	
+
 	/**
 	 * Gets the last modified time millis.
-	 *
+	 * 
 	 * @return the last modified time millis
 	 */
 	public long getLastModifiedTimeMillis() {
 		return lastModifiedTimeMillis;
 	}
-	
+
 	/**
 	 * Sets the last modified.
 	 */
 	public void setLastModified() {
 		this.lastModifiedTime = DateTimeUtility.getCurrentTime();
 		this.lastModifiedTimeMillis = this.lastModifiedTime.getTime();
-		
+
 	}
 
 	/**
 	 * Gets the loading timeout.
-	 *
+	 * 
 	 * @return the loading timeout
 	 */
 	public long getLoadingTimeout() {
 		return loadingTimeout;
 	}
-	
+
 	/**
 	 * Sets the loading timeout.
-	 *
-	 * @param loadingTimeout the new loading timeout
+	 * 
+	 * @param loadingTimeout
+	 *            the new loading timeout
 	 */
 	public void setLoadingTimeout(int loadingTimeout) {
 		this.loadingTimeout = loadingTimeout;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -283,16 +291,18 @@ public class CacheComposite implements Serializable {
 		if (this.expiration == null) {
 			return false;
 		}
-//		Calendar c = Calendar.getInstance();
-//		Date currentTime = c.getTime();
-//		long currentMillis = currentTime.getTime();
+		// Calendar c = Calendar.getInstance();
+		// Date currentTime = c.getTime();
+		// long currentMillis = currentTime.getTime();
 		long currentMillis = System.currentTimeMillis(); // current time in millis UTC
-		long expirationMillis = this.getExpirationTimestamp(); // expiration timestamp 
+		long expirationMillis = this.getExpirationTimestamp(); // expiration timestamp
 		if (currentMillis > expirationMillis) {
-			CacheLogger.debug("cache is expired, expirationTime=" + this.expiration + ", currentMillis=" + currentMillis + ", expirationMillis=" + expirationMillis);
+			CacheLogger.debug("cache is expired, expirationTime=" + this.expiration + ", currentMillis=" + currentMillis
+					+ ", expirationMillis=" + expirationMillis);
 			return true;
-//		} else {
-//			CacheLogger.debug("cache is not expired, expirationTime = " + this.expiration + ", expirationMillis = " + expirationMillis + ", currentTime = " + currentTime + ", currentMillis = " + currentMillis);		
+			// } else {
+			// CacheLogger.debug("cache is not expired, expirationTime = " + this.expiration + ", expirationMillis = " +
+			// expirationMillis + ", currentTime = " + currentTime + ", currentMillis = " + currentMillis);
 		}
 		return false;
 	}
@@ -313,9 +323,10 @@ public class CacheComposite implements Serializable {
 			return false;
 		}
 		long currentMillis = System.currentTimeMillis(); // current time in millis UTC
-		long creationMillis = this.getCreationTimestamp(); // creation timestamp 
+		long creationMillis = this.getCreationTimestamp(); // creation timestamp
 		if (currentMillis > creationMillis) {
-			CacheLogger.debug("cache loading is expired, creationTime=" + this.creationTime + ", currentMillis=" + currentMillis + ", creationMillis=" + creationMillis);
+			CacheLogger.debug("cache loading is expired, creationTime=" + this.creationTime + ", currentMillis=" + currentMillis
+					+ ", creationMillis=" + creationMillis);
 			return true;
 		}
 		return false;
@@ -323,7 +334,7 @@ public class CacheComposite implements Serializable {
 
 	/**
 	 * Checks if is modification expired.
-	 *
+	 * 
 	 * @return true, if is modification expired
 	 */
 	public boolean isModificationExpired() {
@@ -334,24 +345,26 @@ public class CacheComposite implements Serializable {
 
 	/**
 	 * Checks if is last message.
-	 *
-	 * @param cacheMessage the cache message
+	 * 
+	 * @param cacheMessage
+	 *            the cache message
 	 * @return true, if is last message
-	 * @throws CacheException the cache exception
+	 * @throws CacheException
+	 *             the cache exception
 	 */
 	public boolean isLastMessage(CacheMessage cacheMessage) throws CacheException {
 		if (cacheMessage == null) {
-			throw  new CacheException("cacheMessage is null");
+			throw new CacheException("cacheMessage is null");
 		}
 		CacheId cacheId = cacheMessage.getCacheId();
 		if (cacheId == null) {
-			throw  new CacheException("cacheMessage cacheId is null");			
+			throw new CacheException("cacheMessage cacheId is null");
 		}
 		String sSequenceNr = cacheId.getSequenceNr();
 		if (sSequenceNr == null) {
-			throw  new CacheException("cacheMessage cacheId has illegal sequenceNr (null)");					
+			throw new CacheException("cacheMessage cacheId has illegal sequenceNr (null)");
 		}
-		int sequenceNr = Integer.parseInt(sSequenceNr);		
+		int sequenceNr = Integer.parseInt(sSequenceNr);
 		return sequenceNr == this.size;
 	}
 

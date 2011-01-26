@@ -430,9 +430,6 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		/** The request. */
 		private IWebRequest request;
 
-		/** The xsl input stream. */
-		private InputStream xslInputStream;
-
 		/** The accessible context. */
 		private IWebCommandAccessibleContext accessibleContext;
 

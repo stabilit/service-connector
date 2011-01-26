@@ -90,9 +90,9 @@ public class FileUtility {
 	static URL toURL(File file) throws MalformedURLException {
 		try {
 			Method toURI = file.getClass().getMethod("toURI", (Class[]) null);
-			Object uri = toURI.invoke(file, (Class[]) null);
+			Object uri = toURI.invoke(file, (Object[]) null);
 			Method toURL = uri.getClass().getMethod("toURL", (Class[]) null);
-			URL url = (URL) toURL.invoke(uri, (Class[]) null);
+			URL url = (URL) toURL.invoke(uri, (Object[]) null);
 
 			return url;
 		} catch (Exception e) {

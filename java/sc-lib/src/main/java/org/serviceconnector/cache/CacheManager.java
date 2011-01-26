@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.cache;
 
@@ -27,16 +27,29 @@ import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.TimeMillis;
 
+/**
+ * The Class CacheManager is the overall cache control class. All cache instance were controlled
+ * by this cache manager.
+ * 
+ * The cache manager starts an internal thread controlling any cache entries for expiration or any
+ * other state problems.
+ */
 public class CacheManager {
 
-	/** The scmp cache map. */
+	/** The cache map. */
 	private Map<String, Cache> cacheMap;
+
+	/** The cache configuration. */
 	private CacheConfiguration cacheConfiguration;
+
+	/** The expiration thread. */
 	private Thread expirationThread;
+
+	/** The expiration timeout run. */
 	private ExpirationTimeoutRun expirationTimeoutRun;
 
 	/**
-	 * Instantiates a new SCMP cache manager.
+	 * Instantiates a new cache manager.
 	 */
 	public CacheManager() {
 		// load scmp caches from configuration
@@ -45,6 +58,14 @@ public class CacheManager {
 		this.expirationTimeoutRun = null;
 	}
 
+	/**
+	 * Initialize (load) the cache manager instance according given cache configuration instance.
+	 * 
+	 * @param cacheConfiguration
+	 *            the cache configuration
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void load(CacheConfiguration cacheConfiguration) throws Exception {
 		this.cacheConfiguration = cacheConfiguration;
 		if (this.cacheConfiguration == null) {
@@ -78,12 +99,15 @@ public class CacheManager {
 		}
 	}
 
+	/**
+	 * Clear all caches.
+	 */
 	public void clearAll() {
 		CacheImplFactory.clearAll();
 	}
 
 	/**
-	 * Destroy.
+	 * Destroy all caches controlled by this cache manager.
 	 */
 	public void destroy() {
 		CacheLogger.debug("destroy, set expiration thread killed");
@@ -103,7 +127,7 @@ public class CacheManager {
 	}
 
 	/**
-	 * Gets the cache.
+	 * Gets the cache for given service name.
 	 * 
 	 * @param serviceName
 	 *            the service name
@@ -117,7 +141,7 @@ public class CacheManager {
 	}
 
 	/**
-	 * Gets the all caches.
+	 * Gets all caches registerred by this cache manager.
 	 * 
 	 * @return the all caches
 	 */
@@ -127,16 +151,16 @@ public class CacheManager {
 
 	/**
 	 * Checks if is cache enabled.
-	 *
+	 * 
 	 * @return true, if is cache enabled
 	 */
 	public boolean isCacheEnabled() {
-	    if (this.cacheConfiguration == null) {
-	    	return false;
-	    }
-	    return this.cacheConfiguration.isCacheEnabled();
+		if (this.cacheConfiguration == null) {
+			return false;
+		}
+		return this.cacheConfiguration.isCacheEnabled();
 	}
-	
+
 	/**
 	 * Removes the expired caches.
 	 */
@@ -163,6 +187,8 @@ public class CacheManager {
 
 	/**
 	 * The Class ExpirationTimeoutThread.
+	 * 
+	 * This class control within a thread any cache instance for expiration or other state failures.
 	 */
 	private class ExpirationTimeoutRun implements Runnable {
 

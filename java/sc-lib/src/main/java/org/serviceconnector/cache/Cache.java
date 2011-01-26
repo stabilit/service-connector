@@ -28,23 +28,40 @@ import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class Cache.
+ * The is the main Cache class which represents an active cache instance. For each service instance
+ * we have a cache instance assigned.
+ * 
+ * Inside each cache we have composite and message instances.
+ * Each composite is identified by its unique {@link CacheId}.
+ * Each message is identified by <CacheId>/<SequenceNr> and MUST belong to a cache composite instance.
+ * 
+ * The central cache methods are {@link Cache#putMessage(SCMPMessage)}, {@link Cache#getMessage(CacheId)},
+ * {@link Cache#getComposite(CacheId)} and {@link Cache#removeComposite(CacheKey)}.
+ * 
+ * This class is synchronized and thread safe for each instance.
+ * 
+ * This class uses the Bridge Design Pattern delegating the Cache implementation, see {@link ICacheImpl}.
+ * The default cache implementation uses the EHCache <a href="http://www.ehcache.org">http://www.ehcache.org</a> library.
+ * 
+ * Inside each cache a {@link CacheCompositeRegistry} instance keeps control over all cache keys. This registry
+ * instance is for internal use only. 
  */
+
 public class Cache {
-	/** The manager. */
+	/** The cache manager. */
 	private CacheManager manager;
 
 	/** The service name. */
 	private String serviceName;
 
-	/** The cache impl. */
+	/** The cache implementation instance (default EHCache <a href="http://www.ehcache.org">http://www.ehcache.org</a>). */
 	private ICacheImpl cacheImpl;
 
 	/**
-	 * Instantiates a new SCMP cache.
+	 * Instantiates a new cache and its bridged implementation.
 	 * 
 	 * @param manager
-	 *            the manager
+	 *            the cache manager
 	 * @param serviceName
 	 *            the service name
 	 */
@@ -56,6 +73,7 @@ public class Cache {
 
 	/**
 	 * Gets the composite keys.
+	 * This methods returns all composite keys stored in this cache instance.
 	 * 
 	 * @return the composite keys
 	 */
@@ -70,6 +88,7 @@ public class Cache {
 
 	/**
 	 * Gets the composite size.
+	 * The size means how composites are stored in this cache instance.
 	 * 
 	 * @return the composite size
 	 */
@@ -82,11 +101,12 @@ public class Cache {
 	}
 
 	/**
-	 * Gets the composite.
+	 * Gets the composite for given cacheId String. The String will be converted
+	 * into an {@link CacheId} instance
 	 * 
 	 * @param cacheId
 	 *            the cache id
-	 * @return the composite
+	 * @return the composite instance or null
 	 * @throws CacheException
 	 *             the cache exception
 	 */
@@ -97,6 +117,15 @@ public class Cache {
 		return getComposite(new CacheId(cacheId));
 	}
 
+	/**
+	 * Gets the composite, see {@link Cache#getComposite(String)}.
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 * @return the composite instance of null
+	 * @throws CacheException
+	 *             the cache exception
+	 */
 	public synchronized CacheComposite getComposite(CacheId cacheId) throws CacheException {
 		if (cacheId == null) {
 			throw new CacheException("no cacheId");
@@ -117,7 +146,7 @@ public class Cache {
 	}
 
 	/**
-	 * Gets the message for given cacheId or null. If no sequence nr is specified then
+	 * Gets the message for given cacheId String or null if not found. If no sequence nr is specified then
 	 * we try to get the first message (sequenceNr is 1).
 	 * 
 	 * @param cacheId
@@ -143,25 +172,26 @@ public class Cache {
 	}
 
 	/**
-	 * Gets the message.
+	 * Gets the message for given cacheId or null if not found. If no sequence nr is specified then
+	 * an exception is thrown.
 	 * 
-	 * @param scmpCacheId
-	 *            the scmp cache id
-	 * @return the message
+	 * @param cacheId
+	 *            the cache id <CacheId>/<SequenceNr>
+	 * @return the message for given cacheId 
 	 * @throws CacheException
 	 *             the cache exception
 	 */
-	public synchronized CacheMessage getMessage(CacheId scmpCacheId) throws CacheException {
-		if (scmpCacheId == null) {
+	public synchronized CacheMessage getMessage(CacheId cacheId) throws CacheException {
+		if (cacheId == null) {
 			return null;
 		}
-		if (scmpCacheId.isCompositeId()) {
+		if (cacheId.isCompositeId()) {
 			return null;
 		}
 		CacheKey compositeCacheKey = null;
 		CacheComposite cacheComposite = null;
 		// check if this message is part of cache
-		compositeCacheKey = new CacheKey(scmpCacheId.getCacheId());
+		compositeCacheKey = new CacheKey(cacheId.getCacheId());
 		Object value = this.cacheImpl.get(compositeCacheKey);
 		if (value == null) {
 			return null;
@@ -175,7 +205,7 @@ public class Cache {
 					+ cacheComposite.getExpiration());
 			return null;
 		}
-		CacheKey msgCacheKey = new CacheKey(scmpCacheId.getFullCacheId());
+		CacheKey msgCacheKey = new CacheKey(cacheId.getFullCacheId());
 		Object obj = this.cacheImpl.get(msgCacheKey);
 		if (obj == null) {
 			return null;
@@ -187,13 +217,24 @@ public class Cache {
 	}
 
 	/**
-	 * Put scmp.
+	 * This method puts a new scmp message instance into the cache. The scmp message will be wrapped
+	 * by a {@link CacheMessage} instance. Only the body and the {@link SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR} are 
+	 * kept in the cache message.
+	 * 
+	 * Each message requires a composite instance. If no composite instance exists, then a composite instance will be
+	 * created and stored in the cache. In an second step the message instance will be added to the cache setting sequence nr to 1.
+	 * 
+	 * If a composite instance already exists, the message is stored in the cache setting next free sequence nr.
+	 * 
+	 * If the cache composite is expired, an exception is thrown.
+	 * 
+	 * If the cache has been loaded an exception is thrown.
 	 * 
 	 * @param message
-	 *            the scmp reply
-	 * @return the SCMP cache id
+	 *            the scmp message instance
+	 * @return the cache id <CacheId>/<SequenceNr>
 	 * @throws CacheException
-	 *             the SCMP cache exception
+	 *             the cache exception
 	 */
 	public synchronized CacheId putMessage(SCMPMessage message) throws CacheException {
 		try {
@@ -289,8 +330,9 @@ public class Cache {
 
 	/**
 	 * Removes the cache composite and all its children for given cache id.
-	 *
-	 * @param cacheId the cache id
+	 * 
+	 * @param cacheId
+	 *            the cache id
 	 */
 	public void removeComposite(String cacheId) {
 		this.removeComposite(new CacheKey(cacheId));
@@ -298,8 +340,9 @@ public class Cache {
 
 	/**
 	 * Removes the cache composite and all its children for given cache key.
-	 *
-	 * @param cacheKey the cache key
+	 * 
+	 * @param cacheKey
+	 *            the cache key as String
 	 */
 	public synchronized void removeComposite(CacheKey cacheKey) {
 		// remove all parts
@@ -375,7 +418,7 @@ public class Cache {
 	}
 
 	/**
-	 * Removes the expired.
+	 * Removes all expired composite instances and all its children.
 	 */
 	public synchronized void removeExpired() {
 		Object[] keys = this.getCompositeKeys();
@@ -459,12 +502,14 @@ public class Cache {
 	 *            the cache id
 	 * @return the iterator
 	 */
-	public Iterator iterator(String cacheId) {
+	public Iterator<CacheMessage> iterator(String cacheId) {
 		return new CacheIterator(cacheId);
 	}
 
 	/**
-	 * The Class CacheIterator.
+	 * The Class CacheIterator represents an iterator instance.
+	 * 
+	 * This class is for internal use only.
 	 */
 	private class CacheIterator implements Iterator<CacheMessage> {
 
@@ -539,7 +584,9 @@ public class Cache {
 	}
 
 	/**
-	 * Put registry.
+	 * Put given CacheKey into the cache composite registry.
+	 * 
+	 * If no registry is part of this cache, then create a new one.
 	 * 
 	 * @param cacheKey
 	 *            the cache key
@@ -556,7 +603,9 @@ public class Cache {
 	}
 
 	/**
-	 * Removes the registry.
+	 * Removes given CacheKey from cache composite registry.
+	 * 
+	 * If no registry exists for cache key then no action required.
 	 * 
 	 * @param cacheKey
 	 *            the cache key
@@ -571,11 +620,13 @@ public class Cache {
 	}
 
 	/**
-	 * Checks if is loading.
+	 * Checks if this cache composite has loading state.
+	 * 
+	 * If no composite exists in the cache for given cacheId, then false is returned.
 	 * 
 	 * @param cacheId
 	 *            the cache id
-	 * @return true, if is loading
+	 * @return true, if cache composite is loaded
 	 */
 	public boolean isLoading(String cacheId) {
 		try {
@@ -607,11 +658,13 @@ public class Cache {
 	}
 
 	/**
-	 * Checks if is loaded.
+	 * Checks if this cache composite has loaded state.
+	 * 
+	 * If no composite exists in the cache for given cacheId, then false is returned.
 	 * 
 	 * @param cacheId
 	 *            the cache id
-	 * @return true, if is loaded
+	 * @return true, if cache composite is loaded
 	 */
 	public boolean isLoaded(String cacheId) {
 		try {
@@ -630,7 +683,10 @@ public class Cache {
 	}
 
 	/**
-	 * Start loading.
+	 * This start loading method create a new composite instance and stores them into the cache
+	 * setting {@link CACHE_STATE.LOADING} state.
+	 * 
+	 * If another composite instance exists for given cacheId, those instance will be replaced.
 	 * 
 	 * @param cacheId
 	 *            the cache id

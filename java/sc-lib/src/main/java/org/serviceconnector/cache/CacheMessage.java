@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.cache;
 
@@ -23,8 +23,11 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
- * The Class CacheMessage.
+ * The Class CacheMessage is the wrapper class for each message stored in the cache.
+ * 
+ * Each instance has a header map and a body object. All attributes MUST be serializable.
  */
+
 public class CacheMessage implements Serializable {
 
 	/**
@@ -32,17 +35,22 @@ public class CacheMessage implements Serializable {
 	 */
 	private static final long serialVersionUID = -6754331155322189585L;
 
-	/** The header. */
+	/** The header attribute map. */
 	private Map<String, String> header;
 
+	/** The cache id identifying this instance. */
 	private CacheId cacheId;
-		
-	/** The body. */
+
+	/** The body, which must be serializable. */
 	private Object body;
 
 	/**
 	 * Instantiates a new cache message.
 	 * 
+	 * The message sequence nr is scmp specific and has no linkage to the cache sequence nr.
+	 * 
+	 * @param messageSequenceNr
+	 *            the message sequence nr
 	 * @param body
 	 *            the body
 	 */
@@ -75,31 +83,33 @@ public class CacheMessage implements Serializable {
 
 	/**
 	 * Gets the message type.
-	 *
+	 * 
 	 * @return the message type
 	 */
 	public String getMessageType() {
 		return this.getHeader(SCMPHeaderAttributeKey.MSG_TYPE);
 	}
-	
+
 	/**
 	 * Sets the compressed.
-	 *
-	 * @param compressed the new compressed
+	 * 
+	 * @param compressed
+	 *            the new compressed
 	 */
 	public void setCompressed(boolean compressed) {
 		this.setHeader(SCMPHeaderAttributeKey.COMPRESSION, String.valueOf(compressed));
 	}
-	
+
 	/**
 	 * Checks if is compressed.
-	 *
+	 * 
 	 * @return true, if is compressed
 	 */
 	public boolean isCompressed() {
 		String compressed = this.getHeader(SCMPHeaderAttributeKey.COMPRESSION);
 		return "true".equals(compressed);
 	}
+
 	/**
 	 * Returns the value of the header attribute.
 	 * 
@@ -125,8 +135,9 @@ public class CacheMessage implements Serializable {
 
 	/**
 	 * Sets the cache id.
-	 *
-	 * @param cacheId the new cache id
+	 * 
+	 * @param cacheId
+	 *            the new cache id
 	 */
 	public void setCacheId(CacheId cacheId) {
 		this.cacheId = cacheId;
@@ -134,8 +145,9 @@ public class CacheMessage implements Serializable {
 
 	/**
 	 * Sets the cache id.
-	 *
-	 * @param cacheId the new cache id
+	 * 
+	 * @param cacheId
+	 *            the new cache id
 	 */
 	public void setCacheId(String cacheId) {
 		this.cacheId = new CacheId(cacheId);
@@ -143,13 +155,13 @@ public class CacheMessage implements Serializable {
 
 	/**
 	 * Gets the cache id.
-	 *
+	 * 
 	 * @return the cache id
 	 */
 	public CacheId getCacheId() {
 		return cacheId;
 	}
-	
+
 	/**
 	 * Gets the body.
 	 * 

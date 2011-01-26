@@ -22,6 +22,11 @@ package org.serviceconnector.web;
 public class NotFoundException extends Exception {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7695341821523840247L;
+
+	/**
 	 * Instantiates a new not found exception.
 	 */
 	public NotFoundException() {

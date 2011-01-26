@@ -24,6 +24,7 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.InvalidParameterException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -232,7 +233,7 @@ public class DefaultXMLLoaderFactory {
 							writer.writeStartElement("scmpMessage");
 							writer.writeStartElement("header");
 							Map<String, String> header = scmpMessage.getHeader();
-							for (Entry headerEntry : header.entrySet()) {
+							for (Entry<?, ?> headerEntry : header.entrySet()) {
 								writer.writeStartElement((String) headerEntry.getKey());
 								writer.writeCData((String) headerEntry.getValue());
 								writer.writeEndElement();
@@ -280,7 +281,6 @@ public class DefaultXMLLoaderFactory {
 		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 			writer.writeStartElement("sessions");
-			String serviceParameter = request.getParameter("session");
 			Session[] sessions = sessionRegistry.getSessions();
 			for (Session session : sessions) {
 				writer.writeStartElement("session");
@@ -411,8 +411,12 @@ public class DefaultXMLLoaderFactory {
 		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			writer.writeStartElement("logs");
 			String dateParameter = request.getParameter("date");
-			Date today = new Date();
-			today = new Date(today.getYear(), today.getMonth(), today.getDate());
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+	        cal.set(Calendar.MINUTE, 0);
+	        cal.set(Calendar.SECOND, 0);
+	        cal.set(Calendar.MILLISECOND,0);
+	        Date today = cal.getTime();
 			Date current = today;
 			if (dateParameter != null) {
 				current = WebUtil.getXMLDateFromString(dateParameter);
@@ -431,7 +435,7 @@ public class DefaultXMLLoaderFactory {
 			}
 			Logger rootLogger = LogManager.getRootLogger();
 			writeLogger(writer, rootLogger, today, current);
-			Enumeration currentLoggers = LogManager.getCurrentLoggers();
+			Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
 			while (currentLoggers.hasMoreElements()) {
 				Logger currentLogger = (Logger) currentLoggers.nextElement();
 				writeLogger(writer, currentLogger, today, current);
@@ -442,7 +446,7 @@ public class DefaultXMLLoaderFactory {
 		private void writeLogger(XMLStreamWriter writer, Logger logger, Date today, Date current) throws XMLStreamException {
 			writer.writeStartElement("logger");
 			writer.writeAttribute("name", logger.getName());
-			Enumeration appenders = logger.getAllAppenders();
+			Enumeration<?> appenders = logger.getAllAppenders();
 			while (appenders.hasMoreElements()) {
 				Appender appender = (Appender) appenders.nextElement();
 				writer.writeStartElement("appender");
@@ -679,7 +683,6 @@ public class DefaultXMLLoaderFactory {
 		private void loadFileServices(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 			writer.writeStartElement("services");
-			String serviceParameter = request.getParameter("service");
 			Service[] services = serviceRegistry.getServices();
 			for (Service service : services) {
 				if (service instanceof FileService) {

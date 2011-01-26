@@ -16,7 +16,6 @@
 package org.serviceconnector.web;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 

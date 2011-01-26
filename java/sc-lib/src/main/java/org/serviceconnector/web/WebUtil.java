@@ -59,13 +59,7 @@ public abstract class WebUtil {
 				return is;
 			}
 			is = new FileInputStream(name);
-			if (is != null) {
-				return is;
-			}
-			if (name.startsWith("/resources")) {
-				return null;
-			}
-			return loadResource("/resources" + name);
+			return is;
 		} catch (Exception e) {
 			if (name.startsWith("/resources")) {
 				return null;
@@ -142,7 +136,9 @@ public abstract class WebUtil {
 	 */
 	public static String getXMLNextDateAsString(Date date) {
 		Calendar c = Calendar.getInstance();
-		return getXMLDateAsString(new Date(date.getYear(), date.getMonth(), date.getDate() + 1));
+		c.setTime(date);
+		c.add(Calendar.DATE, 1);
+		return getXMLDateAsString(c.getTime());
 	}
 
 	/**
@@ -154,6 +150,8 @@ public abstract class WebUtil {
 	 */
 	public static String getXMLPreviousDateAsString(Date date) {
 		Calendar c = Calendar.getInstance();
-		return getXMLDateAsString(new Date(date.getYear(), date.getMonth(), date.getDate() - 1));
+		c.setTime(date);
+		c.add(Calendar.DATE, -1);
+		return getXMLDateAsString(c.getTime());
 	}
 }

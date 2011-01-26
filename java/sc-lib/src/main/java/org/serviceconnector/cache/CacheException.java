@@ -15,7 +15,15 @@
  */
 package org.serviceconnector.cache;
 
+/**
+ * The Class CacheException.
+ */
 public class CacheException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4687914027434017716L;
 
 	/**
 	 * Instantiates a new cache exception.
