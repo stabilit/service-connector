@@ -32,6 +32,7 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.FileService;
+import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceState;
@@ -107,7 +108,7 @@ public abstract class CommandAdapter implements ICommand {
 	 */
 	protected SubscriptionQueue<SCMPMessage> getSubscriptionQueueById(String subscriptionId) throws Exception {
 		Subscription subscription = this.getSubscriptionById(subscriptionId);
-		return ((PublishService) subscription.getServer().getService()).getSubscriptionQueue();
+		return ((IPublishService) subscription.getService()).getSubscriptionQueue();
 	}
 
 	/**
@@ -198,8 +199,7 @@ public abstract class CommandAdapter implements ICommand {
 	protected PublishService validatePublishService(Service service) throws SCMPCommandException {
 		if (service.getType() != ServiceType.PUBLISH_SERVICE) {
 			// service is not publish service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, service
-					.getName()
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, service.getName()
 					+ " is not publish service");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;

@@ -81,7 +81,8 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
-		String serviceName = reply.getServiceName();
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
 		int noDataIntervalSeconds = this.subscription.getNoDataInterval();
 
 		if (reply.isFault() == false) {
@@ -97,6 +98,8 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
 				// finally add subscription to the registry & schedule subscription timeout internal
 				this.subscriptionRegistry.addSubscription(subscription.getId(), subscription);
 				SubscriptionLogger.logSubscribe(serviceName, subscription.getId(), subscriptionMask.getValue());
+				// forward local subscription no matter what server sends
+				reply.setSessionId(subscription.getId());
 			} else {
 				// subscription has been rejected - remove subscription id from header
 				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
@@ -119,16 +122,27 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		// creation failed remove from server
+		server.removeSession(subscription);
 		SCMPMessage fault = null;
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
 			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln subscribe");
 		} else if (ex instanceof IOException) {
 			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln subscribe");
+		} else if (ex instanceof InterruptedException) {
+			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed, thread interrupted");
 		} else {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed");
 		}
-		this.receive(fault);
+		// forward reply to client
+		fault.setIsReply(true);
+		fault.setServiceName(serviceName);
+		fault.setMessageType(SCMPMsgType.CLN_SUBSCRIBE);
+		response.setSCMP(fault);
+		this.responderCallback.responseCallback(request, response);
 	}
 
 	/**

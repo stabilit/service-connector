@@ -14,42 +14,48 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.service;
+package org.serviceconnector.casc;
 
-import org.serviceconnector.casc.CascadedClient;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.server.CascadedSC;
+import org.serviceconnector.service.SubscriptionMask;
 
-public class CascadedPublishService extends Service implements IPublishService {
+public class CascClientAlreadySubscribedCallback implements ISCMPMessageCallback {
 
-	/** The subscription queue. */
-	private SubscriptionQueue<SCMPMessage> subscriptionQueue;
-	/** The cascaded sc. */
-	protected CascadedSC cascadedSC;
-	/** The cascaded client. */
+	/** The cascaded client semaphore. */
 	private CascadedClient cascClient;
+	private ISCMPMessageCallback callback;
+	private SubscriptionMask changedMask;
 
-	public CascadedPublishService(String name, CascadedSC cascadedSC) {
-		super(name, ServiceType.CASCADED_PUBLISH_SERVICE);
-		this.cascadedSC = cascadedSC;
-		this.cascClient = new CascadedClient();
-		this.subscriptionQueue = new SubscriptionQueue<SCMPMessage>();
+	public CascClientAlreadySubscribedCallback(ISCMPMessageCallback callback, SubscriptionMask changeMask) {
+		this.callback = callback;
+		this.changedMask = changeMask;
 	}
 
-	public SubscriptionQueue<SCMPMessage> getSubscriptionQueue() {
-		return this.subscriptionQueue;
+	@Override
+	public void receive(SCMPMessage reply) {
+		try {
+			// forward reply to client
+			this.callback.receive(reply);
+			this.cascClient.setSubscriptionMask(this.changedMask);
+			// release permit
+			this.cascClient.getCascClientSemaphore().release();
+		} catch (Exception e) {
+			// release permit
+			this.cascClient.getCascClientSemaphore().release();
+			this.callback.receive(e);
+		}
 	}
 
-	public void setCascadedSC(CascadedSC cascadedSC) {
-		this.cascadedSC = cascadedSC;
+	@Override
+	public void receive(Exception ex) {
+		// release permit
+		this.cascClient.getCascClientSemaphore().release();
+		// forward reply to client
+		this.callback.receive(ex);
 	}
 
-	public CascadedSC getCascadedSC() {
-		return cascadedSC;
-	}
-
-	public CascadedClient getCascClient() {
-		return this.cascClient;
+	public void setCascClient(CascadedClient cascClient) {
+		this.cascClient = cascClient;
 	}
 }

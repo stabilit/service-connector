@@ -71,7 +71,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		SubscriptionLogger.logUnsubscribe(serviceName, subscriptionId);
 
 		// unsubscribe on backend server
-		StatefulServer server = subscription.getServer();
+		StatefulServer server = (StatefulServer) subscription.getServer();
 
 		ClnUnsubscribeCommandCallback callback;
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
@@ -80,7 +80,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		int i = 0;
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
-			callback = new ClnUnsubscribeCommandCallback(request, response, responderCallback, subscription, server);
+			callback = new ClnUnsubscribeCommandCallback(request, response, responderCallback, subscription);
 			try {
 				server.unsubscribe(reqMessage, callback, otiOnSCMillis - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop

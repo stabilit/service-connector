@@ -41,6 +41,8 @@ public abstract class AbstractSession {
 	/** The timeouter task. */
 	private TimeoutWrapper timeouterTask;
 
+	private Service service;
+
 	/**
 	 * Instantiates a new session.
 	 * 
@@ -84,6 +86,14 @@ public abstract class AbstractSession {
 	 */
 	public IServer getServer() {
 		return this.server;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
+	}
+
+	public Service getService() {
+		return service;
 	}
 
 	/**

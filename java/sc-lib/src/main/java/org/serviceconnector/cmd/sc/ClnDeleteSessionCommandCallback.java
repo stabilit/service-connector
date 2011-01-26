@@ -58,7 +58,8 @@ public class ClnDeleteSessionCommandCallback implements ISCMPMessageCallback {
 	public void receive(SCMPMessage reply) {
 		// free server from session
 		server.removeSession(session);
-		String serviceName = reply.getServiceName();
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
 		// forward server reply to client
 		reply.setIsReply(true);
 		reply.setServiceName(serviceName);
@@ -74,7 +75,11 @@ public class ClnDeleteSessionCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		// free server from session
+		server.removeSession(session);
 		SCMPMessage fault = null;
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
 			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln delete session");
@@ -83,6 +88,13 @@ public class ClnDeleteSessionCommandCallback implements ISCMPMessageCallback {
 		} else {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln delete session failed");
 		}
-		this.receive(fault);
+		// forward server reply to client
+		fault.setIsReply(true);
+		fault.setServiceName(serviceName);
+		fault.setMessageType(SCMPMsgType.CLN_DELETE_SESSION);
+		this.response.setSCMP(fault);
+		this.responderCallback.responseCallback(request, response);
+		// delete session failed destroy server
+		server.abortSessionsAndDestroy("deleting session failed");
 	}
 }

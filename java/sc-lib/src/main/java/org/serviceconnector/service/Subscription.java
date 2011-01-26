@@ -15,7 +15,7 @@
  */
 package org.serviceconnector.service;
 
-import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.server.IStatefulServer;
 
 public class Subscription extends AbstractSession {
 
@@ -57,8 +57,8 @@ public class Subscription extends AbstractSession {
 
 	/** {@inheritDoc} */
 	@Override
-	public StatefulServer getServer() {
-		return (StatefulServer) this.server;
+	public IStatefulServer getServer() {
+		return (IStatefulServer) this.server;
 	}
 
 	/**

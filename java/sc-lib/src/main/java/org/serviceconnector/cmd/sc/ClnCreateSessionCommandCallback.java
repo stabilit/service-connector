@@ -55,7 +55,8 @@ public class ClnCreateSessionCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
-		String serviceName = reply.getServiceName();
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
 
 		if (reply.isFault()) {
 			// response is an error - remove session id from header
@@ -88,6 +89,8 @@ public class ClnCreateSessionCommandCallback implements ISCMPMessageCallback {
 	@Override
 	public void receive(Exception ex) {
 		SCMPMessage fault = null;
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
 			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln create session");
@@ -96,7 +99,11 @@ public class ClnCreateSessionCommandCallback implements ISCMPMessageCallback {
 		} else {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln create session failed");
 		}
-		this.receive(fault);
+		fault.setIsReply(true);
+		fault.setServiceName(serviceName);
+		fault.setMessageType(SCMPMsgType.CLN_CREATE_SESSION);
+		this.response.setSCMP(fault);
+		this.responderCallback.responseCallback(request, response);
 	}
 
 	public void setServer(StatefulServer server) {

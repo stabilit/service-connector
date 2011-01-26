@@ -61,7 +61,8 @@ public class ClnCommandCascCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
-		String serviceName = reply.getServiceName();
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
 		// forward server reply to client
 		reply.setIsReply(true);
 		reply.setServiceName(serviceName);
@@ -83,6 +84,13 @@ public class ClnCommandCascCallback implements ISCMPMessageCallback {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing " + this.msgType + " failed");
 		}
 		fault.setSessionId(this.request.getMessage().getSessionId());
-		this.receive(fault);
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
+		// forward server reply to client
+		fault.setIsReply(true);
+		fault.setServiceName(serviceName);
+		fault.setMessageType(this.msgType);
+		this.response.setSCMP(fault);
+		this.responderCallback.responseCallback(request, response);
 	}
 }

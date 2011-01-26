@@ -95,6 +95,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			// create file session
 			FileSession fileSession = new FileSession(sessionInfo, ipAddressList, fileService.getPath(), fileService
 					.getUploadFileScriptName(), fileService.getGetFileListScriptName());
+			fileSession.setService(fileService);
 			FileServer fileServer = fileService.allocateFileServerAndCreateSession(fileSession);
 			// add server to session
 			fileSession.setServer(fileServer);
@@ -116,6 +117,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 
 		// create session
 		Session session = new Session(sessionInfo, ipAddressList);
+		session.setService(abstractService);
 		session.setSessionTimeoutSeconds(eci * basicConf.getEchoIntervalMultiplier());
 		reqMessage.setSessionId(session.getId());
 		// no need to forward echo attributes

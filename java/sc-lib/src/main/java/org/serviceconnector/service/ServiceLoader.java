@@ -20,7 +20,6 @@
  */
 package org.serviceconnector.service;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -78,8 +77,13 @@ public class ServiceLoader {
 				service = new CascadedSessionService(serviceName, (CascadedSC) server);
 				break;
 			case CASCADED_PUBLISH_SERVICE:
-				// TODO JOT
-				continue;
+				server = AppContext.getServerRegistry().getServer(remoteHost);
+				if (server == null) {
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteHost
+							+ " configured for service=" + serviceName + " is not configured");
+				}
+				service = new CascadedPublishService(serviceName, (CascadedSC) server);
+				break;
 			case CASCADED_FILE_SERVICE:
 				// TODO JOT
 				continue;

@@ -67,8 +67,7 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 			if (rejectSubscriptionFlag == false) {
 				// session has not been rejected
 				String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
-				SubscriptionQueue<SCMPMessage> queue = ((PublishService) subscription.getServer().getService())
-						.getSubscriptionQueue();
+				SubscriptionQueue<SCMPMessage> queue = ((PublishService) subscription.getService()).getSubscriptionQueue();
 				SubscriptionMask mask = new SubscriptionMask(newMask);
 				SubscriptionLogger.logChangeSubscribe(serviceName, subscriptionId, newMask);
 				queue.changeSubscription(subscriptionId, mask);
@@ -93,15 +92,25 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 	@Override
 	public void receive(Exception ex) {
 		SCMPMessage fault = null;
+		SCMPMessage reqMessage = request.getMessage();
+		String serviceName = reqMessage.getServiceName();
+		String subscriptionId = subscription.getId();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
-			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT,
-					"Operation timeout expired on SC cln change subscription");
+			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln change subscription");
 		} else if (ex instanceof IOException) {
 			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln change subscription");
 		} else {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln change subscription failed");
 		}
-		this.receive(fault);
+		fault.setIsReply(true);
+		fault.setServiceName(serviceName);
+		fault.setMessageType(SCMPMsgType.CLN_CHANGE_SUBSCRIPTION);
+		fault.setSessionId(subscriptionId);
+		response.setSCMP(fault);
+		// schedule subscription timeout
+		Subscription subscription = this.subscriptionRegistry.getSubscription(subscriptionId);
+		this.subscriptionRegistry.scheduleSubscriptionTimeout(subscription);
+		this.responderCallback.responseCallback(request, response);
 	}
 }

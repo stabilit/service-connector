@@ -20,16 +20,19 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.cmd.casc.ClnSubscribeCommandCascCallback;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.CascadedSC;
+import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.CascadedPublishService;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.NoFreeServerException;
@@ -81,36 +84,54 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		SubscriptionMask subscriptionMask = new SubscriptionMask(mask);
 		String sessionInfo = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 		int noi = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
-		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		// create subscription
 		Subscription subscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList, noi);
+		subscription.setService(abstractService);
+		String cascSubscriptionId = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);
+		Subscription cascSubscription = this.subscriptionRegistry.getSubscription(cascSubscriptionId);
 
 		switch (abstractService.getType()) {
 		case CASCADED_PUBLISH_SERVICE:
 			// publish service is cascaded
-			ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback(request, response, responderCallback,
-					subscription);
+			ISCMPMessageCallback callback;
 			CascadedSC cascadedSC = ((CascadedPublishService) abstractService).getCascadedSC();
-			callback.setServer(cascadedSC);
-			callback.setService((IPublishService) abstractService);
+			if (cascSubscription != null) {
+				// subscribe is made by a cascadedClient which is already subscribed
+				callback = new ClnSubscribeCommandCascCallback(request, response, responderCallback);
+			} else {
+				// subscribe is made by a client
+				callback = new ClnSubscribeCommandCallback(request, response, responderCallback, subscription);
+				((ClnSubscribeCommandCallback) callback).setServer(cascadedSC);
+				((ClnSubscribeCommandCallback) callback).setService((IPublishService) abstractService);
+			}
 			// TODO JOT/JAN modify reqMessage - right attributes for polling client
-			cascadedSC.subscribe(reqMessage, callback, oti);
+			cascadedSC.subscribe(((CascadedPublishService) abstractService).getCascClient(), reqMessage, callback, oti);
 			return;
 		}
-		// put subscription id only if message goes to server
+		// modify message only if it goes to server
 		reqMessage.setSessionId(subscription.getId());
+		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		// check service is present
 		PublishService service = this.validatePublishService(abstractService);
-		ClnSubscribeCommandCallback callback = null;
 
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
-			callback = new ClnSubscribeCommandCallback(request, response, responderCallback, subscription);
-			callback.setService(service);
 			try {
+				if (cascSubscription != null) {
+					// subscribe is made by a cascadedClient which is already subscribed route client subscribe to same server
+					ClnSubscribeCommandCascCallback cascCallback = new ClnSubscribeCommandCascCallback(request, response,
+							responderCallback);
+					((StatefulServer) cascSubscription.getServer()).subscribe(reqMessage, cascCallback, otiOnSCMillis
+							- (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
+					break;
+				}
+				// normal subscribe mechanism
+				ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback(request, response, responderCallback,
+						subscription);
+				callback.setService(service);
 				service.allocateServerAndSubscribe(reqMessage, callback, subscription, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop

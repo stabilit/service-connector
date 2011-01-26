@@ -165,7 +165,18 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 		} else {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "error executing CLN_EXECUTE");
 		}
+		// forward server reply to client
 		fault.setSessionId(sessionId);
-		this.receive(fault);
+		fault.setIsReply(true);
+		fault.setMessageType(SCMPMsgType.CLN_EXECUTE);
+		fault.setServiceName(this.requestServiceName);
+		this.response.setSCMP(fault);
+		// schedule session timeout
+		Session session = this.sessionRegistry.getSession(this.sessionId);
+		if (session != null) {
+			this.sessionRegistry.scheduleSessionTimeout(session);
+			session.setPendingRequest(false);
+		}
+		this.responderCallback.responseCallback(request, response);
 	}
 }

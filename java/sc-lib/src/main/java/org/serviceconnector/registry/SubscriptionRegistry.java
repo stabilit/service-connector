@@ -24,8 +24,8 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.server.StatefulServer;
-import org.serviceconnector.service.PublishService;
+import org.serviceconnector.server.IStatefulServer;
+import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
@@ -205,11 +205,10 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			 * 3. abort subscription on backend server<br>
 			 */
 			SubscriptionRegistry.this.removeSubscription(subscription);
-			SubscriptionQueue<SCMPMessage> subscriptionQueue = ((PublishService) subscription.getServer().getService())
-					.getSubscriptionQueue();
+			SubscriptionQueue<SCMPMessage> subscriptionQueue = ((IPublishService) subscription.getService()).getSubscriptionQueue();
 			subscriptionQueue.unsubscribe(subscription.getId());
 
-			StatefulServer server = subscription.getServer();
+			IStatefulServer server = subscription.getServer();
 			server.abortSession(subscription, "subscription timed out in registry");
 			SubscriptionLogger.logAbortSubscription(subscription.getId());
 		}

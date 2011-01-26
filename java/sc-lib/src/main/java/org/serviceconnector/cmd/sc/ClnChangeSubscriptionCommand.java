@@ -57,7 +57,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 		String subscriptionId = reqMessage.getSessionId();
 
 		Subscription subscription = this.getSubscriptionById(subscriptionId);
-		StatefulServer server = subscription.getServer();
+		StatefulServer server = (StatefulServer) subscription.getServer();
 		reqMessage.setHeader(SCMPHeaderAttributeKey.ACTUAL_MASK, subscription.getMask().getValue());
 		// enhance ipAddressList
 		String ipAddressList = reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
