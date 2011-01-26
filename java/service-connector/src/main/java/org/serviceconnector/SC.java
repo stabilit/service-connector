@@ -133,7 +133,8 @@ public final class SC {
 		for (CommunicatorConfig respConfig : responderList) {
 			IResponder responder = new Responder(respConfig);
 			responder.create();
-			logger.info("Start listener=" + respConfig.getName() + " on= " + respConfig.getInterfaces() + ":" + respConfig.getPort());
+			logger.info("Start listener=" + respConfig.getName() + " on= " + respConfig.getInterfaces() + ":"
+					+ respConfig.getPort());
 			responder.startListenAsync();
 		}
 		if (AppContext.getBasicConfiguration().isWritePID()) {
@@ -152,12 +153,14 @@ public final class SC {
 	private static void initializeJMX() throws Exception {
 		// Necessary to make access for JMX client available
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+		ObjectName mxbeanNameSubReg = new ObjectName("org.serviceconnector.registry:type=SubscriptionRegistry");
 		ObjectName mxbeanNameSessReg = new ObjectName("org.serviceconnector.registry:type=SessionRegistry");
 		ObjectName mxbeanNameServiceReg = new ObjectName("org.serviceconnector.registry:type=ServiceRegistry");
 		ObjectName mxbeanNameServerReg = new ObjectName("org.serviceconnector.registry:type=ServerRegistry");
 		ObjectName mxbeanNameLoggingManager = new ObjectName("org.serviceconnector.logging:type=LoggingManager");
 
 		// Register the Queue Sampler MXBean
+		mbs.registerMBean(AppContext.getSubscriptionRegistry(), mxbeanNameSubReg);
 		mbs.registerMBean(AppContext.getSessionRegistry(), mxbeanNameSessReg);
 		mbs.registerMBean(AppContext.getServiceRegistry(), mxbeanNameServiceReg);
 		mbs.registerMBean(AppContext.getServerRegistry(), mxbeanNameServerReg);
@@ -172,23 +175,23 @@ public final class SC {
 	 *             the exception
 	 */
 	private static void writeSystemInfoToLog() throws Exception {
-		logger.info( "SC configuration=" + SystemInfo.getConfigFileName());
-		logger.info( "Java version=" + SystemInfo.getJavaVersion());
-		logger.info( "VM version=" + SystemInfo.getVmVersion());
-		logger.info( "Local host=" + SystemInfo.getLocalHostId());
-		logger.info( "OS=" + SystemInfo.getOs());
-		logger.info( "OS patch level=" + SystemInfo.getOsPatchLevel());
-		logger.info( "CPU type=" + SystemInfo.getCpuType());
-		logger.info( "User dir=" + SystemInfo.getUserDir());
-		logger.info( "Country setting=" + SystemInfo.getCountrySetting());
-		logger.info( "User timezone=" + SystemInfo.getUserTimezone());
-		logger.info( "UTC Offset=" + SystemInfo.getUtcOffset());
-		logger.info( "Local date=" + SystemInfo.getLocalDate());
-		logger.info( "Available processors=" + SystemInfo.getAvailableProcessors());
-		logger.info( "Max memory=" + SystemInfo.getMaxMemory());
-		logger.info( "Free memory=" + SystemInfo.getFreeMemory());
-		logger.info( "Total memory=" + SystemInfo.getTotalMemory());
-		logger.info( "Available disk memory=" + SystemInfo.getAvailableDiskSpace());
+		logger.info("SC configuration=" + SystemInfo.getConfigFileName());
+		logger.info("Java version=" + SystemInfo.getJavaVersion());
+		logger.info("VM version=" + SystemInfo.getVmVersion());
+		logger.info("Local host=" + SystemInfo.getLocalHostId());
+		logger.info("OS=" + SystemInfo.getOs());
+		logger.info("OS patch level=" + SystemInfo.getOsPatchLevel());
+		logger.info("CPU type=" + SystemInfo.getCpuType());
+		logger.info("User dir=" + SystemInfo.getUserDir());
+		logger.info("Country setting=" + SystemInfo.getCountrySetting());
+		logger.info("User timezone=" + SystemInfo.getUserTimezone());
+		logger.info("UTC Offset=" + SystemInfo.getUtcOffset());
+		logger.info("Local date=" + SystemInfo.getLocalDate());
+		logger.info("Available processors=" + SystemInfo.getAvailableProcessors());
+		logger.info("Max memory=" + SystemInfo.getMaxMemory());
+		logger.info("Free memory=" + SystemInfo.getFreeMemory());
+		logger.info("Total memory=" + SystemInfo.getTotalMemory());
+		logger.info("Available disk memory=" + SystemInfo.getAvailableDiskSpace());
 	}
 
 	private static void showError(String msg) {
