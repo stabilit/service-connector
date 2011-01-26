@@ -279,6 +279,16 @@ public class DefaultXMLLoaderFactory {
 		/** {@inheritDoc} */
 		@Override
 		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			String serverParameter = request.getParameter("server");
+			if (serverParameter != null) {
+				ServerRegistry serverRegistry = AppContext.getServerRegistry();
+				Server server = serverRegistry.getServer(serverParameter);
+				if (server != null) {
+					writer.writeStartElement("server");
+					this.writeBean(writer, server);
+					writer.writeEndElement();
+				}
+			}
 			SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 			writer.writeStartElement("sessions");
 			Session[] sessions = sessionRegistry.getSessions();

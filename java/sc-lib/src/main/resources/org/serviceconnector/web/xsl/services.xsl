@@ -22,7 +22,9 @@
             <th class="sc_table">Allocated Sessions / Subscriptions</th>
             <th class="sc_table">Available Sessions</th>
           </tr>          
-          <xsl:apply-templates select="$body/services/service"/>
+          <xsl:apply-templates select="$body/services/service">
+            <xsl:sort data-type="text" order="ascending" select="name"/>
+          </xsl:apply-templates>
         </table>
       </div>
     </xsl:template>
@@ -63,7 +65,7 @@
 	         <td class="{$class}"><a class="sc_table" href="services?service={serviceName}"><xsl:value-of select="serviceName"/></a>&#160;</td>
           </xsl:when>
           <xsl:otherwise>	       
-	         <td class="{$class}"><xsl:value-of select="serviceName"/>&#160;</td>
+	         <td class="{$class}"><xsl:value-of select="name"/>&#160;</td>
 	      </xsl:otherwise>
         </xsl:choose>       
 	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countServers"/></xsl:call-template></td>

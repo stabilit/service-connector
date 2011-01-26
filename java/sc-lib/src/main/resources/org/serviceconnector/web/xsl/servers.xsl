@@ -22,7 +22,6 @@
             <th class="sc_table">Service Name</th>
             <th class="sc_table">Max Sessions</th>
             <th class="sc_table">Max Connections</th>
-            <th class="sc_table">Busy Connections(Requester)</th>
           </tr>          
           <xsl:if test="not($body/servers/server)">
             <tr class="sc_table_even"><td colspan="6" class="sc_table">no servers</td></tr>
@@ -67,7 +66,6 @@
 	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="serviceName"/></xsl:call-template></td>
 	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="maxSessions"/></xsl:call-template></td>
 	    <td class="{$class}"><xsl:value-of select="maxConnections"/></td>
-	    <td class="{$class}"><a class="sc_table" href="servers?host={host}&amp;port={portNr}"><xsl:value-of select="requester/context/connectionPool/busyConnections"/></a></td>	    
 	</xsl:template>
 	<xsl:template name="server_details">
 	  <td colspan="7">

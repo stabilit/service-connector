@@ -340,6 +340,12 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					if (value instanceof Server) {
 						writer.writeStartElement(name);
 						Server server = (Server) value;
+						writer.writeStartElement("serverKey");
+						writer.writeCData(server.getServerKey());
+						writer.writeEndElement();
+						writer.writeStartElement("serviceName");
+						writer.writeCData(server.getServiceName());
+						writer.writeEndElement();
 						writer.writeStartElement("host");
 						writer.writeCData(server.getHost());
 						writer.writeEndElement();
