@@ -147,9 +147,10 @@ public final class Constants {
 
 	/**
 	 * File containing the SC dump. Created with the dump console command or with WEBGUI
-	 * DUMP_FILE_NAME: 
 	 */
-	public static final String DUMP_FILE_NAME = "scDump_.xml";
+	public static final String DUMP_FILE_NAME = "scDump_";
+	/** The Constant XML_EXTENSION. */
+	public static final String XML_EXTENSION = ".xml";
 
 	/** The Constant IPV6_LOOPBACK_NIC. */
 	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
@@ -256,6 +257,7 @@ public final class Constants {
 	public static final String SCMP_FORMAT_OF_HEADER_SIZE = " 00000";
 	public static final String SCMP_FORMAT_OF_DATE_TIME = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	public static final String SCMP_FORMAT_OF_DATE_TIME_UTC = "yyyy-MM-dd'T'HH:mm:ss";
+	public static final String FORMAT_OF_DATE_TIME_DUMP_FILE = "yyyyMMddHHmmssSSS";
 	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
 
 }

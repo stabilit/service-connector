@@ -1,20 +1,27 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.ctx;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -26,6 +33,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.jboss.netty.logging.InternalLoggerFactory;
 import org.jboss.netty.logging.Log4JLoggerFactory;
+import org.serviceconnector.Constants;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cache.CacheConfiguration;
 import org.serviceconnector.cache.CacheManager;
@@ -54,7 +62,7 @@ public final class AppContext {
 
 	/** The Constant logger. */
 	protected final static Logger logger = Logger.getLogger(AppContext.class);
-	
+	private static final SimpleDateFormat DUMP_FILE_SDF = new SimpleDateFormat(Constants.FORMAT_OF_DATE_TIME_DUMP_FILE);
 	/** The SC environment. Indicates that AppContext is running in a SC environment */
 	private static boolean scEnvironment = false;
 
@@ -401,12 +409,33 @@ public final class AppContext {
 			}
 		}
 	}
-	
+
 	/**
 	 * dumps the entire application context.
 	 */
 	public static void dump() {
-		logger.info("SC dump created into file=?");
+		String dumpPath = AppContext.basicConfiguration.getDumpPath();
+		Calendar cal = Calendar.getInstance();
+		Date now = cal.getTime();
+		String fs = System.getProperty("file.separator");
+		String dumpFileName = null;
+		synchronized (DUMP_FILE_SDF) { // DUMP_FILE_SDF is not thread safe
+			String dateTimeString = DUMP_FILE_SDF.format(now);
+			dumpFileName = Constants.DUMP_FILE_NAME + dateTimeString + Constants.XML_EXTENSION;
+		}
+		File dumpDir = new File(dumpPath);
+		try {
+			// create directory if non existent
+			if (dumpDir.exists() == true || dumpDir.mkdirs()) {
+				BufferedWriter writer = new BufferedWriter(new FileWriter(dumpDir + fs + dumpFileName));
+				writer.write("dummy");
+				writer.close();
+				logger.info("SC dump created into file=" + dumpPath);
+			} else {
+				logger.error("Creating SC dump file =" + dumpPath + " failed, can not create directory");
+			}
+		} catch (IOException e) {
+			logger.error("Creating SC dump file =" + dumpPath + " failed.", e);
+		}
 	}
-
 }
