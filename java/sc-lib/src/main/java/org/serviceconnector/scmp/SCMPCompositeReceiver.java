@@ -196,10 +196,12 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	}
 
 	/**
-	 * Gets the body as stream.
+	 * Write body out to given stream instance.
 	 * 
+	 * @param outStream
+	 *            the out stream
 	 */
-	public void getBodyAsStream(OutputStream outStream) {
+	public void writeBodyAsStream(OutputStream outStream) {
 		// put all parts together to get complete body
 		SCMPMessage firstScmp = scmpList.get(0);
 		if (firstScmp.isByteArray()) {

@@ -85,7 +85,6 @@ public interface ISCMPCall {
 	 *            the callback
 	 * @param timeoutMillis
 	 *            the timeout in milliseconds
-	 * @return the result
 	 * @throws Exception
 	 *             the exception
 	 */

@@ -39,7 +39,7 @@ public class SCConsole {
 	 *            java -jar scconsole.jar -h localhost -p 7000 dump<br>
 	 *            java -jar scconsole.jar -l log4j-sc.properties -c sc.properties startSC<br>
 	 *            
-	 * @returns system exit status<br>
+	 * system exit status<br>
 	 * 				0 = success
 	 * 				1 = error parsing arguments
 	 * 				3 = invalid command

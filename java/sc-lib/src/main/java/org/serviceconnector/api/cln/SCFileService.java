@@ -157,7 +157,7 @@ public class SCFileService extends SCService {
 			}
 			// 4. post process, reply to client
 			if (reply.isComposite()) {
-				((SCMPCompositeReceiver) reply).getBodyAsStream(outStream);
+				((SCMPCompositeReceiver) reply).writeBodyAsStream(outStream);
 				return;
 			}
 			outStream.write((byte[]) reply.getBody());
