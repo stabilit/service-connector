@@ -147,8 +147,9 @@ public final class Constants {
 
 	/**
 	 * File containing the SC dump. Created with the dump console command or with WEBGUI
+	 * DUMP_FILE_NAME: 
 	 */
-	public static final String DUMP_FILE_NAME = "scDump.xml";
+	public static final String DUMP_FILE_NAME = "scDump_.xml";
 
 	/** The Constant IPV6_LOOPBACK_NIC. */
 	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
