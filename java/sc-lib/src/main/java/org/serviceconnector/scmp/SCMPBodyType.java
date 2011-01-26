@@ -58,7 +58,7 @@ public enum SCMPBodyType implements IReversibleEnum<String, SCMPBodyType> {
 	/**
 	 * Gets the body type by string.
 	 * 
-	 * @param bodyType
+	 * @param bodyTypeString
 	 *            the body type
 	 * @return the body type
 	 */

@@ -23,12 +23,11 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPMessage;
 
-
 public class MessageLogger {
 
 	private static final Logger messageLogger = Logger.getLogger(Loggers.MESSAGE.getValue());
 
-	private static String MSG_INPUT_STR  = "<-%s %s";
+	private static String MSG_INPUT_STR = "<-%s %s";
 	private static String MSG_OUTPUT_STR = "->%s %s";
 
 	/**
@@ -38,8 +37,12 @@ public class MessageLogger {
 	}
 
 	/**
-	 * @param className
+	 * Log input message.
+	 * 
+	 * @param headlineKey
+	 *            the headline key
 	 * @param message
+	 *            the message
 	 */
 	public static synchronized void logInputMessage(SCMPHeaderKey headlineKey, SCMPMessage message) {
 		if (messageLogger.isTraceEnabled()) {
@@ -51,16 +54,16 @@ public class MessageLogger {
 		} else if (messageLogger.isDebugEnabled()) {
 			// write out only important attributes
 			StringBuilder builder = new StringBuilder();
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MSG_TYPE,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SERVICE_NAME,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SESSION_ID,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MASK,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.IP_ADDRESS_LIST,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.CASCADED_MASK,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.CACHE_ID,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT,message));		
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MSG_TYPE, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SERVICE_NAME, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SESSION_ID, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MASK, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.CASCADED_MASK, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.CACHE_ID, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT, message));
 			Formatter format = new Formatter();
 			format.format(MSG_INPUT_STR, headlineKey.toString(), builder.toString());
 			messageLogger.debug(format.toString());
@@ -69,8 +72,10 @@ public class MessageLogger {
 	}
 
 	/**
-	 * @param className
-	 * @param message
+	 * Log output message.
+	 *
+	 * @param headlineKey the headline key
+	 * @param message the message
 	 */
 	public static synchronized void logOutputMessage(SCMPHeaderKey headlineKey, SCMPMessage message) {
 		if (messageLogger.isTraceEnabled()) {
@@ -82,16 +87,16 @@ public class MessageLogger {
 		} else if (messageLogger.isDebugEnabled()) {
 			// write out only important attributes
 			StringBuilder builder = new StringBuilder();
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MSG_TYPE,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SERVICE_NAME,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SESSION_ID,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MASK,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.IP_ADDRESS_LIST,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.CASCADED_MASK,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.CACHE_ID,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE,message));
-			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT,message));		
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MSG_TYPE, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SERVICE_NAME, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SESSION_ID, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.MASK, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.CASCADED_MASK, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.CACHE_ID, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_CODE, message));
+			builder.append(MessageLogger.formatAttribute(SCMPHeaderAttributeKey.SC_ERROR_TEXT, message));
 			Formatter format = new Formatter();
 			format.format(MSG_OUTPUT_STR, headlineKey.toString(), builder.toString());
 			messageLogger.debug(format.toString());
@@ -101,25 +106,25 @@ public class MessageLogger {
 
 	/**
 	 * @param key
-	 * 				e.g. MTY
+	 *            e.g. MTY
 	 * @param message
-	 * 				SCMP message
+	 *            SCMP message
 	 * @return
-	 * 		string like MTY=REG or "" if attribute is missing
+	 *         string like MTY=REG or "" if attribute is missing
 	 */
 	private static String formatAttribute(SCMPHeaderAttributeKey key, SCMPMessage message) {
 		String attrValue = message.getHeader(key);
 		if (attrValue == null || attrValue.equals("")) {
 			return "";
-		}
-		else {
-			return " "+key.getValue()+"="+attrValue;
+		} else {
+			return " " + key.getValue() + "=" + attrValue;
 		}
 	}
 
-	
 	/**
-	 * @return
+	 * Checks if is enabled.
+	 * 
+	 * @return true, if is enabled
 	 */
 	public static boolean isEnabled() {
 		return messageLogger.isDebugEnabled();

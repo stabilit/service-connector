@@ -90,7 +90,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 	 * Instantiates a new SCMPCallAdapter. Constructor is necessary because in SC you need to hand over received
 	 * message.
 	 * 
-	 * @param req
+	 * @param requester
 	 *            the requester
 	 * @param messageToForward
 	 *            the message

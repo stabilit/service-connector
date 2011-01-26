@@ -80,7 +80,9 @@ public class SubscriptionLogger {
 	}
 
 	/**
-	 * @return
+	 * Checks if is enabled.
+	 *
+	 * @return true, if is enabled
 	 */
 	public static boolean isEnabled() {
 		return subscriptionLogger.isTraceEnabled();

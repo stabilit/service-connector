@@ -33,7 +33,7 @@ public class CacheComposite implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 6142075299284577556L;
 
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(CacheComposite.class);
@@ -44,28 +44,28 @@ public class CacheComposite implements Serializable {
 	public enum CACHE_STATE {
 		/** The UNDEFINDED. */
 		UNDEFINDED,		
-		/** The LOADING. */
+		/** The LOADING state, the cache is loading. */
 		LOADING,
-		/** The LOADED. */
+		/** The LOADED state, the cache has been loaded and is accessible. */
 		LOADED;
 	};
 
-	/** The size. */
+	/** The size, tells how many messages exists for this composite. */
 	private int size;
 
-	/** The creation time. */
+	/** The creation time, tells what time this composite has been created. */
 	private Date creationTime;
 
-	/** The creation time (ms). */
+	/** The creation time (ms), {@link CacheComposite#creationTime} */
 	private long creationTimeMillis;
 
-	/** The last modified time. */
+	/** The last modified time, tells what time the last messages has been put. {@link Cache#putMessage(org.serviceconnector.scmp.SCMPMessage)}  */
 	private Date lastModifiedTime;
 
-	/** The last modified time (ms). */
+	/** The last modified time (ms), {@link CacheComposite#lastModifiedTime} */
 	private long lastModifiedTimeMillis;
 
-	/** The expiration. */
+	/** The expiration date/time string. {@link Constants#SCMP_FORMAT_OF_DATE_TIME}*/
 	private String expiration;
 	
 	/** The expiration timestamp UTC */
@@ -328,7 +328,8 @@ public class CacheComposite implements Serializable {
 	 */
 	public boolean isModificationExpired() {
 		long current = System.currentTimeMillis();
-		return this.lastModifiedTimeMillis + Constants.DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS < current;
+		long lastModifiedExpired = this.lastModifiedTimeMillis + Constants.DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS;
+		return lastModifiedExpired < current;
 	}
 
 	/**

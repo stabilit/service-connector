@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.web.ctx;
 
@@ -26,7 +26,6 @@ import org.serviceconnector.web.WebConfiguration;
 import org.serviceconnector.web.cmd.FlyweightWebCommandFactory;
 import org.serviceconnector.web.cmd.IWebCommand;
 import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
-
 
 /**
  * The Class WebContext.
@@ -50,7 +49,7 @@ public class WebContext {
 
 	/** The composite configuration. */
 	private static CompositeConfiguration apacheCompositeConfig;
-	
+
 	/** The web configuration. */
 	private static WebConfiguration webConfiguration = new WebConfiguration();
 
@@ -90,7 +89,7 @@ public class WebContext {
 
 	/**
 	 * Gets the web configuration.
-	 *
+	 * 
 	 * @return the web configuration
 	 */
 	public static WebConfiguration getWebConfiguration() {
@@ -109,10 +108,10 @@ public class WebContext {
 	}
 
 	/**
-	 * Gets the xML loader.
+	 * Gets the XML loader.
 	 * 
-	 * @param key
-	 *            the key
+	 * @param url
+	 *            the url
 	 * @return the xML loader
 	 */
 	public static IXMLLoader getXMLLoader(String url) {

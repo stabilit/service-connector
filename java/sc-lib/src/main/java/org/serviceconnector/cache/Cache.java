@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.cache;
 
@@ -117,10 +117,11 @@ public class Cache {
 	}
 
 	/**
-	 * Gets the message.
+	 * Gets the message for given cacheId or null. If no sequence nr is specified then
+	 * we try to get the first message (sequenceNr is 1).
 	 * 
-	 * @param msg
-	 *            the msg
+	 * @param cacheId
+	 *            the cache id
 	 * @return the message
 	 * @throws CacheException
 	 *             the cache exception
@@ -170,7 +171,8 @@ public class Cache {
 		}
 		// check if cache is expired or not
 		if (cacheComposite.isExpired()) {
-			CacheLogger.debug("expired composite=" + compositeCacheKey + " found in cache, expiration time=" + cacheComposite.getExpiration());
+			CacheLogger.debug("expired composite=" + compositeCacheKey + " found in cache, expiration time="
+					+ cacheComposite.getExpiration());
 			return null;
 		}
 		CacheKey msgCacheKey = new CacheKey(scmpCacheId.getFullCacheId());
@@ -248,7 +250,7 @@ public class Cache {
 			String cacheExpirationDateTime = message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
 			if (newSize == 1 && cacheExpirationDateTime == null) {
 				this.removeComposite(cacheKey);
-				throw new CacheException("cacheExpirationDateTime is missing, composite has been removed");			    
+				throw new CacheException("cacheExpirationDateTime is missing, composite has been removed");
 			}
 			// check for expiration date time, but only if this is the first message part
 			if (newSize == 1 && cacheExpirationDateTime != null) {
@@ -258,7 +260,7 @@ public class Cache {
 				if (cacheComposite.isExpired()) {
 					CacheLogger.info("composite=" + scmpCacheId + " is expired, expiration=" + cacheExpirationDateTime);
 					this.removeComposite(cacheKey);
-					throw new CacheException("composite=" + scmpCacheId + " is expired");					
+					throw new CacheException("composite=" + scmpCacheId + " is expired");
 				}
 			}
 			CacheId msgCacheId = new CacheId(scmpCacheId.getCacheId(), String.valueOf(newSize));
@@ -286,15 +288,19 @@ public class Cache {
 	}
 
 	/**
-	 * Removes the cache composite and all its children
-	 * 
-	 * @param cacheKey
-	 *            the cache key
+	 * Removes the cache composite and all its children for given cache id.
+	 *
+	 * @param cacheId the cache id
 	 */
 	public void removeComposite(String cacheId) {
 		this.removeComposite(new CacheKey(cacheId));
 	}
-	
+
+	/**
+	 * Removes the cache composite and all its children for given cache key.
+	 *
+	 * @param cacheKey the cache key
+	 */
 	public synchronized void removeComposite(CacheKey cacheKey) {
 		// remove all parts
 		CacheComposite cacheComposite = null;
@@ -344,7 +350,7 @@ public class Cache {
 		}
 		if (cacheComposite.isExpired() == false && cacheComposite.isLoadingExpired() == false) {
 			return;
-		}		
+		}
 		String cacheId = cacheKey.getCacheId();
 		int size = cacheComposite.getSize();
 		CacheLogger.debug("Remove expired composite=" + cacheKey);
@@ -589,8 +595,7 @@ public class Cache {
 				if (cacheComposite.isModificationExpired()) {
 					// modification timeout expired, remove this composite from cache
 					this.removeComposite(new CacheKey(cacheId));
-					CacheLogger.warn("remove composite while loading cache due timeout expiration, cacheId="
-							+ cacheId);
+					CacheLogger.warn("remove composite while loading cache due timeout expiration, cacheId=" + cacheId);
 				}
 				return true;
 			}

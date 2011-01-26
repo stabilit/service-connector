@@ -521,9 +521,10 @@ public class SCMPMessage {
 
 	/**
 	 * Sets the body.
-	 * 
-	 * @param body
-	 *            the new body
+	 *
+	 * @param buffer the buffer
+	 * @param offset the offset
+	 * @param length the length
 	 */
 	public void setBody(byte[] buffer, int offset, int length) {
 		if (buffer == null) {

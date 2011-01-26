@@ -55,8 +55,8 @@ public class SCRequester implements IRequester {
 	/**
 	 * Instantiates a new requester.
 	 * 
-	 * @param context
-	 *            the context
+	 * @param reqContext
+	 *            the reqContext
 	 */
 	public SCRequester(RequesterContext reqContext) {
 		this.reqContext = reqContext;

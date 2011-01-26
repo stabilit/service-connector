@@ -45,19 +45,11 @@ public abstract class SrvService {
 
 	/**
 	 * Instantiates a new srv service.
-	 * 
-	 * @param scHost
-	 *            the SC host
-	 * @param scPort
-	 *            the SC port
-	 * @param serviceName
-	 *            the service name
-	 * @param maxSessions
-	 *            the max sessions
-	 * @param maxConnections
-	 *            the max connections
-	 * @param callback
-	 *            the callback
+	 *
+	 * @param serviceName the service name
+	 * @param maxSessions the max sessions
+	 * @param maxConnections the max connections
+	 * @param requester the requester
 	 */
 	public SrvService(String serviceName, int maxSessions, int maxConnections, IRequester requester) {
 		super();

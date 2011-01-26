@@ -110,7 +110,7 @@ public class SCMPClnExecuteCall extends SCMPCallAdapter {
 	 * Sets the request body.
 	 * 
 	 * @param obj
-	 *            the new request body {@inhertiDoc} *
+	 *            the new request body {@inheritDoc} *
 	 */
 	@Override
 	public void setRequestBody(Object obj) {

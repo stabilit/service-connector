@@ -94,9 +94,9 @@ public abstract class Service {
 	}
 
 	/**
-	 * Gets the current service state
-	 * 
-	 * @return
+	 * Gets the current service state.
+	 *
+	 * @return the state
 	 */
 	public ServiceState getState() {
 		return state;

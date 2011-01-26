@@ -26,5 +26,5 @@ public interface IServer {
 	 * @param reason
 	 *            the reason
 	 */
-	public abstract void abortSession(AbstractSession session, String string);
+	public abstract void abortSession(AbstractSession session, String reason);
 }

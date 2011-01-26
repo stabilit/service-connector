@@ -36,7 +36,7 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.TestCacheConfiguration;
+import org.serviceconnector.cache.CacheConfiguration;
 import org.serviceconnector.cache.CacheException;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.ctx.AppContext;
@@ -75,7 +75,7 @@ public class CacheManagerTest extends SuperUnitTest {
 		Service service = new SessionService("dummy");
 		serviceRegistry.addService("dummy", service);
 		CacheManager cacheManager = new CacheManager();
-		TestCacheConfiguration cacheConfiguration = new TestCacheConfiguration();
+		CacheConfiguration cacheConfiguration = new CacheConfiguration();
 		cacheConfiguration.setExpirationCheckIntervalSeconds(2);
 		try {
 			cacheManager.load(cacheConfiguration);

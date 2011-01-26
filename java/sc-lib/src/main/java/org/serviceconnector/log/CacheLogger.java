@@ -30,7 +30,9 @@ public class CacheLogger {
 	}
 
 	/**
-	 * @return
+	 * Checks if is enabled.
+	 * 
+	 * @return true, if is enabled
 	 */
 	public static boolean isEnabled() {
 		return cacheLogger.isTraceEnabled();
@@ -53,13 +55,13 @@ public class CacheLogger {
 			cacheLogger.info(message);
 		}
 	}
-	
+
 	public static void error(String message) {
 		if (cacheLogger.isEnabledFor(Level.ERROR)) {
 			cacheLogger.error(message);
 		}
 	}
-	
+
 	public static void error(String message, Exception e) {
 		if (cacheLogger.isEnabledFor(Level.ERROR)) {
 			cacheLogger.error(message, e);

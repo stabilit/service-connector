@@ -89,7 +89,7 @@ public class CommunicatorConfig {
 	/**
 	 * Sets the communicator name.
 	 * 
-	 * @param respName
+	 * @param name
 	 *            the new communicator name
 	 */
 	public void setName(String name) {

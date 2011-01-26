@@ -18,10 +18,19 @@ package org.serviceconnector.cache;
 import java.io.Serializable;
 
 /**
- * The Class CacheKey.
+ * The CacheKey class is a hash key identifying any instance located in the cache (e.g. Composite or Message).
+ * The class the wrapper class for any given cacheId String of the format <CacheId>/<SequenceNr> (@see {@link CacheId}
+ * 
+ * The only purpose of this class is support for hashCode generation and equality check. The main usage for this class is 
+ * inside the @link Cache class.   
  */
 public class CacheKey implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4264046172213809960L;
+	
 	/** The cache id. */
 	private String cacheId;
 

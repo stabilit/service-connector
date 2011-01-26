@@ -77,11 +77,9 @@ public abstract class SCPublishServerCallback {
 
 	/**
 	 * Abort subscription.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param operationTimeoutInMillis
-	 *            the operation timeout in milliseconds
+	 *
+	 * @param scMessage the sc message
+	 * @param operationTimeoutInMillis the operation timeout in milliseconds
 	 */
 	public void abortSubscription(SCMessage scMessage, int operationTimeoutInMillis) {
 	}

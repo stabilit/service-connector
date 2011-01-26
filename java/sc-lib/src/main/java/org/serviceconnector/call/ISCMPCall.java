@@ -35,7 +35,6 @@ public interface ISCMPCall {
 	 *            the callback
 	 * @param timeoutMillis
 	 *            the timeout in milliseconds
-	 * @return the scmp message
 	 * @throws Exception
 	 *             the exception
 	 */

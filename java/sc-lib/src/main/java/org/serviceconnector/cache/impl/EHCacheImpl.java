@@ -26,6 +26,7 @@ import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.Configuration;
 import net.sf.ehcache.config.DiskStoreConfiguration;
 
+import org.serviceconnector.Constants;
 import org.serviceconnector.cache.ICacheConfiguration;
 
 /**
@@ -149,13 +150,17 @@ public class EHCacheImpl implements ICacheImpl {
 		synchronized (syncObj) {
 			if (manager == null) {
 				Configuration configuration = new Configuration();
+				String diskPath = cacheConfiguration.getDiskPath();
+				// disk store configuration is required
 				DiskStoreConfiguration diskStoreConfiguration = new DiskStoreConfiguration();
-				diskStoreConfiguration.setPath(cacheConfiguration.getDiskPath());
+				if (diskPath != null) {
+					diskStoreConfiguration.setPath(diskPath);
+				}
 				configuration.addDiskStore(diskStoreConfiguration);
-				configuration.setName(cacheConfiguration.getCacheName());
-				
+				configuration.setName(Constants.DEFAULT_CACHE_NAME);
+
 				// default Cache configuration is required for CacheManager
-				CacheConfiguration defaultConfiguration = new CacheConfiguration(cacheConfiguration.getCacheName(),
+				CacheConfiguration defaultConfiguration = new CacheConfiguration(Constants.DEFAULT_CACHE_NAME,
 						cacheConfiguration.getMaxElementsInMemory());
 				defaultConfiguration.setEternal(false);
 				defaultConfiguration.setTimeToIdleSeconds(60);
@@ -163,23 +168,23 @@ public class EHCacheImpl implements ICacheImpl {
 				defaultConfiguration.setOverflowToDisk(true);
 				defaultConfiguration.setMaxElementsInMemory(cacheConfiguration.getMaxElementsInMemory());
 				defaultConfiguration.setMaxElementsOnDisk(cacheConfiguration.getMaxElementsOnDisk());
-				defaultConfiguration.setDiskPersistent(cacheConfiguration.isDiskPersistent());
-				defaultConfiguration.setName(cacheConfiguration.getCacheName());
+				defaultConfiguration.setDiskPersistent(Constants.DEFAULT_CACHE_DISK_PERSISTENT);
+				defaultConfiguration.setName(Constants.DEFAULT_CACHE_NAME);
 				configuration.setDefaultCacheConfiguration(defaultConfiguration);
 				configuration.setUpdateCheck(false); // disable update checker
 				manager = new CacheManager(configuration);
 			}
 		}
-		this.config = new CacheConfiguration(serviceName, cacheConfiguration.getMaxElementsInMemory());
-		this.config.setEternal(true);
+		EHCacheImpl.config = new CacheConfiguration(serviceName, cacheConfiguration.getMaxElementsInMemory());
+		EHCacheImpl.config.setEternal(true);
 		// this.config.setTimeToIdleSeconds(60);
 		// this.config.setTimeToLiveSeconds(120);
-		this.config.setMaxElementsInMemory(cacheConfiguration.getMaxElementsInMemory());
-		this.config.setMaxElementsOnDisk(cacheConfiguration.getMaxElementsOnDisk());
-		this.config.setDiskPersistent(cacheConfiguration.isDiskPersistent());
-		this.config.setName(cacheConfiguration.getCacheName() + "." + serviceName);
-		this.cache = new Cache(this.config);
-		this.cache.setName(cacheConfiguration.getCacheName() + "." + serviceName);
+		EHCacheImpl.config.setMaxElementsInMemory(cacheConfiguration.getMaxElementsInMemory());
+		EHCacheImpl.config.setMaxElementsOnDisk(cacheConfiguration.getMaxElementsOnDisk());
+		EHCacheImpl.config.setDiskPersistent(Constants.DEFAULT_CACHE_DISK_PERSISTENT);
+		EHCacheImpl.config.setName(Constants.DEFAULT_CACHE_NAME + "." + serviceName);
+		this.cache = new Cache(EHCacheImpl.config);
+		this.cache.setName(Constants.DEFAULT_CACHE_NAME + "." + serviceName);
 		this.cache.setDiskStorePath(serviceName);
 		manager.addCache(this.cache);
 	}

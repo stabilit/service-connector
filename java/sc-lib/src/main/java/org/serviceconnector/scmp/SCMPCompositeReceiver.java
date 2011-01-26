@@ -198,7 +198,6 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 	/**
 	 * Gets the body as stream.
 	 * 
-	 * @return the body as stream
 	 */
 	public void getBodyAsStream(OutputStream outStream) {
 		// put all parts together to get complete body

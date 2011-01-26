@@ -49,10 +49,12 @@ public abstract class SCService {
 	/**
 	 * Instantiates a new service.
 	 * 
+	 * @param scClient
+	 *            the sc client
 	 * @param serviceName
 	 *            the service name
-	 * @param scContext
-	 *            the context
+	 * @param requester
+	 *            the requester
 	 */
 	public SCService(SCClient scClient, String serviceName, SCRequester requester) {
 		this.serviceName = serviceName;

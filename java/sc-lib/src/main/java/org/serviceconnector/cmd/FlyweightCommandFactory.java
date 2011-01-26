@@ -25,7 +25,8 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * A factory for creating FlyweightCommand objects. Factory is based on the Flyweight pattern
- * (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). Commands are only instantiated one time. Factory is always
+ * (http://www.allapplabs.com/java_design_patterns/flyweight_pattern.htm). Commands are only instantiated one time. Factory is
+ * always
  * returning the same instance from a map.
  */
 public abstract class FlyweightCommandFactory {
@@ -43,8 +44,8 @@ public abstract class FlyweightCommandFactory {
 	 * 
 	 * @param messageType
 	 *            the message type
-	 * @param factoryInstance
-	 *            the factory instance
+	 * @param command
+	 *            the command
 	 */
 	public void addCommand(SCMPMsgType messageType, ICommand command) {
 		FlyweightCommandFactory.commands.put(messageType.getValue(), command);

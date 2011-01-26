@@ -20,7 +20,6 @@ import java.io.OutputStream;
 
 import org.jboss.netty.handler.codec.http.Cookie;
 
-
 /**
  * The Interface IWebResponse abstracts a web response.
  */
@@ -28,9 +27,11 @@ public interface IWebResponse {
 
 	/**
 	 * Adds the header.
-	 *
-	 * @param name the name
-	 * @param value the value
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
 	 */
 	void addHeader(String name, String value);
 
@@ -77,12 +78,16 @@ public interface IWebResponse {
 	/**
 	 * Redirect.
 	 * 
-	 * @param string
-	 *            the string
+	 * @param path
+	 *            the path
 	 */
 	public abstract void redirect(String path);
 
+	/**
+	 * Checks if is redirect.
+	 *
+	 * @return true, if is redirect
+	 */
 	public abstract boolean isRedirect();
-
 
 }

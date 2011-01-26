@@ -40,8 +40,14 @@ public class FileService extends Service {
 	 * 
 	 * @param name
 	 *            the name
-	 * @param type
-	 *            the type
+	 * @param server
+	 *            the server
+	 * @param path
+	 *            the path
+	 * @param scUploadScript
+	 *            the sc upload script
+	 * @param scGetFileListScript
+	 *            the sc get file list script
 	 */
 	public FileService(String name, FileServer server, String path, String scUploadScript, String scGetFileListScript) {
 		super(name, ServiceType.FILE_SERVICE);
@@ -73,8 +79,7 @@ public class FileService extends Service {
 			return this.server;
 		}
 		// no free server available
-		NoFreeServerException noFreeSereverExc = new NoFreeServerException(SCMPError.NO_FREE_SERVER, "service="
-				+ this.getName());
+		NoFreeServerException noFreeSereverExc = new NoFreeServerException(SCMPError.NO_FREE_SERVER, "service=" + this.getName());
 		noFreeSereverExc.setMessageType(SCMPMsgType.CLN_CREATE_SESSION);
 		throw noFreeSereverExc;
 	}

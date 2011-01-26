@@ -41,8 +41,6 @@ public class PublishService extends StatefulService implements IPublishService {
 	 * 
 	 * @param name
 	 *            the name
-	 * @param type
-	 *            the type
 	 */
 	public PublishService(String name) {
 		super(name, ServiceType.PUBLISH_SERVICE);

@@ -227,8 +227,6 @@ public final class Constants {
 	public static final int DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS = 60000;
 	// cache property keys
 	public static final String CACHE_ENABLED = "cache.enabled";
-	public static final String CACHE_NAME = "cache.name";
-	public static final String CACHE_DISK_PERSISTENT = "cache.diskPersistent";
 	public static final String CACHE_DISK_PATH = "cache.diskPath";
 	public static final String CACHE_MAX_ELEMENTS_IN_MEMORY = "cache.maxElementsInMemory";
 	public static final String CACHE_MAX_ELEMENTS_ON_DISK = "cache.maxElementsOnDisk";

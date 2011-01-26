@@ -53,7 +53,8 @@ public final class ValidatorUtility {
 	 * 
 	 * @param dateTimeString
 	 *            the date time string
-	 * @return the date
+	 * @param error
+	 *            the error
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
@@ -92,8 +93,6 @@ public final class ValidatorUtility {
 	 *            the lower inclusive limit
 	 * @param longStringValue
 	 *            the integer string value to validate
-	 * @param upperLimitInc
-	 *            the upper inclusive limit
 	 * @param error
 	 *            the error to be thrown in case of an invalidation
 	 * @throws SCMPValidatorException

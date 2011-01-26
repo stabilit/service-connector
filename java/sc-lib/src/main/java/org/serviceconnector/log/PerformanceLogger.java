@@ -71,7 +71,9 @@ public class PerformanceLogger {
 	}
 
 	/**
-	 * @return
+	 * Checks if is enabled.
+	 *
+	 * @return true, if is enabled
 	 */
 	public boolean isEnabled() {
 		return performanceLogger.isTraceEnabled();

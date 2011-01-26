@@ -29,25 +29,11 @@ public interface ICacheConfiguration {
 	public abstract boolean isCacheEnabled();
 
 	/**
-	 * Checks if is disk persistent.
-	 * 
-	 * @return true, if is disk persistent
-	 */
-	public abstract boolean isDiskPersistent();
-
-	/**
 	 * Gets the disk path.
 	 * 
 	 * @return the disk path
 	 */
 	public abstract String getDiskPath();
-
-	/**
-	 * Gets the cache name.
-	 * 
-	 * @return the cache name
-	 */
-	public abstract String getCacheName();
 
 	/**
 	 * Gets the max elements in memory.

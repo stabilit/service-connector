@@ -68,7 +68,7 @@ public class SCMPManageCall extends SCMPCallAdapter {
 		}
 	}
 
-	/** {@inhertiDoc} **/
+	/** {@inheritDoc} **/
 	@Override
 	public void setRequestBody(Object obj) {
 		this.requestMessage.setBody(obj);

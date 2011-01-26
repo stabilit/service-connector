@@ -43,6 +43,7 @@ public interface ICommand {
 	 * @param responderCallback
 	 *            callback to the responder
 	 * @throws Exception
+	 *             the exception
 	 */
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception;
 
@@ -57,9 +58,9 @@ public interface ICommand {
 	public void validate(IRequest request) throws Exception;
 
 	/**
-	 * Checks if command passes through message parts
-	 * 
-	 * @return
+	 * Checks if command passes through message parts.
+	 *
+	 * @return true, if is pass through part msg
 	 */
 	public boolean isPassThroughPartMsg();
 }

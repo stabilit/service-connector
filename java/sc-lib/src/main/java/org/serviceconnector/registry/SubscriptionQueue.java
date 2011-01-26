@@ -156,7 +156,8 @@ public class SubscriptionQueue<E> {
 	}
 
 	/**
-	 * Fire new data arrived. Indicates that a new message has been added. Sets data pointer pointing on null elements to new element
+	 * Fire new data arrived. Indicates that a new message has been added. Sets data pointer pointing on null elements to new
+	 * element
 	 * if necessary (mask matches & listening mode).
 	 */
 	private synchronized void fireNewDataArrived() {
@@ -240,8 +241,8 @@ public class SubscriptionQueue<E> {
 	 * 
 	 * @param sessionId
 	 *            the session id
-	 * @param filterMask
-	 *            the filter mask
+	 * @param mask
+	 *            the mask
 	 */
 	public synchronized void changeSubscription(String sessionId, SubscriptionMask mask) {
 		logger.debug("changeSubscription");
@@ -291,8 +292,8 @@ public class SubscriptionQueue<E> {
 		 * 
 		 * @param mask
 		 *            the filter mask
-		 * @param timerRun
-		 *            the timer run
+		 * @param publishTimeout
+		 *            the publish timeout
 		 */
 		public TimeAwareDataPointer(SubscriptionMask mask, PublishTimeout publishTimeout) {
 			this.publishTimeout = publishTimeout;

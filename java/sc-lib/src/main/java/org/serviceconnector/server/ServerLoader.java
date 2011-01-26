@@ -43,10 +43,10 @@ public class ServerLoader {
 	/**
 	 * Loads remote hosts from a file.
 	 * 
-	 * @param fileName
-	 *            the file name
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param config
+	 *            the config
+	 * @throws Exception
+	 *             the exception
 	 */
 	public static void load(CompositeConfiguration config) throws Exception {
 		@SuppressWarnings("unchecked")

@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.util;
 
@@ -51,7 +51,7 @@ public class FileUtility {
 			return false;
 		}
 	}
-	
+
 	public static URL locate(String resourceName) {
 		URL url = FileUtility.locateFromAbsolutePath(resourceName);
 		if (url == null) {
@@ -93,7 +93,7 @@ public class FileUtility {
 			Object uri = toURI.invoke(file, (Class[]) null);
 			Method toURL = uri.getClass().getMethod("toURL", (Class[]) null);
 			URL url = (URL) toURL.invoke(uri, (Class[]) null);
-	
+
 			return url;
 		} catch (Exception e) {
 			throw new MalformedURLException(e.getMessage());
@@ -147,7 +147,10 @@ public class FileUtility {
 	/**
 	 * Create file containing the PID. Is used for testing purpose to verify that process is running properly.
 	 * 
-	 * @return
+	 * @param fileNameFull
+	 *            the file name full
+	 * @throws Exception
+	 *             the exception
 	 */
 	public static void createPIDfile(String fileNameFull) throws Exception {
 		FileWriter fw = null;

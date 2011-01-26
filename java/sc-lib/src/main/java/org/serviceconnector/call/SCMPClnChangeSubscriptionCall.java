@@ -43,10 +43,12 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 	/**
 	 * Instantiates a new SCMPClnChangeSubscriptionCall.
 	 * 
-	 * @param requester
-	 *            the requester
+	 * @param req
+	 *            the req
 	 * @param serviceName
 	 *            the service name
+	 * @param sessionId
+	 *            the session id
 	 */
 	public SCMPClnChangeSubscriptionCall(IRequester req, String serviceName, String sessionId) {
 		super(req, serviceName, sessionId);
@@ -115,7 +117,7 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 		}
 	}
 
-	/** {@inhertiDoc} **/
+	/** {@inheritDoc} **/
 	@Override
 	public void setRequestBody(Object obj) {
 		this.requestMessage.setBody(obj);

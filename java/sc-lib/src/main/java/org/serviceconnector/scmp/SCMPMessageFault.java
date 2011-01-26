@@ -134,13 +134,9 @@ public class SCMPMessageFault extends SCMPMessage {
 
 	/**
 	 * Sets the error.
-	 * 
-	 * @param errorCode
-	 *            the error code
-	 * @param errorText
-	 *            the error text
-	 * @param additionalInfo
-	 *            the additional info
+	 *
+	 * @param scmpError the scmp error
+	 * @param additionalInfo the additional info
 	 */
 	public void setError(SCMPError scmpError, String additionalInfo) {
 		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), scmpError.getErrorCode());

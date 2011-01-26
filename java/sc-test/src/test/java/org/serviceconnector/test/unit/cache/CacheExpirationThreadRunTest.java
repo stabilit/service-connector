@@ -23,9 +23,9 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.TestCacheConfiguration;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
+import org.serviceconnector.cache.CacheConfiguration;
 import org.serviceconnector.cache.CacheException;
 import org.serviceconnector.cache.CacheId;
 import org.serviceconnector.cache.CacheKey;
@@ -48,7 +48,7 @@ import org.serviceconnector.util.TimeMillis;
  */
 public class CacheExpirationThreadRunTest extends SuperUnitTest {
 
-	private CacheManager cacheManager;
+	protected CacheManager cacheManager;
 
 	/**
 	 * Run before each test and setup the dummy environment (services and cache manager).
@@ -67,8 +67,12 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 		Service service = new SessionService("dummy");
 		serviceRegistry.addService("dummy", service);
 		cacheManager = new CacheManager();
-		TestCacheConfiguration cacheConfiguration = new TestCacheConfiguration();
-		cacheConfiguration.setExpirationCheckIntervalSeconds(1);
+		CacheConfiguration cacheConfiguration = new CacheConfiguration() {
+			{
+				this.diskPath = CacheSuperUnitTest.CACHE_TEST_DEFAULT_DISK_PATH;
+				this.expirationCheckIntervalSeconds = 1;
+			}
+		};
 		cacheManager.load(cacheConfiguration);
 	}
 
@@ -78,7 +82,6 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 	@After
 	public void afterOneTest() {
 		cacheManager.destroy();
-		AppContext.setSCEnvironment(false);
 		super.afterOneTest();
 	}
 

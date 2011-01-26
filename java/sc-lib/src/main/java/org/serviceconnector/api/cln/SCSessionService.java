@@ -62,10 +62,12 @@ public class SCSessionService extends SCService {
 	/**
 	 * Instantiates a new session service.
 	 * 
+	 * @param scClient
+	 *            the sc client
 	 * @param serviceName
 	 *            the service name
-	 * @param context
-	 *            the context
+	 * @param requester
+	 *            the requester
 	 */
 	public SCSessionService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);

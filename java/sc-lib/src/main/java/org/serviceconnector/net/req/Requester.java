@@ -48,8 +48,8 @@ public class Requester implements IRequester {
 	/**
 	 * Instantiates a new requester.
 	 * 
-	 * @param context
-	 *            the context
+	 * @param reqContext
+	 *            the reqContext
 	 */
 	public Requester(RequesterContext reqContext) {
 		this.reqContext = reqContext;

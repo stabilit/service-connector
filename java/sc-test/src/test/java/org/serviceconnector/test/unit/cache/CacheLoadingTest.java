@@ -20,22 +20,13 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.TestCacheConfiguration;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheException;
 import org.serviceconnector.cache.CacheId;
-import org.serviceconnector.cache.CacheManager;
-import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPPart;
-import org.serviceconnector.service.Service;
-import org.serviceconnector.service.SessionService;
-import org.serviceconnector.test.unit.SuperUnitTest;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.TimeMillis;
 
@@ -44,47 +35,17 @@ import org.serviceconnector.util.TimeMillis;
  * 
  * @author ds
  */
-public class CacheLoadingTest extends SuperUnitTest {
-
-	private CacheManager cacheManager;
-
-	/**
-	 * Run before each test and setup the dummy environment (services and cache manager). <br/>
-	 * 
-	 * @throws Exception
-	 * 
-	 */
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		AppContext.setSCEnvironment(true);
-		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
-		Service service = new SessionService("dummy");
-		serviceRegistry.addService("dummy", service);
-		service = new SessionService("dummy1");
-		serviceRegistry.addService("dummy1", service);
-		service = new SessionService("dummy2");
-		serviceRegistry.addService("dummy2", service);
-		cacheManager = new CacheManager();
-		cacheManager.load(new TestCacheConfiguration());
-	}
-
-	@After
-	public void afterTest() {
-		cacheManager.destroy();
-		AppContext.setSCEnvironment(false);
-		super.afterOneTest();
-	}
+public class CacheLoadingTest extends CacheSuperUnitTest {
 
 	/**
 	 * Description: Simple cache loading test<br>
-	 * Write a message into the cache using a dummy id and nr<br>.
+	 * Write a message into the cache using a dummy id and nr<br>
+	 * .
 	 * Verify if cache has been loaded after put message.<br>
 	 * 
 	 * Expectation: passes
 	 */
 	@Test
-	
 	public void t01_cacheLoadingTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the buffer";
@@ -98,11 +59,11 @@ public class CacheLoadingTest extends SuperUnitTest {
 				DateTimeUtility.getDateTimeAsString(expirationDate));
 		@SuppressWarnings("unused")
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
-		Assert.assertEquals(true, scmpCache.isLoaded("dummy.cache.id"));						
+		Assert.assertEquals(true, scmpCache.isLoaded("dummy.cache.id"));
 	}
 
 	/**
-	 * Description: Large (part) cache loading  test<br>
+	 * Description: Large (part) cache loading test<br>
 	 * Write a large message into the cache using a dummy id and nr.<br>
 	 * Check for each written part if the cache has loading state.<br>
 	 * Check if cache is loaded when the last message has been put to the cache.<br>
@@ -118,9 +79,9 @@ public class CacheLoadingTest extends SuperUnitTest {
 			byte[] buffer = partWrite.getBytes();
 			SCMPMessage scmpMessageWrite = null;
 			if (i < 10) {
-			   scmpMessageWrite = new SCMPPart();
+				scmpMessageWrite = new SCMPPart();
 			} else {
-			   scmpMessageWrite = new SCMPMessage();			
+				scmpMessageWrite = new SCMPMessage();
 			}
 			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
@@ -128,15 +89,15 @@ public class CacheLoadingTest extends SuperUnitTest {
 			Date now = new Date();
 			Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, TimeMillis.HOUR.getMillis());
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
-					DateTimeUtility.getDateTimeAsString(expirationDate));			
+					DateTimeUtility.getDateTimeAsString(expirationDate));
 			scmpCache.putMessage(scmpMessageWrite);
 			if (i < 10) {
-			   // check if cache is in loading state
-			   Assert.assertEquals(true, scmpCache.isLoading("dummy.cache.id"));				
+				// check if cache is in loading state
+				Assert.assertEquals(true, scmpCache.isLoading("dummy.cache.id"));
 			}
 		}
 		// check if cache has been loaded
-		Assert.assertEquals(true, scmpCache.isLoaded("dummy.cache.id"));						
+		Assert.assertEquals(true, scmpCache.isLoaded("dummy.cache.id"));
 	}
 
 }

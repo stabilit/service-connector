@@ -198,7 +198,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	 * Gets the error text plus additional info.
 	 * 
 	 * @param additionalInfo
-	 * @return
+	 * @return error text as string
 	 */
 	public String getErrorText(String additionalInfo) {
 		return errorText + " [" + additionalInfo + "]";

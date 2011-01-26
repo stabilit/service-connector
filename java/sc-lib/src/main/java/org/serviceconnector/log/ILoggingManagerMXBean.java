@@ -39,7 +39,7 @@ public interface ILoggingManagerMXBean {
 	/**
 	 * Sets the connection logger level.
 	 * 
-	 * @param level
+	 * @param levelValue
 	 *            the new connection logger level
 	 */
 	public abstract void setConnectionLoggerLevel(String levelValue);
@@ -54,7 +54,7 @@ public interface ILoggingManagerMXBean {
 	/**
 	 * Sets the cache logger level.
 	 * 
-	 * @param level
+	 * @param levelValue
 	 *            the new cache logger level
 	 */
 	public abstract void setCacheLoggerLevel(String levelValue);
@@ -69,7 +69,7 @@ public interface ILoggingManagerMXBean {
 	/**
 	 * Sets the message logger level.
 	 * 
-	 * @param level
+	 * @param levelValue
 	 *            the new message logger level
 	 */
 	public abstract void setMessageLoggerLevel(String levelValue);
@@ -84,7 +84,7 @@ public interface ILoggingManagerMXBean {
 	/**
 	 * Sets the performance logger level.
 	 * 
-	 * @param level
+	 * @param levelValue
 	 *            the new performance logger level
 	 */
 	public abstract void setPerformanceLoggerLevel(String levelValue);
@@ -99,7 +99,7 @@ public interface ILoggingManagerMXBean {
 	/**
 	 * Sets the session logger level.
 	 * 
-	 * @param level
+	 * @param levelValue
 	 *            the new session logger level
 	 */
 	public abstract void setSessionLoggerLevel(String levelValue);

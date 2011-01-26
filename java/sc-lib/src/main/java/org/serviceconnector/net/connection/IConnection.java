@@ -71,11 +71,8 @@ public interface IConnection {
 	 * 
 	 * @param scmp
 	 *            the scmp
-	 * @param timeoutMillis
-	 *            the timeout milliseconds
 	 * @param callback
 	 *            the callback
-	 * @return the scmp
 	 * @throws Exception
 	 *             the exception
 	 */

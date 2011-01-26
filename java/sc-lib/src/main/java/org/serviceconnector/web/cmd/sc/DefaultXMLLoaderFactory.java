@@ -503,9 +503,6 @@ public class DefaultXMLLoaderFactory {
 		private void writeCacheConfiguration(XMLStreamWriter writer, ICacheConfiguration cacheConfiguration)
 				throws XMLStreamException {
 			writer.writeStartElement("config");
-			writer.writeStartElement("name");
-			writer.writeCharacters(cacheConfiguration.getCacheName());
-			writer.writeEndElement(); // close name tag
 			writer.writeStartElement("diskPath");
 			writer.writeCharacters(cacheConfiguration.getDiskPath());
 			writer.writeEndElement(); // close diskPath tag
@@ -518,9 +515,6 @@ public class DefaultXMLLoaderFactory {
 			writer.writeStartElement("enabled");
 			writer.writeCharacters(String.valueOf(cacheConfiguration.isCacheEnabled()));
 			writer.writeEndElement(); // close enabled tag
-			writer.writeStartElement("diskPersistent");
-			writer.writeCharacters(String.valueOf(cacheConfiguration.isDiskPersistent()));
-			writer.writeEndElement(); // close diskPersistent tag
 			writer.writeEndElement(); // close config tag
 		}
 
@@ -535,9 +529,6 @@ public class DefaultXMLLoaderFactory {
 				writer.writeStartElement("serviceName");
 				writer.writeCharacters(cache.getServiceName());
 				writer.writeEndElement(); // close serviceName tag
-				writer.writeStartElement("cacheName");
-				writer.writeCharacters(cache.getCacheName());
-				writer.writeEndElement(); // close cacheName tag
 				writer.writeStartElement("compositeSize");
 				writer.writeCharacters(String.valueOf(cache.getCompositeSize()));
 				writer.writeEndElement(); // close compositeSize tag

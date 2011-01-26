@@ -24,16 +24,29 @@ import org.apache.log4j.Logger;
  * The Class SCMPCacheId. Responsible to provide correct cache id for a specific request/response. Cache id is unique for every
  * message. Format: CacheId / SequenceNr.
  * 
+ * Any Cache entry belongs to a composite instance and assigned messages. Each composite will be identified by a unique 
+ * CacheId without any sequence nr.
+ * 
+ * Every message is identified by CacheId and Sequence Nr (<CacheId>/<SequenceNr>). The CacheId of each message links
+ * to the composite instance, the sequence nr identifies the message starting at point 1. The sequence nr will be 
+ * incremented for each additional message with same CacheId.
+ *  
+ * 
  * @author JTraber
  */
 public class CacheId implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1147590394007400404L;
+
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(CacheId.class);
 
-	private String cacheId;
-	private String sequenceNr;
-	private StringBuilder fullCacheId;
+	private String cacheId = null;
+	private String sequenceNr = null;
+	private StringBuilder fullCacheId = null;
 
 	/**
 	 * Instantiates a new cache id.
@@ -42,8 +55,25 @@ public class CacheId implements Serializable {
 		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new cache id parsing given string of the format <CacheId>/<SequenceNr>
+	 * If the string does not contains the / separator then no sequence nr is parsed and its content
+	 * belongs to the cache id.
+	 * The sequence number must be a number >= 1.
+	 *
+	 * @param cacheId the cache id
+	 */
 	public CacheId(String cacheId) {
+		if (cacheId == null) {
+			return;
+		}		
 		String[] splitted = cacheId.split("/");
+		if (splitted == null) {
+			return;
+		}
+		if (splitted.length <= 0 || splitted.length > 2) {
+			return;
+		}
 		if (splitted.length == 2) {
 			this.cacheId = splitted[0];
 			this.sequenceNr = splitted[1];
@@ -68,7 +98,8 @@ public class CacheId implements Serializable {
 	}
 
 	/**
-	 * Checks if both cache ids were equal
+	 * Checks if both cache ids were equal, only the cache id is checked and any sequence nr 
+	 * will be ignored.
 	 * 
 	 * @param cacheId
 	 *            the cache id
@@ -91,7 +122,8 @@ public class CacheId implements Serializable {
 	}
 
 	/**
-	 * Gets the full cache id.
+	 * Gets the full cache id. The full cacheid has the format <CacheId>/<SequenceNr>. If no
+	 * sequence nr exists, then the CacheId without any / separator will be returned.
 	 * 
 	 * @return the full cache id
 	 */
@@ -113,6 +145,7 @@ public class CacheId implements Serializable {
 
 	/**
 	 * Gets the sequence nr.
+	 * Returns the sequence number or null.
 	 * 
 	 * @return the sequence nr
 	 */
@@ -121,7 +154,9 @@ public class CacheId implements Serializable {
 	}
 
 	/**
-	 * Gets the sequence nr int.
+	 * Gets the sequence nr as an Integer (int). 
+	 * If no sequence number is specified, then 0 will be returned. 
+	 * A valid sequence number is >= 1.
 	 * 
 	 * @return the sequence nr int
 	 */
@@ -137,6 +172,7 @@ public class CacheId implements Serializable {
 
 	/**
 	 * Sets the sequence nr.
+	 * This method replaces any existing sequence nr and recomputes the full cache id. 
 	 * 
 	 * @param sequenceNr
 	 *            the new sequence nr
@@ -153,7 +189,8 @@ public class CacheId implements Serializable {
 	}
 
 	/**
-	 * Next sequence.
+	 * This method increments any existing sequence number or starts at position 1
+	 * returning the same CacheId instance (this).
 	 * 
 	 * @return the cache id
 	 */
@@ -167,7 +204,8 @@ public class CacheId implements Serializable {
 	}
 
 	/**
-	 * Checks if is composite id.
+	 * Check if this CacheId belongs to a composite id. A composite id does not contain any
+	 * sequence number.
 	 * 
 	 * @return true, if is composite id
 	 * @throws CacheException
@@ -183,7 +221,7 @@ public class CacheId implements Serializable {
 	}
 
 	/**
-	 * Reset.
+	 * Reset any attributes to null.
 	 */
 	public void reset() {
 		this.cacheId = null;

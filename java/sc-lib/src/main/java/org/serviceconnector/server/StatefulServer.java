@@ -429,7 +429,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 		this.service = service;
 	}
 
-	/** @{inheritDoc */
+	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
 		super.destroy();
@@ -437,7 +437,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 		this.service = null;
 	}
 
-	/** @{inheritDoc */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return super.getServerKey() + ":" + portNr + " : " + maxSessions;

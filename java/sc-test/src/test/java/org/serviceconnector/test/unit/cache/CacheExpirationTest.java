@@ -20,24 +20,16 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.TestCacheConfiguration;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheException;
 import org.serviceconnector.cache.CacheId;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
-import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPPart;
-import org.serviceconnector.service.Service;
-import org.serviceconnector.service.SessionService;
-import org.serviceconnector.test.unit.SuperUnitTest;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.TimeMillis;
 
@@ -46,37 +38,7 @@ import org.serviceconnector.util.TimeMillis;
  * 
  * @author ds
  */
-public class CacheExpirationTest extends SuperUnitTest {
-
-	private CacheManager cacheManager;
-
-	/**
-	 * Run before each test and setup the dummy environment (services and cache manager). <br/>
-	 * 
-	 * @throws Exception
-	 * 
-	 */
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		AppContext.setSCEnvironment(true);
-		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
-		Service service = new SessionService("dummy");
-		serviceRegistry.addService("dummy", service);
-		service = new SessionService("dummy1");
-		serviceRegistry.addService("dummy1", service);
-		service = new SessionService("dummy2");
-		serviceRegistry.addService("dummy2", service);
-		cacheManager = new CacheManager();
-		cacheManager.load(new TestCacheConfiguration());
-	}
-
-	@After
-	public void afterTest() {
-		cacheManager.destroy();
-		AppContext.setSCEnvironment(false);
-		super.afterOneTest();
-	}
+public class CacheExpirationTest extends CacheSuperUnitTest {
 
 	/**
 	 * Description: Simple cache write test, not expired<br>
@@ -137,12 +99,12 @@ public class CacheExpirationTest extends SuperUnitTest {
 			Assert.fail("cache put should be expired but is not");
 		} catch (Exception e) {
 		}
-	}	
+	}
+
 	/**
 	 * Description: Large (part) cache write test, first message is not expired but all others were expired<br>
 	 * Write a large message into the cache using a dummy id and nr. The first part is not expired and will
-	 * be accepted. The following parts were all expired, but this will be ignored.
-     * <br>
+	 * be accepted. The following parts were all expired, but this will be ignored. <br>
 	 * 
 	 * Expectation: passes
 	 */
@@ -155,9 +117,9 @@ public class CacheExpirationTest extends SuperUnitTest {
 			byte[] buffer = partWrite.getBytes();
 			SCMPMessage scmpMessageWrite = null;
 			if (i < 10) {
-			   scmpMessageWrite = new SCMPPart();
+				scmpMessageWrite = new SCMPPart();
 			} else {
-			   scmpMessageWrite = new SCMPMessage();			
+				scmpMessageWrite = new SCMPMessage();
 			}
 			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
@@ -166,12 +128,12 @@ public class CacheExpirationTest extends SuperUnitTest {
 				Date now = new Date();
 				Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, TimeMillis.HOUR.getMillis());
 				scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
-						DateTimeUtility.getDateTimeAsString(expirationDate));			
+						DateTimeUtility.getDateTimeAsString(expirationDate));
 			} else {
 				Date now = new Date();
 				Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, -TimeMillis.HOUR.getMillis());
 				scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
-						DateTimeUtility.getDateTimeAsString(expirationDate));						
+						DateTimeUtility.getDateTimeAsString(expirationDate));
 			}
 			scmpCache.putMessage(scmpMessageWrite);
 		}
@@ -194,13 +156,14 @@ public class CacheExpirationTest extends SuperUnitTest {
 			byte[] bufferRead = (byte[]) cacheMessage.getBody();
 			String stringRead = new String(bufferRead);
 			Assert.assertEquals(partWrite, stringRead);
-		}	
+		}
 	}
+
 	/**
 	 * Description: Simple new expired cache write test<br>
 	 * Write a message into the cache using a dummy id and nr. Set the expiration date and time 2 seconds to the future.
-	 * Sleep 4 seconds.<br> 
-	 * The cache read  will not succeed and throw an exception, because the cache entry is expired.<br>
+	 * Sleep 4 seconds.<br>
+	 * The cache read will not succeed and throw an exception, because the cache entry is expired.<br>
 	 * 
 	 * Expectation: passes
 	 */
@@ -220,7 +183,7 @@ public class CacheExpirationTest extends SuperUnitTest {
 		try {
 			Thread.sleep(4000);
 			CacheComposite cacheComposite = scmpCache.getComposite("dummy.cache.id");
-			boolean expired = cacheComposite.isExpired();			
+			boolean expired = cacheComposite.isExpired();
 			Assert.assertEquals(true, expired);
 		} catch (Exception e) {
 		}

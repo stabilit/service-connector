@@ -35,7 +35,6 @@ public interface IRequester {
 	 *            the timeout in seconds
 	 * @param callback
 	 *            the callback
-	 * @return the scmp
 	 * @throws Exception
 	 *             exception in sending/receiving process
 	 */

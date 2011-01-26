@@ -21,24 +21,15 @@ import java.util.Iterator;
 
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.serviceconnector.TestCacheConfiguration;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheException;
 import org.serviceconnector.cache.CacheId;
-import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
-import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPPart;
-import org.serviceconnector.service.Service;
-import org.serviceconnector.service.SessionService;
-import org.serviceconnector.test.unit.SuperUnitTest;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.TimeMillis;
 
@@ -47,39 +38,7 @@ import org.serviceconnector.util.TimeMillis;
  * 
  * @author ds
  */
-public class CacheTest extends SuperUnitTest {
-
-	private CacheManager cacheManager;
-
-	/**
-	 * Run before each test and setup the dummy environment (services and cache manager)<br/>
-	 * 
-	 * @throws Exception
-	 * 
-	 */
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		AppContext.setSCEnvironment(true);
-		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
-		Service service = new SessionService("dummy");
-		serviceRegistry.addService("dummy", service);
-		service = new SessionService("dummy1");
-		serviceRegistry.addService("dummy1", service);
-		service = new SessionService("dummy2");
-		serviceRegistry.addService("dummy2", service);
-		cacheManager = new CacheManager();
-		cacheManager.load(new TestCacheConfiguration());
-	}
-
-	/**
-	 * Run after each test, destroy cache manager<br/>
-	 */
-	@After
-	public void afterOneTest() {
-		cacheManager.destroy();
-		AppContext.setSCEnvironment(false);
-	}
+public class CacheTest extends CacheSuperUnitTest {
 
 	/**
 	 * Description: Simple cache write test. Write a message into the cache using a dummy id and nr and read the message from cache

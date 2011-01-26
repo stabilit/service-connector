@@ -58,8 +58,8 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 	 * 
 	 * @param key
 	 *            the key
-	 * @param item
-	 *            the item
+	 * @param responder
+	 *            the responder
 	 */
 	public void addResponder(Object key, IResponder responder) {
 		this.put(key, responder);
@@ -67,8 +67,9 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/**
 	 * Removes the responder.
-	 *
-	 * @param key the key
+	 * 
+	 * @param key
+	 *            the key
 	 */
 	public void removeResponder(Object key) {
 		this.remove(key);
@@ -76,8 +77,9 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/**
 	 * Gets the responder.
-	 *
-	 * @param key the key
+	 * 
+	 * @param key
+	 *            the key
 	 * @return the responder
 	 */
 	public IResponder getResponder(Object key) {
@@ -86,7 +88,7 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/**
 	 * Gets all responders.
-	 *
+	 * 
 	 * @return the responders
 	 */
 	public IResponder[] getResponders() {
@@ -104,7 +106,7 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the current responder.
 	 * 

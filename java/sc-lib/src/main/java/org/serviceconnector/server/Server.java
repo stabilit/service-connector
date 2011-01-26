@@ -171,7 +171,7 @@ public abstract class Server implements IServer {
 		return requester;
 	}
 
-	/** @{inheritDoc */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return this.getServerKey() + ":" + portNr;
