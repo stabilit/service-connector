@@ -25,7 +25,6 @@ import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheException;
 import org.serviceconnector.cache.CacheId;
-import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
