@@ -13,9 +13,16 @@ public class ServerDefinition {
 	private int maxConnections;
 	private String serviceNames;
 	private ConnectionType connectionType;
+	private String timezone;
 
 	public ServerDefinition(String serverType, String log4jproperty, String serverName, int serverPort, int scPort,
 			int maxSessions, int maxConnections, String serviceNames, ConnectionType connectionType) {
+		this(serverType, log4jproperty, serverName, serverPort, scPort, maxSessions, maxConnections, serviceNames, connectionType,
+				null);
+	}
+
+	public ServerDefinition(String serverType, String log4jproperty, String serverName, int serverPort, int scPort,
+			int maxSessions, int maxConnections, String serviceNames, ConnectionType connectionType, String timezone) {
 		this.serverType = serverType;
 		this.log4jproperty = log4jproperty;
 		this.serverName = serverName;
@@ -25,7 +32,7 @@ public class ServerDefinition {
 		this.maxConnections = maxConnections;
 		this.serviceNames = serviceNames;
 		this.connectionType = connectionType;
-
+		this.timezone = timezone;
 	}
 
 	public ServerDefinition(String serverType, String log4jproperty, String serverName, int serverPort, int scPort,
@@ -65,8 +72,12 @@ public class ServerDefinition {
 	public String getServiceNames() {
 		return serviceNames;
 	}
-	
+
 	public ConnectionType getConnectionType() {
 		return connectionType;
+	}
+
+	public String getTimezone() {
+		return timezone;
 	}
 }
