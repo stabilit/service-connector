@@ -375,7 +375,7 @@ public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
 		} catch(Exception e) {			
 		}
         // wait other 10s, SC server timeout should expire and cache composite removed from cache
-        Thread.sleep(10);
+        Thread.sleep(10000);
         inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
         Assert.assertEquals(inspectResponse.getValue("return"), "notfound");
 		sessionService1.deleteSession();

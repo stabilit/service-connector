@@ -555,7 +555,7 @@ public class DefaultXMLLoaderFactory {
 				writer.writeStartElement("diskStoreSize");
 				writer.writeCharacters(String.valueOf(cache.getDiskStoreSize()));
 				writer.writeEndElement(); // close diskStoreSize tag
-				if (cache.getCacheName().equals(cacheParam)) {
+				if (cache.getServiceName().equals(cacheParam)) {
 					writeCacheDetails(writer, cache, request);
 				}
 				writer.writeEndElement(); // close cache tag

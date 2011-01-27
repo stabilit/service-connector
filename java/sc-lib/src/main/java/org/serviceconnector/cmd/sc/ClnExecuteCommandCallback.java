@@ -177,6 +177,33 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 			this.sessionRegistry.scheduleSessionTimeout(session);
 			session.setPendingRequest(false);
 		}
+		// check for cache id
+		CacheManager cacheManager = null;
+		if (this.requestCacheId != null) {
+			// try save reply in cache
+			cacheManager = AppContext.getCacheManager();
+		}
+		if (cacheManager != null && cacheManager.isCacheEnabled()) {
+			try {
+				Cache scmpCache = cacheManager.getCache(this.requestServiceName);
+				if (scmpCache == null) {
+					this.logger.error("cache write failed, no cache, service name = " + this.requestServiceName);
+				} else {
+					// an exception did occure, remove those composite from cache
+					// remove request cacheId from cache
+					CacheComposite cacheComposite = scmpCache.getComposite(this.requestCacheId);
+					if (cacheComposite != null) {
+						scmpCache.removeComposite(this.requestCacheId);
+						CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + this.requestCacheId
+								+ ")");
+					}
+				}
+			} catch (Exception e) {
+				CacheLogger.debug("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
+				this.logger.error(e.toString());
+			}
+
+		}
 		this.responderCallback.responseCallback(request, response);
 	}
 }
