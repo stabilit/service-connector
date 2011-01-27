@@ -340,7 +340,10 @@ public class CacheComposite implements Serializable {
 	public boolean isModificationExpired() {
 		long current = System.currentTimeMillis();
 		long lastModifiedExpired = this.lastModifiedTimeMillis + Constants.DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS;
-		return lastModifiedExpired < current;
+		if (lastModifiedExpired < current) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
