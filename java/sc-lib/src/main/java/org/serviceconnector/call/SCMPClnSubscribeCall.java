@@ -48,8 +48,8 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 		super(requester, serviceName);
 	}
 
-	public SCMPClnSubscribeCall(Requester requester, SCMPMessage msgToForward) {
-		super(requester, msgToForward);
+	public SCMPClnSubscribeCall(Requester requester, SCMPMessage msgToSend) {
+		super(requester, msgToSend);
 	}
 
 	/**

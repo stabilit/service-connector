@@ -419,7 +419,7 @@ public class ConnectionPool {
 		// send a keep alive message
 		SCMPKeepAlive keepAliveMessage = new SCMPKeepAlive();
 		try {
-			ConnectionPoolCallback callback = new ConnectionPoolCallback();
+			ConnectionPoolCallback callback = new ConnectionPoolCallback(true);
 			connection.send(keepAliveMessage, callback);
 			callback.getMessageSync(AppContext.getBasicConfiguration().getKeepAliveOTIMillis());
 			connection.incrementNrOfIdles();
@@ -491,6 +491,10 @@ public class ConnectionPool {
 	 * The Class ConnectionPoolCallback.
 	 */
 	private class ConnectionPoolCallback extends SynchronousCallback {
+
+		public ConnectionPoolCallback(boolean synchronous) {
+			this.synchronous = synchronous;
+		}
 		// nothing to implement in this case everything is done in super-class
 	}
 

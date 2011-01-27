@@ -74,6 +74,11 @@ public final class Constants {
 	 */
 	public static final int DEFAULT_KEEP_ALIVE_OTI_MILLIS = 2000;
 
+	/**
+	 * Default value to wait in a receive publication call. Careful: For the total OTI of RCP noDataInterval will be added.
+	 */
+	public static final int DEFAULT_RECEIVE_PUBLICATION_OTI_MILLIS = 2000;
+
 	/** The default keep alive interval, 0 = not active. */
 	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 60;
 
@@ -207,6 +212,7 @@ public final class Constants {
 	public static final String PROPERTY_QUALIFIER_PASSWORD = ".password";
 	public static final String PROPERTY_QUALIFIER_UPLOAD_SCRIPT_NAME = ".uploadScriptName";
 	public static final String PROPERTY_QUALIFIER_REMOTE_HOST = ".remoteHost";
+	public static final String PROPERTY_QUALIFIER_NOI = ".noDataIntervalInSeconds";
 	public static final String PROPERTY_QUALIFIER_INTERFACES = ".interfaces";
 	public static final String PROPERTY_QUALIFIER_HOST = ".host";
 	public static final String PROPERTY_QUALIFIER_PORT = ".port";

@@ -51,11 +51,11 @@ public class SCMPClnExecuteCall extends SCMPCallAdapter {
 	 * 
 	 * @param req
 	 *            the req
-	 * @param receivedMessage
-	 *            the received message
+	 * @param msgToSend
+	 *            the message to send
 	 */
-	public SCMPClnExecuteCall(IRequester req, SCMPMessage receivedMessage) {
-		super(req, receivedMessage);
+	public SCMPClnExecuteCall(IRequester req, SCMPMessage msgToSend) {
+		super(req, msgToSend);
 	}
 
 	/**

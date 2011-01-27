@@ -2,6 +2,7 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
+import org.serviceconnector.casc.ISubscriptionCallback;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.IRequest;
@@ -17,7 +18,7 @@ import org.serviceconnector.service.Subscription;
 /**
  * The Class ClnUnsubscribeCommandCallback.
  */
-public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback {
+public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
 
 	/** The callback. */
 	private IResponderCallback responderCallback;
@@ -81,5 +82,15 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback {
 		this.responderCallback.responseCallback(request, response);
 		// delete subscription failed
 		this.subscription.getServer().abortSession(subscription, "unsubscribe failed");
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Subscription getSubscription() {
+		return this.subscription;
+	}
+
+	public IRequest getRequest() {
+		return request;
 	}
 }

@@ -82,7 +82,8 @@ public class ServiceLoader {
 					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteHost
 							+ " configured for service=" + serviceName + " is not configured");
 				}
-				service = new CascadedPublishService(serviceName, (CascadedSC) server);
+				int noDataIntervalInSeconds = config.getInt(serviceName + Constants.PROPERTY_QUALIFIER_NOI);
+				service = new CascadedPublishService(serviceName, (CascadedSC) server, noDataIntervalInSeconds);
 				break;
 			case CASCADED_FILE_SERVICE:
 				// TODO JOT

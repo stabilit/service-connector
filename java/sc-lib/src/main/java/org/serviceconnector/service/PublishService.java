@@ -88,13 +88,12 @@ public class PublishService extends StatefulService implements IPublishService {
 			}
 			StatefulServer server = this.listOfServers.get(serverIndex);
 			if (server.hasFreeSession()) {
-				callback.setServer(server);
 				server.addSession(subscription);
+				subscription.setServer(server);
 				try {
 					server.subscribe(msgToForward, callback, timeoutMillis);
 				} catch (Exception e) {
 					server.removeSession(subscription);
-					callback.setServer(null);
 					throw e;
 				}
 				return;

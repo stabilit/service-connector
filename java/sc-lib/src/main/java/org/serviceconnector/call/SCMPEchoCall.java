@@ -50,8 +50,8 @@ public class SCMPEchoCall extends SCMPCallAdapter {
 		super(req, serviceName, sessionId);
 	}
 
-	public SCMPEchoCall(Requester requester, SCMPMessage msgToForward) {
-		super(requester, msgToForward);
+	public SCMPEchoCall(Requester requester, SCMPMessage msgToSend) {
+		super(requester, msgToSend);
 	}
 
 	/** {@inheritDoc} */

@@ -18,6 +18,7 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.casc.CascSCUnsubscribeCallback;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.log.SubscriptionLogger;
@@ -31,7 +32,10 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.service.CascadedPublishService;
+import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ValidatorUtility;
 
@@ -54,12 +58,37 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
-		String subscriptionId = reqMessage.getSessionId();
-		this.subscriptionRegistry.getSubscription(subscriptionId);
+		String serviceName = reqMessage.getServiceName();
 
+		String subscriptionId = reqMessage.getSessionId();
 		// lookup session and checks properness
 		Subscription subscription = this.getSubscriptionById(subscriptionId);
-		// delete entry from session registry
+
+		// check service is present
+		Service abstractService = this.validateService(serviceName);
+		String cascSubscriptionId = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);
+		Subscription cascSubscription = this.subscriptionRegistry.getSubscription(cascSubscriptionId);
+		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+
+		switch (abstractService.getType()) {
+		case CASCADED_PUBLISH_SERVICE:
+			CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
+			// publish service is cascaded
+			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
+
+			if (cascSubscription != null) {
+				// service is cascaded - unsubscribe is made by a cascaded SC
+				CascSCUnsubscribeCallback callback = new CascSCUnsubscribeCallback(request, response, responderCallback,
+						cascSubscription);
+				cascadedSC.cascadedSCUnsubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
+			} else {
+				// service is cascaded - unsubscribe is made by a normal client
+				ClnUnsubscribeCommandCallback callback = new ClnUnsubscribeCommandCallback(request, response, responderCallback,
+						subscription);
+				cascadedSC.clientUnsubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
+			}
+			return;
+		}
 		// looks up subscription queue and stops publish mechanism
 		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(subscriptionId);
 		// first remove subscription than unsubscribe
@@ -67,14 +96,12 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		subscriptionQueue.unsubscribe(subscriptionId);
 		// cancel subscription timeout
 		this.subscriptionRegistry.cancelSubscriptionTimeout(subscription);
-		String serviceName = reqMessage.getHeader(SCMPHeaderAttributeKey.SERVICE_NAME);
 		SubscriptionLogger.logUnsubscribe(serviceName, subscriptionId);
 
 		// unsubscribe on backend server
 		StatefulServer server = (StatefulServer) subscription.getServer();
 
 		ClnUnsubscribeCommandCallback callback;
-		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;

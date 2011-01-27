@@ -16,13 +16,15 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.CascadedSC;
 
 public class CascadedPublishService extends Service implements IPublishService {
-
+	/** The Constant logger. */
+	protected final static Logger logger = Logger.getLogger(CascadedPublishService.class);
 	/** The subscription queue. */
 	private SubscriptionQueue<SCMPMessage> subscriptionQueue;
 	/** The cascaded sc. */
@@ -30,10 +32,13 @@ public class CascadedPublishService extends Service implements IPublishService {
 	/** The cascaded client. */
 	private CascadedClient cascClient;
 
-	public CascadedPublishService(String name, CascadedSC cascadedSC) {
+	private int noDataIntervalInSeconds = 0;
+
+	public CascadedPublishService(String name, CascadedSC cascadedSC, int noDataIntervalInSeconds) {
 		super(name, ServiceType.CASCADED_PUBLISH_SERVICE);
 		this.cascadedSC = cascadedSC;
-		this.cascClient = new CascadedClient();
+		this.cascClient = new CascadedClient(cascadedSC, this);
+		this.noDataIntervalInSeconds = noDataIntervalInSeconds;
 		this.subscriptionQueue = new SubscriptionQueue<SCMPMessage>();
 	}
 
@@ -51,5 +56,14 @@ public class CascadedPublishService extends Service implements IPublishService {
 
 	public CascadedClient getCascClient() {
 		return this.cascClient;
+	}
+	
+	public int getNoDataIntervalInSeconds() {
+		return noDataIntervalInSeconds;
+	}
+
+	public void renewCascadedClient() {
+		logger.warn("cascaded publish service renew cascaded client service=" + this.getName());
+		this.cascClient = new CascadedClient(cascadedSC, this);
 	}
 }

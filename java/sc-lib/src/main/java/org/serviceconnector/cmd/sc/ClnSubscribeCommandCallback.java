@@ -19,6 +19,7 @@ package org.serviceconnector.cmd.sc;
 import java.io.IOException;
 
 import org.serviceconnector.Constants;
+import org.serviceconnector.casc.ISubscriptionCallback;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
@@ -33,7 +34,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.server.IStatefulServer;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.PublishTimeout;
 import org.serviceconnector.service.Subscription;
@@ -42,7 +42,7 @@ import org.serviceconnector.service.SubscriptionMask;
 /**
  * The Class ClnSubscribeCommandCallback.
  */
-public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
+public class ClnSubscribeCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
 
 	/** The callback. */
 	private IResponderCallback responderCallback;
@@ -51,11 +51,7 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
 	/** The response. */
 	private IResponse response;
 	/** The subscription. */
-	private Subscription subscription;
-	/** The server. */
-	private IStatefulServer server;
-	/** The service. */
-	private IPublishService service;
+	private Subscription tempSubscription;
 	/** The subscription registry. */
 	private SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 
@@ -68,14 +64,15 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
 	 *            the response
 	 * @param callback
 	 *            the callback
-	 * @param subscription
+	 * @param tempSubscription
 	 *            the subscription
 	 */
-	public ClnSubscribeCommandCallback(IRequest request, IResponse response, IResponderCallback callback, Subscription subscription) {
+	public ClnSubscribeCommandCallback(IRequest request, IResponse response, IResponderCallback callback,
+			Subscription tempSubscription) {
 		this.responderCallback = callback;
 		this.request = request;
 		this.response = response;
-		this.subscription = subscription;
+		this.tempSubscription = tempSubscription;
 	}
 
 	/** {@inheritDoc} */
@@ -83,33 +80,33 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
 	public void receive(SCMPMessage reply) {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
-		int noDataIntervalSeconds = this.subscription.getNoDataInterval();
+		int noDataIntervalSeconds = this.tempSubscription.getNoDataInterval();
 
 		if (reply.isFault() == false) {
 			boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 			if (rejectSubscriptionFlag == false) {
 				// subscription has not been rejected, add server to subscription
-				subscription.setServer(server);
-				SubscriptionQueue<SCMPMessage> subscriptionQueue = this.service.getSubscriptionQueue();
+				SubscriptionQueue<SCMPMessage> subscriptionQueue = ((IPublishService) this.tempSubscription.getService())
+						.getSubscriptionQueue();
 				PublishTimeout publishTimeout = new PublishTimeout(subscriptionQueue, noDataIntervalSeconds
 						* Constants.SEC_TO_MILLISEC_FACTOR);
-				SubscriptionMask subscriptionMask = subscription.getMask();
-				subscriptionQueue.subscribe(subscription.getId(), subscriptionMask, publishTimeout);
+				SubscriptionMask subscriptionMask = tempSubscription.getMask();
+				subscriptionQueue.subscribe(tempSubscription.getId(), subscriptionMask, publishTimeout);
 				// finally add subscription to the registry & schedule subscription timeout internal
-				this.subscriptionRegistry.addSubscription(subscription.getId(), subscription);
-				SubscriptionLogger.logSubscribe(serviceName, subscription.getId(), subscriptionMask.getValue());
+				this.subscriptionRegistry.addSubscription(tempSubscription.getId(), tempSubscription);
+				SubscriptionLogger.logSubscribe(serviceName, tempSubscription.getId(), subscriptionMask.getValue());
 				// forward local subscription no matter what server sends
-				reply.setSessionId(subscription.getId());
+				reply.setSessionId(tempSubscription.getId());
 			} else {
 				// subscription has been rejected - remove subscription id from header
 				reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 				// creation failed remove from server
-				server.removeSession(subscription);
+				this.tempSubscription.getServer().removeSession(tempSubscription);
 			}
 		} else {
 			reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 			// creation failed remove from server
-			server.removeSession(subscription);
+			this.tempSubscription.getServer().removeSession(tempSubscription);
 		}
 		// forward reply to client
 		reply.setIsReply(true);
@@ -123,7 +120,7 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
 	@Override
 	public void receive(Exception ex) {
 		// creation failed remove from server
-		server.removeSession(subscription);
+		this.tempSubscription.getServer().removeSession(tempSubscription);
 		SCMPMessage fault = null;
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
@@ -145,23 +142,13 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback {
 		this.responderCallback.responseCallback(request, response);
 	}
 
-	/**
-	 * Sets the server.
-	 * 
-	 * @param server
-	 *            the new server
-	 */
-	public void setServer(IStatefulServer server) {
-		this.server = server;
+	/** {@inheritDoc} */
+	@Override
+	public Subscription getSubscription() {
+		return null;
 	}
 
-	/**
-	 * Sets the service.
-	 * 
-	 * @param service
-	 *            the new service
-	 */
-	public void setService(IPublishService service) {
-		this.service = service;
+	public IRequest getRequest() {
+		return request;
 	}
 }

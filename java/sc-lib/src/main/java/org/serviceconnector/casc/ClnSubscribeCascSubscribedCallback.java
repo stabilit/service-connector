@@ -16,28 +16,36 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.casc;
 
+import org.serviceconnector.cmd.sc.ClnSubscribeCommandCallback;
+import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SubscriptionMask;
 
-public class CascClientAlreadySubscribedCallback implements ISCMPMessageCallback {
+public class ClnSubscribeCascSubscribedCallback implements ISCMPMessageCallback {
 
-	/** The cascaded client semaphore. */
+	/** The request. */
+	protected IRequest request;
+	/** The cascaded client. */
 	private CascadedClient cascClient;
-	private ISCMPMessageCallback callback;
-	private SubscriptionMask changedMask;
+	private ClnSubscribeCommandCallback callback;
 
-	public CascClientAlreadySubscribedCallback(ISCMPMessageCallback callback, SubscriptionMask changeMask) {
+	public ClnSubscribeCascSubscribedCallback(IRequest request, ClnSubscribeCommandCallback callback) {
+		this.request = request;
 		this.callback = callback;
-		this.changedMask = changeMask;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
 		try {
 			// forward reply to client
 			this.callback.receive(reply);
-			this.cascClient.setSubscriptionMask(this.changedMask);
+			// adding client subscription id to cascaded client and change his mask
+			this.cascClient.addClientSubscriptionId(this.callback.getSubscription().getId());
+			String newMask = this.request.getMessage().getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
+			this.cascClient.setSubscriptionMask(new SubscriptionMask(newMask));
 			// release permit
 			this.cascClient.getCascClientSemaphore().release();
 		} catch (Exception e) {
@@ -47,6 +55,7 @@ public class CascClientAlreadySubscribedCallback implements ISCMPMessageCallback
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
 		// release permit

@@ -54,8 +54,8 @@ public class SCMPClnChangeSubscriptionCall extends SCMPCallAdapter {
 		super(req, serviceName, sessionId);
 	}
 
-	public SCMPClnChangeSubscriptionCall(Requester requester, SCMPMessage msgToForward) {
-		super(requester, msgToForward);
+	public SCMPClnChangeSubscriptionCall(Requester requester, SCMPMessage msgToSend) {
+		super(requester, msgToSend);
 	}
 
 	/**

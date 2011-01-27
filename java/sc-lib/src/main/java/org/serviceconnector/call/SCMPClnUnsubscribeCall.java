@@ -47,8 +47,8 @@ public class SCMPClnUnsubscribeCall extends SCMPCallAdapter {
 		super(req, serviceName, sessionId);
 	}
 
-	public SCMPClnUnsubscribeCall(Requester requester, SCMPMessage msgToForward) {
-		super(requester, msgToForward);
+	public SCMPClnUnsubscribeCall(Requester requester, SCMPMessage msgToSend) {
+		super(requester, msgToSend);
 	}
 
 	/** {@inheritDoc} */
