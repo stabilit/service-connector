@@ -32,7 +32,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t01_disable_enable() throws Exception {
+	public void t01_checkNonexistingService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled("notExistingService"));
@@ -43,7 +43,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t02_disable_enable() throws Exception {
+	public void t02_enableNonexistingService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		client.enableService("notExistingService");
@@ -54,7 +54,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t03_disable_enable() throws Exception {
+	public void t03_disableNonexistingService() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		client.disableService("notExistingService");
@@ -65,17 +65,17 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t04_disable_enable() throws Exception {
+	public void t04_checkServiceNoAttach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
 	}
 	
 	/**
-	 * Description: check default service<br> 
+	 * Description: check default service state<br> 
 	 * Expectation:	service is enabled.
 	 */
 	@Test
-	public void t05_default() throws Exception {
+	public void t05_checkDefaultState() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
@@ -87,7 +87,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t06_disable_enable() throws Exception {
+	public void t06_disableServiceNoAttach() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.disableService(TestConstants.sesServiceName1);
 	}
@@ -97,7 +97,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	service is enabled.
 	 */
 	@Test
-	public void t07_disable_enable() throws Exception {
+	public void t07_disableEnable() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
@@ -113,7 +113,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	stays enabled / disabled
 	 */
 	@Test
-	public void t08_disable_enable() throws Exception {
+	public void t08_enableDisableTwice() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Enabled ", true, client.isServiceEnabled(TestConstants.sesServiceName1));
@@ -131,7 +131,7 @@ public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	stays enabled / disabled
 	 */
 	@Test
-	public void t09_disable_enable() throws Exception {
+	public void t09_enableDdisable1000times() throws Exception {
 		client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		int nr = 1000;

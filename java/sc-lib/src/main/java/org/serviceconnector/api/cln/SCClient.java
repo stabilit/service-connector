@@ -99,17 +99,17 @@ public class SCClient {
 	 * @param operationTimeout
 	 *            the operation timeout
 	 * @throws InvalidParameterException
-	 *             port is not within limits 0 to 0xFFFF, host unset<br>
+	 *             port is not within limits 0 to 0xFFFF or host is missing<br>
 	 */
 	public synchronized void attach(int operationTimeout) throws Exception {
-		// 1. checking preconditions and initialize
+		// 1. checking preconditions and validate
 		if (this.attached) {
 			throw new SCServiceException("already attached");
 		}
 		if (host == null) {
-			throw new InvalidParameterException("host must be set");
+			throw new InvalidParameterException("host is missing");
 		}
-		ValidatorUtility.validateInt(1, this.port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
+		ValidatorUtility.validateInt(1, this.port, Constants.MAX_PORT_NR, SCMPError.HV_WRONG_PORTNR);
 		// 2. initialize call & invoke
 		synchronized (AppContext.communicatorsLock) {
 			AppContext.init();
@@ -243,7 +243,7 @@ public class SCClient {
 	 * connection. The value = 0 means no keep alive messages will be sent.
 	 * 
 	 * @param keepAliveIntervalSeconds
-	 *            Example: 360
+	 *            Example: 300
 	 * @throws SCMPValidatorException
 	 * @throws Exception
 	 *             SCMPValidatorException - keepAliveIntervalSeconds not within limits 0 to 3600 <br>

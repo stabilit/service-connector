@@ -115,6 +115,9 @@ public final class Constants {
 	/** Maximum size of a message. Larger data is treated as large message */
 	public static final int MAX_MESSAGE_SIZE = DEFAULT_MAX_MESSAGE_SIZE;
 
+	/** Maximum port nummber */
+	public static final int MAX_PORT_NR = 65535;
+	
 	/** flag to enable / disable command validation. */
 	public static final boolean COMMAND_VALIDATION_ENABLED = true;
 

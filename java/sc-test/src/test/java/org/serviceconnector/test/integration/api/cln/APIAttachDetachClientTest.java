@@ -85,7 +85,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 
 	/**
 	 * Description: attach client to SC on localhost, http-port and tcp-connection type<br>
-	 * Expectation:	throws Exception.
+	 * Expectation:	throws SCServiceException.
 	 */
 	@Test (expected = SCServiceException.class)
 	public void t040_attach() throws Exception {
@@ -95,61 +95,51 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 
 	/**
 	 * Description: Attach client with default host and port zero.<br>
-	 * Expectation:	throws Exception.
+	 * Expectation:	throws SCMPValidatorException.
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t050_attach() throws Exception {
+	public void t050_attachPortZero() throws Exception {
 		client = newSCClient(TestConstants.HOST, 0, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 
 	/**
 	 * Description: Attach client with default host and port -1.<br>
-	 * Expectation:	throws Exception.
+	 * Expectation:	throws SCMPValidatorException.
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t060_attach() throws Exception {
+	public void t060_attachPortNegative() throws Exception {
 		client = newSCClient(TestConstants.HOST, -1, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 
 	/**
 	 * Description: Attach client with default host and port is set to minimum.<br>
-	 * Expectation:	throws Exception.
+	 * Expectation:	throws SCServiceException because SC is not listing to this port
 	 */
 	@Test (expected = SCServiceException.class)
-	public void t070_attach() throws Exception {
+	public void t070_attachPortMinimum() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_MIN, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 
 	/**
-	 * Description: Attach client with default host and port is set to minimum.<br>
-	 * Expectation:	throws Exception.
+	 * Description: Attach client with default host and port is set to minimum - 1.<br>
+	 * Expectation:	throws SCMPValidatorException.
 	 */
-	@Test (expected = SCServiceException.class)
-	public void t080_attach() throws Exception {
-		client = newSCClient(TestConstants.HOST, TestConstants.PORT_MAX, ConnectionType.NETTY_TCP);
+	@Test (expected = SCMPValidatorException.class)
+	public void t080_attachPortMinimum() throws Exception {
+		client = newSCClient(TestConstants.HOST, TestConstants.PORT_MIN - 1, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 	
 	/**
-	 * Description: Attach client with default host and port is set to maximum allowed.<br>
-	 * Expectation:	throws Exception.
-	 */
-	@Test (expected = SCServiceException.class)
-	public void t090_attach() throws Exception {
-		client = newSCClient(TestConstants.HOST, 0xFFFF, ConnectionType.NETTY_TCP);
-		client.attach();
-	}
-
-	/**
 	 * Description: Attach client with default host and the port is set to maximum + 1.<br>
-	 * Expectation:	throws Exception.
+	 * Expectation:	throws SCMPValidatorException.
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t100_attach() throws Exception {
-		client = newSCClient(TestConstants.HOST, 0xFFFF + 1, ConnectionType.NETTY_TCP);
+	public void t100_attachPortOverMaximum() throws Exception {
+		client = newSCClient(TestConstants.HOST, TestConstants.PORT_MAX + 1, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
 
@@ -158,7 +148,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	passes
 	 */
 	@Test
-	public void t110_attach() throws Exception {
+	public void t110_attachTimeout() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach(10);
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
@@ -170,7 +160,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws Exception
 	 */
 	@Test (expected = SCServiceException.class)
-	public void t120_attach() throws Exception {
+	public void t120_attachTwoTimes() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
@@ -218,10 +208,10 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	
 	/**
 	 * Description: Attach two times the same client to SC on localhost  http-connection type.<br>
-	 * Expectation:	Throws exception on the second attach.
+	 * Expectation:	Throws SCServiceException on the second attach.
 	 */
 	@Test (expected = SCServiceException.class)
-	public void t02_attachDetach() throws Exception {
+	public void t02_attachTwoTimes() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());
@@ -233,7 +223,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	Client is detached.
 	 */
 	@Test
-	public void t03_attachDetach() throws Exception {
+	public void t03_detachNoAttach() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
 		Assert.assertEquals("Client is attached", false, client.isAttached());
 		client.detach();
@@ -245,7 +235,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	Client is detached.
 	 */
 	@Test
-	public void t04_attachDetach() throws Exception {
+	public void t04_attachDetach100times() throws Exception {
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP);
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());

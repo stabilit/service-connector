@@ -47,7 +47,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws InvalidParameterException
 	 */
 	@Test(expected = InvalidParameterException.class)
-	public void t101_newSessionService() throws Exception {
+	public void t101_newSessionServiceNameNull() throws Exception {
 		client.newSessionService(null);
 	}
 
@@ -56,7 +56,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCMPValidatorException
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t102_newSessionService() throws Exception {
+	public void t102_newSessionServiceNameEmpty() throws Exception {
 		client.newSessionService("");
 	}
 
@@ -65,7 +65,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCMPValidatorException
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t103_newSessionService() throws Exception {
+	public void t103_newSessionServiceNameBlank() throws Exception {
 		client.newSessionService(" ");
 	}
 	
@@ -74,7 +74,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCMPValidatorException (too long)
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t104_newSessionService() throws Exception {
+	public void t104_newSessionServiceNameTooLong() throws Exception {
 		client.newSessionService(TestConstants.pangram);
 	}
 
@@ -92,7 +92,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t107_newSessionService() throws Exception {
+	public void t107_newSessionServiceCalledTwice() throws Exception {
 		Assert.assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
 		Assert.assertEquals("create", true, client.newSessionService(TestConstants.sesServiceName1) instanceof SCSessionService);
 	}
@@ -112,7 +112,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t109_newSessionService() throws Exception {
+	public void t109_newSessionService1000times() throws Exception {
 		int serviceCount = 1000;
 		SCSessionService[] services = new SCSessionService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {
@@ -131,7 +131,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws InvalidParameterException
 	 */
 	@Test(expected = InvalidParameterException.class)
-	public void t201_newPublisService() throws Exception {
+	public void t201_newPublisServiceNameNull() throws Exception {
 		client.newPublishService(null);
 	}
 
@@ -140,7 +140,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCMPValidatorException
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t202_newPublisService() throws Exception {
+	public void t202_newPublisServiceNameEmpty() throws Exception {
 		client.newPublishService("");
 	}
 
@@ -149,7 +149,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCMPValidatorException
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t203_newPublisService() throws Exception {
+	public void t203_newPublisServiceNameBlank() throws Exception {
 		client.newPublishService(" ");
 	}
 
@@ -158,7 +158,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCMPValidatorException. (too long)
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t204_newPublisService() throws Exception {
+	public void t204_newPublisServiceNameTooLong() throws Exception {
 		client.newPublishService(TestConstants.pangram);
 	}
 
@@ -176,7 +176,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t207_newPublisService() throws Exception {
+	public void t207_newPublisServiceCalledTwice() throws Exception {
 		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 		Assert.assertEquals("create", true, client.newPublishService(TestConstants.pubServiceName1) instanceof SCPublishService);
 	}
@@ -196,7 +196,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t209_newPublisService() throws Exception {
+	public void t209_newPublisService1000times() throws Exception {
 		int serviceCount = 1000;
 		SCPublishService[] services = new SCPublishService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {
@@ -213,7 +213,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws InvalidParameterException
 	 */
 	@Test(expected = InvalidParameterException.class)
-	public void t301_newFileService() throws Exception {
+	public void t301_newFileServiceNameNull() throws Exception {
 		client.newFileService(null);
 	}
 
@@ -222,7 +222,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCMPValidatorException
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t302_newFileService() throws Exception {
+	public void t302_newFileServiceNameEmpty() throws Exception {
 		client.newFileService("");
 	}
 
@@ -231,7 +231,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCMPValidatorException
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t303_newFileService() throws Exception {
+	public void t303_newFileServiceNameBlank() throws Exception {
 		client.newFileService(" ");
 	}
 
@@ -240,7 +240,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	throws SCMPValidatorException (too long)
 	 */
 	@Test (expected = SCMPValidatorException.class)
-	public void t304_newFileService() throws Exception {
+	public void t304_newFileServiceNameTooLong() throws Exception {
 		client.newFileService(TestConstants.pangram);
 	}
 
@@ -258,7 +258,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t307_newFileService() throws Exception {
+	public void t307_newFileServiceCalledTwice() throws Exception {
 		Assert.assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
 		Assert.assertEquals("create", true, client.newFileService(TestConstants.filServiceName1) instanceof SCFileService);
 	}
@@ -278,7 +278,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	 * Expectation:	successful creation
 	 */
 	@Test
-	public void t309_newFileService() throws Exception {
+	public void t309_newFileService1000times() throws Exception {
 		int serviceCount = 1000;
 		SCFileService[] services = new SCFileService[serviceCount];
 		for (int i = 0; i < serviceCount; i++) {
