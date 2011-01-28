@@ -29,7 +29,7 @@ import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
 public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(APIPublishServerTest.class);
+	private final static Logger logger = Logger.getLogger(APIPublishServerTest.class);
 
 	/**
 	 * Description: publish 1 message to the service "publish-1"<br>

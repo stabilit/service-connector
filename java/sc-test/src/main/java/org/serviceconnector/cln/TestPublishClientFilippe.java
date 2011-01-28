@@ -29,7 +29,7 @@ import org.serviceconnector.net.ConnectionType;
 public class TestPublishClientFilippe extends Thread {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(TestPublishClientFilippe.class);
+	private final static Logger logger = Logger.getLogger(TestPublishClientFilippe.class);
 
 	private String methodName;
 

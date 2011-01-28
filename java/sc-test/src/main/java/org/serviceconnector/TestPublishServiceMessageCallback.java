@@ -1,11 +1,15 @@
 package org.serviceconnector;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCPublishService;
 
 public class TestPublishServiceMessageCallback extends SCMessageCallback {
 
+	/** The Constant logger. */
+	private final static Logger logger = Logger.getLogger(TestPublishServiceMessageCallback.class);
+	
 	public TestPublishServiceMessageCallback(SCPublishService service) {
 		super(service);
 	}

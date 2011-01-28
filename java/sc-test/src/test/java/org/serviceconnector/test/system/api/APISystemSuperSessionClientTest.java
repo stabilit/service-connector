@@ -108,12 +108,12 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 		public void receive(Exception e) {
 			testLogger.info("Error received");
 			if (e instanceof SCServiceException) {
-				logger.info("SC error received code:" + ((SCServiceException) e).getSCErrorCode() + " text:"
+				SystemSuperTest.testLogger.info("SC error received code:" + ((SCServiceException) e).getSCErrorCode() + " text:"
 						+ ((SCServiceException) e).getSCErrorText());
 				scErrorCode = Integer.parseInt(((SCServiceException) e).getSCErrorCode());
 				scErrorText = ((SCServiceException) e).getSCErrorText();
 			} else {
-				logger.error("receive error: " + e.getMessage());
+				SystemSuperTest.testLogger.error("receive error: " + e.getMessage());
 			}
 			response = null;
 			APISystemSuperSessionClientTest.messageReceived = true;

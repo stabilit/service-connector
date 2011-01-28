@@ -36,7 +36,7 @@ public class APISCServerTest extends SuperUnitTest {
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(APISCServerTest.class);
+	private final static Logger logger = Logger.getLogger(APISCServerTest.class);
 	
 	private SCServer server;
 

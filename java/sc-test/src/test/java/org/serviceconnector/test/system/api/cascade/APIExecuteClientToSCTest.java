@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 public class APIExecuteClientToSCTest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(APIExecuteClientToSCTest.class);
+	private final static Logger logger = Logger.getLogger(APIExecuteClientToSCTest.class);
 
 //	private static ProcessCtx scCtx;
 //	private static ProcessCtx scCasCtx;

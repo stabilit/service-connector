@@ -19,7 +19,7 @@ package org.serviceconnector.test.system.api.cascade;
 public class APISubscriptionServerTest {
 	
 //	/** The Constant logger. */
-//	protected final static Logger logger = Logger.getLogger(SubscriptionServerTest.class);
+//	private final static Logger logger = Logger.getLogger(SubscriptionServerTest.class);
 //
 //	private static ProcessesController ctrl;
 //	private static ProcessCtx scCtx;

@@ -27,7 +27,7 @@ import org.serviceconnector.test.unit.SuperUnitTest;
 public class APISCPublishMessageTest extends SuperUnitTest {
 	
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(APISCPublishMessageTest.class);
+	private final static Logger logger = Logger.getLogger(APISCPublishMessageTest.class);
 	
 	private SCPublishMessage message;
 

@@ -113,9 +113,9 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 
 		@Override
 		public void receive(Exception e) {
-			logger.error("receive error: " + e.getMessage());
+			SystemSuperTest.testLogger.error("receive error: " + e.getMessage());
 			if (e instanceof SCServiceException) {
-				logger.info("SC error received code:" + ((SCServiceException) e).getSCErrorCode() + " text:"
+				SystemSuperTest.testLogger.info("SC error received code:" + ((SCServiceException) e).getSCErrorCode() + " text:"
 						+ ((SCServiceException) e).getSCErrorText());
 			}
 			message = null;

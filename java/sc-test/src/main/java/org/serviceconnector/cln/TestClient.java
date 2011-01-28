@@ -24,7 +24,7 @@ import org.serviceconnector.TestConstants;
 public class TestClient {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(TestClient.class);
+	private final static Logger logger = Logger.getLogger(TestClient.class);
 
 	/**
 	 * start test process

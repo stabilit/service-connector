@@ -287,7 +287,7 @@ public class TestPublishServer extends TestStatefulServer {
 					pubMessage.setData("publish message nr:" + i);
 					this.publishSrv.publish(pubMessage);
 					Thread.sleep(waitTime);
-					if (((i + 1) % 100) == 0) {
+					if (((i + 1) % 1000) == 0) {
 						TestPublishServer.testLogger.info("Publishing message nr. " + (i + 1));
 					}
 				} catch (Exception e) {

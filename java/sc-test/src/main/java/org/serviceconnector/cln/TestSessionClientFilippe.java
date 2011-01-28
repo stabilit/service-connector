@@ -26,7 +26,7 @@ import org.serviceconnector.net.ConnectionType;
 public class TestSessionClientFilippe extends Thread {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(TestSessionClientFilippe.class);
+	private final static Logger logger = Logger.getLogger(TestSessionClientFilippe.class);
 
 	private String methodName;
 

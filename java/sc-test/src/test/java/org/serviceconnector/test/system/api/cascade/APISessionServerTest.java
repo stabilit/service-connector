@@ -19,7 +19,7 @@ package org.serviceconnector.test.system.api.cascade;
 public class APISessionServerTest {
 	
 //	/** The Constant logger. */
-//	protected final static Logger logger = Logger.getLogger(SessionServerTest.class);
+//	private final static Logger logger = Logger.getLogger(SessionServerTest.class);
 //	/** The Constant logger. */
 //	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 //

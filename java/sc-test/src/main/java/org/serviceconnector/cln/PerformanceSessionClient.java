@@ -32,7 +32,7 @@ public class PerformanceSessionClient implements Runnable {
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PerformanceSessionClient.class);
+	private final static Logger logger = Logger.getLogger(PerformanceSessionClient.class);
 	private final CountDownLatch beforeAttachSignal;
 	private final CountDownLatch afterAttachSignal;
 	private final CountDownLatch attachedSignal;

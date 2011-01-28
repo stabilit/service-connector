@@ -21,7 +21,7 @@ import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 public class TestSessionClientJan extends Thread {
 	
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(TestSessionClientJan.class);
+	private final static Logger logger = Logger.getLogger(TestSessionClientJan.class);
 
 	private ThreadSafeCounter ctr;
 	private String scHost;

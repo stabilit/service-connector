@@ -40,7 +40,7 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	}
 	
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(APINewServiceTest.class);
+	private final static Logger logger = Logger.getLogger(APINewServiceTest.class);
 
 	/**
 	 * Description: create new session service with service name = null<br> 
