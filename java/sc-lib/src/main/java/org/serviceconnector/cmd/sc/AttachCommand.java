@@ -37,7 +37,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class AttachCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AttachCommand.class);
+	private final static Logger logger = Logger.getLogger(AttachCommand.class);
 
 	/** {@inheritDoc} */
 	@Override

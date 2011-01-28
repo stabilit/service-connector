@@ -50,7 +50,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class ClnCreateSessionCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ClnCreateSessionCommand.class);
+	private final static Logger logger = Logger.getLogger(ClnCreateSessionCommand.class);
 
 	/**
 	 * Instantiates a new ClnCreateSessionCommand.

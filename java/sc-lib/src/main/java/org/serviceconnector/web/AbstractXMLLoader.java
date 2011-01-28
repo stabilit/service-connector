@@ -55,7 +55,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AbstractXMLLoader.class);
+	private final static Logger logger = Logger.getLogger(AbstractXMLLoader.class);
 
 	/** The meta map. */
 	private Map<String, String> metaMap;

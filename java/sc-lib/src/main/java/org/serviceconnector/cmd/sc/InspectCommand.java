@@ -55,7 +55,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class InspectCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(InspectCommand.class);
+	private final static Logger logger = Logger.getLogger(InspectCommand.class);
 
 	/**
 	 * Instantiates a new InspectCommand.

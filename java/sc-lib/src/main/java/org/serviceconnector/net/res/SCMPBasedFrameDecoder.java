@@ -36,7 +36,7 @@ import org.serviceconnector.scmp.SCMPError;
 public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandler {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPBasedFrameDecoder.class);
+	private final static Logger logger = Logger.getLogger(SCMPBasedFrameDecoder.class);
 
 	/** The decode state. */
 	private DecodeState decodeState;

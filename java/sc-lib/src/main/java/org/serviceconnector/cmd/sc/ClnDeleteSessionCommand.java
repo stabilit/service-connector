@@ -48,7 +48,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class ClnDeleteSessionCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ClnDeleteSessionCommand.class);
+	private final static Logger logger = Logger.getLogger(ClnDeleteSessionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -126,6 +126,10 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
+			} catch (Exception e) {
+				// free server from subscription
+				statefulServer.removeSession(session);
+				throw e;
 			}
 			// sleep for a while and then try again
 			Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);

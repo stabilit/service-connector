@@ -34,7 +34,7 @@ import org.serviceconnector.net.req.netty.tcp.NettyTcpConnection;
 public class ConnectionFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ConnectionFactory.class);
+	private final static Logger logger = Logger.getLogger(ConnectionFactory.class);
 
 	/**
 	 * NETTY stuff<br>

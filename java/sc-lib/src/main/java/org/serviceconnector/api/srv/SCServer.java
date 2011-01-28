@@ -44,7 +44,7 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class SCServer {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCServer.class);
+	private final static Logger logger = Logger.getLogger(SCServer.class);
 	/** The SC host. */
 	private String scHost;
 	/** The SC port. */

@@ -39,7 +39,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SCPublishService extends SCService {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCPublishService.class);
+	private final static Logger logger = Logger.getLogger(SCPublishService.class);
 	/**
 	 * The no data interval seconds.Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag
 	 * set. Default = 0.

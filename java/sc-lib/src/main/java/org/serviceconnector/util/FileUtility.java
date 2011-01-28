@@ -37,7 +37,7 @@ import org.serviceconnector.scmp.SCMPError;
 public class FileUtility {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(FileUtility.class);
+	private final static Logger logger = Logger.getLogger(FileUtility.class);
 
 	/**
 	 * @param filename

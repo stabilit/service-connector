@@ -39,7 +39,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class PublishCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PublishCommand.class);
+	private final static Logger logger = Logger.getLogger(PublishCommand.class);
 
 	/**
 	 * Instantiates a new PublishCommand.

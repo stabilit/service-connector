@@ -45,7 +45,7 @@ import org.serviceconnector.util.LinkedQueue;
 public class SubscriptionQueue<E> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SubscriptionQueue.class);
+	private final static Logger logger = Logger.getLogger(SubscriptionQueue.class);
 
 	private ScheduledThreadPoolExecutor timeoutScheduler;
 	/** The data queue. */

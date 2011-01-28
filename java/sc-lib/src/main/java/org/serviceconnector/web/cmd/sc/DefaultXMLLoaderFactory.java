@@ -82,7 +82,7 @@ import org.serviceconnector.web.ctx.WebContext;
 public class DefaultXMLLoaderFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DefaultXMLLoaderFactory.class);
+	private final static Logger logger = Logger.getLogger(DefaultXMLLoaderFactory.class);
 
 	/** The loader factory. */
 	protected static DefaultXMLLoaderFactory loaderFactory = new DefaultXMLLoaderFactory();

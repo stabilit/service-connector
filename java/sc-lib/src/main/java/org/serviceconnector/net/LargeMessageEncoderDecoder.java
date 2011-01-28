@@ -37,7 +37,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public class LargeMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(LargeMessageEncoderDecoder.class);
+	private final static Logger logger = Logger.getLogger(LargeMessageEncoderDecoder.class);
 
 	/**
 	 * Instantiates a new large message encoder decoder.

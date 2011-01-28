@@ -34,7 +34,7 @@ import org.serviceconnector.net.req.RequesterContext;
 public abstract class Server implements IServer {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(Server.class);
+	private final static Logger logger = Logger.getLogger(Server.class);
 
 	/** The host. */
 	protected String host;

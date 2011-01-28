@@ -28,7 +28,7 @@ import org.serviceconnector.server.FileServer;
 public class FileService extends Service {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(FileService.class);
+	private final static Logger logger = Logger.getLogger(FileService.class);
 	private FileServer server;
 	private String path;
 

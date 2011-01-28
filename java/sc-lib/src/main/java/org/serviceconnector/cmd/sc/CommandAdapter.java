@@ -50,7 +50,7 @@ import org.serviceconnector.service.Subscription;
 public abstract class CommandAdapter implements ICommand {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(CommandAdapter.class);
+	private final static Logger logger = Logger.getLogger(CommandAdapter.class);
 
 	/** The session registry. */
 	protected SessionRegistry sessionRegistry = AppContext.getSessionRegistry();

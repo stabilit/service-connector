@@ -34,7 +34,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public class DetachCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DetachCommand.class);
+	private final static Logger logger = Logger.getLogger(DetachCommand.class);
 	
 	/** {@inheritDoc} */
 	@Override

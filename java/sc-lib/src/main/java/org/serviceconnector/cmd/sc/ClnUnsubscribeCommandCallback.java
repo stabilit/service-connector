@@ -9,7 +9,6 @@ import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
@@ -45,7 +44,6 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// forward server reply to client
-		reply.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 		reply.setIsReply(true);
 		reply.setServiceName(serviceName);
 		reply.setMessageType(SCMPMsgType.CLN_UNSUBSCRIBE);
@@ -74,7 +72,6 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// forward server reply to client
-		fault.removeHeader(SCMPHeaderAttributeKey.SESSION_ID);
 		fault.setIsReply(true);
 		fault.setServiceName(serviceName);
 		fault.setMessageType(SCMPMsgType.CLN_UNSUBSCRIBE);

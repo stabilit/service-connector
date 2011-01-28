@@ -40,7 +40,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SrvUnsubscribeCommand.class);
+	private final static Logger logger = Logger.getLogger(SrvUnsubscribeCommand.class);
 
 	/**
 	 * Instantiates a new SrvUnsubscribeCommand.

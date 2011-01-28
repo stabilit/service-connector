@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPSrvAbortSessionCall;
 import org.serviceconnector.call.SCMPSrvChangeSubscriptionCall;
@@ -52,6 +53,9 @@ import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.Subscription;
 
 public class StatefulServer extends Server implements IStatefulServer {
+
+	/** The Constant logger. */
+	private final static Logger logger = Logger.getLogger(StatefulServer.class);
 
 	private static SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
@@ -86,7 +90,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 		}
 		this.sessions.remove(session);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public List<AbstractSession> getSessions() {
@@ -334,17 +338,17 @@ public class StatefulServer extends Server implements IStatefulServer {
 				}
 			}
 		} catch (SCMPCommandException scmpCommandException) {
-			Server.logger.warn("ConnectionPoolBusyException in aborting session wait mec");
+			logger.warn("ConnectionPoolBusyException in aborting session wait mec");
 			// ConnectionPoolBusyException after wait mec - try opening a new connection
 			RequesterContext reqContext = this.requester.getContext();
 			// set up a new requester to make the SAS - only 1 connection is allowed
-			Requester sasRequester = new Requester(new RequesterContext(host, portNr, reqContext.getConnectionType(), reqContext
-					.getKeepAliveIntervalInSeconds(), 1));
+			Requester sasRequester = new Requester(new RequesterContext(host, portNr, reqContext.getConnectionType(),
+					reqContext.getKeepAliveIntervalInSeconds(), 1));
 			try {
 				this.serverAbortSessionWithSpecialRequester(sasRequester, abortMessage, callback, oti);
 			} catch (ConnectionPoolBusyException e) {
 				sasRequester.destroy();
-				Server.logger.warn("ConnectionPoolBusyException in aborting session wait mec over special connection");
+				logger.warn("ConnectionPoolBusyException in aborting session wait mec over special connection");
 				if (this.service.getType() == ServiceType.SESSION_SERVICE) {
 					this.abortSessionsAndDestroy("Session abort over a new connection failed");
 				}
@@ -355,14 +359,14 @@ public class StatefulServer extends Server implements IStatefulServer {
 				// session server - validate reply of server
 				SCMPMessage reply = callback.getMessageSync(oti);
 				if (reply.isFault()) {
-					Server.logger.warn("Fault in aborting session wait mec over special connection");
+					logger.warn("Fault in aborting session wait mec over special connection");
 					// error in server abort session - destroy server
 					this.abortSessionsAndDestroy("Session abort over a new connection failed");
 				}
 			}
 		} catch (Exception e) {
 			if (this.service.getType() == ServiceType.SESSION_SERVICE) {
-				Server.logger.error("Exceptiont in aborting session wait mec over special connection", e);
+				logger.error("Exceptiont in aborting session wait mec over special connection", e);
 				// session server - destroy server in case of an error
 				this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
 			}
@@ -402,7 +406,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 				this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 						.getSrvAbortOTIMillis());
 			} catch (ConnectionPoolBusyException e) {
-				Server.logger.warn("aborting session failed because of busy connection pool");
+				logger.warn("aborting session failed because of busy connection pool");
 			}
 			SessionLogger.logAbortSession(this.getClass().getName(), abortMessage.getSessionId());
 		}

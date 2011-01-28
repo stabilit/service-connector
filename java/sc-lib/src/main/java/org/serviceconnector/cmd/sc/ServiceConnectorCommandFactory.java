@@ -28,7 +28,7 @@ import org.serviceconnector.cmd.ICommand;
 public class ServiceConnectorCommandFactory extends FlyweightCommandFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ServiceConnectorCommandFactory.class);
+	private final static Logger logger = Logger.getLogger(ServiceConnectorCommandFactory.class);
 
 	public ServiceConnectorCommandFactory() {
 		ICommand attachCommand = new AttachCommand();

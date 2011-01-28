@@ -30,7 +30,7 @@ import org.serviceconnector.service.Service;
 public final class ServiceRegistry extends Registry<String, Service> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ServiceRegistry.class);
+	private final static Logger logger = Logger.getLogger(ServiceRegistry.class);
 
 	/**
 	 * Adds the service.

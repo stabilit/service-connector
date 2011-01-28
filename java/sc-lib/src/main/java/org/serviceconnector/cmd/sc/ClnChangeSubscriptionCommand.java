@@ -42,7 +42,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class ClnChangeSubscriptionCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ClnChangeSubscriptionCommand.class);
+	private final static Logger logger = Logger.getLogger(ClnChangeSubscriptionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override

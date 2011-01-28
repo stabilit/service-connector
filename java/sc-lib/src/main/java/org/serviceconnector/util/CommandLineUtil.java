@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 public class CommandLineUtil {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(CommandLineUtil.class);
+	private final static Logger logger = Logger.getLogger(CommandLineUtil.class);
 	
 	/**
 	 * Gets the arguments.

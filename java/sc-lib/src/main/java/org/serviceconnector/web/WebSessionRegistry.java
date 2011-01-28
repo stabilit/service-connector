@@ -28,7 +28,7 @@ import org.serviceconnector.registry.Registry;
 public class WebSessionRegistry extends Registry<String, IWebSession> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(WebSessionRegistry.class);
+	private final static Logger logger = Logger.getLogger(WebSessionRegistry.class);
 
 	/** The instance. */
 	private static WebSessionRegistry instance = new WebSessionRegistry();

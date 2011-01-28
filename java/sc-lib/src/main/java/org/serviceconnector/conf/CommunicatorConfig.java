@@ -29,7 +29,7 @@ import org.serviceconnector.Constants;
 public class CommunicatorConfig {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(CommunicatorConfig.class);
+	private final static Logger logger = Logger.getLogger(CommunicatorConfig.class);
 
 	/** The communicator name. */
 	private String name;

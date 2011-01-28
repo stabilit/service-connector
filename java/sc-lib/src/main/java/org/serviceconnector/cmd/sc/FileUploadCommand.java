@@ -33,7 +33,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class FileUploadCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(FileUploadCommand.class);
+	private final static Logger logger = Logger.getLogger(FileUploadCommand.class);
 
 	/** {@inheritDoc} */
 	@Override

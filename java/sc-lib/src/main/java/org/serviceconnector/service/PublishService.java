@@ -31,7 +31,7 @@ import org.serviceconnector.server.StatefulServer;
 public class PublishService extends StatefulService implements IPublishService {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(PublishService.class);
+	private final static Logger logger = Logger.getLogger(PublishService.class);
 
 	/** The subscription queue. */
 	private SubscriptionQueue<SCMPMessage> subscriptionQueue;

@@ -39,7 +39,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SynchronousCallback.class);
+	private final static Logger logger = Logger.getLogger(SynchronousCallback.class);
 
 	/** Queue to store the answer. */
 	protected final BlockingQueue<SCMPMessage> answer;

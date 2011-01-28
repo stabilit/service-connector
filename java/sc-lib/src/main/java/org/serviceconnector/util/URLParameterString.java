@@ -43,7 +43,7 @@ import org.serviceconnector.Constants;
 public class URLParameterString {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(URLParameterString.class);
+	private final static Logger logger = Logger.getLogger(URLParameterString.class);
 
 	/** The parameters. */
 	private Map<String, String> map;

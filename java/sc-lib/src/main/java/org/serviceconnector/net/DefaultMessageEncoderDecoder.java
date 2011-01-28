@@ -38,7 +38,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DefaultMessageEncoderDecoder.class);
+	private final static Logger logger = Logger.getLogger(DefaultMessageEncoderDecoder.class);
 
 	/**
 	 * Instantiates a new default encoder decoder.

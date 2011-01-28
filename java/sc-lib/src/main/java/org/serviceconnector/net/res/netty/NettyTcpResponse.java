@@ -31,7 +31,7 @@ import org.serviceconnector.scmp.ResponseAdapter;
 public class NettyTcpResponse extends ResponseAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyTcpResponse.class);
+	private final static Logger logger = Logger.getLogger(NettyTcpResponse.class);
 
 	/**
 	 * Instantiates a new netty tcp response.

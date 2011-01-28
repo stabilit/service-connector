@@ -44,7 +44,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class ManageCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ManageCommand.class);
+	private final static Logger logger = Logger.getLogger(ManageCommand.class);
 
 	/** The Constant MANAGE_REGEX_STRING. */
 	private static final String MANAGE_REGEX_STRING = Constants.DUMP + "|" + "(" + Constants.ENABLE + "|" + Constants.DISABLE + ")"

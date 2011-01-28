@@ -38,7 +38,7 @@ import org.serviceconnector.service.SCServiceException;
 public class SCPublishServer extends SCSessionServer {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCPublishServer.class);
+	private final static Logger logger = Logger.getLogger(SCPublishServer.class);
 
 	/**
 	 * Instantiates a new SC publish server.

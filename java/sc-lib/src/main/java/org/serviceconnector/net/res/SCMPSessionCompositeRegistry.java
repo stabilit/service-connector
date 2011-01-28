@@ -31,7 +31,7 @@ import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSessionCompositeItem> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPSessionCompositeRegistry.class);
+	private final static Logger logger = Logger.getLogger(SCMPSessionCompositeRegistry.class);
 
 	/**
 	 * Adds the session.

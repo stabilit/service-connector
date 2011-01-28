@@ -19,6 +19,7 @@ package org.serviceconnector.casc;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.Subscription;
 
 /**
  * The Class CascClientCallback.
@@ -49,7 +50,8 @@ public class CascClientSubscribeCallback implements ISCMPMessageCallback {
 			// forward reply to client
 			this.commandCallback.receive(reply);
 			// adding client subscription id to cascaded client
-			this.cascClient.addClientSubscriptionId(this.commandCallback.getSubscription().getId());
+			Subscription clientSubscription = this.commandCallback.getSubscription();
+			this.cascClient.addClientSubscriptionId(clientSubscription.getId());
 			// release permit
 			this.cascClient.getCascClientSemaphore().release();
 		} catch (Exception e) {

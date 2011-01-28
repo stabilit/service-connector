@@ -33,7 +33,7 @@ import org.serviceconnector.ctx.AppContext;
 public class Responder implements IResponder {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(Responder.class);
+	private final static Logger logger = Logger.getLogger(Responder.class);
 
 	/** The responder configuration. */
 	private CommunicatorConfig respConfig;

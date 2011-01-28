@@ -38,7 +38,7 @@ import org.serviceconnector.util.URLParameterString;
  */
 public class SCMgmtClient extends SCClient {
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMgmtClient.class);
+	private final static Logger logger = Logger.getLogger(SCMgmtClient.class);
 
 	public SCMgmtClient(String host, int port) {
 		super(host, port);

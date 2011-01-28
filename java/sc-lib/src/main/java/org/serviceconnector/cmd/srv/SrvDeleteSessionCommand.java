@@ -40,7 +40,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SrvDeleteSessionCommand extends SrvCommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SrvDeleteSessionCommand.class);
+	private final static Logger logger = Logger.getLogger(SrvDeleteSessionCommand.class);
 
 	/**
 	 * Instantiates a new SrvDeleteSessionCommand.

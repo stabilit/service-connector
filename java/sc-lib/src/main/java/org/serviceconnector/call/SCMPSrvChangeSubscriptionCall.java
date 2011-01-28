@@ -39,7 +39,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public class SCMPSrvChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPSrvChangeSubscriptionCall.class);
+	private final static Logger logger = Logger.getLogger(SCMPSrvChangeSubscriptionCall.class);
 
 	/**
 	 * Instantiates a new SCMPSrvChangeSubscriptionCall.

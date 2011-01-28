@@ -39,7 +39,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public abstract class SrvCommandAdapter implements ICommand {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SrvCommandAdapter.class);
+	private final static Logger logger = Logger.getLogger(SrvCommandAdapter.class);
 
 	/** The session composite registry. */
 	protected static SCMPSessionCompositeRegistry sessionCompositeRegistry = AppContext.getSCMPSessionCompositeRegistry();

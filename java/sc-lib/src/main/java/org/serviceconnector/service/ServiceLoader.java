@@ -39,7 +39,7 @@ import org.serviceconnector.server.Server;
 public class ServiceLoader {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ServiceLoader.class);
+	private final static Logger logger = Logger.getLogger(ServiceLoader.class);
 
 	/**
 	 * Loads services from a file.

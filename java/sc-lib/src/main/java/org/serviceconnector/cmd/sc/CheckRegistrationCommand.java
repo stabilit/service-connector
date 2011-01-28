@@ -41,7 +41,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class CheckRegistrationCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(CheckRegistrationCommand.class);
+	private final static Logger logger = Logger.getLogger(CheckRegistrationCommand.class);
 
 	/** {@inheritDoc} */
 	@Override

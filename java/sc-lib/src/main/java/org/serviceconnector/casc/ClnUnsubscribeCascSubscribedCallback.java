@@ -39,28 +39,22 @@ public class ClnUnsubscribeCascSubscribedCallback implements ISCMPMessageCallbac
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
-		try {
-			// remove client subscription id from cascaded client and change his mask
-			this.cascClient.removeClientSubscriptionId(this.callback.getSubscription().getId());
-			String newMask = this.request.getMessage().getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
-			this.cascClient.setSubscriptionMask(new SubscriptionMask(newMask));
-			// release permit
-			this.cascClient.getCascClientSemaphore().release();
-			// forward reply to client
-			this.callback.receive(reply);
-		} catch (Exception e) {
-			this.callback.receive(e);
-		}
+		// change cascade client mask, removing of client subscription id is done in call
+		String newMask = this.request.getMessage().getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
+		this.cascClient.setSubscriptionMask(new SubscriptionMask(newMask));
+		// release permit in any case
+		this.cascClient.getCascClientSemaphore().release();
+		// forward reply to client
+		this.callback.receive(reply);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		// remove client subscription id from cascaded client and change his mask
-		this.cascClient.removeClientSubscriptionId(this.callback.getSubscription().getId());
+		// change cascade client mask, removing of client subscription id is done in call
 		String newMask = this.request.getMessage().getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
 		this.cascClient.setSubscriptionMask(new SubscriptionMask(newMask));
-		// release permit
+		// release permit in any case
 		this.cascClient.getCascClientSemaphore().release();
 		// forward reply to client
 		this.callback.receive(ex);

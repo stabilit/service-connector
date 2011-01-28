@@ -36,7 +36,7 @@ import org.serviceconnector.util.Statistics;
 public class NettyTcpRequest extends RequestAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyTcpRequest.class);
+	private final static Logger logger = Logger.getLogger(NettyTcpRequest.class);
 	/** The request. */
 	private ChannelBuffer request;
 

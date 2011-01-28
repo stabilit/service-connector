@@ -39,7 +39,7 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 	UNDEFINED("undefined");
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ServiceType.class);
+	private final static Logger logger = Logger.getLogger(ServiceType.class);
 
 	/** The value. */
 	private String value;

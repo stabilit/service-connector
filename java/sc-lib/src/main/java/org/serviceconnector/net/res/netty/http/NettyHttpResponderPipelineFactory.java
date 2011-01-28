@@ -34,7 +34,7 @@ import org.serviceconnector.Constants;
 public class NettyHttpResponderPipelineFactory implements ChannelPipelineFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyHttpResponderPipelineFactory.class);
+	private final static Logger logger = Logger.getLogger(NettyHttpResponderPipelineFactory.class);
 	
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {

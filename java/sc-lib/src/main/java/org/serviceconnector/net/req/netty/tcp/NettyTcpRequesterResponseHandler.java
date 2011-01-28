@@ -40,7 +40,7 @@ import org.serviceconnector.util.Statistics;
 public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyTcpRequesterResponseHandler.class);
+	private final static Logger logger = Logger.getLogger(NettyTcpRequesterResponseHandler.class);
 	/** The scmp callback. */
 	private ISCMPMessageCallback scmpCallback;
 	/** The pending request. */

@@ -36,7 +36,7 @@ public abstract class WebUtil {
 	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(WebUtil.class);
+	private final static Logger logger = Logger.getLogger(WebUtil.class);
 
 	/**
 	 * Load resource.

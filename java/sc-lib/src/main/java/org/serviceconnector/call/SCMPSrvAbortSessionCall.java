@@ -30,7 +30,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPSrvAbortSessionCall.class);
+	private final static Logger logger = Logger.getLogger(SCMPSrvAbortSessionCall.class);
 
 	/**
 	 * Instantiates a new SCMP srv abort session call.

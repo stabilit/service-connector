@@ -36,7 +36,7 @@ import org.jboss.netty.util.Timer;
 public class NettyIdleTimeoutHandler extends IdleStateHandler {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyIdleTimeoutHandler.class);
+	private final static Logger logger = Logger.getLogger(NettyIdleTimeoutHandler.class);
 	
 	/**
 	 * @param timer

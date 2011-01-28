@@ -27,7 +27,7 @@ import org.serviceconnector.registry.Registry;
 public class SrvServiceRegistry extends Registry<String, SrvService> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SrvServiceRegistry.class);
+	private final static Logger logger = Logger.getLogger(SrvServiceRegistry.class);
 
 	/**
 	 * Adds the server service.

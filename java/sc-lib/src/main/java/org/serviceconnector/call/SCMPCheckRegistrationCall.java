@@ -28,7 +28,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public class SCMPCheckRegistrationCall extends SCMPCallAdapter  {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPCheckRegistrationCall.class);
+	private final static Logger logger = Logger.getLogger(SCMPCheckRegistrationCall.class);
 		
 	/**
 	 * Instantiates a new SCMPCheckRegistrationCall.

@@ -39,7 +39,7 @@ import org.serviceconnector.util.TimeoutWrapper;
 public class SessionRegistry extends Registry<String, Session> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SessionRegistry.class);
+	private final static Logger logger = Logger.getLogger(SessionRegistry.class);
 
 	/** The timer. Timer instance is responsible to observe session timeouts. */
 	private ScheduledThreadPoolExecutor sessionScheduler;

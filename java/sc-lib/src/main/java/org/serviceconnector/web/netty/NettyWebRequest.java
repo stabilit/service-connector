@@ -35,7 +35,7 @@ import org.serviceconnector.web.AbstractWebRequest;
 public class NettyWebRequest extends AbstractWebRequest {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyWebRequest.class);
+	private final static Logger logger = Logger.getLogger(NettyWebRequest.class);
 
 	/** The request. */
 	private HttpRequest request;

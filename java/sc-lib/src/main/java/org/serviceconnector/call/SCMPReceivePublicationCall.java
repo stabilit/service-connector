@@ -33,7 +33,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public class SCMPReceivePublicationCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPReceivePublicationCall.class);
+	private final static Logger logger = Logger.getLogger(SCMPReceivePublicationCall.class);
 
 	/**
 	 * Instantiates a new SCMP receive publication call.

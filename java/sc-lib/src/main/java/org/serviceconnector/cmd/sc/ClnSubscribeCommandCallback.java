@@ -145,7 +145,7 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback, ISubsc
 	/** {@inheritDoc} */
 	@Override
 	public Subscription getSubscription() {
-		return null;
+		return this.tempSubscription;
 	}
 
 	public IRequest getRequest() {

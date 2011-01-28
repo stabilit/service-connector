@@ -26,7 +26,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public class SubscriptionMask {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SubscriptionMask.class);
+	private final static Logger logger = Logger.getLogger(SubscriptionMask.class);
 	/** The mask in bytes. */
 	private byte[] mask;
 

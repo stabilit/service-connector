@@ -25,7 +25,7 @@ import org.serviceconnector.Constants;
 public class WebConfiguration {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(WebConfiguration.class);
+	private final static Logger logger = Logger.getLogger(WebConfiguration.class);
 
 	/**
 	 * The translet enabled flag.

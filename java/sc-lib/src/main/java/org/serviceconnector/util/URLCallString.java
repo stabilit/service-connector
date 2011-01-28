@@ -39,7 +39,7 @@ import org.serviceconnector.Constants;
 public class URLCallString {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(URLCallString.class);
+	private final static Logger logger = Logger.getLogger(URLCallString.class);
 
 	/** The call key. */
 	private String callKey;

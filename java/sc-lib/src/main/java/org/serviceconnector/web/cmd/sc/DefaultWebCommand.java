@@ -52,7 +52,7 @@ import org.serviceconnector.web.ctx.WebContext;
 public class DefaultWebCommand extends WebCommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DefaultWebCommand.class);
+	private final static Logger logger = Logger.getLogger(DefaultWebCommand.class);
 
 	/**
 	 * Instantiates a new default web command.

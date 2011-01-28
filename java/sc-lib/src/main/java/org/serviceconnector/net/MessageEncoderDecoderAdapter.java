@@ -48,7 +48,7 @@ import org.serviceconnector.scmp.SCMPPart;
 public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(MessageEncoderDecoderAdapter.class);
+	private final static Logger logger = Logger.getLogger(MessageEncoderDecoderAdapter.class);
 
 	/** The df msg size. */
 	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);

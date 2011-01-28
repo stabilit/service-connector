@@ -33,7 +33,7 @@ import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 public class RequesterContext {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(RequesterContext.class);
+	private final static Logger logger = Logger.getLogger(RequesterContext.class);
 	protected SCMPMessageSequenceNr msgSequenceNr;
 
 	private String host;

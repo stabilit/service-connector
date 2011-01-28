@@ -48,13 +48,9 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			request.load();
 			SCMPMessage scmpReq = request.getMessage();
 			String sessionId = scmpReq.getSessionId();
-			SCMPMessageSequenceNr msgSequenceNr = NettyResponderRequestHandlerTask.compositeRegistry.getSCMPMsgSequenceNr(sessionId);
+			SCMPMessageSequenceNr msgSequenceNr = NettyResponderRequestHandlerTask.compositeRegistry
+					.getSCMPMsgSequenceNr(sessionId);
 
-			if (scmpReq == null) {
-				// no scmp protocol used - nothing to return
-				this.sendUnknownRequestError(response);
-				return;
-			}
 			if (scmpReq.isKeepAlive()) {
 				scmpReq.setIsReply(true);
 				response.setSCMP(scmpReq);
@@ -222,20 +218,6 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 		} catch (Exception ex) {
 			logger.error("send response failed", ex);
 		}
-	}
-
-	/**
-	 * Send unknown request error.
-	 * 
-	 * @param response
-	 *            the response
-	 * @throws Exception
-	 *             the exception
-	 */
-	protected void sendUnknownRequestError(IResponse response) throws Exception {
-		SCMPMessage message = new SCMPMessage();
-		message.setMessageType(SCMPMsgType.UNDEFINED);
-		this.sendBadRequestError(response, message);
 	}
 
 	/**

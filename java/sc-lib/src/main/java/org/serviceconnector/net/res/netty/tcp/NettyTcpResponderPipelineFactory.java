@@ -32,7 +32,7 @@ import org.serviceconnector.net.res.SCMPBasedFrameDecoder;
 public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyTcpResponderPipelineFactory.class);
+	private final static Logger logger = Logger.getLogger(NettyTcpResponderPipelineFactory.class);
 	
 	/** {@inheritDoc} */
 	@Override

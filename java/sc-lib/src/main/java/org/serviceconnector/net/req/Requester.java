@@ -38,7 +38,7 @@ import org.serviceconnector.util.TimeoutWrapper;
 public class Requester implements IRequester {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(Requester.class);
+	private final static Logger logger = Logger.getLogger(Requester.class);
 
 	/** The context. */
 	protected RequesterContext reqContext;

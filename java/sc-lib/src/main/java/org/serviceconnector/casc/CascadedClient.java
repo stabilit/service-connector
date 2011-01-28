@@ -13,7 +13,7 @@ import org.serviceconnector.service.SubscriptionMask;
 public class CascadedClient {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(CascadedClient.class);
+	private final static Logger logger = Logger.getLogger(CascadedClient.class);
 
 	private boolean subscribed;
 	private String subscriptionId;
@@ -30,6 +30,8 @@ public class CascadedClient {
 
 	private boolean destroyed;
 
+	public String serviceName;
+
 	public CascadedClient(CascadedSC cascadedSC, CascadedPublishService publishService) {
 		this.subscribed = false;
 		this.subscriptionId = null;
@@ -39,17 +41,23 @@ public class CascadedClient {
 		this.cascadedSC = cascadedSC;
 		this.publishService = publishService;
 		this.destroyed = false;
+		this.serviceName = this.publishService.getName();
 	}
 
 	public boolean isSubscribed() {
+		if (this.destroyed == true) {
+			logger.warn("cascaded client gots destroyed before");
+			// client is already destroyed
+			return false;
+		}
 		return subscribed;
 	}
 
-	public synchronized void setSubscribed(boolean subscribed) {
+	public void setSubscribed(boolean subscribed) {
 		if (this.destroyed == true) {
-			logger.warn("cascaded client can not be set subscribed it gots destroyed bevor");
+			logger.warn("cascaded client can not be set subscribed it gots destroyed before");
 			// client is already destroyed
-			throw new RuntimeException("cascaded client already destroyed.");
+			this.subscribed = false;
 		}
 		this.subscribed = subscribed;
 	}
@@ -75,7 +83,7 @@ public class CascadedClient {
 	}
 
 	public String getServiceName() {
-		return publishService.getName();
+		return this.serviceName;
 	}
 
 	public CascadedPublishService getPublishService() {
@@ -95,6 +103,10 @@ public class CascadedClient {
 	}
 
 	public void receivePublication() {
+		if (this.destroyed == true) {
+			// client got destroyed, stop receive publication
+			return;
+		}
 		CascReceivePublicationCallback callback = new CascReceivePublicationCallback(this);
 		// OTI for receive publication: DEFAULT_OPERATION_TIMEOUT_SECONDS + NO_DATA_INTERVAL
 		int oti = (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.getPublishService().getNoDataIntervalInSeconds())
@@ -102,14 +114,33 @@ public class CascadedClient {
 		this.cascadedSC.receivePublication(this.publishService.getName(), this.subscriptionId, callback, oti);
 	}
 
-	public synchronized void destroy() {
+	public CascadedSC getCascadedSC() {
+		return cascadedSC;
+	}
+
+	public boolean isDestroyed() {
+		return destroyed;
+	}
+
+	/**
+	 * Destroy cascaded client. A cascaded can only be destroyed once. After destroying use of client is forbidden. The service gets
+	 * a new instance of CascadedClient. Destroy should be called having a permit to avoid errors in proceeding
+	 * subscribe/unsubscribe/changeSubscription. Destroy releases any thread waiting for a permit on semaphore.
+	 */
+	public void destroy() {
+		if (this.destroyed == true) {
+			// cascaded client got already destroyed
+			return;
+		}
 		logger.warn("cascadedClient gets destroyed service=" + this.getServiceName());
 		this.destroyed = true;
 		this.subscribed = false;
+		// release threads waiting for permits, just allow any thread to continue
+		this.cascClientSemaphore.release(Integer.MAX_VALUE);
 		this.clientSubscriptionIds.clear();
+		// TODO JOT/JAN what to do if client subscriptions are left????
+		// delete the subscription maybe??? or cascaded client renew with current subscriptions
 		this.publishService.renewCascadedClient();
 		this.publishService = null;
-		this.cascadedSC = null;
-		this.cascClientSemaphore = null;
 	}
 }

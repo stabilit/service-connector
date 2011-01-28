@@ -42,7 +42,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public class NettyTcpConnection extends NettyConnectionAdpater {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyTcpConnection.class);
+	private final static Logger logger = Logger.getLogger(NettyTcpConnection.class);
 
 	/**
 	 * Instantiates a new NettyTcpConnection.

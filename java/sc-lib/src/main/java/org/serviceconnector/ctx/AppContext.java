@@ -61,7 +61,7 @@ import org.serviceconnector.scmp.SCMPError;
 public final class AppContext {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(AppContext.class);
+	private final static Logger logger = Logger.getLogger(AppContext.class);
 	private static final SimpleDateFormat DUMP_FILE_SDF = new SimpleDateFormat(Constants.FORMAT_OF_DATE_TIME_DUMP_FILE);
 	/** The SC environment. Indicates that AppContext is running in a SC environment */
 	private static boolean scEnvironment = false;

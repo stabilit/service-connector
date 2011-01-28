@@ -48,7 +48,7 @@ import org.serviceconnector.util.SynchronousCallback;
 public class ConnectionPool {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ConnectionPool.class);
+	private final static Logger logger = Logger.getLogger(ConnectionPool.class);
 
 	/** The port. */
 	private int port;

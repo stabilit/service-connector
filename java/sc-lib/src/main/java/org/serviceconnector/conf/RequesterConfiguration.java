@@ -34,7 +34,7 @@ import org.serviceconnector.scmp.SCMPError;
 public class RequesterConfiguration {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(RequesterConfiguration.class);
+	private final static Logger logger = Logger.getLogger(RequesterConfiguration.class);
 
 	private List<CommunicatorConfig> requesterConfigList;
 

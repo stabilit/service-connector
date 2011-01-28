@@ -30,7 +30,7 @@ import org.serviceconnector.registry.Registry;
 public final class ResponderRegistry extends Registry<Object, IResponder> {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ResponderRegistry.class);
+	private final static Logger logger = Logger.getLogger(ResponderRegistry.class);
 
 	/** The thread local. Space to store any data for a single thread. */
 	private ThreadLocal<Object> threadLocal;

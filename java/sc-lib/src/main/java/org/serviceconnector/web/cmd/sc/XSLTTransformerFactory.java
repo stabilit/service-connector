@@ -39,7 +39,7 @@ import org.serviceconnector.web.ctx.WebContext;
 public class XSLTTransformerFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(XSLTTransformerFactory.class);
+	private final static Logger logger = Logger.getLogger(XSLTTransformerFactory.class);
 
 	/** The transformer factory. */
 	protected static XSLTTransformerFactory transformerFactory = new XSLTTransformerFactory();

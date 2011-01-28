@@ -49,7 +49,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class ClnSubscribeCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(ClnSubscribeCommand.class);
+	private final static Logger logger = Logger.getLogger(ClnSubscribeCommand.class);
 
 	/**
 	 * Instantiates a ClnSubscribeCommand.
@@ -85,6 +85,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		// create subscription
 		Subscription subscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList, noi);
 		subscription.setService(abstractService);
+		String cascadedSCMask = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
 		String cascSubscriptionId = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);
 		Subscription cascSubscription = this.subscriptionRegistry.getSubscription(cascSubscriptionId);
 
@@ -99,7 +100,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			if (cascSubscription != null) {
 				// service is cascaded - subscribe is made by a cascaded SC which is already subscribed
 				CascSCSubscribeCallback callback = new CascSCSubscribeCallback(request, response, responderCallback,
-						cascSubscription);
+						cascSubscription, cascadedSCMask);
 				cascadedSC.cascadedSCSubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
 			} else {
 				// service is cascaded - subscribe is made by a normal client
@@ -125,7 +126,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				if (cascSubscription != null) {
 					// service is local - cascaded SC subscribes which is already subscribed forward client subscribe to same server
 					CascSCSubscribeCallback cascCallback = new CascSCSubscribeCallback(request, response, responderCallback,
-							cascSubscription);
+							cascSubscription, cascadedSCMask);
 					((StatefulServer) cascSubscription.getServer()).subscribe(reqMessage, cascCallback, otiOnSCMillis);
 					break;
 				}

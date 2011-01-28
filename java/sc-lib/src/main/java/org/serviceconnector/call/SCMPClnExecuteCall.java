@@ -30,7 +30,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public class SCMPClnExecuteCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCMPClnExecuteCall.class);
+	private final static Logger logger = Logger.getLogger(SCMPClnExecuteCall.class);
 
 	/**
 	 * Instantiates a new SCMPClnExecuteCall.

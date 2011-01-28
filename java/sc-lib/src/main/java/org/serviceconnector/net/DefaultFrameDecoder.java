@@ -28,7 +28,7 @@ import org.serviceconnector.scmp.SCMPHeaderKey;
 public class DefaultFrameDecoder implements IFrameDecoder {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DefaultFrameDecoder.class);
+	private final static Logger logger = Logger.getLogger(DefaultFrameDecoder.class);
 
 	/**
 	 * Instantiates a new default frame decoder.

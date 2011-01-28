@@ -32,7 +32,7 @@ import org.serviceconnector.net.res.netty.web.NettyWebEndpoint;
 public class EndpointFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(EndpointFactory.class);
+	private final static Logger logger = Logger.getLogger(EndpointFactory.class);
 
 	public IEndpoint createEndpoint(String key) {
 		if (ConnectionType.NETTY_HTTP.getValue().equalsIgnoreCase(key)) {

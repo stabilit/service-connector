@@ -49,7 +49,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class RegisterServerCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(RegisterServerCommand.class);
+	private final static Logger logger = Logger.getLogger(RegisterServerCommand.class);
 
 	/**
 	 * Instantiates a new RegisterServerCommand.

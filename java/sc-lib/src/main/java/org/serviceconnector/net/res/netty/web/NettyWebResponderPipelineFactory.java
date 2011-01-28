@@ -29,7 +29,7 @@ import org.serviceconnector.Constants;
 public class NettyWebResponderPipelineFactory implements ChannelPipelineFactory {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyWebResponderPipelineFactory.class);
+	private final static Logger logger = Logger.getLogger(NettyWebResponderPipelineFactory.class);
 	
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {

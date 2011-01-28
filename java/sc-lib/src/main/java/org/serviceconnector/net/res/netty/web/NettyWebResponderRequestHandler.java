@@ -49,7 +49,7 @@ import org.serviceconnector.web.netty.NettyWebResponse;
 public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(NettyWebResponderRequestHandler.class);
+	private final static Logger logger = Logger.getLogger(NettyWebResponderRequestHandler.class);
 
 	/** {@inheritDoc} */
 	@Override
