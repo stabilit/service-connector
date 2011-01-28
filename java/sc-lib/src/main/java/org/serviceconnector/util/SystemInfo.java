@@ -86,7 +86,7 @@ public class SystemInfo {
 	/** The available disk space. */
 	private static long availableDiskSpace;	
 	/** The local date. */
-	private static Date localDate;	
+	private static Date startupDateTime;	
 	/** The available processors. */
 	private static int availableProcessors;
 
@@ -116,7 +116,7 @@ public class SystemInfo {
 		userTimezone = sysprops.getProperty(USER_TIMEZONE);
 		utcOffset = zone.getRawOffset();
 		useDST = zone.useDaylightTime();
-		localDate = new Date(System.currentTimeMillis());
+		startupDateTime = new Date(System.currentTimeMillis());
 		availableProcessors = Runtime.getRuntime().availableProcessors();
 
 		MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
@@ -253,12 +253,12 @@ public class SystemInfo {
 	}
 
 	/**
-	 * Returns local date.
+	 * Returns startup date and time.
 	 * 
-	 * @return localDate
+	 * @return startupDateTime
 	 */
-	public static Date getLocalDate() {
-		return localDate;
+	public static Date getStartupDateTime() {
+		return startupDateTime;
 	}
 
 	/**
@@ -307,5 +307,14 @@ public class SystemInfo {
 	 */
 	public static long getAvailableDiskSpace() {
 		return availableDiskSpace;
+	}
+	
+	/**
+	 * Gets the thread info.
+	 *
+	 * @return the thread info
+	 */
+	public static SystemThreadInfo getThreadInfo() {
+		return new SystemThreadInfo();
 	}
 }

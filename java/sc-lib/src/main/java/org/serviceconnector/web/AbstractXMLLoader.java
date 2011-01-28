@@ -43,6 +43,7 @@ import org.serviceconnector.server.Server;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
+import org.serviceconnector.util.SystemThreadInfo;
 
 
 /**
@@ -419,16 +420,27 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	public void writeRuntime(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeStartElement("availableProcessors");
 		writer.writeCData(String.valueOf(SystemInfo.getAvailableProcessors()));
-		writer.writeEndElement();
+		writer.writeEndElement();  // end of availableProcessors
 		writer.writeStartElement("freeMemory");
 		writer.writeCData(String.valueOf(SystemInfo.getFreeMemory()));
-		writer.writeEndElement();
+		writer.writeEndElement();  // end of freeMemory
 		writer.writeStartElement("maxMemory");
 		writer.writeCData(String.valueOf(SystemInfo.getMaxMemory()));
-		writer.writeEndElement();
+		writer.writeEndElement();  // end of maxMemory
 		writer.writeStartElement("totalMemory");
 		writer.writeCData(String.valueOf(SystemInfo.getTotalMemory()));
-		writer.writeEndElement();
+		writer.writeEndElement(); // end of  totalMemory
+		// get thread info
+		SystemThreadInfo threadInfo = SystemInfo.getThreadInfo();
+		writer.writeStartElement("threadCount");
+		writer.writeCData(String.valueOf(threadInfo.getThreadCount()));
+		writer.writeEndElement();  // end of threadCount
+		writer.writeStartElement("daemonThreadCount");
+		writer.writeCData(String.valueOf(threadInfo.getDaemonThreadCount()));
+		writer.writeEndElement();  // end of daemonThreadCount
+		writer.writeStartElement("peakThreadCount");
+		writer.writeCData(String.valueOf(threadInfo.getPeakThreadCount()));
+		writer.writeEndElement();  // end of peakThreadCount
 	}
 
 }

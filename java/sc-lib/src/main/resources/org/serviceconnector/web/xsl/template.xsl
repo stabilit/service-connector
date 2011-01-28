@@ -169,6 +169,18 @@
 	    <td class="sc_table_odd">Max Memory</td>	  
 	    <td class="sc_table_odd"><xsl:value-of select="maxMemory"/></td>	  
 	  </tr>
+	  <tr class="sc_table_odd">
+	    <td class="sc_table_even">Thread Count</td>	  
+	    <td class="sc_table_even"><xsl:value-of select="threadCount"/></td>	  
+	  </tr>
+	  <tr class="sc_table_odd">
+	    <td class="sc_table_odd">Daemon Thrds</td>	  
+	    <td class="sc_table_odd"><xsl:value-of select="daemonThreadCount"/></td>	  
+	  </tr>
+	  <tr class="sc_table_odd">
+	    <td class="sc_table_even">Peak Threads</td>	  
+	    <td class="sc_table_even"><xsl:value-of select="peakThreadCount"/></td>	  
+	  </tr>
 	  <tr>
 	    <td colspan="2" class="sc_table_even"><a class="sc_table" href="javascript:runGC()">Run GC</a></td>
 	  </tr>
@@ -192,8 +204,7 @@
 	    </td>
 	  </tr>
 	  <tr class="sc_table_odd">
-	    <td class="sc_table_odd">Runtime (s)</td>	  
-	    <td class="sc_table_odd"><xsl:value-of select="runtimeSinceStartupSeconds"/></td>	  
+	    <xsl:call-template name="runtimeSinceStartup"/>
 	  </tr>
 	  <tr class="sc_table_even">
 	    <td class="sc_table_even">Total Messages</td>	  
@@ -227,4 +238,30 @@
 	    <xsl:otherwise>-</xsl:otherwise>
 	  </xsl:choose>	  
 	</xsl:template>  
+	<xsl:template name="runtimeSinceStartup">
+	    <xsl:choose>
+	      <xsl:when test="runtimeSinceStartupSeconds &gt;= (3600 * 24)">
+	        <xsl:variable name="days" select="floor(runtimeSinceStartupSeconds div (3600 * 24))"/>
+	        <xsl:variable name="hours" select="floor((runtimeSinceStartupSeconds mod (3600 * 24)) div 3660)"/>
+	        <xsl:variable name="minutes" select="floor((runtimeSinceStartupSeconds mod 3600) div 60)"/>
+	       	<td class="sc_table_odd">Runtime (d:h:m)</td>	  
+	        <td class="sc_table_odd"><xsl:value-of select="$days"/>d&#160;<xsl:value-of select="$hours"/>h&#160;<xsl:value-of select="$minutes"/>&apos;</td>	  	       	     
+	      </xsl:when>
+	      <xsl:when test="runtimeSinceStartupSeconds &gt;= (60 * 60)">
+	        <xsl:variable name="hours" select="floor(runtimeSinceStartupSeconds div 3600)"/>
+	        <xsl:variable name="minutes" select="floor((runtimeSinceStartupSeconds mod 3600) div 60)"/>
+	        <xsl:variable name="seconds" select="floor((runtimeSinceStartupSeconds mod 3600) mod 60)"/>
+	       	<td class="sc_table_odd">Runtime (h:m:s)</td>	  
+	        <td class="sc_table_odd"><xsl:value-of select="$hours"/>:<xsl:value-of select="$minutes"/>:<xsl:value-of select="$seconds"/></td>	  	       
+	      </xsl:when>	      
+	      <xsl:when test="runtimeSinceStartupSeconds &gt;= 60">
+	      	<td class="sc_table_odd">Runtime (min)</td>	  
+	        <td class="sc_table_odd"><xsl:value-of select="floor(runtimeSinceStartupSeconds div 60)"/>&apos;&#160;<xsl:value-of select="runtimeSinceStartupSeconds mod 60"/></td>	  	       
+	      </xsl:when>
+	      <xsl:otherwise>
+	      	<td class="sc_table_odd">Runtime (s)</td>	  
+	        <td class="sc_table_odd"><xsl:value-of select="runtimeSinceStartupSeconds"/></td>	  
+	      </xsl:otherwise>
+	    </xsl:choose>	    
+	</xsl:template>
 </xsl:stylesheet>
