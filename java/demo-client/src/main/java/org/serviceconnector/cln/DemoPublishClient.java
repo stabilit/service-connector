@@ -27,7 +27,7 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoPublishClient extends Thread {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DemoPublishClient.class);
+	private final static Logger logger = Logger.getLogger(DemoPublishClient.class);
 
 	public static void main(String[] args) {
 		DemoPublishClient demoPublishClient = new DemoPublishClient();
@@ -52,8 +52,8 @@ public class DemoPublishClient extends Thread {
 			// set up subscribe message
 			SCSubscribeMessage msg = new SCSubscribeMessage();
 			String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
-			msg.setSessionInfo("subscription-info"); // optional
-			msg.setData("certificate or what so ever"); // optional
+			msg.setSessionInfo("publishMessagesWithDelay"); // optional
+			msg.setData("1000|10"); // optional
 			msg.setMask(mask); // mandatory
 			msg.setNoDataIntervalInSeconds(100); // mandatory
 			SCSubscribeMessage reply = service.subscribe(msg, cbk); // regular subscribe
@@ -61,7 +61,7 @@ public class DemoPublishClient extends Thread {
 			String sid = service.getSessionId();
 
 			// wait to receive messages
-			while (cbk.receivedMsg < 5) {
+			while (cbk.receivedMsg < 999) {
 				Thread.sleep(1500);
 			}
 		} catch (Exception e) {

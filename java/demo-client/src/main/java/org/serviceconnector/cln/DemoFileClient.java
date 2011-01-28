@@ -29,7 +29,7 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoFileClient extends Thread {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DemoFileClient.class);
+	private final static Logger logger = Logger.getLogger(DemoFileClient.class);
 
 	public static void main(String[] args) {
 		DemoFileClient demoFileClient = new DemoFileClient();

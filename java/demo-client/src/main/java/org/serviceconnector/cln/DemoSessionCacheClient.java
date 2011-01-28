@@ -26,7 +26,7 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoSessionCacheClient extends Thread {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DemoSessionCacheClient.class);
+	private final static Logger logger = Logger.getLogger(DemoSessionCacheClient.class);
 
 	private static boolean pendingRequest = false;
 

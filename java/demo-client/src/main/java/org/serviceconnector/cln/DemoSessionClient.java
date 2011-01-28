@@ -26,7 +26,7 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoSessionClient {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DemoSessionClient.class);
+	private final static Logger logger = Logger.getLogger(DemoSessionClient.class);
 
 	public static void main(String[] args) {
 		DemoSessionClient demoSessionClient = new DemoSessionClient();

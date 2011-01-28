@@ -35,7 +35,7 @@ import org.serviceconnector.api.cln.SCSessionService;
 public class SCAsyncSessionClientExample {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SCAsyncSessionClientExample.class);
+	private final static Logger logger = Logger.getLogger(SCAsyncSessionClientExample.class);
 
 	private static boolean messageReceived = false;
 
