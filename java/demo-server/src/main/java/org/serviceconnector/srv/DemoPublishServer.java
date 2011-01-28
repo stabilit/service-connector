@@ -26,7 +26,7 @@ import org.serviceconnector.api.srv.SCServer;
 public class DemoPublishServer extends Thread {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(DemoPublishServer.class);
+	private final static Logger logger = Logger.getLogger(DemoPublishServer.class);
 
 	/**
 	 * Main method if you like to start in debug mode.
