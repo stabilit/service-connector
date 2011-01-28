@@ -51,7 +51,7 @@ import org.serviceconnector.web.ctx.WebContext;
 public final class SC {
 
 	/** The Constant logger. */
-	protected final static Logger logger = Logger.getLogger(SC.class);
+	private final static Logger logger = Logger.getLogger(SC.class);
 
 	/**
 	 * Instantiates a new service connector.
