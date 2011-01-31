@@ -77,7 +77,7 @@ public class PublishTimeout implements ITimeout {
 	/** {@inheritDoc} */
 	@Override
 	public void timeout() {
-		logger.debug("timeout publishTimer");
+		logger.trace("timeout publishTimer");
 		String subscriptionId = null;
 		try {
 			// extracting subscriptionId from request message
@@ -86,10 +86,10 @@ public class PublishTimeout implements ITimeout {
 			SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 			subscriptionId = reqMsg.getSessionId();
 
-			logger.debug("timeout publishTimer datapointer subscriptionId " + subscriptionId);
+			logger.trace("timeout publishTimer datapointer subscriptionId " + subscriptionId);
 			Subscription subscription = subscriptionRegistry.getSubscription(subscriptionId);
 			if (subscription == null) {
-				logger.debug("subscription not found - already deleted subscriptionId=" + subscriptionId);
+				logger.trace("subscription not found - already deleted subscriptionId=" + subscriptionId);
 				// subscription has already been deleted
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SUBSCRIPTION_NOT_FOUND, subscriptionId);
 				fault.setMessageType(reqMsg.getMessageType());
@@ -98,14 +98,14 @@ public class PublishTimeout implements ITimeout {
 				// tries polling from queue
 				SCMPMessage message = this.subscriptionQueue.getMessage(subscriptionId);
 				if (message == null) {
-					logger.debug("no message found on queue - subscription timeout set up no data message subscriptionId="
+					logger.trace("no message found on queue - subscription timeout set up no data message subscriptionId="
 							+ subscriptionId);
 					// no message found on queue - subscription timeout set up no data message
 					reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 					reqMsg.setIsReply(true);
 					this.response.setSCMP(reqMsg);
 				} else {
-					logger.debug("message found on queue - subscription timeout set up reply message subscriptionId="
+					logger.trace("message found on queue - subscription timeout set up reply message subscriptionId="
 							+ subscriptionId);
 					// set up reply
 					SCMPMessage reply = null;

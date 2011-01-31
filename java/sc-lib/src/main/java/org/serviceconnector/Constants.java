@@ -82,7 +82,8 @@ public final class Constants {
 	/**
 	 * Defines the time to wait in receive publication on cascaded client to get permit to proceed.
 	 */
-	public static final int WAIT_FOR_PERMIT_IN_RECEIVE_PUBLICATION_MILLIS = 2000;
+	//TODO JOT/JAN.. reduce to 2000, 200000 for testing purpose
+	public static final int WAIT_FOR_PERMIT_IN_RECEIVE_PUBLICATION_MILLIS = 200000;
 
 	/** The default keep alive interval, 0 = not active. */
 	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 60;

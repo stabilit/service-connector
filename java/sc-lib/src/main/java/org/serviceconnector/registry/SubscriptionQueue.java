@@ -145,7 +145,7 @@ public class SubscriptionQueue<E> {
 	 * @return the e
 	 */
 	public synchronized E getMessageOrListen(String sessionId, IRequest request, IResponse response) {
-		logger.debug("getMessageOrListen");
+		logger.trace("getMessageOrListen");
 		E message = this.getMessage(sessionId);
 		if (message == null) {
 			// message null - switch to listen mode
@@ -161,14 +161,14 @@ public class SubscriptionQueue<E> {
 	 * if necessary (mask matches & listening mode).
 	 */
 	private synchronized void fireNewDataArrived() {
-		logger.debug("fireNewDataArrived");
+		logger.trace("fireNewDataArrived");
 
 		LinkedNode<E> newNode = dataQueue.getLast();
 		for (TimeAwareDataPointer ptr : this.pointerMap.values()) {
 			if (ptr.getNode() == null) {
 				// data pointer points to null - try pointing to new element
 				if (ptr.setNode(newNode) == true) {
-					logger.debug("data pointer points to null,setNode successful - data pointer interested in new node");
+					logger.trace("data pointer points to null,setNode successful - data pointer interested in new node");
 					// setNode successful - data pointer interested in new node
 					if (ptr.listening()) {
 						// data pointer in listen mode needs to be informed about new data
@@ -216,7 +216,7 @@ public class SubscriptionQueue<E> {
 		// starts listening and schedules subscription timeout
 		dataPointer.startListen();
 		dataPointer.schedule();
-		logger.debug("Subscriptionqueue listen " + sessionId + " listen: " + dataPointer.listening);
+		logger.trace("Subscriptionqueue listen " + sessionId + " listen: " + dataPointer.listening);
 	}
 
 	/**
@@ -230,7 +230,7 @@ public class SubscriptionQueue<E> {
 	 *            the timer run
 	 */
 	public synchronized void subscribe(String sessionId, SubscriptionMask mask, PublishTimeout publishTimeout) {
-		logger.debug("subscribe");
+		logger.trace("subscribe");
 		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(mask, publishTimeout);
 		// Stores sessionId and dataPointer in map
 		this.pointerMap.put(sessionId, dataPointer);
@@ -245,7 +245,7 @@ public class SubscriptionQueue<E> {
 	 *            the mask
 	 */
 	public synchronized void changeSubscription(String sessionId, SubscriptionMask mask) {
-		logger.debug("changeSubscription");
+		logger.trace("changeSubscription");
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		if (dataPointer != null) {
 			dataPointer.changeMask(mask);
@@ -259,7 +259,7 @@ public class SubscriptionQueue<E> {
 	 *            the session id
 	 */
 	public synchronized void unsubscribe(String sessionId) {
-		logger.debug("unsubscribe");
+		logger.trace("unsubscribe");
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		if (dataPointer.listening) {
 			// unsubscribe & pointer is in listen mode - run a timeout
@@ -348,6 +348,7 @@ public class SubscriptionQueue<E> {
 		 * 
 		 * @return true, if successful
 		 */
+		@SuppressWarnings("unused")
 		public boolean hasNext() {
 			return node.getNext() != null;
 		}
@@ -424,14 +425,14 @@ public class SubscriptionQueue<E> {
 			// schedules timeoutTask on subscription queue executer
 			this.timeout = (ScheduledFuture<PublishTimeoutWrapper>) timeoutScheduler.schedule(timeoutWrapper, (long) timeoutMillis,
 					TimeUnit.MILLISECONDS);
-			logger.debug("schedule datapointer " + timeoutMillis);
+			logger.trace("schedule datapointer " + timeoutMillis);
 		}
 
 		/**
 		 * Destroys data pointer and dereferences node in queue.
 		 */
 		private synchronized void destroy() {
-			logger.debug("destroy TimeAwareDataPointer");
+			logger.trace("destroy TimeAwareDataPointer");
 			this.cancel();
 			if (node != null) {
 				this.node.dereference();
@@ -453,7 +454,7 @@ public class SubscriptionQueue<E> {
 			if (this.timeout != null) {
 				// cancel timeout even if its already running - timeout synchronize on queue
 				this.timeout.cancel(true);
-				logger.debug("cancel TimeAwareDataPointer");
+				logger.trace("cancel TimeAwareDataPointer");
 				// important to set timeouter null - rescheduling of same instance not possible
 				this.timeout = null;
 				// removes canceled timeouts
