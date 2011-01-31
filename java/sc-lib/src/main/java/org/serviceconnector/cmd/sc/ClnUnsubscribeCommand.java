@@ -28,6 +28,7 @@ import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -76,12 +77,19 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
 
 			if (cascSubscription != null) {
-				// change subscription for cascaded SC
 				SubscriptionQueue<SCMPMessage> queue = ((IPublishService) cascSubscription.getService()).getSubscriptionQueue();
-				SubscriptionMask cascSCMask = new SubscriptionMask(cascadedSCMask);
-				queue.changeSubscription(cascSubscription.getId(), cascSCMask);
-				cascSubscription.setMask(cascSCMask);
-				SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
+				if (cascadedSCMask == null) {
+					// first remove subscription than unsubscribe
+					this.subscriptionRegistry.removeSubscription(cascSubscription.getId());
+					queue.unsubscribe(cascSubscription.getId());
+					SubscriptionLogger.logUnsubscribe(serviceName, cascSubscription.getId());
+				} else {
+					// change subscription for cascaded SC
+					SubscriptionMask cascSCMask = new SubscriptionMask(cascadedSCMask);
+					queue.changeSubscription(cascSubscription.getId(), cascSCMask);
+					cascSubscription.setMask(cascSCMask);
+					SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
+				}
 				// service is cascaded - unsubscribe is made by a cascaded SC
 				CascSCUnsubscribeCallback callback = new CascSCUnsubscribeCallback(request, response, responderCallback,
 						cascSubscription);
@@ -105,19 +113,30 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 			return;
 		}
 
-		String subscriptionId = reqMessage.getSessionId();
-		// lookup session and checks properness
-		Subscription subscription = this.getSubscriptionById(subscriptionId);
-
+		StatefulServer server = null;
+		Subscription subscription = null;
 		if (cascSubscription != null) {
-			// cascadedSC unsubscribe - change subscription for cascadedSC and forward unsubscribe to server
-			// change subscription for cascaded SC
 			SubscriptionQueue<SCMPMessage> queue = ((IPublishService) cascSubscription.getService()).getSubscriptionQueue();
-			SubscriptionMask cascSCMask = new SubscriptionMask(cascadedSCMask);
-			queue.changeSubscription(cascSubscription.getId(), cascSCMask);
-			cascSubscription.setMask(cascSCMask);
-			SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
+			if (cascadedSCMask == null) {
+				// first remove subscription than unsubscribe
+				this.subscriptionRegistry.removeSubscription(cascSubscription.getId());
+				queue.unsubscribe(cascSubscription.getId());
+				SubscriptionLogger.logUnsubscribe(serviceName, cascSubscription.getId());
+			} else {
+				// cascadedSC unsubscribe - change subscription for cascadedSC and forward unsubscribe to server
+				// change subscription for cascaded SC
+				SubscriptionMask cascSCMask = new SubscriptionMask(cascadedSCMask);
+				queue.changeSubscription(cascSubscription.getId(), cascSCMask);
+				cascSubscription.setMask(cascSCMask);
+				SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
+			}
+			// use server of cascaded client to unsubscribe
+			server = (StatefulServer) cascSubscription.getServer();
+			subscription = cascSubscription;
 		} else {
+			String subscriptionId = reqMessage.getSessionId();
+			// lookup session and checks properness
+			subscription = this.getSubscriptionById(subscriptionId);
 			// normal unsubscribe process of a client
 			// looks up subscription queue and stops publish mechanism
 			SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(subscriptionId);
@@ -125,18 +144,23 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 			this.subscriptionRegistry.removeSubscription(subscription);
 			subscriptionQueue.unsubscribe(subscriptionId);
 			SubscriptionLogger.logUnsubscribe(serviceName, subscriptionId);
+			server = (StatefulServer) subscription.getServer();
 		}
 		// unsubscribe on backend server
-		StatefulServer server = (StatefulServer) subscription.getServer();
-
-		ClnUnsubscribeCommandCallback callback;
+		ISCMPMessageCallback callback;
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
-			callback = new ClnUnsubscribeCommandCallback(request, response, responderCallback, subscription);
 			try {
+				if (cascSubscription != null) {
+					// set up callback in case of a cascaded client unsubscribe operation
+					callback = new CascSCUnsubscribeCallback(request, response, responderCallback, subscription);
+				} else {
+					// set up callback for normal client unsubscribe operation
+					callback = new ClnUnsubscribeCommandCallback(request, response, responderCallback, subscription);
+				}
 				server.unsubscribe(reqMessage, callback, otiOnSCMillis - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
@@ -151,8 +175,10 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 					throw scmpCommandException;
 				}
 			} catch (Exception e) {
-				// free server from subscription
-				server.removeSession(subscription);
+				if (cascSubscription != null) {
+					// free server from subscription
+					server.removeSession(subscription);
+				}
 				throw e;
 			}
 			// sleep for a while and then try again

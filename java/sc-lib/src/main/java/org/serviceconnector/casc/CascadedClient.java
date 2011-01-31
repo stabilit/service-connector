@@ -6,8 +6,11 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.service.CascadedPublishService;
+import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
 public class CascadedClient {
@@ -76,6 +79,22 @@ public class CascadedClient {
 
 	public void setSubscriptionMask(SubscriptionMask newSubscriptionMask) {
 		this.subscriptionMask = newSubscriptionMask;
+	}
+
+	public String evalSubscriptionMaskFromClientSubscriptions() {
+		SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
+		byte[] baseMask = null;
+		for (String clientSubscriptionId : clientSubscriptionIds) {
+			Subscription subscription = subscriptionRegistry.getSubscription(clientSubscriptionId);
+			String maskString = subscription.getMask().getValue();
+			byte[] mask = maskString.getBytes();
+			if (baseMask == null) {
+				baseMask = mask;
+				continue;
+			}
+			baseMask = SubscriptionMask.masking(baseMask, mask);
+		}
+		return new String(baseMask);
 	}
 
 	public SubscriptionMask getSubscriptionMask() {

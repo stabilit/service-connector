@@ -89,6 +89,11 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		String cascSubscriptionId = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);
 		Subscription cascSubscription = this.subscriptionRegistry.getSubscription(cascSubscriptionId);
 
+		// don't overwrite session id if already set, its the client session id which the server needs to know
+		if (reqMessage.getSessionId() == null) {
+			reqMessage.setSessionId(subscription.getId());
+		}
+
 		switch (abstractService.getType()) {
 		case CASCADED_PUBLISH_SERVICE:
 			// publish service is cascaded
@@ -111,7 +116,6 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			return;
 		}
 		// modify message only if it goes to server
-		reqMessage.setSessionId(subscription.getId());
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);

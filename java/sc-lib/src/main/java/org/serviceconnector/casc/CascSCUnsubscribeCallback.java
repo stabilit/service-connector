@@ -55,7 +55,6 @@ public class CascSCUnsubscribeCallback extends ClnCommandCascCallback implements
 			// only if service is cascaded - release permit
 			this.cascClient.getCascClientSemaphore().release();
 		}
-
 		// forward reply to client
 		reply.setIsReply(true);
 		reply.setServiceName(serviceName);
