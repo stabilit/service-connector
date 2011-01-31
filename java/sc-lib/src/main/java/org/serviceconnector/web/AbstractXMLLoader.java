@@ -44,6 +44,7 @@ import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.util.SystemThreadInfo;
+import org.serviceconnector.web.ctx.WebContext;
 
 
 /**
@@ -163,9 +164,15 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeStartElement("meta");
 		writer.writeAttribute("scversion", SCVersion.CURRENT.toString());
 		writer.writeEndElement(); // close meta tag
+		// write sc header prefix
+		writer.writeStartElement("meta");
+		writer.writeAttribute("headerprefix", WebContext.getWebConfiguration().getPageHeaderPrefix());
+		writer.writeEndElement(); // close meta tag
+		// write sc status
 		writer.writeStartElement("meta");
 		writer.writeAttribute("scstatus", "success");
 		writer.writeEndElement(); // close meta tag
+		// write scconfigfile
 		writer.writeStartElement("meta");
 		writer.writeAttribute("scconfigfile", SystemInfo.getConfigFileName());
 		writer.writeEndElement(); // close meta tag

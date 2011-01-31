@@ -36,6 +36,12 @@ public class WebConfiguration {
 	private boolean xslTransformationCacheEnabled;
 
 	/**
+	 * Page header prexix is displayed in the page header and page title in front of the
+	 * standard text. The property WEB_PAGE_HEADER_PREFIX allows to define a custom value.
+	 */
+	private String pageHeaderPrefix;
+
+	/**
 	 * Instantiates a new SCMP cache configuration.
 	 */
 	public WebConfiguration() {
@@ -51,13 +57,16 @@ public class WebConfiguration {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void init(CompositeConfiguration compositeConfiguration) throws Exception {
+	public synchronized void load(CompositeConfiguration compositeConfiguration) throws Exception {
 		Boolean xslTransformationCacheEnabled = compositeConfiguration.getBoolean(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED,
 				null);
 		if (xslTransformationCacheEnabled != null) {
 			this.xslTransformationCacheEnabled = xslTransformationCacheEnabled;
 		}
 		logger.info(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED + "=" + this.xslTransformationCacheEnabled);
+
+		this.pageHeaderPrefix = compositeConfiguration.getString(Constants.WEB_PAGE_HEADER_PREFIX, "");
+		logger.info(Constants.WEB_PAGE_HEADER_PREFIX + "=" + this.pageHeaderPrefix);
 	}
 
 	/**
@@ -67,6 +76,10 @@ public class WebConfiguration {
 	 */
 	public boolean isTransletEnabled() {
 		return xslTransformationCacheEnabled;
+	}
+
+	public String getPageHeaderPrefix() {
+		return pageHeaderPrefix;
 	}
 
 }

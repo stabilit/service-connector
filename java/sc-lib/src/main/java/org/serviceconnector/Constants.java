@@ -254,7 +254,7 @@ public final class Constants {
 	/**
 	 * Page header XSL transformation cache enebled = transformation will be done every cycle
 	 */
-	public static final String WEB_PAGE_HEADER = "web.pageHeader";
+	public static final String WEB_PAGE_HEADER_PREFIX = "web.pageHeaderPrefix";
 
 	/*
 	 * SCMP protocol constants ***********************

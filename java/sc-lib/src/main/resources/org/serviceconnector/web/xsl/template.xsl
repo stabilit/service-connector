@@ -52,7 +52,7 @@
 		</html>
 	</xsl:template>
 	<xsl:template name="sc_title">
-	  Service Connector <xsl:value-of select="$head/meta/@scversion"/> on <xsl:value-of select="$head/meta/@hostname"/> 
+	  <xsl:value-of select="$head/meta/@headerprefix"/> SC <xsl:value-of select="$head/meta/@scversion"/> on <xsl:value-of select="$head/meta/@hostname"/> 
 	</xsl:template>
 	<xsl:template name="sc_header">
 	   <div id="sc_logo">
@@ -68,7 +68,7 @@
 	    </xsl:if>
 	    <br/>
 	    <br/>
-	    Service Connector provided by <a href="www.stabilit.ch" class="sc_header" target="stabilit">Stabilit</a>
+	    Service Connector provided by <a href="http://www.stabilit.ch/" class="sc_header" target="stabilit">Stabilit</a>
 	  </div>
 	</xsl:template>
 	<xsl:template name="sc_menu">

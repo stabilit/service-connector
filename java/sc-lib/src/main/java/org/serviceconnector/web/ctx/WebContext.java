@@ -70,7 +70,7 @@ public class WebContext {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.toString());
 		}
 
-		WebContext.webConfiguration.init(WebContext.apacheCompositeConfig);
+		WebContext.webConfiguration.load(WebContext.apacheCompositeConfig);
 	}
 
 	/**

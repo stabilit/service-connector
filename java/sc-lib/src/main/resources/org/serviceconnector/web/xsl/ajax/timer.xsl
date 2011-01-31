@@ -11,6 +11,6 @@
 	    </xsl:if>
 	    <br/>
 	    <br/>
-	    Service Connector provided by <a href="www.stabilit.ch" class="sc_header" target="stabilit">Stabilit</a>
+	    Service Connector provided by <a href="http://www.stabilit.ch/" class="sc_header" target="stabilit">Stabilit</a>
 	</xsl:template>
 </xsl:stylesheet>
