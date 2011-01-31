@@ -32,8 +32,8 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class SrvUnsubscribeCommand. Responsible for validation and execution of server unsubscribe command. Allows unsubscribing from
- * service.
+ * The Class SrvUnsubscribeCommand. Responsible for validation and execution of server unsubscribe command. Allows unsubscribing
+ * from service.
  * 
  * @author JTraber
  */
