@@ -21,7 +21,7 @@ import java.net.InetSocketAddress;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.res.IResponder;
@@ -85,7 +85,7 @@ public class RegisterServerCommand extends CommandAdapter {
 
 		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 		IResponder responder = responderRegistry.getCurrentResponder();
-		CommunicatorConfig respConfig = responder.getResponderConfig();
+		ListenerConfiguration respConfig = responder.getListenerConfig();
 		String connectionType = respConfig.getConnectionType();
 
 		// create new server

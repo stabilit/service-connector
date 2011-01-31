@@ -76,7 +76,7 @@ public abstract class SrvCommandAdapter implements ICommand {
 	protected SrvService getSrvServiceByServiceName(String serviceName) throws SCMPCommandException {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		IResponder responder = AppContext.getResponderRegistry().getCurrentResponder();
-		int listenerPort = responder.getResponderConfig().getPort();
+		int listenerPort = responder.getListenerConfig().getPort();
 		SrvService srvService = srvServiceRegistry.getSrvService(serviceName + "_" + listenerPort);
 		if (srvService == null) {
 			logger.warn("service=" + serviceName + " port=" + listenerPort + " not found in registry");

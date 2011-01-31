@@ -28,9 +28,6 @@ import org.serviceconnector.Constants;
  */
 public class SCMessage {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SCMessage.class);
-
 	/**
 	 * The message info. Optional information passed together with the message body that helps to identify the message content
 	 * without investigating the body.

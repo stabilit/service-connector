@@ -27,7 +27,7 @@ import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class RequesterConfiguration. It may hold more than one configuration for a requester, is represented by
- * <code>RequesterConfig</code>.
+ * <code>RemoteNodeConfiguration</code>.
  * 
  * @author JTraber
  */
@@ -36,13 +36,13 @@ public class RequesterConfiguration {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(RequesterConfiguration.class);
 
-	private List<CommunicatorConfig> requesterConfigList;
+	private List<RemoteNodeConfiguration> remoteNodeConfigList;
 
 	public RequesterConfiguration() {
 	}
 
 	/**
-	 * Inits the.
+	 * Initialises the requester configuration.
 	 * 
 	 * @param compositeConfig
 	 *            the apache composite config
@@ -56,57 +56,18 @@ public class RequesterConfiguration {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
 					+ Constants.PROPERTY_REMOTE_NODES + " is missing");
 		}
-		// load all communicators in the list into the array
-		this.requesterConfigList = new ArrayList<CommunicatorConfig>();
+
+		// load all remote nodes into the list
+		this.remoteNodeConfigList = new ArrayList<RemoteNodeConfiguration>();
 		for (String requesterName : requesterList) {
 			requesterName = requesterName.trim(); // remove blanks in name
-			CommunicatorConfig commConfig = new CommunicatorConfig(requesterName);
-	
-			try {
-				// get port
-				commConfig.setPort(compositeConfig.getInt(requesterName + Constants.PROPERTY_QUALIFIER_PORT));
-			} catch (Exception e) {
-				logger.error(e.toString());
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.getMessage());
-			}
-			// get connectionType
-			String connectionType = compositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
-			if (connectionType == null) {
-				logger.error(requesterName + " connectionType not set");
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, requesterName + " connectionType not set");
-			}
-			commConfig.setConnectionType(connectionType);
-	
-			// get host for requester
-			String host = compositeConfig.getString(requesterName + Constants.PROPERTY_QUALIFIER_HOST);
-			if (host == null) {
-				logger.error(requesterName + " host not set");
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, requesterName + " host not set");
-			}
-			List<String> hosts = new ArrayList<String>();
-			hosts.add(host);
-			commConfig.setInterfaces(hosts);
-	
-			// get max connection pool size
-			Integer localMaxPoolSize = compositeConfig.getInteger(requesterName
-					+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE, null);
-			if (localMaxPoolSize == null) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + requesterName
-						+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE + " is missing");
-			}
-			commConfig.setMaxPoolSize(localMaxPoolSize);
-	
-			// get keep alive interval
-			Integer localKeepAliveIntervalSeconds = compositeConfig.getInteger(requesterName
-					+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS, null);
-			if (localKeepAliveIntervalSeconds == null) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + requesterName
-						+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS + " is missing");
-			}
-			commConfig.setKeepAliveIntervalSeconds(localMaxPoolSize);
-	
+			RemoteNodeConfiguration remoteNodeConfig = new RemoteNodeConfiguration(requesterName);
+			// load it with the configurated items
+			remoteNodeConfig.load(compositeConfig);
 			// adding requester to list
-			this.requesterConfigList.add(commConfig);
+			this.remoteNodeConfigList.add(remoteNodeConfig);
+			// show it
+			logger.info("RemoteNode=" + remoteNodeConfig.toString());
 		}
 	}
 
@@ -115,7 +76,7 @@ public class RequesterConfiguration {
 	 * 
 	 * @return the responder configuration list
 	 */
-	public List<CommunicatorConfig> getRequesterConfigList() {
-		return this.requesterConfigList;
+	public List<RemoteNodeConfiguration> getRequesterConfigList() {
+		return this.remoteNodeConfigList;
 	}
 }

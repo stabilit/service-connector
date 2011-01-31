@@ -18,7 +18,7 @@ package org.serviceconnector.net.res;
 
 import java.util.List;
 
-import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.conf.ListenerConfiguration;
 
 /**
  * The Interface IRequester.
@@ -70,14 +70,14 @@ public interface IResponder {
 	 * @param respConfig
 	 *            the new responder configuration
 	 */
-	public void setResponderConfig(CommunicatorConfig respConfig);
+	public void setListenerConfig(ListenerConfiguration respConfig);
 
 	/**
 	 * Gets the responder configuration.
 	 * 
 	 * @return the responder configuration
 	 */
-	public CommunicatorConfig getResponderConfig();
+	public ListenerConfiguration getListenerConfig();
 	
 	/**
 	 * Gets the endpoint.

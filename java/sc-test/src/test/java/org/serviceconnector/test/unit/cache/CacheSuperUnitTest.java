@@ -18,8 +18,8 @@ package org.serviceconnector.test.unit.cache;
 
 import org.junit.After;
 import org.junit.Before;
-import org.serviceconnector.cache.CacheConfiguration;
 import org.serviceconnector.cache.CacheManager;
+import org.serviceconnector.conf.CacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.service.Service;

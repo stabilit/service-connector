@@ -34,7 +34,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.SCVersion;
-import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.connection.IConnection;
@@ -396,8 +396,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						writer.writeEndElement();
 						continue;
 					}
-					if (value instanceof CommunicatorConfig) {
-						CommunicatorConfig communicatorConfig = (CommunicatorConfig) value;
+					if (value instanceof ListenerConfiguration) {
+						ListenerConfiguration communicatorConfig = (ListenerConfiguration) value;
 						writer.writeStartElement(name);
 						this.writeBean(writer, communicatorConfig);
 						writer.writeEndElement();

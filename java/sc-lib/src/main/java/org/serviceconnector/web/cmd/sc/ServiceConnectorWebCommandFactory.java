@@ -19,7 +19,7 @@ package org.serviceconnector.web.cmd.sc;
 import net.sf.ehcache.config.InvalidConfigurationException;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.web.IWebRequest;
@@ -168,7 +168,7 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 			@Override
 			public String getUserid() {
 				IResponder responder = AppContext.getResponderRegistry().getCurrentResponder();
-				CommunicatorConfig respConfig = responder.getResponderConfig();
+				ListenerConfiguration respConfig = responder.getListenerConfig();
 				return respConfig.getUsername();
 			}
 
@@ -176,7 +176,7 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 			@Override
 			public String getPassword() {
 				IResponder responder = AppContext.getResponderRegistry().getCurrentResponder();
-				CommunicatorConfig respConfig = responder.getResponderConfig();
+				ListenerConfiguration respConfig = responder.getListenerConfig();
 				return respConfig.getPassword();
 			}
 		}

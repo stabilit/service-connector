@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.ctx.AppContext;
 
 /**
@@ -35,8 +35,8 @@ public class Responder implements IResponder {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(Responder.class);
 
-	/** The responder configuration. */
-	private CommunicatorConfig respConfig;
+	/** The listener configuration. */
+	private ListenerConfiguration listenerConfig;
 	/** The endpoint connection. */
 	private List<IEndpoint> endpoints;
 
@@ -44,20 +44,20 @@ public class Responder implements IResponder {
 		this(null);
 	}
 
-	public Responder(CommunicatorConfig respConfig) {
-		this.respConfig = respConfig;
+	public Responder(ListenerConfiguration listenerConfig) {
+		this.listenerConfig = listenerConfig;
 		this.endpoints = new ArrayList<IEndpoint>();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void create() throws Exception {
-		for (String host : this.respConfig.getInterfaces()) {
+		for (String networkInterface : this.listenerConfig.getInterfaces()) {
 			EndpointFactory endpointFactory = AppContext.getEndpointFactory();
-			IEndpoint endpoint = endpointFactory.createEndpoint(this.respConfig.getConnectionType());
+			IEndpoint endpoint = endpointFactory.createEndpoint(this.listenerConfig.getConnectionType());
 			endpoint.setResponder(this);
-			endpoint.setHost(host);
-			endpoint.setPort(this.respConfig.getPort());
+			endpoint.setHost(networkInterface);
+			endpoint.setPort(this.listenerConfig.getPort());
 			endpoint.create();
 			endpoints.add(endpoint);
 		}
@@ -97,14 +97,14 @@ public class Responder implements IResponder {
 
 	/** {@inheritDoc} */
 	@Override
-	public CommunicatorConfig getResponderConfig() {
-		return this.respConfig;
+	public ListenerConfiguration getListenerConfig() {
+		return this.listenerConfig;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setResponderConfig(CommunicatorConfig respConfig) {
-		this.respConfig = respConfig;
+	public void setListenerConfig(ListenerConfiguration listenerConfig) {
+		this.listenerConfig = listenerConfig;
 	}
 
 	/**

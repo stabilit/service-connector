@@ -375,7 +375,7 @@ public class DefaultXMLLoaderFactory {
 			for (IResponder responder : responders) {
 				writer.writeStartElement("responder");
 				writer.writeStartElement("responderConfig");
-				this.writeBean(writer, responder.getResponderConfig());
+				this.writeBean(writer, responder.getListenerConfig());
 				writer.writeEndElement();
 				writer.writeStartElement("endPoints");
 				List<IEndpoint> endPointList = responder.getEndpoints();

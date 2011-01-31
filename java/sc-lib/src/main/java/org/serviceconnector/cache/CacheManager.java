@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.serviceconnector.cache.impl.CacheImplFactory;
+import org.serviceconnector.conf.CacheConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.CacheLogger;
 import org.serviceconnector.registry.ServiceRegistry;

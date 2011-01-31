@@ -61,25 +61,25 @@ public class ServiceLoader {
 			String serviceTypeString = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_TYPE);
 			ServiceType serviceType = ServiceType.getServiceType(serviceTypeString);
 
-			String remoteHost = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_HOST, null);
+			String remoteNode = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_NODE, null);
 			// instantiate right type of service
 			Service service = null;
 
-			serviceType = ServiceLoader.adaptServiceTypeIfCascService(serviceType, remoteHost);
+			serviceType = ServiceLoader.adaptServiceTypeIfCascService(serviceType, remoteNode);
 
 			switch (serviceType) {
 			case CASCADED_SESSION_SERVICE:
-				Server server = AppContext.getServerRegistry().getServer(remoteHost);
+				Server server = AppContext.getServerRegistry().getServer(remoteNode);
 				if (server == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteHost
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteNode
 							+ " configured for service=" + serviceName + " is not configured");
 				}
 				service = new CascadedSessionService(serviceName, (CascadedSC) server);
 				break;
 			case CASCADED_PUBLISH_SERVICE:
-				server = AppContext.getServerRegistry().getServer(remoteHost);
+				server = AppContext.getServerRegistry().getServer(remoteNode);
 				if (server == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteHost
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteNode
 							+ " configured for service=" + serviceName + " is not configured");
 				}
 				Integer noDataIntervalInSeconds = config.getInteger(serviceName + Constants.PROPERTY_QUALIFIER_NOI, null);
@@ -110,9 +110,9 @@ public class ServiceLoader {
 					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
 							+ Constants.PROPERTY_QUALIFIER_LIST_SCRIPT + " is missing for service=" + serviceName);
 				}
-				server = AppContext.getServerRegistry().getServer(remoteHost);
+				server = AppContext.getServerRegistry().getServer(remoteNode);
 				if (server == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteHost
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteNode
 							+ " configured for service=" + serviceName + " is not configured");
 				}
 				service = new FileService(serviceName, (FileServer) server, path, scUploadFileScriptName, scGetFileListScriptName);

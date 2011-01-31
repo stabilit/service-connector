@@ -27,7 +27,7 @@ import javax.management.ObjectName;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.sc.ServiceConnectorCommandFactory;
-import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ILoggingManagerMXBean;
 import org.serviceconnector.log.JMXLoggingManager;
@@ -128,15 +128,14 @@ public final class SC {
 		Statistics statistics = Statistics.getInstance();
 		statistics.setStartupDateTime(new Timestamp(Calendar.getInstance().getTime().getTime()));
 
-		// create configured responders / listeners
-		List<CommunicatorConfig> responderList = AppContext.getResponderConfiguration().getResponderConfigList();
-		for (CommunicatorConfig respConfig : responderList) {
-			IResponder responder = new Responder(respConfig);
+		// start configured responders
+		List<ListenerConfiguration> listenerList = AppContext.getResponderConfiguration().getListenerConfigList();
+		for (ListenerConfiguration listenerConfig : listenerList) {
+			IResponder responder = new Responder(listenerConfig);
 			responder.create();
-			logger.info("Start listener=" + respConfig.getName() + " on= " + respConfig.getInterfaces() + ":"
-					+ respConfig.getPort());
 			responder.startListenAsync();
 		}
+		// Write PID file
 		if (AppContext.getBasicConfiguration().isWritePID()) {
 			String fs = System.getProperty("file.separator");
 			FileUtility.createPIDfile(AppContext.getBasicConfiguration().getPidPath() + fs + Constants.PID_FILE_NAME);

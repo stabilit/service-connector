@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.cache;
+package org.serviceconnector.conf;
 
 import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cache.CacheManager;
+import org.serviceconnector.cache.ICacheConfiguration;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
@@ -78,7 +79,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 		if (cacheEnabled != null && this.cacheEnabled != cacheEnabled) {
 			this.cacheEnabled = cacheEnabled;
 		}
-		logger.log(Level.OFF, Constants.CACHE_DISK_PATH + "cacheEnabled=" + this.cacheEnabled);
+		logger.info(Constants.CACHE_DISK_PATH + "cacheEnabled=" + this.cacheEnabled);
 
 		// diskPath
 		String sDiskPath = compositeConfiguration.getString(Constants.CACHE_DISK_PATH, null);
@@ -89,21 +90,21 @@ public class CacheConfiguration implements ICacheConfiguration {
 		if (sDiskPath != null && sDiskPath != this.diskPath) {
 			this.diskPath = sDiskPath;
 		}
-		logger.log(Level.OFF, Constants.CACHE_DISK_PATH + "diskPath=" + this.diskPath);
+		logger.info(Constants.CACHE_DISK_PATH + "=" + this.diskPath);
 
 		// maxElementsInMemory
 		Integer maxElementsInMemory = compositeConfiguration.getInteger(Constants.CACHE_MAX_ELEMENTS_IN_MEMORY, null);
 		if (maxElementsInMemory != null && maxElementsInMemory != this.maxElementsInMemory) {
 			this.maxElementsInMemory = maxElementsInMemory;
 		}
-		logger.log(Level.OFF, Constants.CACHE_DISK_PATH + "maxElementsInMemory=" + this.maxElementsInMemory);
+		logger.info(Constants.CACHE_MAX_ELEMENTS_IN_MEMORY + "=" + this.maxElementsInMemory);
 
 		// maxElementsOnDisk
 		Integer maxElementsOnDisk = compositeConfiguration.getInteger(Constants.CACHE_MAX_ELEMENTS_ON_DISK, null);
 		if (maxElementsOnDisk != null && maxElementsOnDisk != this.maxElementsOnDisk) {
 			this.maxElementsOnDisk = maxElementsOnDisk;
 		}
-		logger.log(Level.OFF, Constants.CACHE_DISK_PATH + "maxElementsOnDisk=" + this.maxElementsOnDisk);
+		logger.info(Constants.CACHE_MAX_ELEMENTS_ON_DISK + "=" + this.maxElementsOnDisk);
 
 		// expirationCheckIntervalSeconds
 		Integer expirationThreadIntervalSeconds = compositeConfiguration.getInteger(
@@ -111,7 +112,7 @@ public class CacheConfiguration implements ICacheConfiguration {
 		if (expirationThreadIntervalSeconds != null && expirationThreadIntervalSeconds != this.expirationCheckIntervalSeconds) {
 			this.expirationCheckIntervalSeconds = expirationThreadIntervalSeconds;
 		}
-		logger.log(Level.OFF, Constants.CACHE_DISK_PATH + "expirationCheckIntervalSeconds=" + this.expirationCheckIntervalSeconds);
+		logger.info(Constants.CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS + "=" + this.expirationCheckIntervalSeconds);
 	}
 
 	/** {@inheritDoc} */

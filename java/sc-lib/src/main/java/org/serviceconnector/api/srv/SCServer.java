@@ -28,7 +28,7 @@ import javax.activity.InvalidActivityException;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.conf.CommunicatorConfig;
+import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.RequesterContext;
@@ -264,19 +264,18 @@ public class SCServer {
 			}
 		}
 
-		CommunicatorConfig respConfig = new CommunicatorConfig(SCSessionServer.class.getSimpleName());
-		respConfig.setConnectionType(this.connectionType.getValue());
+		ListenerConfiguration listenerConfig = new ListenerConfiguration(SCSessionServer.class.getSimpleName());
+		listenerConfig.setConnectionType(this.connectionType.getValue());
+		listenerConfig.setNetworkInterfaces(nics);
+		listenerConfig.setPort(this.listenerPort);
 
-		respConfig.setInterfaces(nics);
-		respConfig.setPort(this.listenerPort);
-
-		responder = new Responder(respConfig);
+		responder = new Responder(listenerConfig);
 		try {
 			responder.create();
 			responder.startListenAsync();
 		} catch (Exception ex) {
 			this.listening = false;
-			logger.error("unable to start listener :" + respConfig.getName(), ex);
+			logger.error("unable to start listener :" + listenerConfig.getName(), ex);
 			throw ex;
 		}
 		this.listening = true;
