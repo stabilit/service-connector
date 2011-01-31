@@ -82,7 +82,11 @@ public class ServiceLoader {
 					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteHost
 							+ " configured for service=" + serviceName + " is not configured");
 				}
-				int noDataIntervalInSeconds = config.getInt(serviceName + Constants.PROPERTY_QUALIFIER_NOI);
+				Integer noDataIntervalInSeconds = config.getInteger(serviceName + Constants.PROPERTY_QUALIFIER_NOI, null);
+				if (noDataIntervalInSeconds == null) {
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
+							+ serviceName + Constants.PROPERTY_QUALIFIER_NOI + " is missing");
+				}
 				service = new CascadedPublishService(serviceName, (CascadedSC) server, noDataIntervalInSeconds);
 				break;
 			case CASCADED_FILE_SERVICE:

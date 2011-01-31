@@ -247,7 +247,14 @@ public final class Constants {
 	// web default values
 	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;
 	// web property keys
+	/**
+	 * XSL transformation cache enebled = transformation will be done every cycle
+	 */
 	public static final String WEB_XSL_TRANSFORMATION_CACHE_ENABLED = "web.xslTransformationCache.enabled";
+	/**
+	 * Page header XSL transformation cache enebled = transformation will be done every cycle
+	 */
+	public static final String WEB_PAGE_HEADER = "web.pageHeader";
 
 	/*
 	 * SCMP protocol constants ***********************
