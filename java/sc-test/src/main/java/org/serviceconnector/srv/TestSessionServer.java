@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
@@ -198,6 +199,19 @@ public class TestSessionServer extends TestStatefulServer {
 			return request;
 		}
 
+		// send back missing application error code
+		public SCMessage echoAppError3(SCMessage request, int operationTimeoutInMillis) {
+			request.setAppErrorCode(Constants.EMPTY_APP_ERROR_CODE);
+			return request;
+		}
+
+		// send back application error code = 0
+		public SCMessage echoAppError4(SCMessage request, int operationTimeoutInMillis) {
+			request.setAppErrorCode(0);
+			return request;
+		}
+
+		
 		// sleep for time defined in the body and send back the same message
 		public SCMessage sleep(SCMessage request, int operationTimeoutInMillis) {
 			String dataString = (String) request.getData();

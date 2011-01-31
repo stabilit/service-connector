@@ -65,6 +65,8 @@ public class TestConstants {
 	public static final String echoAppErrorCmd = "echoAppError";
 	public static final String echoAppError1Cmd = "echoAppError1";
 	public static final String echoAppError2Cmd = "echoAppError2";
+	public static final String echoAppError3Cmd = "echoAppError3";
+	public static final String echoAppError4Cmd = "echoAppError4";
 	public static final String largeResponseCmd = "largeResponse";
 	public static final String sleepCmd = "sleep";
 	public static final String cacheCmd = "cache";

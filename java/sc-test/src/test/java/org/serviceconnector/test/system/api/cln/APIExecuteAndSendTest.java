@@ -46,6 +46,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 
 	@Parameters
 	public static Collection<Object[]> getParameters() {
+		// SC definitions
 		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
 		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
 				TestConstants.log4jSC0Properties);
@@ -59,6 +60,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		scCascDefs.add(sc0CascDef);
 		scCascDefs.add(sc1CascDef);
 
+		// server definitions
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
@@ -99,6 +101,8 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("appErrorCode is not empty", Constants.EMPTY_APP_ERROR_CODE, response.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not null", null, response.getAppErrorText());
 		sessionService1.deleteSession();
 	}
 
@@ -123,6 +127,8 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("appErrorCode is not empty", Constants.EMPTY_APP_ERROR_CODE, response.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not null", null, response.getAppErrorText());
 		sessionService1.deleteSession();
 	}
 
@@ -147,6 +153,8 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("appErrorCode is not empty", Constants.EMPTY_APP_ERROR_CODE, response.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not null", null, response.getAppErrorText());
 		sessionService1.deleteSession();
 	}
 
@@ -171,11 +179,13 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
 		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		Assert.assertEquals("appErrorCode is not empty", Constants.EMPTY_APP_ERROR_CODE, response.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not null", null, response.getAppErrorText());
 		sessionService1.deleteSession();
 	}
 
 	/**
-	 * Description: exchange one message, return APP error<br>
+	 * Description: exchange one message, return APP error code and text<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -203,7 +213,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t006_executeAPPError() throws Exception {
+	public void t006_executeAPPErrorCodeOnly() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setDataLength(TestConstants.pangram.length());
 		SCMessage response = null;
@@ -223,11 +233,61 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	}
 
 	/**
+	 * Description: exchange one message, return APP error code = 0<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t007_executeAPPErrorCodeZero() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setDataLength(TestConstants.pangram.length());
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		request.setMessageInfo(TestConstants.echoAppError4Cmd);
+		response = sessionService1.execute(request);
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
+		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
+		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
+		Assert.assertEquals("appErrorCode is not 0", 0, response.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not null", null, response.getAppErrorText());
+		sessionService1.deleteSession();
+	}
+
+	
+	/**
+	 * Description: exchange one message, return missing APP error code only<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t008_executeAPPMissingErrorCodeOnly() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		request.setDataLength(TestConstants.pangram.length());
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		request.setMessageInfo(TestConstants.echoAppError3Cmd);
+		response = sessionService1.execute(request);
+		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
+		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
+		Assert.assertEquals("sessionId is not the same", sessionService1.getSessionId(), response.getSessionId());
+		Assert.assertEquals("service name is not the same", request.getServiceName(), response.getServiceName());
+		Assert.assertEquals("session info is not the same", request.getSessionInfo(), response.getSessionInfo());
+		Assert.assertEquals("appErrorCode is not missing", Constants.EMPTY_APP_ERROR_CODE, response.getAppErrorCode());
+		Assert.assertEquals("appErrorText is not null", null, response.getAppErrorText());
+		sessionService1.deleteSession();
+	}
+
+	
+	/**
 	 * Description: exchange one message, return only APP error text<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t007_executeAPPError() throws Exception {
+	public void t009_executeAPPErrorTextOnly() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		request.setDataLength(TestConstants.pangram.length());
 		SCMessage response = null;
@@ -252,7 +312,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t008_execute() throws Exception {
+	public void t010_executeBodyEmptyObject() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
@@ -268,7 +328,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t009_execute() throws Exception {
+	public void t011_executeMessageInfoEmty() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
@@ -284,7 +344,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t010_execute() throws Exception {
+	public void t012_executeMessageInfoBlank() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
@@ -300,7 +360,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t011_execute() throws Exception {
+	public void t013_executeMessageInfoTooLong() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
@@ -316,7 +376,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t012_execute() throws Exception {
+	public void t014_executeCacheIdEmpty() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
@@ -332,7 +392,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t013_execute() throws Exception {
+	public void t015_executeCacheIdBlank() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
@@ -348,7 +408,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t014_execute() throws Exception {
+	public void t016_executeCacheIdTooLong() throws Exception {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);

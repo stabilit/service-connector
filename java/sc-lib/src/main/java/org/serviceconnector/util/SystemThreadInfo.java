@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 public class SystemThreadInfo {
 
 	/** The Constant log. */
-	private final static Logger log = Logger.getLogger(SystemThreadInfo.class);
+	private final static Logger logger = Logger.getLogger(SystemThreadInfo.class);
 
 	private static final ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
 

@@ -186,7 +186,7 @@ public final class SC {
 		logger.info("Country setting=" + SystemInfo.getCountrySetting());
 		logger.info("User timezone=" + SystemInfo.getUserTimezone());
 		logger.info("UTC Offset=" + SystemInfo.getUtcOffset());
-		logger.info("Local date=" + SystemInfo.getStartupDateTime());
+		logger.info("Startup date=" + SystemInfo.getStartupDateTime());
 		logger.info("Available processors=" + SystemInfo.getAvailableProcessors());
 		logger.info("Max memory=" + SystemInfo.getMaxMemory());
 		logger.info("Free memory=" + SystemInfo.getFreeMemory());
