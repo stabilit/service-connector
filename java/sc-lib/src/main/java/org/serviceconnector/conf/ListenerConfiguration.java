@@ -38,7 +38,7 @@ import org.serviceconnector.util.ValidatorUtility;
  * @author JTraber
  */
 public class ListenerConfiguration {
-	
+
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(ListenerConfiguration.class);
 
@@ -77,11 +77,14 @@ public class ListenerConfiguration {
 	 * Load the configurated items
 	 * 
 	 * @param compositeConfig
+	 * @param remoteNodeListConfiguration
 	 * @throws SCMPValidatorException
 	 */
 
-	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
-		
+	@SuppressWarnings("unchecked")
+	public void load(CompositeConfiguration compositeConfig, RemoteNodeListConfiguration remoteNodeListConfiguration)
+			throws SCMPValidatorException {
+
 		// get interfaces for listener
 		networkInterfaces = (List<String>) compositeConfig.getList(this.name + Constants.PROPERTY_QUALIFIER_INTERFACES, null);
 		if (networkInterfaces == null) {
@@ -125,13 +128,13 @@ public class ListenerConfiguration {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown connectionType=" + this.name
 					+ this.connectionType);
 		}
-		
+
 		// get username & password for netty.web
 		if (connectionType == ConnectionType.NETTY_WEB) {
 			this.username = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_USERNAME, null);
 			if (this.username == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
-						+ Constants.PROPERTY_QUALIFIER_USERNAME + " is missing");	
+						+ Constants.PROPERTY_QUALIFIER_USERNAME + " is missing");
 			}
 			this.password = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_PASSWORD, null);
 			if (this.password == null) {
@@ -145,23 +148,21 @@ public class ListenerConfiguration {
 			String remoteNode = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_REMOTE_NODE);
 			if (remoteNode == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
-					+ Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is missing");
+						+ Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is missing");
 			}
-			// create configuration for remote host
-			RemoteNodeConfiguration remoteNodeConfig = new RemoteNodeConfiguration(remoteNode);
-			// load it with the configurated items
-			remoteNodeConfig.load(compositeConfig);
+			RemoteNodeConfiguration remoteNodeConfig = remoteNodeListConfiguration.getRequesterConfigurations().get(remoteNode);
+
 			// remote node must be a web server
-			if (!remoteNodeConfig.getServerType().equals(ServerType.WEB_SERVER.getValue())) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "remote node=" +remoteNode
-					+ " is not a web server");
+			if ((remoteNodeConfig.getServerType() == ServerType.WEB_SERVER) == false) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "remote node=" + remoteNode
+						+ " is not a web server");
 			}
-			
+
 			// set remote host configuration into the listener configuration
 			this.remoteNodeConfiguration = remoteNodeConfig;
 		}
 	}
-	
+
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.name);

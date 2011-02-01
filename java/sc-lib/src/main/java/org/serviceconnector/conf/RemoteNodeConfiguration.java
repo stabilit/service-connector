@@ -27,7 +27,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class RemoteNodeConfiguration {
 
 	/** The serverType. */
-	private String serverType;
+	private ServerType serverType;
 	/** The node name. */
 	private String name;
 	/** The host. */
@@ -103,29 +103,27 @@ public class RemoteNodeConfiguration {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown connectionType=" + this.name
 					+ this.connectionType);
 		}
-		
+
 		// get serverType
-		this.serverType = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_TYPE);
-		if (this.serverType == null) {
+		String serverTypeValue = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_TYPE);
+		if (serverTypeValue == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 					+ Constants.PROPERTY_QUALIFIER_TYPE + " is missing");
 		}
-		ServerType serverType = ServerType.getType(this.serverType);
-		if (serverType == ServerType.UNDEFINED) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown type=" + this.name
-					+ this.serverType);
+		this.serverType = ServerType.getType(serverTypeValue);
+		if (this.serverType == ServerType.UNDEFINED) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown type=" + this.name + this.serverType);
 		}
 		if (serverType == ServerType.STATEFUL_SERVER) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "stateful server=" + this.name
-					+ this.serverType + "must not be configured");
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "stateful server=" + this.name + this.serverType
+					+ "must not be configured");
 		}
 
-		if ((serverType == ServerType.FILE_SERVER) || 
-			(serverType == ServerType.WEB_SERVER)|| 
-			(serverType == ServerType.CASCADED_SC)) {
+		if ((serverType == ServerType.FILE_SERVER) || (serverType == ServerType.WEB_SERVER)
+				|| (serverType == ServerType.CASCADED_SC)) {
 			// get max connection pool size
-			Integer localMaxPoolSize = compositeConfig.getInteger(this.name
-					+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE, null);
+			Integer localMaxPoolSize = compositeConfig.getInteger(this.name + Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE,
+					null);
 			if (localMaxPoolSize == null) {
 				localMaxPoolSize = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 			}
@@ -141,11 +139,10 @@ public class RemoteNodeConfiguration {
 			this.keepAliveIntervalSeconds = localKeepAliveIntervalSeconds;
 			ValidatorUtility.validateInt(0, this.keepAliveIntervalSeconds, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 		}
-		
+
 		if (serverType == ServerType.FILE_SERVER) {
 			// get maxSessions
-			Integer localMaxSessions = compositeConfig.getInteger(this.name
-					+ Constants.PROPERTY_QALIFIER_MAX_SESSIONS, null);
+			Integer localMaxSessions = compositeConfig.getInteger(this.name + Constants.PROPERTY_QALIFIER_MAX_SESSIONS, null);
 			if (localMaxSessions == null) {
 				localMaxSessions = Constants.DEFAULT_MAX_FILE_SESSIONS;
 			}
@@ -199,8 +196,8 @@ public class RemoteNodeConfiguration {
 	/**
 	 * @return serverType (called type in the configuration)
 	 */
-	public String getServerType() {
-		return serverType;
+	public ServerType getServerType() {
+		return this.serverType;
 	}
 
 	/**
@@ -226,7 +223,7 @@ public class RemoteNodeConfiguration {
 		builder.append("/mxc=");
 		builder.append(this.maxPoolSize);
 		builder.append("/mxs=");
-		builder.append(this.maxSessions);	
+		builder.append(this.maxSessions);
 		return builder.toString();
 	}
 }

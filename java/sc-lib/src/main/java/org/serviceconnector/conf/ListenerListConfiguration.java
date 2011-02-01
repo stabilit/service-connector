@@ -42,7 +42,8 @@ public class ListenerListConfiguration {
 	public ListenerListConfiguration() {
 	}
 
-	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
+	public void load(CompositeConfiguration compositeConfig, RemoteNodeListConfiguration remoteNodeListConfiguration)
+			throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
 		List<String> listeners = compositeConfig.getList(Constants.PROPERTY_LISTENERS, null);
 		if (listeners == null) {
@@ -56,7 +57,7 @@ public class ListenerListConfiguration {
 			listenerName = listenerName.trim(); // remove blanks in name
 			ListenerConfiguration listenerConfig = new ListenerConfiguration(listenerName);
 			// load it with the configurated items
-			listenerConfig.load(compositeConfig);
+			listenerConfig.load(compositeConfig, remoteNodeListConfiguration);
 			if (this.listenerConfigurations.containsKey(listenerName) == true) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
 						"listener already in registry name must be unique listenerName=" + listenerName);

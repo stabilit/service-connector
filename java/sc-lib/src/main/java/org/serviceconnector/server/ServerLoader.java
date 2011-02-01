@@ -51,8 +51,7 @@ public class ServerLoader {
 
 		for (RemoteNodeConfiguration remoteNodeConfiguration : remoteNodesMap.values()) {
 
-			String serverTypeString = remoteNodeConfiguration.getServerType();
-			ServerType serverType = ServerType.getType(serverTypeString);
+			ServerType serverType = remoteNodeConfiguration.getServerType();
 			InetSocketAddress socketAddress = new InetSocketAddress(remoteNodeConfiguration.getHost(), remoteNodeConfiguration
 					.getPort());
 
@@ -69,7 +68,7 @@ public class ServerLoader {
 				continue;
 			default:
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong serverType, serverName/serverType="
-						+ remoteNodeConfiguration.getName() + "/" + serverTypeString);
+						+ remoteNodeConfiguration.getName() + "/" + serverType);
 			}
 			AppContext.getServerRegistry().addServer(server.getServerKey(), server);
 		}

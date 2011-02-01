@@ -114,8 +114,7 @@ public abstract class Server implements IServer {
 	/** {@inheritDoc} */
 	@Override
 	public ServerType getType() {
-		// TODO JOT
-		return null;
+		return this.remoteNodeConfiguration.getServerType();
 	}
 
 	/**
