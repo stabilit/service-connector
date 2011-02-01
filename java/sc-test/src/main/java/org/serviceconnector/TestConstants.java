@@ -99,4 +99,5 @@ public class TestConstants {
 	public static final String SC0 = "sc0";
 	public static final String SC1_CASC = "sc1Casc";
 	public static final String SC0_CASC = "sc0Casc";
+	public static final String RemoteNodeName = "TestRemoteNode";
 }

@@ -26,8 +26,8 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPDeRegisterServerCall;
 import org.serviceconnector.call.SCMPRegisterServerCall;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -43,8 +43,8 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP,
-				ConnectionType.NETTY_HTTP.getValue(), 0));
+		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
+				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 1, 0));
 	}
 
 	@After

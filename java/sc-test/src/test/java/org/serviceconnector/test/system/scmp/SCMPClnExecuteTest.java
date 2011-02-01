@@ -29,10 +29,10 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPBodyType;
@@ -57,8 +57,8 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1,
 				TestConstants.sesServiceName1);
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, TestConstants.PORT_SC_HTTP,
-				ConnectionType.NETTY_HTTP.getValue(), 0));
+		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
+				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 1, 0));
 		AppContext.init();
 		this.createSession();
 	}

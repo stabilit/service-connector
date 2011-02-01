@@ -14,11 +14,11 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPDetachCall;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
-import org.serviceconnector.net.req.RequesterContext;
 
 public class MultipleNICTest extends IntegrationSuperTest {
 
@@ -43,8 +43,8 @@ public class MultipleNICTest extends IntegrationSuperTest {
 			Enumeration<InetAddress> inetAdresses = netint.getInetAddresses();
 			for (InetAddress inetAddress : Collections.list(inetAdresses)) {
 				try {
-					IRequester req = new Requester(new RequesterContext(inetAddress.getHostAddress(), TestConstants.PORT_SC_HTTP,
-							ConnectionType.NETTY_HTTP.getValue(), 0));
+					IRequester req = new Requester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
+							TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 1, 0));
 					SCMPAttachCall attachCall = new SCMPAttachCall(req);
 					attachCall.invoke(cbk, 1000);
 					TestUtil.checkReply(cbk.getMessageSync(1000));

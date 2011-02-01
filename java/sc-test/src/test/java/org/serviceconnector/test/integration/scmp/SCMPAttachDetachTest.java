@@ -31,8 +31,8 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPDetachCall;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -76,7 +76,8 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 	 */
 	@Test
 	public void t01_AttachDetach() throws Exception {
-		this.requester = new SCRequester(new RequesterContext(TestConstants.HOST, this.port, this.connectionType.getValue(), 0));
+		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, this.port,
+				this.connectionType.getValue(), 1, 0));
 		SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);
 		TestCallback callback = new TestCallback();
 		attachCall.invoke(callback, 1000);
