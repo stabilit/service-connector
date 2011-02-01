@@ -19,7 +19,7 @@ package org.serviceconnector;
 import java.lang.management.ManagementFactory;
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Map;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -129,8 +129,8 @@ public final class SC {
 		statistics.setStartupDateTime(new Timestamp(Calendar.getInstance().getTime().getTime()));
 
 		// start configured responders
-		List<ListenerConfiguration> listenerList = AppContext.getResponderConfiguration().getListenerConfigList();
-		for (ListenerConfiguration listenerConfig : listenerList) {
+		Map<String, ListenerConfiguration> listenerList = AppContext.getResponderConfiguration().getListenerConfigurations();
+		for (ListenerConfiguration listenerConfig : listenerList.values()) {
 			IResponder responder = new Responder(listenerConfig);
 			responder.create();
 			responder.startListenAsync();
