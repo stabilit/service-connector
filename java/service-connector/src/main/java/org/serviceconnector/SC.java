@@ -109,10 +109,11 @@ public final class SC {
 		AppContext.getCacheConfiguration().load(AppContext.getApacheCompositeConfig());
 		AppContext.getResponderConfiguration().load(AppContext.getApacheCompositeConfig());
 		AppContext.getRequesterConfiguration().load(AppContext.getApacheCompositeConfig());
+		AppContext.getServiceConfiguration().load(AppContext.getApacheCompositeConfig());
 		// load servers
-		ServerLoader.load(AppContext.getApacheCompositeConfig());
+		ServerLoader.load(AppContext.getRequesterConfiguration());
 		// load services
-		ServiceLoader.load(AppContext.getApacheCompositeConfig());
+		ServiceLoader.load(AppContext.getServiceConfiguration());
 		// load cache configuration in cache manager after service are loaded
 		AppContext.getCacheManager().load(AppContext.getCacheConfiguration());
 
