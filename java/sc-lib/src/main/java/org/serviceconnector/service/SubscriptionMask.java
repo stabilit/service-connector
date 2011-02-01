@@ -75,6 +75,15 @@ public class SubscriptionMask {
 		this.mask = SubscriptionMask.masking(this.mask, newMask);
 	}
 
+	/**
+	 * Masking. Combines base mask with given new mask.
+	 * 
+	 * @param baseMask
+	 *            the base mask
+	 * @param newMask
+	 *            the new mask
+	 * @return the byte[]
+	 */
 	public static byte[] masking(byte[] baseMask, byte[] newMask) {
 		for (int byteIndex = 0; byteIndex < baseMask.length; byteIndex++) {
 			if (baseMask[byteIndex] == 0x25) {
@@ -89,10 +98,16 @@ public class SubscriptionMask {
 		return baseMask;
 	}
 
-	public String evalNewMask(String newMaskString) {
-		// TODO JOT/JAN how to handle different length of mask
-		byte[] newMask = newMaskString.getBytes();
-		byte[] tmpMask = mask;
-		return new String(SubscriptionMask.masking(tmpMask, newMask));
+	/**
+	 * Masking. Combines base mask with given new mask.
+	 * 
+	 * @param currentSubscriptionMask
+	 *            the current subscription mask
+	 * @param mask2
+	 *            the mask2
+	 * @return the string
+	 */
+	public static String masking(SubscriptionMask currentSubscriptionMask, String mask2) {
+		return new String(SubscriptionMask.masking(currentSubscriptionMask.getValue().getBytes(), mask2.getBytes()));
 	}
 }

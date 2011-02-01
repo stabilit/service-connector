@@ -66,12 +66,16 @@ public class StatefulServer extends Server implements IStatefulServer {
 	/** The max sessions. */
 	private int maxSessions;
 	private StatefulService service;
+	private RemoteNodeConfiguration sasRemoteNodeConfiguration;
 
 	public StatefulServer(RemoteNodeConfiguration remoteNodeConfiguration, String serviceName, InetSocketAddress socketAddress) {
 		super(remoteNodeConfiguration, serviceName, socketAddress);
 		this.sessions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 		this.maxSessions = remoteNodeConfiguration.getMaxSessions();
 		this.service = null;
+		// set up separate remote node configuration for server session abort request in case of busy connection pool
+		this.sasRemoteNodeConfiguration = new RemoteNodeConfiguration(remoteNodeConfiguration.getName(), remoteNodeConfiguration
+				.getHost(), remoteNodeConfiguration.getPort(), remoteNodeConfiguration.getConnectionType(), 0, 1, 1);
 	}
 
 	/** {@inheritDoc} */
@@ -341,8 +345,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 			// ConnectionPoolBusyException after wait mec - try opening a new connection
 			RemoteNodeConfiguration remoteNodeConfiguration = this.requester.getRemoteNodeConfiguration();
 			// set up a new requester to make the SAS - only 1 connection is allowed
-			// TODO JOT special remoteNodeConf for SAS
-			Requester sasRequester = new Requester(remoteNodeConfiguration);
+			Requester sasRequester = new Requester(this.sasRemoteNodeConfiguration);
 			try {
 				this.serverAbortSessionWithSpecialRequester(sasRequester, abortMessage, callback, oti);
 			} catch (ConnectionPoolBusyException e) {

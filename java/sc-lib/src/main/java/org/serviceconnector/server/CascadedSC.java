@@ -107,6 +107,21 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Try acquire permit on cascaded client semaphore. This method is used to get permit to continue. Only one permit is available
+	 * per cascaded client. If no permit is available thread waits inside the semaphore. Operation breaks if OTI times out. After
+	 * receiving a valid permit cascaded client will be checked to be active. Operation stops if client got destroyed in the
+	 * meantime.
+	 * Important: Pay attention an acquired permit must be released as fast as possible!!! Other threads are blocked.
+	 * 
+	 * @param cascClient
+	 *            the cascaded client
+	 * @param oti
+	 *            the operation timeout
+	 * @param callback
+	 *            the callback
+	 * @return true, if successful
+	 */
 	public boolean tryAcquirePermitOnCascClientSemaphore(CascadedClient cascClient, int oti, ISCMPMessageCallback callback) {
 		boolean permit = false;
 		Semaphore cascClientSemaphore = cascClient.getCascClientSemaphore();
@@ -139,12 +154,15 @@ public class CascadedSC extends Server implements IStatefulServer {
 	public void clientSubscribe(CascadedClient cascClient, SCMPMessage msgToForward, ClnSubscribeCommandCallback callback,
 			int timeoutMillis) {
 		int oti = (int) (this.operationTimeoutMultiplier * timeoutMillis);
-
+		long boforeAcquireTime = System.currentTimeMillis();
 		if (this.tryAcquirePermitOnCascClientSemaphore(cascClient, oti, callback) == false) {
 			// could not get permit to process - response done inside method
 			return;
 		}
+		// calculate new OTI, reduce original by wait time in acquire
+		oti = oti - (int) (System.currentTimeMillis() - boforeAcquireTime);
 		// try catch block to assure releasing permit in case of any error - very important!
+		SubscriptionMask currentSubscriptionMask = cascClient.getSubscriptionMask();
 		try {
 			// thread got permit to continue
 			if (cascClient.isSubscribed() == false) {
@@ -155,19 +173,23 @@ public class CascadedSC extends Server implements IStatefulServer {
 				SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, msgToForward);
 				// store client mask in subscription
 				String mask = msgToForward.getHeader(SCMPHeaderAttributeKey.MASK);
+				if (currentSubscriptionMask != null) {
+					// cascaded client already has subscribed clients, figure out combined mask
+					mask = SubscriptionMask.masking(currentSubscriptionMask, mask);
+				}
 				cascClient.setSubscriptionMask(new SubscriptionMask(mask));
 				CascClientSubscribeCallback cascCallback = new CascClientSubscribeCallback(callback, cascClient);
-				// TODO JOT/JAN what OTI to continue??
 				subscribeCall.invoke(cascCallback, oti);
 				return;
 			}
-			// TODO JOT/JAN what OTI to continue??
 			// cascaded client already subscribed - special subscribe
 			ClnSubscribeCascSubscribedCallback cascCallback = new ClnSubscribeCascSubscribedCallback(callback.getRequest(),
 					callback);
 			cascCallback.setCascClient(cascClient);
 			this.subscribeWithActiveCascadedClient(cascClient, msgToForward, cascCallback, oti);
 		} catch (Exception e) {
+			// set the old mask in case of an error
+			cascClient.setSubscriptionMask(currentSubscriptionMask);
 			// release permit in case of an error
 			cascClient.getCascClientSemaphore().release();
 			callback.receive(e);
@@ -177,11 +199,15 @@ public class CascadedSC extends Server implements IStatefulServer {
 	public void cascadedSCSubscribe(CascadedClient cascClient, SCMPMessage msgToForward, CascSCSubscribeCallback callback,
 			int timeoutMillis) {
 		int oti = (int) (this.operationTimeoutMultiplier * timeoutMillis);
+		long boforeAcquireTime = System.currentTimeMillis();
 		if (this.tryAcquirePermitOnCascClientSemaphore(cascClient, oti, callback) == false) {
 			// could not get permit to process - response done inside method
 			return;
 		}
+		// calculate new OTI, reduce original by wait time in acquire
+		oti = oti - (int) (System.currentTimeMillis() - boforeAcquireTime);
 		// try catch block to assure releasing permit in case of any error - very important!
+		SubscriptionMask currentSubscriptionMask = cascClient.getSubscriptionMask();
 		try {
 			// thread got permit to continue
 			if (cascClient.isSubscribed() == false) {
@@ -192,17 +218,21 @@ public class CascadedSC extends Server implements IStatefulServer {
 				SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, msgToForward);
 				// store cascadedSC mask in subscription
 				String mask = msgToForward.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
+				if (currentSubscriptionMask != null) {
+					// cascaded client already has subscribed clients, figure out combined mask
+					mask = SubscriptionMask.masking(currentSubscriptionMask, mask);
+				}
 				cascClient.setSubscriptionMask(new SubscriptionMask(mask));
 				CascClientSubscribeCallback cascCallback = new CascClientSubscribeCallback(callback, cascClient);
-				// TODO JOT/JAN what OTI to continue??
 				subscribeCall.invoke(cascCallback, oti);
 				return;
 			}
-			// TODO JOT/JAN what OTI to continue??
 			// cascaded client already subscribed
 			callback.setCascClient(cascClient);
 			this.subscribeWithActiveCascadedClient(cascClient, msgToForward, callback, oti);
 		} catch (Exception e) {
+			// set the old mask in case of an error
+			cascClient.setSubscriptionMask(currentSubscriptionMask);
 			// release permit in case of an error
 			cascClient.getCascClientSemaphore().release();
 			callback.receive(e);
@@ -215,8 +245,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 		msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
 		String clientMaskString = msgToForward.getHeader(SCMPHeaderAttributeKey.MASK);
 		SubscriptionMask cascClientMask = cascClient.getSubscriptionMask();
-		String cascadedMask = cascClientMask.evalNewMask(clientMaskString);
-		// TODO JOT/JAN calculate new mask and put into cascadedMask
+		String cascadedMask = SubscriptionMask.masking(cascClientMask, clientMaskString);
 		msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_MASK, cascadedMask);
 		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, msgToForward);
 		subscribeCall.invoke(callback, oti);
@@ -225,10 +254,13 @@ public class CascadedSC extends Server implements IStatefulServer {
 	public void clientUnsubscribe(CascadedClient cascClient, SCMPMessage msgToForward, ClnUnsubscribeCommandCallback callback,
 			int timeoutMillis) {
 		int oti = (int) (this.operationTimeoutMultiplier * timeoutMillis);
+		long boforeAcquireTime = System.currentTimeMillis();
 		if (this.tryAcquirePermitOnCascClientSemaphore(cascClient, oti, callback) == false) {
 			// could not get permit to process - response done inside method
 			return;
 		}
+		// calculate new OTI, reduce original by wait time in acquire
+		oti = oti - (int) (System.currentTimeMillis() - boforeAcquireTime);
 		// try catch block to assure releasing permit in case of any error - very important!
 		try {
 			// thread got permit to continue
@@ -237,7 +269,6 @@ public class CascadedSC extends Server implements IStatefulServer {
 				SCMPClnUnsubscribeCall unsubscribeCall = new SCMPClnUnsubscribeCall(this.requester, msgToForward);
 				// set cascaded client subscriptonId
 				msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
-				// TODO JOT/JAN what OTI to continue??
 				try {
 					unsubscribeCall.invoke(callback, oti);
 				} finally {
@@ -250,7 +281,6 @@ public class CascadedSC extends Server implements IStatefulServer {
 			ClnUnsubscribeCascSubscribedCallback cascCallback = new ClnUnsubscribeCascSubscribedCallback(callback.getRequest(),
 					callback);
 			cascCallback.setCascClient(cascClient);
-			// TODO JOT/JAN what OTI to continue??
 			this.unsubscribeWithActiveCascadedClient(cascClient, msgToForward, cascCallback, oti);
 		} catch (Exception e) {
 			// release permit in case of an error
@@ -266,7 +296,6 @@ public class CascadedSC extends Server implements IStatefulServer {
 		cascClient.removeClientSubscriptionId(msgToForward.getSessionId());
 		// set cascaded subscriptonId
 		msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
-		// TODO JOT/JAN calculate new mask and put into cascadedMask
 		String cascadedMask = cascClient.evalSubscriptionMaskFromClientSubscriptions();
 		msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_MASK, cascadedMask);
 		SCMPClnUnsubscribeCall unsubscribeCall = new SCMPClnUnsubscribeCall(this.requester, msgToForward);
@@ -276,10 +305,13 @@ public class CascadedSC extends Server implements IStatefulServer {
 	public void cascadedSCUnsubscribe(CascadedClient cascClient, SCMPMessage msgToForward, CascSCUnsubscribeCallback callback,
 			int timeoutMillis) {
 		int oti = (int) (this.operationTimeoutMultiplier * timeoutMillis);
+		long boforeAcquireTime = System.currentTimeMillis();
 		if (this.tryAcquirePermitOnCascClientSemaphore(cascClient, oti, callback) == false) {
 			// could not get permit to process - response done inside method
 			return;
 		}
+		// calculate new OTI, reduce original by wait time in acquire
+		oti = oti - (int) (System.currentTimeMillis() - boforeAcquireTime);
 		// try catch block to assure releasing permit in case of any error - very important!
 		try {
 			if (cascClient.getClientSubscriptionIds().size() <= 1) {
@@ -287,7 +319,6 @@ public class CascadedSC extends Server implements IStatefulServer {
 				SCMPClnUnsubscribeCall unsubscribeCall = new SCMPClnUnsubscribeCall(this.requester, msgToForward);
 				// set cascaded client subscriptonId
 				msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
-				// TODO JOT/JAN what OTI to continue??
 				try {
 					unsubscribeCall.invoke(callback, oti);
 				} finally {
@@ -296,7 +327,6 @@ public class CascadedSC extends Server implements IStatefulServer {
 				}
 				return;
 			}
-			// TODO JOT/JAN what OTI to continue??
 			// more than one client subscription left - unsubscribe only cascaded SC, change subscription for cascaded client
 			callback.setCascClient(cascClient);
 			this.unsubscribeWithActiveCascadedClient(cascClient, msgToForward, callback, oti);

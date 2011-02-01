@@ -45,6 +45,7 @@ public class CascadedClient {
 		this.publishService = publishService;
 		this.destroyed = false;
 		this.serviceName = this.publishService.getName();
+		this.subscriptionMask = null;
 	}
 
 	public boolean isSubscribed() {
