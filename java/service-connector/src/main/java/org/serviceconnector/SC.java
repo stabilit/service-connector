@@ -107,8 +107,8 @@ public final class SC {
 		AppContext.initConfiguration(configFileName);
 		AppContext.getBasicConfiguration().load(AppContext.getApacheCompositeConfig());
 		AppContext.getCacheConfiguration().load(AppContext.getApacheCompositeConfig());
-		AppContext.getResponderConfiguration().load(AppContext.getApacheCompositeConfig());
 		AppContext.getRequesterConfiguration().load(AppContext.getApacheCompositeConfig());
+		AppContext.getResponderConfiguration().load(AppContext.getApacheCompositeConfig(), AppContext.getRequesterConfiguration());
 		AppContext.getServiceConfiguration().load(AppContext.getApacheCompositeConfig());
 		// load servers
 		ServerLoader.load(AppContext.getRequesterConfiguration());
