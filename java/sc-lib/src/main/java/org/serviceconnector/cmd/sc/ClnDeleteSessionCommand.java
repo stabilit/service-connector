@@ -99,7 +99,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		case UNDEFINED:
 		default:
 			throw new SCMPCommandException(SCMPError.SC_ERROR, "delete session not allowed for service "
-					+ abstractServer.getServiceName());
+					+ abstractService.getName());
 		}
 
 		StatefulServer statefulServer = (StatefulServer) abstractServer;

@@ -39,7 +39,6 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Service;
-import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.util.URLCallString;
@@ -103,11 +102,11 @@ public class InspectCommand extends CommandAdapter {
 			logger.debug("state request for service:" + serviceName);
 
 			if (this.serviceRegistry.containsKey(serviceName)) {
-				if (this.serviceRegistry.getService(serviceName).getState() == ServiceState.ENABLED) {
-					scmpReply.setBody(ServiceState.ENABLED.toString());
+				if (this.serviceRegistry.getService(serviceName).isEnabled() == true) {
+					scmpReply.setBody(Constants.ENABLE);
 					logger.debug("service:" + serviceName + "is enabled");
-				} else if (this.serviceRegistry.getService(serviceName).getState() == ServiceState.DISABLED) {
-					scmpReply.setBody(ServiceState.DISABLED.toString());
+				} else if (this.serviceRegistry.getService(serviceName).isEnabled() == false) {
+					scmpReply.setBody(Constants.DISABLE);
 					logger.debug("service:" + serviceName + "is disabled");
 				} else {
 					scmpReply.setBody("?");

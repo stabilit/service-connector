@@ -46,8 +46,8 @@ public class FileServer extends Server {
 	/** The max sessions. */
 	private int maxSessions;
 
-	public FileServer(RemoteNodeConfiguration remoteNodeConfiguration, String serviceName, InetSocketAddress socketAddress) {
-		super(remoteNodeConfiguration, serviceName, socketAddress);
+	public FileServer(RemoteNodeConfiguration remoteNodeConfiguration, InetSocketAddress socketAddress) {
+		super(remoteNodeConfiguration, socketAddress);
 		this.sessions = Collections.synchronizedList(new ArrayList<FileSession>());
 		this.maxSessions = remoteNodeConfiguration.getMaxSessions();
 		this.serverKey = remoteNodeConfiguration.getName();

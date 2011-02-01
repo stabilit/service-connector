@@ -44,14 +44,13 @@ public abstract class Server implements IServer {
 	protected Requester requester;
 	/** The server key. */
 	protected String serverKey;
-	protected String serviceName;
+
 	/** The operation timeout mulitplier. */
 	protected final double operationTimeoutMultiplier = AppContext.getBasicConfiguration().getOperationTimeoutMultiplier();
 
-	public Server(RemoteNodeConfiguration remoteNodeConfiguration, String serviceName, InetSocketAddress socketAddress) {
+	public Server(RemoteNodeConfiguration remoteNodeConfiguration, InetSocketAddress socketAddress) {
 		this.requester = new Requester(remoteNodeConfiguration);
-		this.serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
-		this.serviceName = serviceName;
+		this.serverKey = "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		this.socketAddress = socketAddress;
 	}
 
@@ -109,12 +108,6 @@ public abstract class Server implements IServer {
 	 */
 	public int getMaxConnections() {
 		return this.remoteNodeConfiguration.getMaxPoolSize();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getServiceName() {
-		return this.serviceName;
 	}
 
 	/** {@inheritDoc} */

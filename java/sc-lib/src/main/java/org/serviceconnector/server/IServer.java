@@ -12,13 +12,6 @@ public interface IServer {
 	public abstract ServerType getType();
 
 	/**
-	 * Gets the service name.
-	 * 
-	 * @return the service name
-	 */
-	public abstract String getServiceName();
-
-	/**
 	 * Abort session on server.
 	 * 
 	 * @param session

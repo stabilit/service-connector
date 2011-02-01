@@ -158,15 +158,18 @@ public class FileUtility {
 			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
 			long pid = Long.parseLong(processName.split("@")[0]);
 
-			// create the pid file
 			File pidFile = new File(fileNameFull);
-			if (pidFile.exists() == false) {
-				pidFile.createNewFile();
+			File parent = pidFile.getParentFile();
+			// create directory if non existent
+			if (parent.exists() == true || parent.mkdirs()) {
+				if (pidFile.exists() == false) {
+					pidFile.createNewFile();
+				}
+				fw = new FileWriter(pidFile);
+				fw.write("pid: " + pid);
+				fw.flush();
+				logger.log(Level.OFF, "Create PID-file=" + fileNameFull + " PID=" + pid);
 			}
-			fw = new FileWriter(pidFile);
-			fw.write("pid: " + pid);
-			fw.flush();
-			logger.log(Level.OFF, "Create PID-file=" + fileNameFull + " PID=" + pid);
 		} finally {
 			if (fw != null) {
 				fw.close();

@@ -66,12 +66,15 @@ public class StatefulServer extends Server implements IStatefulServer {
 	/** The max sessions. */
 	private int maxSessions;
 	private StatefulService service;
+	private String serviceName;
 	private RemoteNodeConfiguration sasRemoteNodeConfiguration;
 
 	public StatefulServer(RemoteNodeConfiguration remoteNodeConfiguration, String serviceName, InetSocketAddress socketAddress) {
-		super(remoteNodeConfiguration, serviceName, socketAddress);
+		super(remoteNodeConfiguration, socketAddress);
 		this.sessions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 		this.maxSessions = remoteNodeConfiguration.getMaxSessions();
+		this.serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
+		this.serviceName = serviceName;
 		this.service = null;
 		// set up separate remote node configuration for server session abort request in case of busy connection pool
 		this.sasRemoteNodeConfiguration = new RemoteNodeConfiguration(remoteNodeConfiguration.getName(), remoteNodeConfiguration
@@ -110,6 +113,15 @@ public class StatefulServer extends Server implements IStatefulServer {
 	@Override
 	public int getMaxSessions() {
 		return this.maxSessions;
+	}
+
+	/**
+	 * Gets the service name.
+	 * 
+	 * @return the service name
+	 */
+	public String getServiceName() {
+		return this.serviceName;
 	}
 
 	/**

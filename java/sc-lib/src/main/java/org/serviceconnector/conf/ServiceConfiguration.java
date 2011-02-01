@@ -37,6 +37,8 @@ public class ServiceConfiguration {
 	private String uploadScript;
 	/** The listScript for file service. */
 	private String listScript;
+	/** The nod data interval in seconds. */
+	private int nodDataIntervalInSeconds;
 	/** The remote node configuration for file services and cascased services. */
 	private RemoteNodeConfiguration remoteNodeConfiguration;
 
@@ -54,8 +56,9 @@ public class ServiceConfiguration {
 		this.uploadScript = null;
 		this.listScript = null;
 		this.remoteNodeConfiguration = null;
+		this.nodDataIntervalInSeconds = Constants.DEFAULT_NO_DATA_INTERVAL_SECONDS;
 	}
-	
+
 	/**
 	 * Load the configured items
 	 * 
@@ -63,7 +66,7 @@ public class ServiceConfiguration {
 	 * @throws SCMPValidatorException
 	 */
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
-		
+
 		// get type
 		this.type = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_TYPE);
 		if (type == null) {
@@ -72,25 +75,25 @@ public class ServiceConfiguration {
 		}
 		ServiceType serviceType = ServiceType.getType(this.type);
 		if (serviceType == ServiceType.UNDEFINED) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown serviceType=" + this.name
-					+ this.type);
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown serviceType=" + this.name + this.type);
 		}
 
 		// get enabled
-		this.enabled = compositeConfig.getBoolean(this.name + Constants.PROPERTY_QUALIFIER_ENABLED, Constants.DEFAULT_SERVICE_ENABLED);
+		this.enabled = compositeConfig.getBoolean(this.name + Constants.PROPERTY_QUALIFIER_ENABLED,
+				Constants.DEFAULT_SERVICE_ENABLED);
 
 		// get path & uploadScript & listScript for file service
 		if (serviceType == ServiceType.FILE_SERVICE) {
 			this.path = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_PATH, null);
 			if (this.path == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
-						+ Constants.PROPERTY_QUALIFIER_PATH + " is missing");	
+						+ Constants.PROPERTY_QUALIFIER_PATH + " is missing");
 			}
 
 			this.uploadScript = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT, null);
 			if (this.uploadScript == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
-						+ Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT + " is missing");	
+						+ Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT + " is missing");
 			}
 			this.listScript = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_LIST_SCRIPT, null);
 			if (this.listScript == null) {
@@ -98,16 +101,14 @@ public class ServiceConfiguration {
 						+ Constants.PROPERTY_QUALIFIER_LIST_SCRIPT + " is missing");
 			}
 		}
-		
+
 		// get remote host for file services or cascaded services
-		if ((serviceType == ServiceType.FILE_SERVICE) || 
-			(serviceType == ServiceType.CASCADED_SESSION_SERVICE) || 
-			(serviceType == ServiceType.CASCADED_PUBLISH_SERVICE) ||
-			(serviceType == ServiceType.CASCADED_FILE_SERVICE)) {
+		if ((serviceType == ServiceType.FILE_SERVICE) || (serviceType == ServiceType.CASCADED_SESSION_SERVICE)
+				|| (serviceType == ServiceType.CASCADED_PUBLISH_SERVICE) || (serviceType == ServiceType.CASCADED_FILE_SERVICE)) {
 			String remoteNode = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_REMOTE_NODE);
 			if (remoteNode == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
-					+ Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is missing");
+						+ Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is missing");
 			}
 			// create configuration for remote host
 			RemoteNodeConfiguration remoteNodeConfig = new RemoteNodeConfiguration(remoteNode);
@@ -116,12 +117,21 @@ public class ServiceConfiguration {
 			// remote node must be a web server
 			if (remoteNodeConfig.getServerType().equals(ServerType.WEB_SERVER.getValue())) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, this.name
-					+ Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is not a web server");
+						+ Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is not a web server");
 			}
 			// set remote host configuration into the listener configuration
 			this.remoteNodeConfiguration = remoteNodeConfig;
 		}
-	
+
+		if (serviceType == ServiceType.CASCADED_PUBLISH_SERVICE) {
+			Integer noDataIntervalInSecondsInteger = compositeConfig.getInteger(this.name + Constants.PROPERTY_QUALIFIER_NOI, null);
+			if (noDataIntervalInSecondsInteger == null) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
+						+ Constants.PROPERTY_QUALIFIER_NOI + " is missing");
+			}
+			this.nodDataIntervalInSeconds = noDataIntervalInSecondsInteger;
+		}
+
 	}
 
 	public String toString() {
@@ -146,7 +156,7 @@ public class ServiceConfiguration {
 		}
 		return builder.toString();
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -174,5 +184,9 @@ public class ServiceConfiguration {
 	public RemoteNodeConfiguration getRemoteNodeConfiguration() {
 		return remoteNodeConfiguration;
 	}
-	
+
+	public int getNoDataIntervalInSeconds() {
+		return this.nodDataIntervalInSeconds;
+	}
+
 }

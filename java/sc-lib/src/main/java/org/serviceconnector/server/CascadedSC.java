@@ -61,8 +61,8 @@ public class CascadedSC extends Server implements IStatefulServer {
 	private List<AbstractSession> subscriptions;
 	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 
-	public CascadedSC(RemoteNodeConfiguration remoteNodeConfiguration, String serviceName, InetSocketAddress socketAddress) {
-		super(remoteNodeConfiguration, serviceName, socketAddress);
+	public CascadedSC(RemoteNodeConfiguration remoteNodeConfiguration, InetSocketAddress socketAddress) {
+		super(remoteNodeConfiguration, socketAddress);
 		this.serverKey = remoteNodeConfiguration.getName();
 		this.subscriptions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 	}

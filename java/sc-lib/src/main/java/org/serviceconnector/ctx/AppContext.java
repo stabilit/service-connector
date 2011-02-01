@@ -40,8 +40,10 @@ import org.serviceconnector.cmd.FlyweightCommandFactory;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.conf.CacheConfiguration;
-import org.serviceconnector.conf.RemoteNodeListConfiguration;
 import org.serviceconnector.conf.ListenerListConfiguration;
+import org.serviceconnector.conf.RemoteNodeListConfiguration;
+import org.serviceconnector.conf.ServiceConfiguration;
+import org.serviceconnector.conf.ServiceListConfiguration;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.FlyweightFrameDecoderFactory;
 import org.serviceconnector.net.connection.ConnectionFactory;
@@ -87,6 +89,8 @@ public final class AppContext {
 	private static ListenerListConfiguration responderConfiguration = new ListenerListConfiguration();
 	/** The requester configuration. */
 	private static RemoteNodeListConfiguration requesterConfiguration = new RemoteNodeListConfiguration();
+	/** The service configuration. */
+	private static ServiceListConfiguration serviceConfiguration = new ServiceListConfiguration();
 
 	// Factories
 	/** The command factory. */
@@ -334,6 +338,10 @@ public final class AppContext {
 	 */
 	public static RemoteNodeListConfiguration getRequesterConfiguration() {
 		return requesterConfiguration;
+	}
+	
+	public static ServiceListConfiguration getServiceConfiguration() {
+		return serviceConfiguration;
 	}
 
 	/**

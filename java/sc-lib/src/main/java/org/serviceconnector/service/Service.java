@@ -36,7 +36,7 @@ public abstract class Service {
 	/** The type. */
 	private ServiceType type;
 	/** The state. */
-	private ServiceState state;
+	private boolean enabled;
 	/** The name. */
 	private String name;
 	/** The location. */
@@ -98,20 +98,20 @@ public abstract class Service {
 	 *
 	 * @return the state
 	 */
-	public ServiceState getState() {
-		return state;
+	public boolean isEnabled() {
+		return enabled;
 	}
 
 	/**
-	 * @param state
+	 * @param enabled
 	 */
-	public void setState(ServiceState state) {
-		this.state = state;
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return this.name + ":" + this.state + ":" + this.type.getValue();
+		return this.name + ":" + this.enabled + ":" + this.type.getValue();
 	}
 }

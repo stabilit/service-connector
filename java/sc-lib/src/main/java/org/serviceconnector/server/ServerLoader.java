@@ -21,14 +21,13 @@
 package org.serviceconnector.server;
 
 import java.net.InetSocketAddress;
-import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
+import org.serviceconnector.conf.RemoteNodeListConfiguration;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
@@ -47,61 +46,30 @@ public class ServerLoader {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public static void load(CompositeConfiguration config) throws Exception {
-		@SuppressWarnings("unchecked")
-		List<String> serverNames = config.getList(Constants.PROPERTY_REMOTE_NODES);
+	public static void load(RemoteNodeListConfiguration remoteNodeListConfigurations) throws Exception {
+		Map<String, RemoteNodeConfiguration> remoteNodesMap = remoteNodeListConfigurations.getRequesterConfigurations();
 
-		for (String serverName : serverNames) {
-			serverName = serverName.trim(); // remove blanks in serverName
+		for (RemoteNodeConfiguration remoteNodeConfiguration : remoteNodesMap.values()) {
 
-			int portNr = Integer.parseInt((String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_PORT));
-			String host = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_HOST);
-			String connectionType = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
-
-			if (connectionType == null) {
-				connectionType = ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE.getValue();
-			}
-			String maxConnectionsValue = (String) config.getString(serverName
-					+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE);
-			int maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
-			if (maxConnectionsValue != null) {
-				maxConnections = Integer.parseInt(maxConnectionsValue);
-			}
-
-			String keepAliveIntervalValue = (String) config.getString(serverName
-					+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS);
-			int keepAliveInterval = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
-			if (keepAliveIntervalValue != null) {
-				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
-			}
-			String serverTypeString = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_TYPE);
+			String serverTypeString = remoteNodeConfiguration.getServerType();
 			ServerType serverType = ServerType.getType(serverTypeString);
-
-			InetSocketAddress socketAddress = new InetSocketAddress(host, portNr);
-			// instantiate right type of server
+			InetSocketAddress socketAddress = new InetSocketAddress(remoteNodeConfiguration.getHost(), remoteNodeConfiguration
+					.getPort());
 
 			Server server = null;
 			switch (serverType) {
 			case FILE_SERVER:
-				String maxSessionValue = (String) config.getString(serverName + Constants.PROPERTY_QALIFIER_MAX_SESSIONS);
-				int maxSessions = Constants.DEFAULT_MAX_FILE_SESSIONS;
-				if (maxSessionValue != null) {
-					maxSessions = Integer.parseInt(maxSessionValue);
-				}
-				//TODO hand over remoteNodeConfig
-//				server = new FileServer(serverName, socketAddress, portNr, maxSessions, maxConnections, connectionType,
-//						keepAliveInterval);
+				server = new FileServer(remoteNodeConfiguration, socketAddress);
 				break;
 			case CASCADED_SC:
-				//TODO hand over remoteNodeConfig
-//				server = new CascadedSC(socketAddress, serverName, portNr, maxConnections, connectionType, keepAliveInterval);
+				server = new CascadedSC(remoteNodeConfiguration, socketAddress);
 				break;
 			case WEB_SERVER:
 				// nothing to do in case of a web server is registered in specific endpoint
 				continue;
 			default:
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong serverType, serverName/serverType="
-						+ serverName + "/" + serverTypeString);
+						+ remoteNodeConfiguration.getName() + "/" + serverTypeString);
 			}
 			AppContext.getServerRegistry().addServer(server.getServerKey(), server);
 		}

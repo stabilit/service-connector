@@ -20,12 +20,13 @@
  */
 package org.serviceconnector.service;
 
-import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
+import org.serviceconnector.conf.ServiceConfiguration;
+import org.serviceconnector.conf.ServiceListConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPError;
@@ -49,45 +50,41 @@ public class ServiceLoader {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public static void load(CompositeConfiguration config) throws Exception {
-		@SuppressWarnings("unchecked")
-		List<String> serviceNames = config.getList(Constants.PROPERTY_SERVICE_NAMES);
-
+	public static void load(ServiceListConfiguration serviceListConfiguration) throws Exception {
+		Map<String, ServiceConfiguration> serviceConfigurationMap = serviceListConfiguration.getServiceConfigurations();
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 
-		for (String serviceName : serviceNames) {
-			// remove blanks in serviceName
-			serviceName = serviceName.trim();
-			String serviceTypeString = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_TYPE);
+		for (ServiceConfiguration serviceConfiguration : serviceConfigurationMap.values()) {
+			String serviceTypeString = serviceConfiguration.getType();
 			ServiceType serviceType = ServiceType.getType(serviceTypeString);
+			RemoteNodeConfiguration remoteNode = serviceConfiguration.getRemoteNodeConfiguration();
+			String remotNodeName = null;
+			if (remoteNode != null) {
+				remotNodeName = remoteNode.getName();
+				serviceType = ServiceLoader.adaptServiceTypeIfCascService(serviceType, remotNodeName);
+			}
+			String serviceName = serviceConfiguration.getName();
 
-			String remoteNode = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_NODE, null);
 			// instantiate right type of service
 			Service service = null;
-
-			serviceType = ServiceLoader.adaptServiceTypeIfCascService(serviceType, remoteNode);
-
 			switch (serviceType) {
 			case CASCADED_SESSION_SERVICE:
-				Server server = AppContext.getServerRegistry().getServer(remoteNode);
+				Server server = AppContext.getServerRegistry().getServer(remotNodeName);
 				if (server == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteNode
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remotNodeName
 							+ " configured for service=" + serviceName + " is not configured");
 				}
 				service = new CascadedSessionService(serviceName, (CascadedSC) server);
 				break;
 			case CASCADED_PUBLISH_SERVICE:
-				server = AppContext.getServerRegistry().getServer(remoteNode);
+				server = AppContext.getServerRegistry().getServer(remotNodeName);
 				if (server == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteNode
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remotNodeName
 							+ " configured for service=" + serviceName + " is not configured");
 				}
-				Integer noDataIntervalInSeconds = config.getInteger(serviceName + Constants.PROPERTY_QUALIFIER_NOI, null);
-				if (noDataIntervalInSeconds == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
-							+ serviceName + Constants.PROPERTY_QUALIFIER_NOI + " is missing");
-				}
-				service = new CascadedPublishService(serviceName, (CascadedSC) server, noDataIntervalInSeconds);
+
+				service = new CascadedPublishService(serviceName, (CascadedSC) server, serviceConfiguration
+						.getNoDataIntervalInSeconds());
 				break;
 			case CASCADED_FILE_SERVICE:
 				// TODO JOT
@@ -99,39 +96,20 @@ public class ServiceLoader {
 				service = new PublishService(serviceName);
 				break;
 			case FILE_SERVICE:
-				String path = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_PATH);
-				String scUploadFileScriptName = config.getString(serviceName + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT);
-				if (scUploadFileScriptName == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
-							+ Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT + " is missing for service=" + serviceName);
-				}
-				String scGetFileListScriptName = config.getString(serviceName + Constants.PROPERTY_QUALIFIER_LIST_SCRIPT);
-				if (scGetFileListScriptName == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
-							+ Constants.PROPERTY_QUALIFIER_LIST_SCRIPT + " is missing for service=" + serviceName);
-				}
-				server = AppContext.getServerRegistry().getServer(remoteNode);
+				server = AppContext.getServerRegistry().getServer(remotNodeName);
 				if (server == null) {
-					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remoteNode
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remotNodeName
 							+ " configured for service=" + serviceName + " is not configured");
 				}
-				service = new FileService(serviceName, (FileServer) server, path, scUploadFileScriptName, scGetFileListScriptName);
+				service = new FileService(serviceName, (FileServer) server, serviceConfiguration.getPath(), serviceConfiguration
+						.getUploadScript(), serviceConfiguration.getListScript());
 				break;
 			case UNDEFINED:
 			default:
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
 						"wrong serviceType, serviceName/serviceType=" + serviceName + "/" + serviceTypeString);
 			}
-
-			// set service state as defined in configuration. Default is enabled
-			String enable = config.getString(serviceName + Constants.PROPERTY_QUALIFIER_ENABLED);
-			if (enable == null || enable.equals("true")) {
-				service.setState(ServiceState.ENABLED); // default is enabled
-				logger.trace("state enabled for service=" + serviceName);
-			} else {
-				service.setState(ServiceState.DISABLED);
-				logger.trace("state disabled for service=" + serviceName);
-			}
+			service.setEnabled(serviceConfiguration.getEnabled());
 			serviceRegistry.addService(service.getName(), service);
 		}
 	}

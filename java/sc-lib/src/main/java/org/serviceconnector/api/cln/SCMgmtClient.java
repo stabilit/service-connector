@@ -27,7 +27,6 @@ import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.SCServiceException;
-import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.util.URLCallString;
 import org.serviceconnector.util.URLParameterString;
 
@@ -94,7 +93,7 @@ public class SCMgmtClient extends SCClient {
 			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
 		}
 		String body = this.inspectCall(Constants.STATE + Constants.EQUAL_SIGN + serviceName);
-		if (ServiceState.ENABLED.toString().equalsIgnoreCase(body)) {
+		if (Constants.ENABLE.equalsIgnoreCase(body)) {
 			return true;
 		}
 		return false;
@@ -118,10 +117,13 @@ public class SCMgmtClient extends SCClient {
 
 	/**
 	 * inspects the cache for given service name and cacheId.
-	 *
-	 * @param serviceName the service name
-	 * @param cacheId the cache id
-	 * @throws SCServiceException the SC service exception
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @param cacheId
+	 *            the cache id
+	 * @throws SCServiceException
+	 *             the SC service exception
 	 */
 	public URLParameterString inspectCache(String serviceName, String cacheId) throws SCServiceException {
 		if (this.attached == false) {
@@ -156,7 +158,7 @@ public class SCMgmtClient extends SCClient {
 			throw new SCServiceException(body);
 		}
 	}
-	
+
 	/**
 	 * Request dump.
 	 * 
@@ -170,7 +172,6 @@ public class SCMgmtClient extends SCClient {
 		this.manageCall(Constants.DUMP);
 	}
 
-	
 	/**
 	 * Kill SC.
 	 * 

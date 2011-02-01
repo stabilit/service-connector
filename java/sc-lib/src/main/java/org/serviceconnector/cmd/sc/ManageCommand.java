@@ -33,7 +33,6 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -105,11 +104,11 @@ public class ManageCommand extends CommandAdapter {
 			if (command.equalsIgnoreCase(Constants.ENABLE)) {
 				// enable service
 				logger.info("enable service=" + serviceName);
-				this.serviceRegistry.getService(serviceName).setState(ServiceState.ENABLED);
+				this.serviceRegistry.getService(serviceName).setEnabled(true);
 			} else {
 				// disable service
 				logger.info("disable service=" + serviceName);
-				this.serviceRegistry.getService(serviceName).setState(ServiceState.DISABLED);
+				this.serviceRegistry.getService(serviceName).setEnabled(false);
 			}
 		} else {
 			logger.debug("service=" + serviceName + " not found");

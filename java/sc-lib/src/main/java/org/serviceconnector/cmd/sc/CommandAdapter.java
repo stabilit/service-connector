@@ -35,7 +35,6 @@ import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Service;
-import org.serviceconnector.service.ServiceState;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.SessionService;
@@ -142,7 +141,7 @@ public abstract class CommandAdapter implements ICommand {
 	 */
 	protected Service validateService(String serviceName) throws SCMPCommandException {
 		Service service = this.getService(serviceName);
-		if (service.getState() == ServiceState.DISABLED) {
+		if (service.isEnabled() == false) {
 			// no session allowed for DISABLED service
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED, "service="
 					+ serviceName + " is disabled");

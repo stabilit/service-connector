@@ -155,26 +155,6 @@ public class RemoteNodeConfiguration {
 		}
 	}
 
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.name);
-		builder.append(" type=");
-		builder.append(this.serverType);
-		builder.append(" on=[");
-		builder.append(this.host);
-		builder.append("]:");
-		builder.append(port);
-		builder.append(" /type=");
-		builder.append(this.connectionType);
-		builder.append("/kpi=");
-		builder.append(this.keepAliveIntervalSeconds);
-		builder.append("/mxc=");
-		builder.append(this.maxPoolSize);
-		builder.append("/mxs=");
-		builder.append(this.maxSessions);	
-		return builder.toString();
-	}
-
 	/**
 	 * @return
 	 */
@@ -229,5 +209,25 @@ public class RemoteNodeConfiguration {
 	 */
 	public int getMaxSessions() {
 		return maxSessions;
+	}
+
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.name);
+		builder.append(" type=");
+		builder.append(this.serverType);
+		builder.append(" on=[");
+		builder.append(this.host);
+		builder.append("]:");
+		builder.append(port);
+		builder.append(" /type=");
+		builder.append(this.connectionType);
+		builder.append("/kpi=");
+		builder.append(this.keepAliveIntervalSeconds);
+		builder.append("/mxc=");
+		builder.append(this.maxPoolSize);
+		builder.append("/mxs=");
+		builder.append(this.maxSessions);	
+		return builder.toString();
 	}
 }

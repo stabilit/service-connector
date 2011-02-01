@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.web;
 
@@ -40,12 +40,12 @@ import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.server.Server;
+import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.util.SystemThreadInfo;
 import org.serviceconnector.web.ctx.WebContext;
-
 
 /**
  * The Class AbstractXMLLoader.
@@ -322,8 +322,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			try {
 				Object value = null;
 				try {
-				    value = method.invoke(obj);
-				} catch(Exception e){
+					value = method.invoke(obj);
+				} catch (Exception e) {
 					System.err.println(e);
 				}
 				if (value == obj) {
@@ -336,9 +336,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						for (Object listObj : list) {
 							writer.writeStartElement(listObj.getClass().getSimpleName().toLowerCase());
 							if (listObj instanceof String) {
-							    writer.writeCData(listObj.toString());
+								writer.writeCData(listObj.toString());
 							} else {
-							    this.writeBean(writer, listObj);								
+								this.writeBean(writer, listObj);
 							}
 							writer.writeEndElement();
 						}
@@ -352,7 +352,11 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						writer.writeCData(server.getServerKey());
 						writer.writeEndElement();
 						writer.writeStartElement("serviceName");
-						writer.writeCData(server.getServiceName());
+						if (value instanceof StatefulServer) {
+							writer.writeCData(((StatefulServer) server).getServiceName());
+						} else {
+							writer.writeCData("unknown");
+						}
 						writer.writeEndElement();
 						writer.writeStartElement("host");
 						writer.writeCData(server.getHost());
@@ -427,27 +431,27 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	public void writeRuntime(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeStartElement("availableProcessors");
 		writer.writeCData(String.valueOf(SystemInfo.getAvailableProcessors()));
-		writer.writeEndElement();  // end of availableProcessors
+		writer.writeEndElement(); // end of availableProcessors
 		writer.writeStartElement("freeMemory");
 		writer.writeCData(String.valueOf(SystemInfo.getFreeMemory()));
-		writer.writeEndElement();  // end of freeMemory
+		writer.writeEndElement(); // end of freeMemory
 		writer.writeStartElement("maxMemory");
 		writer.writeCData(String.valueOf(SystemInfo.getMaxMemory()));
-		writer.writeEndElement();  // end of maxMemory
+		writer.writeEndElement(); // end of maxMemory
 		writer.writeStartElement("totalMemory");
 		writer.writeCData(String.valueOf(SystemInfo.getTotalMemory()));
-		writer.writeEndElement(); // end of  totalMemory
+		writer.writeEndElement(); // end of totalMemory
 		// get thread info
 		SystemThreadInfo threadInfo = SystemInfo.getThreadInfo();
 		writer.writeStartElement("threadCount");
 		writer.writeCData(String.valueOf(threadInfo.getThreadCount()));
-		writer.writeEndElement();  // end of threadCount
+		writer.writeEndElement(); // end of threadCount
 		writer.writeStartElement("daemonThreadCount");
 		writer.writeCData(String.valueOf(threadInfo.getDaemonThreadCount()));
-		writer.writeEndElement();  // end of daemonThreadCount
+		writer.writeEndElement(); // end of daemonThreadCount
 		writer.writeStartElement("peakThreadCount");
 		writer.writeCData(String.valueOf(threadInfo.getPeakThreadCount()));
-		writer.writeEndElement();  // end of peakThreadCount
+		writer.writeEndElement(); // end of peakThreadCount
 	}
 
 }
