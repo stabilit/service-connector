@@ -155,8 +155,6 @@ public class RemoteNodeConfiguration {
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.name);
@@ -168,10 +166,12 @@ public class RemoteNodeConfiguration {
 		builder.append(port);
 		builder.append(" /type=");
 		builder.append(this.connectionType);
-		builder.append("/poolSize=");
-		builder.append(this.maxPoolSize);
 		builder.append("/kpi=");
 		builder.append(this.keepAliveIntervalSeconds);
+		builder.append("/mxc=");
+		builder.append(this.maxPoolSize);
+		builder.append("/mxs=");
+		builder.append(this.maxSessions);	
 		return builder.toString();
 	}
 

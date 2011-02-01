@@ -32,14 +32,14 @@ import org.serviceconnector.scmp.SCMPError;
  * 
  * @author JTraber
  */
-public class RequesterConfiguration {
+public class RemoteNodeListConfiguration {
 
 	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(RequesterConfiguration.class);
+	private final static Logger logger = Logger.getLogger(RemoteNodeListConfiguration.class);
 
-	private Map<String, RemoteNodeConfiguration> remoteNodeConfigurationst;
+	private Map<String, RemoteNodeConfiguration> remoteNodeConfigurations;
 
-	public RequesterConfiguration() {
+	public RemoteNodeListConfiguration() {
 	}
 
 	/**
@@ -59,14 +59,14 @@ public class RequesterConfiguration {
 		}
 
 		// load all remote nodes into the list
-		this.remoteNodeConfigurationst = new HashMap<String, RemoteNodeConfiguration>();
+		this.remoteNodeConfigurations = new HashMap<String, RemoteNodeConfiguration>();
 		for (String requesterName : requesterList) {
 			requesterName = requesterName.trim(); // remove blanks in name
 			RemoteNodeConfiguration remoteNodeConfig = new RemoteNodeConfiguration(requesterName);
 			// load it with the configurated items
 			remoteNodeConfig.load(compositeConfig);
 			// adding requester to list
-			this.remoteNodeConfigurationst.put(requesterName, remoteNodeConfig);
+			this.remoteNodeConfigurations.put(requesterName, remoteNodeConfig);
 			// show it
 			logger.info("RemoteNode=" + remoteNodeConfig.toString());
 		}
@@ -78,6 +78,6 @@ public class RequesterConfiguration {
 	 * @return the requester configurations
 	 */
 	public Map<String, RemoteNodeConfiguration> getRequesterConfigurations() {
-		return this.remoteNodeConfigurationst;
+		return this.remoteNodeConfigurations;
 	}
 }

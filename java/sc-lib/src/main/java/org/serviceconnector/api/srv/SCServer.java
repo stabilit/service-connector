@@ -280,8 +280,7 @@ public class SCServer {
 		}
 		this.listening = true;
 		// initialize requester, maxConnection = 1 only 1 connection allowed for register server
-		// TODO JAN/JOT what name for remoteNodeConfig - must be unique
-		this.requester = new SCRequester(new RemoteNodeConfiguration(this.listenerPort + "", this.scHost, this.scPort,
+		this.requester = new SCRequester(new RemoteNodeConfiguration(this.listenerPort + "server", this.scHost, this.scPort,
 				this.connectionType.getValue(), this.keepAliveIntervalSeconds, 1));
 	}
 

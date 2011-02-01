@@ -114,9 +114,8 @@ public class SCClient {
 		synchronized (AppContext.communicatorsLock) {
 			AppContext.init();
 			// TODO JAN/JOT what name for remoteNodeConfig - must be unique
-			this.requester = new SCRequester(new RemoteNodeConfiguration("scClientConfiguration"
-					+ AppContext.attachedCommunicators.get() + 1, this.host, this.port, this.connectionType.getValue(),
-					keepAliveIntervalSeconds, this.maxConnections));
+			this.requester = new SCRequester(new RemoteNodeConfiguration(this.port + "client", this.host, this.port,
+					this.connectionType.getValue(), keepAliveIntervalSeconds, this.maxConnections));
 			SCServiceCallback callback = new SCServiceCallback(true);
 			SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);
 			try {

@@ -54,7 +54,7 @@ public class ListenerConfiguration {
 	private String username;
 	/** The password. */
 	private String password;
-	/** The remote host configuration. */
+	/** The remote node configuration. */
 	private RemoteNodeConfiguration remoteNodeConfiguration;
 
 	/**
@@ -116,7 +116,7 @@ public class ListenerConfiguration {
 
 		// get connectionType
 		this.connectionType = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
-		if (connectionType == null) {
+		if (this.connectionType == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 					+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE + " is missing");
 		}
@@ -152,26 +152,23 @@ public class ListenerConfiguration {
 			// load it with the configurated items
 			remoteNodeConfig.load(compositeConfig);
 			// remote node must be a web server
-			if (remoteNodeConfig.getServerType().equals(ServerType.WEB_SERVER.getValue())) {
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, this.name
-					+ Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is not a web server");
+			if (!remoteNodeConfig.getServerType().equals(ServerType.WEB_SERVER.getValue())) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "remote node=" +remoteNode
+					+ " is not a web server");
 			}
 			
 			// set remote host configuration into the listener configuration
 			this.remoteNodeConfiguration = remoteNodeConfig;
 		}
 	}
-
 	
-	/** {@inheritDoc} */
-	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.name);
 		builder.append(" on=");
 		builder.append(this.networkInterfaces);
 		builder.append(":");
-		builder.append(port);
+		builder.append(this.port);
 		builder.append(" /type=");
 		builder.append(this.connectionType);
 		if (this.remoteNodeConfiguration != null) {
@@ -181,7 +178,6 @@ public class ListenerConfiguration {
 		return builder.toString();
 	}
 
-	
 	/**
 	 * Gets the communicator name.
 	 * 

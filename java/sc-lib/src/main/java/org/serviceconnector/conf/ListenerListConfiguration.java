@@ -32,14 +32,14 @@ import org.serviceconnector.scmp.SCMPError;
  * 
  * @author JTraber
  */
-public class ResponderConfiguration {
+public class ListenerListConfiguration {
 
 	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ResponderConfiguration.class);
+	private final static Logger logger = Logger.getLogger(ListenerListConfiguration.class);
 
 	private Map<String, ListenerConfiguration> listenerConfigurations;
 
-	public ResponderConfiguration() {
+	public ListenerListConfiguration() {
 	}
 
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {

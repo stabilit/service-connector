@@ -86,8 +86,8 @@ public class RegisterServerCommand extends CommandAdapter {
 
 		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
 		IResponder responder = responderRegistry.getCurrentResponder();
-		ListenerConfiguration respConfig = responder.getListenerConfig();
-		String connectionType = respConfig.getConnectionType();
+		ListenerConfiguration listenerConfig = responder.getListenerConfig();
+		String connectionType = listenerConfig.getConnectionType();
 
 		RemoteNodeConfiguration remoteNodeConfiguration = new RemoteNodeConfiguration(serverKey, socketAddress.getHostName(),
 				portNr, connectionType, keepAliveInterval, maxConnections, maxSessions);

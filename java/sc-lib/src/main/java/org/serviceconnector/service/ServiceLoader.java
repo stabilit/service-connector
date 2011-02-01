@@ -59,7 +59,7 @@ public class ServiceLoader {
 			// remove blanks in serviceName
 			serviceName = serviceName.trim();
 			String serviceTypeString = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_TYPE);
-			ServiceType serviceType = ServiceType.getServiceType(serviceTypeString);
+			ServiceType serviceType = ServiceType.getType(serviceTypeString);
 
 			String remoteNode = (String) config.getString(serviceName + Constants.PROPERTY_QUALIFIER_REMOTE_NODE, null);
 			// instantiate right type of service

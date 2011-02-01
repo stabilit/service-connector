@@ -21,7 +21,6 @@
  */
 package org.serviceconnector.service;
 
-import org.apache.log4j.Logger;
 import org.serviceconnector.util.IReversibleEnum;
 import org.serviceconnector.util.ReverseEnumMap;
 
@@ -38,9 +37,6 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 	FILE_SERVICE("file"), //
 	UNDEFINED("undefined");
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ServiceType.class);
-
 	/** The value. */
 	private String value;
 	/** The reverseMap, to get access to the enum constants by string value. */
@@ -50,7 +46,7 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 		this.value = value;
 	}
 
-	public static ServiceType getServiceType(String typeString) {
+	public static ServiceType getType(String typeString) {
 		ServiceType type = reverseMap.get(typeString);
 		if (type == null) {
 			// typeString doesn't match to a valid serviceType
@@ -65,6 +61,6 @@ public enum ServiceType implements IReversibleEnum<String, ServiceType> {
 
 	@Override
 	public ServiceType reverse(String typeString) {
-		return ServiceType.getServiceType(typeString);
+		return ServiceType.getType(typeString);
 	}
 }

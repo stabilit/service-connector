@@ -40,8 +40,8 @@ import org.serviceconnector.cmd.FlyweightCommandFactory;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.conf.CacheConfiguration;
-import org.serviceconnector.conf.RequesterConfiguration;
-import org.serviceconnector.conf.ResponderConfiguration;
+import org.serviceconnector.conf.RemoteNodeListConfiguration;
+import org.serviceconnector.conf.ListenerListConfiguration;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.FlyweightFrameDecoderFactory;
 import org.serviceconnector.net.connection.ConnectionFactory;
@@ -83,9 +83,9 @@ public final class AppContext {
 	/** The cache configuration. */
 	private static CacheConfiguration cacheConfiguration = new CacheConfiguration();
 	/** The responder configuration. */
-	private static ResponderConfiguration responderConfiguration = new ResponderConfiguration();
+	private static ListenerListConfiguration responderConfiguration = new ListenerListConfiguration();
 	/** The requester configuration. */
-	private static RequesterConfiguration requesterConfiguration = new RequesterConfiguration();
+	private static RemoteNodeListConfiguration requesterConfiguration = new RemoteNodeListConfiguration();
 
 	// Factories
 	/** The command factory. */
@@ -127,8 +127,8 @@ public final class AppContext {
 		InternalLoggerFactory.setDefaultFactory(new Log4JLoggerFactory());
 		AppContext.basicConfiguration = new BasicConfiguration();
 		AppContext.cacheConfiguration = new CacheConfiguration();
-		AppContext.responderConfiguration = new ResponderConfiguration();
-		AppContext.requesterConfiguration = new RequesterConfiguration();
+		AppContext.responderConfiguration = new ListenerListConfiguration();
+		AppContext.requesterConfiguration = new RemoteNodeListConfiguration();
 		init();
 	}
 
@@ -322,7 +322,7 @@ public final class AppContext {
 	 * 
 	 * @return the responder configuration
 	 */
-	public static ResponderConfiguration getResponderConfiguration() {
+	public static ListenerListConfiguration getResponderConfiguration() {
 		return responderConfiguration;
 	}
 
@@ -331,7 +331,7 @@ public final class AppContext {
 	 * 
 	 * @return the requester configuration
 	 */
-	public static RequesterConfiguration getRequesterConfiguration() {
+	public static RemoteNodeListConfiguration getRequesterConfiguration() {
 		return requesterConfiguration;
 	}
 

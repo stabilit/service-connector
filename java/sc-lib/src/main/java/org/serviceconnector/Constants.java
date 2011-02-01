@@ -108,6 +108,9 @@ public final class Constants {
 	/** Default max message size */
 	public static final int DEFAULT_MAX_MESSAGE_SIZE = 60 << 10; // 64K
 
+	/** Default service state. */
+	public static final boolean DEFAULT_SERVICE_ENABLED = true;
+	
 	/*
 	 * Various Constants *********
 	 */
