@@ -42,7 +42,6 @@ import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.conf.CacheConfiguration;
 import org.serviceconnector.conf.ListenerListConfiguration;
 import org.serviceconnector.conf.RemoteNodeListConfiguration;
-import org.serviceconnector.conf.ServiceConfiguration;
 import org.serviceconnector.conf.ServiceListConfiguration;
 import org.serviceconnector.net.FlyweightEncoderDecoderFactory;
 import org.serviceconnector.net.FlyweightFrameDecoderFactory;

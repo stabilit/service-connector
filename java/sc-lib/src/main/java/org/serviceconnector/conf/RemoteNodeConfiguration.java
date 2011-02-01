@@ -62,7 +62,6 @@ public class RemoteNodeConfiguration {
 		this.keepAliveIntervalSeconds = keepAliveIntervalInSeconds;
 		this.maxPoolSize = maxConnections;
 		this.maxSessions = maxSessions;
-		this.maxSessions = 0;	// Constants.DEFAULT_MAX_FILE_SESSIONS;
 	}
 
 	public RemoteNodeConfiguration(String name, String host, int port, String connectionType, int keepAliveIntervalInSeconds,

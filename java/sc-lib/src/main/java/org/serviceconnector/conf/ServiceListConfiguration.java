@@ -48,6 +48,10 @@ public class ServiceListConfiguration {
 			ServiceConfiguration serviceConfig = new ServiceConfiguration(serviceName);
 			// load it with the configured items
 			serviceConfig.load(config);
+			if (this.serviceConfigurations.containsKey(serviceName) == true) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
+						"service already in registry name must be unique serviceName=" + serviceName);
+			}
 			// adding service to list
 			this.serviceConfigurations.put(serviceName, serviceConfig);
 			// show it

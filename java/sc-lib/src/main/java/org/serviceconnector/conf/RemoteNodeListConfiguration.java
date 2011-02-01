@@ -65,6 +65,10 @@ public class RemoteNodeListConfiguration {
 			RemoteNodeConfiguration remoteNodeConfig = new RemoteNodeConfiguration(requesterName);
 			// load it with the configurated items
 			remoteNodeConfig.load(compositeConfig);
+			if (this.remoteNodeConfigurations.containsKey(requesterName) == true) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
+						"requester already in registry name must be unique requesterName=" + requesterName);
+			}
 			// adding requester to list
 			this.remoteNodeConfigurations.put(requesterName, remoteNodeConfig);
 			// show it

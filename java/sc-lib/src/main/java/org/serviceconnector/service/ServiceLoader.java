@@ -61,7 +61,7 @@ public class ServiceLoader {
 			String remotNodeName = null;
 			if (remoteNode != null) {
 				remotNodeName = remoteNode.getName();
-				serviceType = ServiceLoader.adaptServiceTypeIfCascService(serviceType, remotNodeName);
+				serviceType = ServiceConfiguration.adaptServiceTypeIfCascService(serviceType, remotNodeName);
 			}
 			String serviceName = serviceConfiguration.getName();
 
@@ -112,33 +112,5 @@ public class ServiceLoader {
 			service.setEnabled(serviceConfiguration.getEnabled());
 			serviceRegistry.addService(service.getName(), service);
 		}
-	}
-
-	/**
-	 * Adapt service type if cascaded service. SC uses more service type internal. This method figures out if changing of service
-	 * type is necessary for current service.
-	 * 
-	 * @param serviceType
-	 *            the service type
-	 * @param remoteHost
-	 *            the remote host
-	 * @return the service type
-	 */
-	private static ServiceType adaptServiceTypeIfCascService(ServiceType serviceType, String remoteHost) {
-		switch (serviceType) {
-		case SESSION_SERVICE:
-			if (remoteHost != null) {
-				return ServiceType.CASCADED_SESSION_SERVICE;
-			}
-		case PUBLISH_SERVICE:
-			if (remoteHost != null) {
-				return ServiceType.CASCADED_PUBLISH_SERVICE;
-			}
-		case FILE_SERVICE:
-			if (remoteHost != null) {
-				return ServiceType.CASCADED_FILE_SERVICE;
-			}
-		}
-		return serviceType;
 	}
 }

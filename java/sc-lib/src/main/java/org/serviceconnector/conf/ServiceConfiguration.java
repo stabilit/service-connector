@@ -77,6 +77,10 @@ public class ServiceConfiguration {
 		if (serviceType == ServiceType.UNDEFINED) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown serviceType=" + this.name + this.type);
 		}
+		String remoteNode = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_REMOTE_NODE);
+		if (remoteNode != null) {
+			serviceType = ServiceConfiguration.adaptServiceTypeIfCascService(serviceType, remoteNode);
+		}
 
 		// get enabled
 		this.enabled = compositeConfig.getBoolean(this.name + Constants.PROPERTY_QUALIFIER_ENABLED,
@@ -89,7 +93,6 @@ public class ServiceConfiguration {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 						+ Constants.PROPERTY_QUALIFIER_PATH + " is missing");
 			}
-
 			this.uploadScript = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_UPLOAD_SCRIPT, null);
 			if (this.uploadScript == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
@@ -105,7 +108,6 @@ public class ServiceConfiguration {
 		// get remote host for file services or cascaded services
 		if ((serviceType == ServiceType.FILE_SERVICE) || (serviceType == ServiceType.CASCADED_SESSION_SERVICE)
 				|| (serviceType == ServiceType.CASCADED_PUBLISH_SERVICE) || (serviceType == ServiceType.CASCADED_FILE_SERVICE)) {
-			String remoteNode = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_REMOTE_NODE);
 			if (remoteNode == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 						+ Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is missing");
@@ -187,6 +189,34 @@ public class ServiceConfiguration {
 
 	public int getNoDataIntervalInSeconds() {
 		return this.nodDataIntervalInSeconds;
+	}
+
+	/**
+	 * Adapt service type if cascaded service. SC uses more service type internal. This method figures out if changing of service
+	 * type is necessary for current service.
+	 * 
+	 * @param serviceType
+	 *            the service type
+	 * @param remoteHost
+	 *            the remote host
+	 * @return the service type
+	 */
+	public static ServiceType adaptServiceTypeIfCascService(ServiceType serviceType, String remoteHost) {
+		switch (serviceType) {
+		case SESSION_SERVICE:
+			if (remoteHost != null) {
+				return ServiceType.CASCADED_SESSION_SERVICE;
+			}
+		case PUBLISH_SERVICE:
+			if (remoteHost != null) {
+				return ServiceType.CASCADED_PUBLISH_SERVICE;
+			}
+		case FILE_SERVICE:
+			if (remoteHost != null) {
+				return ServiceType.CASCADED_FILE_SERVICE;
+			}
+		}
+		return serviceType;
 	}
 
 }

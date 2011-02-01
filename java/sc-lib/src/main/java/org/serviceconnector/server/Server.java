@@ -50,6 +50,7 @@ public abstract class Server implements IServer {
 
 	public Server(RemoteNodeConfiguration remoteNodeConfiguration, InetSocketAddress socketAddress) {
 		this.requester = new Requester(remoteNodeConfiguration);
+		this.remoteNodeConfiguration = remoteNodeConfiguration;
 		this.serverKey = "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		this.socketAddress = socketAddress;
 	}

@@ -57,6 +57,10 @@ public class ListenerListConfiguration {
 			ListenerConfiguration listenerConfig = new ListenerConfiguration(listenerName);
 			// load it with the configurated items
 			listenerConfig.load(compositeConfig);
+			if (this.listenerConfigurations.containsKey(listenerName) == true) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE,
+						"listener already in registry name must be unique listenerName=" + listenerName);
+			}
 			// adding listener to the list
 			this.listenerConfigurations.put(listenerName, listenerConfig);
 			// show it
