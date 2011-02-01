@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -96,7 +97,10 @@ public class ManageCommand extends CommandAdapter {
 
 		String command = m.group(1);
 		String serviceName = m.group(2);
-		if (this.serviceRegistry.containsKey(serviceName)) {
+		if (command.equals(Constants.DUMP)) {
+			AppContext.dump();
+		}
+		else if (this.serviceRegistry.containsKey(serviceName)) {
 			// service exists
 			if (command.equalsIgnoreCase(Constants.ENABLE)) {
 				// enable service
