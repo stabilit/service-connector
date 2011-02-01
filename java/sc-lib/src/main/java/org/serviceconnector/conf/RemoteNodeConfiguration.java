@@ -23,7 +23,6 @@ import org.serviceconnector.scmp.SCMPError;
 
 public class RemoteNodeConfiguration {
 
-
 	/** The type. */
 	private String type;
 	/** The node name. */
@@ -40,7 +39,7 @@ public class RemoteNodeConfiguration {
 	private int keepAliveIntervalSeconds;
 	/** The maxSessions (for file servers). */
 	private int maxSessions;
-	
+
 	/**
 	 * The Constructor.
 	 * 
@@ -48,12 +47,23 @@ public class RemoteNodeConfiguration {
 	 *            the communicator name
 	 */
 	public RemoteNodeConfiguration(String name) {
+		this(name, null, 0, null, Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE, Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS, 0);
+	}
+
+	public RemoteNodeConfiguration(String name, String host, int port, String connectionType, int keepAliveIntervalInSeconds,
+			int maxConnections, int maxSessions) {
 		this.name = name;
-		this.host = null;
-		this.port = 0;
-		this.connectionType = null;
-		this.maxPoolSize = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
-		this.keepAliveIntervalSeconds = Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS;
+		this.host = host;
+		this.port = port;
+		this.connectionType = connectionType;
+		this.keepAliveIntervalSeconds = keepAliveIntervalInSeconds;
+		this.maxPoolSize = maxConnections;
+		this.maxSessions = maxSessions;
+	}
+
+	public RemoteNodeConfiguration(String name, String host, int port, String connectionType, int keepAliveIntervalInSeconds,
+			int maxConnections) {
+		this(name, host, port, connectionType, keepAliveIntervalInSeconds, maxConnections, 0);
 	}
 
 	/**
@@ -63,13 +73,13 @@ public class RemoteNodeConfiguration {
 	 * @throws SCMPValidatorException
 	 */
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
-		// get host 
+		// get host
 		this.host = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_HOST);
 		if (this.host == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 					+ Constants.PROPERTY_QUALIFIER_HOST + " is missing");
 		}
-		
+
 		// get port
 		Integer localPort = compositeConfig.getInteger(this.name + Constants.PROPERTY_QUALIFIER_PORT, null);
 		if (localPort == null) {
@@ -86,8 +96,8 @@ public class RemoteNodeConfiguration {
 		}
 
 		// get max connection pool size
-		Integer localMaxPoolSize = compositeConfig.getInteger(this.name
-				+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE, null);
+		Integer localMaxPoolSize = compositeConfig.getInteger(this.name + Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE,
+				null);
 		if (localMaxPoolSize == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 					+ Constants.PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE + " is missing");
@@ -101,9 +111,9 @@ public class RemoteNodeConfiguration {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 					+ Constants.PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS + " is missing");
 		}
-		this.keepAliveIntervalSeconds = localKeepAliveIntervalSeconds;		
+		this.keepAliveIntervalSeconds = localKeepAliveIntervalSeconds;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
@@ -137,7 +147,9 @@ public class RemoteNodeConfiguration {
 	}
 
 	/**
-	 * @return
+	 * Gets the host.
+	 * 
+	 * @return the host
 	 */
 	public String getHost() {
 		return host;
@@ -169,5 +181,9 @@ public class RemoteNodeConfiguration {
 	 */
 	public int getKeepAliveIntervalSeconds() {
 		return keepAliveIntervalSeconds;
+	}
+
+	public int getMaxSessions() {
+		return this.maxSessions;
 	}
 }

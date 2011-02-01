@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.ListenerConfiguration;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.SCMPCommunicationException;
 import org.serviceconnector.net.res.IResponder;
@@ -88,9 +89,10 @@ public class RegisterServerCommand extends CommandAdapter {
 		ListenerConfiguration respConfig = responder.getListenerConfig();
 		String connectionType = respConfig.getConnectionType();
 
+		RemoteNodeConfiguration remoteNodeConfiguration = new RemoteNodeConfiguration(serverKey, socketAddress.getHostName(),
+				portNr, connectionType, keepAliveInterval, maxConnections, maxSessions);
 		// create new server
-		StatefulServer server = new StatefulServer(socketAddress, serviceName, portNr, maxSessions, maxConnections, connectionType,
-				keepAliveInterval);
+		StatefulServer server = new StatefulServer(remoteNodeConfiguration, serviceName, socketAddress);
 		try {
 			if (immediateConnect) {
 				// server connections get connected immediately
@@ -155,11 +157,11 @@ public class RegisterServerCommand extends CommandAdapter {
 			// maxSessions - validate with lower limit 1 mandatory
 			String maxSessionsValue = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
 			ValidatorUtility.validateInt(1, maxSessionsValue, SCMPError.HV_WRONG_MAX_SESSIONS);
-			int maxSessions = Integer.parseInt(maxSessionsValue); 
+			int maxSessions = Integer.parseInt(maxSessionsValue);
 			// maxConnections - validate with lower limit 1 & higher limit maxSessions mandatory
 			String maxConnectionsValue = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_CONNECTIONS);
 			ValidatorUtility.validateInt(1, maxConnectionsValue, maxSessions, SCMPError.HV_WRONG_MAX_CONNECTIONS);
-			int maxConnections = Integer.parseInt(maxConnectionsValue);				
+			int maxConnections = Integer.parseInt(maxConnectionsValue);
 			if (maxConnections == 1 && maxSessions != 1) {
 				// invalid configuration
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MAX_SESSIONS, "maxSessions must be 1 if maxConnections is 1");

@@ -370,7 +370,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						writer.writeStartElement(name);
 						IRequester requester = (IRequester) value;
 						writer.writeStartElement("context");
-						this.writeBean(writer, requester.getContext());
+						this.writeBean(writer, requester.getRemoteNodeConfiguration());
 						writer.writeEndElement();
 						writer.writeEndElement();
 						continue;

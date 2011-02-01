@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.server;
 
@@ -27,6 +27,7 @@ import java.util.List;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.Constants;
 import org.serviceconnector.conf.BasicConfiguration;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -45,13 +46,11 @@ public class FileServer extends Server {
 	/** The max sessions. */
 	private int maxSessions;
 
-	public FileServer(String serverKey, InetSocketAddress socketAddress, int portNr, int maxSessions, int maxConnections,
-			String connectionType, int keepAliveInterval) {
-		super(ServerType.FILE_SERVER, socketAddress, ServerType.FILE_SERVER.getValue(), portNr, maxConnections, connectionType,
-				keepAliveInterval);
+	public FileServer(RemoteNodeConfiguration remoteNodeConfiguration, String serviceName, InetSocketAddress socketAddress) {
+		super(remoteNodeConfiguration, serviceName, socketAddress);
 		this.sessions = Collections.synchronizedList(new ArrayList<FileSession>());
-		this.maxSessions = maxSessions;
-		this.serverKey = serverKey;
+		this.maxSessions = remoteNodeConfiguration.getMaxSessions();
+		this.serverKey = remoteNodeConfiguration.getName();
 	}
 
 	public SCMPMessage serverUploadFile(FileSession session, SCMPMessage message, String remoteFileName, int timeoutMillis)
@@ -66,8 +65,8 @@ public class FileServer extends Server {
 		} else {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
-			URL url = new URL("http://" + this.host + ":" + this.portNr + "/" + path + session.getUploadFileScriptName() + "?name="
-					+ remoteFileName);
+			URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort()
+					+ "/" + path + session.getUploadFileScriptName() + "?name=" + remoteFileName);
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("PUT");
 			httpCon.setDoOutput(true);
@@ -120,7 +119,8 @@ public class FileServer extends Server {
 			// download request arrived - set up URL connection
 			String path = session.getPath();
 			try {
-				URL url = new URL("http://" + this.host + ":" + this.portNr + "/" + path + remoteFileName);
+				URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort()
+						+ "/" + path + remoteFileName);
 				httpCon = (HttpURLConnection) url.openConnection();
 				httpCon.connect();
 				in = httpCon.getInputStream();
@@ -162,7 +162,8 @@ public class FileServer extends Server {
 			throws Exception {
 		HttpURLConnection httpCon = null;
 
-		URL url = new URL("http://" + this.host + ":" + this.portNr + "/" + path + listScriptName + "?service=" + serviceName);
+		URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort() + "/"
+				+ path + listScriptName + "?service=" + serviceName);
 		httpCon = (HttpURLConnection) url.openConnection();
 		httpCon.setRequestMethod("GET");
 		httpCon.setDoOutput(true);

@@ -97,7 +97,7 @@ public class SCSessionServer {
 	 * @return the max connections
 	 */
 	public int getMaxConnections() {
-		return this.requester.getContext().getMaxConnections();
+		return this.requester.getRemoteNodeConfiguration().getMaxPoolSize();
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class SCSessionServer {
 			synchronized (AppContext.communicatorsLock) {
 				// get communicator lock - avoids interference with other clients or scServers
 				AppContext.init();
-				this.requester.getContext().getSCMPMsgSequenceNr().reset();
+				this.requester.getSCMPMsgSequenceNr().reset();
 
 				SCMPRegisterServerCall registerServerCall = new SCMPRegisterServerCall(this.requester, this.serviceName);
 

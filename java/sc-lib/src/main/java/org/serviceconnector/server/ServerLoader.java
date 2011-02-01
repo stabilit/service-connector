@@ -75,7 +75,7 @@ public class ServerLoader {
 				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
 			}
 			String serverTypeString = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_TYPE);
-			ServerType serverType = ServerType.getServiceType(serverTypeString);
+			ServerType serverType = ServerType.getServerType(serverTypeString);
 
 			InetSocketAddress socketAddress = new InetSocketAddress(host, portNr);
 			// instantiate right type of server
@@ -88,11 +88,13 @@ public class ServerLoader {
 				if (maxSessionValue != null) {
 					maxSessions = Integer.parseInt(maxSessionValue);
 				}
-				server = new FileServer(serverName, socketAddress, portNr, maxSessions, maxConnections, connectionType,
-						keepAliveInterval);
+				//TODO hand over remoteNodeConfig
+//				server = new FileServer(serverName, socketAddress, portNr, maxSessions, maxConnections, connectionType,
+//						keepAliveInterval);
 				break;
 			case CASCADED_SC:
-				server = new CascadedSC(socketAddress, serverName, portNr, maxConnections, connectionType, keepAliveInterval);
+				//TODO hand over remoteNodeConfig
+//				server = new CascadedSC(socketAddress, serverName, portNr, maxConnections, connectionType, keepAliveInterval);
 				break;
 			case WEB_SERVER:
 				// nothing to do in case of a web server is registered in specific endpoint

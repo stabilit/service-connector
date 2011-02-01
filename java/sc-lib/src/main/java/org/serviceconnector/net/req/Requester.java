@@ -20,6 +20,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionPool;
@@ -40,12 +41,7 @@ public class Requester implements IRequester {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(Requester.class);
 
-	// TODO JOT RemoteNodeConfiguration must be here
-	
-	// TODO JOT probably SCMPMessageSequenceNr is here 
-	
-	/** The context. */
-	protected RequesterContext reqContext; // TODO JOT this is probably obsolete => replaced by RemoteNodeConfiguration
+	private RemoteNodeConfiguration remoteNodeConfiguration;
 
 	private ConnectionPool connectionPool = null;
 
@@ -55,15 +51,14 @@ public class Requester implements IRequester {
 	 * @param reqContext
 	 *            the reqContext
 	 */
-	public Requester(RequesterContext reqContext) {	//TODO JOT constructor with RemoteNodeConfiguration as param
-		this.reqContext = reqContext;
-		this.connectionPool = new ConnectionPool(reqContext.getHost(), reqContext.getPort(), reqContext.getConnectionType(),
-				reqContext.getKeepAliveIntervalInSeconds());
-		this.connectionPool.setMaxConnections(reqContext.getMaxConnections());
+	public Requester(RemoteNodeConfiguration remoteNodeConfiguration) {
+		this.remoteNodeConfiguration = remoteNodeConfiguration;
+		this.connectionPool = new ConnectionPool(remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(),
+				remoteNodeConfiguration.getConnectionType(), remoteNodeConfiguration.getKeepAliveIntervalSeconds());
+		this.connectionPool.setMaxConnections(remoteNodeConfiguration.getMaxPoolSize());
 	}
 
 	/** {@inheritDoc} */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void send(SCMPMessage message, int timeoutInMillis, ISCMPMessageCallback callback) throws Exception {
 		// return an already connected live instance
@@ -74,6 +69,7 @@ public class Requester implements IRequester {
 			// setting up operation timeout after successful send
 			TimeoutWrapper timeoutWrapper = new TimeoutWrapper((ITimeout) requesterCallback);
 			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
+			@SuppressWarnings("unchecked")
 			ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(
 					timeoutWrapper, (long) timeoutInMillis, TimeUnit.MILLISECONDS);
 			reqCallback.setOperationTimeout(timeout);
@@ -87,8 +83,8 @@ public class Requester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public RequesterContext getContext() {
-		return this.reqContext;
+	public RemoteNodeConfiguration getRemoteNodeConfiguration() {
+		return this.remoteNodeConfiguration;
 	}
 
 	/** {@inheritDoc} */
@@ -203,7 +199,7 @@ public class Requester implements IRequester {
 		 */
 		@Override
 		public void timeout() {
-			logger.warn("oti timeout expiration on SC oti="+this.timeoutInMillis);
+			logger.warn("oti timeout expiration on SC oti=" + this.timeoutInMillis);
 			this.disconnectConnection();
 			this.scmpCallback.receive(new IdleTimeoutException("idle timeout. operation - could not be completed."));
 		}

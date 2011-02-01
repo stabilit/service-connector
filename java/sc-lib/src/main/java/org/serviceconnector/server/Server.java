@@ -20,10 +20,10 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.net.req.Requester;
-import org.serviceconnector.net.req.RequesterContext;
 
 /**
  * The Class Server. Represents a server instance on a backend Server. Serves a service. Has control over the max of sessions and
@@ -36,53 +36,23 @@ public abstract class Server implements IServer {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(Server.class);
 
-	/** The host. */
-	protected String host;
-	/** The port number. */
-	protected int portNr;
+	protected RemoteNodeConfiguration remoteNodeConfiguration;
+
 	/** The socket address. */
 	protected InetSocketAddress socketAddress;
-	/** The service name. */
-	protected String serviceName;
-	/** The max connections. */
-	private int maxConnections;
 	/** The requester. */
 	protected Requester requester;
-	/** The type. */
-	private ServerType type;
 	/** The server key. */
 	protected String serverKey;
+	protected String serviceName;
 	/** The operation timeout mulitplier. */
 	protected final double operationTimeoutMultiplier = AppContext.getBasicConfiguration().getOperationTimeoutMultiplier();
 
-	/**
-	 * Instantiates a new server.
-	 * 
-	 * @param type
-	 *            the type
-	 * @param socketAddress
-	 *            the socket address
-	 * @param serviceName
-	 *            the service name
-	 * @param portNr
-	 *            the port nr
-	 * @param maxConnections
-	 *            the max connections
-	 * @param connectionType
-	 *            the connection type
-	 * @param keepAliveInterval
-	 *            the keep alive interval
-	 */
-	public Server(ServerType type, InetSocketAddress socketAddress, String serviceName, int portNr, int maxConnections,
-			String connectionType, int keepAliveInterval) {
+	public Server(RemoteNodeConfiguration remoteNodeConfiguration, String serviceName, InetSocketAddress socketAddress) {
+		this.requester = new Requester(remoteNodeConfiguration);
+		this.serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 		this.serviceName = serviceName;
 		this.socketAddress = socketAddress;
-		this.type = type;
-		this.portNr = portNr;
-		this.maxConnections = maxConnections;
-		this.host = socketAddress.getHostName();
-		this.requester = new Requester(new RequesterContext(host, portNr, connectionType, keepAliveInterval, maxConnections));
-		this.serverKey = serviceName + "_" + socketAddress.getHostName() + "/" + socketAddress.getPort();
 	}
 
 	/**
@@ -120,7 +90,7 @@ public abstract class Server implements IServer {
 	 * @return the host
 	 */
 	public String getHost() {
-		return host;
+		return this.remoteNodeConfiguration.getHost();
 	}
 
 	/**
@@ -129,7 +99,7 @@ public abstract class Server implements IServer {
 	 * @return the port number
 	 */
 	public int getPortNr() {
-		return portNr;
+		return this.remoteNodeConfiguration.getPort();
 	}
 
 	/**
@@ -138,19 +108,20 @@ public abstract class Server implements IServer {
 	 * @return the max connections
 	 */
 	public int getMaxConnections() {
-		return maxConnections;
+		return this.remoteNodeConfiguration.getMaxPoolSize();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getServiceName() {
-		return serviceName;
+		return this.serviceName;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public ServerType getType() {
-		return this.type;
+		// TODO JOT
+		return null;
 	}
 
 	/**
@@ -174,6 +145,6 @@ public abstract class Server implements IServer {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return this.getServerKey() + ":" + portNr;
+		return this.getServerKey() + ":" + this.remoteNodeConfiguration.getPort();
 	}
 }

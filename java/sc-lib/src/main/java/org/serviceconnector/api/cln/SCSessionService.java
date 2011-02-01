@@ -117,7 +117,7 @@ public class SCSessionService extends SCService {
 			throw new SCServiceException("scMessage must be set.");
 		}
 		this.messageCallback = messageCallback;
-		this.requester.getContext().getSCMPMsgSequenceNr().reset();
+		this.requester.getSCMPMsgSequenceNr().reset();
 		// 2. initialize call & invoke
 		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, this.serviceName);
 		createSessionCall.setRequestBody(scMessage.getData());
@@ -193,7 +193,7 @@ public class SCSessionService extends SCService {
 		}
 		// cancel session timeout even if its running already
 		this.cancelSessionTimeout(true);
-		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		this.requester.getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, this.serviceName, this.sessionId);
 		clnExecuteCall.setMessageInfo(scMessage.getMessageInfo());
@@ -266,7 +266,7 @@ public class SCSessionService extends SCService {
 		}
 		// cancel session timeout even if its running already
 		this.cancelSessionTimeout(true);
-		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		this.requester.getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// important to set pendingRequest true in case of asynchronous communication
 		this.pendingRequest = true;
 		// 2. initialize call & invoke
@@ -297,7 +297,7 @@ public class SCSessionService extends SCService {
 			// an operation is running no echo allowed
 			return;
 		}
-		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		this.requester.getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCMPEchoCall clnEchoCall = new SCMPEchoCall(this.requester, this.serviceName, this.sessionId);
 		SCServiceCallback callback = new SCServiceCallback(true);
@@ -387,7 +387,7 @@ public class SCSessionService extends SCService {
 		}
 		// cancel session timeout even if its running already
 		this.cancelSessionTimeout(true);
-		this.requester.getContext().getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		this.requester.getSCMPMsgSequenceNr().incrementMsgSequenceNr();
 		try {
 			// 2. initialize call & invoke
 			SCServiceCallback callback = new SCServiceCallback(true);

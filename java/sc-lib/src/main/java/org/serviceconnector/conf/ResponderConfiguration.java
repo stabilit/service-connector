@@ -16,8 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.conf;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
@@ -36,39 +37,39 @@ public class ResponderConfiguration {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(ResponderConfiguration.class);
 
-	private List<ListenerConfiguration> listenerConfigList; //TODO JOT => map
+	private Map<String, ListenerConfiguration> listenerConfigurations;
 
 	public ResponderConfiguration() {
 	}
 
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
-		List<String> listeners = compositeConfig.getList(Constants.PROPERTY_LISTENERS);
+		List<String> listeners = compositeConfig.getList(Constants.PROPERTY_LISTENERS, null);
 		if (listeners == null) {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property="
 					+ Constants.PROPERTY_LISTENERS + " is missing");
 		}
 
 		// load all communicators in the list into the array
-		this.listenerConfigList = new ArrayList<ListenerConfiguration>();
+		this.listenerConfigurations = new HashMap<String, ListenerConfiguration>();
 		for (String listenerName : listeners) {
 			listenerName = listenerName.trim(); // remove blanks in name
 			ListenerConfiguration listenerConfig = new ListenerConfiguration(listenerName);
 			// load it with the configurated items
-			listenerConfig.load(compositeConfig);			
+			listenerConfig.load(compositeConfig);
 			// adding listener to the list
-			this.listenerConfigList.add(listenerConfig);
+			this.listenerConfigurations.put(listenerName, listenerConfig);
 			// show it
 			logger.info("Listener=" + listenerConfig.toString());
 		}
 	}
 
 	/**
-	 * Gets the responder configuration list.
+	 * Gets the listener configurations.
 	 * 
-	 * @return the responder configuration list
+	 * @return the listener configurations
 	 */
-	public List<ListenerConfiguration> getListenerConfigList() {
-		return this.listenerConfigList;
+	public Map<String, ListenerConfiguration> getListenerConfigurations() {
+		return this.listenerConfigurations;
 	}
 }

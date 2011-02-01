@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.req;
 
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -50,5 +51,5 @@ public interface IRequester {
 	 * 
 	 * @return the context
 	 */
-	public RequesterContext getContext();
+	public RemoteNodeConfiguration getRemoteNodeConfiguration();
 }

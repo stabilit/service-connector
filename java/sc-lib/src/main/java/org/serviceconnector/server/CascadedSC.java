@@ -40,6 +40,7 @@ import org.serviceconnector.casc.ClnSubscribeCascSubscribedCallback;
 import org.serviceconnector.casc.ClnUnsubscribeCascSubscribedCallback;
 import org.serviceconnector.cmd.sc.ClnSubscribeCommandCallback;
 import org.serviceconnector.cmd.sc.ClnUnsubscribeCommandCallback;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.registry.SubscriptionRegistry;
@@ -60,11 +61,9 @@ public class CascadedSC extends Server implements IStatefulServer {
 	private List<AbstractSession> subscriptions;
 	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 
-	public CascadedSC(InetSocketAddress socketAddress, String serverName, int portNr, int maxConnections, String connectionType,
-			int keepAliveInterval) {
-		// TODO JOT keep alive
-		super(ServerType.CASCADED_SC, socketAddress, serverName, portNr, maxConnections, connectionType, 0);
-		this.serverKey = serverName;
+	public CascadedSC(RemoteNodeConfiguration remoteNodeConfiguration, String serviceName, InetSocketAddress socketAddress) {
+		super(remoteNodeConfiguration, serviceName, socketAddress);
+		this.serverKey = remoteNodeConfiguration.getName();
 		this.subscriptions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 	}
 

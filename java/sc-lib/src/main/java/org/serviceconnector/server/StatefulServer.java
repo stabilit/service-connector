@@ -33,11 +33,11 @@ import org.serviceconnector.call.SCMPSrvUnsubscribeCall;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.sc.CommandCallback;
 import org.serviceconnector.conf.BasicConfiguration;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.Requester;
-import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
@@ -67,11 +67,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 	private int maxSessions;
 	private StatefulService service;
 
-	public StatefulServer(InetSocketAddress socketAddress, String serviceName, int portNr, int maxSessions, int maxConnections,
-			String connectionType, int keepAliveInterval) {
-		super(ServerType.STATEFUL_SERVER, socketAddress, serviceName, portNr, maxConnections, connectionType, keepAliveInterval);
+	public StatefulServer(RemoteNodeConfiguration remoteNodeConfiguration, String serviceName, InetSocketAddress socketAddress) {
+		super(remoteNodeConfiguration, serviceName, socketAddress);
 		this.sessions = Collections.synchronizedList(new ArrayList<AbstractSession>());
-		this.maxSessions = maxSessions;
+		this.maxSessions = remoteNodeConfiguration.getMaxSessions();
 		this.service = null;
 	}
 
@@ -340,10 +339,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 		} catch (SCMPCommandException scmpCommandException) {
 			logger.warn("ConnectionPoolBusyException in aborting session wait mec");
 			// ConnectionPoolBusyException after wait mec - try opening a new connection
-			RequesterContext reqContext = this.requester.getContext();
+			RemoteNodeConfiguration remoteNodeConfiguration = this.requester.getRemoteNodeConfiguration();
 			// set up a new requester to make the SAS - only 1 connection is allowed
-			Requester sasRequester = new Requester(new RequesterContext(host, portNr, reqContext.getConnectionType(),
-					reqContext.getKeepAliveIntervalInSeconds(), 1));
+			// TODO JOT special remoteNodeConf for SAS
+			Requester sasRequester = new Requester(remoteNodeConfiguration);
 			try {
 				this.serverAbortSessionWithSpecialRequester(sasRequester, abortMessage, callback, oti);
 			} catch (ConnectionPoolBusyException e) {
@@ -444,6 +443,6 @@ public class StatefulServer extends Server implements IStatefulServer {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return super.getServerKey() + ":" + portNr + " : " + maxSessions;
+		return super.getServerKey() + ":" + this.remoteNodeConfiguration.getPort() + " : " + maxSessions;
 	}
 }

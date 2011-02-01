@@ -438,33 +438,4 @@ public final class AppContext {
 			logger.error("Creating SC dump file =" + dumpPath + " failed.", e);
 		}
 	}
-
-	/**
-	 * dumps the entire application context.
-	 */
-	public static void dump() {
-		String dumpPath = AppContext.basicConfiguration.getDumpPath();
-		Calendar cal = Calendar.getInstance();
-		Date now = cal.getTime();
-		String fs = System.getProperty("file.separator");
-		String dumpFileName = null;
-		synchronized (DUMP_FILE_SDF) { // DUMP_FILE_SDF is not thread safe
-			String dateTimeString = DUMP_FILE_SDF.format(now);
-			dumpFileName = Constants.DUMP_FILE_NAME + dateTimeString + Constants.XML_EXTENSION;
-		}
-		File dumpDir = new File(dumpPath);
-		try {
-			// create directory if non existent
-			if (dumpDir.exists() == true || dumpDir.mkdirs()) {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(dumpDir + fs + dumpFileName));
-				writer.write("dummy");
-				writer.close();
-				logger.info("SC dump created into file=" + dumpPath);
-			} else {
-				logger.error("Creating SC dump file =" + dumpPath + " failed, can not create directory");
-			}
-		} catch (IOException e) {
-			logger.error("Creating SC dump file =" + dumpPath + " failed.", e);
-		}
-	}
 }

@@ -23,9 +23,9 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.net.req.RequesterContext;
 import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -113,7 +113,9 @@ public class SCClient {
 		// 2. initialize call & invoke
 		synchronized (AppContext.communicatorsLock) {
 			AppContext.init();
-			this.requester = new SCRequester(new RequesterContext(this.host, this.port, this.connectionType.getValue(),
+			// TODO JAN/JOT what name for remoteNodeConfig - must be unique
+			this.requester = new SCRequester(new RemoteNodeConfiguration("scClientConfiguration"
+					+ AppContext.attachedCommunicators.get() + 1, this.host, this.port, this.connectionType.getValue(),
 					keepAliveIntervalSeconds, this.maxConnections));
 			SCServiceCallback callback = new SCServiceCallback(true);
 			SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);

@@ -16,8 +16,9 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.conf;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
@@ -36,13 +37,13 @@ public class RequesterConfiguration {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(RequesterConfiguration.class);
 
-	private List<RemoteNodeConfiguration> remoteNodeConfigList; //TODO JOT => map
+	private Map<String, RemoteNodeConfiguration> remoteNodeConfigurationst;
 
 	public RequesterConfiguration() {
 	}
 
 	/**
-	 * Initialises the requester configuration.
+	 * Initializes the requester configuration.
 	 * 
 	 * @param compositeConfig
 	 *            the apache composite config
@@ -58,25 +59,25 @@ public class RequesterConfiguration {
 		}
 
 		// load all remote nodes into the list
-		this.remoteNodeConfigList = new ArrayList<RemoteNodeConfiguration>();
+		this.remoteNodeConfigurationst = new HashMap<String, RemoteNodeConfiguration>();
 		for (String requesterName : requesterList) {
 			requesterName = requesterName.trim(); // remove blanks in name
 			RemoteNodeConfiguration remoteNodeConfig = new RemoteNodeConfiguration(requesterName);
 			// load it with the configurated items
 			remoteNodeConfig.load(compositeConfig);
 			// adding requester to list
-			this.remoteNodeConfigList.add(remoteNodeConfig);
+			this.remoteNodeConfigurationst.put(requesterName, remoteNodeConfig);
 			// show it
 			logger.info("RemoteNode=" + remoteNodeConfig.toString());
 		}
 	}
 
 	/**
-	 * Gets the responder configuration list.
+	 * Gets the requester configurations.
 	 * 
-	 * @return the responder configuration list
+	 * @return the requester configurations
 	 */
-	public List<RemoteNodeConfiguration> getRequesterConfigList() {
-		return this.remoteNodeConfigList;
+	public Map<String, RemoteNodeConfiguration> getRequesterConfigurations() {
+		return this.remoteNodeConfigurationst;
 	}
 }

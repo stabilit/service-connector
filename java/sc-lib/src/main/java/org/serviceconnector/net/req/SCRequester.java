@@ -21,6 +21,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionPool;
@@ -48,7 +49,8 @@ public class SCRequester implements IRequester {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(SCRequester.class);
 	/** The context. */
-	private RequesterContext reqContext;
+	private RemoteNodeConfiguration remoteNodeConfiguration;
+	private SCMPMessageSequenceNr msgSequenceNr;
 
 	private ConnectionPool connectionPool = null;
 
@@ -58,11 +60,12 @@ public class SCRequester implements IRequester {
 	 * @param reqContext
 	 *            the reqContext
 	 */
-	public SCRequester(RequesterContext reqContext) {
-		this.reqContext = reqContext;
-		this.connectionPool = new ConnectionPool(reqContext.getHost(), reqContext.getPort(), reqContext.getConnectionType(),
-				reqContext.getKeepAliveIntervalInSeconds());
-		this.connectionPool.setMaxConnections(reqContext.getMaxConnections());
+	public SCRequester(RemoteNodeConfiguration remoteNodeConfiguration) {
+		this.remoteNodeConfiguration = remoteNodeConfiguration;
+		this.connectionPool = new ConnectionPool(remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(),
+				remoteNodeConfiguration.getConnectionType(), remoteNodeConfiguration.getKeepAliveIntervalSeconds());
+		this.connectionPool.setMaxConnections(remoteNodeConfiguration.getMaxPoolSize());
+		this.msgSequenceNr = new SCMPMessageSequenceNr();
 	}
 
 	/** {@inheritDoc} */
@@ -73,7 +76,6 @@ public class SCRequester implements IRequester {
 		IConnection connection = this.connectionPool.getConnection();
 		ConnectionContext connectionContext = connection.getContext();
 
-		SCMPMessageSequenceNr msgSequenceNr = this.reqContext.getSCMPMsgSequenceNr();
 		try {
 			ISCMPMessageCallback requesterCallback = null;
 			// differ if message is large or not, sending procedure is different
@@ -121,8 +123,8 @@ public class SCRequester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public RequesterContext getContext() {
-		return reqContext;
+	public RemoteNodeConfiguration getRemoteNodeConfiguration() {
+		return this.remoteNodeConfiguration;
 	}
 
 	/** {@inheritDoc} */
@@ -404,5 +406,9 @@ public class SCRequester implements IRequester {
 				this.scmpCallback.receive(e);
 			}
 		}
+	}
+
+	public SCMPMessageSequenceNr getSCMPMsgSequenceNr() {
+		return this.msgSequenceNr;
 	}
 }
