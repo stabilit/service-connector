@@ -40,10 +40,6 @@ public class Responder implements IResponder {
 	/** The endpoint connection. */
 	private List<IEndpoint> endpoints;
 
-	public Responder() {
-		this(null);
-	}
-
 	public Responder(ListenerConfiguration listenerConfig) {
 		this.listenerConfig = listenerConfig;
 		this.endpoints = new ArrayList<IEndpoint>();

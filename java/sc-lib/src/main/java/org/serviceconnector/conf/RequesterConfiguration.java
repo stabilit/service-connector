@@ -36,7 +36,7 @@ public class RequesterConfiguration {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(RequesterConfiguration.class);
 
-	private List<RemoteNodeConfiguration> remoteNodeConfigList;
+	private List<RemoteNodeConfiguration> remoteNodeConfigList; //TODO JOT => map
 
 	public RequesterConfiguration() {
 	}

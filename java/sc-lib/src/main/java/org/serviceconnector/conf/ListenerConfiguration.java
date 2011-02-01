@@ -77,6 +77,7 @@ public class ListenerConfiguration {
 	 * @param compositeConfig
 	 * @throws SCMPValidatorException
 	 */
+
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 		
 		// get interfaces for listener

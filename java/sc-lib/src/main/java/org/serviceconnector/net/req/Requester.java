@@ -40,8 +40,12 @@ public class Requester implements IRequester {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(Requester.class);
 
+	// TODO JOT RemoteNodeConfiguration must be here
+	
+	// TODO JOT probably SCMPMessageSequenceNr is here 
+	
 	/** The context. */
-	protected RequesterContext reqContext;
+	protected RequesterContext reqContext; // TODO JOT this is probably obsolete => replaced by RemoteNodeConfiguration
 
 	private ConnectionPool connectionPool = null;
 
@@ -51,7 +55,7 @@ public class Requester implements IRequester {
 	 * @param reqContext
 	 *            the reqContext
 	 */
-	public Requester(RequesterContext reqContext) {
+	public Requester(RequesterContext reqContext) {	//TODO JOT constructor with RemoteNodeConfiguration as param
 		this.reqContext = reqContext;
 		this.connectionPool = new ConnectionPool(reqContext.getHost(), reqContext.getPort(), reqContext.getConnectionType(),
 				reqContext.getKeepAliveIntervalInSeconds());

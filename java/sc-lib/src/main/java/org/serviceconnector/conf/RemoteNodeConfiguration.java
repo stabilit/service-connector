@@ -23,6 +23,9 @@ import org.serviceconnector.scmp.SCMPError;
 
 public class RemoteNodeConfiguration {
 
+
+	/** The type. */
+	private String type;
 	/** The node name. */
 	private String name;
 	/** The host. */
@@ -35,7 +38,9 @@ public class RemoteNodeConfiguration {
 	private int maxPoolSize;
 	/** The keep alive interval. */
 	private int keepAliveIntervalSeconds;
-
+	/** The maxSessions (for file servers). */
+	private int maxSessions;
+	
 	/**
 	 * The Constructor.
 	 * 

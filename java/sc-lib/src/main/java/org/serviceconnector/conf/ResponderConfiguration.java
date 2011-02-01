@@ -16,18 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.conf;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
@@ -41,7 +36,7 @@ public class ResponderConfiguration {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(ResponderConfiguration.class);
 
-	private List<ListenerConfiguration> listenerConfigList;
+	private List<ListenerConfiguration> listenerConfigList; //TODO JOT => map
 
 	public ResponderConfiguration() {
 	}
