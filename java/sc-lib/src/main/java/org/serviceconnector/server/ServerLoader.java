@@ -75,7 +75,7 @@ public class ServerLoader {
 				keepAliveInterval = Integer.parseInt(keepAliveIntervalValue);
 			}
 			String serverTypeString = (String) config.getString(serverName + Constants.PROPERTY_QUALIFIER_TYPE);
-			ServerType serverType = ServerType.getServerType(serverTypeString);
+			ServerType serverType = ServerType.getType(serverTypeString);
 
 			InetSocketAddress socketAddress = new InetSocketAddress(host, portNr);
 			// instantiate right type of server

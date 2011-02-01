@@ -29,6 +29,8 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.server.ServerType;
+import org.serviceconnector.util.ValidatorUtility;
 
 /**
  * The Class ListenerConfiguration.
@@ -59,7 +61,7 @@ public class ListenerConfiguration {
 	 * The Constructor.
 	 * 
 	 * @param name
-	 *            the communicator name
+	 *            the listener name
 	 */
 	public ListenerConfiguration(String name) {
 		this.name = name;
@@ -81,9 +83,9 @@ public class ListenerConfiguration {
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 		
 		// get interfaces for listener
-		networkInterfaces = compositeConfig.getList(this.name + Constants.PROPERTY_QUALIFIER_INTERFACES, null);
+		networkInterfaces = (List<String>) compositeConfig.getList(this.name + Constants.PROPERTY_QUALIFIER_INTERFACES, null);
 		if (networkInterfaces == null) {
-			// interfaces not set in configuration file - listen to all NIC's
+			// interfaces not set in configuration file - get all NIC's
 			networkInterfaces = new ArrayList<String>();
 			try {
 				Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
@@ -110,6 +112,7 @@ public class ListenerConfiguration {
 					+ Constants.PROPERTY_QUALIFIER_PORT + " is missing");
 		}
 		this.port = localPort;
+		ValidatorUtility.validateInt(1, this.port, SCMPError.HV_WRONG_PORTNR);
 
 		// get connectionType
 		this.connectionType = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE);
@@ -117,9 +120,14 @@ public class ListenerConfiguration {
 			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 					+ Constants.PROPERTY_QUALIFIER_CONNECTION_TYPE + " is missing");
 		}
+		ConnectionType connectionType = ConnectionType.getType(this.connectionType);
+		if (connectionType == ConnectionType.UNDEFINED) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "unkown connectionType=" + this.name
+					+ this.connectionType);
+		}
 		
 		// get username & password for netty.web
-		if (this.connectionType.equals(ConnectionType.NETTY_WEB.getValue())) {
+		if (connectionType == ConnectionType.NETTY_WEB) {
 			this.username = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_USERNAME, null);
 			if (this.username == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
@@ -133,7 +141,7 @@ public class ListenerConfiguration {
 		}
 
 		// get remote host config for http-proxy
-		if (this.connectionType.equals(ConnectionType.NETTY_PROXY_HTTP.getValue())) {
+		if (connectionType == ConnectionType.NETTY_PROXY_HTTP) {
 			String remoteNode = compositeConfig.getString(this.name + Constants.PROPERTY_QUALIFIER_REMOTE_NODE);
 			if (remoteNode == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
@@ -143,6 +151,12 @@ public class ListenerConfiguration {
 			RemoteNodeConfiguration remoteNodeConfig = new RemoteNodeConfiguration(remoteNode);
 			// load it with the configurated items
 			remoteNodeConfig.load(compositeConfig);
+			// remote node must be a web server
+			if (remoteNodeConfig.getServerType().equals(ServerType.WEB_SERVER.getValue())) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, this.name
+					+ Constants.PROPERTY_QUALIFIER_REMOTE_NODE + " is not a web server");
+			}
+			
 			// set remote host configuration into the listener configuration
 			this.remoteNodeConfiguration = remoteNodeConfig;
 		}

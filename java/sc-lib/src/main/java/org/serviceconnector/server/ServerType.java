@@ -48,10 +48,10 @@ public enum ServerType implements IReversibleEnum<String, ServerType> {
 		this.value = value;
 	}
 
-	public static ServerType getServerType(String typeString) {
+	public static ServerType getType(String typeString) {
 		ServerType type = reverseMap.get(typeString);
 		if (type == null) {
-			// typeString doesn't match to a valid serviceType
+			// typeString doesn't match to a valid type
 			return ServerType.UNDEFINED;
 		}
 		return type;
@@ -64,6 +64,6 @@ public enum ServerType implements IReversibleEnum<String, ServerType> {
 
 	@Override
 	public ServerType reverse(String typeString) {
-		return ServerType.getServerType(typeString);
+		return ServerType.getType(typeString);
 	}
 }

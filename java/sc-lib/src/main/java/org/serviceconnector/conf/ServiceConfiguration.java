@@ -14,48 +14,47 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.net;
+package org.serviceconnector.conf;
 
-import org.serviceconnector.util.IReversibleEnum;
-import org.serviceconnector.util.ReverseEnumMap;
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPValidatorException;
 
-public enum ConnectionType implements IReversibleEnum<String, ConnectionType>{
+public class ServiceConfiguration {
 
-	NETTY_TCP("netty.tcp"), 	//
-	NETTY_HTTP("netty.http"),	//
-	NETTY_WEB("netty.web"),		//
-	NETTY_PROXY_HTTP("netty-proxy.http"),	//
-	DEFAULT_CLIENT_CONNECTION_TYPE(ConnectionType.NETTY_TCP.getValue()), //
-	DEFAULT_SERVER_CONNECTION_TYPE(ConnectionType.NETTY_TCP.getValue()), //
-	UNDEFINED("undefined");
+	/** The type. */
+	private String type;
+	/** The node name. */
+	private String name;
+	/** The host. */
+	private String host;
+	/** The port. */
+	private int port;
+	/** The connectionType. */
+	private String connectionType;
+	/** The max pool size. */
+	private int maxPoolSize;
+	/** The keep alive interval. */
+	private int keepAliveIntervalSeconds;
+	/** The maxSessions (for file servers). */
+	private int maxSessions;
 
-	/** The value. */
-	private String value;
-
-	/** The reverseMap, to get access to the enum constants by string value. */
-	private static final ReverseEnumMap<String, ConnectionType> reverseMap = new ReverseEnumMap<String, ConnectionType>(ConnectionType.class);
-
-	
-	/** The Connection type. */
-	private ConnectionType(String value) {
-		this.value = value;
-	}
-
-	public static ConnectionType getType(String typeString) {
-		ConnectionType type = reverseMap.get(typeString);
-		if (type == null) {
-			// typeString doesn't match to a valid type
-			return ConnectionType.UNDEFINED;
-		}
-		return type;
+	/**
+	 * The Constructor.
+	 * 
+	 * @param name
+	 *            the node name
+	 */
+	public ServiceConfiguration(String name) {
 	}
 	
-	public String getValue() {
-		return this.value;
+	/**
+	 * Load the configurated items
+	 * 
+	 * @param compositeConfig
+	 * @throws SCMPValidatorException
+	 */
+	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 	}
 	
-	@Override
-	public ConnectionType reverse(String typeString) {
-		return ConnectionType.getType(typeString);
-	}
 }
