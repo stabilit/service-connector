@@ -46,10 +46,10 @@ public class SCMPAttachCall extends SCMPCallAdapter {
 	
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
+	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 		this.setVersion(SCMPMessage.SC_VERSION.toString());
 		this.setLocalDateTime(DateTimeUtility.getCurrentTimeZoneMillis());
-		super.invoke(scmpCallback, timeoutInMillis);
+		super.invoke(scmpCallback, timeoutMillis);
 	}
 
 	/**

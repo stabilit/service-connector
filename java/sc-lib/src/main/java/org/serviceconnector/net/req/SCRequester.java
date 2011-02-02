@@ -71,7 +71,7 @@ public class SCRequester implements IRequester {
 	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void send(SCMPMessage message, int timeoutInMillis, ISCMPMessageCallback scmpCallback) throws Exception {
+	public void send(SCMPMessage message, int timeoutMillis, ISCMPMessageCallback scmpCallback) throws Exception {
 		// return an already connected live instance
 		IConnection connection = this.connectionPool.getConnection();
 		ConnectionContext connectionContext = connection.getContext();
@@ -88,9 +88,9 @@ public class SCRequester implements IRequester {
 				TimeoutWrapper timeoutWrapper = new TimeoutWrapper((ITimeout) requesterCallback);
 				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
 				ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(
-						timeoutWrapper, (long) timeoutInMillis, TimeUnit.MILLISECONDS);
+						timeoutWrapper, (long) timeoutMillis, TimeUnit.MILLISECONDS);
 				reqCallback.setOperationTimeout(timeout);
-				reqCallback.setTimeoutMillis(timeoutInMillis);
+				reqCallback.setTimeoutMillis(timeoutMillis);
 				// extract first part message & send
 				SCMPMessage part = largeResponse.getFirst();
 				// handling msgSequenceNr
@@ -105,9 +105,9 @@ public class SCRequester implements IRequester {
 				TimeoutWrapper timeoutWrapper = new TimeoutWrapper((ITimeout) requesterCallback);
 				SCRequesterSCMPCallback reqCallback = (SCRequesterSCMPCallback) requesterCallback;
 				ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(
-						timeoutWrapper, (long) timeoutInMillis, TimeUnit.MILLISECONDS);
+						timeoutWrapper, (long) timeoutMillis, TimeUnit.MILLISECONDS);
 				reqCallback.setOperationTimeout(timeout);
-				reqCallback.setTimeoutMillis(timeoutInMillis);
+				reqCallback.setTimeoutMillis(timeoutMillis);
 				// handling msgSequenceNr
 				if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
 					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
@@ -154,7 +154,7 @@ public class SCRequester implements IRequester {
 		/** The operation timeout. */
 		private ScheduledFuture<TimeoutWrapper> operationTimeout;
 		/** The timeout in milliseconds. */
-		private int timeoutInMillis;
+		private int timeoutMillis;
 
 		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPMessageCallback scmpCallback, ConnectionContext conCtx,
 				SCMPMessageSequenceNr msgSequenceNr) {
@@ -168,7 +168,7 @@ public class SCRequester implements IRequester {
 			this.requestMsg = reqMsg;
 			this.largeRequest = largeRequest;
 			this.msgSequenceNr = msgSequenceNr;
-			this.timeoutInMillis = 0;
+			this.timeoutMillis = 0;
 			this.operationTimeout = null;
 		}
 
@@ -379,17 +379,17 @@ public class SCRequester implements IRequester {
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
-			return this.timeoutInMillis;
+			return this.timeoutMillis;
 		}
 
 		/**
 		 * Sets the timeout milliseconds.
 		 * 
-		 * @param timeoutInMillis
+		 * @param timeoutMillis
 		 *            the new timeout milliseconds
 		 */
-		public void setTimeoutMillis(int timeoutInMillis) {
-			this.timeoutInMillis = timeoutInMillis;
+		public void setTimeoutMillis(int timeoutMillis) {
+			this.timeoutMillis = timeoutMillis;
 		}
 
 		/**

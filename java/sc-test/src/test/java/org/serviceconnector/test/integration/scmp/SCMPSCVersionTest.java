@@ -65,13 +65,13 @@ public class SCMPSCVersionTest extends IntegrationSuperTest {
 	public void t01_AttachCallSCVersionIsEmpty() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(this.requester) {
 			@Override
-			public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
+			public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "";
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, dateTime);
 				this.requestMessage.setMessageType(this.getMessageType());
-				this.requester.send(this.requestMessage, timeoutInMillis, scmpCallback);
+				this.requester.send(this.requestMessage, timeoutMillis, scmpCallback);
 				return;
 			}
 		};
@@ -89,13 +89,13 @@ public class SCMPSCVersionTest extends IntegrationSuperTest {
 	public void t02_AttachCallSCVersionIsIncompatible() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(this.requester) {
 			@Override
-			public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
+			public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "2.0-000";
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, dateTime);
 				this.requestMessage.setMessageType(this.getMessageType());
-				this.requester.send(this.requestMessage, timeoutInMillis, scmpCallback);
+				this.requester.send(this.requestMessage, timeoutMillis, scmpCallback);
 				return;
 			}
 		};
@@ -113,14 +113,14 @@ public class SCMPSCVersionTest extends IntegrationSuperTest {
 	public void t03_AttachCallSCVersionWrongFormat() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(this.requester) {
 			@Override
-			public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
+			public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "1.1000";
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, dateTime);
 				this.requestMessage.setMessageType(this.getMessageType());
-				this.requester.send(this.requestMessage, timeoutInMillis, scmpCallback);
+				this.requester.send(this.requestMessage, timeoutMillis, scmpCallback);
 				return;
 			}
 		};
@@ -138,14 +138,14 @@ public class SCMPSCVersionTest extends IntegrationSuperTest {
 	public void t04_AttachCallSCVersionCompatible() throws Exception {
 		SCMPAttachCall attachCall = new SCMPAttachCall(this.requester) {
 			@Override
-			public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
+			public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 
 				String dateTime = DateTimeUtility.getCurrentTimeZoneMillis();
 				String version = "1.0-000";
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.SC_VERSION, version);
 				this.requestMessage.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, dateTime);
 				this.requestMessage.setMessageType(this.getMessageType());
-				this.requester.send(this.requestMessage, timeoutInMillis, scmpCallback);
+				this.requester.send(this.requestMessage, timeoutMillis, scmpCallback);
 				return;
 			}
 		};

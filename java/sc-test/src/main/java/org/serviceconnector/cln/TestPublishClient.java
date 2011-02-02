@@ -22,8 +22,8 @@ public class TestPublishClient extends TestAbstractClient {
 	 *            [4] maxConnections<br>
 	 *            [5] keepAliveIntervalSeconds (0 = disabled)<br>
 	 *            [6] serviceName<br>
-	 *            [7] echoIntervalInSeconds<br>
-	 *            [8] echoTimeoutInSeconds<br>
+	 *            [7] echoIntervalSeconds<br>
+	 *            [8] echoTimeoutSeconds<br>
 	 *            [9] methodsToInvoke
 	 */
 	public static void main(String[] args) throws Exception {
@@ -39,8 +39,8 @@ public class TestPublishClient extends TestAbstractClient {
 		testClient.setMaxConnections(Integer.parseInt(args[4]));
 		testClient.setKeepAliveIntervalSeconds(Integer.parseInt(args[5]));
 		testClient.setServiceName(args[6]);
-//		testClient.setEchoIntervalInSeconds(Integer.parseInt(args[7]));
-//		testClient.setEchoTimeoutInSeconds(Integer.parseInt(args[8]));
+//		testClient.setEchoIntervalSeconds(Integer.parseInt(args[7]));
+//		testClient.setEchoTimeoutSeconds(Integer.parseInt(args[8]));
 		testClient.setMethodsToInvoke(Arrays.asList(args[9].split("\\|")));
 		testClient.run();
 	}

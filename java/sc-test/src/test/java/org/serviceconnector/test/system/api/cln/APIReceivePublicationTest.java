@@ -102,8 +102,8 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		subMsgRequest.setMask(TestConstants.mask);
 		subMsgRequest.setSessionInfo(TestConstants.publishMsgWithDelayCmd);
 		int nrMessages = 5;
-		String waitInMillis = "1000";
-		subMsgRequest.setData(nrMessages + "|" + waitInMillis);
+		String waitMillis = "1000";
+		subMsgRequest.setData(nrMessages + "|" + waitMillis);
 		subMsgRequest.setDataLength(((String)subMsgRequest.getData()).length());
 		msgCallback.setExpectedMessages(nrMessages);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);

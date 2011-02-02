@@ -55,13 +55,13 @@ public class SessionService extends StatefulService {
 	 *            the callback
 	 * @param session
 	 *            the session
-	 * @param timeoutInMillis
+	 * @param timeoutMillis
 	 *            the timeout in milliseconds
 	 * @throws Exception
 	 *             the exception
 	 */
 	public synchronized void allocateServerAndCreateSession(SCMPMessage msgToForward, ClnCreateSessionCommandCallback callback,
-			Session session, int timeoutInMillis) throws Exception {
+			Session session, int timeoutMillis) throws Exception {
 		int numberOfServer = this.listOfServers.size();
 		if (numberOfServer == 0) {
 			// no server registered for this service
@@ -81,7 +81,7 @@ public class SessionService extends StatefulService {
 				callback.setServer(server);
 				server.addSession(session);
 				try {
-					server.createSession(msgToForward, callback, timeoutInMillis);
+					server.createSession(msgToForward, callback, timeoutMillis);
 				} catch (Exception e) {
 					server.removeSession(session);
 					callback.setServer(null);

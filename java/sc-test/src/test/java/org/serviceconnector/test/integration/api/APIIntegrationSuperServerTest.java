@@ -67,20 +67,20 @@ public class APIIntegrationSuperServerTest extends IntegrationSuperTest {
 			super(server);
 		}
 		@Override
-		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage createSession(SCMessage request, int operationTimeoutMillis) {
 			return request;
 		}
 
 		@Override
-		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
+		public void deleteSession(SCMessage request, int operationTimeoutMillis) {
 		}
 
 		@Override
-		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
+		public void abortSession(SCMessage request, int operationTimeoutMillis) {
 		}
 
 		@Override
-		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage execute(SCMessage request, int operationTimeoutMillis) {
 			return request;
 		}
 	}
@@ -91,17 +91,17 @@ public class APIIntegrationSuperServerTest extends IntegrationSuperTest {
 			super(server);
 		}
 		@Override
-		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutInMillis) {
+		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutMillis) {
 			return message;
 		}
 
 		@Override
-		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
+		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 			return message;
 		}
 
 		@Override
-		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
+		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 		}
 	}
 }

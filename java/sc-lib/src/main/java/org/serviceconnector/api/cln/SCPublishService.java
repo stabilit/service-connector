@@ -103,7 +103,7 @@ public class SCPublishService extends SCService {
 		if (scMessageCallback == null) {
 			throw new InvalidParameterException("Callback must be set.");
 		}
-		this.noDataIntervalSeconds = scSubscribeMessage.getNoDataIntervalInSeconds();
+		this.noDataIntervalSeconds = scSubscribeMessage.getNoDataIntervalSeconds();
 		String mask = scSubscribeMessage.getMask();
 		ValidatorUtility.validateMask(mask, SCMPError.HV_WRONG_MASK);
 		this.messageCallback = scMessageCallback;
@@ -113,7 +113,7 @@ public class SCPublishService extends SCService {
 		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, this.serviceName);
 		subscribeCall.setMask(scSubscribeMessage.getMask());
 		subscribeCall.setSessionInfo(scSubscribeMessage.getSessionInfo());
-		subscribeCall.setNoDataIntervalSeconds(scSubscribeMessage.getNoDataIntervalInSeconds());
+		subscribeCall.setNoDataIntervalSeconds(scSubscribeMessage.getNoDataIntervalSeconds());
 		subscribeCall.setCompressed(scSubscribeMessage.isCompressed());
 		subscribeCall.setRequestBody(scSubscribeMessage.getData());
 		try {

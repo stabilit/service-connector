@@ -60,7 +60,7 @@ public class Requester implements IRequester {
 
 	/** {@inheritDoc} */
 	@Override
-	public void send(SCMPMessage message, int timeoutInMillis, ISCMPMessageCallback callback) throws Exception {
+	public void send(SCMPMessage message, int timeoutMillis, ISCMPMessageCallback callback) throws Exception {
 		// return an already connected live instance
 		IConnection connection = this.connectionPool.getConnection();
 		ConnectionContext connectionContext = connection.getContext();
@@ -71,9 +71,9 @@ public class Requester implements IRequester {
 			RequesterSCMPCallback reqCallback = (RequesterSCMPCallback) requesterCallback;
 			@SuppressWarnings("unchecked")
 			ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) AppContext.otiScheduler.schedule(
-					timeoutWrapper, (long) timeoutInMillis, TimeUnit.MILLISECONDS);
+					timeoutWrapper, (long) timeoutMillis, TimeUnit.MILLISECONDS);
 			reqCallback.setOperationTimeout(timeout);
-			reqCallback.setTimeoutMillis(timeoutInMillis);
+			reqCallback.setTimeoutMillis(timeoutMillis);
 			connection.send(message, requesterCallback);
 		} catch (Exception ex) {
 			this.connectionPool.freeConnection(connection);
@@ -106,13 +106,13 @@ public class Requester implements IRequester {
 		/** The operation timeout. */
 		private ScheduledFuture<TimeoutWrapper> operationTimeout;
 		/** The timeout in milliseconds. */
-		private int timeoutInMillis;
+		private int timeoutMillis;
 
 		public RequesterSCMPCallback(ISCMPMessageCallback scmpCallback, ConnectionContext connectionCtx) {
 			this.scmpCallback = scmpCallback;
 			this.connectionCtx = connectionCtx;
 			this.operationTimeout = null;
-			this.timeoutInMillis = 0;
+			this.timeoutMillis = 0;
 		}
 
 		/** {@inheritDoc} */
@@ -181,17 +181,17 @@ public class Requester implements IRequester {
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
-			return this.timeoutInMillis;
+			return this.timeoutMillis;
 		}
 
 		/**
 		 * Sets the timeout milliseconds.
 		 * 
-		 * @param timeoutInMillis
+		 * @param timeoutMillis
 		 *            the new timeout seconds
 		 */
-		public void setTimeoutMillis(int timeoutInMillis) {
-			this.timeoutInMillis = timeoutInMillis;
+		public void setTimeoutMillis(int timeoutMillis) {
+			this.timeoutMillis = timeoutMillis;
 		}
 
 		/**
@@ -199,7 +199,7 @@ public class Requester implements IRequester {
 		 */
 		@Override
 		public void timeout() {
-			logger.warn("oti timeout expiration on SC oti=" + this.timeoutInMillis);
+			logger.warn("oti timeout expiration on SC oti=" + this.timeoutMillis);
 			this.disconnectConnection();
 			this.scmpCallback.receive(new IdleTimeoutException("idle timeout. operation - could not be completed."));
 		}

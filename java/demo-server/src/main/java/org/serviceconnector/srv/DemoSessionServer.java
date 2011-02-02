@@ -77,13 +77,13 @@ public class DemoSessionServer extends Thread {
 		}
 
 		@Override
-		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage createSession(SCMessage request, int operationTimeoutMillis) {
 			logger.info("Session created");
 			return request;
 		}
 
 		@Override
-		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
+		public void deleteSession(SCMessage request, int operationTimeoutMillis) {
 			logger.info("Session deleted");
 			String sessionInfo = request.getSessionInfo();
 			// watch out for kill server message
@@ -97,12 +97,12 @@ public class DemoSessionServer extends Thread {
 		}
 
 		@Override
-		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
+		public void abortSession(SCMessage request, int operationTimeoutMillis) {
 			logger.info("Session aborted");
 		}
 
 		@Override
-		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage execute(SCMessage request, int operationTimeoutMillis) {
 			Object data = request.getData();
 			if (request.getCacheId() != null) {
 				Calendar time = Calendar.getInstance();

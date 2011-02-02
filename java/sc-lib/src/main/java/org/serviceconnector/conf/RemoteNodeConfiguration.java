@@ -55,20 +55,20 @@ public class RemoteNodeConfiguration {
 	}
 
 	public RemoteNodeConfiguration(ServerType serverType, String name, String host, int port, String connectionType,
-			int keepAliveIntervalInSeconds, int maxConnections, int maxSessions) {
+			int keepAliveIntervalSeconds, int maxConnections, int maxSessions) {
 		this.name = name;
 		this.host = host;
 		this.port = port;
 		this.connectionType = connectionType;
-		this.keepAliveIntervalSeconds = keepAliveIntervalInSeconds;
+		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
 		this.maxPoolSize = maxConnections;
 		this.maxSessions = maxSessions;
 		this.serverType = serverType;
 	}
 	
-	public RemoteNodeConfiguration(String name, String host, int port, String connectionType, int keepAliveIntervalInSeconds,
+	public RemoteNodeConfiguration(String name, String host, int port, String connectionType, int keepAliveIntervalSeconds,
 			int maxConnections) {
-		this(ServerType.UNDEFINED, name, host, port, connectionType, keepAliveIntervalInSeconds, maxConnections, 0);
+		this(ServerType.UNDEFINED, name, host, port, connectionType, keepAliveIntervalSeconds, maxConnections, 0);
 	}
 
 	/**

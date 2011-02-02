@@ -255,7 +255,7 @@ public class APISessionServerTest {
 ////		}
 //
 //		@Override
-//		public SCMessage createSession(SCMessage message, int operationTimeoutInMillis) {
+//		public SCMessage createSession(SCMessage message, int operationTimeoutMillis) {
 //			messagesExchanged++;
 //			createSessionMsg = message;
 //			if (message.getData() != null && message.getData() instanceof String) {
@@ -279,19 +279,19 @@ public class APISessionServerTest {
 //		}
 //
 //		@Override
-//		public void deleteSession(SCMessage message, int operationTimeoutInMillis) {
+//		public void deleteSession(SCMessage message, int operationTimeoutMillis) {
 //			messagesExchanged++;
 //			deleteSessionMsg = message;
 //		}
 //
 //		@Override
-//		public void abortSession(SCMessage message, int operationTimeoutInMillis) {
+//		public void abortSession(SCMessage message, int operationTimeoutMillis) {
 //			messagesExchanged++;
 //			abortSessionMsg = message;
 //		}
 //
 //		@Override
-//		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
+//		public SCMessage execute(SCMessage request, int operationTimeoutMillis) {
 //			messagesExchanged++;
 //			Object data = request.getData();
 //			// watch out for timeout server message

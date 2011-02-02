@@ -96,12 +96,12 @@ public class SCClient {
 	/**
 	 * Attach client to SC.
 	 * 
-	 * @param operationTimeout
+	 * @param operationTimeoutSeconds
 	 *            the operation timeout
 	 * @throws InvalidParameterException
 	 *             port is not within limits 0 to 0xFFFF or host is missing<br>
 	 */
-	public synchronized void attach(int operationTimeout) throws Exception {
+	public synchronized void attach(int operationTimeoutSeconds) throws Exception {
 		// 1. checking preconditions and validate
 		if (this.attached) {
 			throw new SCServiceException("already attached");
@@ -118,13 +118,13 @@ public class SCClient {
 			SCServiceCallback callback = new SCServiceCallback(true);
 			SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);
 			try {
-				attachCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
+				attachCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				this.requester.destroy();
 				throw new SCServiceException("attach to " + host + ":" + port + " failed", e);
 			}
 			// 3. receiving reply and error handling
-			SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
+			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				this.requester.destroy();
 				// release resources
@@ -162,10 +162,12 @@ public class SCClient {
 	/**
 	 * Detach client from SC.
 	 * 
+	 * @param operationTimeoutSeconds
+	 *            the operation timeout
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void detach(int operationTimeout) throws Exception {
+	public synchronized void detach(int operationTimeoutSeconds) throws Exception {
 		// 1. checking preconditions and initialize
 		if (this.attached == false) {
 			// client is not attached just ignore
@@ -176,12 +178,12 @@ public class SCClient {
 			SCServiceCallback callback = new SCServiceCallback(true);
 			SCMPDetachCall detachCall = new SCMPDetachCall(this.requester);
 			try {
-				detachCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
+				detachCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				throw new SCServiceException("detach client failed", e);
 			}
 			// 3. receiving reply and error handling
-			SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
+			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				SCServiceException ex = new SCServiceException("detach client failed");
 				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));

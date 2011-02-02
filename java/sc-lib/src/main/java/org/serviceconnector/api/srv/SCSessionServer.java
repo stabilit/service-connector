@@ -77,7 +77,7 @@ public class SCSessionServer {
 	 * 
 	 * @return the keep alive interval in seconds
 	 */
-	public int getKeepAliveIntervalInSeconds() {
+	public int getKeepAliveIntervalSeconds() {
 		return this.scServer.getKeepAliveIntervalSeconds();
 	}
 

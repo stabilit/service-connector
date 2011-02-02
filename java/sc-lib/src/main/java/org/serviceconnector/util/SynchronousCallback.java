@@ -91,10 +91,10 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 
 	/** {@inheritDoc} */
 	@Override
-	public SCMPMessage getMessageSync(int timeoutInMillis) {
-		if (timeoutInMillis <= 0) {
-			// timeoutInMillis must be greater than 0
-			logger.error("timeoutInMillis <= 0");
+	public SCMPMessage getMessageSync(int timeoutMillis) {
+		if (timeoutMillis <= 0) {
+			// timeoutMillis must be greater than 0
+			logger.error("timeoutMillis <= 0");
 			return null;
 		}
 		// set synchronous mode
@@ -102,7 +102,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 		SCMPMessage reply = null;
 		try {
 			// the method poll() from BlockingQueue waits inside
-			reply = this.answer.poll(timeoutInMillis, TimeUnit.MILLISECONDS);
+			reply = this.answer.poll(timeoutMillis, TimeUnit.MILLISECONDS);
 			// reset synchronous mode
 			this.synchronous = false;
 		} catch (InterruptedException e) {

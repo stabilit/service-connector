@@ -10,8 +10,8 @@ import org.serviceconnector.api.cln.SCSessionService;
 
 public class TestSessionClient extends TestAbstractClient {
 
-	private int echoIntervalInSeconds;
-	private int echoTimeoutInSeconds;
+	private int echoIntervalSeconds;
+	private int echoTimeoutSeconds;
 	private SCSessionService service;
 
 	static {
@@ -29,8 +29,8 @@ public class TestSessionClient extends TestAbstractClient {
 	 *            [4] maxConnections<br>
 	 *            [5] keepAliveIntervalSeconds (0 = disabled)<br>
 	 *            [6] serviceName<br>
-	 *            [7] echoIntervalInSeconds<br>
-	 *            [8] echoTimeoutInSeconds<br>
+	 *            [7] echoIntervalSeconds<br>
+	 *            [8] echoTimeoutSeconds<br>
 	 *            [9] methodsToInvoke
 	 */
 	public static void main(String[] args) throws Exception {
@@ -46,16 +46,16 @@ public class TestSessionClient extends TestAbstractClient {
 		testClient.setMaxConnections(Integer.parseInt(args[4]));
 		testClient.setKeepAliveIntervalSeconds(Integer.parseInt(args[5]));
 		testClient.setServiceName(args[6]);
-		testClient.setEchoIntervalInSeconds(Integer.parseInt(args[7]));
-		testClient.setEchoTimeoutInSeconds(Integer.parseInt(args[8]));
+		testClient.setEchoIntervalSeconds(Integer.parseInt(args[7]));
+		testClient.setEchoTimeoutSeconds(Integer.parseInt(args[8]));
 		testClient.setMethodsToInvoke(Arrays.asList(args[9].split("\\|")));
 		testClient.run();
 	}
 
 	public void p_createSession() throws Exception {
 		service = client.newSessionService(this.serviceName);
-		service.setEchoIntervalInSeconds(this.echoIntervalInSeconds);
-		service.setEchoTimeoutInSeconds(this.echoTimeoutInSeconds);
+		service.setEchoIntervalSeconds(this.echoIntervalSeconds);
+		service.setEchoTimeoutSeconds(this.echoTimeoutSeconds);
 		service.createSession(new SCMessage(), new TestSessionServiceMessageCallback(service));
 	}
 
@@ -96,11 +96,11 @@ public class TestSessionClient extends TestAbstractClient {
 		this.p_exit();
 	}
 
-	public void setEchoIntervalInSeconds(int echoIntervalInSeconds) {
-		this.echoIntervalInSeconds = echoIntervalInSeconds;
+	public void setEchoIntervalSeconds(int echoIntervalSeconds) {
+		this.echoIntervalSeconds = echoIntervalSeconds;
 	}
 
-	public void setEchoTimeoutInSeconds(int echoTimeoutInSeconds) {
-		this.echoTimeoutInSeconds = echoTimeoutInSeconds;
+	public void setEchoTimeoutSeconds(int echoTimeoutSeconds) {
+		this.echoTimeoutSeconds = echoTimeoutSeconds;
 	}
 }

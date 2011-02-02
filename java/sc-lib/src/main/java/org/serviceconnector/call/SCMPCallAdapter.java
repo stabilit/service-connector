@@ -115,10 +115,10 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPMessageCallback callback, int timeoutInMillis) throws Exception {
+	public void invoke(ISCMPMessageCallback callback, int timeoutMillis) throws Exception {
 		this.requestMessage.setMessageType(this.getMessageType());
-		this.requestMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, timeoutInMillis);
-		this.requester.send(this.requestMessage, timeoutInMillis, callback);
+		this.requestMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, timeoutMillis);
+		this.requester.send(this.requestMessage, timeoutMillis, callback);
 		return;
 	}
 
@@ -174,7 +174,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 		/** {@inheritDoc} */
 		@Override
-		public void invoke(ISCMPMessageCallback callback, int timeoutInMillis) throws Exception {
+		public void invoke(ISCMPMessageCallback callback, int timeoutMillis) throws Exception {
 			if (this.groupState == SCMPGroupState.CLOSE) {
 				logger.warn("tried to invoke groupCall but state of group is closed");
 			}
@@ -183,7 +183,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 
 			if (callSCMP.isLargeMessage()) {
 				// parent call is large no need to change anything
-				this.parentCall.invoke(callback, timeoutInMillis);
+				this.parentCall.invoke(callback, timeoutMillis);
 				return;
 			}
 			if (callSCMP.isPart() == false) {
@@ -195,7 +195,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 				SCMPCallAdapter.this.requestMessage = scmpPart; // SCMPCallAdapter.this points to this.parentCall
 				callSCMP = null;
 			}
-			this.parentCall.invoke(callback, timeoutInMillis);
+			this.parentCall.invoke(callback, timeoutMillis);
 			return;
 		}
 

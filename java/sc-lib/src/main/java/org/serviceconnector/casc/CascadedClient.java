@@ -124,7 +124,7 @@ public class CascadedClient {
 		}
 		CascReceivePublicationCallback callback = new CascReceivePublicationCallback(this);
 		// OTI for receive publication: DEFAULT_OPERATION_TIMEOUT_SECONDS + NO_DATA_INTERVAL
-		int oti = (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.getPublishService().getNoDataIntervalInSeconds())
+		int oti = (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.getPublishService().getNoDataIntervalSeconds())
 				* Constants.SEC_TO_MILLISEC_FACTOR;
 		this.cascadedSC.receivePublication(this.publishService.getName(), this.subscriptionId, callback, oti);
 	}

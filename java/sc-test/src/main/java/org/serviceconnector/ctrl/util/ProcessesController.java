@@ -403,13 +403,13 @@ public class ProcessesController {
 	 *            the connection type
 	 * @param maxConnections
 	 *            the max connections
-	 * @param keepAliveIntervalInSeconds
+	 * @param keepAliveIntervalSeconds
 	 *            the keep alive interval in seconds
 	 * @param serviceName
 	 *            the service name
-	 * @param echoIntervalInSeconds
+	 * @param echoIntervalSeconds
 	 *            the echo interval in seconds
-	 * @param echoTimeoutInSeconds
+	 * @param echoTimeoutSeconds
 	 *            the echo timeout in seconds
 	 * @param methodsToInvoke
 	 *            the methods to invoke
@@ -423,8 +423,8 @@ public class ProcessesController {
 	 *             TestConstants.sesServiceName1, 300, 5, "\"initAttach|detach\"");
 	 */
 	public ProcessCtx startClient(String clientType, String log4jClnProperties, String clientName, String scHost, int scPort,
-			ConnectionType connectionType, int maxConnections, int keepAliveIntervalInSeconds, String serviceName,
-			int echoIntervalInSeconds, int echoTimeoutInSeconds, String methodsToInvoke) throws Exception {
+			ConnectionType connectionType, int maxConnections, int keepAliveIntervalSeconds, String serviceName,
+			int echoIntervalSeconds, int echoTimeoutSeconds, String methodsToInvoke) throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
 
@@ -450,15 +450,27 @@ public class ProcessesController {
 		proc.setConnectionType(connectionType);
 		proc.setCommunicatorType(clientType);
 		/*
-		 * start client process Arguments: [0] -Dlog4j.configuration=file [1] log4jProperties [2] -jar [3] client runnable
-		 * [4] clientType ("session" or "publish") [5] clientName [6] scHost [7] scPort [8] ConnectionType ("netty.tcp" or
-		 * "netty.http") [9] maxConnections [10]
-		 * keepAliveIntervalSeconds [11] serviceName [12] echoIntervalInSeconds[13] echoTimeoutInSeconds[14] methodsToInvoke (split
-		 * by | "initAttach|detach")[15]
+		 * start client process Arguments: 
+		 * [0] -Dlog4j.configuration=file 
+		 * [1] log4jProperties 
+		 * [2] -jar 
+		 * [3] client runnable
+		 * [4] clientType ("session" or "publish") 
+		 * [5] clientName 
+		 * [6] scHost 
+		 * [7] scPort 
+		 * [8] ConnectionType ("netty.tcp" or "netty.http") 
+		 * [9] maxConnections 
+		 * [10] keepAliveIntervalSeconds 
+		 * [11] serviceName 
+		 * [12] echoIntervalSeconds
+		 * [13] echoTimeoutSeconds
+		 * [14] methodsToInvoke (split * by | "initAttach|detach")
+		 * [15]
 		 */
 		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + clnRunablFullName + " " + clientType
 				+ " " + clientName + " " + scHost + " " + scPort + " " + connectionType.getValue() + " " + maxConnections + " "
-				+ keepAliveIntervalInSeconds + " " + serviceName + " " + echoIntervalInSeconds + " " + echoTimeoutInSeconds + " "
+				+ keepAliveIntervalSeconds + " " + serviceName + " " + echoIntervalSeconds + " " + echoTimeoutSeconds + " "
 				+ methodsToInvoke;
 		Process clnProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(clnProcess);

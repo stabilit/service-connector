@@ -55,7 +55,7 @@ public class DemoPublishClient extends Thread {
 			msg.setSessionInfo("publishMessagesWithDelay"); // optional
 			msg.setData("1000|10"); // optional
 			msg.setMask(mask); // mandatory
-			msg.setNoDataIntervalInSeconds(100); // mandatory
+			msg.setNoDataIntervalSeconds(100); // mandatory
 			SCSubscribeMessage reply = service.subscribe(msg, cbk); // regular subscribe
 
 			String sid = service.getSessionId();

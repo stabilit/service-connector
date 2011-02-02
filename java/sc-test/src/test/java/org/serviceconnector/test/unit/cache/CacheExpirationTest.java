@@ -55,7 +55,7 @@ public class CacheExpirationTest extends CacheSuperUnitTest {
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		Date now = new Date();
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, TimeMillis.HOUR.getMillis());
+		Date expirationDate = DateTimeUtility.getIncrementTimeMillis(now, TimeMillis.HOUR.getMillis());
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
 				DateTimeUtility.getDateTimeAsString(expirationDate));
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
@@ -89,7 +89,7 @@ public class CacheExpirationTest extends CacheSuperUnitTest {
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		Date now = new Date();
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, -TimeMillis.HOUR.getMillis());
+		Date expirationDate = DateTimeUtility.getIncrementTimeMillis(now, -TimeMillis.HOUR.getMillis());
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
 				DateTimeUtility.getDateTimeAsString(expirationDate));
 		try {
@@ -125,12 +125,12 @@ public class CacheExpirationTest extends CacheSuperUnitTest {
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 			if (i == 1) {
 				Date now = new Date();
-				Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, TimeMillis.HOUR.getMillis());
+				Date expirationDate = DateTimeUtility.getIncrementTimeMillis(now, TimeMillis.HOUR.getMillis());
 				scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
 						DateTimeUtility.getDateTimeAsString(expirationDate));
 			} else {
 				Date now = new Date();
-				Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, -TimeMillis.HOUR.getMillis());
+				Date expirationDate = DateTimeUtility.getIncrementTimeMillis(now, -TimeMillis.HOUR.getMillis());
 				scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
 						DateTimeUtility.getDateTimeAsString(expirationDate));
 			}
@@ -175,7 +175,7 @@ public class CacheExpirationTest extends CacheSuperUnitTest {
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		Date now = new Date();
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(now, 2 * TimeMillis.SECOND.getMillis());
+		Date expirationDate = DateTimeUtility.getIncrementTimeMillis(now, 2 * TimeMillis.SECOND.getMillis());
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
 				DateTimeUtility.getDateTimeAsString(expirationDate));
 		scmpCache.putMessage(scmpMessageWrite);

@@ -168,11 +168,11 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 	}
 
 	/**
-	 * Description: setKeepAliveIntervalInSeconds after attach.<br>
+	 * Description: setKeepAliveIntervalSeconds after attach.<br>
 	 * Expectation:	throws SCServiceException
 	 */
 	@Test (expected = SCServiceException.class)
-	public void t130_setKeepAliveIntervalInSeconds() throws Exception {
+	public void t130_setKeepAliveIntervalSeconds() throws Exception {
 		client = newSCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 		Assert.assertEquals("Client is not attached", true, client.isAttached());

@@ -48,8 +48,8 @@ public class DemoSessionCacheClient extends Thread {
 
 			String serviceName = "session-1";
 			service = sc.newSessionService(serviceName); // regular, no other params possible
-			service.setEchoIntervalInSeconds(10); // can be set before create session
-			service.setEchoTimeoutInSeconds(2); // can be set before create session
+			service.setEchoIntervalSeconds(10); // can be set before create session
+			service.setEchoTimeoutSeconds(2); // can be set before create session
 
 			SCMessage msg = new SCMessage();
 			msg.setSessionInfo("session-info"); // optional

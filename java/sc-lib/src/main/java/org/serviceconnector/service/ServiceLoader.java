@@ -84,7 +84,7 @@ public class ServiceLoader {
 				}
 
 				service = new CascadedPublishService(serviceName, (CascadedSC) server, serviceConfiguration
-						.getNoDataIntervalInSeconds());
+						.getNoDataIntervalSeconds());
 				break;
 			case CASCADED_FILE_SERVICE:
 				// TODO JOT

@@ -171,7 +171,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 				// cascaded client not subscribed - subscribe
 				CascadedPublishService cascPublishService = cascClient.getPublishService();
 				// adapt NO_DATA_INTERVAL for cascaded client
-				msgToForward.setHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, cascPublishService.getNoDataIntervalInSeconds());
+				msgToForward.setHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, cascPublishService.getNoDataIntervalSeconds());
 				SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, msgToForward);
 				// store client mask in subscription
 				String mask = msgToForward.getHeader(SCMPHeaderAttributeKey.MASK);
@@ -216,7 +216,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 				// cascaded client not subscribed - subscribe
 				CascadedPublishService cascPublishService = cascClient.getPublishService();
 				// adapt NO_DATA_INTERVAL for cascaded client
-				msgToForward.setHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, cascPublishService.getNoDataIntervalInSeconds());
+				msgToForward.setHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL, cascPublishService.getNoDataIntervalSeconds());
 				SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, msgToForward);
 				// store cascadedSC mask in subscription
 				String mask = msgToForward.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);

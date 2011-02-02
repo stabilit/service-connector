@@ -125,7 +125,7 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 
 		@Override
-		public SCMessage subscribe(SCSubscribeMessage request, int operationTimeoutInMillis) {
+		public SCMessage subscribe(SCSubscribeMessage request, int operationTimeoutMillis) {
 			SCMessage response = request;
 			String sessionInfo = request.getSessionInfo();
 			if (sessionInfo != null) {
@@ -145,7 +145,7 @@ public class TestPublishServer extends TestStatefulServer {
 					response.setAppErrorText(TestConstants.appErrorText);
 				} else {
 					PublishThread publishThread = new PublishThread(this.scPublishServer, sessionInfo, request,
-							operationTimeoutInMillis);
+							operationTimeoutMillis);
 					try {
 						publishThread.start();
 					} catch (Exception e1) {
@@ -158,7 +158,7 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 
 		@Override
-		public SCMessage changeSubscription(SCSubscribeMessage request, int operationTimeoutInMillis) {
+		public SCMessage changeSubscription(SCSubscribeMessage request, int operationTimeoutMillis) {
 			SCMessage response = request;
 			String sessionInfo = request.getSessionInfo();
 			if (sessionInfo != null) {
@@ -173,12 +173,12 @@ public class TestPublishServer extends TestStatefulServer {
 				} else if (sessionInfo.equals(TestConstants.sleepCmd)) {
 					// invoking a method synchronous
 					PublishThread th = new PublishThread();
-					th.sleep(request, operationTimeoutInMillis);
+					th.sleep(request, operationTimeoutMillis);
 					return response;
 				} else {
 					// invoking a method asynchronous
 					PublishThread publishThread = new PublishThread(this.scPublishServer, sessionInfo, request,
-							operationTimeoutInMillis);
+							operationTimeoutMillis);
 					try {
 						publishThread.start();
 					} catch (Exception e1) {
@@ -191,7 +191,7 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 
 		@Override
-		public void unsubscribe(SCSubscribeMessage request, int operationTimeoutInMillis) {
+		public void unsubscribe(SCSubscribeMessage request, int operationTimeoutMillis) {
 			SubscriptionLogger.logUnsubscribe("publish-1", request.getSessionId());
 		}
 	}
@@ -200,12 +200,12 @@ public class TestPublishServer extends TestStatefulServer {
 		SCPublishServer publishSrv;
 		String methodName;
 		SCMessage request;
-		int operationTimeoutInMillis = 0;
+		int operationTimeoutMillis = 0;
 
 		public PublishThread() {
 		}
 
-		public PublishThread(SCPublishServer publishSrv, String methodName, SCMessage request, int operationTimeoutInMillis) {
+		public PublishThread(SCPublishServer publishSrv, String methodName, SCMessage request, int operationTimeoutMillis) {
 			this.publishSrv = publishSrv;
 			this.methodName = methodName;
 			this.request = request;
@@ -218,7 +218,7 @@ public class TestPublishServer extends TestStatefulServer {
 				// sleep for 1/2 seconds giving time to pass back the original response
 				Thread.sleep(500);
 				Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
-				method.invoke(this, request, operationTimeoutInMillis);
+				method.invoke(this, request, operationTimeoutMillis);
 			} catch (Exception e1) {
 				logger.error("cannot not invoke method:" + methodName, e1);
 				return;
@@ -229,11 +229,11 @@ public class TestPublishServer extends TestStatefulServer {
 		// methods invoked by name (passed in messageInfo)
 
 		// do nothing
-		public void doNothing(SCMessage request, int operationTimeoutInMillis) {
+		public void doNothing(SCMessage request, int operationTimeoutMillis) {
 		}
 
 		// publish n compressed messages 128 byte long. n is defined in the request body
-		public void publishMessagesCompressed(SCMessage request, int operationTimeoutInMillis) {
+		public void publishMessagesCompressed(SCMessage request, int operationTimeoutMillis) {
 			String dataString = (String) request.getData();
 			int count = Integer.parseInt(dataString);
 			SCPublishMessage pubMessage = new SCPublishMessage(new byte[128]);
@@ -254,7 +254,7 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 
 		// publish n uncompressed messages 128 byte long. n is defined in the request body
-		public void publishMessagesUncompressed(SCMessage request, int operationTimeoutInMillis) {
+		public void publishMessagesUncompressed(SCMessage request, int operationTimeoutMillis) {
 			String dataString = (String) request.getData();
 			int count = Integer.parseInt(dataString);
 			SCPublishMessage pubMessage = new SCPublishMessage(new byte[128]);
@@ -275,7 +275,7 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 
 		// publish n messages 128 byte long with delay w. n is defined in the request body, w in messageInfo
-		public void publishMessagesWithDelay(SCMessage request, int operationTimeoutInMillis) {
+		public void publishMessagesWithDelay(SCMessage request, int operationTimeoutMillis) {
 			String[] dataString = ((String) request.getData()).split("\\|");
 			int count = Integer.parseInt(dataString[0]);
 			int waitTime = Integer.parseInt(dataString[1]);
@@ -298,7 +298,7 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 
 		// publish a large message
-		public void publishLargeMessage(SCMessage request, int operationTimeoutInMillis) {
+		public void publishLargeMessage(SCMessage request, int operationTimeoutMillis) {
 			String largeString = TestUtil.getLargeString();
 			SCPublishMessage pubMessage = new SCPublishMessage(largeString);
 			pubMessage.setCompressed(false);
@@ -314,7 +314,7 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 
 		// sleep for time defined in the body and send back the same message
-		public SCMessage sleep(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage sleep(SCMessage request, int operationTimeoutMillis) {
 			String dataString = (String) request.getData();
 			int millis = Integer.parseInt(dataString);
 			try {

@@ -38,8 +38,8 @@ public class TestClient {
 	 *            [5] maxConnections<br>
 	 *            [6] keepAliveIntervalSeconds (0 = disabled)<br>
 	 *            [7] serviceName<br>
-	 *            [8] echoIntervalInSeconds<br>
-	 *            [9] echoTimeoutInSeconds<br>
+	 *            [8] echoIntervalSeconds<br>
+	 *            [9] echoTimeoutSeconds<br>
 	 *            [10] methodsToInvoke (split by | "initAattach|detach")
 	 */
 	public static void main(String[] args) {
@@ -50,8 +50,8 @@ public class TestClient {
 		TestAbstractClient client = null;
 		if (args[0].equals(TestConstants.COMMUNICATOR_TYPE_SESSION)) {
 			client = new TestSessionClient();
-			((TestSessionClient) client).setEchoIntervalInSeconds(Integer.parseInt(args[8]));
-			((TestSessionClient) client).setEchoTimeoutInSeconds(Integer.parseInt(args[9]));
+			((TestSessionClient) client).setEchoIntervalSeconds(Integer.parseInt(args[8]));
+			((TestSessionClient) client).setEchoTimeoutSeconds(Integer.parseInt(args[9]));
 		} else if (args[0].equals(TestConstants.COMMUNICATOR_TYPE_PUBLISH)) {
 			client = new TestPublishClient();
 		}

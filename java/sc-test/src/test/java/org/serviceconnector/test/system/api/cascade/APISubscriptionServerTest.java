@@ -220,21 +220,21 @@ public class APISubscriptionServerTest {
 //		private SCMessage unsubscribeMsg = null;
 //
 //		@Override
-//		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutInMillis) {
+//		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutMillis) {
 //			messagesExchanged++;
 //			changeSubMsg = message;
 //			return message;
 //		}
 //
 //		@Override
-//		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
+//		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 //			messagesExchanged++;
 //			subscribeMsg = message;
 //			return message;
 //		}
 //
 //		@Override
-//		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
+//		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 //			messagesExchanged++;
 //			unsubscribeMsg = message;
 //		}

@@ -76,13 +76,13 @@ public class DemoPublishServer extends Thread {
 		}
 
 		@Override
-		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutInMillis) {
+		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutMillis) {
 			logger.info("PublishServer.SrvCallback.changeSubscription()");
 			return message;
 		}
 
 		@Override
-		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
+		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 			logger.info("PublishServer.SrvCallback.subscribe()");
 			PublishThread publish = new PublishThread(this.scPublishServer);
 			publish.start();
@@ -90,7 +90,7 @@ public class DemoPublishServer extends Thread {
 		}
 
 		@Override
-		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
+		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 			logger.info("PublishServer.SrvCallback.unsubscribe()");
 			String sessionInfo = message.getSessionInfo();
 			// watch out for kill server message

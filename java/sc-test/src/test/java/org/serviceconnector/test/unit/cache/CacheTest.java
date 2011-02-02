@@ -54,7 +54,7 @@ public class CacheTest extends CacheSuperUnitTest {
 
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		Date expirationDate = DateTimeUtility.getIncrementTimeMillis(new Date(), +TimeMillis.HOUR.getMillis());
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
 				DateTimeUtility.getDateTimeAsString(expirationDate));
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
@@ -112,7 +112,7 @@ public class CacheTest extends CacheSuperUnitTest {
 
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		Date expirationDate = DateTimeUtility.getIncrementTimeMillis(new Date(), +TimeMillis.HOUR.getMillis());
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
 				DateTimeUtility.getDateTimeAsString(expirationDate));
 		CacheId msgCacheId1 = scmpCache1.putMessage(scmpMessageWrite);
@@ -143,7 +143,7 @@ public class CacheTest extends CacheSuperUnitTest {
 	public void t10_partSCMPCacheWriteTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the part buffer nr = ";
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		Date expirationDate = DateTimeUtility.getIncrementTimeMillis(new Date(), +TimeMillis.HOUR.getMillis());
 		String expirationDateTimeString = DateTimeUtility.getDateTimeAsString(expirationDate);
 		for (int i = 1; i <= 10; i++) {
 			String partWrite = stringWrite + i;
@@ -193,7 +193,7 @@ public class CacheTest extends CacheSuperUnitTest {
 	public void t11_largePartSCMPCacheWriteTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the part buffer nr = ";
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		Date expirationDate = DateTimeUtility.getIncrementTimeMillis(new Date(), +TimeMillis.HOUR.getMillis());
 		String expirationDateTimeString = DateTimeUtility.getDateTimeAsString(expirationDate);
 		for (int i = 1; i <= 10000; i++) {
 			String partWrite = stringWrite + i;
@@ -244,7 +244,7 @@ public class CacheTest extends CacheSuperUnitTest {
 	public void t12_partSCMPCacheWriteUsingIteratorTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
 		String stringWrite = "this is the part buffer nr = ";
-		Date expirationDate = DateTimeUtility.getIncrementTimeInMillis(new Date(), +TimeMillis.HOUR.getMillis());
+		Date expirationDate = DateTimeUtility.getIncrementTimeMillis(new Date(), +TimeMillis.HOUR.getMillis());
 		String expirationDateTimeString = DateTimeUtility.getDateTimeAsString(expirationDate);
 		for (int i = 1; i <= 10; i++) {
 			String partWrite = stringWrite + i;

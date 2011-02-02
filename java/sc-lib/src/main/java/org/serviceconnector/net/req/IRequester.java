@@ -32,14 +32,14 @@ public interface IRequester {
 	 * 
 	 * @param scmp
 	 *            the scmp
-	 * @param timeoutInMillis
+	 * @param timeoutMillis
 	 *            the timeout in seconds
 	 * @param callback
 	 *            the callback
 	 * @throws Exception
 	 *             exception in sending/receiving process
 	 */
-	public void send(SCMPMessage scmp, int timeoutInMillis, ISCMPMessageCallback callback) throws Exception;
+	public void send(SCMPMessage scmp, int timeoutMillis, ISCMPMessageCallback callback) throws Exception;
 
 	/**
 	 * Destroy.

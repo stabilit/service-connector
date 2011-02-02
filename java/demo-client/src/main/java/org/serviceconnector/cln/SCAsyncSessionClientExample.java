@@ -57,7 +57,7 @@ public class SCAsyncSessionClientExample {
 			// creates a session
 			SCMessage scMessage = new SCMessage();
 			scMessage.setSessionInfo("sessionInfo");
-			sessionServiceA.setEchoTimeoutInSeconds(300);
+			sessionServiceA.setEchoTimeoutSeconds(300);
 			SCMessageCallback cbk = new ExampleCallback(sessionServiceA);
 			sessionServiceA.createSession(60, scMessage, cbk);
 

@@ -52,7 +52,7 @@ public class APISCSubscribeMessageTest extends SuperUnitTest {
 	public void t01_constructor() {
 		Assert.assertEquals("mask is not null", null, message.getMask());
 		Assert.assertEquals("noDataInterval is default", Constants.DEFAULT_NO_DATA_INTERVAL_SECONDS, message
-				.getNoDataIntervalInSeconds());
+				.getNoDataIntervalSeconds());
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class APISCSubscribeMessageTest extends SuperUnitTest {
 	 */
 	@Test
 	public void t17_noDataInteval() throws Exception {
-		message.setNoDataIntervalInSeconds(1);
-		Assert.assertEquals("interval is not equal", 1, message.getNoDataIntervalInSeconds());
+		message.setNoDataIntervalSeconds(1);
+		Assert.assertEquals("interval is not equal", 1, message.getNoDataIntervalSeconds());
 	}
 }

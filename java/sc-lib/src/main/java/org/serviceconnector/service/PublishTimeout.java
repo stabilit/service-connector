@@ -24,8 +24,8 @@ public class PublishTimeout implements ITimeout {
 	/** The subscription registry. */
 	private SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 
-	/** The noDataIntervalInMillis. */
-	private int noDataIntervalInMillis;
+	/** The noDataIntervalMillis. */
+	private int noDataIntervalMillis;
 	/** The subscription queue. */
 	private SubscriptionQueue<SCMPMessage> subscriptionQueue;
 	/** The request. */
@@ -38,20 +38,20 @@ public class PublishTimeout implements ITimeout {
 	 * 
 	 * @param subscriptionQueue
 	 *            the subscription place
-	 * @param noDataIntervalInMillis
+	 * @param noDataIntervalMillis
 	 *            the timeout
 	 */
-	public PublishTimeout(SubscriptionQueue<SCMPMessage> subscriptionQueue, int noDataIntervalInMillis) {
+	public PublishTimeout(SubscriptionQueue<SCMPMessage> subscriptionQueue, int noDataIntervalMillis) {
 		this.request = null;
 		this.response = null;
-		this.noDataIntervalInMillis = noDataIntervalInMillis;
+		this.noDataIntervalMillis = noDataIntervalMillis;
 		this.subscriptionQueue = subscriptionQueue;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public int getTimeoutMillis() {
-		return this.noDataIntervalInMillis;
+		return this.noDataIntervalMillis;
 	}
 
 	/**

@@ -50,7 +50,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 
 	private int port;
 	private ConnectionType connectionType;
-	private int keepAlivInSeconds = 1;
+	private int keepAlivSeconds = 1;
 	private ConnectionPool connectionPool;
 
 	public ConnectionPoolTest(Integer port, ConnectionType connectionType) {
@@ -68,7 +68,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		connectionPool = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(), this.keepAlivInSeconds);
+		connectionPool = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(), this.keepAlivSeconds);
 	}
 
 	@After
@@ -127,7 +127,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 		connectionPool.setMaxConnections(1);
 		connectionPool.setMinConnections(1);
 		connectionPool.initMinConnections();
-		Thread.sleep((long) ((this.keepAlivInSeconds + 0.2) * Constants.SEC_TO_MILLISEC_FACTOR));
+		Thread.sleep((long) ((this.keepAlivSeconds + 0.2) * Constants.SEC_TO_MILLISEC_FACTOR));
 		IConnection connection = connectionPool.getConnection();
 		Assert.assertTrue(connection.getNrOfIdlesInSequence() > 0);
 		connectionPool.freeConnection(connection);
@@ -141,7 +141,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 	public void t21_NoKeepAliveForUsedConnection() throws Exception {
 		connectionPool.setMaxConnections(1);
 		IConnection connection = connectionPool.getConnection();
-		Thread.sleep((long) ((this.keepAlivInSeconds + 0.2) * Constants.SEC_TO_MILLISEC_FACTOR));
+		Thread.sleep((long) ((this.keepAlivSeconds + 0.2) * Constants.SEC_TO_MILLISEC_FACTOR));
 		Assert.assertTrue(connection.getNrOfIdlesInSequence() == 0);
 		Assert.assertTrue(connection.isConnected());
 	}
@@ -212,7 +212,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 		
 		for (int i = 0; i < 10000; i++) {
 			ConnectionPool cp = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(),
-					this.keepAlivInSeconds);
+					this.keepAlivSeconds);
 			IConnection connection = cp.getConnection();
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);

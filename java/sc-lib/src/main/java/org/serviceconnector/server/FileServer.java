@@ -107,7 +107,7 @@ public class FileServer extends Server {
 		return reply;
 	}
 
-	public SCMPMessage serverDownloadFile(FileSession session, SCMPMessage message, String remoteFileName, int timeoutInSeconds)
+	public SCMPMessage serverDownloadFile(FileSession session, SCMPMessage message, String remoteFileName, int timeoutSeconds)
 			throws Exception {
 		InputStream in = null;
 		HttpURLConnection httpCon = null;
@@ -158,7 +158,7 @@ public class FileServer extends Server {
 		}
 	}
 
-	public SCMPMessage serverGetFileList(String path, String listScriptName, String serviceName, int timeoutInSeconds)
+	public SCMPMessage serverGetFileList(String path, String listScriptName, String serviceName, int timeoutSeconds)
 			throws Exception {
 		HttpURLConnection httpCon = null;
 

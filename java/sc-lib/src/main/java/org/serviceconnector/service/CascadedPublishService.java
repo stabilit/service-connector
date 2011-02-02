@@ -36,13 +36,13 @@ public class CascadedPublishService extends Service implements IPublishService {
 	/** The cascaded client. */
 	private CascadedClient cascClient;
 
-	private int noDataIntervalInSeconds = 0;
+	private int noDataIntervalSeconds = 0;
 
-	public CascadedPublishService(String name, CascadedSC cascadedSC, int noDataIntervalInSeconds) {
+	public CascadedPublishService(String name, CascadedSC cascadedSC, int noDataIntervalSeconds) {
 		super(name, ServiceType.CASCADED_PUBLISH_SERVICE);
 		this.cascadedSC = cascadedSC;
 		this.cascClient = new CascadedClient(cascadedSC, this);
-		this.noDataIntervalInSeconds = noDataIntervalInSeconds;
+		this.noDataIntervalSeconds = noDataIntervalSeconds;
 		this.subscriptionQueue = new SubscriptionQueue<SCMPMessage>();
 	}
 
@@ -62,8 +62,8 @@ public class CascadedPublishService extends Service implements IPublishService {
 		return this.cascClient;
 	}
 
-	public int getNoDataIntervalInSeconds() {
-		return noDataIntervalInSeconds;
+	public int getNoDataIntervalSeconds() {
+		return noDataIntervalSeconds;
 	}
 
 	public void renewCascadedClient(Map<String, SubscriptionMask> clientSubscriptionIds) {

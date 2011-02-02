@@ -43,11 +43,11 @@ public abstract class SCPublishServerCallback {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param operationTimeoutInMillis
+	 * @param operationTimeoutMillis
 	 *            the operation timeout in milliseconds
 	 * @return the sC message
 	 */
-	public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
+	public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 		return message;
 	}
 
@@ -56,11 +56,11 @@ public abstract class SCPublishServerCallback {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param operationTimeoutInMillis
+	 * @param operationTimeoutMillis
 	 *            the operation timeout in milliseconds
 	 * @return the sC message
 	 */
-	public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutInMillis) {
+	public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutMillis) {
 		return message;
 	}
 
@@ -69,18 +69,18 @@ public abstract class SCPublishServerCallback {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param operationTimeoutInMillis
+	 * @param operationTimeoutMillis
 	 *            the operation timeout in milliseconds
 	 */
-	public void unsubscribe(SCSubscribeMessage message, int operationTimeoutInMillis) {
+	public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
 	}
 
 	/**
 	 * Abort subscription.
 	 *
 	 * @param scMessage the sc message
-	 * @param operationTimeoutInMillis the operation timeout in milliseconds
+	 * @param operationTimeoutMillis the operation timeout in milliseconds
 	 */
-	public void abortSubscription(SCMessage scMessage, int operationTimeoutInMillis) {
+	public void abortSubscription(SCMessage scMessage, int operationTimeoutMillis) {
 	}
 }

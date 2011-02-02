@@ -57,7 +57,7 @@ public class TestSessionClientJan extends Thread {
 //		ctr = new ThreadSafeCounter();
 //		SCClient sc = new SCClient(TestConstants.HOST, this.scPort);
 //		try {
-//			sc.setKeepAliveIntervalInSeconds(this.keepAliveIntervalSeconds);
+//			sc.setKeepAliveIntervalSeconds(this.keepAliveIntervalSeconds);
 //
 //<<<<<<< .mine		} catch (Exception e) {
 //			logger.error("runSessionServer", e);
@@ -137,7 +137,7 @@ public class TestSessionClientJan extends Thread {
 //		}
 //
 //		@Override
-//		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
+//		public SCMessage createSession(SCMessage request, int operationTimeoutMillis) {
 //			Object data = request.getData();
 //
 //<<<<<<< .mine			SCMessage response = request;
@@ -166,19 +166,19 @@ public class TestSessionClientJan extends Thread {
 //		}
 //
 //		@Override
-//		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
+//		public void deleteSession(SCMessage request, int operationTimeoutMillis) {
 //			sessionLogger.logDeleteSession(this.getClass().getName(), request.getSessionId());
 //		}
 //
 //<<<<<<< .mine		@Override
-//		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
+//		public void abortSession(SCMessage request, int operationTimeoutMillis) {
 //			sessionLogger.logAbortSession(this.getClass().getName(), request.getSessionId());
 //		}
 //=======			} else if (getMethodName() == "createSessionExecuteDeleteSession_twice_6MessagesArrive") {
 //				SCSessionService sessionService = client.newSessionService(TestConstants.sesServiceName1);
 //>>>>>>> .theirs
 //		@Override
-//		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
+//		public SCMessage execute(SCMessage request, int operationTimeoutMillis) {
 //			return request;
 //		}
 //	}
@@ -220,7 +220,7 @@ public class TestSessionClientJan extends Thread {
 // }
 //
 // @Override
-// public SCMessage createSession(SCMessage message, int operationTimeoutInMillis) {
+// public SCMessage createSession(SCMessage message, int operationTimeoutMillis) {
 // logger.info("SessionServer.SrvCallback.createSession()\n" + message.getData());
 // if (message.getData() != null && message.getData() instanceof String) {
 // String dataString = (String) message.getData();
@@ -243,17 +243,17 @@ public class TestSessionClientJan extends Thread {
 // }
 //
 // @Override
-// public void deleteSession(SCMessage message, int operationTimeoutInMillis) {
+// public void deleteSession(SCMessage message, int operationTimeoutMillis) {
 // logger.trace("SessionServer.SrvCallback.deleteSession()");
 // }
 //
 // @Override
-// public void abortSession(SCMessage message, int operationTimeoutInMillis) {
+// public void abortSession(SCMessage message, int operationTimeoutMillis) {
 // logger.trace("SessionServer.SrvCallback.abortSession()");
 // }
 //
 // @Override
-// public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
+// public SCMessage execute(SCMessage request, int operationTimeoutMillis) {
 // ctr.increment();
 //
 // Object data = request.getData();

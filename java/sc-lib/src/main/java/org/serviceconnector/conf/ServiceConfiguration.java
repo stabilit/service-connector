@@ -38,7 +38,7 @@ public class ServiceConfiguration {
 	/** The listScript for file service. */
 	private String listScript;
 	/** The nod data interval in seconds. */
-	private int nodDataIntervalInSeconds;
+	private int nodDataIntervalSeconds;
 	/** The remote node configuration for file services and cascased services. */
 	private RemoteNodeConfiguration remoteNodeConfiguration;
 
@@ -56,7 +56,7 @@ public class ServiceConfiguration {
 		this.uploadScript = null;
 		this.listScript = null;
 		this.remoteNodeConfiguration = null;
-		this.nodDataIntervalInSeconds = Constants.DEFAULT_NO_DATA_INTERVAL_SECONDS;
+		this.nodDataIntervalSeconds = Constants.DEFAULT_NO_DATA_INTERVAL_SECONDS;
 	}
 
 	/**
@@ -126,12 +126,12 @@ public class ServiceConfiguration {
 		}
 
 		if (serviceType == ServiceType.CASCADED_PUBLISH_SERVICE) {
-			Integer noDataIntervalInSecondsInteger = compositeConfig.getInteger(this.name + Constants.PROPERTY_QUALIFIER_NOI, null);
-			if (noDataIntervalInSecondsInteger == null) {
+			Integer noDataIntervalSecondsInteger = compositeConfig.getInteger(this.name + Constants.PROPERTY_QUALIFIER_NOI, null);
+			if (noDataIntervalSecondsInteger == null) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "required property=" + this.name
 						+ Constants.PROPERTY_QUALIFIER_NOI + " is missing");
 			}
-			this.nodDataIntervalInSeconds = noDataIntervalInSecondsInteger;
+			this.nodDataIntervalSeconds = noDataIntervalSecondsInteger;
 		}
 
 	}
@@ -187,8 +187,8 @@ public class ServiceConfiguration {
 		return remoteNodeConfiguration;
 	}
 
-	public int getNoDataIntervalInSeconds() {
-		return this.nodDataIntervalInSeconds;
+	public int getNoDataIntervalSeconds() {
+		return this.nodDataIntervalSeconds;
 	}
 
 	/**

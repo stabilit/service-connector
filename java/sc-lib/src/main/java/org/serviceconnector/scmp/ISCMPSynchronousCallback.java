@@ -34,11 +34,11 @@ public interface ISCMPSynchronousCallback extends ISCMPMessageCallback {
 	 * or time you hand over runs out.<br>
 	 * <br>
 	 * 
-	 * @param timeoutInMillis
+	 * @param timeoutMillis
 	 *            the timeout in milliseconds
 	 * @return the message sync
 	 * @throws Exception
 	 */
-	public abstract SCMPMessage getMessageSync(int timeoutInMillis) throws Exception;
+	public abstract SCMPMessage getMessageSync(int timeoutMillis) throws Exception;
 
 }

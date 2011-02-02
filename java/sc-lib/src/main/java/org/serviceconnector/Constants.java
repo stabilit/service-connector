@@ -221,7 +221,7 @@ public final class Constants {
 	public static final String PROPERTY_QUALIFIER_PASSWORD = ".password";
 	public static final String PROPERTY_QUALIFIER_UPLOAD_SCRIPT_NAME = ".uploadScriptName";
 	public static final String PROPERTY_QUALIFIER_REMOTE_NODE = ".remoteNode";
-	public static final String PROPERTY_QUALIFIER_NOI = ".noDataIntervalInSeconds";
+	public static final String PROPERTY_QUALIFIER_NOI = ".noDataIntervalSeconds";
 	public static final String PROPERTY_QUALIFIER_INTERFACES = ".interfaces";
 	public static final String PROPERTY_QUALIFIER_HOST = ".host";
 	public static final String PROPERTY_QUALIFIER_PORT = ".port";

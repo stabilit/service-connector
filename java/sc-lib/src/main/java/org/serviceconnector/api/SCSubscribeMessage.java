@@ -35,13 +35,13 @@ public class SCSubscribeMessage extends SCMessage {
 	 * The no data interval in seconds. Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag
 	 * set.
 	 */
-	private int noDataIntervalInSeconds;
+	private int noDataIntervalSeconds;
 
 	/**
 	 * Instantiates a new sC subscribe message.
 	 */
 	public SCSubscribeMessage() {
-		this.noDataIntervalInSeconds = Constants.DEFAULT_NO_DATA_INTERVAL_SECONDS;
+		this.noDataIntervalSeconds = Constants.DEFAULT_NO_DATA_INTERVAL_SECONDS;
 	}
 
 	/**
@@ -111,23 +111,23 @@ public class SCSubscribeMessage extends SCMessage {
 	 * 
 	 * @return the no data interval in seconds
 	 */
-	public int getNoDataIntervalInSeconds() {
-		return this.noDataIntervalInSeconds;
+	public int getNoDataIntervalSeconds() {
+		return this.noDataIntervalSeconds;
 	}
 
 	/**
 	 * Sets the no data interval in seconds. Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData
 	 * flag set.
 	 * 
-	 * @param noDataIntervalInSeconds
+	 * @param noDataIntervalSeconds
 	 *            Validation: Number > 0 and < 3600<br>
 	 *            Example: 60
 	 */
-	public void setNoDataIntervalInSeconds(Integer noDataIntervalInSeconds) {
-		if (noDataIntervalInSeconds == null) {
-			this.noDataIntervalInSeconds = 0;
+	public void setNoDataIntervalSeconds(Integer noDataIntervalSeconds) {
+		if (noDataIntervalSeconds == null) {
+			this.noDataIntervalSeconds = 0;
 			return;
 		}
-		this.noDataIntervalInSeconds = noDataIntervalInSeconds;
+		this.noDataIntervalSeconds = noDataIntervalSeconds;
 	}
 }

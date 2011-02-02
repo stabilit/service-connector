@@ -52,12 +52,12 @@ public class SCSessionService extends SCService {
 	/** The sessionTimeout, timeout runs when session need to be refreshed. */
 	private ScheduledFuture<TimeoutWrapper> sessionTimeout;
 	/** The echo timeout in seconds. Time to wait for the reply of SC in case of an echo until the session is marked as dead. */
-	private int echoTimeoutInSeconds;
+	private int echoTimeoutSeconds;
 	/**
 	 * The echo interval in seconds. Interval in seconds between two subsequent ECHO messages sent by the client to SC. The message
 	 * is sent only when no message is pending.
 	 */
-	private int echoIntervalInSeconds;
+	private int echoIntervalSeconds;
 
 	/**
 	 * Instantiates a new session service.
@@ -72,8 +72,8 @@ public class SCSessionService extends SCService {
 	public SCSessionService(SCClient scClient, String serviceName, SCRequester requester) {
 		super(scClient, serviceName, requester);
 		this.sessionTimeout = null;
-		this.echoTimeoutInSeconds = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
-		this.echoIntervalInSeconds = Constants.DEFAULT_ECHO_INTERVAL_SECONDS;
+		this.echoTimeoutSeconds = Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS;
+		this.echoIntervalSeconds = Constants.DEFAULT_ECHO_INTERVAL_SECONDS;
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class SCSessionService extends SCService {
 		createSessionCall.setRequestBody(scMessage.getData());
 		createSessionCall.setCompressed(scMessage.isCompressed());
 		createSessionCall.setSessionInfo(scMessage.getSessionInfo());
-		createSessionCall.setEchoIntervalSeconds(this.echoIntervalInSeconds);
+		createSessionCall.setEchoIntervalSeconds(this.echoIntervalSeconds);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			createSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
@@ -302,7 +302,7 @@ public class SCSessionService extends SCService {
 		SCMPEchoCall clnEchoCall = new SCMPEchoCall(this.requester, this.serviceName, this.sessionId);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
-			clnEchoCall.invoke(callback, this.echoTimeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			clnEchoCall.invoke(callback, this.echoTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			// inactivate the session
 			this.sessionActive = false;
@@ -313,7 +313,7 @@ public class SCSessionService extends SCService {
 			return;
 		}
 		// 3. receiving reply and error handling
-		SCMPMessage reply = callback.getMessageSync(this.echoTimeoutInSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+		SCMPMessage reply = callback.getMessageSync(this.echoTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
 			// inactivate the session
 			this.sessionActive = false;
@@ -433,7 +433,7 @@ public class SCSessionService extends SCService {
 		SCSessionTimeout sessionTimeout = new SCSessionTimeout();
 		TimeoutWrapper timeoutWrapper = new TimeoutWrapper(sessionTimeout);
 		this.sessionTimeout = (ScheduledFuture<TimeoutWrapper>) AppContext.eciScheduler.schedule(timeoutWrapper,
-				(int) (echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR), TimeUnit.MILLISECONDS);
+				(int) (echoIntervalSeconds * Constants.SEC_TO_MILLISEC_FACTOR), TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -452,14 +452,14 @@ public class SCSessionService extends SCService {
 	 * Sets the echo timeout in seconds. Time in seconds the an echo request waits to be confirmed. If no confirmation is received
 	 * session is marked as dead.
 	 * 
-	 * @param echoTimeoutInSeconds
+	 * @param echoTimeoutSeconds
 	 *            Validation: Number > 1 and < 3600<br>
 	 *            Example: 10
 	 */
-	public void setEchoTimeoutInSeconds(int echoTimeoutInSeconds) throws SCMPValidatorException {
+	public void setEchoTimeoutSeconds(int echoTimeoutSeconds) throws SCMPValidatorException {
 		// validate in this case its a local needed information
-		ValidatorUtility.validateInt(1, echoTimeoutInSeconds, 3600, SCMPError.HV_WRONG_ECHO_TIMEOUT);
-		this.echoTimeoutInSeconds = echoTimeoutInSeconds;
+		ValidatorUtility.validateInt(1, echoTimeoutSeconds, 3600, SCMPError.HV_WRONG_ECHO_TIMEOUT);
+		this.echoTimeoutSeconds = echoTimeoutSeconds;
 	}
 
 	/**
@@ -467,8 +467,8 @@ public class SCSessionService extends SCService {
 	 * 
 	 * @return the echo timeout in seconds
 	 */
-	public int getEchoTimeoutInSeconds() {
-		return this.echoTimeoutInSeconds;
+	public int getEchoTimeoutSeconds() {
+		return this.echoTimeoutSeconds;
 	}
 
 	/**
@@ -489,7 +489,7 @@ public class SCSessionService extends SCService {
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
-			return SCSessionService.this.echoIntervalInSeconds * Constants.SEC_TO_MILLISEC_FACTOR;
+			return SCSessionService.this.echoIntervalSeconds * Constants.SEC_TO_MILLISEC_FACTOR;
 		}
 	}
 
@@ -497,12 +497,12 @@ public class SCSessionService extends SCService {
 	 * Sets the echo interval in seconds. Interval in seconds between two subsequent ECHO messages sent by the client to SC. The
 	 * message is sent only when no message is pending.
 	 * 
-	 * @param echoIntervalInSeconds
+	 * @param echoIntervalSeconds
 	 *            Validation: Number > 1 and < 3600<br>
 	 *            Example: 360
 	 */
-	public void setEchoIntervalInSeconds(int echoIntervalInSeconds) {
-		this.echoIntervalInSeconds = echoIntervalInSeconds;
+	public void setEchoIntervalSeconds(int echoIntervalSeconds) {
+		this.echoIntervalSeconds = echoIntervalSeconds;
 	}
 
 	/**
@@ -510,7 +510,7 @@ public class SCSessionService extends SCService {
 	 * 
 	 * @return the echo interval in seconds
 	 */
-	public int getEchoIntervalInSeconds() {
-		return this.echoIntervalInSeconds;
+	public int getEchoIntervalSeconds() {
+		return this.echoIntervalSeconds;
 	}
 }

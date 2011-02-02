@@ -35,7 +35,7 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback1 = new MsgCallback(sessionService1);
-		sessionService1.setEchoIntervalInSeconds(10); // want be notified quickly!
+		sessionService1.setEchoIntervalSeconds(10); // want be notified quickly!
 		response = sessionService1.createSession(request, msgCallback1);
 		Assert.assertNotNull("the session ID is null", sessionService1.getSessionId());
 

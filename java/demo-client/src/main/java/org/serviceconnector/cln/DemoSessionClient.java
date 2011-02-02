@@ -46,8 +46,8 @@ public class DemoSessionClient {
 
 			String serviceName = "session-1";
 			service = sc.newSessionService(serviceName); // name of the service to use
-			service.setEchoIntervalInSeconds(10); // can be set before create session
-			service.setEchoTimeoutInSeconds(2); // can be set before create session
+			service.setEchoIntervalSeconds(10); // can be set before create session
+			service.setEchoTimeoutSeconds(2); // can be set before create session
 
 			SCMessage msg = new SCMessage();
 			msg.setSessionInfo("session-info"); // optional

@@ -44,23 +44,23 @@ public class DemoLargeSessionServer extends DemoSessionServer {
 		}
 
 		@Override
-		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage createSession(SCMessage request, int operationTimeoutMillis) {
 			logger.info("Session created");
 			return request;
 		}
 
 		@Override
-		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
+		public void deleteSession(SCMessage request, int operationTimeoutMillis) {
 			logger.info("Session deleted");
 		}
 
 		@Override
-		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
+		public void abortSession(SCMessage request, int operationTimeoutMillis) {
 			logger.info("Session aborted");
 		}
 
 		@Override
-		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage execute(SCMessage request, int operationTimeoutMillis) {
 			//  we return a large message
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < 10000; i++) {

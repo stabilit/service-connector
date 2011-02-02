@@ -54,9 +54,9 @@ public final class DateTimeUtility {
 	 * @return the current time zone millis
 	 */
 	public static String getCurrentTimeZoneMillis() {
-		long timeInMillis = System.currentTimeMillis();
+		long timeMillis = System.currentTimeMillis();
 		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(timeInMillis);
+		cal.setTimeInMillis(timeMillis);
 		java.util.Date date = cal.getTime();
 
 		synchronized (SDF) { // SDF is not thread safe
@@ -106,7 +106,7 @@ public final class DateTimeUtility {
 	 *            the inc
 	 * @return the increment time in millis
 	 */
-	public static Date getIncrementTimeInMillis(Date date, long inc) {
+	public static Date getIncrementTimeMillis(Date date, long inc) {
 		long time = date.getTime();
 		time += inc;
 		return new Date(time);

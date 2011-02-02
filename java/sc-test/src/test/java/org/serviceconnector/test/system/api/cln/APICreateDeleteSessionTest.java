@@ -399,7 +399,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
-		sessionService1.setEchoIntervalInSeconds(1);
+		sessionService1.setEchoIntervalSeconds(1);
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
 	}
@@ -413,7 +413,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
-		sessionService1.setEchoIntervalInSeconds(0);
+		sessionService1.setEchoIntervalSeconds(0);
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
 	}
@@ -427,7 +427,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		SCMessage request = new SCMessage(new byte[128]);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
-		sessionService1.setEchoIntervalInSeconds(10);
+		sessionService1.setEchoIntervalSeconds(10);
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
 		Assert.assertNotNull("the session ID is null", sessionService1.getSessionId());

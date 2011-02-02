@@ -55,13 +55,13 @@ public class SCMPSrvChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutInMillis) throws Exception {
+	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 		// adding ip of current unit to header field ip address list
 		InetAddress localHost = InetAddress.getLocalHost();
 		String ipList = this.requestMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		ipList += "/" + localHost.getHostAddress();
 		this.requestMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipList);
-		super.invoke(scmpCallback, timeoutInMillis);
+		super.invoke(scmpCallback, timeoutMillis);
 	}
 
 	/** {@inheritDoc} */

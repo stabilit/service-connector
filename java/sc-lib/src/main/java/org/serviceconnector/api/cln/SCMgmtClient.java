@@ -36,7 +36,9 @@ import org.serviceconnector.util.URLParameterString;
  * @author JTrnka
  */
 public class SCMgmtClient extends SCClient {
+	
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCMgmtClient.class);
 
 	public SCMgmtClient(String host, int port) {
@@ -51,31 +53,53 @@ public class SCMgmtClient extends SCClient {
 	 * Disable service on SC.
 	 * 
 	 * @param serviceName
-	 *            the service name
+	 * @throws SCServiceException
 	 */
 	public void disableService(String serviceName) throws SCServiceException {
+		this.disableService(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
+	}
+
+	/**
+	 * Disable service on SC.
+	 * 
+	 * @param operationTimeout
+	 * @param serviceName
+	 * @throws SCServiceException
+	 */
+	public void disableService(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			// disableService not possible - client not attached
 			throw new SCServiceException("client not attached - disableService not possible.");
 		}
-		String body = this.manageCall(Constants.DISABLE + Constants.EQUAL_SIGN + serviceName);
+		String body = this.manageCall(operationTimeout, Constants.DISABLE + Constants.EQUAL_SIGN + serviceName);
 		if (body != null) {
 			throw new SCServiceException(body);
 		}
 	}
 
 	/**
+	 * Disable service on SC.
+	 * 
+	 * @param serviceName
+	 * @throws SCServiceException
+	 */
+	public void enableService(String serviceName) throws SCServiceException {
+		this.enableService(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
+	}
+
+	/**
 	 * Enable service on SC.
 	 * 
+	 * @param operationTimeout
 	 * @param serviceName
 	 *            the service name
 	 */
-	public void enableService(String serviceName) throws SCServiceException {
+	public void enableService(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			// enableService not possible - client not attached
 			throw new SCServiceException("client not attached - enableService not possible.");
 		}
-		String body = this.manageCall(Constants.ENABLE + Constants.EQUAL_SIGN + serviceName);
+		String body = this.manageCall(operationTimeout, Constants.ENABLE + Constants.EQUAL_SIGN + serviceName);
 		if (body != null) {
 			throw new SCServiceException(body);
 		}
@@ -89,10 +113,22 @@ public class SCMgmtClient extends SCClient {
 	 * @return true, if is service enabled
 	 */
 	public boolean isServiceEnabled(String serviceName) throws SCServiceException {
+		return this.isServiceEnabled(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
+	}
+
+	/**
+	 * Checks if service is enabled on SC.
+	 * 
+	 * @param operationTimeout
+	 * @param serviceName
+	 *            the service name
+	 * @return true, if is service enabled
+	 */
+	public boolean isServiceEnabled(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
 		}
-		String body = this.inspectCall(Constants.STATE + Constants.EQUAL_SIGN + serviceName);
+		String body = this.inspectCall(operationTimeout, Constants.STATE + Constants.EQUAL_SIGN + serviceName);
 		if (Constants.ENABLE.equalsIgnoreCase(body)) {
 			return true;
 		}
@@ -109,10 +145,24 @@ public class SCMgmtClient extends SCClient {
 	 *             the SC service exception
 	 */
 	public String getWorkload(String serviceName) throws SCServiceException {
+		return this.getWorkload(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
+	}
+
+	/**
+	 * Returns the number of available and allocated sessions for given service name.
+	 * 
+	 * @param operationTimeout
+	 * @param serviceName
+	 *            the service name
+	 * @return string containing the available and allocated sessions, e.g. "4/2".
+	 * @throws SCServiceException
+	 *             the SC service exception
+	 */
+	public String getWorkload(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
 		}
-		return this.inspectCall(Constants.SESSIONS + Constants.EQUAL_SIGN + serviceName);
+		return this.inspectCall(operationTimeout, Constants.SESSIONS + Constants.EQUAL_SIGN + serviceName);
 	}
 
 	/**
@@ -126,11 +176,25 @@ public class SCMgmtClient extends SCClient {
 	 *             the SC service exception
 	 */
 	public URLParameterString inspectCache(String serviceName, String cacheId) throws SCServiceException {
+		return this.inspectCache(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName, cacheId);
+	}
+	/**
+	 * inspects the cache for given service name and cacheId.
+	 * 
+	 * @param operationTimeout
+	 * @param serviceName
+	 *            the service name
+	 * @param cacheId
+	 *            the cache id
+	 * @throws SCServiceException
+	 *             the SC service exception
+	 */
+	public URLParameterString inspectCache(int operationTimeout, String serviceName, String cacheId) throws SCServiceException {
 		if (this.attached == false) {
 			throw new SCServiceException("client not attached - inspectCache not possible.");
 		}
 		URLCallString callString = new URLCallString(Constants.INSPECT_CACHE, serviceName, cacheId);
-		String body = this.inspectCall(callString.toString());
+		String body = this.inspectCall(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, callString.toString());
 		if (body == null) {
 			throw new SCServiceException(body);
 		}
@@ -150,10 +214,24 @@ public class SCMgmtClient extends SCClient {
 	 *             the SC service exception
 	 */
 	public void clearCache(String serviceName) throws SCServiceException {
+		this.clearCache(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
+	}
+	
+	/**
+	 * Clears the cache for given service name.
+	 * 
+	 * @param operationTimeout
+	 * @param serviceName
+	 *            the service name
+	 * @throws SCServiceException
+	 *             the SC service exception
+	 */
+	public void clearCache(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			throw new SCServiceException("client not attached - clearCache not possible.");
 		}
-		String body = this.manageCall(Constants.CLEAR_CACHE + Constants.EQUAL_SIGN + serviceName);
+		String body = this.manageCall(operationTimeout, Constants.CLEAR_CACHE + Constants.EQUAL_SIGN
+				+ serviceName);
 		if (body != null) {
 			throw new SCServiceException(body);
 		}
@@ -166,10 +244,21 @@ public class SCMgmtClient extends SCClient {
 	 *             the SC service exception
 	 */
 	public void dump() throws SCServiceException {
+		this.dump(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
+	}
+
+	/**
+	 * Request dump.
+	 * 
+	 * @param operationTimeout
+	 * @throws SCServiceException
+	 *             the SC service exception
+	 */
+	public void dump(int operationTimeout) throws SCServiceException {
 		if (this.attached == false) {
 			throw new SCServiceException("client not attached - dump not possible.");
 		}
-		this.manageCall(Constants.DUMP);
+		this.manageCall(operationTimeout, Constants.DUMP);
 	}
 
 	/**
@@ -182,7 +271,7 @@ public class SCMgmtClient extends SCClient {
 		if (this.attached == false) {
 			throw new SCServiceException("client not attached - killSC not possible.");
 		}
-		this.manageCall(Constants.KILL);
+		this.manageCall(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, Constants.KILL);
 		try {
 			// sleep to assure kill is sent
 			Thread.sleep(1000);
@@ -208,12 +297,12 @@ public class SCMgmtClient extends SCClient {
 	 * @throws SCServiceException
 	 *             the sC service exception
 	 */
-	private String inspectCall(String instruction) throws SCServiceException {
+	private String inspectCall(int operationTimeout, String instruction) throws SCServiceException {
 		SCMPInspectCall inspectCall = new SCMPInspectCall(this.requester);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			inspectCall.setRequestBody(instruction);
-			inspectCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+			inspectCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.requester.destroy();
 			throw new SCServiceException("inspect request failed", e);
@@ -222,7 +311,7 @@ public class SCMgmtClient extends SCClient {
 			// on KILL SC cannot reply a message
 			return null;
 		}
-		SCMPMessage reply = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+		SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("inspect failed");
 			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
@@ -240,12 +329,12 @@ public class SCMgmtClient extends SCClient {
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
-	private String manageCall(String instruction) throws SCServiceException {
+	private String manageCall(int operationTimeout, String instruction) throws SCServiceException {
 		SCMPManageCall manageCall = new SCMPManageCall(this.requester);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			manageCall.setRequestBody(instruction);
-			manageCall.invoke(callback, Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+			manageCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.requester.destroy();
 			throw new SCServiceException(instruction + " SC failed", e);
@@ -254,7 +343,7 @@ public class SCMgmtClient extends SCClient {
 			// kill SC doesn't reply a message
 			return null;
 		}
-		SCMPMessage reply = callback.getMessageSync(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
+		SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("manage failed");
 			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));

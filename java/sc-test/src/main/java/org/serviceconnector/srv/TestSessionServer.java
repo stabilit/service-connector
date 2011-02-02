@@ -119,7 +119,7 @@ public class TestSessionServer extends TestStatefulServer {
 		}
 
 		@Override
-		public SCMessage createSession(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage createSession(SCMessage request, int operationTimeoutMillis) {
 			SCMessage response = request;
 			String sessionInfo = request.getSessionInfo();
 			if (sessionInfo != null) {
@@ -141,17 +141,17 @@ public class TestSessionServer extends TestStatefulServer {
 		}
 
 		@Override
-		public void deleteSession(SCMessage request, int operationTimeoutInMillis) {
+		public void deleteSession(SCMessage request, int operationTimeoutMillis) {
 			SessionLogger.logDeleteSession(this.getClass().getName(), request.getSessionId());
 		}
 
 		@Override
-		public void abortSession(SCMessage request, int operationTimeoutInMillis) {
+		public void abortSession(SCMessage request, int operationTimeoutMillis) {
 			SessionLogger.logAbortSession(this.getClass().getName(), request.getSessionId());
 		}
 
 		@Override
-		public SCMessage execute(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage execute(SCMessage request, int operationTimeoutMillis) {
 			// watch out for method to call passed in messageInfo
 			SCMessage response = request;
 			String methodName = request.getMessageInfo();
@@ -161,7 +161,7 @@ public class TestSessionServer extends TestStatefulServer {
 				}
 				try {
 					Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
-					response = (SCMessage) method.invoke(this, request, operationTimeoutInMillis);
+					response = (SCMessage) method.invoke(this, request, operationTimeoutMillis);
 					return response;
 				} catch (Exception e) {
 					logger.warn("method " + methodName + " not found on server");
@@ -175,45 +175,45 @@ public class TestSessionServer extends TestStatefulServer {
 		// methods invoked by name (passed in messageInfo)
 
 		// send back the same message
-		public SCMessage echoMessage(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage echoMessage(SCMessage request, int operationTimeoutMillis) {
 			// do not log! it is used for performance benchmarks
 			return request;
 		}
 
 		// send back an application error
-		public SCMessage echoAppError(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage echoAppError(SCMessage request, int operationTimeoutMillis) {
 			request.setAppErrorCode(TestConstants.appErrorCode);
 			request.setAppErrorText(TestConstants.appErrorText);
 			return request;
 		}
 
 		// send back an application error code only
-		public SCMessage echoAppError1(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage echoAppError1(SCMessage request, int operationTimeoutMillis) {
 			request.setAppErrorCode(TestConstants.appErrorCode);
 			return request;
 		}
 
 		// send back application error text only
-		public SCMessage echoAppError2(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage echoAppError2(SCMessage request, int operationTimeoutMillis) {
 			request.setAppErrorText(TestConstants.appErrorText);
 			return request;
 		}
 
 		// send back missing application error code
-		public SCMessage echoAppError3(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage echoAppError3(SCMessage request, int operationTimeoutMillis) {
 			request.setAppErrorCode(Constants.EMPTY_APP_ERROR_CODE);
 			return request;
 		}
 
 		// send back application error code = 0
-		public SCMessage echoAppError4(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage echoAppError4(SCMessage request, int operationTimeoutMillis) {
 			request.setAppErrorCode(0);
 			return request;
 		}
 
 		
 		// sleep for time defined in the body and send back the same message
-		public SCMessage sleep(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage sleep(SCMessage request, int operationTimeoutMillis) {
 			String dataString = (String) request.getData();
 			int millis = Integer.parseInt(dataString);
 			try {
@@ -228,14 +228,14 @@ public class TestSessionServer extends TestStatefulServer {
 		}
 
 		// send back a large response
-		public SCMessage largeResponse(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage largeResponse(SCMessage request, int operationTimeoutMillis) {
 			String largeString = TestUtil.getLargeString();
 			request.setData(largeString);
 			return request;
 		}
 
 		// causes caching response message
-		public SCMessage cache(SCMessage request, int operationTimeoutInMillis) {
+		public SCMessage cache(SCMessage request, int operationTimeoutMillis) {
 			Calendar time = Calendar.getInstance();
 			String dataString = (String) request.getData();
 

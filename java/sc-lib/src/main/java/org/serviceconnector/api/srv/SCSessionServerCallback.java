@@ -34,11 +34,11 @@ public abstract class SCSessionServerCallback {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param operationTimeoutInMillis
+	 * @param operationTimeoutMillis
 	 *            the operation timeout in millis
 	 * @return the sC message
 	 */
-	public SCMessage createSession(SCMessage message, int operationTimeoutInMillis) {
+	public SCMessage createSession(SCMessage message, int operationTimeoutMillis) {
 		return message;
 	}
 
@@ -47,10 +47,10 @@ public abstract class SCSessionServerCallback {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param operationTimeoutInMillis
+	 * @param operationTimeoutMillis
 	 *            the operation timeout in milliseconds
 	 */
-	public void deleteSession(SCMessage message, int operationTimeoutInMillis) {
+	public void deleteSession(SCMessage message, int operationTimeoutMillis) {
 	}
 
 	/**
@@ -58,10 +58,10 @@ public abstract class SCSessionServerCallback {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param operationTimeoutInMillis
+	 * @param operationTimeoutMillis
 	 *            the operation timeout in milliseconds
 	 */
-	public void abortSession(SCMessage message, int operationTimeoutInMillis) {
+	public void abortSession(SCMessage message, int operationTimeoutMillis) {
 	}
 
 	/**
@@ -69,9 +69,9 @@ public abstract class SCSessionServerCallback {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param operationTimeoutInMillis
+	 * @param operationTimeoutMillis
 	 *            the operation timeout in milliseconds
 	 * @return the sC message
 	 */
-	public abstract SCMessage execute(SCMessage message, int operationTimeoutInMillis);
+	public abstract SCMessage execute(SCMessage message, int operationTimeoutMillis);
 }
