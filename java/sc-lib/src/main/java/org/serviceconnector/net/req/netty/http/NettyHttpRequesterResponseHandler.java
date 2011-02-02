@@ -69,10 +69,13 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	/** {@inheritDoc} */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-
 		if (this.pendingRequest) {
 			this.pendingRequest = false;
-			this.responseReceived((HttpResponse) e.getMessage());
+			// set up responderRequestHandlerTask to take care of the request
+			NettyHttpRequesterResponseHandlerTask responseHandlerTask = new NettyHttpRequesterResponseHandlerTask((HttpResponse) e
+					.getMessage());
+			AppContext.getExecutor().submit(responseHandlerTask);
+			// this.responseReceived((HttpResponse) e.getMessage());
 			return;
 		}
 		// unsolicited input, message not expected - race condition
@@ -97,40 +100,45 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 			}
 		}
 		if (th instanceof java.io.IOException) {
-			logger.warn(th.toString());	// regular disconnect causes this expected exception
-		}
-		else {
-			logger.error("Response error",th);
+			logger.warn(th.toString()); // regular disconnect causes this expected exception
+		} else {
+			logger.error("Response error", th);
 		}
 	}
 
-	/**
-	 * Response received.
-	 * 
-	 * @param httpResponse
-	 *            the http response
-	 * @throws Exception
-	 *             the exception
-	 */
-	private void responseReceived(HttpResponse httpResponse) throws Exception {
-		SCMPMessage ret = null;
-		try {
-			ChannelBuffer content = httpResponse.getContent();
-			byte[] buffer = new byte[content.readableBytes()];
-			content.readBytes(buffer);
-			Statistics.getInstance().incrementTotalMessages(buffer.length);
-			if (ConnectionLogger.isEnabledFull()) {
-				ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
-			}
+	private class NettyHttpRequesterResponseHandlerTask implements Runnable {
 
-			ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
-			IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
-			ret = (SCMPMessage) encoderDecoder.decode(bais);
-		} catch (Exception ex) {
-			logger.warn("receive" + ex.toString());
-			this.scmpCallback.receive(ex);
-			return;
+		private HttpResponse httpResponse;
+
+		public NettyHttpRequesterResponseHandlerTask(HttpResponse httpResponse) {
+			this.httpResponse = httpResponse;
 		}
-		this.scmpCallback.receive(ret);
+
+		/** {@inheritDoc} */
+		@Override
+		public void run() {
+			SCMPMessage ret = null;
+			try {
+				ChannelBuffer content = httpResponse.getContent();
+				byte[] buffer = new byte[content.readableBytes()];
+				content.readBytes(buffer);
+				Statistics.getInstance().incrementTotalMessages(buffer.length);
+				if (ConnectionLogger.isEnabledFull()) {
+					ConnectionLogger.logReadBuffer(this.getClass().getSimpleName(), "", -1, buffer, 0, buffer.length);
+				}
+				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+				IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
+				ret = (SCMPMessage) encoderDecoder.decode(bais);
+			} catch (Exception ex) {
+				logger.warn("receive" + ex.toString());
+				NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ex);
+				return;
+			}
+			try {
+				NettyHttpRequesterResponseHandler.this.scmpCallback.receive(ret);
+			} catch (Exception e) {
+				NettyHttpRequesterResponseHandler.this.scmpCallback.receive(e);
+			}
+		}
 	}
 }

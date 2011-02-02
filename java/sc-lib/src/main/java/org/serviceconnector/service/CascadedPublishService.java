@@ -58,7 +58,12 @@ public class CascadedPublishService extends Service implements IPublishService {
 		return cascadedSC;
 	}
 
-	public CascadedClient getCascClient() {
+	/**
+	 * Gets the cascaded client. Synchronization avoids returning the client in renew process.
+	 * 
+	 * @return the cascaded client
+	 */
+	public synchronized CascadedClient getCascClient() {
 		return this.cascClient;
 	}
 
@@ -66,7 +71,13 @@ public class CascadedPublishService extends Service implements IPublishService {
 		return noDataIntervalSeconds;
 	}
 
-	public void renewCascadedClient(Map<String, SubscriptionMask> clientSubscriptionIds) {
+	/**
+	 * Renew cascaded client. Synchronization avoids returning the client in renew process.
+	 * 
+	 * @param clientSubscriptionIds
+	 *            the client subscription ids
+	 */
+	public synchronized void renewCascadedClient(Map<String, SubscriptionMask> clientSubscriptionIds) {
 		logger.warn("cascaded publish service renew cascaded client service=" + this.getName());
 		this.cascClient = new CascadedClient(cascadedSC, this);
 		if (clientSubscriptionIds != null && clientSubscriptionIds.size() > 0) {

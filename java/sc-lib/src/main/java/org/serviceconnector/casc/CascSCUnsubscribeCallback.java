@@ -58,7 +58,7 @@ public class CascSCUnsubscribeCallback extends ClnCommandCascCallback implements
 		// forward reply to client
 		reply.setIsReply(true);
 		reply.setServiceName(serviceName);
-		reply.setMessageType(SCMPMsgType.CLN_SUBSCRIBE);
+		reply.setMessageType(SCMPMsgType.CLN_UNSUBSCRIBE);
 		response.setSCMP(reply);
 		this.responderCallback.responseCallback(request, response);
 	}

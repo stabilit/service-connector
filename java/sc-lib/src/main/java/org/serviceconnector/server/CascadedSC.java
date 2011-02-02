@@ -20,6 +20,7 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -266,7 +267,8 @@ public class CascadedSC extends Server implements IStatefulServer {
 		// try catch block to assure releasing permit in case of any error - very important!
 		try {
 			// thread got permit to continue
-			if (cascClient.getClientSubscriptionIds().size() <= 1) {
+			Map<String, SubscriptionMask> clnSubscriptions = cascClient.getClientSubscriptionIds();
+			if (clnSubscriptions.size() <= 1 && clnSubscriptions.containsKey(msgToForward.getSessionId())) {
 				// only this client subscription left cascaded client can unsubscribe himself
 				SCMPClnUnsubscribeCall unsubscribeCall = new SCMPClnUnsubscribeCall(this.requester, msgToForward);
 				// set cascaded client subscriptonId
@@ -332,18 +334,14 @@ public class CascadedSC extends Server implements IStatefulServer {
 		oti = oti - (int) (System.currentTimeMillis() - boforeAcquireTime);
 		// try catch block to assure releasing permit in case of any error - very important!
 		try {
-			if (cascClient.getClientSubscriptionIds().size() <= 1) {
-				// only this client subscription left cascaded client can unsubscribe himself
+			Map<String, SubscriptionMask> clnSubscriptions = cascClient.getClientSubscriptionIds();
+			if (clnSubscriptions.size() <= 1 && (msgToForward.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK) == null)) {
+				// cascaded client can unsubscribe himself, only one left and cascadedSC just unsubscribed
 				SCMPClnUnsubscribeCall unsubscribeCall = new SCMPClnUnsubscribeCall(this.requester, msgToForward);
 				// set cascaded client subscriptonId
 				msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
 				cascClient.removeClientSubscriptionId(msgToForward.getSessionId());
-				try {
-					unsubscribeCall.invoke(callback, oti);
-				} finally {
-					// destroy cascaded client in any case
-					cascClient.destroy();
-				}
+				unsubscribeCall.invoke(callback, oti);
 				return;
 			}
 			// more than one client subscription left - unsubscribe only cascaded SC, change subscription for cascaded client
@@ -351,9 +349,6 @@ public class CascadedSC extends Server implements IStatefulServer {
 			this.unsubscribeWithActiveCascadedClient(cascClient, msgToForward, callback, oti);
 		} catch (Exception e) {
 			callback.receive(e);
-		} finally {
-			// destroy cascaded client in any case, permission get released inside method
-			cascClient.destroy();
 		}
 	}
 
