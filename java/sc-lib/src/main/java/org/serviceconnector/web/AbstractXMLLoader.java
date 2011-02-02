@@ -44,7 +44,6 @@ import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
-import org.serviceconnector.util.SystemThreadInfo;
 import org.serviceconnector.web.ctx.WebContext;
 
 /**
@@ -442,16 +441,14 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeCData(String.valueOf(SystemInfo.getTotalMemory()));
 		writer.writeEndElement(); // end of totalMemory
 		// get thread info
-		SystemThreadInfo threadInfo = SystemInfo.getThreadInfo();
 		writer.writeStartElement("threadCount");
-		writer.writeCData(String.valueOf(threadInfo.getThreadCount()));
+		writer.writeCData(String.valueOf(SystemInfo.getThreadCount()));
 		writer.writeEndElement(); // end of threadCount
 		writer.writeStartElement("daemonThreadCount");
-		writer.writeCData(String.valueOf(threadInfo.getDaemonThreadCount()));
+		writer.writeCData(String.valueOf(SystemInfo.getDaemonThreadCount()));
 		writer.writeEndElement(); // end of daemonThreadCount
 		writer.writeStartElement("peakThreadCount");
-		writer.writeCData(String.valueOf(threadInfo.getPeakThreadCount()));
+		writer.writeCData(String.valueOf(SystemInfo.getPeakThreadCount()));
 		writer.writeEndElement(); // end of peakThreadCount
 	}
-
 }

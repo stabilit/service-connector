@@ -77,8 +77,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 		this.serviceName = serviceName;
 		this.service = null;
 		// set up separate remote node configuration for server session abort request in case of busy connection pool
-		this.sasRemoteNodeConfiguration = new RemoteNodeConfiguration(remoteNodeConfiguration.getName(), remoteNodeConfiguration
-				.getHost(), remoteNodeConfiguration.getPort(), remoteNodeConfiguration.getConnectionType(), 0, 1, 1);
+		this.sasRemoteNodeConfiguration = new RemoteNodeConfiguration(ServerType.UNDEFINED, remoteNodeConfiguration.getName(),
+				remoteNodeConfiguration.getHost(), remoteNodeConfiguration.getPort(), remoteNodeConfiguration.getConnectionType(),
+				0, 1, 1);
 	}
 
 	/** {@inheritDoc} */

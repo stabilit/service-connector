@@ -36,6 +36,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.Server;
+import org.serviceconnector.server.ServerType;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.util.DateTimeUtility;
@@ -89,8 +90,8 @@ public class RegisterServerCommand extends CommandAdapter {
 		ListenerConfiguration listenerConfig = responder.getListenerConfig();
 		String connectionType = listenerConfig.getConnectionType();
 
-		RemoteNodeConfiguration remoteNodeConfiguration = new RemoteNodeConfiguration(serverKey, socketAddress.getHostName(),
-				portNr, connectionType, keepAliveInterval, maxConnections, maxSessions);
+		RemoteNodeConfiguration remoteNodeConfiguration = new RemoteNodeConfiguration(ServerType.STATEFUL_SERVER, serverKey,
+				socketAddress.getHostName(), portNr, connectionType, keepAliveInterval, maxConnections, maxSessions);
 		// create new server
 		StatefulServer server = new StatefulServer(remoteNodeConfiguration, serviceName, socketAddress);
 		try {
