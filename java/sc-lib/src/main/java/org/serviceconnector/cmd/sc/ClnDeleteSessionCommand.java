@@ -106,14 +106,14 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		ClnDeleteSessionCommandCallback callback;
 
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
-		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 		do {
 			callback = new ClnDeleteSessionCommandCallback(request, response, responderCallback, session, statefulServer);
 			try {
 				statefulServer.deleteSession(reqMessage, callback, otiOnSCMillis
-						- (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
+						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
@@ -132,7 +132,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 				throw e;
 			}
 			// sleep for a while and then try again
-			Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+			Thread.sleep(Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		} while (++i < tries);
 	}
 

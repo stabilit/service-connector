@@ -38,7 +38,7 @@ import org.serviceconnector.util.TimeoutWrapper;
 public class SubscriptionRegistry extends Registry<String, Subscription> {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SubscriptionRegistry.class);
+	private final static Logger logger = Logger.getLogger(SubscriptionRegistry.class);
 
 	/** The timer. Timer instance is responsible to observe subscription timeouts. */
 	private ScheduledThreadPoolExecutor subscriptionScheduler;

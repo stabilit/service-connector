@@ -45,6 +45,7 @@ import org.serviceconnector.util.FileUtility;
 public class ProcessesController {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(ProcessesController.class);
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 

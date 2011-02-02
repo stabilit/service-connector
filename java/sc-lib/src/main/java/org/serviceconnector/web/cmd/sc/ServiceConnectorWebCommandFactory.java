@@ -40,6 +40,7 @@ import org.serviceconnector.web.cmd.IWebCommandAccessibleContext;
 public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactory {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(ServiceConnectorWebCommandFactory.class);
 
 	/**

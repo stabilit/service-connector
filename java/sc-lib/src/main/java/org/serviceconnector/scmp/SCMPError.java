@@ -153,7 +153,8 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	CACHE_MANAGER_ERROR("610", "Cache Manager error.");
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPError.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(SCMPError.class);
 
 	/** The error code. Should not be integer because it is transmitted over the line */
 	private String errorCode;

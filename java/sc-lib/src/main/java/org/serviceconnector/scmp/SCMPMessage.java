@@ -33,7 +33,7 @@ import org.serviceconnector.SCVersion;
 public class SCMPMessage {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPMessage.class);
+	private final static Logger logger = Logger.getLogger(SCMPMessage.class);
 
 	/** The Constant SCMP_VERSION. */
 	public static final SCMPVersion SCMP_VERSION = SCMPVersion.CURRENT;

@@ -36,6 +36,7 @@ import org.serviceconnector.web.cmd.NullWebCommandValidator;
 public abstract class WebCommandAdapter implements IWebCommand {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(WebCommandAdapter.class);
 
 	/** The web command accessible. */

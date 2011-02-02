@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 public class ConnectionContext {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(ConnectionContext.class);
 	
 	/** The connection. */

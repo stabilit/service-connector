@@ -36,6 +36,7 @@ import org.serviceconnector.net.CommunicationException;
 public class NettyOperationListener implements ChannelFutureListener {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(NettyOperationListener.class);
 	
 	/** Queue to store the answer. */

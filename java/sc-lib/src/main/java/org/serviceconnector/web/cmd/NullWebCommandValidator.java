@@ -29,7 +29,8 @@ import org.serviceconnector.web.IWebRequest;
 public final class NullWebCommandValidator implements IWebCommandValidator {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(NullWebCommandValidator.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(NullWebCommandValidator.class);
 
 	/** The null command validator. */
 	private static IWebCommandValidator nullCommandValidator = new NullWebCommandValidator();

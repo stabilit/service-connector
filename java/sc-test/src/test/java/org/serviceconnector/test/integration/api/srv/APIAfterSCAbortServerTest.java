@@ -28,6 +28,7 @@ import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
 public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(APIAfterSCAbortServerTest.class);
 
 	/**

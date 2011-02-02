@@ -31,6 +31,7 @@ import org.serviceconnector.server.StatefulServer;
 public class PublishService extends StatefulService implements IPublishService {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(PublishService.class);
 
 	/** The subscription queue. */

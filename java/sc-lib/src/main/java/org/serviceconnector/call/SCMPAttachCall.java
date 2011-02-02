@@ -32,6 +32,7 @@ import org.serviceconnector.util.DateTimeUtility;
 public class SCMPAttachCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCMPAttachCall.class);
 
 	/**

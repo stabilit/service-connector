@@ -30,6 +30,7 @@ import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 	
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(APIMultipleSCsClientTest.class);
 	
 	private static ProcessCtx scCtx2;

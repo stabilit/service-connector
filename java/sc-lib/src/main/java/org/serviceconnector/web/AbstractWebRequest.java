@@ -28,6 +28,7 @@ import org.jboss.netty.handler.codec.http.Cookie;
 public abstract class AbstractWebRequest implements IWebRequest {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(AbstractWebRequest.class);
 
 	/** The attr map. */

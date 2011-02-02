@@ -33,7 +33,8 @@ import org.apache.log4j.Logger;
 public class ReverseEnumMap<K, V extends IReversibleEnum<K, V>> {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(ReverseEnumMap.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(ReverseEnumMap.class);
 
 	/** The reverse map. */
 	private final Map<K, V> reverseMap = new HashMap<K, V>();

@@ -27,7 +27,8 @@ import org.apache.log4j.Logger;
 public class SCMPCacheId {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPCacheId.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(SCMPCacheId.class);
 	
 	private String cacheId;
 	private String sequenceNr;

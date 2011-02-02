@@ -93,7 +93,8 @@ public enum SCMPHeaderAttributeKey {
 	URL_PATH("urp");
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPHeaderAttributeKey.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(SCMPHeaderAttributeKey.class);
 	
 	/** The value. */
 	private String value;

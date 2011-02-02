@@ -37,7 +37,8 @@ import org.serviceconnector.registry.jmx.RegistryEntryWrapperJMX;
 public abstract class Registry<K, V> implements IRegistryMXBean {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(Registry.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(Registry.class);
 
 	/** The registry map. */
 	protected Map<K, V> registryMap;

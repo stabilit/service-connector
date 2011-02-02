@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
-import org.serviceconnector.log.Loggers;
 import org.serviceconnector.test.unit.SuperUnitTest;
 
 /**
@@ -34,10 +33,8 @@ import org.serviceconnector.test.unit.SuperUnitTest;
  */
 public class APISCMessageTest extends SuperUnitTest {
 
-	/** The Constant testLogger. */
-	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
-
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(APISCMessageTest.class);
 
 	private SCMessage message;

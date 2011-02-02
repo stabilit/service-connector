@@ -67,7 +67,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
-		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		int i = 0;
 
@@ -76,7 +76,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 					responderCallback, subscription);
 			try {
 				server.changeSubscription(reqMessage, callback, otiOnSCMillis
-						- (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
+						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
@@ -89,7 +89,7 @@ public class ClnChangeSubscriptionCommand extends CommandAdapter {
 					throw scmpCommandException;
 				}
 			} // sleep for a while and then try again
-			Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+			Thread.sleep(Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		} while (++i < tries);
 	}
 

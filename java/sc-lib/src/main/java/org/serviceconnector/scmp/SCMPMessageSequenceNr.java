@@ -27,7 +27,8 @@ import org.apache.log4j.Logger;
 public class SCMPMessageSequenceNr {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPMessageSequenceNr.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(SCMPMessageSequenceNr.class);
 
 	/** The message sequence number. */
 	private long msgSequenceNr;

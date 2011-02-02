@@ -35,6 +35,7 @@ import org.serviceconnector.scmp.SCMPError;
 public final class ValidatorUtility {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(ValidatorUtility.class);
 
 	/** The Constant IP_LIST_REGEX, regex for ip address list. */

@@ -26,13 +26,9 @@ import org.serviceconnector.Constants;
 
 /**
  * The Class URLCallString supports the following format:
- * 
  * This class is not synchronized.
- * 
  * callKey=parameter1&parameter2&parameter3&...
- * 
  * All parameters and the call key are url encoded (see {@link java.net.URLEncoder}) using UTF-8
- * 
  * The parse Method decodes a given string using url decoding (see {@link java.net.URLDecoder} using UTF-8
  */
 
@@ -48,7 +44,7 @@ public class URLCallString {
 	private String[] parameters;
 
 	/**
-	 * Instantiates a new uRL call string.
+	 * Instantiates a new URL call string.
 	 */
 	public URLCallString() {
 		this.callKey = null;
@@ -142,7 +138,7 @@ public class URLCallString {
 		String[] parameterStringArray = splitted[1].split(Constants.AMPERSAND_SIGN);
 		this.parameters = new String[parameterStringArray.length];
 		for (int i = 0; i < parameterStringArray.length; i++) {
-			this.parameters[i] = URLDecoder.decode(parameterStringArray[i], Constants.DEFAULT_ENCODING);			
+			this.parameters[i] = URLDecoder.decode(parameterStringArray[i], Constants.URL_ENCODING);			
 		}
 	}
 
@@ -167,7 +163,7 @@ public class URLCallString {
 				if (i > 0) {
 					sb.append(Constants.AMPERSAND_SIGN);
 				}
-				sb.append(URLEncoder.encode(this.parameters[i], Constants.DEFAULT_ENCODING));
+				sb.append(URLEncoder.encode(this.parameters[i], Constants.URL_ENCODING));
 			}
 			return sb.toString();
 		} catch (UnsupportedEncodingException e) {

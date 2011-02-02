@@ -34,6 +34,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public class SCMPEchoCall extends SCMPCallAdapter {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCMPEchoCall.class);
 
 	/**

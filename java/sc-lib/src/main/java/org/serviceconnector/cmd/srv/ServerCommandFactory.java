@@ -28,6 +28,7 @@ import org.serviceconnector.cmd.ICommand;
 public class ServerCommandFactory extends FlyweightCommandFactory {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(ServerCommandFactory.class);
 
 	public ServerCommandFactory() {

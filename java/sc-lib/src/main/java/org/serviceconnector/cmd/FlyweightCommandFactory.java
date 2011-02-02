@@ -32,7 +32,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public abstract class FlyweightCommandFactory {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(FlyweightCommandFactory.class);
+	private final static Logger logger = Logger.getLogger(FlyweightCommandFactory.class);
 	/** The map stores base instances by a key. */
 	protected static Map<String, ICommand> commands = new HashMap<String, ICommand>();
 

@@ -37,6 +37,7 @@ import org.serviceconnector.net.req.netty.NettyIdleHandler;
 public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(NettyHttpRequesterPipelineFactory.class);
 	
 	/** The timer to observe timeouts. */

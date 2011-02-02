@@ -162,7 +162,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		// unsubscribe on backend server
 		ISCMPMessageCallback callback;
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
-		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
@@ -174,7 +174,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 					// set up callback for normal client unsubscribe operation
 					callback = new ClnUnsubscribeCommandCallback(request, response, responderCallback, subscription);
 				}
-				server.unsubscribe(reqMessage, callback, otiOnSCMillis - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
+				server.unsubscribe(reqMessage, callback, otiOnSCMillis - (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {
@@ -195,7 +195,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 				throw e;
 			}
 			// sleep for a while and then try again
-			Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+			Thread.sleep(Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		} while (++i < tries);
 	}
 

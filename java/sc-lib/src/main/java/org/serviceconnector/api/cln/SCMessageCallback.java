@@ -27,6 +27,7 @@ import org.serviceconnector.api.SCMessage;
 public abstract class SCMessageCallback {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCMessageCallback.class);
 
 	/** The service which is using the message callback. */

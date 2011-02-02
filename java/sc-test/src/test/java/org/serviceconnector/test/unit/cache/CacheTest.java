@@ -239,7 +239,6 @@ public class CacheTest extends CacheSuperUnitTest {
 	 * 
 	 * @see CacheTest#testPartSCMPCacheWrite()
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
 	public void t12_partSCMPCacheWriteUsingIteratorTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");

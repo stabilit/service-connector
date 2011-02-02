@@ -67,7 +67,7 @@ public class ServerRegistry extends Registry<String, Server> {
 			Server[] servers = new Server[entries.size()];
 			int index = 0;
 			for (Entry<String, Server> entry : entries) {
-				String key = entry.getKey();
+				//String key = entry.getKey();
 				Server server = entry.getValue();
 				servers[index++] = server;
 			}

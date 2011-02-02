@@ -40,6 +40,7 @@ import org.serviceconnector.server.Server;
 public class ServiceLoader {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(ServiceLoader.class);
 
 	/**

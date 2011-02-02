@@ -21,7 +21,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 
 	/** The Constant logger. */
-	protected final Logger logger = Logger.getLogger(ClnExecuteCommandCascCallback.class);
+	private final static Logger logger = Logger.getLogger(ClnExecuteCommandCascCallback.class);
 	/** The request cache id. */
 	private String requestCacheId;
 	/** The request oti. */

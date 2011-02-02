@@ -49,7 +49,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void encode(OutputStream os, Object obj) throws Exception {
-		OutputStreamWriter osw = new OutputStreamWriter(os, Constants.CHARSET);
+		OutputStreamWriter osw = new OutputStreamWriter(os, Constants.DEFAULT_ENCODING);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPMessage scmpMsg = (SCMPMessage) obj;
 

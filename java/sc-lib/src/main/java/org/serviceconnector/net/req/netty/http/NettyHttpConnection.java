@@ -99,7 +99,7 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scmp);
 		encoderDecoder.encode(baos, scmp);
-		url = new URL(Constants.HTTP, host, port, Constants.HTTP_FILE);
+		url = new URL(Constants.HTTP, host, port, Constants.HTTP_FILE_QUALIFIER);
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, this.url.getPath());
 		byte[] buffer = baos.toByteArray();
 		// Http header fields

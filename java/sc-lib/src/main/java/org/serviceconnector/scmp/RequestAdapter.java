@@ -28,7 +28,8 @@ import org.apache.log4j.Logger;
 public abstract class RequestAdapter implements IRequest {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(RequestAdapter.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(RequestAdapter.class);
 
 	/** The scmp message. */
 	private SCMPMessage message;

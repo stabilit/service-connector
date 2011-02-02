@@ -31,6 +31,7 @@ public class ClientThreadController {
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(ClientThreadController.class);
 
 	private CountDownLatch beforeAttachSignal;

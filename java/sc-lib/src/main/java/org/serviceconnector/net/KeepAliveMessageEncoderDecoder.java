@@ -33,6 +33,7 @@ import org.serviceconnector.scmp.SCMPKeepAlive;
 public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(KeepAliveMessageEncoderDecoder.class);
 
 	/**
@@ -44,7 +45,7 @@ public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter
 	/** {@inheritDoc} */
 	@Override
 	public void encode(OutputStream os, Object obj) throws Exception {
-		OutputStreamWriter osw = new OutputStreamWriter(os, Constants.CHARSET);
+		OutputStreamWriter osw = new OutputStreamWriter(os, Constants.DEFAULT_ENCODING);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPKeepAlive keepAlive = (SCMPKeepAlive) obj;
 		if (keepAlive.isReply()) {

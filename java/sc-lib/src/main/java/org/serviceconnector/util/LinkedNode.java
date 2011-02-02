@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 public class LinkedNode<T> {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(LinkedNode.class);
 	
 	/** The value of the node. */

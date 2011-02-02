@@ -42,7 +42,7 @@ public class DumpFileTest {
 		String[] dumpFiles = dumpPath.list(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.endsWith(Constants.XML_EXTENSION) && name.startsWith(Constants.DUMP_FILE_NAME);
+				return name.endsWith(Constants.DUMP_FILE_EXTENSION) && name.startsWith(Constants.DUMP_FILE_NAME);
 			}
 		});
 		Assert.assertTrue("dump file has not been created", dumpFiles.length > 0);

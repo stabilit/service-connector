@@ -41,6 +41,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SCClient {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCClient.class);
 
 	/** The host of the SC. */

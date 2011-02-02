@@ -28,6 +28,7 @@ import org.serviceconnector.Constants;
 public class HttpFrameDecoder extends DefaultFrameDecoder {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(HttpFrameDecoder.class);
 	
 	/**

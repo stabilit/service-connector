@@ -18,9 +18,11 @@ package org.serviceconnector.cln;
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 
+@SuppressWarnings("unused")
 public class TestSessionClientJan extends Thread {
 	
 	/** The Constant logger. */
+
 	private final static Logger logger = Logger.getLogger(TestSessionClientJan.class);
 
 	private ThreadSafeCounter ctr;

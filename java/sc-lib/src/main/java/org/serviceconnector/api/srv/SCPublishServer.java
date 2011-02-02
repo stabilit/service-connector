@@ -38,6 +38,7 @@ import org.serviceconnector.service.SCServiceException;
 public class SCPublishServer extends SCSessionServer {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCPublishServer.class);
 
 	/**

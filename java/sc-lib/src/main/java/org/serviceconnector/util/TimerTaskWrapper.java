@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 public class TimerTaskWrapper extends TimerTask {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(TimerTaskWrapper.class);
 	
 	/** The target to run when time is out. */

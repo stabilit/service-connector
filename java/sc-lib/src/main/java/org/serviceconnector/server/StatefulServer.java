@@ -272,11 +272,11 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 */
 	public void serverAbortSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
-		this.serverAbortSessionWithSpecialRequester(this.requester, message, callback, timeoutMillis);
+		this.serverAbortSessionWithExtraRequester(this.requester, message, callback, timeoutMillis);
 	}
 
 	/**
-	 * Server abort session with special requester.
+	 * Server abort session with extra requester.
 	 * 
 	 * @param requester
 	 *            the requester
@@ -289,7 +289,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 * @throws ConnectionPoolBusyException
 	 *             the connection pool busy exception
 	 */
-	void serverAbortSessionWithSpecialRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
+	void serverAbortSessionWithExtraRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
 			int timeoutMillis) throws ConnectionPoolBusyException {
 		SCMPSrvAbortSessionCall srvAbortSessionCall = new SCMPSrvAbortSessionCall(this.requester, message);
 		try {
@@ -312,7 +312,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 		CommandCallback callback = null;
 
 		int oti = this.basicConf.getSrvAbortOTIMillis();
-		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
 		int otiOnServerMillis = 0;
 		// set up abort message
@@ -327,7 +327,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 			do {
 				callback = new CommandCallback(true);
 				try {
-					otiOnServerMillis = oti - (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+					otiOnServerMillis = oti - (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 					this.serverAbortSession(abortMessage, callback, otiOnServerMillis);
 					// no exception has been thrown - get out of wait loop
 					break;
@@ -342,7 +342,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 					}
 				}
 				// sleep for a while and then try again
-				Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+				Thread.sleep(Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 			} while (++i < tries);
 
 			if (this.service.getType() == ServiceType.SESSION_SERVICE) {
@@ -356,11 +356,12 @@ public class StatefulServer extends Server implements IStatefulServer {
 		} catch (SCMPCommandException scmpCommandException) {
 			logger.warn("ConnectionPoolBusyException in aborting session wait mec");
 			// ConnectionPoolBusyException after wait mec - try opening a new connection
-			RemoteNodeConfiguration remoteNodeConfiguration = this.requester.getRemoteNodeConfiguration();
+			
+			//RemoteNodeConfiguration remoteNodeConfiguration = this.requester.getRemoteNodeConfiguration(); 
 			// set up a new requester to make the SAS - only 1 connection is allowed
 			Requester sasRequester = new Requester(this.sasRemoteNodeConfiguration);
 			try {
-				this.serverAbortSessionWithSpecialRequester(sasRequester, abortMessage, callback, oti);
+				this.serverAbortSessionWithExtraRequester(sasRequester, abortMessage, callback, oti);
 			} catch (ConnectionPoolBusyException e) {
 				sasRequester.destroy();
 				logger.warn("ConnectionPoolBusyException in aborting session wait mec over special connection");

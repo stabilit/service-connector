@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 public class LinkedQueue<E> {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(LinkedQueue.class);
 
 	/**

@@ -90,8 +90,7 @@ public class ConnectionPool {
 		// default = false connection will not be closed at the time they are freed
 		this.closeOnFree = false;
 		this.maxConnections = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
-		// the minimum of connection is 1 per default - means there is always one connection active
-		this.minConnections = 1;
+		this.minConnections = Constants.DEFAULT_MIN_CONNECTION_POOL_SIZE;
 		this.freeConnections = Collections.synchronizedList(new ArrayList<IConnection>());
 		this.usedConnections = Collections.synchronizedList(new ArrayList<IConnection>());
 		this.connectionFactory = AppContext.getConnectionFactory();

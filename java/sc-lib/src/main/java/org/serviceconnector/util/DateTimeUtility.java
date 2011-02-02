@@ -31,7 +31,8 @@ import org.serviceconnector.Constants;
 public final class DateTimeUtility {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(DateTimeUtility.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(DateTimeUtility.class);
 
 	/** The Constant SDF. */
 	private static final SimpleDateFormat SDF = new SimpleDateFormat(Constants.SCMP_FORMAT_OF_DATE_TIME);

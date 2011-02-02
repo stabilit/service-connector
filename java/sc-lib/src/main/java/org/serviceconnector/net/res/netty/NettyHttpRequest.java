@@ -36,6 +36,7 @@ import org.serviceconnector.util.Statistics;
 public class NettyHttpRequest extends RequestAdapter {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(NettyHttpRequest.class);
 
 	/** The request. */

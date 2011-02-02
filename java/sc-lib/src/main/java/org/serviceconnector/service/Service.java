@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 public abstract class Service {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(Service.class);
 
 	/** The type. */

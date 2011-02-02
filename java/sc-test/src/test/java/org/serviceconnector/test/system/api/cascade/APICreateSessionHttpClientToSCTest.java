@@ -39,6 +39,7 @@ import org.serviceconnector.service.SCServiceException;
 public class APICreateSessionHttpClientToSCTest {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(APICreateSessionHttpClientToSCTest.class);
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 

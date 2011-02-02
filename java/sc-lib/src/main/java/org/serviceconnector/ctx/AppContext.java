@@ -64,7 +64,7 @@ public final class AppContext {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(AppContext.class);
 	
-	private static final SimpleDateFormat DUMP_FILE_SDF = new SimpleDateFormat(Constants.FORMAT_OF_DATE_TIME_DUMP_FILE);
+	private static final SimpleDateFormat DUMP_FILE_SDF = new SimpleDateFormat(Constants.DUMP_FILE_NAME_FORMAT);
 	/** The SC environment. Indicates that AppContext is running in a SC environment */
 	private static boolean scEnvironment = false;
 
@@ -429,7 +429,7 @@ public final class AppContext {
 		String dumpFileName = null;
 		synchronized (DUMP_FILE_SDF) { // DUMP_FILE_SDF is not thread safe
 			String dateTimeString = DUMP_FILE_SDF.format(now);
-			dumpFileName = Constants.DUMP_FILE_NAME + dateTimeString + Constants.XML_EXTENSION;
+			dumpFileName = Constants.DUMP_FILE_NAME + dateTimeString + Constants.DUMP_FILE_EXTENSION;
 		}
 		File dumpDir = new File(dumpPath);
 		try {

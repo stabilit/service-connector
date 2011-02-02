@@ -45,6 +45,7 @@ import org.serviceconnector.util.SynchronousCallback;
 public class SCSessionServer {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCSessionServer.class);
 
 	/** The registered. Indicates if a server is already registered to an SC. */

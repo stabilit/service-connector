@@ -26,7 +26,8 @@ import org.apache.log4j.Logger;
 public final class Constants {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(Constants.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(Constants.class);
 
 	private Constants() {
 		// instantiating not allowed
@@ -35,6 +36,9 @@ public final class Constants {
 	/*
 	 * Defaults ********
 	 */
+	/** The default SC character set (encoding). */
+	public static final String DEFAULT_ENCODING = "ISO-8859-1";
+	
 	/** Default value used if no ECHO_TIMEOUT_MULTIPLIER is configured */
 	public static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
 
@@ -70,31 +74,32 @@ public final class Constants {
 	public static final int DEFAULT_NO_DATA_INTERVAL_SECONDS = 300;
 
 	/**
-	 * Default value used if no DEFAULT_KEEP_ALIVE_OTI_MILLIS is configured.
-	 */
-	public static final int DEFAULT_KEEP_ALIVE_OTI_MILLIS = 2000;
-
-	/**
-	 * Default value to wait in a receive publication call. Careful: For the total OTI of RCP noDataInterval will be added.
+	 * Default value to wait in a receive publication call.
+	 * Careful: For the total OTI of RCP noDataInterval will be added.
 	 */
 	public static final int DEFAULT_RECEIVE_PUBLICATION_OTI_MILLIS = 2000;
 
 	/**
 	 * Defines the time to wait in receive publication on cascaded client to get permit to proceed.
 	 */
-	//TODO JOT/JAN.. reduce to 2000, 200000 for testing purpose
+	// TODO JOT/JAN.. reduce to 2000, 200000 for testing purpose
 	public static final int WAIT_FOR_PERMIT_IN_RECEIVE_PUBLICATION_MILLIS = 2000000;
 
 	/** The default keep alive interval, 0 = not active. */
 	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 60;
 
-	/**
-	 * The default number of subsequent keep alive before the connection is closed.
-	 */
+	/** The default number of subsequent keep alive messages before the connection is closed. */
 	public static final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
+
+	/** Default operation timeout used if ROOT_KEEP_ALIVE_OTI_MILLIS is not configured. */
+	public static final int DEFAULT_KEEP_ALIVE_OTI_MILLIS = 2000;
 
 	/** The default maximal connection pool size */
 	public static final int DEFAULT_MAX_CONNECTION_POOL_SIZE = 100;
+
+	// ** ATTENTION ** SIX Exchange C-Servers depend on minimum = 1 !!
+	/** The default minimal connection pool size, 1 - means there is always one connection active */
+	public static final int DEFAULT_MIN_CONNECTION_POOL_SIZE = 1;
 
 	/** The default maximal file sessions */
 	public static final int DEFAULT_MAX_FILE_SESSIONS = 10;
@@ -110,7 +115,7 @@ public final class Constants {
 
 	/** Default service state. */
 	public static final boolean DEFAULT_SERVICE_ENABLED = true;
-	
+
 	/*
 	 * Various Constants *********
 	 */
@@ -123,8 +128,8 @@ public final class Constants {
 	/** Empty application error code. */
 	public static final int EMPTY_APP_ERROR_CODE = -9999;
 
-	/** The wait time in a loop waiting for a busy connection. */
-	public static final int WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS = 200;
+	/** The wait time in a loop waiting for a free connection. */
+	public static final int WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS = 200;
 
 	/** Maximum size of a message. Larger data is treated as large message */
 	public static final int MAX_MESSAGE_SIZE = DEFAULT_MAX_MESSAGE_SIZE;
@@ -132,17 +137,14 @@ public final class Constants {
 	/** Maximum port nummber */
 	public static final int MAX_PORT_NR = 65535;
 
+	/** Seconds to milliseconds calculation factor */
+	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
+	
 	/** flag to enable / disable command validation. */
 	public static final boolean COMMAND_VALIDATION_ENABLED = true;
 
-	/** flag to enable / disable message caching. */
-	public static final boolean MESSAGE_CACHE_ENABLED = true;
-
 	/** File qualifier for Http requests. */
-	public static final String HTTP_FILE = "/";
-
-	/** Seconds to milliseconds calculation factor */
-	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
+	public static final String HTTP_FILE_QUALIFIER = "/";
 
 	/** HttpHeaders.Names.ACCEPT parameter used when http data is sent */
 	public static final String HTTP_ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
@@ -158,27 +160,28 @@ public final class Constants {
 
 	/**
 	 * File containing the SC process PID. Created at startup and deleted on
-	 * exit or error. Used to check is sc is running.
+	 * exit or error. Used to check if SC is running.
 	 */
 	public static final String PID_FILE_NAME = "sc.pid";
 
-	/**
-	 * File containing the SC dump. Created with the dump console command or with WEBGUI
-	 */
+	/** File containing the SC dump. Created with the console command or WEB-GUI */
 	public static final String DUMP_FILE_NAME = "scDump_";
-	/** The Constant XML_EXTENSION. */
-	public static final String XML_EXTENSION = ".xml";
 
+	/** The dump file name format*/
+	public static final String DUMP_FILE_NAME_FORMAT = "yyyyMMddHHmmssSSS";
+	
+	/** The dump file extension */
+	public static final String DUMP_FILE_EXTENSION = ".xml";
+
+	/** The dump file encoding */
+	public static final String DUMP_FILE_ENCODING = "ISO-8859-1";
+	
 	/** The Constant IPV6_LOOPBACK_NIC. */
 	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
 
-	/**
-	 * FILE_LIST_DELIMITER, separates file names in file list SCFileService.
-	 */
+	/** FILE_LIST_DELIMITER, separates file names in file list SCFileService. */
 	public static final String FILE_LIST_DELIMITER = "\\|";
 
-	/** The Constant CHARSET. */
-	public static final String CHARSET = "ISO-8859-1";
 	/** The Constant LINE_BREAK_SIGN. */
 	public static final String LINE_BREAK_SIGN = "\n";
 
@@ -195,7 +198,7 @@ public final class Constants {
 	public static final String DUMP = "dump";
 	public static final String EQUAL_SIGN = "=";
 	public static final String AMPERSAND_SIGN = "&";
-	public static final String DEFAULT_ENCODING = "UTF-8";
+	public static final String URL_ENCODING = "UTF-8";		// TODO SC default is "ISO-8859-1" does it match?
 
 	/*
 	 * Constants for syntax in sc.properies ************************************
@@ -251,13 +254,9 @@ public final class Constants {
 	// web default values
 	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;
 	// web property keys
-	/**
-	 * XSL transformation cache enebled = transformation will be done every cycle
-	 */
+	/** XSL transformation cache enebled = transformation will be done every cycle */
 	public static final String WEB_XSL_TRANSFORMATION_CACHE_ENABLED = "web.xslTransformationCache.enabled";
-	/**
-	 * Page header XSL transformation cache enebled = transformation will be done every cycle
-	 */
+	/** Prefix displayed in header and title to identify the SC instance */
 	public static final String WEB_PAGE_HEADER_PREFIX = "web.pageHeaderPrefix";
 
 	/*
@@ -278,7 +277,6 @@ public final class Constants {
 	public static final String SCMP_FORMAT_OF_HEADER_SIZE = " 00000";
 	public static final String SCMP_FORMAT_OF_DATE_TIME = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	public static final String SCMP_FORMAT_OF_DATE_TIME_UTC = "yyyy-MM-dd'T'HH:mm:ss";
-	public static final String FORMAT_OF_DATE_TIME_DUMP_FILE = "yyyyMMddHHmmssSSS";
 	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
 
 }

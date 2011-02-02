@@ -26,6 +26,7 @@ import org.serviceconnector.server.StatefulServer;
 public class Session extends AbstractSession {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(Session.class);
 
 	private double sessionTimeoutSeconds;

@@ -83,7 +83,8 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	UNDEFINED("UND");
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPMsgType.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(SCMPMsgType.class);
 
 	/** The value. */
 	private String value;

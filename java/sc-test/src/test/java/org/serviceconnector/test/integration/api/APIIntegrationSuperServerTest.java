@@ -30,6 +30,7 @@ import org.serviceconnector.test.integration.IntegrationSuperTest;
 public class APIIntegrationSuperServerTest extends IntegrationSuperTest {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(APIIntegrationSuperServerTest.class);
 	
 	protected SCServer server;

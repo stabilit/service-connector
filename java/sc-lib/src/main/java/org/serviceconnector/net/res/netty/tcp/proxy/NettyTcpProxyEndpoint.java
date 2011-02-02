@@ -77,9 +77,6 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 		this.remoteHost = remoteNodeConfig.getHost();
 		this.remotePort = remoteNodeConfig.getPort();
 		this.maxConnectionPoolSize = remoteNodeConfig.getMaxPoolSize();
-		if (this.maxConnectionPoolSize < 1) {
-			this.maxConnectionPoolSize = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
-		}
 		try {
 			// limit threads
 			this.endpointChannelFactory = new NioServerSocketChannelFactory(Executors

@@ -122,7 +122,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		// check service is present
 		PublishService service = this.validatePublishService(abstractService);
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
-		int tries = (otiOnSCMillis / Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
@@ -138,7 +138,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				ClnSubscribeCommandCallback callback = new ClnSubscribeCommandCallback(request, response, responderCallback,
 						subscription);
 				service.allocateServerAndSubscribe(reqMessage, callback, subscription, otiOnSCMillis
-						- (i * Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS));
+						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (NoFreeServerException ex) {
@@ -159,7 +159,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 				}
 			}
 			// sleep for a while and then try again
-			Thread.sleep(Constants.WAIT_FOR_BUSY_CONNECTION_INTERVAL_MILLIS);
+			Thread.sleep(Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		} while (++i < tries);
 	}
 

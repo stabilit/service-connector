@@ -31,7 +31,8 @@ import org.serviceconnector.Constants;
 public class SCMPOffsetPart extends SCMPPart {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPOffsetPart.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(SCMPOffsetPart.class);
 
 	/** The offset where body starts. */
 	private int offset;

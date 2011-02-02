@@ -103,8 +103,8 @@ public class URLParameterString {
 		for (int i = 0; i < parameterStringArray.length; i++) {
 			String[] splitted = parameterStringArray[i].split(Constants.EQUAL_SIGN);
 			if (splitted.length == 2) {
-				String key = URLDecoder.decode(splitted[0], Constants.DEFAULT_ENCODING);
-				String value = URLDecoder.decode(splitted[1], Constants.DEFAULT_ENCODING);
+				String key = URLDecoder.decode(splitted[0], Constants.URL_ENCODING);
+				String value = URLDecoder.decode(splitted[1], Constants.URL_ENCODING);
 				this.map.put(key, value);
 			}
 		}
@@ -133,11 +133,11 @@ public class URLParameterString {
 				String key = entry.getKey();
 				String value = entry.getValue();
 				if (key != null) {
-			       sb.append(URLEncoder.encode(key, Constants.DEFAULT_ENCODING));
+			       sb.append(URLEncoder.encode(key, Constants.URL_ENCODING));
 			       sb.append(Constants.EQUAL_SIGN);
 				}
 				if (value != null) {
-			       sb.append(URLEncoder.encode(value, Constants.DEFAULT_ENCODING));
+			       sb.append(URLEncoder.encode(value, Constants.URL_ENCODING));
 				} else {				
 				}
 			}

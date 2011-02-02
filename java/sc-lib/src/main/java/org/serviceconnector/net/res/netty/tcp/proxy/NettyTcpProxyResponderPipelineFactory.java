@@ -29,6 +29,7 @@ public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFac
 	private final int remotePort;
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(NettyTcpProxyResponderPipelineFactory.class);
 
 	public NettyTcpProxyResponderPipelineFactory(ClientSocketChannelFactory cf, String remoteHost, int remotePort) {

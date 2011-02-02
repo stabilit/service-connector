@@ -41,7 +41,7 @@ import org.serviceconnector.scmp.SCMPError;
 public abstract class EndpointAdapter implements IEndpoint, Runnable {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(EndpointAdapter.class);
+	private final static Logger logger = Logger.getLogger(EndpointAdapter.class);
 	/** The base conf. */
 	protected final BasicConfiguration baseConf = AppContext.getBasicConfiguration();
 

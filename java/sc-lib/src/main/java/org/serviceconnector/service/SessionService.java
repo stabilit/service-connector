@@ -34,6 +34,7 @@ import org.serviceconnector.server.StatefulServer;
 public class SessionService extends StatefulService {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SessionService.class);
 
 	/**

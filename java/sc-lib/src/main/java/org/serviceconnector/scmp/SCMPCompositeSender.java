@@ -30,7 +30,8 @@ import org.apache.log4j.Logger;
 public class SCMPCompositeSender extends SCMPMessage {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCMPCompositeSender.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(SCMPCompositeSender.class);
 
 	/** The large scmp message. */
 	private SCMPMessage message;

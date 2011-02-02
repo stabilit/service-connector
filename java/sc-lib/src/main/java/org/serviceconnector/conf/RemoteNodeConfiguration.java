@@ -65,7 +65,7 @@ public class RemoteNodeConfiguration {
 		this.maxSessions = maxSessions;
 		this.serverType = serverType;
 	}
-	
+
 	public RemoteNodeConfiguration(String name, String host, int port, String connectionType, int keepAliveIntervalSeconds,
 			int maxConnections) {
 		this(ServerType.UNDEFINED, name, host, port, connectionType, keepAliveIntervalSeconds, maxConnections, 0);
@@ -130,7 +130,7 @@ public class RemoteNodeConfiguration {
 				localMaxPoolSize = Constants.DEFAULT_MAX_CONNECTION_POOL_SIZE;
 			}
 			this.maxPoolSize = localMaxPoolSize;
-			ValidatorUtility.validateInt(0, this.maxPoolSize, SCMPError.HV_WRONG_MAX_CONNECTIONS);
+			ValidatorUtility.validateInt(1, this.maxPoolSize, SCMPError.HV_WRONG_MAX_CONNECTIONS);
 
 			// get keep alive interval
 			Integer localKeepAliveIntervalSeconds = compositeConfig.getInteger(this.name

@@ -32,15 +32,16 @@ import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
 public class APINewServiceTest extends APIIntegrationSuperClientTest {
 
+	/** The Constant logger. */
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(APINewServiceTest.class);
+	
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
-	
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(APINewServiceTest.class);
 
 	/**
 	 * Description: create new session service with service name = null<br> 

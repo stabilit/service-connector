@@ -25,7 +25,8 @@ import org.serviceconnector.net.req.SCRequester;
 public abstract class SCService {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(SCService.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(SCService.class);
 
 	/**
 	 * The service name. The service name is an abstract name and represents the logical address of the service. In order to allow

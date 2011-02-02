@@ -69,7 +69,7 @@ public class DemoPublishServer extends Thread {
 	private class SrvCallback extends SCPublishServerCallback {
 
 		/** The Constant logger. */
-		protected final Logger logger = Logger.getLogger(SrvCallback.class);
+		private final Logger logger = Logger.getLogger(SrvCallback.class);
 
 		public SrvCallback(SCPublishServer publishSrv) {
 			super(publishSrv);

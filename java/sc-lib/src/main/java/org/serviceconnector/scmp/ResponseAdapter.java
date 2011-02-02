@@ -33,7 +33,8 @@ import org.serviceconnector.net.IEncoderDecoder;
 public abstract class ResponseAdapter implements IResponse {
 
 	/** The Constant logger. */
-	protected static final Logger logger = Logger.getLogger(ResponseAdapter.class);
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(ResponseAdapter.class);
 	
 	/** The encoder decoder. */
 	protected IEncoderDecoder encoderDecoder;

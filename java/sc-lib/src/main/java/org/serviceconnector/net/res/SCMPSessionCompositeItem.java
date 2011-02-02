@@ -30,6 +30,7 @@ import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 public class SCMPSessionCompositeItem {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCMPSessionCompositeItem.class);
 
 	/** The large response. */

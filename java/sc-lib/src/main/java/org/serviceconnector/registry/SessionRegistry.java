@@ -113,7 +113,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			Session[] sessions = new Session[entries.size()];
 			int index = 0;
 			for (Entry<String, Session> entry : entries) {
-				String key = entry.getKey();
+				//String key = entry.getKey();
 				Session session = entry.getValue();
 				sessions[index++] = session;
 			}
