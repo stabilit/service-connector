@@ -21,6 +21,7 @@ import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
 public class ClnSubscribeCascSubscribedCallback implements ISCMPMessageCallback {
@@ -43,7 +44,8 @@ public class ClnSubscribeCascSubscribedCallback implements ISCMPMessageCallback 
 			// forward reply to client
 			this.callback.receive(reply);
 			// adding client subscription id to cascaded client and change his mask
-			this.cascClient.addClientSubscriptionId(this.callback.getSubscription().getId());
+			Subscription clnSubscription = this.callback.getSubscription();
+			this.cascClient.addClientSubscriptionId(clnSubscription.getId(), clnSubscription.getMask());
 			String newMask = this.request.getMessage().getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
 			this.cascClient.setSubscriptionMask(new SubscriptionMask(newMask));
 			// release permit

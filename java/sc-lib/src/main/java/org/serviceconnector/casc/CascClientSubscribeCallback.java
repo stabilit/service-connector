@@ -51,7 +51,7 @@ public class CascClientSubscribeCallback implements ISCMPMessageCallback {
 			this.commandCallback.receive(reply);
 			// adding client subscription id to cascaded client
 			Subscription clientSubscription = this.commandCallback.getSubscription();
-			this.cascClient.addClientSubscriptionId(clientSubscription.getId());
+			this.cascClient.addClientSubscriptionId(clientSubscription.getId(), clientSubscription.getMask());
 			// release permit
 			this.cascClient.getCascClientSemaphore().release();
 		} catch (Exception e) {

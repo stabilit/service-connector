@@ -24,6 +24,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPClnChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
@@ -40,6 +41,7 @@ import org.serviceconnector.casc.ClnSubscribeCascSubscribedCallback;
 import org.serviceconnector.casc.ClnUnsubscribeCascSubscribedCallback;
 import org.serviceconnector.cmd.sc.ClnSubscribeCommandCallback;
 import org.serviceconnector.cmd.sc.ClnUnsubscribeCommandCallback;
+import org.serviceconnector.cmd.sc.CommandCallback;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
@@ -269,6 +271,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 				SCMPClnUnsubscribeCall unsubscribeCall = new SCMPClnUnsubscribeCall(this.requester, msgToForward);
 				// set cascaded client subscriptonId
 				msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
+				cascClient.removeClientSubscriptionId(msgToForward.getSessionId());
 				try {
 					unsubscribeCall.invoke(callback, oti);
 				} finally {
@@ -302,6 +305,21 @@ public class CascadedSC extends Server implements IStatefulServer {
 		unsubscribeCall.invoke(callback, oti);
 	}
 
+	public void unsubscribeCascadedClientInErrorCases(CascadedClient cascClient) {
+		try {
+			SCMPMessage msg = new SCMPMessage();
+			msg.setSessionId(cascClient.getSubscriptionId());
+			msg.setServiceName(cascClient.getServiceName());
+			msg.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, "100");
+			msg.removeHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
+			SCMPClnUnsubscribeCall unsubscribeCall = new SCMPClnUnsubscribeCall(this.requester, msg);
+			unsubscribeCall.invoke(new CommandCallback(false), Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
+					* Constants.SEC_TO_MILLISEC_FACTOR);
+		} catch (Exception e) {
+			logger.warn("unsubscribing cascaded client failed service=" + cascClient.getServiceName(), e);
+		}
+	}
+
 	public void cascadedSCUnsubscribe(CascadedClient cascClient, SCMPMessage msgToForward, CascSCUnsubscribeCallback callback,
 			int timeoutMillis) {
 		int oti = (int) (this.operationTimeoutMultiplier * timeoutMillis);
@@ -319,6 +337,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 				SCMPClnUnsubscribeCall unsubscribeCall = new SCMPClnUnsubscribeCall(this.requester, msgToForward);
 				// set cascaded client subscriptonId
 				msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
+				cascClient.removeClientSubscriptionId(msgToForward.getSessionId());
 				try {
 					unsubscribeCall.invoke(callback, oti);
 				} finally {

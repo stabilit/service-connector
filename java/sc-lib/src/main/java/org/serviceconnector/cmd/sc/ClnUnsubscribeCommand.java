@@ -116,12 +116,25 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		StatefulServer server = null;
 		Subscription subscription = null;
 		if (cascSubscription != null) {
+			// request is from cascadedSC
 			SubscriptionQueue<SCMPMessage> queue = ((IPublishService) cascSubscription.getService()).getSubscriptionQueue();
 			if (cascadedSCMask == null) {
+				// no mask is set - unsubscribe cascadedSC and forward client id to server
 				// first remove subscription than unsubscribe
 				this.subscriptionRegistry.removeSubscription(cascSubscription.getId());
 				queue.unsubscribe(cascSubscription.getId());
 				SubscriptionLogger.logUnsubscribe(serviceName, cascSubscription.getId());
+				if (reqMessage.getSessionId() == null) {
+					// no session id set, cascadedSC is unsubscribing himself on his own initiative
+					// no need to forward to server
+					SCMPMessage reply = new SCMPMessage();
+					reply.setIsReply(true);
+					reply.setServiceName(serviceName);
+					reply.setMessageType(getKey());
+					response.setSCMP(reply);
+					responderCallback.responseCallback(request, response);
+					return;
+				}
 			} else {
 				// cascadedSC unsubscribe - change subscription for cascadedSC and forward unsubscribe to server
 				// change subscription for cascaded SC

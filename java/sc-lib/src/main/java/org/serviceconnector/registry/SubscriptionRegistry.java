@@ -81,8 +81,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		if (key == null) {
 			return;
 		}
-		super.remove(key);
 		this.cancelSubscriptionTimeout(key);
+		super.remove(key);
 		SubscriptionLogger.logDeleteSubscription(key);
 	}
 

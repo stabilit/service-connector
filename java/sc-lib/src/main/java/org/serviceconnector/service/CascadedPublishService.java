@@ -16,6 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.registry.SubscriptionQueue;
@@ -57,13 +61,22 @@ public class CascadedPublishService extends Service implements IPublishService {
 	public CascadedClient getCascClient() {
 		return this.cascClient;
 	}
-	
+
 	public int getNoDataIntervalInSeconds() {
 		return noDataIntervalInSeconds;
 	}
 
-	public void renewCascadedClient() {
+	public void renewCascadedClient(Map<String, SubscriptionMask> clientSubscriptionIds) {
 		logger.warn("cascaded publish service renew cascaded client service=" + this.getName());
 		this.cascClient = new CascadedClient(cascadedSC, this);
+		if (clientSubscriptionIds != null && clientSubscriptionIds.size() > 0) {
+			// need to hand over client subscription ID's to the new cascaded client
+			Set<Entry<String, SubscriptionMask>> subscriptionSet = clientSubscriptionIds.entrySet();
+			for (Entry<String, SubscriptionMask> entry : subscriptionSet) {
+				this.cascClient.addClientSubscriptionId(entry.getKey(), entry.getValue());
+			}
+			SubscriptionMask mask = new SubscriptionMask(this.cascClient.evalSubscriptionMaskFromClientSubscriptions());
+			this.cascClient.setSubscriptionMask(mask);
+		}
 	}
 }

@@ -1,16 +1,13 @@
 package org.serviceconnector.casc;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.service.CascadedPublishService;
-import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
 public class CascadedClient {
@@ -25,7 +22,7 @@ public class CascadedClient {
 
 	private SubscriptionMask subscriptionMask;
 
-	private List<String> clientSubscriptionIds;
+	private Map<String, SubscriptionMask> clientSubscriptionIds;
 
 	private CascadedSC cascadedSC;
 
@@ -40,12 +37,12 @@ public class CascadedClient {
 		this.subscriptionId = null;
 		// binary semaphore, has two states: one permit available or zero permits, mutual exclusion lock, works as FIFO
 		this.cascClientSemaphore = new Semaphore(1, true);
-		this.clientSubscriptionIds = new ArrayList<String>();
 		this.cascadedSC = cascadedSC;
 		this.publishService = publishService;
 		this.destroyed = false;
 		this.serviceName = this.publishService.getName();
 		this.subscriptionMask = null;
+		this.clientSubscriptionIds = new HashMap<String, SubscriptionMask>();
 	}
 
 	public boolean isSubscribed() {
@@ -83,11 +80,9 @@ public class CascadedClient {
 	}
 
 	public String evalSubscriptionMaskFromClientSubscriptions() {
-		SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 		byte[] baseMask = null;
-		for (String clientSubscriptionId : clientSubscriptionIds) {
-			Subscription subscription = subscriptionRegistry.getSubscription(clientSubscriptionId);
-			String maskString = subscription.getMask().getValue();
+		for (SubscriptionMask clnMask : clientSubscriptionIds.values()) {
+			String maskString = clnMask.getValue();
 			byte[] mask = maskString.getBytes();
 			if (baseMask == null) {
 				baseMask = mask;
@@ -110,12 +105,12 @@ public class CascadedClient {
 		return this.publishService;
 	}
 
-	public List<String> getClientSubscriptionIds() {
+	public Map<String, SubscriptionMask> getClientSubscriptionIds() {
 		return clientSubscriptionIds;
 	}
 
-	public void addClientSubscriptionId(String clientSubscriptionId) {
-		this.clientSubscriptionIds.add(clientSubscriptionId);
+	public void addClientSubscriptionId(String clientSubscriptionId, SubscriptionMask clientMask) {
+		this.clientSubscriptionIds.put(clientSubscriptionId, clientMask);
 	}
 
 	public void removeClientSubscriptionId(String clientSubscriptionId) {
@@ -143,9 +138,10 @@ public class CascadedClient {
 	}
 
 	/**
-	 * Destroy cascaded client. A cascaded can only be destroyed once. After destroying use of client is forbidden. The service gets
-	 * a new instance of CascadedClient. Destroy should be called having a permit to avoid errors in proceeding
-	 * subscribe/unsubscribe/changeSubscription. Destroy releases any thread waiting for a permit on semaphore.
+	 * Destroy cascaded client. A cascaded can only be destroyed once. After destroying use of client is forbidden. The publish
+	 * service gets a new instance of CascadedClient which holds current subscribers. Destroy should be called having a permit to
+	 * avoid errors in proceeding subscribe/unsubscribe/changeSubscription. Destroy releases any thread waiting for a permit on
+	 * semaphore.
 	 */
 	public void destroy() {
 		if (this.destroyed == true) {
@@ -157,10 +153,8 @@ public class CascadedClient {
 		this.subscribed = false;
 		// release threads waiting for permits, just allow any thread to continue
 		this.cascClientSemaphore.release(Integer.MAX_VALUE);
+		this.publishService.renewCascadedClient(this.clientSubscriptionIds);
 		this.clientSubscriptionIds.clear();
-		// TODO JOT/JAN what to do if client subscriptions are left????
-		// delete the subscription maybe??? or cascaded client renew with current subscriptions
-		this.publishService.renewCascadedClient();
 		this.publishService = null;
 	}
 }

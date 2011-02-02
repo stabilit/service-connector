@@ -42,6 +42,7 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 				// operation failed
 				logger.error("receive publication failed for cascaded client (set to be unsubscribed) service="
 						+ cascClient.getServiceName());
+				this.cascClient.getCascadedSC().unsubscribeCascadedClientInErrorCases(this.cascClient);
 				this.cascClient.destroy();
 				return;
 			}
@@ -67,7 +68,12 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		if (this.cascClient.isDestroyed() == true) {
+			// cascaded client already destroyed ignore exception
+			return;
+		}
+		logger.error(ex);
+		this.cascClient.getCascadedSC().unsubscribeCascadedClientInErrorCases(this.cascClient);
 		// destroy cascaded client, without having a permit!
 		this.cascClient.destroy();
 	}
