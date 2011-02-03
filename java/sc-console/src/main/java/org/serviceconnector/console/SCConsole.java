@@ -34,7 +34,8 @@ public class SCConsole {
 	 *            java -jar scconsole.jar -h localhost -p 7000 disable=abc<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 state=abc<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 sessions=abc<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 clear=abc<br>
+	 *            java -jar scconsole.jar -h localhost -p 7000 dump<br>
+	 *            java -jar scconsole.jar -h localhost -p 7000 clearCache<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 kill<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 dump<br>
 	 *            java -jar scconsole.jar -l log4j-sc.properties -c sc.properties startSC<br>
@@ -97,15 +98,15 @@ public class SCConsole {
 	private static int run(String arg0, String arg1, String bodyString) throws Exception {
 
 		/** The Constant COMMAND_REGEX_STRING. */
-		String regex = "(" + Constants.KILL + "|" + Constants.DUMP + "|("
-				+ Constants.ENABLE + "|" + Constants.DISABLE + "|" + Constants.STATE + "|" + Constants.SESSIONS + "|" + Constants.CLEAR_CACHE + ")"
+		String regex = "(" + Constants.CC_CMD_KILL + "|" + Constants.CC_CMD_DUMP + "|" + Constants.CC_CMD_CLEAR_CACHE + "|("
+				+ Constants.CC_CMD_ENABLE + "|" + Constants.CC_CMD_DISABLE + "|" + Constants.CC_CMD_STATE + "|" + Constants.CC_CMD_SESSIONS + ")"
 				+ Constants.EQUAL_SIGN + "(.*))";
 		int status = 0;
 
 		Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 		Matcher m = pattern.matcher(bodyString);
 		if (!m.matches()) {
-			showError("invalid or no command (enable|disable|state|sessions|startSC|restartSC|kill|dump)");
+			showError("invalid or no command="+bodyString);
 			return 3;
 		}
 		String command = m.group(1);
@@ -114,28 +115,28 @@ public class SCConsole {
 
 		try {
 			SCMgmtClient client = new SCMgmtClient(arg0, Integer.parseInt(arg1), ConnectionType.NETTY_TCP);
-			client.attach(5);
+			client.attach();
 
-			if (command.equalsIgnoreCase(Constants.KILL)) {
+			if (command.equalsIgnoreCase(Constants.CC_CMD_KILL)) {
 				client.killSC();
 				System.out.println("SC exit requested");
-			} else if (command.equalsIgnoreCase(Constants.DUMP)) {
+			} else if (command.equalsIgnoreCase(Constants.CC_CMD_DUMP)) {
 				client.dump();
 				System.out.println("SC dump requested");
 				client.detach();
-			} else if (function.equalsIgnoreCase(Constants.CLEAR_CACHE)) {
-				client.clearCache(serviceName);
-				System.out.println("Cache for service [" + serviceName + "] has been cleared");
+			} else if (command.equalsIgnoreCase(Constants.CC_CMD_CLEAR_CACHE)) {
+				client.clearCache();
+				System.out.println("Cache has been cleared");
 				client.detach();
-			} else if (function.equalsIgnoreCase(Constants.ENABLE)) {
+			} else if (function.equalsIgnoreCase(Constants.CC_CMD_ENABLE)) {
 				client.enableService(serviceName);
 				System.out.println("Service [" + serviceName + "] has been enabled");
 				client.detach();
-			} else if (function.equalsIgnoreCase(Constants.DISABLE)) {
+			} else if (function.equalsIgnoreCase(Constants.CC_CMD_DISABLE)) {
 				client.disableService(serviceName);
 				System.out.println("Service [" + serviceName + "] has been disabled");
 				client.detach();
-			} else if (function.equalsIgnoreCase(Constants.STATE)) {
+			} else if (function.equalsIgnoreCase(Constants.CC_CMD_STATE)) {
 				try {
 					boolean enabled = client.isServiceEnabled(serviceName);
 					if (enabled) {
@@ -148,7 +149,7 @@ public class SCConsole {
 					status = 4;
 				}
 				client.detach();
-			} else if (function.equalsIgnoreCase(Constants.SESSIONS)) {
+			} else if (function.equalsIgnoreCase(Constants.CC_CMD_SESSIONS)) {
 				try {
 					String sessions = client.getWorkload(serviceName);
 					System.out.println("Service [" + serviceName + "] has " + sessions + " sessions");
@@ -168,11 +169,12 @@ public class SCConsole {
 	private static void showError(String msg) {
 		System.err.println("error: " + msg);
 		System.out
-				.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>|dump|kill|restartSC>");
+				.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>clear_cache|dump|kill|restartSC>");
 		System.out.println("\nsamples: java -jar scconsole.jar -h localhost -p 7000 enable=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 disable=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 state=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 sessions=abc");
+		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 clear_cache");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 dump");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 kill");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 restartSC");

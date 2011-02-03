@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -47,8 +48,10 @@ public class ManageCommand extends CommandAdapter {
 	private final static Logger logger = Logger.getLogger(ManageCommand.class);
 
 	/** The Constant MANAGE_REGEX_STRING. */
-	private static final String MANAGE_REGEX_STRING = Constants.DUMP + "|" + "(" + Constants.ENABLE + "|" + Constants.DISABLE + ")"
-			+ Constants.EQUAL_SIGN + "(.*)";
+	private static final String MANAGE_REGEX_STRING = "(" + Constants.CC_CMD_KILL + "|" + Constants.CC_CMD_DUMP + "|" + Constants.CC_CMD_CLEAR_CACHE + "|("
+		+ Constants.CC_CMD_ENABLE + "|" + Constants.CC_CMD_DISABLE + ")"
+		+ Constants.EQUAL_SIGN + "(.*))";
+
 	/** The Constant MANAGE_PATTERN. */
 	private static final Pattern MANAGE_PATTERN = Pattern.compile(MANAGE_REGEX_STRING, Pattern.CASE_INSENSITIVE);
 
@@ -78,12 +81,6 @@ public class ManageCommand extends CommandAdapter {
 		InetAddress localHost = InetAddress.getLocalHost();
 		scmpReply.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 
-		if ((ipAddress.equals(localHost.getHostAddress())) && (bodyString.equalsIgnoreCase(Constants.KILL))) {
-			// kill request is allowed from localhost only!
-			logger.info("SC stopped by kill console command");
-			System.exit(0);
-		}
-
 		Matcher m = MANAGE_PATTERN.matcher(bodyString);
 		if (!m.matches()) {
 			logger.error("wrong manage command body=" + bodyString); // body has bad syntax
@@ -93,15 +90,26 @@ public class ManageCommand extends CommandAdapter {
 			responderCallback.responseCallback(request, response);
 			return;
 		}
-
 		String command = m.group(1);
-		String serviceName = m.group(2);
-		if (command.equals(Constants.DUMP)) {
-			AppContext.dump();
+		String function = m.group(2);
+		String serviceName = m.group(3);
+	
+		// kill command
+		if ((ipAddress.equals(localHost.getHostAddress())) && (command.equalsIgnoreCase(Constants.CC_CMD_KILL))) {
+			// kill request is allowed from localhost only!
+			logger.info("SC stopped by kill console command");
+			System.exit(0);
 		}
-		else if (this.serviceRegistry.containsKey(serviceName)) {
+
+		// other commands
+		if (command.equals(Constants.CC_CMD_DUMP)) {
+			AppContext.dump();
+		} else if (command.equals(Constants.CC_CMD_CLEAR_CACHE)) {
+			CacheManager cacheManager = AppContext.getCacheManager();
+			cacheManager.clearAll();
+		} else if (this.serviceRegistry.containsKey(serviceName)) {
 			// service exists
-			if (command.equalsIgnoreCase(Constants.ENABLE)) {
+			if (function.equalsIgnoreCase(Constants.CC_CMD_ENABLE)) {
 				// enable service
 				logger.info("enable service=" + serviceName);
 				this.serviceRegistry.getService(serviceName).setEnabled(true);

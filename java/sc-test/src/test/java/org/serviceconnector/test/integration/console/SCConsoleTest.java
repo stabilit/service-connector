@@ -375,7 +375,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	public void t22_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", String.valueOf(TestConstants.HOST), "-p", String.valueOf(TestConstants.PORT_SC_HTTP),
-					Constants.STATE + "=something", Constants.STATE + "=something" });
+					Constants.CC_CMD_STATE + "=something", Constants.CC_CMD_STATE + "=something" });
 		} catch (ExitException e) {
 			Assert.assertEquals(1, e.status);
 		}
@@ -390,7 +390,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	public void t23_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_HTTP),
-					Constants.STATE + "=something" });
+					Constants.CC_CMD_STATE + "=something" });
 		} catch (ExitException e) {
 			Assert.assertEquals(5, e.status);
 		}
@@ -405,7 +405,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	public void t24_start() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_MGMT),
-					Constants.STATE + "=something" });
+					Constants.CC_CMD_STATE + "=something" });
 		} catch (ExitException e) {
 			Assert.assertEquals(5, e.status);
 		}
@@ -417,9 +417,9 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	 * Expectation: throws exception with exitCode = 4 "Unknown service" <br>
 	 */
 	@Test
-	public void t25_state() throws Exception {
+	public void t25_stateUnknownService() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP), Constants.STATE + "=gaga" });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP), Constants.CC_CMD_STATE + "=gaga" });
 		} catch (ExitException e) {
 			Assert.assertEquals(4, e.status);
 		}
@@ -427,12 +427,12 @@ public class SCConsoleTest extends IntegrationSuperTest {
 
 	/**
 	 * Description: start console with "-h 127.0.0.1 -p 9000 state=session-1" parameters<br>
-	 * Expectation: passes though with exitCode = 0 "Success" <br>
+	 * Expectation: passes with exitCode = 0 "Success" <br>
 	 */
 	@Test
 	public void t26_state() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", String.valueOf(TestConstants.PORT_SC_TCP), Constants.STATE + "=session-1" });
+			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", String.valueOf(TestConstants.PORT_SC_TCP), Constants.CC_CMD_STATE + "=session-1" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
@@ -440,7 +440,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 
 	/**
 	 * Description: disable and re-enable the session service "session-1"<br>
-	 * Expectation: passes though with exitCode = 0 "Success".<br>
+	 * Expectation: passes with exitCode = 0 "Success".<br>
 	 * Post-condition: session service "session-1" is enabled again
 	 */
 	@Test
@@ -450,14 +450,14 @@ public class SCConsoleTest extends IntegrationSuperTest {
 		client.attach();
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
-					Constants.DISABLE + "=session-1" });
+					Constants.CC_CMD_DISABLE + "=session-1" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
 		Assert.assertEquals(false, client.isServiceEnabled("session-1"));
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
-					Constants.ENABLE + "=session-1" });
+					Constants.CC_CMD_ENABLE + "=session-1" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
@@ -467,13 +467,13 @@ public class SCConsoleTest extends IntegrationSuperTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 sessions=session-1" parameters<br>
-	 * Expectation: passes though with exitCode = 0 "Success" <br>
+	 * Expectation: passes with exitCode = 0 "Success" <br>
 	 */
 	@Test
 	public void t52_sessions_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
-					Constants.SESSIONS + "=session-1" });
+					Constants.CC_CMD_SESSIONS + "=session-1" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
@@ -481,13 +481,13 @@ public class SCConsoleTest extends IntegrationSuperTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 sessions=publish-1<br>
-	 * Expectation: passes though with exitCode = 0 "Success" <br>
+	 * Expectation: passes with exitCode = 0 "Success" <br>
 	 */
 	@Test
 	public void t53_sessions_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
-					Constants.SESSIONS + "=publish-1" });
+					Constants.CC_CMD_SESSIONS + "=publish-1" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
@@ -502,19 +502,48 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	public void t54_sessions_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
-					Constants.SESSIONS + "=notExistingService" });
+					Constants.CC_CMD_SESSIONS + "=notExistingService" });
 		} catch (ExitException e) {
 			Assert.assertEquals(4, e.status);
 		}
 	}
 
 	/**
+	 * Description: start console with "-h localhost -p 9000 dump<br>
+	 * Expectation: passes with exitCode = 0 "Success".<br>
+	 */
+	@Test
+	public void t60_dump_command() throws Exception {
+		try {
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+					Constants.CC_CMD_DUMP});
+		} catch (ExitException e) {
+			Assert.assertEquals(0, e.status);
+		}
+	}
+
+	/**
+	 * Description: start console with "-h localhost -p 9000 clearCache<br>
+	 * Expectation: passes with exitCode = 0 "Success".<br>
+	 */
+	@Test
+	public void t70_clearCache() throws Exception {
+		try {
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+					Constants.CC_CMD_CLEAR_CACHE});
+		} catch (ExitException e) {
+			Assert.assertEquals(0, e.status);
+		}
+	}
+
+	
+	/**
 	 * Description: start console with "-h localhost -p 9000 gaga=notExistingService<br>
 	 * (unknown command)<br>
 	 * Expectation: throws exception with exitCode = 3 "invalid command"<br>
 	 */
 	@Test
-	public void t55_undefined_command() throws Exception {
+	public void t90_undefined_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP), "gaga=notExistingService" });
 		} catch (ExitException e) {
@@ -528,7 +557,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	 * Expectation: throws exception with exitCode = 3 "invalid command" <br>
 	 */
 	@Test
-	public void t56_undefined_command() throws Exception {
+	public void t91_undefined_command() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP), "gaga=session-1" });
 		} catch (ExitException e) {
@@ -538,13 +567,13 @@ public class SCConsoleTest extends IntegrationSuperTest {
 
 	/**
 	 * Description: start console with "-h localhost -p 9000 kill<br>
-	 * Expectation: passes though with exitCode = 0 "Success" <br>
+	 * Expectation: passes with exitCode = 0 "Success" <br>
 	 * Post-condition: SC will be killed!
 	 */
 	@Test
 	public void t99_kill_command() throws Exception {
 		try {
-			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP), Constants.KILL });
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP), Constants.CC_CMD_KILL });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}

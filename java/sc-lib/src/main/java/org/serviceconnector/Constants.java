@@ -188,14 +188,14 @@ public final class Constants {
 	/*
 	 * console command constants *************************
 	 */
-	public static final String DISABLE = "disable";
-	public static final String ENABLE = "enable";
-	public static final String STATE = "state";
-	public static final String SESSIONS = "sessions";
-	public static final String CLEAR_CACHE = "clear";
-	public static final String INSPECT_CACHE = "inspect_cache";
-	public static final String KILL = "kill";
-	public static final String DUMP = "dump";
+	public static final String CC_CMD_DISABLE = "disable";
+	public static final String CC_CMD_ENABLE = "enable";
+	public static final String CC_CMD_STATE = "state";
+	public static final String CC_CMD_SESSIONS = "sessions";
+	public static final String CC_CMD_CLEAR_CACHE = "clearCache";
+	public static final String CC_CMD_INSPECT_CACHE = "inspectCache";
+	public static final String CC_CMD_KILL = "kill";
+	public static final String CC_CMD_DUMP = "dump";
 	public static final String EQUAL_SIGN = "=";
 	public static final String AMPERSAND_SIGN = "&";
 	public static final String URL_ENCODING = "UTF-8";		// TODO SC default is "ISO-8859-1" does it match?

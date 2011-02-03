@@ -96,17 +96,17 @@ public class InspectCommand extends CommandAdapter {
 			responderCallback.responseCallback(request, response);
 			return;
 		}
-		if (bodyString.startsWith(Constants.STATE)) {
+		if (bodyString.startsWith(Constants.CC_CMD_STATE)) {
 			// state for service requested
 			String serviceName = bodyString.substring(6);
 			logger.debug("state request for service:" + serviceName);
 
 			if (this.serviceRegistry.containsKey(serviceName)) {
 				if (this.serviceRegistry.getService(serviceName).isEnabled() == true) {
-					scmpReply.setBody(Constants.ENABLE);
+					scmpReply.setBody(Constants.CC_CMD_ENABLE);
 					logger.debug("service:" + serviceName + "is enabled");
 				} else if (this.serviceRegistry.getService(serviceName).isEnabled() == false) {
-					scmpReply.setBody(Constants.DISABLE);
+					scmpReply.setBody(Constants.CC_CMD_DISABLE);
 					logger.debug("service:" + serviceName + "is disabled");
 				} else {
 					scmpReply.setBody("?");
@@ -121,7 +121,7 @@ public class InspectCommand extends CommandAdapter {
 			responderCallback.responseCallback(request, response);
 			return;
 		}
-		if (bodyString.startsWith(Constants.SESSIONS)) {
+		if (bodyString.startsWith(Constants.CC_CMD_SESSIONS)) {
 			// state for service requested
 			String serviceName = bodyString.substring(9);
 			logger.debug("sessions request for service:" + serviceName);
@@ -139,7 +139,7 @@ public class InspectCommand extends CommandAdapter {
 			responderCallback.responseCallback(request, response);
 			return;
 		}
-		if (Constants.INSPECT_CACHE.equalsIgnoreCase(callKey)) {
+		if (Constants.CC_CMD_INSPECT_CACHE.equalsIgnoreCase(callKey)) {
 			String serviceName = urlCallString.getParameter(0);
 			String cacheId = urlCallString.getParameter(1);
 			logger.debug("cache inspect for serviceName: " + serviceName + ", cacheId:" + cacheId);

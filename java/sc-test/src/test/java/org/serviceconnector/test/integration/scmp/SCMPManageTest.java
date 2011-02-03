@@ -69,7 +69,7 @@ public class SCMPManageTest extends IntegrationSuperTest {
 		TestCallback cbk = new TestCallback();
 
 		// disable service
-		manageCall.setRequestBody(Constants.DISABLE + Constants.EQUAL_SIGN + TestConstants.sesServerName1);
+		manageCall.setRequestBody(Constants.CC_CMD_DISABLE + Constants.EQUAL_SIGN + TestConstants.sesServerName1);
 		manageCall.invoke(cbk, 1000);
 		SCMPMessage result = cbk.getMessageSync(3000);
 		TestUtil.checkReply(result);
@@ -78,7 +78,7 @@ public class SCMPManageTest extends IntegrationSuperTest {
 		TestUtil.verifyError(fault, SCMPError.SERVICE_DISABLED, SCMPMsgType.CLN_CREATE_SESSION);
 
 		// enable service
-		manageCall.setRequestBody(Constants.ENABLE + Constants.EQUAL_SIGN + TestConstants.sesServerName1);
+		manageCall.setRequestBody(Constants.CC_CMD_ENABLE + Constants.EQUAL_SIGN + TestConstants.sesServerName1);
 		manageCall.invoke(cbk, 1000);
 		result = cbk.getMessageSync(3000);
 		TestUtil.checkReply(result);
@@ -94,14 +94,14 @@ public class SCMPManageTest extends IntegrationSuperTest {
 		TestCallback cbk = new TestCallback();
 
 		// disable service
-		manageCall.setRequestBody(Constants.DISABLE + Constants.EQUAL_SIGN + TestConstants.sesServerName1);
+		manageCall.setRequestBody(Constants.CC_CMD_DISABLE + Constants.EQUAL_SIGN + TestConstants.sesServerName1);
 		manageCall.invoke(cbk, 1000);
 		SCMPMessage result = cbk.getMessageSync(3000);
 		TestUtil.checkReply(result);
 
 		// state of enableService
 		SCMPInspectCall inspectCall = new SCMPInspectCall(this.requester);
-		inspectCall.setRequestBody(Constants.STATE + Constants.EQUAL_SIGN + TestConstants.sesServerName1);
+		inspectCall.setRequestBody(Constants.CC_CMD_STATE + Constants.EQUAL_SIGN + TestConstants.sesServerName1);
 		inspectCall.invoke(cbk, 1000);
 		result = cbk.getMessageSync(3000);
 		Assert.assertEquals("DISABLED", result.getBody().toString());
