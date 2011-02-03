@@ -19,6 +19,7 @@
             <th class="sc_table">Port</th>
             <th class="sc_table">Name</th>
             <th class="sc_table">Connection Type</th>
+            <th class="sc_table">Interfaces</th>
             <th class="sc_table">Remote Node</th>            
           </tr>          
           <xsl:if test="not($body/responders/responder)">
@@ -66,6 +67,11 @@
 	    <td class="{$class}"><xsl:value-of select="responderConfig/port"/></td>
 	    <td class="{$class}"><xsl:value-of select="responderConfig/name"/></td>
 	    <td class="{$class}"><xsl:value-of select="responderConfig/connectionType"/></td>
+	    <td class="{$class}">
+	      <xsl:for-each select="responderConfig/interfaces/string">
+	        <xsl:value-of select="."/><br/>
+	      </xsl:for-each>
+	    </td>
 	    <td class="{$class}">
 	      <xsl:choose>  
 	        <xsl:when test="responderConfig/remoteNodeConfiguration/name">

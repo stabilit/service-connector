@@ -405,9 +405,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						continue;
 					}
 					if (value instanceof ListenerConfiguration) {
-						ListenerConfiguration communicatorConfig = (ListenerConfiguration) value;
+						ListenerConfiguration listenerConfig = (ListenerConfiguration) value;
 						writer.writeStartElement(name);
-						this.writeBean(writer, communicatorConfig);
+						this.writeBean(writer, listenerConfig);
 						writer.writeEndElement();
 						continue;
 					}

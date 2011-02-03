@@ -69,7 +69,6 @@ import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.DumpUtility;
-import org.serviceconnector.util.FileUtility;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
