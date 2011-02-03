@@ -19,6 +19,7 @@ package org.serviceconnector.conf;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.server.ServerType;
 import org.serviceconnector.service.ServiceType;
@@ -213,7 +214,12 @@ public class ServiceConfiguration {
 			}
 		case FILE_SERVICE:
 			if (remoteHost != null) {
-				return ServiceType.CASCADED_FILE_SERVICE;
+				RemoteNodeConfiguration remoteNodeConfiguration = AppContext.getRequesterConfiguration()
+						.getRequesterConfigurations().get(remoteHost);
+				if (remoteNodeConfiguration.getServerType() == ServerType.CASCADED_SC) {
+					return ServiceType.CASCADED_FILE_SERVICE;
+				}
+				return serviceType;
 			}
 		}
 		return serviceType;
