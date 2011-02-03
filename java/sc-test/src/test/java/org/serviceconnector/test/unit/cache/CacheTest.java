@@ -55,8 +55,8 @@ public class CacheTest extends CacheSuperUnitTest {
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		Date expirationDate = DateTimeUtility.getIncrementTimeMillis(new Date(), +TimeMillis.HOUR.getMillis());
-		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
-				DateTimeUtility.getDateTimeAsString(expirationDate));
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility
+				.getDateTimeAsString(expirationDate));
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
@@ -99,7 +99,6 @@ public class CacheTest extends CacheSuperUnitTest {
 	/**
 	 * Description: Simple cache write test into two separate cache instances (Cache). Write the same message into two cache
 	 * instances using dummy nr and id. Read both messages from its cache instance and check for equality.<br>
-	 * 
 	 * Expectation: passes
 	 */
 	@Test
@@ -113,8 +112,8 @@ public class CacheTest extends CacheSuperUnitTest {
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 		Date expirationDate = DateTimeUtility.getIncrementTimeMillis(new Date(), +TimeMillis.HOUR.getMillis());
-		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
-				DateTimeUtility.getDateTimeAsString(expirationDate));
+		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, DateTimeUtility
+				.getDateTimeAsString(expirationDate));
 		CacheId msgCacheId1 = scmpCache1.putMessage(scmpMessageWrite);
 		CacheId msgCacheId2 = scmpCache2.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
@@ -136,7 +135,6 @@ public class CacheTest extends CacheSuperUnitTest {
 	 * instances were assigned to this composite node. This test reads the composite and tries to get all assigned part messages.
 	 * Each part message will be identified by a concatenated key using format CACHE_ID/SEQUENCE NR. All messages bodies were tested
 	 * for equality.<br>
-	 * 
 	 * Expectation: passes
 	 */
 	@Test
@@ -184,7 +182,6 @@ public class CacheTest extends CacheSuperUnitTest {
 
 	/**
 	 * Description: Huge message (parts) cache write test.<br>
-	 * 
 	 * Expectation: passes
 	 * 
 	 * @see CacheTest#testPartSCMPCacheWrite()
@@ -234,7 +231,6 @@ public class CacheTest extends CacheSuperUnitTest {
 
 	/**
 	 * Description: Large message (parts) cache write test using iterator.<br>
-	 * 
 	 * Expectation: passes
 	 * 
 	 * @see CacheTest#testPartSCMPCacheWrite()
