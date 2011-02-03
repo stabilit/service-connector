@@ -76,7 +76,7 @@ public class SCMPMessageFault extends SCMPMessage {
 		this.setError(error);
 		this.exception = e;
 	}
-	
+
 	/**
 	 * Instantiates a new SCMP fault.
 	 * 
@@ -135,14 +135,15 @@ public class SCMPMessageFault extends SCMPMessage {
 
 	/**
 	 * Sets the error.
-	 *
-	 * @param scmpError the scmp error
-	 * @param additionalInfo the additional info
+	 * 
+	 * @param scmpError
+	 *            the scmp error
+	 * @param additionalInfo
+	 *            the additional info
 	 */
 	public void setError(SCMPError scmpError, String additionalInfo) {
 		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), scmpError.getErrorCode());
-		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getValue(), scmpError.getErrorText() + " ["
-				+ additionalInfo + "]");
+		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getValue(), scmpError.getErrorText() + " [" + additionalInfo + "]");
 	}
 
 	/**
@@ -154,5 +155,11 @@ public class SCMPMessageFault extends SCMPMessage {
 	public void setError(SCMPError scmpError) {
 		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_CODE.getValue(), scmpError.getErrorCode());
 		this.header.put(SCMPHeaderAttributeKey.SC_ERROR_TEXT.getValue(), scmpError.getErrorText());
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return super.toString() + " SCMPMessageFault [exception=" + exception + "]";
 	}
 }

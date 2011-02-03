@@ -521,10 +521,13 @@ public class SCMPMessage {
 
 	/**
 	 * Sets the body.
-	 *
-	 * @param buffer the buffer
-	 * @param offset the offset
-	 * @param length the length
+	 * 
+	 * @param buffer
+	 *            the buffer
+	 * @param offset
+	 *            the offset
+	 * @param length
+	 *            the length
 	 */
 	public void setBody(byte[] buffer, int offset, int length) {
 		if (buffer == null) {
@@ -595,11 +598,7 @@ public class SCMPMessage {
 		return 0;
 	}
 
-	/**
-	 * To string.
-	 * 
-	 * @return the string {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -656,5 +655,4 @@ public class SCMPMessage {
 	public void setIsReply(boolean isReply) {
 		this.isReply = isReply;
 	}
-
 }

@@ -116,4 +116,11 @@ public abstract class HasFaultResponseException extends Exception {
 			logger.warn("not possible to set service name in EXC of execute command.");
 		}
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return super.toString() + " HasFaultResponseException [fault=" + fault + "]";
+	}
+
 }

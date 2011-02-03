@@ -189,7 +189,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 				if (scmpCache == null) {
 					this.logger.error("cache write failed, no cache, service name = " + this.requestServiceName);
 				} else {
-					// an exception did occure, remove those composite from cache
+					// an exception did occur, remove those composite from cache
 					// remove request cacheId from cache
 					CacheComposite cacheComposite = scmpCache.getComposite(this.requestCacheId);
 					if (cacheComposite != null) {
@@ -202,7 +202,6 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 				CacheLogger.debug("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
 				this.logger.error(e.toString());
 			}
-
 		}
 		this.responderCallback.responseCallback(request, response);
 	}

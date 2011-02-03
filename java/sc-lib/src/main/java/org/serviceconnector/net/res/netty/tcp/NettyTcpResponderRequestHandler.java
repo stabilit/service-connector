@@ -67,12 +67,14 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 		}
 		if (th instanceof java.io.IOException) {
 			logger.warn(th.toString()); // regular disconnect causes this expected exception
+			return;
 		} else {
 			logger.error("Response error", th);
 		}
 		if (th instanceof HasFaultResponseException) {
 			((HasFaultResponseException) th).setFaultResponse(response);
 			response.write();
+			return;
 		}
 		SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SC_ERROR, th.getMessage());
 		fault.setMessageType(SCMPMsgType.UNDEFINED);

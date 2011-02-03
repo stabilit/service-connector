@@ -154,7 +154,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 				logger.error("Sending a response failed.", ex);
 			}
 		} catch (Exception e2) {
-			logger.warn("run " + e2.toString());
+			logger.error("run ", e2);
 			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, e2.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();

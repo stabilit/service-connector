@@ -16,7 +16,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 
 /**
- * The Class ClnExecuteCommandProxyCallback.
+ * The Class ClnExecuteCommandCascCallback.
  */
 public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 
@@ -28,7 +28,7 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 	private int requestOTI;
 
 	/**
-	 * Instantiates a new ClnExecuteCommandProxyCallback.
+	 * Instantiates a new ClnExecuteCommandCascCallback.
 	 * 
 	 * @param request
 	 *            the request

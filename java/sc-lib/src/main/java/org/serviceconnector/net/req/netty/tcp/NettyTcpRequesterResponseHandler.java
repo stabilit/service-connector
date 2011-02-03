@@ -74,7 +74,6 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			NettyTcpRequesterResponseHandlerTask responseHandlerTask = new NettyTcpRequesterResponseHandlerTask((ChannelBuffer) e
 					.getMessage());
 			AppContext.getExecutor().submit(responseHandlerTask);
-			// this.responseReceived((ChannelBuffer) e.getMessage());
 			return;
 		}
 		// unsolicited input, message not expected - race condition
@@ -89,7 +88,8 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			Exception ex = (Exception) th;
 			if (this.pendingRequest) {
 				this.pendingRequest = false;
-				this.scmpCallback.receive(ex);
+				NettyTcpRequesterErrorHandlerTask errorHandler = new NettyTcpRequesterErrorHandlerTask(ex);
+				AppContext.getExecutor().submit(errorHandler);
 				return;
 			}
 			if (ex instanceof IdleTimeoutException) {
@@ -132,15 +132,36 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
 				IEncoderDecoder encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(buffer);
 				ret = (SCMPMessage) encoderDecoder.decode(bais);
-			} catch (Exception ex) {
-				logger.warn("receive" + ex.toString());
-				NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ex);
-				return;
-			}
-			try {
 				NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ret);
-			} catch (Exception e) {
-				NettyTcpRequesterResponseHandler.this.scmpCallback.receive(e);
+			} catch (Throwable th) {
+				logger.error("receive message", th);
+				if ((th instanceof Exception) == false) {
+					try {
+						NettyTcpRequesterResponseHandler.this.scmpCallback.receive((Exception) th);
+					} catch (Throwable th1) {
+						logger.error("receive exception", th);
+					}
+				}
+			}
+		}
+	}
+
+	private class NettyTcpRequesterErrorHandlerTask implements Runnable {
+
+		private Exception exception;
+
+		public NettyTcpRequesterErrorHandlerTask(Exception exception) {
+			this.exception = exception;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void run() {
+			logger.error("receive exception", exception);
+			try {
+				NettyTcpRequesterResponseHandler.this.scmpCallback.receive(exception);
+			} catch (Throwable th) {
+				logger.error("receive exception", th);
 			}
 		}
 	}
