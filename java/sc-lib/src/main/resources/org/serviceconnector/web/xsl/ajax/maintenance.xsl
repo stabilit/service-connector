@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:include href="maintenance.xsl"/>
+    <xsl:variable name="action" select="$head/query/param/@action"/>
     <xsl:variable name="serviceParam" select="$head/query/param/@service"/>
     <xsl:template match="/">      
       <xsl:choose>
-        <xsl:when test="$serviceParam">
+        <xsl:when test="$action = 'sc_dump_list'">
+          <xsl:call-template name="scDumpList"/>
+        </xsl:when>
+        <xsl:when test="$action = 'sc_property_download'">
           <xsl:call-template name="downloadPropertyFile"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:call-template name="sc_content"/>
+          Invalid action [<xsl:value-of select="$action"/>]
         </xsl:otherwise>
       </xsl:choose>
 	</xsl:template>
@@ -19,9 +23,9 @@
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
-	            <th class="sc_table">File Service Listing (Remote)</th>
-	            <th class="sc_table">&#160;</th>
 	            <th class="sc_table">SC Configuration Listing (Local)</th>
+	            <th class="sc_table">&#160;</th>
+	            <th class="sc_table">File Service Listing (Remote)</th>
 	          </tr>
 	          <tr>
 	            <td valign="top">
@@ -39,7 +43,7 @@
 	              </table>
 	            </td>
 	            <td valign="top" style="text-align:center;width:100px;">
-	              <input class="sc_form_button" style="height:80px; margin:10px;" name="DownloadAndReplace" type="button" value="&lt;&lt; Download and Replace Selected &lt;&lt;" onclick="javascript:downloadAndReplaceSelected('{$serviceParam}')"></input>
+	              <input class="sc_form_button_download" name="DownloadAndReplace" type="button" value="&lt;&lt;" onclick="javascript:downloadAndReplaceSelected('{$serviceParam}')"></input>
 	            </td>
 	            <td valign="top">
 	              <table border="0" cellspacing="0" cellpadding="0" style="background:white; width:100%;border-right:1px solid #666666">
@@ -55,7 +59,49 @@
 	            </td>
 	          </tr>          
 	        </table>
-        </div>
-	  
+        </div>	  
 	</xsl:template>
+	<xsl:template name="scDumpList">
+	    <div class="sc_table">
+	       <div class="sc_table_title">
+	          SC Dump List [<xsl:value-of select="$body/dumplist/path"/>]
+	       </div>
+           <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
+             <tr class="sc_table_header">
+               <th class="sc_table" style="width:20px;">Nr</th>
+               <th class="sc_table">Name</th>
+               <th class="sc_table">Last Modified</th>
+               <th class="sc_table">Size</th>
+             </tr>
+             <xsl:if test="count($body/dumplist/files/file) &lt;= 0">
+	           <tr class="sc_table_even"><td class="sc_table_even" colspan="3">no dump files</td></tr>               
+             </xsl:if>
+             <xsl:apply-templates select="$body/dumplist/files/file">
+             </xsl:apply-templates>
+           </table>
+         </div>
+	</xsl:template>
+	<xsl:template match="dumplist/files/file">
+	  <xsl:if test="position() mod 2 = 0">
+	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
+	        <xsl:call-template name="dump_file_row">
+	          <xsl:with-param name="class">sc_table_even</xsl:with-param>
+	        </xsl:call-template>
+	     </tr>	    
+	  </xsl:if>
+	  <xsl:if test="position() mod 2 != 0">
+	     <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
+	        <xsl:call-template name="dump_file_row">
+	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
+	        </xsl:call-template>
+	     </tr>	    
+	  </xsl:if>
+	</xsl:template>	
+	<xsl:template name="dump_file_row">
+	    <xsl:param name="class"/>
+	    <td class="{$class}"><xsl:value-of select="position()"/></td>	    
+	    <td class="{$class}"><a class="sc_table" href="./dump?name={name}" target="{name}"><xsl:value-of select="name"/></a></td>	    
+	    <td class="{$class}"><xsl:value-of select="lastModified"/></td>	    
+	    <td class="{$class}"><xsl:value-of select="length"/></td>	    
+	</xsl:template>	
 </xsl:stylesheet>

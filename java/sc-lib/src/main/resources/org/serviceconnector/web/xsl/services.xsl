@@ -58,7 +58,12 @@
 	</xsl:template>
 	<xsl:template name="service_row">
 	    <xsl:param name="class"/>
-	    <td class="{$class}"><xsl:value-of select="state"/></td>
+	    <td class="{$class}">
+	      <xsl:choose>
+	        <xsl:when test="enabled = 'true'">Enabled</xsl:when>
+	        <xsl:otherwise>Disabled</xsl:otherwise>
+	      </xsl:choose>
+	    </td>
 	    <td class="{$class}"><xsl:value-of select="type"/></td>	    
 	    <xsl:choose>
 	      <xsl:when test="countServers &gt; 0">

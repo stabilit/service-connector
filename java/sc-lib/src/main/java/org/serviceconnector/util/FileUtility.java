@@ -16,7 +16,10 @@
 package org.serviceconnector.util;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -220,4 +223,23 @@ public class FileUtility {
 		}
 		return path;
 	}
+
+	/**
+	 * Read file to writer.
+	 *
+	 * @param filePath the file path
+	 * @param writer the writer
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public static void readFileToWriter(String filePath, Writer writer) throws IOException {
+		FileReader fr = new FileReader(filePath);
+		char[] buffer = new char[1 << 16];
+		int bytesRead = -1;
+        while ((bytesRead = fr.read(buffer)) != -1) {
+           writer.write(buffer, 0, bytesRead);
+        }
+        fr.close();		
+        return;
+	}
+
 }

@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -35,6 +35,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.log4j.Logger;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.conf.ListenerConfiguration;
+import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.connection.IConnection;
@@ -301,10 +302,14 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 				continue;
 			}
 			String name = method.getName();
-			if (name.startsWith("get") == false) {
+			if (name.startsWith("get") == false && name.startsWith("is") == false) {
 				continue;
 			}
-			name = String.valueOf(name.charAt(3)).toLowerCase() + name.substring(4);
+			if (name.startsWith("get")) {
+			   name = String.valueOf(name.charAt(3)).toLowerCase() + name.substring(4);
+			} else {
+			   name = String.valueOf(name.charAt(2)).toLowerCase() + name.substring(3);				
+			}
 			if ("class".equals(name)) {
 				continue;
 			}
@@ -403,6 +408,13 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						ListenerConfiguration communicatorConfig = (ListenerConfiguration) value;
 						writer.writeStartElement(name);
 						this.writeBean(writer, communicatorConfig);
+						writer.writeEndElement();
+						continue;
+					}
+					if (value instanceof RemoteNodeConfiguration) {
+						RemoteNodeConfiguration remoteNodeConfiguration = (RemoteNodeConfiguration) value;
+						writer.writeStartElement(name);
+						this.writeBean(writer, remoteNodeConfiguration);
 						writer.writeEndElement();
 						continue;
 					}

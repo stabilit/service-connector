@@ -73,7 +73,7 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 		if (ce != null) {
 			String encodedCookies = ce.encode();
 			if (encodedCookies != null && encodedCookies.length() > 0) {
-				logger.debug(encodedCookies);
+				//logger.debug(encodedCookies);
 				httpResponse.addHeader("Set-Cookie", encodedCookies);
 			}
 		}

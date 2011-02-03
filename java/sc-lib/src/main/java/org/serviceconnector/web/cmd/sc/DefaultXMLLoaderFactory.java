@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.web.cmd.sc;
 
@@ -68,6 +68,8 @@ import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.util.DateTimeUtility;
+import org.serviceconnector.util.DumpUtility;
+import org.serviceconnector.util.FileUtility;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
@@ -111,6 +113,8 @@ public class DefaultXMLLoaderFactory {
 		this.addXMLLoader("/cache", loader);
 		loader = new MaintenanceXMLLoader();
 		this.addXMLLoader("/maintenance", loader);
+		loader = new DumpXMLLoader();
+		this.addXMLLoader("/dump", loader);
 		loader = new AjaxResourceXMLLoader();
 		this.addXMLLoader("/ajax/resource", loader);
 		loader = new TimerXMLLoader();
@@ -379,7 +383,7 @@ public class DefaultXMLLoaderFactory {
 				writer.writeEndElement();
 				writer.writeStartElement("endPoints");
 				List<IEndpoint> endPointList = responder.getEndpoints();
-				for (IEndpoint endPoint : endPointList) {					
+				for (IEndpoint endPoint : endPointList) {
 					writer.writeStartElement("endPoint");
 					this.writeBean(writer, endPoint);
 					writer.writeEndElement();
@@ -423,10 +427,10 @@ public class DefaultXMLLoaderFactory {
 			String dateParameter = request.getParameter("date");
 			Calendar cal = Calendar.getInstance();
 			cal.set(Calendar.HOUR_OF_DAY, 0);
-	        cal.set(Calendar.MINUTE, 0);
-	        cal.set(Calendar.SECOND, 0);
-	        cal.set(Calendar.MILLISECOND,0);
-	        Date today = cal.getTime();
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			Date today = cal.getTime();
 			Date current = today;
 			if (dateParameter != null) {
 				current = WebUtil.getXMLDateFromString(dateParameter);
@@ -670,6 +674,43 @@ public class DefaultXMLLoaderFactory {
 	}
 
 	/**
+	 * The Class DumpXMLLoader.
+	 */
+	public static class DumpXMLLoader extends AbstractXMLLoader {
+
+		/**
+		 * Instantiates a new default xml loader.
+		 */
+		public DumpXMLLoader() {
+		}
+		
+		@Override
+		public void loadBody(Writer writer, IWebRequest request) throws Exception {
+			String name = request.getParameter("name");
+			String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
+			DumpUtility.readDumpFileToWriter(dumpPath, name, writer);
+			return;
+		}
+
+
+
+		@Override
+		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			throw new UnsupportedOperationException("not supported");
+		}
+		
+		@Override
+		public boolean isText() {
+			return true;
+		}
+
+		@Override
+		public IFactoryable newInstance() {
+			return new DumpXMLLoader();
+		}
+	}
+
+	/**
 	 * The Class MaintenanceXMLLoader.
 	 */
 	public static class MaintenanceXMLLoader extends AbstractXMLLoader {
@@ -883,6 +924,34 @@ public class DefaultXMLLoaderFactory {
 					writer.writeCharacters("GC did run.");
 					writer.writeEndElement(); // message
 					writer.writeEndElement(); // messages
+					return;
+				}
+				if ("dump".equals(action)) {
+					logger.debug("SC dump by user interface");
+					try {
+						String dumpPath = AppContext.dump();
+						writer.writeStartElement("status");
+						writer.writeCharacters("success");
+						writer.writeEndElement();
+						writer.writeStartElement("messages");
+						writer.writeStartElement("message");
+						writer.writeCharacters("SC dump done.");
+						writer.writeEndElement(); // message
+						writer.writeStartElement("message");
+						writer.writeCharacters(dumpPath);
+						writer.writeEndElement(); // message
+						writer.writeEndElement(); // messages
+					} catch (Exception e) {
+						writer.writeStartElement("status");
+						writer.writeCharacters("failure");
+						writer.writeEndElement();
+						writer.writeStartElement("messages");
+						writer.writeStartElement("message");
+						writer.writeCharacters(e.toString());
+						writer.writeEndElement(); // message
+						writer.writeEndElement(); // messages
+					}
+					return;
 				}
 				if ("terminate".equals(action)) {
 					logger.debug("SC terminated by user interface");
@@ -896,6 +965,20 @@ public class DefaultXMLLoaderFactory {
 					writer.writeEndElement(); // messages
 					System.exit(1);
 				}
+				if ("clearDump".equals(action)) {
+					logger.debug("clear dump by user interface");
+					String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
+					DumpUtility.deleteAllDumpFiles(dumpPath);
+					writer.writeStartElement("status");
+					writer.writeCharacters("success");
+					writer.writeEndElement();
+					writer.writeStartElement("messages");
+					writer.writeStartElement("message");
+					writer.writeCharacters("Dump has been cleared.");
+					writer.writeEndElement(); // message
+					writer.writeEndElement(); // messages
+					return;
+				}
 				if ("resetCache".equals(action)) {
 					logger.debug("reset cache by user interface");
 					CacheManager cacheManager = AppContext.getCacheManager();
@@ -908,6 +991,7 @@ public class DefaultXMLLoaderFactory {
 					writer.writeCharacters("Cache has been cleared.");
 					writer.writeEndElement(); // message
 					writer.writeEndElement(); // messages
+					return;
 				}
 				if ("resetTranslet".equals(action)) {
 					logger.debug("reset translet by user interface");
@@ -920,6 +1004,7 @@ public class DefaultXMLLoaderFactory {
 					writer.writeCharacters("Translet have been reset.");
 					writer.writeEndElement(); // message
 					writer.writeEndElement(); // messages
+					return;
 				}
 				if ("downloadAndReplace".equals(action)) {
 					logger.debug("download and replace configuration");
@@ -927,6 +1012,7 @@ public class DefaultXMLLoaderFactory {
 					writer.writeStartElement("status");
 					writer.writeCharacters("success");
 					writer.writeEndElement();
+					return;
 				}
 			} catch (Exception e) {
 				writer.writeStartElement("status");
@@ -937,8 +1023,9 @@ public class DefaultXMLLoaderFactory {
 				writer.writeCharacters(e.getMessage());
 				writer.writeEndElement(); // message
 				writer.writeEndElement(); // messages
+			} finally {
+				writer.writeEndElement();
 			}
-			writer.writeEndElement();
 		}
 
 		/** {@inheritDoc} */
@@ -984,9 +1071,9 @@ public class DefaultXMLLoaderFactory {
 							if (configFile.isAbsolute()) {
 								localDestionationFile = new File(configFile.getParent() + File.separator + file);
 							} else {
-								URL resourceURL = WebUtil.getResourceURL(configFileName);							
+								URL resourceURL = WebUtil.getResourceURL(configFileName);
 								File resourceURLFile = new File(resourceURL.toURI());
-								localDestionationFile = new File(resourceURLFile.getParent() + File.separator + file); 
+								localDestionationFile = new File(resourceURLFile.getParent() + File.separator + file);
 							}
 							downloadAndReplaceSingleFile(writer, downloadURL, localDestionationFile);
 						} catch (Exception e) {
@@ -1097,6 +1184,29 @@ public class DefaultXMLLoaderFactory {
 		/** {@inheritDoc} */
 		@Override
 		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			String action = request.getParameter("action");
+			if (action == null) {
+				throw new InvalidParameterException("action parameter missing");
+			}
+			if ("sc_property_download".equals(action)) {
+				loadDownloadBody(writer, request);
+				return;
+			}
+			if ("sc_dump_list".equals(action)) {
+				loadDumpListBody(writer, request);
+				return;
+			}
+			throw new InvalidParameterException("action parameter is invalid or unknown (action=" + action + ")");
+		}
+
+		/**
+		 * load body data for download action
+		 * 
+		 * @param writer
+		 * @param request
+		 * @throws Exception
+		 */
+		private void loadDownloadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			String serviceName = request.getParameter("service");
 			if (serviceName == null) {
 				throw new InvalidParameterException("service parameter missing");
@@ -1152,8 +1262,46 @@ public class DefaultXMLLoaderFactory {
 				}
 				writer.writeEndElement(); // close resource tag
 			}
-
 		}
+
+		/**
+		 * load body data for dump list action
+		 * 
+		 * @param writer
+		 * @param request
+		 * @throws Exception
+		 */
+		private void loadDumpListBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
+			File[] files = DumpUtility.getDumpFiles(dumpPath);
+			writer.writeStartElement("dumplist");
+			writer.writeStartElement("path");
+			writer.writeCData(dumpPath);
+			writer.writeEndElement(); // close path tag
+			if (files != null) {
+				writer.writeStartElement("files");
+				for (int i = 0; i < files.length; i++) {
+					if (files[i].isFile()) {
+						writer.writeStartElement("file");
+						writer.writeStartElement("name");
+						writer.writeCData(files[i].getName());
+						writer.writeEndElement(); // close name tag
+						writer.writeStartElement("length");
+						writer.writeCData(String.valueOf(files[i].length()));
+						writer.writeEndElement(); // close length tag
+						writer.writeStartElement("lastModified");
+						Date lastModifiedDate = new Date(files[i].lastModified());
+						writer.writeCData(DateTimeUtility.getDateTimeAsString(lastModifiedDate));
+						writer.writeEndElement(); // close last modified tag
+						writer.writeEndElement(); // close file tag
+					}
+				}
+				writer.writeEndElement(); // close files tag
+			}
+			writer.writeEndElement(); // close dumplist tag
+			return;
+		}
+
 	}
 
 }

@@ -253,6 +253,14 @@ div#sc_resource {
 	padding: 4px;
 }
 
+.sc_form_button_download {
+	width:80px;
+	height:80px;
+	color: black;
+	margin:10px;
+	padding: 4px;
+}
+
 .sc_error {
 	background: #FFDDDD;
 	border-bottom: 1px solid #B61F34;
@@ -270,6 +278,7 @@ div.sc_table {
 }
 
 table.sc_table {
+	color:black;
 	width: 100%;
 	padding: 0px;
 }

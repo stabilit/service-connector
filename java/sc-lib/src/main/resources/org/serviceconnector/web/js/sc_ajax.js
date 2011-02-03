@@ -55,6 +55,18 @@ function runGC() {
 	ajaxSystem.ajaxCall('ajax/system?action=gc');	
 }
 
+function scDump() {
+	ajaxSystem.ajaxCall('ajax/system?action=dump');	
+}
+
+function scDumpClear() {
+	var check = window.confirm("Clear all SC dump files! Are you sure?");
+	if (check == false) {
+		return;
+    }
+	ajaxSystem.ajaxCall('ajax/system?action=clearDump');	
+}
+
 function terminateSC() {
 	var check = window.confirm("Terminate SC! Are you sure?");
 	if (check == false) {
@@ -121,6 +133,12 @@ function systemCallback() {
 		if (service != null) {
 		    maintenanceCall(service);
 		}
+	}
+	if (action == "dump") {
+	    maintenanceCall("sc_dump_list");
+	}
+	if (action == "clearDump") {
+	    maintenanceCall("sc_dump_list");
 	}
    	setStatusSuccess();
 }
@@ -193,8 +211,8 @@ function maintenanceCallback() {
 	}
 }
 
-function maintenanceCall(service, query) {
-	ajaxMaintenance.ajaxCall('ajax/maintenance?service='+service + '&' + query);
+function maintenanceCall(action, service, query) {
+	ajaxMaintenance.ajaxCall('ajax/maintenance?action=' + action + '&service='+service + '&' + query);
 }
 
 var ajaxMaintenance = new AjaxCallObject('Maintenanace', 'ajax/maintenance', maintenanceCallback, errorCallback);

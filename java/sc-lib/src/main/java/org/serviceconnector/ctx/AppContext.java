@@ -421,8 +421,8 @@ public final class AppContext {
 	/**
 	 * dumps the entire application context.
 	 */
-	public static void dump() {
-		String dumpPath = AppContext.basicConfiguration.getDumpPath();
+	public static String dump() throws IOException {
+		String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
 		Calendar cal = Calendar.getInstance();
 		Date now = cal.getTime();
 		String fs = System.getProperty("file.separator");
@@ -439,11 +439,14 @@ public final class AppContext {
 				writer.write("dummy");
 				writer.close();
 				logger.info("SC dump created into file=" + dumpPath);
+				return dumpFileName;
 			} else {
 				logger.error("Creating SC dump file =" + dumpPath + " failed, can not create directory");
+				throw new IOException("Creating SC dump file =" + dumpPath + " failed, can not create directory");
 			}
 		} catch (IOException e) {
 			logger.error("Creating SC dump file =" + dumpPath + " failed.", e);
+			throw e;
 		}
 	}
 }

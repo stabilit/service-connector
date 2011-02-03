@@ -3,10 +3,10 @@
     <xsl:import href="template.xsl"/>
     <xsl:variable name="body" select="/sc-web/body"/>
     <xsl:variable name="head" select="/sc-web/head"/>
-    <xsl:variable name="remoteHost" select="$head/query/param/@remoteHost"/>
+    <xsl:variable name="remoteNode" select="$head/query/param/@remoteNode"/>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('listeners', 'remoteHost=<xsl:value-of select="$remoteHost"/>)", 10000);      
+      setInterval("contentCall('listeners', 'remoteNode=<xsl:value-of select="$remoteNode"/>)", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table max_width">
@@ -19,13 +19,13 @@
             <th class="sc_table">Port</th>
             <th class="sc_table">Name</th>
             <th class="sc_table">Connection Type</th>
-            <th class="sc_table">Remote Host</th>            
+            <th class="sc_table">Remote Node</th>            
           </tr>          
           <xsl:if test="not($body/responders/responder)">
             <tr class="sc_table_even"><td colspan="7" class="sc_table">no listeners</td></tr>
           </xsl:if>          
           <xsl:apply-templates select="$body/responders/responder"/>
-          <xsl:if test="string-length($remoteHost) &gt; 0">
+          <xsl:if test="string-length($remoteNode) &gt; 0">
             <tr>
                <xsl:call-template name="responder_details"/>
             </tr>
@@ -68,11 +68,11 @@
 	    <td class="{$class}"><xsl:value-of select="responderConfig/connectionType"/></td>
 	    <td class="{$class}">
 	      <xsl:choose>  
-	        <xsl:when test="responderConfig/remoteHostConfiguration/name">
-	          <a class="sc_table" href="listeners?remoteHost={responderConfig/remoteHostConfiguration/name}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="responderConfig/remoteHostConfiguration/name"/></xsl:call-template></a>
+	        <xsl:when test="responderConfig/remoteNodeConfiguration/name">
+	          <a class="sc_table" href="listeners?remoteNode={responderConfig/remoteNodeConfiguration/name}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="responderConfig/remoteNodeConfiguration/name"/></xsl:call-template></a>
 	        </xsl:when>
 	        <xsl:otherwise>
-	          <xsl:call-template name="fieldValue"><xsl:with-param name="value" select="responderConfig/remoteHostConfiguration/name"/></xsl:call-template>
+	          <xsl:call-template name="fieldValue"><xsl:with-param name="value" select="responderConfig/remoteNodeConfiguration/name"/></xsl:call-template>
 	        </xsl:otherwise>
 	      </xsl:choose>
 	    </td>
@@ -81,29 +81,29 @@
 	  <td colspan="7">
 	  <div class="sc_table_details">
 	    <div class="sc_table_title">
-	         Remote Host Configuration [<xsl:value-of select="$remoteHost"/>]
+	         Remote Node Configuration [<xsl:value-of select="$remoteNode"/>]
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">          
             <th class="sc_table">Name</th>
-            <th class="sc_table">Interfaces</th>
+            <th class="sc_table">Host</th>
             <th class="sc_table">Port</th>            
+            <th class="sc_table">serverType</th>            
             <th class="sc_table">connectionType</th>            
             <th class="sc_table">maxPoolSize</th>            
-            <th class="sc_table">keepAliveInterval</th>            
+            <th class="sc_table">keepAliveInterval (s)</th>            
+            <th class="sc_table">maxSessions</th>            
           </tr>
           <tr>
-            <xsl:variable name="remoteHostConfiguration" select="$body/responders/responder/responderConfig/remoteHostConfiguration[name = $remoteHost]"/>
-            <td class="sc_table"><xsl:value-of select="$remoteHostConfiguration/name"/></td>
-            <td class="sc_table">
-	          <xsl:for-each select="$remoteHostConfiguration/interfaces">
-	            <xsl:value-of select="string"/><br/>
-	          </xsl:for-each>	                
-            </td>
-            <td class="sc_table"><xsl:value-of select="$remoteHostConfiguration/port"/></td>            
-            <td class="sc_table"><xsl:value-of select="$remoteHostConfiguration/connectionType"/></td>            
-            <td class="sc_table"><xsl:value-of select="$remoteHostConfiguration/maxPoolSize"/></td>            
-            <td class="sc_table"><xsl:value-of select="$remoteHostConfiguration/keepAliveInterval"/></td>            
+            <xsl:variable name="remoteNodeConfiguration" select="$body/responders/responder/responderConfig/remoteNodeConfiguration[name = $remoteNode]"/>
+            <td class="sc_table"><xsl:value-of select="$remoteNodeConfiguration/name"/></td>
+            <td class="sc_table"><xsl:value-of select="$remoteNodeConfiguration/host"/></td>            
+            <td class="sc_table"><xsl:value-of select="$remoteNodeConfiguration/port"/></td>            
+            <td class="sc_table"><xsl:value-of select="$remoteNodeConfiguration/serverType"/></td>            
+            <td class="sc_table"><xsl:value-of select="$remoteNodeConfiguration/connectionType"/></td>            
+            <td class="sc_table"><xsl:value-of select="$remoteNodeConfiguration/maxPoolSize"/></td>            
+            <td class="sc_table"><xsl:value-of select="$remoteNodeConfiguration/keepAliveIntervalSeconds"/></td>            
+            <td class="sc_table"><xsl:value-of select="$remoteNodeConfiguration/maxSessions"/></td>            
           </tr>          
         </table>
        </div>	  

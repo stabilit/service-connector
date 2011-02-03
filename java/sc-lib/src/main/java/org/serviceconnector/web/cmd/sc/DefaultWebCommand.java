@@ -72,7 +72,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		// check if session is available
 		String url = request.getURL();
 		if (url != null) {
-			logger.debug(url);
+			//logger.debug(url);
 		} else {
 			logger.warn("url is null");
 		}
@@ -510,7 +510,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			if (transformer == null) {
 				transformer = XSLTTransformerFactory.getInstance().newTransformer(this.getXSLPath(""));				
 			} else {
-				logger.debug("transform using xslt " + xslPath);
+				//logger.debug("transform using xslt " + xslPath);
 			}
 			if (transformer == null) {
                 throw new NotFoundException("xslt resource " + xslPath + " not found");
