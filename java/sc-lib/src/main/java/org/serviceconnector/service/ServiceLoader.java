@@ -47,7 +47,7 @@ public class ServiceLoader {
 	 * Loads services from a file.
 	 * 
 	 * @param config
-	 *            the config
+	 *            the configuration
 	 * @throws Exception
 	 *             the exception
 	 */
