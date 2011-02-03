@@ -31,7 +31,8 @@ public class TestSessionClient extends TestAbstractClient {
 	 *            [6] serviceName<br>
 	 *            [7] echoIntervalSeconds<br>
 	 *            [8] echoTimeoutSeconds<br>
-	 *            [9] methodsToInvoke
+	 *            [9] noDataIntervalSeconds<br>
+	 *            [10] methodsToInvoke
 	 */
 	public static void main(String[] args) throws Exception {
 		logger.log(Level.OFF, "TestSessionClient is starting ...");
@@ -48,7 +49,8 @@ public class TestSessionClient extends TestAbstractClient {
 		testClient.setServiceName(args[6]);
 		testClient.setEchoIntervalSeconds(Integer.parseInt(args[7]));
 		testClient.setEchoTimeoutSeconds(Integer.parseInt(args[8]));
-		testClient.setMethodsToInvoke(Arrays.asList(args[9].split("\\|")));
+		//args[9] can be ignored in session client (noDataIntervalSeconds)
+		testClient.setMethodsToInvoke(Arrays.asList(args[10].split("\\|")));
 		testClient.run();
 	}
 

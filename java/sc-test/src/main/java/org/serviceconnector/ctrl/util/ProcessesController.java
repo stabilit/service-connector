@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.ctrl.util;
 
 import java.io.File;
@@ -412,6 +413,8 @@ public class ProcessesController {
 	 *            the echo interval in seconds
 	 * @param echoTimeoutSeconds
 	 *            the echo timeout in seconds
+	 * @param noDataIntervalSeconds
+	 *            the no data interval seconds
 	 * @param methodsToInvoke
 	 *            the methods to invoke
 	 * @return the process ctx
@@ -423,9 +426,9 @@ public class ProcessesController {
 	 *             TestConstants.sesServiceName1, TestConstants.HOST, TestConstants.PORT_HTTP, ConnectionType.NETTY_HTTP, 10, 0,
 	 *             TestConstants.sesServiceName1, 300, 5, "\"initAttach|detach\"");
 	 */
-	public ProcessCtx startClient(String clientType, String log4jClnProperties, String clientName, String scHost, int scPort,
+	private ProcessCtx startClient(String clientType, String log4jClnProperties, String clientName, String scHost, int scPort,
 			ConnectionType connectionType, int maxConnections, int keepAliveIntervalSeconds, String serviceName,
-			int echoIntervalSeconds, int echoTimeoutSeconds, String methodsToInvoke) throws Exception {
+			int echoIntervalSeconds, int echoTimeoutSeconds, int noDataIntervalSeconds, String methodsToInvoke) throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
 
@@ -466,13 +469,13 @@ public class ProcessesController {
 		 * [11] serviceName 
 		 * [12] echoIntervalSeconds
 		 * [13] echoTimeoutSeconds
-		 * [14] methodsToInvoke (split * by | "initAttach|detach")
-		 * [15]
+		 * [14] noDataIntervalSeconds
+		 * [15] methodsToInvoke (split * by | "initAttach|detach")
 		 */
 		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + " -jar " + clnRunablFullName + " " + clientType
 				+ " " + clientName + " " + scHost + " " + scPort + " " + connectionType.getValue() + " " + maxConnections + " "
 				+ keepAliveIntervalSeconds + " " + serviceName + " " + echoIntervalSeconds + " " + echoTimeoutSeconds + " "
-				+ methodsToInvoke;
+				+ noDataIntervalSeconds + " " + methodsToInvoke;
 		Process clnProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(clnProcess);
 		int timeout = 15;
@@ -487,6 +490,23 @@ public class ProcessesController {
 			throw e;
 		}
 		return proc;
+	}
+
+	public ProcessCtx startSessionClient(String log4jClnProperties, String clientName, String scHost, int scPort,
+			ConnectionType connectionType, int maxConnections, int keepAliveIntervalSeconds, String serviceName,
+			int echoIntervalSeconds, int echoTimeoutSeconds, String methodsToInvoke) throws Exception {
+		return this.startClient(TestConstants.COMMUNICATOR_TYPE_SESSION, log4jClnProperties, clientName, scHost, scPort,
+				connectionType, maxConnections, keepAliveIntervalSeconds, serviceName, echoIntervalSeconds, echoTimeoutSeconds, 0,
+				methodsToInvoke);
+	}
+
+	public ProcessCtx startPublishClient(String log4jClnProperties, String clientName, String scHost, int scPort,
+			ConnectionType connectionType, int maxConnections, int keepAliveIntervalSeconds, String serviceName,
+			int noDataIntervalSeconds, String methodsToInvoke) throws Exception {
+		return this
+				.startClient(TestConstants.COMMUNICATOR_TYPE_PUBLISH, log4jClnProperties, clientName, scHost, scPort,
+						connectionType, maxConnections, keepAliveIntervalSeconds, serviceName, 0, 0, noDataIntervalSeconds,
+						methodsToInvoke);
 	}
 
 	public void stopClient(ProcessCtx clnProcess) throws Exception {

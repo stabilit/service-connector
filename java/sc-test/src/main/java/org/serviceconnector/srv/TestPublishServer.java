@@ -87,6 +87,7 @@ public class TestPublishServer extends TestStatefulServer {
 
 		ctr = new ThreadSafeCounter();
 		SCServer sc = new SCServer(TestConstants.HOST, this.port, this.listenerPort, this.connectionType);
+		sc.setKeepAliveIntervalSeconds(0);
 		try {
 			sc.setKeepAliveIntervalSeconds(10);
 			sc.setImmediateConnect(true);
@@ -126,6 +127,7 @@ public class TestPublishServer extends TestStatefulServer {
 
 		@Override
 		public SCMessage subscribe(SCSubscribeMessage request, int operationTimeoutMillis) {
+			logger.log(Level.OFF, "Subscribe with sid=" + request.getSessionId() + " mask=" + request.getMask());
 			SCMessage response = request;
 			String sessionInfo = request.getSessionInfo();
 			if (sessionInfo != null) {
@@ -192,6 +194,7 @@ public class TestPublishServer extends TestStatefulServer {
 
 		@Override
 		public void unsubscribe(SCSubscribeMessage request, int operationTimeoutMillis) {
+			logger.log(Level.OFF, "Unsubscribe with sid=" + request.getSessionId() + " mask=" + request.getMask());
 			SubscriptionLogger.logUnsubscribe("publish-1", request.getSessionId());
 		}
 	}

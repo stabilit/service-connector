@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.test.system.api.cln;
 
@@ -55,11 +55,11 @@ public class APIStressExecutionTest extends SystemSuperTest {
 	public void t01_2Clients10000Messages() throws Exception {
 		int numberOfClients = 2;
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
-	
+
 		for (int i = 0; i < clientCtxs.length; i++) {
-			ProcessCtx clientCtx = ctrl.startClient(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jClnProperties,
-					"client" + i, TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0,
-					TestConstants.sesServerName1, 50, 60, "f_execute1000MessagesAndExit");
+			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
+					TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
+					"f_execute1000MessagesAndExit");
 			clientCtxs[i] = clientCtx;
 		}
 		APIStressExecutionTest.ctrl.waitForClientTermination(clientCtxs);
@@ -77,9 +77,9 @@ public class APIStressExecutionTest extends SystemSuperTest {
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
 		for (int i = 0; i < clientCtxs.length; i++) {
-			ProcessCtx clientCtx = ctrl.startClient(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jClnProperties,
-					"client" + i, TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0,
-					TestConstants.sesServerName1, 10, 60, "f_execute100000MessagesAndExit");
+			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
+					TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 10, 60,
+					"f_execute100000MessagesAndExit");
 			clientCtxs[i] = clientCtx;
 		}
 		APIStressExecutionTest.ctrl.waitForClientTermination(clientCtxs);

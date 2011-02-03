@@ -7,6 +7,7 @@ import org.serviceconnector.api.cln.SCPublishService;
 
 public class TestPublishServiceMessageCallback extends SCMessageCallback {
 
+	public static int receivedMsg;
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(TestPublishServiceMessageCallback.class);
 	
@@ -16,11 +17,13 @@ public class TestPublishServiceMessageCallback extends SCMessageCallback {
 
 	@Override
 	public void receive(SCMessage reply) {
+		receivedMsg++;
 		logger.info("Publish client received: " + reply.getData());
 	}
 
 	@Override
 	public void receive(Exception ex) {
+		receivedMsg++;
 		logger.info("Publish client received: " + ex);
 	}
 }
