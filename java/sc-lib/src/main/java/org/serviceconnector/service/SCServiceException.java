@@ -137,11 +137,7 @@ public class SCServiceException extends Exception {
 		return this.scErrorText;
 	}
 
-	/**
-	 * To string.
-	 * 
-	 * @return the string {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return super.toString() + " SCServiceException [appErrorCode=" + appErrorCode + ", appErrorText=" + appErrorText
