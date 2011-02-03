@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,11 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
 /**
@@ -141,4 +136,16 @@ public class SCServiceException extends Exception {
 	public String getSCErrorText() {
 		return this.scErrorText;
 	}
+
+	/**
+	 * To string.
+	 * 
+	 * @return the string {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return super.toString() + " SCServiceException [appErrorCode=" + appErrorCode + ", appErrorText=" + appErrorText
+				+ ", scErrorCode=" + scErrorCode + ", scErrorText=" + scErrorText + "]";
+	}
+
 }
