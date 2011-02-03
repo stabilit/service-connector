@@ -1,3 +1,19 @@
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty;
 
 import org.apache.log4j.Logger;
@@ -22,6 +38,12 @@ import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.scmp.SCMPPart;
 
+/**
+ * The Class NettyResponderRequestHandlerTask. Is responsible for processing a request. It has to be a new thread because of NETTY
+ * threading concept.
+ * A worker thread owns a channel pipeline. If block the thread nothing will be sent on that channel.
+ * More information about this issue: http://www.jboss.org/netty/community.html#nabble-td5441049
+ */
 public class NettyResponderRequestHandlerTask implements IResponderCallback, Runnable {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(NettyResponderRequestHandlerTask.class);

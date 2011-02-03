@@ -106,6 +106,12 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		}
 	}
 
+	/**
+	 * The Class NettyHttpRequesterResponseHandlerTask. Is responsible for processing a response. It has to be a new thread because
+	 * of NETTY threading concept.
+	 * A worker thread owns a channel pipeline. If block the thread nothing will be sent on that channel.
+	 * More information about this issue: http://www.jboss.org/netty/community.html#nabble-td5441049
+	 */
 	private class NettyHttpRequesterResponseHandlerTask implements Runnable {
 
 		private HttpResponse httpResponse;
