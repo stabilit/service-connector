@@ -74,9 +74,6 @@ public class FileListCommand extends CommandAdapter {
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
 			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
-			// sessionId mandatory
-			String sessionId = message.getSessionId();
-			ValidatorUtility.validateStringLength(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

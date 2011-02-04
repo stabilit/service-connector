@@ -108,7 +108,8 @@ public abstract class TestStatefulServer extends Thread {
 
 		@Override
 		public void run() {
-			FileUtility.deletePIDfile(this.pidFileNameFull);
+			FileUtility.deleteFile(this.pidFileNameFull);
+			logger.info("Delete PID-file=" + this.pidFileNameFull);
 			logger.log(Level.OFF, "TestServer exit");
 			logger.log(Level.OFF, "<<<");
 		}

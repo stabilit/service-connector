@@ -164,7 +164,7 @@ public class FileServer extends Server {
 		HttpURLConnection httpCon = null;
 
 		URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort() + "/"
-				+ path + listScriptName + "?service=" + serviceName);
+				+ path + listScriptName + "?servicename=" + serviceName);
 		httpCon = (HttpURLConnection) url.openConnection();
 		httpCon.setRequestMethod("GET");
 		httpCon.setDoOutput(true);

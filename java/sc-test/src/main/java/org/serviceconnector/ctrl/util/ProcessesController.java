@@ -197,7 +197,7 @@ public class ProcessesController {
 				scProcess.getProcess().waitFor();
 				// make sure the pid file is deleted under any circumstances
 				try {
-					FileUtility.deletePIDfile(scProcess.getPidFileName());
+					FileUtility.deleteFile(scProcess.getPidFileName());
 				} catch (Exception e) {
 				}
 			}
@@ -381,7 +381,7 @@ public class ProcessesController {
 				srvProcess.getProcess().waitFor();
 				// make sure the pid file is deleted under any circumstances
 				try {
-					FileUtility.deletePIDfile(srvProcess.getPidFileName());
+					FileUtility.deleteFile(srvProcess.getPidFileName());
 				} catch (Exception e) {
 				}
 			}
@@ -513,7 +513,7 @@ public class ProcessesController {
 		if (clnProcess.isRunning()) {
 			clnProcess.getProcess().destroy();
 			clnProcess.getProcess().waitFor();
-			FileUtility.deletePIDfile(clnProcess.getPidFileName());
+			FileUtility.deleteFile(clnProcess.getPidFileName());
 		}
 		testLogger.error("Client " + clnProcess.getProcessName() + "stopped.");
 	}

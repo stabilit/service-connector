@@ -31,7 +31,7 @@ header("Content-Type: text/plain");
 #  -mail: specifies if a mail notification is sent (1) or not (0)
 #   sample (send mail)   : http://localhost:8080/sc/scupload.php?filename=clientLog.txt&servicename=demo&sendmail=1
 #   sample (no send mail): http://localhost:8080/sc/scupload.php?filename=clientLog.txt&servicename=demo&sendmail=0
-#   the default value is 1 if this flag is not set  
+#   the default value is 0 => will NOT sent mail
 # ------------------------------------------------------------------------------
 */
 

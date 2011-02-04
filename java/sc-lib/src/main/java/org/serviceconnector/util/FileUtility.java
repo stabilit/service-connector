@@ -120,6 +120,7 @@ public class FileUtility {
 	 *             if the file does not exist after the given time
 	 */
 	public static void waitExists(String filename, int nrSeconds) throws Exception {
+		if (exists(filename)) return;
 		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (exists(filename)) {
 				return;
@@ -138,6 +139,7 @@ public class FileUtility {
 	 *             if the file still exists after the given time
 	 */
 	public static void waitNotExists(String filename, int nrSeconds) throws Exception {
+		if (notExists(filename)) return;
 		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (notExists(filename)) {
 				return;
@@ -181,14 +183,13 @@ public class FileUtility {
 	}
 
 	/**
-	 * Delete file containing the PID. Is used for testing purpose to verify that process is running properly.
+	 * Delete file. Catch all possible errors 
 	 */
-	public static void deletePIDfile(String fileNameFull) {
+	public static void deleteFile(String fileNameFull) {
 		try {
 			File pidFile = new File(fileNameFull);
 			if (pidFile.exists()) {
 				pidFile.delete();
-				logger.info("Delete PID-file=" + fileNameFull);
 			}
 		} catch (Exception e) {
 			// ignore any error
