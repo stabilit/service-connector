@@ -48,9 +48,9 @@ public class ManageCommand extends CommandAdapter {
 	private final static Logger logger = Logger.getLogger(ManageCommand.class);
 
 	/** The Constant MANAGE_REGEX_STRING. */
-	private static final String MANAGE_REGEX_STRING = "(" + Constants.CC_CMD_KILL + "|" + Constants.CC_CMD_DUMP + "|" + Constants.CC_CMD_CLEAR_CACHE + "|("
-		+ Constants.CC_CMD_ENABLE + "|" + Constants.CC_CMD_DISABLE + ")"
-		+ Constants.EQUAL_SIGN + "(.*))";
+	private static final String MANAGE_REGEX_STRING = "(" + Constants.CC_CMD_KILL + "|" + Constants.CC_CMD_DUMP + "|"
+			+ Constants.CC_CMD_CLEAR_CACHE + "|(" + Constants.CC_CMD_ENABLE + "|" + Constants.CC_CMD_DISABLE + ")"
+			+ Constants.EQUAL_SIGN + "(.*))";
 
 	/** The Constant MANAGE_PATTERN. */
 	private static final Pattern MANAGE_PATTERN = Pattern.compile(MANAGE_REGEX_STRING, Pattern.CASE_INSENSITIVE);
@@ -93,11 +93,15 @@ public class ManageCommand extends CommandAdapter {
 		String command = m.group(1);
 		String function = m.group(2);
 		String serviceName = m.group(3);
-	
+
 		// kill command
 		if ((ipAddress.equals(localHost.getHostAddress())) && (command.equalsIgnoreCase(Constants.CC_CMD_KILL))) {
 			// kill request is allowed from localhost only!
 			logger.info("SC stopped by kill console command");
+			response.setSCMP(scmpReply);
+			responderCallback.responseCallback(request, response);
+			// wait a second until the response has been sent
+			Thread.sleep(1000);
 			System.exit(0);
 		}
 
