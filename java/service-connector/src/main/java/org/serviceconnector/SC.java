@@ -219,7 +219,9 @@ public final class SC {
 			AppContext.getCacheManager().destroy();
 			try {
 				if (AppContext.getBasicConfiguration() != null) {
-					FileUtility.deletePIDfile(AppContext.getBasicConfiguration().getPidPath() + fs + Constants.PID_FILE_NAME);
+					String pidFileNameFull = AppContext.getBasicConfiguration().getPidPath() + fs + Constants.PID_FILE_NAME;
+					FileUtility.deleteFile(pidFileNameFull);
+					logger.info("Delete PID-file=" + pidFileNameFull);
 				}
 			} catch (Exception e) {
 			}
