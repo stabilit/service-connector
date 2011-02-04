@@ -258,7 +258,12 @@ public final class Constants {
 	public static final String WEB_XSL_TRANSFORMATION_CACHE_ENABLED = "web.xslTransformationCache.enabled";
 	/** Prefix displayed in header and title to identify the SC instance */
 	public static final String WEB_PAGE_HEADER_PREFIX = "web.pageHeaderPrefix";
-
+	/** file service used for upload via GUI */
+	public static final String WEB_SC_UPLOAD_SERVICE = "web.scUploadService";
+	/** file service used for download via GUI */
+	public static final String WEB_SC_DOWNLOAD_SERVICE = "web.scDownloadService";
+	
+	
 	/*
 	 * SCMP protocol constants ***********************
 	 */

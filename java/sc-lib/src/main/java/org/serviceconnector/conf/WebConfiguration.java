@@ -19,6 +19,9 @@ package org.serviceconnector.conf;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class WebConfiguration.
@@ -43,10 +46,23 @@ public class WebConfiguration {
 	private String pageHeaderPrefix;
 
 	/**
+	 * Name of the service used by GUI to upload log files
+	 */
+	private String scUploadService;
+	
+	/**
+	 * Name of the service used by GUI to download configuration files
+	 */
+	private String scDownloadService;
+	
+	/**
 	 * Instantiates a new SCMP cache configuration.
 	 */
 	public WebConfiguration() {
 		this.xslTransformationCacheEnabled = Constants.DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED;
+		this.scDownloadService = null;
+		this.scUploadService = null;
+		this.pageHeaderPrefix = null;
 	}
 
 	/**
@@ -68,6 +84,20 @@ public class WebConfiguration {
 
 		this.pageHeaderPrefix = compositeConfiguration.getString(Constants.WEB_PAGE_HEADER_PREFIX, "");
 		logger.info(Constants.WEB_PAGE_HEADER_PREFIX + "=" + this.pageHeaderPrefix);
+		
+		this.scDownloadService = compositeConfiguration.getString(Constants.WEB_SC_DOWNLOAD_SERVICE, null);
+		logger.info(Constants.WEB_SC_DOWNLOAD_SERVICE + "=" + this.scDownloadService);
+		if (AppContext.getServiceRegistry().getService(this.scDownloadService) == null) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, 
+				Constants.WEB_SC_DOWNLOAD_SERVICE + "="+ this.scDownloadService + " service not found");
+		}
+		
+		this.scUploadService = compositeConfiguration.getString(Constants.WEB_SC_UPLOAD_SERVICE, null);
+		logger.info(Constants.WEB_SC_UPLOAD_SERVICE + "=" + this.scUploadService);
+		if (AppContext.getServiceRegistry().getService(this.scDownloadService) == null) {
+			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, 
+				Constants.WEB_SC_UPLOAD_SERVICE + "="+ this.scUploadService + " service not found");
+		}
 	}
 
 	/**
