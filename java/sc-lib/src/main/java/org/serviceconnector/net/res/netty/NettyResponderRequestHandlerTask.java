@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty;
 
+import java.net.InetSocketAddress;
+
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
 import org.serviceconnector.Constants;
@@ -89,7 +91,8 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 
 			// needs to set a key in thread local to identify thread later and get access to the responder
 			ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
-			responderRegistry.setThreadLocal(channel.getParent().getId());
+			int port = ((InetSocketAddress) channel.getLocalAddress()).getPort();
+			responderRegistry.setThreadLocal(port);
 
 			ICommand command = AppContext.getCommandFactory().getCommand(request.getKey());
 			// gets the command

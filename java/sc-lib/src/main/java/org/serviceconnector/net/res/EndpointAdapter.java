@@ -98,9 +98,6 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 	public void startListenSync() throws Exception {
 		try {
 			this.channel = this.bootstrap.bind(new InetSocketAddress(this.host, this.port));
-			// adds responder to registry
-			ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
-			responderRegistry.addResponder(this.channel.getId(), this.resp);
 		} catch (Exception ex) {
 			this.answer.add(Boolean.FALSE);
 			throw ex;
@@ -123,13 +120,13 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 		try {
 			bool = this.answer.poll(baseConf.getConnectionTimeoutMillis(), TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "cannot start listener on port="+this.port);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "cannot start listener on port=" + this.port);
 		}
 		if (bool == null) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "startup listener timed out on port="+this.port);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "startup listener timed out on port=" + this.port);
 		}
 		if (bool == false) {
-			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "cannot start listener on port="+this.port);
+			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "cannot start listener on port=" + this.port);
 		}
 	}
 
@@ -138,9 +135,6 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 	public void stopListening() {
 		try {
 			if (this.channel != null) {
-				// removes responder from registry
-				ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
-				responderRegistry.removeResponder(this.channel.getId());
 				ChannelFuture future = this.channel.close();
 				NettyOperationListener operationListener = new NettyOperationListener();
 				future.addListener(operationListener);
@@ -181,13 +175,13 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 
 	/**
 	 * Gets the host.
-	 *
+	 * 
 	 * @return the host
 	 */
 	public String getHost() {
 		return host;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void setHost(String host) {
@@ -196,13 +190,13 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 
 	/**
 	 * Gets the port.
-	 *
+	 * 
 	 * @return the port
 	 */
 	public int getPort() {
 		return port;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void setPort(int port) {

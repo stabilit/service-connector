@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res.netty.web;
 
+import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 
 import org.apache.log4j.Logger;
@@ -58,7 +59,8 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 		// access to the responder
 		Channel channel = ctx.getChannel();
 		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
-		responderRegistry.setThreadLocal(channel.getParent().getId());
+		int port = ((InetSocketAddress) channel.getLocalAddress()).getPort();
+		responderRegistry.setThreadLocal(port);
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 		IWebRequest webRequest = new NettyWebRequest(httpRequest);
@@ -73,7 +75,7 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 		if (ce != null) {
 			String encodedCookies = ce.encode();
 			if (encodedCookies != null && encodedCookies.length() > 0) {
-				//logger.debug(encodedCookies);
+				// logger.debug(encodedCookies);
 				httpResponse.addHeader("Set-Cookie", encodedCookies);
 			}
 		}

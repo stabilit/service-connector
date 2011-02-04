@@ -66,6 +66,9 @@ public class Responder implements IResponder {
 		for (IEndpoint endpoint : this.endpoints) {
 			endpoint.startsListenAsync();
 		}
+		// adds responder to registry
+		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
+		responderRegistry.addResponder(this.getListenerConfig().getPort(), this);
 	}
 
 	/** {@inheritDoc} */
@@ -74,6 +77,9 @@ public class Responder implements IResponder {
 		for (IEndpoint endpoint : this.endpoints) {
 			endpoint.startListenSync();
 		}
+		// adds responder to registry
+		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
+		responderRegistry.addResponder(this.getListenerConfig().getPort(), this);
 	}
 
 	/** {@inheritDoc} */
@@ -82,6 +88,9 @@ public class Responder implements IResponder {
 		for (IEndpoint endpoint : this.endpoints) {
 			endpoint.stopListening();
 		}
+		// removes responder from registry
+		ResponderRegistry responderRegistry = AppContext.getResponderRegistry();
+		responderRegistry.removeResponder(this.listenerConfig.getPort());
 	}
 
 	/** {@inheritDoc} */
