@@ -66,7 +66,8 @@ public class FileServer extends Server {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
 			URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort()
-					+ "/" + path + session.getUploadFileScriptName() + "?name=" + remoteFileName);
+					+ "/" + path + session.getUploadFileScriptName() + "?filename=" + remoteFileName + "&servicename="
+					+ message.getServiceName());
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("PUT");
 			httpCon.setDoOutput(true);
