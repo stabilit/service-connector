@@ -1145,7 +1145,14 @@ public class DefaultXMLLoaderFactory {
 					if (file.startsWith("fs:") && file.endsWith(":fs")) {
 						try {
 							file = file.substring(3, file.length() - 3);
-							String path = fileService.getPath() + file;
+							String path = fileService.getPath();
+							if (path.startsWith("/") == false) {
+								path = "/" + path;
+							}
+							if (path.endsWith("/") == false) {
+								path += "/";
+							}
+							path += file;
 							// download file
 							URL downloadURL = new URL("http://" + fileServer.getHost() + ":" + fileServer.getPortNr() + "/" + path);
 							String configFileName = SystemInfo.getConfigFileName();
@@ -1442,7 +1449,14 @@ public class DefaultXMLLoaderFactory {
 			if (service instanceof FileService) {
 				FileService fileService = (FileService) service;
 				FileServer fileServer = fileService.getServer();
-				SCMPMessage reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(),
+				String path = fileService.getPath();
+				if (path.startsWith("/") == false) {
+					path = "/" + path;
+				}
+				if (path.endsWith("/") == false) {
+					path += "/";
+				}
+				SCMPMessage reply = fileServer.serverGetFileList(path, fileService.getGetFileListScriptName(),
 						serviceName, 10);
 				Object body = reply.getBody();
 				if (body != null && body instanceof byte[]) {
@@ -1507,7 +1521,14 @@ public class DefaultXMLLoaderFactory {
 			if (service instanceof FileService) {
 				FileService fileService = (FileService) service;
 				FileServer fileServer = fileService.getServer();
-				SCMPMessage reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(),
+				String path = fileService.getPath();
+				if (path.startsWith("/") == false) {
+					path = "/" + path;
+				}
+				if (path.endsWith("/") == false) {
+					path += "/";
+				}
+				SCMPMessage reply = fileServer.serverGetFileList(path, fileService.getGetFileListScriptName(),
 						serviceName, 10);
 				Object body = reply.getBody();
 				if (body != null && body instanceof byte[]) {

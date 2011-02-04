@@ -96,7 +96,7 @@
 	                <xsl:for-each select="$body/service/files/file">
 	                  <tr>
 	                    <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">
-	                      <input id="fs:{.}:fs" type="checkbox"></input>
+	                      -
 	                    </td>
 	                    <td style="border-bottom:1px solid #666666;padding:4px;text-align:left;"><xsl:value-of select="."/></td>
 	                  </tr>
