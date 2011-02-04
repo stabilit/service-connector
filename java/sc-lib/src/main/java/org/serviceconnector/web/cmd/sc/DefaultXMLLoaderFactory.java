@@ -20,22 +20,30 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.InvalidParameterException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.LogManager;
@@ -69,6 +77,8 @@ import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.DumpUtility;
+import org.serviceconnector.util.HttpClientUploadUtility;
+import org.serviceconnector.util.HttpClientUploadUtility.UploadRunnable;
 import org.serviceconnector.util.SystemInfo;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
@@ -413,10 +423,14 @@ public class DefaultXMLLoaderFactory {
 	 */
 	public static class LogsXMLLoader extends AbstractXMLLoader {
 
+		/** The distinct logger set, prevent multiple entries of log files */
+		private Set<String> distinctLoggerSet;
+
 		/**
 		 * Instantiates a new default xml loader.
 		 */
 		public LogsXMLLoader() {
+			distinctLoggerSet = new HashSet<String>();
 		}
 
 		/** {@inheritDoc} */
@@ -451,17 +465,25 @@ public class DefaultXMLLoaderFactory {
 			Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
 			while (currentLoggers.hasMoreElements()) {
 				Logger currentLogger = (Logger) currentLoggers.nextElement();
-				writeLogger(writer, currentLogger, today, current);
+				Enumeration<?> appenders = currentLogger.getAllAppenders();
+				if (appenders.hasMoreElements()) {
+					writeLogger(writer, currentLogger, today, current);
+				}
 			}
 			writer.writeEndElement(); // close logs tag
 		}
 
-		private void writeLogger(XMLStreamWriter writer, Logger logger, Date today, Date current) throws XMLStreamException {
+		protected void writeLogger(XMLStreamWriter writer, Logger logger, Date today, Date current) throws XMLStreamException {
 			writer.writeStartElement("logger");
 			writer.writeAttribute("name", logger.getName());
 			Enumeration<?> appenders = logger.getAllAppenders();
 			while (appenders.hasMoreElements()) {
 				Appender appender = (Appender) appenders.nextElement();
+				String appenderName = appender.getName();
+				if (distinctLoggerSet.contains(appenderName)) {
+					continue;
+				}
+				distinctLoggerSet.add(appenderName);
 				writer.writeStartElement("appender");
 				writer.writeAttribute("name", appender.getName());
 				if (appender instanceof FileAppender) {
@@ -488,6 +510,42 @@ public class DefaultXMLLoaderFactory {
 		@Override
 		public IFactoryable newInstance() {
 			return new LogsXMLLoader();
+		}
+
+		protected List<String> getCurrentLogFiles() {
+			distinctLoggerSet.clear();
+			List<String> logFileList = new ArrayList<String>();
+			Logger rootLogger = LogManager.getRootLogger();
+			addLogFiles(rootLogger, logFileList);
+			Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
+			while (currentLoggers.hasMoreElements()) {
+				Logger currentLogger = (Logger) currentLoggers.nextElement();
+				Enumeration<?> appenders = currentLogger.getAllAppenders();
+				if (appenders.hasMoreElements()) {
+					addLogFiles(currentLogger, logFileList);
+				}
+			}
+			return logFileList;
+		}
+
+		protected void addLogFiles(Logger logger, List<String> logFileList) {
+			Enumeration<?> appenders = logger.getAllAppenders();
+			while (appenders.hasMoreElements()) {
+				Appender appender = (Appender) appenders.nextElement();
+				String appenderName = appender.getName();
+				if (distinctLoggerSet.contains(appenderName)) {
+					continue;
+				}
+				distinctLoggerSet.add(appenderName);
+				if (appender instanceof FileAppender) {
+					FileAppender fileAppender = (FileAppender) appender;
+					String sFile = fileAppender.getFile();
+					File file = new File(sFile);
+					if (file.exists() && file.isFile()) {
+						logFileList.add(sFile);
+					}
+				}
+			}
 		}
 
 	}
@@ -682,7 +740,7 @@ public class DefaultXMLLoaderFactory {
 		 */
 		public DumpXMLLoader() {
 		}
-		
+
 		@Override
 		public void loadBody(Writer writer, IWebRequest request) throws Exception {
 			String name = request.getParameter("name");
@@ -691,13 +749,11 @@ public class DefaultXMLLoaderFactory {
 			return;
 		}
 
-
-
 		@Override
 		public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			throw new UnsupportedOperationException("not supported");
 		}
-		
+
 		@Override
 		public boolean isText() {
 			return true;
@@ -885,6 +941,9 @@ public class DefaultXMLLoaderFactory {
 	 * The Class AjaxSystemXMLLoader.
 	 */
 	public static class AjaxSystemXMLLoader extends AbstractXMLLoader {
+
+		private static final SimpleDateFormat LOGS_FILE_SDF = new SimpleDateFormat(Constants.LOGS_FILE_NAME_FORMAT);
+
 		/**
 		 * Instantiates a new system xml loader.
 		 */
@@ -1013,6 +1072,20 @@ public class DefaultXMLLoaderFactory {
 					writer.writeEndElement();
 					return;
 				}
+				if ("uploadLogFiles".equals(action)) {
+					logger.debug("upload current log files");
+					uploadCurrentLogFiles(writer, request);
+					return;
+				}
+				// action is not valid or unknown
+				writer.writeStartElement("status");
+				writer.writeCharacters("failure");
+				writer.writeEndElement();
+				writer.writeStartElement("messages");
+				writer.writeStartElement("message");
+				writer.writeCharacters("Action [" + action + "] is unknwon");
+				writer.writeEndElement(); // message
+				writer.writeEndElement(); // messages
 			} catch (Exception e) {
 				writer.writeStartElement("status");
 				writer.writeCharacters("failure");
@@ -1033,6 +1106,17 @@ public class DefaultXMLLoaderFactory {
 			throw new UnsupportedOperationException();
 		}
 
+		/**
+		 * Download and replace all selected from remote file server into our current configuration directory.
+		 * If the same file already exists then the local file content will be replaced.
+		 * 
+		 * @param writer
+		 *            the writer
+		 * @param request
+		 *            the request
+		 * @throws Exception
+		 *             the exception
+		 */
 		private void downloadAndReplace(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			String serviceName = request.getParameter("service");
 			if (serviceName == null) {
@@ -1090,6 +1174,18 @@ public class DefaultXMLLoaderFactory {
 			writer.writeEndElement();
 		}
 
+		/**
+		 * Download and replace a single file.
+		 * 
+		 * @param writer
+		 *            the writer
+		 * @param srcUrl
+		 *            the src url
+		 * @param dstFile
+		 *            the dst file
+		 * @throws Exception
+		 *             the exception
+		 */
 		private void downloadAndReplaceSingleFile(XMLStreamWriter writer, URL srcUrl, File dstFile) throws Exception {
 			String status = "successful (copied)";
 			if (dstFile.exists()) {
@@ -1117,6 +1213,130 @@ public class DefaultXMLLoaderFactory {
 				writer.writeEndElement();
 				throw e;
 			}
+		}
+
+		/**
+		 * Upload current log files to remote file server. The file server will be identified by the service name.
+		 * 
+		 * @param writer
+		 *            the writer
+		 * @param request
+		 *            the request
+		 * @throws Exception
+		 *             the exception
+		 */
+		private void uploadCurrentLogFiles(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			String serviceName = request.getParameter("service");
+			if (serviceName == null) {
+				throw new WebCommandException("service is missing");
+			}
+			ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
+			Service service = serviceRegistry.getService(serviceName);
+			if (service == null) {
+				throw new WebCommandException("service " + serviceName + " not found");
+			}
+			if (service instanceof FileService == false) {
+				throw new WebCommandException("service " + serviceName + " is not a file service");
+			}
+			writer.writeStartElement("service");
+			writer.writeCharacters(serviceName);
+			writer.writeEndElement();
+			// get current log files and write them to the remote file server using a stream
+			FileService fileService = (FileService) service;
+			FileServer fileServer = fileService.getServer();
+			Calendar cal = Calendar.getInstance();
+			Date now = cal.getTime();
+			String logsFileName = null;
+			synchronized (LOGS_FILE_SDF) {
+				String dateTimeString = LOGS_FILE_SDF.format(now);
+				logsFileName = Constants.LOGS_FILE_NAME + serviceName + "_" + dateTimeString + Constants.LOGS_FILE_EXTENSION;
+			}
+			StringBuilder sb = new StringBuilder();
+			sb.append("http://");
+			sb.append(fileServer.getHost());
+			sb.append(":");
+			sb.append(fileServer.getPortNr());
+			String path = fileService.getPath();
+			if (path.startsWith("/") == false) {
+				sb.append("/");
+			}
+			sb.append(path);
+			if (path.endsWith("/") == false) {
+				sb.append("/");
+			}
+			sb.append(fileService.getUploadFileScriptName());
+			sb.append("?name=");
+			sb.append(logsFileName);
+			sb.append("&service=");
+			sb.append(serviceName);
+			sb.append("&mail=0");
+			// TODO: What does the mail option?
+			Integer ret = uploadCurrentLogFilesUsingStream(writer, sb.toString());
+			if (ret == HttpStatus.SC_OK) {
+				writer.writeStartElement("status");
+				writer.writeCharacters("success");
+				writer.writeEndElement();
+				writer.writeStartElement("messages");
+				writer.writeStartElement("message");
+				writer.writeCharacters("logs file upload done!");
+				writer.writeEndElement();
+				writer.writeStartElement("message");
+				writer.writeCharacters("file name is " + logsFileName);
+				writer.writeEndElement();
+				writer.writeEndElement();
+			} else {
+				writer.writeStartElement("status");
+				writer.writeCharacters("failure");
+				writer.writeEndElement();
+				writer.writeStartElement("messages");
+				writer.writeStartElement("message");
+				writer.writeCharacters("logs file upload did fail");
+				writer.writeEndElement();
+				writer.writeStartElement("message");
+				writer.writeCharacters("http server code is " + ret);
+				writer.writeEndElement();
+				writer.writeEndElement();
+			}
+		}
+
+		private Integer uploadCurrentLogFilesUsingStream(XMLStreamWriter writer, String uploadUri) throws Exception {
+			// get all log file names
+			LogsXMLLoader logsXMLLoader = (LogsXMLLoader) loaderFactory.getXMLLoader("/logs");
+			List<String> logFiles = logsXMLLoader.getCurrentLogFiles();
+			if (logFiles.isEmpty()) {
+				throw new WebCommandException("upload log files failed, no logs files found");
+			}
+			HttpClientUploadUtility uploadUtility = new HttpClientUploadUtility(uploadUri);
+			UploadRunnable uploadRunnable = uploadUtility.startUpload();
+			OutputStream os = uploadRunnable.getOutputStream();
+			ZipOutputStream zos = new ZipOutputStream(os);
+			for (String logFile : logFiles) {
+				String path = logFile.replace(File.separatorChar, '/');
+				InputStream is = WebUtil.loadResource(path);
+				if (is == null) {
+					continue;
+				}
+				ZipEntry entry = new ZipEntry(logFile);
+				entry.setComment("log file " + logFile);
+				zos.putNextEntry(entry);
+				try {
+					int readBytes = -1;
+					byte[] buffer = new byte[1 << 16];
+					while ((readBytes = is.read(buffer)) > 0) {
+						zos.write(buffer, 0, readBytes);
+					}
+				} catch (Exception e) {
+					this.addMeta("exception", e.toString());
+				} finally {
+					if (is != null) {
+						is.close();
+					}
+				}
+				zos.closeEntry();
+			}
+			zos.close();
+			Integer ret = uploadRunnable.close();
+			return ret;
 		}
 	}
 
@@ -1188,7 +1408,11 @@ public class DefaultXMLLoaderFactory {
 				throw new InvalidParameterException("action parameter missing");
 			}
 			if ("sc_property_download".equals(action)) {
-				loadDownloadBody(writer, request);
+				loadPropertyDownloadBody(writer, request);
+				return;
+			}
+			if ("sc_logs_upload".equals(action)) {
+				loadLogfileUploadBody(writer, request);
 				return;
 			}
 			if ("sc_dump_list".equals(action)) {
@@ -1199,13 +1423,13 @@ public class DefaultXMLLoaderFactory {
 		}
 
 		/**
-		 * load body data for download action
+		 * load body data for property files download action
 		 * 
 		 * @param writer
 		 * @param request
 		 * @throws Exception
 		 */
-		private void loadDownloadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+		private void loadPropertyDownloadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			String serviceName = request.getParameter("service");
 			if (serviceName == null) {
 				throw new InvalidParameterException("service parameter missing");
@@ -1264,6 +1488,68 @@ public class DefaultXMLLoaderFactory {
 		}
 
 		/**
+		 * load body data for logs file upload action
+		 * 
+		 * @param writer
+		 * @param request
+		 * @throws Exception
+		 */
+		private void loadLogfileUploadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			String serviceName = request.getParameter("service");
+			if (serviceName == null) {
+				throw new InvalidParameterException("service parameter missing");
+			}
+			// load file services and the file list
+			ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
+			writer.writeStartElement("service");
+			Service service = serviceRegistry.getService(serviceName);
+			this.writeBean(writer, service);
+			if (service instanceof FileService) {
+				FileService fileService = (FileService) service;
+				FileServer fileServer = fileService.getServer();
+				SCMPMessage reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(),
+						serviceName, 10);
+				Object body = reply.getBody();
+				if (body != null && body instanceof byte[]) {
+					String sBody = new String((byte[]) body);
+					String[] files = sBody.split("\\|");
+					writer.writeStartElement("files");
+					for (int i = 0; i < files.length; i++) {
+						String fileName = files[i];
+						if (fileName.startsWith(Constants.LOGS_FILE_NAME)) {
+						   writer.writeStartElement("file");
+						   writer.writeCData(files[i]);
+						   writer.writeEndElement();
+						}
+					}
+					writer.writeEndElement();
+				}
+			}
+			writer.writeEndElement(); // close service tag			
+			// get logs xml loader from factory
+			LogsXMLLoader logsXMLLoader = (LogsXMLLoader) loaderFactory.getXMLLoader("/logs");
+			// load available logs file list for current date (today)
+			writer.writeStartElement("logs");
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			Date today = cal.getTime();
+			Logger rootLogger = LogManager.getRootLogger();
+			logsXMLLoader.writeLogger(writer, rootLogger, today, today);
+			Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
+			while (currentLoggers.hasMoreElements()) {
+				Logger currentLogger = (Logger) currentLoggers.nextElement();
+				Enumeration<?> appenders = currentLogger.getAllAppenders();
+				if (appenders.hasMoreElements()) {
+					logsXMLLoader.writeLogger(writer, currentLogger, today, today);
+				}
+			}
+			writer.writeEndElement(); // close logs tag
+		}
+
+		/**
 		 * load body data for dump list action
 		 * 
 		 * @param writer
@@ -1298,6 +1584,7 @@ public class DefaultXMLLoaderFactory {
 				writer.writeEndElement(); // close files tag
 			}
 			writer.writeEndElement(); // close dumplist tag
+			
 			return;
 		}
 

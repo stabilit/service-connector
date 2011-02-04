@@ -22,8 +22,11 @@
 				<script type="text/javascript" src="sc.js"></script>
 				<script type="text/javascript"><xsl:call-template name="sc_script"/></script>
 				<script type="text/javascript">
+				  var callPending = false;
 				  window.document.onclick=function() {
-				     hideLayer('DialogBox');
+				     if (callPending == false) {
+				        hideLayer('DialogBox');
+				     }
 				  }
 				</script>
 			</head>

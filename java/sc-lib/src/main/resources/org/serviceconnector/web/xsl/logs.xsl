@@ -23,7 +23,9 @@
             <th class="sc_table">Appender Name</th>
             <th class="sc_table">File</th>
           </tr>          
-          <xsl:apply-templates select="$body/logs/logger/appender[@type = 'file']"/>
+          <xsl:apply-templates select="$body/logs/logger/appender[@type = 'file']">
+            <xsl:sort data-type="text" select="@name"/>
+          </xsl:apply-templates>
         </table>
       </div>
     </xsl:template>

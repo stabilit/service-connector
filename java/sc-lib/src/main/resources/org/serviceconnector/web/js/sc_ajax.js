@@ -97,6 +97,15 @@ function resetTranslet() {
 	ajaxSystem.ajaxCall('ajax/system?action=resetTranslet');	
 }
 
+function getDialogText(msg) {
+    callPending = true;
+	var text = '<table border="0" cellspacing="0" cellpadding="0" width="100%" class="sc_dialog_table">';
+	text += '<tr><th class="sc_dialog_table_header" style="width:20px;"> </th>';
+	text += '<th class="sc_dialog_table_header">' + msg + '</th>';
+	text += '</tr></table>';
+	return text;
+}
+
 function downloadAndReplaceSelected(service) {
 	// get all checkboxes
 	var inputs = document.getElementsByTagName("input"); //or document.forms[0].elements;  
@@ -116,11 +125,31 @@ function downloadAndReplaceSelected(service) {
 	if (check == false) {
 		return;
     }
-//	alert('ajax/system?action=downloadAndReplace&service=' + service +  query);
+	var dialogBox = document.getElementById("DialogBox");
+	if (dialogBox != null) {
+       dialogBox.innerHTML = getDialogText("... Please Wait ...");
+       showLayer("DialogBox");
+       centerLayer("DialogBox", 400, 400, 0, 0);
+	}
 	ajaxSystem.ajaxCall('ajax/system?action=downloadAndReplace&service=' + service + query);	
 }
 
+function uploadLogFiles(service) {
+	var check = window.confirm("Upload current log files! Are you sure?");
+	if (check == false) {
+		return;
+    }
+	var dialogBox = document.getElementById("DialogBox");
+	if (dialogBox != null) {
+       dialogBox.innerHTML = getDialogText("... Please Wait ...");
+       showLayer("DialogBox");
+       centerLayer("DialogBox", 400, 400, 0, 0);
+	}
+	ajaxSystem.ajaxCall('ajax/system?action=uploadLogFiles&service=' + service);		
+}
+
 function systemCallback() {
+	callPending = false;
 	var dialogBox = document.getElementById("DialogBox");
 	if (dialogBox != null) {
        dialogBox.innerHTML = this.req.responseText;
@@ -132,6 +161,11 @@ function systemCallback() {
 	if (action == "downloadAndReplace") {
 		if (service != null) {
 		    maintenanceCall("sc_property_download", service);
+		}
+	}
+	if (action == "uploadLogFiles") {
+		if (service != null) {
+		    maintenanceCall("sc_logs_upload", service);
 		}
 	}
 	if (action == "dump") {

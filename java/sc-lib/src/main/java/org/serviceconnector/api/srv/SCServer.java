@@ -254,7 +254,7 @@ public class SCServer {
 							// ignore IPV6_LOOPBACK_NIC, bind not possible on this NIC
 							continue;
 						}
-						nics.add(inetAddress.getHostAddress());
+						nics.add(inetAddress.getHostAddress());						
 						logger.debug("SCServer listens on " + inetAddress.getHostAddress());
 					}
 				}

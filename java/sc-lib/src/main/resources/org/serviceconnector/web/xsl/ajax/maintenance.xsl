@@ -11,6 +11,9 @@
         <xsl:when test="$action = 'sc_property_download'">
           <xsl:call-template name="downloadPropertyFile"/>
         </xsl:when>
+        <xsl:when test="$action = 'sc_logs_upload'">
+          <xsl:call-template name="uploadLogFiles"/>
+        </xsl:when>
         <xsl:otherwise>
           Invalid action [<xsl:value-of select="$action"/>]
         </xsl:otherwise>
@@ -44,6 +47,49 @@
 	            </td>
 	            <td valign="top" style="text-align:center;width:100px;">
 	              <input class="sc_form_button_download" name="DownloadAndReplace" type="button" value="&lt;&lt;" onclick="javascript:downloadAndReplaceSelected('{$serviceParam}')"></input>
+	            </td>
+	            <td valign="top">
+	              <table border="0" cellspacing="0" cellpadding="0" style="background:white; width:100%;border-right:1px solid #666666">
+	                <xsl:for-each select="$body/service/files/file">
+	                  <tr>
+	                    <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">
+	                      <input id="fs:{.}:fs" type="checkbox"></input>
+	                    </td>
+	                    <td style="border-bottom:1px solid #666666;padding:4px;text-align:left;"><xsl:value-of select="."/></td>
+	                  </tr>
+	                </xsl:for-each>
+	              </table>
+	            </td>
+	          </tr>          
+	        </table>
+        </div>	  
+	</xsl:template>
+	<xsl:template name="uploadLogFiles">
+	    <div class="sc_table">
+	        <div class="sc_table_title">
+	           Upload Current Logfiles to File Service [<xsl:value-of select="$serviceParam"/>]
+	        </div>             
+	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
+	          <tr class="sc_table_header">
+	            <th class="sc_table">Current Log Files</th>
+	            <th class="sc_table">&#160;</th>
+	            <th class="sc_table">File Service Logfiles (Remote)</th>
+	          </tr>
+	          <tr>
+	            <td valign="top">
+	              <table border="0" cellspacing="0" cellpadding="0" style="background:white; width:100%;border-left:1px solid #666666">
+	                <xsl:for-each select="$body/logs/logger/appender[@type = 'file']">
+	                  <tr>
+	                    <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">
+	                    -
+	                    </td>
+	                    <td style="border-bottom:1px solid #666666;padding:4px;text-align:left;"><xsl:value-of select="."/>&#160;(<xsl:value-of select="file/@size"/>)</td>
+	                  </tr>
+	                </xsl:for-each>
+	              </table>
+	            </td>
+	            <td valign="top" style="text-align:center;width:100px;">
+	              <input class="sc_form_button_download" name="Upload" type="button" value="&gt;&gt;" onclick="javascript:uploadLogFiles('{$serviceParam}')"></input>
 	            </td>
 	            <td valign="top">
 	              <table border="0" cellspacing="0" cellpadding="0" style="background:white; width:100%;border-right:1px solid #666666">
