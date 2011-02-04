@@ -2,7 +2,7 @@
 header("Content-Type: text/plain");
 /*-----------------------------------------------------------------------------*
  *                                                                             *
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *       Copyright Â© 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
  *  you may not use this file except in compliance with the License.           *
@@ -20,7 +20,7 @@ header("Content-Type: text/plain");
 # 							 		instructions for use  								
 # - Call the script http://host:port/path/scupload.php?name=remoteFileName&service=demo
 #		Substitute variable host, port, path and remoteFileName
-#		(http://localhost:8080/sc/scupload.php?name=clientLog.txt&service=demo)
+#		(http://localhost:8080/sc/scupload.php?filename=clientLog.txt&servicename=demo)
 # - The script stores a stream in a file. Put it to the folders where you like
 #		to store the files.
 # - A declared file service on SC need to define the script in SC configuration
@@ -29,8 +29,8 @@ header("Content-Type: text/plain");
 #
 # Optional parameters:
 #  -mail: specifies if a mail notification is sent (1) or not (0)
-#   sample (send mail)   : http://localhost:8080/sc/scupload.php?name=clientLog.txt&service=demo&mail=1
-#   sample (no send mail): http://localhost:8080/sc/scupload.php?name=clientLog.txt&service=demo&mail=0
+#   sample (send mail)   : http://localhost:8080/sc/scupload.php?filename=clientLog.txt&servicename=demo&sendmail=1
+#   sample (no send mail): http://localhost:8080/sc/scupload.php?filename=clientLog.txt&servicename=demo&sendmail=0
 #   the default value is 1 if this flag is not set  
 # ------------------------------------------------------------------------------
 */
@@ -47,7 +47,7 @@ $greeting = "stabilit";          // the smtp ehlo greeting name
 
 // send mail notification
 $recipients = array("joel.traber@stabilit.ch", "jan.trnka@stabilit.ch");  // mail recipients list
-$from = "joel.traber@stabilit.ch";                                        // mail sender address
+$from = "info@stabilit.ch";                                      				  // mail sender address
 $fromName = "Service-Connector";                                          // mail sender name
 $replyTo = $from;                                                         // reply to mail address
 
@@ -60,26 +60,36 @@ $replyTo = $from;                                                         // rep
 $putdata = fopen("php://input","r");
 $fileName = null;  // no default
 $service = null;   // no default
-$sendMailFlag = 1; // send mail flag, default is 1 (say mail will be sent)
-if (isset($_REQUEST['name'])) {
-	$fileName = $_REQUEST['name']; 
+$sendMailFlag = 0; // send mail flag, default is 0 (will NOT sent mail)
+if (isset($_REQUEST['filename'])) {
+	$fileName = $_REQUEST['filename']; 
 }
-if (isset($_REQUEST['service'])) {
-	$service = $_REQUEST['service']; 
+if (isset($_REQUEST['servicename'])) {
+	$service = $_REQUEST['servicename']; 
 }
-if (isset($_REQUEST['mail'])) {
-	$sendMailFlag = $_REQUEST['mail']; 
+if (isset($_REQUEST['sendmail'])) {
+	$sendMailFlag = $_REQUEST['sendmail']; 
 }
 
-if ($fileName == null || $service == null || $fileName == "" || $service == "") {
-	header($_SERVER["SERVER_PROTOCOL"]." 400 Bad Request");
-	echo "400 bad request\r\n";
-	if ($fileName == null || $fileName == "") {
-	   echo "parameter name is missing\r\n";
-	}
-	if ($service == null || $service == "") {
-	   echo "parameter service is missing\r\n";
-	}
+// check input params
+if ($fileName == null) {
+	header($_SERVER["SERVER_PROTOCOL"]." 400 Bad Request - filename is missing");
+	echo 'filename is missing<br/>';
+	exit;
+}
+if ($fileName == "") {
+	header($_SERVER["SERVER_PROTOCOL"]." 400 Bad Request - filename is empty");
+	echo 'filename is empty<br/>';
+	exit;
+}
+if ($service == null) {
+	header($_SERVER["SERVER_PROTOCOL"]." 400 Bad Request - servicename is missing");
+	echo 'servicename is missing<br/>';
+	exit;
+}
+if ($service == "") {
+	header($_SERVER["SERVER_PROTOCOL"]." 400 Bad Request - servicename is empty");
+	echo 'servicename is empty<br/>';
 	exit;
 }
 
