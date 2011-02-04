@@ -68,7 +68,7 @@ public class NettyHttpResponderRequestHandler extends NettyResponderRequestHandl
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			logger.warn(th.toString()); // regular disconnect causes this expected exception
+			logger.warn(th); // regular disconnect causes this expected exception
 			return;
 		} else {
 			logger.error("Response error", th);

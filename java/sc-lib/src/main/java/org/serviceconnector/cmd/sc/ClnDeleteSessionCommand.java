@@ -101,9 +101,10 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			throw new SCMPCommandException(SCMPError.SC_ERROR, "delete session not allowed for service "
 					+ abstractService.getName());
 		}
-
 		StatefulServer statefulServer = (StatefulServer) abstractServer;
 		ClnDeleteSessionCommandCallback callback;
+		// free server from session
+		statefulServer.removeSession(session);
 
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
@@ -126,10 +127,6 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
-			} catch (Exception e) {
-				// free server from subscription
-				statefulServer.removeSession(session);
-				throw e;
 			}
 			// sleep for a while and then try again
 			Thread.sleep(Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);

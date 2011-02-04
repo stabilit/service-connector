@@ -138,7 +138,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 			throws ConnectionPoolBusyException {
 		SCMPSrvCreateSessionCall createSessionCall = new SCMPSrvCreateSessionCall(requester, msgToForward);
 		try {
-			createSessionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+			createSessionCall.invoke(callback, timeoutMillis);
 		} catch (ConnectionPoolBusyException ex) {
 			throw ex;
 		} catch (Exception e) {
@@ -161,7 +161,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 		SCMPSrvDeleteSessionCall deleteSessionCall = new SCMPSrvDeleteSessionCall(requester, message);
 
 		try {
-			deleteSessionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+			deleteSessionCall.invoke(callback, timeoutMillis);
 		} catch (ConnectionPoolBusyException ex) {
 			throw ex;
 		} catch (Exception e) {
@@ -183,7 +183,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 			throws ConnectionPoolBusyException {
 		SCMPSrvSubscribeCall subscribeCall = new SCMPSrvSubscribeCall(requester, msgToForward);
 		try {
-			subscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+			subscribeCall.invoke(callback, timeoutMillis);
 		} catch (ConnectionPoolBusyException ex) {
 			throw ex;
 		} catch (Exception e) {
@@ -206,7 +206,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 		SCMPSrvUnsubscribeCall unsubscribeCall = new SCMPSrvUnsubscribeCall(this.requester, message);
 
 		try {
-			unsubscribeCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+			unsubscribeCall.invoke(callback, timeoutMillis);
 		} catch (ConnectionPoolBusyException ex) {
 			throw ex;
 		} catch (Exception e) {
@@ -231,7 +231,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 		SCMPSrvChangeSubscriptionCall changeSubscriptionCall = new SCMPSrvChangeSubscriptionCall(this.requester, message);
 
 		try {
-			changeSubscriptionCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+			changeSubscriptionCall.invoke(callback, timeoutMillis);
 		} catch (ConnectionPoolBusyException ex) {
 			throw ex;
 		} catch (Exception e) {
@@ -252,7 +252,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	public void execute(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		SCMPSrvExecuteCall srvExecuteCall = new SCMPSrvExecuteCall(this.requester, message);
 		try {
-			srvExecuteCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+			srvExecuteCall.invoke(callback, timeoutMillis);
 		} catch (ConnectionPoolBusyException ex) {
 			throw ex;
 		} catch (Exception th) {
@@ -356,8 +356,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 		} catch (SCMPCommandException scmpCommandException) {
 			logger.warn("ConnectionPoolBusyException in aborting session wait mec");
 			// ConnectionPoolBusyException after wait mec - try opening a new connection
-			
-			//RemoteNodeConfiguration remoteNodeConfiguration = this.requester.getRemoteNodeConfiguration(); 
+
+			// RemoteNodeConfiguration remoteNodeConfiguration = this.requester.getRemoteNodeConfiguration();
 			// set up a new requester to make the SAS - only 1 connection is allowed
 			Requester sasRequester = new Requester(this.sasRemoteNodeConfiguration);
 			try {

@@ -56,8 +56,6 @@ public class ClnDeleteSessionCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
-		// free server from session
-		server.removeSession(session);
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// forward server reply to client

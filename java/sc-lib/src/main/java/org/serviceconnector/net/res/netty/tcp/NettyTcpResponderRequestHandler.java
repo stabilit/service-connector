@@ -34,8 +34,8 @@ import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
- * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the Netty framework
- * by catching events (message received, exception caught). Functionality to handle large messages is also inside.
+ * The Class NettyTcpResponderRequestHandler. This class is responsible for handling Tcp requests. Is called from the Netty
+ * framework by catching events (message received, exception caught). Functionality to handle large messages is also inside.
  * 
  * @author JTraber
  */
@@ -66,7 +66,7 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			logger.warn(th.toString()); // regular disconnect causes this expected exception
+			logger.warn(th); // regular disconnect causes this expected exception
 			return;
 		} else {
 			logger.error("Response error", th);
