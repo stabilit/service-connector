@@ -131,7 +131,7 @@ function systemCallback() {
 	var service = this.ajaxGetParam("service");
 	if (action == "downloadAndReplace") {
 		if (service != null) {
-		    maintenanceCall(service);
+		    maintenanceCall("sc_property_download", service);
 		}
 	}
 	if (action == "dump") {
