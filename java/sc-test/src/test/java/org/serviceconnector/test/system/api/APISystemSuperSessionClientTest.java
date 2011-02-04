@@ -29,6 +29,7 @@ import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ServerDefinition;
+import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.system.SystemSuperTest;
@@ -40,14 +41,14 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 	protected static Map<String, ProcessCtx> sesSrvCtxs;
 	protected MsgCallback msgCallback1 = null;
 	protected static boolean messageReceived = false;
-	protected List<ServerDefinition> srvDefs;
+	protected static List<ServerDefinition> srvDefs;
 
 	public APISystemSuperSessionClientTest() {
-		this.srvDefs = new ArrayList<ServerDefinition>();
+		APISystemSuperSessionClientTest.srvDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
 				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
 				TestConstants.sesServiceName1);
-		this.srvDefs.add(srvDef);
+		APISystemSuperSessionClientTest.srvDefs.add(srvDef);
 	}
 
 	@Before
@@ -77,6 +78,43 @@ public class APISystemSuperSessionClientTest extends SystemSuperTest {
 		}
 		sesSrvCtxs = null;
 		super.afterOneTest();
+	}
+
+	public static void setUpServiceConnectorAndServer() {
+		// SC definitions
+		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
+				TestConstants.log4jSC0Properties);
+		sc0Defs.add(sc0Def);
+
+		// server definitions
+		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
+				TestConstants.PORT_SC_TCP, 100, 10, TestConstants.sesServiceName1);
+		srvToSC0Defs.add(srvToSC0Def);
+
+		SystemSuperTest.scDefs = sc0Defs;
+		APISystemSuperSessionClientTest.srvDefs = srvToSC0Defs;
+	}
+
+	public static void setUpCascadedServiceConnectorAndServer() {
+		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
+				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
+		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
+				TestConstants.SC1CASCProperties, TestConstants.log4jSC1CASCProperties);
+		scCascDefs.add(sc0CascDef);
+		scCascDefs.add(sc1CascDef);
+
+		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
+				TestConstants.PORT_SC0_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
+		srvToSC0CascDefs.add(srvToSC0CascDef);
+
+		SystemSuperTest.scDefs = scCascDefs;
+		APISystemSuperSessionClientTest.srvDefs = srvToSC0CascDefs;
 	}
 
 	protected class MsgCallback extends SCMessageCallback {

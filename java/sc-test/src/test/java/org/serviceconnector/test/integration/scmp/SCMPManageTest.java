@@ -46,7 +46,7 @@ public class SCMPManageTest extends IntegrationSuperTest {
 		super.beforeOneTest();
 		AppContext.init();
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 1, 0));
+				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1));
 	}
 
 	@After

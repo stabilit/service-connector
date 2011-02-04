@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.test.system.scmp;
+package org.serviceconnector.test.system.scmp.casc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +52,9 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	private SCRequester requester;
 	protected static List<ServerDefinition> srvDefs;
 	protected static Map<String, ProcessCtx> sesSrvCtxs;
-	
+
 	public SCMPClnCreateSessionTest() {
-		SCMPClnCreateSessionTest.setUpServiceConnectorAndServer();
+		SCMPClnCreateSessionTest.setUpCascadedServiceConnectorAndServer();
 	}
 
 	@Before
@@ -80,22 +80,23 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		super.afterOneTest();
 	}
 
-	public static void setUpServiceConnectorAndServer() {
-		// SC definitions
-		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
-				TestConstants.log4jSC0Properties);
-		sc0Defs.add(sc0Def);
+	public static void setUpCascadedServiceConnectorAndServer() {
+		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
+				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
+		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
+				TestConstants.SC1CASCProperties, TestConstants.log4jSC1CASCProperties);
+		scCascDefs.add(sc0CascDef);
+		scCascDefs.add(sc1CascDef);
 
-		// server definitions
-		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
-		srvToSC0Defs.add(srvToSC0Def);
+				TestConstants.PORT_SC0_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
+		srvToSC0CascDefs.add(srvToSC0CascDef);
 
-		SystemSuperTest.scDefs = sc0Defs;
-		SCMPClnCreateSessionTest.srvDefs = srvToSC0Defs;
+		SystemSuperTest.scDefs = scCascDefs;
+		SCMPClnCreateSessionTest.srvDefs = srvToSC0CascDefs;
 	}
 
 	/**

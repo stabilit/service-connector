@@ -77,7 +77,7 @@ public class SCMPAttachDetachTest extends IntegrationSuperTest {
 	@Test
 	public void t01_AttachDetach() throws Exception {
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST, this.port,
-				this.connectionType.getValue(), 1, 0));
+				this.connectionType.getValue(), 0, 1));
 		SCMPAttachCall attachCall = new SCMPAttachCall(this.requester);
 		TestCallback callback = new TestCallback();
 		attachCall.invoke(callback, 1000);
