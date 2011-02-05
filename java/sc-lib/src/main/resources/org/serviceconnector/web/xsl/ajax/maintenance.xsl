@@ -50,6 +50,20 @@
 	            </td>
 	            <td valign="top">
 	              <table border="0" cellspacing="0" cellpadding="0" style="background:white; width:100%;border-right:1px solid #666666">
+	                <xsl:if test="count($body/service/files/file) = 0">
+	                  <tr>
+	                    <td colspan="0" style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">
+	                      <xsl:choose>
+	                        <xsl:when test="$body/service/exception">
+	                          <xsl:value-of select="$body/service/exception"/>
+	                        </xsl:when>
+	                        <xsl:otherwise>
+	                          no files found
+	                        </xsl:otherwise>
+	                      </xsl:choose>
+	                    </td>
+	                  </tr>
+	                </xsl:if>
 	                <xsl:for-each select="$body/service/files/file">
 	                  <tr>
 	                    <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">
@@ -93,6 +107,20 @@
 	            </td>
 	            <td valign="top">
 	              <table border="0" cellspacing="0" cellpadding="0" style="background:white; width:100%;border-right:1px solid #666666">
+	                <xsl:if test="count($body/service/files/file) = 0">
+	                  <tr>
+	                    <td colspan="0" style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">
+	                      <xsl:choose>
+	                        <xsl:when test="$body/service/exception">
+	                          <xsl:value-of select="$body/service/exception"/>
+	                        </xsl:when>
+	                        <xsl:otherwise>
+	                          no files found
+	                        </xsl:otherwise>
+	                      </xsl:choose>
+	                    </td>
+	                  </tr>
+	                </xsl:if>
 	                <xsl:for-each select="$body/service/files/file">
 	                  <tr>
 	                    <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">

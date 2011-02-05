@@ -1,4 +1,5 @@
 /*
+ * 
  * Copyright © 2010 STABILIT Informatik AG, Switzerland *
  * *
  * Licensed under the Apache License, Version 2.0 (the "License"); *
@@ -80,6 +81,7 @@ import org.serviceconnector.util.DumpUtility;
 import org.serviceconnector.util.HttpClientUploadUtility;
 import org.serviceconnector.util.HttpClientUploadUtility.UploadRunnable;
 import org.serviceconnector.util.SystemInfo;
+import org.serviceconnector.util.URLUtility;
 import org.serviceconnector.web.AbstractXMLLoader;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
@@ -1146,15 +1148,9 @@ public class DefaultXMLLoaderFactory {
 						try {
 							file = file.substring(3, file.length() - 3);
 							String path = fileService.getPath();
-							if (path.startsWith("/") == false) {
-								path = "/" + path;
-							}
-							if (path.endsWith("/") == false) {
-								path += "/";
-							}
-							path += file;
+							String urlPath = URLUtility.makePath(path, file);
 							// download file
-							URL downloadURL = new URL("http://" + fileServer.getHost() + ":" + fileServer.getPortNr() + "/" + path);
+							URL downloadURL = new URL("http", fileServer.getHost(), fileServer.getPortNr(), urlPath);
 							String configFileName = SystemInfo.getConfigFileName();
 							File configFile = new File(configFileName);
 							File localDestionationFile = null;
@@ -1258,20 +1254,10 @@ public class DefaultXMLLoaderFactory {
 				String dateTimeString = LOGS_FILE_SDF.format(now);
 				logsFileName = Constants.LOGS_FILE_NAME + serviceName + "_" + dateTimeString + Constants.LOGS_FILE_EXTENSION;
 			}
+			String urlPath = URLUtility.makePath(fileService.getPath(), fileService.getUploadFileScriptName());
+			URL url = new URL("http", fileServer.getHost(), fileServer.getPortNr(), urlPath);
 			StringBuilder sb = new StringBuilder();
-			sb.append("http://");
-			sb.append(fileServer.getHost());
-			sb.append(":");
-			sb.append(fileServer.getPortNr());
-			String path = fileService.getPath();
-			if (path.startsWith("/") == false) {
-				sb.append("/");
-			}
-			sb.append(path);
-			if (path.endsWith("/") == false) {
-				sb.append("/");
-			}
-			sb.append(fileService.getUploadFileScriptName());
+			sb.append(url.toString());
 			sb.append("?name=");
 			sb.append(logsFileName);
 			sb.append("&service=");
@@ -1449,26 +1435,27 @@ public class DefaultXMLLoaderFactory {
 			if (service instanceof FileService) {
 				FileService fileService = (FileService) service;
 				FileServer fileServer = fileService.getServer();
-				String path = fileService.getPath();
-				if (path.startsWith("/") == false) {
-					path = "/" + path;
-				}
-				if (path.endsWith("/") == false) {
-					path += "/";
-				}
-				SCMPMessage reply = fileServer.serverGetFileList(path, fileService.getGetFileListScriptName(),
-						serviceName, 10);
-				Object body = reply.getBody();
-				if (body != null && body instanceof byte[]) {
-					String sBody = new String((byte[]) body);
-					String[] files = sBody.split("\\|");
-					writer.writeStartElement("files");
-					for (int i = 0; i < files.length; i++) {
-						writer.writeStartElement("file");
-						writer.writeCData(files[i]);
+				try {
+					SCMPMessage reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(),
+							serviceName, 10);
+					Object body = reply.getBody();
+					if (body != null && body instanceof byte[]) {
+						String sBody = new String((byte[]) body);
+						String[] files = sBody.split("\\|");
+						writer.writeStartElement("files");
+						for (int i = 0; i < files.length; i++) {
+							writer.writeStartElement("file");
+							writer.writeCData(files[i]);
+							writer.writeEndElement();
+						}
 						writer.writeEndElement();
 					}
+				} catch (Exception e) {
+					writer.writeComment("exception:" + e.toString() + ":exception");
+					writer.writeStartElement("exception");
+					writer.writeCData(e.toString());
 					writer.writeEndElement();
+					logger.error(e.toString());
 				}
 			}
 			writer.writeEndElement(); // close service tag
@@ -1521,32 +1508,33 @@ public class DefaultXMLLoaderFactory {
 			if (service instanceof FileService) {
 				FileService fileService = (FileService) service;
 				FileServer fileServer = fileService.getServer();
-				String path = fileService.getPath();
-				if (path.startsWith("/") == false) {
-					path = "/" + path;
-				}
-				if (path.endsWith("/") == false) {
-					path += "/";
-				}
-				SCMPMessage reply = fileServer.serverGetFileList(path, fileService.getGetFileListScriptName(),
-						serviceName, 10);
-				Object body = reply.getBody();
-				if (body != null && body instanceof byte[]) {
-					String sBody = new String((byte[]) body);
-					String[] files = sBody.split("\\|");
-					writer.writeStartElement("files");
-					for (int i = 0; i < files.length; i++) {
-						String fileName = files[i];
-						if (fileName.startsWith(Constants.LOGS_FILE_NAME)) {
-						   writer.writeStartElement("file");
-						   writer.writeCData(files[i]);
-						   writer.writeEndElement();
+				try {
+					SCMPMessage reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(),
+							serviceName, 10);
+					Object body = reply.getBody();
+					if (body != null && body instanceof byte[]) {
+						String sBody = new String((byte[]) body);
+						String[] files = sBody.split("\\|");
+						writer.writeStartElement("files");
+						for (int i = 0; i < files.length; i++) {
+							String fileName = files[i];
+							if (fileName.startsWith(Constants.LOGS_FILE_NAME)) {
+								writer.writeStartElement("file");
+								writer.writeCData(files[i]);
+								writer.writeEndElement();
+							}
 						}
+						writer.writeEndElement();
 					}
+				} catch (Exception e) {
+					writer.writeComment("exception:" + e.toString() + ":exception");
+					writer.writeStartElement("exception");
+					writer.writeCData(e.toString());
 					writer.writeEndElement();
+					logger.error(e.toString());
 				}
 			}
-			writer.writeEndElement(); // close service tag			
+			writer.writeEndElement(); // close service tag
 			// get logs xml loader from factory
 			LogsXMLLoader logsXMLLoader = (LogsXMLLoader) loaderFactory.getXMLLoader("/logs");
 			// load available logs file list for current date (today)
@@ -1605,7 +1593,7 @@ public class DefaultXMLLoaderFactory {
 				writer.writeEndElement(); // close files tag
 			}
 			writer.writeEndElement(); // close dumplist tag
-			
+
 			return;
 		}
 

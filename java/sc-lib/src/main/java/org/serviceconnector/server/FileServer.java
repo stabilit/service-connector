@@ -36,6 +36,7 @@ import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.AbstractSession;
 import org.serviceconnector.service.FileSession;
 import org.serviceconnector.service.Session;
+import org.serviceconnector.util.URLUtility;
 
 public class FileServer extends Server {
 
@@ -162,9 +163,9 @@ public class FileServer extends Server {
 	public SCMPMessage serverGetFileList(String path, String listScriptName, String serviceName, int timeoutSeconds)
 			throws Exception {
 		HttpURLConnection httpCon = null;
-
-		URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort() + "/"
-				+ path + listScriptName + "?servicename=" + serviceName);
+		String urlPath = URLUtility.makePath(path, listScriptName);
+		urlPath += "?servicename=" + serviceName;
+		URL url = new URL("http", this.remoteNodeConfiguration.getHost(), this.remoteNodeConfiguration.getPort(), urlPath);
 		httpCon = (HttpURLConnection) url.openConnection();
 		httpCon.setRequestMethod("GET");
 		httpCon.setDoOutput(true);

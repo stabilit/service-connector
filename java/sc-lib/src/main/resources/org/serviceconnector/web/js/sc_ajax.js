@@ -106,6 +106,14 @@ function getDialogText(msg) {
 	return text;
 }
 
+function getDialogException(exception) {
+	var text = '<table border="0" cellspacing="0" cellpadding="0" width="100%" class="sc_dialog_table">';
+	text += '<tr><th class="sc_dialog_table_header" style="width:20px;"> </th>';
+	text += '<th class="sc_dialog_table_header">' + msg + '</th>';
+	text += '</tr></table>';
+	return text;
+}
+
 function downloadAndReplaceSelected(service) {
 	// get all checkboxes
 	var inputs = document.getElementsByTagName("input"); //or document.forms[0].elements;  
@@ -239,6 +247,8 @@ var ajaxContent = new AjaxCallObject('Content', 'ajax/content', contentCallback,
 
 
 function maintenanceCallback() {
+//    callPending = false;
+//    hideLayer("DialogBox");
 	var scMaintenance = document.getElementById("sc_maintenance");
 	if (scMaintenance != null) {
 		scMaintenance.innerHTML = this.req.responseText;
@@ -246,6 +256,12 @@ function maintenanceCallback() {
 }
 
 function maintenanceCall(action, service, query) {
+//	var dialogBox = document.getElementById("DialogBox");
+//	if (dialogBox != null) {
+//       dialogBox.innerHTML = getDialogText("... Please Wait ...");
+//       showLayer("DialogBox");
+//       centerLayer("DialogBox", 400, 400, 0, 0);
+//	}
 	ajaxMaintenance.ajaxCall('ajax/maintenance?action=' + action + '&service='+service + '&' + query);
 }
 
