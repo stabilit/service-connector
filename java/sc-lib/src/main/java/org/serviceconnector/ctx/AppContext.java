@@ -63,7 +63,7 @@ public final class AppContext {
 
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(AppContext.class);
-	
+
 	private static final SimpleDateFormat DUMP_FILE_SDF = new SimpleDateFormat(Constants.DUMP_FILE_NAME_FORMAT);
 	/** The SC environment. Indicates that AppContext is running in a SC environment */
 	private static boolean scEnvironment = false;
@@ -338,7 +338,7 @@ public final class AppContext {
 	public static RemoteNodeListConfiguration getRequesterConfiguration() {
 		return requesterConfiguration;
 	}
-	
+
 	public static ServiceListConfiguration getServiceConfiguration() {
 		return serviceConfiguration;
 	}
@@ -414,6 +414,8 @@ public final class AppContext {
 				if (AppContext.executor != null) {
 					AppContext.executor.shutdownNow();
 				}
+			} else {
+				logger.error("destroy of AppContext failed - not allowed, communicators using ressources available");
 			}
 		}
 	}
