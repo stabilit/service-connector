@@ -8,7 +8,7 @@
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
       setInterval("contentCall('sessions', '')", 10000);      
-      setInterval("contentCall('sessions', 'server=<xsl:value-of select="$serverParam"/>)", 10000);            
+      setInterval("contentCall('sessions', 'server=<xsl:value-of select="$serverParam"/>')", 10000);            
     </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table max_width">

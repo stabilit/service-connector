@@ -123,22 +123,14 @@
            <xsl:choose>
              <xsl:when test="$head/meta/@scstatus = 'success'">
                <div id="sc_status_area" style="padding-left:2px; float:right">
-                 <div id="sc_status_area_success" style="visibility:visible; float:right">
-                   <img border="0" width="14" height="14" src="green.png"></img>
-                 </div>             
-                 <div id="sc_status_area_error" style="visibility:hidden; float:right">
-                    <img border="0" width="14" height="14" src="red.png"></img>             
-                 </div>
+                 <div id="sc_status_area_success" style="visibility:visible; float:right"><img border="0" width="14" height="14" src="green.png"></img></div>             
+                 <div id="sc_status_area_error" style="visibility:hidden; float:right"><img border="0" width="14" height="14" src="red.png"/></div>
                </div>
              </xsl:when>
              <xsl:otherwise>
                <div id="sc_status_area" style="padding-left:2px; float:right">
-                 <div id="sc_status_area_success" style="visibility:hidden; float:right">
-                   <img border="0" width="14" height="14" src="green.png"></img>
-                 </div>             
-                 <div id="sc_status_area_error" style="visibility:visible; float:right">
-                    <img border="0" width="14" height="14" src="red.png"></img>       
-                 </div>
+                 <div id="sc_status_area_success" style="visibility:hidden; float:right"><img border="0" width="14" height="14" src="green.png"/></div>             
+                 <div id="sc_status_area_error" style="visibility:visible; float:right"><img border="0" width="14" height="14" src="red.png"/></div>
                </div>
              </xsl:otherwise>
            </xsl:choose>

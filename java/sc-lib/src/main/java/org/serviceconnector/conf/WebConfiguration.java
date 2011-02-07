@@ -40,7 +40,7 @@ public class WebConfiguration {
 	private boolean xslTransformationCacheEnabled;
 
 	/**
-	 * Page header prexix is displayed in the page header and page title in front of the
+	 * Page header prefix is displayed in the page header and page title in front of the
 	 * standard text. The property WEB_PAGE_HEADER_PREFIX allows to define a custom value.
 	 */
 	private String pageHeaderPrefix;
@@ -109,7 +109,30 @@ public class WebConfiguration {
 		return xslTransformationCacheEnabled;
 	}
 
+	/**
+	 * Gets the page header prefix.
+	 *
+	 * @return the page header prefix
+	 */
 	public String getPageHeaderPrefix() {
 		return pageHeaderPrefix;
+	}
+	
+	/**
+	 * Gets the sc download service.
+	 *
+	 * @return the sc download service
+	 */
+	public String getScDownloadService() {
+		return scDownloadService;
+	}
+	
+	/**
+	 * Gets the sc upload service.
+	 *
+	 * @return the sc upload service
+	 */
+	public String getScUploadService() {
+		return scUploadService;
 	}
 }

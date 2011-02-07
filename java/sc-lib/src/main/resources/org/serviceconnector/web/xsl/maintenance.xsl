@@ -23,8 +23,12 @@
             <tr class="sc_table_even">
               <xsl:for-each select="$body/maintenance/services/service">
                 <xsl:sort data-type="text" select="name"/>
-                <td id="sc_file_service_download_{name}" style="float:left"><input class="sc_form_button" style="margin:10px;" name="File Service" type="button" value="Propery File Download - {name}" onclick="javascript:maintenanceCall('sc_property_download', '{name}')"></input></td> 
-                <td id="sc_file_service_upload_{name}" style="float:left"><input class="sc_form_button" style="margin:10px;" name="File Service" type="button" value="Logile Upload - {name}" onclick="javascript:maintenanceCall('sc_logs_upload', '{name}')"></input></td> 
+                <xsl:if test="scDownloadService = 'true'">
+                   <td id="sc_file_service_download_{name}" style="float:left"><input class="sc_form_button" style="margin:10px;" name="File Service" type="button" value="Propery File Download - {name}" onclick="javascript:maintenanceCall('sc_property_download', '{name}')"></input></td>
+                </xsl:if>                
+                <xsl:if test="scUploadService = 'true'">
+                   <td id="sc_file_service_upload_{name}" style="float:left"><input class="sc_form_button" style="margin:10px;" name="File Service" type="button" value="Logile Upload - {name}" onclick="javascript:maintenanceCall('sc_logs_upload', '{name}')"></input></td>
+                </xsl:if> 
               </xsl:for-each>              
             </tr>
           </table>

@@ -6,7 +6,7 @@
     <xsl:variable name="remoteNode" select="$head/query/param/@remoteNode"/>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('listeners', 'remoteNode=<xsl:value-of select="$remoteNode"/>)", 10000);      
+      setInterval("contentCall('listeners', 'remoteNode=<xsl:value-of select="$remoteNode"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table max_width">

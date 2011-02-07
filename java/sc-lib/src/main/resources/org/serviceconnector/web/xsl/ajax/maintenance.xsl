@@ -65,6 +65,7 @@
 	                  </tr>
 	                </xsl:if>
 	                <xsl:for-each select="$body/service/files/file">
+	                  <xsl:sort data-type="text" order="descending" select="."/>
 	                  <tr>
 	                    <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">
 	                      <input id="fs:{.}:fs" type="checkbox"></input>
@@ -122,6 +123,7 @@
 	                  </tr>
 	                </xsl:if>
 	                <xsl:for-each select="$body/service/files/file">
+	                  <xsl:sort data-type="text" order="descending" select="."/>
 	                  <tr>
 	                    <td style="border-bottom:1px solid #666666;width:20px;padding:4px;text-align:left;">
 	                      -

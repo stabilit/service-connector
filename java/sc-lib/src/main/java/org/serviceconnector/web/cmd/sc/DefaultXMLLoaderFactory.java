@@ -58,6 +58,7 @@ import org.serviceconnector.cache.CacheKey;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cache.CacheMessage;
 import org.serviceconnector.cache.ICacheConfiguration;
+import org.serviceconnector.conf.WebConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.factory.IFactoryable;
 import org.serviceconnector.net.res.IEndpoint;
@@ -782,19 +783,51 @@ public class DefaultXMLLoaderFactory {
 		@Override
 		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			writer.writeStartElement("maintenance");
+			// load web configuration
+			loadWebConfiguration(writer, request);
 			// load any file services
 			loadFileServices(writer, request);
 
 			writer.writeEndElement(); // close maintenance tag
 		}
-
+		
+		private void loadWebConfiguration(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			WebConfiguration webConfiguration = WebContext.getWebConfiguration();
+			writer.writeStartElement("web-config");
+			String scDownloadService = webConfiguration.getScDownloadService();
+			writer.writeStartElement("scDownloadService");
+			writer.writeCData(scDownloadService);
+			writer.writeEndElement(); // end of scDownloadService
+			String scUploadService = webConfiguration.getScUploadService();
+			writer.writeStartElement("scUploadService");
+			writer.writeCData(scUploadService);
+			writer.writeEndElement(); // end of scUploadService
+			writer.writeEndElement(); // end of web-config
+		}
+		
 		private void loadFileServices(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 			writer.writeStartElement("services");
 			Service[] services = serviceRegistry.getServices();
+			WebConfiguration webConfiguration = WebContext.getWebConfiguration();
+			String scDownloadService = webConfiguration.getScDownloadService();
+			String scUploadService = webConfiguration.getScUploadService();
 			for (Service service : services) {
 				if (service instanceof FileService) {
+					// check if upload or download is active for this service
+					FileService fileService = (FileService) service;
 					writer.writeStartElement("service");
+					String fileServiceName = fileService.getName();
+					if (fileServiceName.equals(scDownloadService)) {
+						writer.writeStartElement("scDownloadService");
+						writer.writeCharacters("true");
+						writer.writeEndElement();
+					}
+					if (fileServiceName.equals(scUploadService)) {
+						writer.writeStartElement("scUploadService");
+						writer.writeCharacters("true");
+						writer.writeEndElement();
+					}
 					this.writeBean(writer, service);
 					writer.writeEndElement(); // close service tag
 				}
