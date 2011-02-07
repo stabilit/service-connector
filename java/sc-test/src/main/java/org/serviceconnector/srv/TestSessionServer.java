@@ -30,7 +30,6 @@ import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.util.FileUtility;
 
@@ -51,6 +50,7 @@ public class TestSessionServer extends TestStatefulServer {
 	 *            [4] maxConnections<br>
 	 *            [5] connectionType ("netty.tcp" or "netty.http")<br>
 	 *            [6] serviceNames (comma delimited list)<br>
+	 *            [7] nics (comma separated list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
 		logger.log(Level.OFF, "TestSessionServer is starting ...");
@@ -65,6 +65,7 @@ public class TestSessionServer extends TestStatefulServer {
 		server.setMaxConnections(Integer.parseInt(args[4]));
 		server.setConnectionType(args[5]);
 		server.setServiceNames(args[6]);
+		server.setNics(args[7]);
 		server.run();
 	}
 
@@ -77,9 +78,12 @@ public class TestSessionServer extends TestStatefulServer {
 			logger.fatal("unable to get path to pid file", e1);
 		}
 
-		ctr = new ThreadSafeCounter();
 		List<String> nics = new ArrayList<String>();
-		nics.add("localhost");
+		String[] nicsStrings = this.nicsStrings.split(",");
+		for (String nicString : nicsStrings) {
+			nics.add(nicString);
+		}
+
 		SCServer sc = new SCServer(TestConstants.HOST, this.port, nics, this.listenerPort, this.connectionType);
 		try {
 			sc.setKeepAliveIntervalSeconds(10);
@@ -211,7 +215,6 @@ public class TestSessionServer extends TestStatefulServer {
 			return request;
 		}
 
-		
 		// sleep for time defined in the body and send back the same message
 		public SCMessage sleep(SCMessage request, int operationTimeoutMillis) {
 			String dataString = (String) request.getData();

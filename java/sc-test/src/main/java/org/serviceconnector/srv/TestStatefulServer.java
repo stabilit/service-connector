@@ -22,6 +22,7 @@ public abstract class TestStatefulServer extends Thread {
 	protected String serviceNames;
 	protected String serverName;
 	protected ConnectionType connectionType;
+	protected String nicsStrings;
 
 	public void setServerName(String serverName) {
 		this.serverName = serverName;
@@ -41,6 +42,10 @@ public abstract class TestStatefulServer extends Thread {
 
 	public void setMaxConnections(int maxConnections) {
 		this.maxConnections = maxConnections;
+	}
+
+	public void setNics(String nics) {
+		this.nicsStrings = nics;
 	}
 
 	public void setServiceNames(String serviceNames) {

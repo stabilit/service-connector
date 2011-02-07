@@ -21,6 +21,8 @@
 package org.serviceconnector.srv;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -59,6 +61,7 @@ public class TestPublishServer extends TestStatefulServer {
 	 *            [4] maxConnections<br>
 	 *            [5] connectionType ("netty.tcp" or "netty.http")<br>
 	 *            [6] serviceNames (comma delimited list)<br>
+	 *            [7] nics (comma separated list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
 		logger.log(Level.OFF, "TestPublishServer is starting ...");
@@ -73,6 +76,7 @@ public class TestPublishServer extends TestStatefulServer {
 		server.setMaxConnections(Integer.parseInt(args[4]));
 		server.setConnectionType(args[5]);
 		server.setServiceNames(args[6]);
+		server.setNics(args[7]);
 		server.run();
 	}
 
@@ -86,7 +90,14 @@ public class TestPublishServer extends TestStatefulServer {
 		}
 
 		ctr = new ThreadSafeCounter();
-		SCServer sc = new SCServer(TestConstants.HOST, this.port, this.listenerPort, this.connectionType);
+
+		List<String> nics = new ArrayList<String>();
+		String[] nicsStrings = this.nicsStrings.split(",");
+		for (String nicString : nicsStrings) {
+			nics.add(nicString);
+		}
+
+		SCServer sc = new SCServer(TestConstants.HOST, this.port, nics, this.listenerPort, this.connectionType);
 		sc.setKeepAliveIntervalSeconds(0);
 		try {
 			sc.setKeepAliveIntervalSeconds(10);
