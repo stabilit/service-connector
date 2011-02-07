@@ -65,7 +65,7 @@ public class TestPublishServer extends TestStatefulServer {
 	 */
 	public static void main(String[] args) throws Exception {
 		logger.log(Level.OFF, "TestPublishServer is starting ...");
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < args.length; i++) {
 			logger.log(Level.OFF, "args[" + i + "]:" + args[i]);
 		}
 		TestPublishServer server = new TestPublishServer();

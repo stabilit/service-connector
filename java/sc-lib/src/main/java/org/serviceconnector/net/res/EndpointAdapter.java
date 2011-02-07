@@ -105,10 +105,11 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 		this.answer.add(Boolean.TRUE);
 		synchronized (this) {
 			try {
+				logger.info("Endpoint started host=" + host + ":" + port);
 				wait();
 			} catch (InterruptedException e) {
-				logger.info("Endpoint stopped : " + host + ":" + port);
 			}
+			logger.info("Endpoint stopped host=" + host + ":" + port);
 		}
 	}
 

@@ -41,7 +41,7 @@ public class TestServer {
 	public static void main(String[] args) {
 		logger.log(Level.OFF, "TestServer starting ...");
 
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < args.length; i++) {
 			logger.log(Level.OFF, "args[" + i + "]:" + args[i]);
 		}
 
