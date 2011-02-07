@@ -209,8 +209,8 @@ public class ProcessesController {
 		Map<String, ProcessCtx> proccessContexts = new HashMap<String, ProcessCtx>();
 		for (ServerDefinition srvDef : serverDefs) {
 			ProcessCtx srvProcess = this.startServer(srvDef.getServerType(), srvDef.getLog4jproperty(), srvDef.getServerName(),
-					srvDef.getServerPort(), srvDef.getScPort(), srvDef.getMaxSessions(), srvDef.getMaxConnections(), srvDef
-							.getConnectionType(), srvDef.getServiceNames(), srvDef.getTimezone());
+					srvDef.getServerPort(), srvDef.getScPort(), srvDef.getMaxSessions(), srvDef.getMaxConnections(),
+					srvDef.getConnectionType(), srvDef.getServiceNames(), srvDef.getTimezone(), srvDef.getNics());
 			proccessContexts.put(srvDef.getServerName(), srvProcess);
 		}
 		return proccessContexts;
@@ -225,7 +225,7 @@ public class ProcessesController {
 	public ProcessCtx startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
 			int maxSessions, int maxConnections, String serviceNames) throws Exception {
 		return this.startServer(serverType, log4jSrvProperties, serverName, listenerPort, scPort, maxSessions, maxConnections,
-				ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, serviceNames, null);
+				ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, serviceNames, null, TestConstants.HOST);
 	}
 
 	/**
@@ -246,9 +246,9 @@ public class ProcessesController {
 	 * @throws Exception
 	 */
 	public ProcessCtx startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
-			int maxSessions, int maxConnections, String serviceNames, String timezone) throws Exception {
+			int maxSessions, int maxConnections, String serviceNames, String timezone, String nics) throws Exception {
 		return this.startServer(serverType, log4jSrvProperties, serverName, listenerPort, scPort, maxSessions, maxConnections,
-				ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, serviceNames, timezone);
+				ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE, serviceNames, timezone, nics);
 	}
 
 	/**
@@ -270,7 +270,7 @@ public class ProcessesController {
 	 * @throws Exception
 	 */
 	public ProcessCtx startServer(String serverType, String log4jSrvProperties, String serverName, int listenerPort, int scPort,
-			int maxSessions, int maxConnections, ConnectionType connectionType, String serviceNames, String timezone)
+			int maxSessions, int maxConnections, ConnectionType connectionType, String serviceNames, String timezone, String nics)
 			throws Exception {
 
 		ProcessCtx proc = new ProcessCtx();
@@ -310,6 +310,7 @@ public class ProcessesController {
 		 * [9] maxConnections
 		 * [10] connectionType ("netty.tcp" or "netty.http")
 		 * [11] serviceNames (comma delimited list)
+		 * [12] nics (comma separated list)
 		 */
 		String timezoneParam = null;
 		if (timezone != null) {
@@ -321,7 +322,7 @@ public class ProcessesController {
 		}
 		String command = "java -Dlog4j.configuration=file:" + log4jFileFullName + timezoneParam + " -jar " + srvRunablFullName
 				+ " " + serverType + " " + serverName + " " + listenerPort + " " + scPort + " " + maxSessions + " "
-				+ maxConnections + " " + connectionType.getValue() + " " + serviceNames;
+				+ maxConnections + " " + connectionType.getValue() + " " + serviceNames + " " + nics;
 		Process srvProcess = Runtime.getRuntime().exec(command);
 		proc.setProcess(srvProcess);
 		int timeout = 15;
@@ -342,8 +343,8 @@ public class ProcessesController {
 		int timeout = 15; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileName())) {
-				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, srvProcess.getSCPort(), srvProcess
-						.getConnectionType());
+				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, srvProcess.getSCPort(),
+						srvProcess.getConnectionType());
 				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
 				clientMgmt.enableService(serviceName); // service might be disabled during tests

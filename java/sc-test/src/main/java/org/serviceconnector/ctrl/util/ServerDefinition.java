@@ -1,5 +1,6 @@
 package org.serviceconnector.ctrl.util;
 
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.net.ConnectionType;
 
 public class ServerDefinition {
@@ -14,15 +15,16 @@ public class ServerDefinition {
 	private String serviceNames;
 	private ConnectionType connectionType;
 	private String timezone;
+	private String nics;
 
 	public ServerDefinition(String serverType, String log4jproperty, String serverName, int serverPort, int scPort,
 			int maxSessions, int maxConnections, String serviceNames, ConnectionType connectionType) {
 		this(serverType, log4jproperty, serverName, serverPort, scPort, maxSessions, maxConnections, serviceNames, connectionType,
-				null);
+				null, TestConstants.HOST);
 	}
 
 	public ServerDefinition(String serverType, String log4jproperty, String serverName, int serverPort, int scPort,
-			int maxSessions, int maxConnections, String serviceNames, ConnectionType connectionType, String timezone) {
+			int maxSessions, int maxConnections, String serviceNames, ConnectionType connectionType, String timezone, String nics) {
 		this.serverType = serverType;
 		this.log4jproperty = log4jproperty;
 		this.serverName = serverName;
@@ -33,6 +35,7 @@ public class ServerDefinition {
 		this.serviceNames = serviceNames;
 		this.connectionType = connectionType;
 		this.timezone = timezone;
+		this.nics = nics;
 	}
 
 	public ServerDefinition(String serverType, String log4jproperty, String serverName, int serverPort, int scPort,
@@ -79,5 +82,9 @@ public class ServerDefinition {
 
 	public String getTimezone() {
 		return timezone;
+	}
+	
+	public String getNics() {
+		return nics;
 	}
 }
