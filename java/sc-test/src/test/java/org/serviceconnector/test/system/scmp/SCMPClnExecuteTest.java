@@ -43,9 +43,9 @@ public class SCMPClnExecuteTest extends org.serviceconnector.test.system.scmp.ca
 		// server definitions
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
 
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 1, 1, TestConstants.pubServiceName1);
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
+				TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
 		srvToSC0Defs.add(srvToSC0Def);
 
 		SystemSuperTest.scDefs = sc0Defs;

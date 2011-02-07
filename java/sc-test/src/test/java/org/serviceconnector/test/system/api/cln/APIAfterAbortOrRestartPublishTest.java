@@ -40,7 +40,7 @@ public class APIAfterAbortOrRestartPublishTest extends APISystemSuperPublishClie
 		cbk.setExpectedMessages(nrMessages);
 		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 
-		ctrl.stopSC(scCtxs.get("SC1"));
+		ctrl.stopSC(scCtxs.get(TestConstants.SC0));
 
 		cbk.waitForMessage(10);
 

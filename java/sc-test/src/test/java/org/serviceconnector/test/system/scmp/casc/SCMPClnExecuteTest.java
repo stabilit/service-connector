@@ -83,7 +83,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
+				TestConstants.PORT_SC0_CASC_TCP, 1, 1, TestConstants.sesServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 
 		SystemSuperTest.scDefs = scCascDefs;
