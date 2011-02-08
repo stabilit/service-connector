@@ -47,7 +47,7 @@ $greeting = "stabilit";          // the smtp ehlo greeting name
 
 // send mail notification
 $recipients = array("joel.traber@stabilit.ch", "jan.trnka@stabilit.ch");  // mail recipients list
-$from = "info@stabilit.ch";                                      				  // mail sender address
+$from = "info@stabilit.ch";                                      		  // mail sender address
 $fromName = "Service-Connector";                                          // mail sender name
 $replyTo = $from;                                                         // reply to mail address
 
