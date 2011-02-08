@@ -8,4 +8,4 @@ rem			-DlogDirectory=%OS_VARIABLE%
 rem and use them in the sc.properties files as ${sys:logDirectory} and in log4j.properties as ${logDirectory}
 rem
 rem# start sc
-java -Dlog4j.configuration=file:../config/log4j-sc.properties -jar ../bin/sc.jar -config ../config/sc.properties
+java -Dlog4j.configuration=file:../conf/log4j-sc.properties -jar sc.jar -config ../conf/sc.properties

@@ -1,8 +1,0 @@
-bin\
-doc\
-config\
-tst\
-cache\
-log\
-src\
-httpd\

@@ -1,6 +1,4 @@
-log\*.*
-kitbuild\kit*.*
-kitbuild\mvn*.*
-doc\*.bak
-config\*.bak
+logs\*.*
 cache\*.*
+doc\*.pdf
+doc\javadoc\*.*
