@@ -1,0 +1,8 @@
+readme.txt
+bin\
+doc\
+conf\
+php-scripts\
+cache\
+logs\
+sources\

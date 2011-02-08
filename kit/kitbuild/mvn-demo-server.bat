@@ -1,0 +1,10 @@
+@echo off
+
+call mvn-source-test-install-cmd.bat ..\..\java\demo-server
+call mvn-assembly-cmd.bat ..\..\java\demo-server
+copy ..\..\java\demo-server\target\demo-server.jar ..\bin /y
+copy ..\..\java\demo-server\src\main\resources\log4j.properties ..\conf\log4j-demo-server.properties /y
+copy ..\..\java\demo-server\src\main\resources\*.php ..\php-scripts /y
+copy ..\..\java\demo-server\src\main\resources\httpd-sc.conf ..\conf /y
+copy ..\..\java\demo-server\target\*sources.jar  ..\sources /y
+copy ..\..\java\demo-server\src\main\resources\*.php ..\test\up-download /y
