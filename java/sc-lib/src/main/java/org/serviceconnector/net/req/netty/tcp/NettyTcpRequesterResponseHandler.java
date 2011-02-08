@@ -30,6 +30,7 @@ import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.SCCallbackException;
 import org.serviceconnector.util.Statistics;
 
 /**
@@ -137,7 +138,8 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 				logger.error("receive message", th);
 				if ((th instanceof Exception) == false) {
 					try {
-						NettyTcpRequesterResponseHandler.this.scmpCallback.receive((Exception) th);
+						SCCallbackException ex = new SCCallbackException("exception raised in callback", th);
+						NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ex);
 					} catch (Throwable th1) {
 						logger.error("receive exception", th);
 					}
