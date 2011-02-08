@@ -7,6 +7,20 @@
 	font-size: 12px;
 }
 
+#overlay{
+    background:#000000;
+	display:none;
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	z-index:5000;
+	-moz-opacity: 0.8;
+	opacity:.80;
+	filter: alpha(opacity=80);
+}
+
 a {
 	text-decoration: none;
 	color:black;
@@ -41,7 +55,7 @@ a.sc_header:hover {
 	position: absolute;
 	text-align: center;	
 	visibility: hidden;
-	z-index: 1;
+	z-index: 10000;
 }
 
 .sc_dialog_table {

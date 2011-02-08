@@ -15,15 +15,33 @@
  */
 package org.serviceconnector.server;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.log4j.Appender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.Constants;
 import org.serviceconnector.conf.BasicConfiguration;
@@ -34,11 +52,20 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPPart;
 import org.serviceconnector.service.AbstractSession;
+import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.FileSession;
 import org.serviceconnector.service.Session;
+import org.serviceconnector.util.HttpClientUploadUtility;
+import org.serviceconnector.util.HttpClientUploadUtility.UploadRunnable;
 import org.serviceconnector.util.URLUtility;
+import org.serviceconnector.web.WebUtil;
 
 public class FileServer extends Server {
+
+	/** The Constant logger. */
+	private final static Logger logger = Logger.getLogger(FileServer.class);
+
+	private static final SimpleDateFormat LOGS_FILE_SDF = new SimpleDateFormat(Constants.LOGS_FILE_NAME_FORMAT);
 
 	/** The bas configuration. */
 	BasicConfiguration basConf = AppContext.getBasicConfiguration();
@@ -230,4 +257,176 @@ public class FileServer extends Server {
 		}
 		this.sessions.remove(session);
 	}
+
+	/**
+	 * Upload current log files. This method gets all current log file names and store them all in zip compressed stream.
+	 * This stream is loaded up to our file server (this). The uploading path is identified by the file service instance.
+	 * The service name identifies the uploading service instance which is part of the zipped file name.
+	 * 
+	 * Note: There is no file session required.
+	 * 
+	 * @param fileService
+	 *            the file service
+	 * @param serviceName
+	 *            the service name
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	public String uploadCurrentLogFiles(FileService fileService, String serviceName) throws Exception {
+		Calendar cal = Calendar.getInstance();
+		Date now = cal.getTime();
+		String logsFileName = null;
+		synchronized (LOGS_FILE_SDF) {
+			String dateTimeString = LOGS_FILE_SDF.format(now);
+			logsFileName = Constants.LOGS_FILE_NAME + serviceName + "_" + dateTimeString + Constants.LOGS_FILE_EXTENSION;
+		}
+		String urlPath = URLUtility.makePath(fileService.getPath(), fileService.getUploadFileScriptName());
+		URL url = new URL("http", this.getHost(), this.getPortNr(), urlPath);
+		StringBuilder sb = new StringBuilder();
+		sb.append(url.toString());
+		sb.append("?name=");
+		sb.append(logsFileName);
+		sb.append("&service=");
+		sb.append(serviceName);
+		sb.append("&mail=0");
+		// TODO: What does the mail option?
+		uploadCurrentLogFilesUsingStream(sb.toString());
+		return logsFileName;
+	}
+
+	/**
+	 * Upload current log files using stream. This methods does the main log file zip and upload job.
+	 * All log files of today were written to a zipped stream which is loaded up to this file server instance.
+	 * 
+	 * @param uploadUri
+	 *            the upload uri
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void uploadCurrentLogFilesUsingStream(String uploadUri) throws Exception {
+		// get all log file names
+		List<String> logFiles = this.getCurrentLogFiles();
+		if (logFiles.isEmpty()) {
+			throw new FileServerException("upload log files failed, no logs files found");
+		}
+		HttpClientUploadUtility uploadUtility = new HttpClientUploadUtility(uploadUri);
+		UploadRunnable uploadRunnable = uploadUtility.startUpload();
+		OutputStream os = null;
+		ZipOutputStream zos = null;
+		try {
+			os = uploadRunnable.getOutputStream();
+			zos = new ZipOutputStream(os);
+			for (String logFile : logFiles) {
+				String path = logFile.replace(File.separatorChar, '/');
+				InputStream is = WebUtil.loadResource(path);
+				if (is == null) {
+					continue;
+				}
+				ZipEntry entry = new ZipEntry(logFile);
+				entry.setComment("log file " + logFile);
+				zos.putNextEntry(entry);
+				try {
+					int readBytes = -1;
+					byte[] buffer = new byte[1 << 16];
+					while ((readBytes = is.read(buffer)) > 0) {
+						zos.write(buffer, 0, readBytes);
+					}
+				} finally {
+					if (is != null) {
+						try {
+							is.close();
+						} catch (Exception e) {
+							logger.error(e.toString());
+						}
+					}
+				}
+				zos.closeEntry();
+			}
+			zos.close();
+		} catch (Exception e) {
+			uploadRunnable.close();
+			throw e;
+		} finally {
+			if (zos != null) {
+				zos.close();
+			}
+		}
+		Integer ret = uploadRunnable.close();
+		if (ret != HttpStatus.SC_OK) {
+			throw new FileServerException("upload log files failed, http return code is " + ret);
+		}
+		return;
+	}
+
+	/**
+	 * Gets the current log file names in a list. Any distinct filenames will be ignored.
+	 * 
+	 * @return the current log file in a list
+	 */
+	private List<String> getCurrentLogFiles() {
+		Set<String> distinctLoggerSet = new HashSet<String>();
+		List<String> logFileList = new ArrayList<String>();
+		Logger rootLogger = LogManager.getRootLogger();
+		addLogFiles(rootLogger, logFileList, distinctLoggerSet);
+		Enumeration<?> currentLoggers = LogManager.getCurrentLoggers();
+		while (currentLoggers.hasMoreElements()) {
+			Logger currentLogger = (Logger) currentLoggers.nextElement();
+			Enumeration<?> appenders = currentLogger.getAllAppenders();
+			if (appenders.hasMoreElements()) {
+				addLogFiles(currentLogger, logFileList, distinctLoggerSet);
+			}
+		}
+		return logFileList;
+	}
+
+	/**
+	 * Adds the log files for given logger instance to the list. Any distinct file names will be ignored.
+	 * 
+	 * @param logger
+	 *            the logger
+	 * @param logFileList
+	 *            the log file list
+	 * @param distinctLoggerSet
+	 *            the distinct logger set
+	 */
+	private void addLogFiles(Logger logger, List<String> logFileList, Set<String> distinctLoggerSet) {
+		Enumeration<?> appenders = logger.getAllAppenders();
+		while (appenders.hasMoreElements()) {
+			Appender appender = (Appender) appenders.nextElement();
+			String appenderName = appender.getName();
+			if (distinctLoggerSet.contains(appenderName)) {
+				continue;
+			}
+			distinctLoggerSet.add(appenderName);
+			if (appender instanceof FileAppender) {
+				FileAppender fileAppender = (FileAppender) appender;
+				String sFile = fileAppender.getFile();
+				File file = new File(sFile);
+				if (file.exists() && file.isFile()) {
+					logFileList.add(sFile);
+				}
+			}
+		}
+	}
+
+	public void downloadAndReplace(FileService fileService, String remoteFile, File dstFile) throws Exception {
+		String path = fileService.getPath();
+		String urlPath = URLUtility.makePath(path, remoteFile);
+		URL downloadURL = new URL("http", this.getHost(), this.getPortNr(), urlPath);
+		FileOutputStream fos = new FileOutputStream(dstFile);
+		HttpURLConnection httpCon = (HttpURLConnection) downloadURL.openConnection();
+		httpCon.connect();
+		InputStream in = httpCon.getInputStream();
+		byte[] fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
+		int readBytes = -1;
+		while ((readBytes = in.read(fullBuffer)) > 0) {
+			fos.write(fullBuffer, 0, readBytes);
+		}
+		in.close();
+		fos.close();
+		httpCon.disconnect();
+		return;
+	}
+
 }

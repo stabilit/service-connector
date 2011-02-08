@@ -31,6 +31,7 @@
 				</script>
 			</head>
 			<body>
+                <div id="overlay">overlay</div>
 			    <div id="DialogBox"></div>
 				<div id="sc_root" >
 					<div id="sc_header">

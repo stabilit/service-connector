@@ -133,6 +133,8 @@ function downloadAndReplaceSelected(service) {
 	if (check == false) {
 		return;
     }
+	var overlayDiv = document.getElementById("overlay");
+	overlayDiv.style.display = 'block';
 	var dialogBox = document.getElementById("DialogBox");
 	if (dialogBox != null) {
        dialogBox.innerHTML = getDialogText("... Please Wait ...");
@@ -147,6 +149,8 @@ function uploadLogFiles(service) {
 	if (check == false) {
 		return;
     }
+	var overlayDiv = document.getElementById("overlay");
+	overlayDiv.style.display = 'block';
 	var dialogBox = document.getElementById("DialogBox");
 	if (dialogBox != null) {
        dialogBox.innerHTML = getDialogText("... Please Wait ...");
@@ -158,6 +162,8 @@ function uploadLogFiles(service) {
 
 function systemCallback() {
 	callPending = false;
+	var overlayDiv = document.getElementById("overlay");
+	overlayDiv.style.display = '';
 	var dialogBox = document.getElementById("DialogBox");
 	if (dialogBox != null) {
        dialogBox.innerHTML = this.req.responseText;

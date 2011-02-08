@@ -790,7 +790,7 @@ public class DefaultXMLLoaderFactory {
 
 			writer.writeEndElement(); // close maintenance tag
 		}
-		
+
 		private void loadWebConfiguration(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			WebConfiguration webConfiguration = WebContext.getWebConfiguration();
 			writer.writeStartElement("web-config");
@@ -804,7 +804,7 @@ public class DefaultXMLLoaderFactory {
 			writer.writeEndElement(); // end of scUploadService
 			writer.writeEndElement(); // end of web-config
 		}
-		
+
 		private void loadFileServices(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 			writer.writeStartElement("services");
@@ -1180,21 +1180,17 @@ public class DefaultXMLLoaderFactory {
 					if (file.startsWith("fs:") && file.endsWith(":fs")) {
 						try {
 							file = file.substring(3, file.length() - 3);
-							String path = fileService.getPath();
-							String urlPath = URLUtility.makePath(path, file);
-							// download file
-							URL downloadURL = new URL("http", fileServer.getHost(), fileServer.getPortNr(), urlPath);
 							String configFileName = SystemInfo.getConfigFileName();
 							File configFile = new File(configFileName);
-							File localDestionationFile = null;
+							File localDestinationFile = null;
 							if (configFile.isAbsolute()) {
-								localDestionationFile = new File(configFile.getParent() + File.separator + file);
+								localDestinationFile = new File(configFile.getParent() + File.separator + file);
 							} else {
 								URL resourceURL = WebUtil.getResourceURL(configFileName);
 								File resourceURLFile = new File(resourceURL.toURI());
-								localDestionationFile = new File(resourceURLFile.getParent() + File.separator + file);
+								localDestinationFile = new File(resourceURLFile.getParent() + File.separator + file);
 							}
-							downloadAndReplaceSingleFile(writer, downloadURL, localDestionationFile);
+							downloadAndReplaceSingleFile(writer, fileServer, fileService, file, localDestinationFile);
 						} catch (Exception e) {
 							writer.writeStartElement("message");
 							writer.writeCharacters(file + " did fail, " + e.getMessage());
@@ -1222,23 +1218,13 @@ public class DefaultXMLLoaderFactory {
 		 * @throws Exception
 		 *             the exception
 		 */
-		private void downloadAndReplaceSingleFile(XMLStreamWriter writer, URL srcUrl, File dstFile) throws Exception {
+		private void downloadAndReplaceSingleFile(XMLStreamWriter writer, FileServer fileServer, FileService fileService, String remoteFile, File dstFile) throws Exception {
 			String status = "successful (copied)";
 			if (dstFile.exists()) {
 				status = "successful (replaced)";
 			}
 			try {
-				FileOutputStream fos = new FileOutputStream(dstFile);
-				HttpURLConnection httpCon = (HttpURLConnection) srcUrl.openConnection();
-				httpCon.connect();
-				InputStream in = httpCon.getInputStream();
-				byte[] fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
-				int readBytes = -1;
-				while ((readBytes = in.read(fullBuffer)) > 0) {
-					fos.write(fullBuffer, 0, readBytes);
-				}
-				in.close();
-				fos.close();
+				fileServer.downloadAndReplace(fileService, remoteFile, dstFile);
 				writer.writeStartElement("message");
 				writer.writeCharacters(dstFile.getName() + "  " + status);
 				writer.writeEndElement();
@@ -1280,25 +1266,8 @@ public class DefaultXMLLoaderFactory {
 			// get current log files and write them to the remote file server using a stream
 			FileService fileService = (FileService) service;
 			FileServer fileServer = fileService.getServer();
-			Calendar cal = Calendar.getInstance();
-			Date now = cal.getTime();
-			String logsFileName = null;
-			synchronized (LOGS_FILE_SDF) {
-				String dateTimeString = LOGS_FILE_SDF.format(now);
-				logsFileName = Constants.LOGS_FILE_NAME + serviceName + "_" + dateTimeString + Constants.LOGS_FILE_EXTENSION;
-			}
-			String urlPath = URLUtility.makePath(fileService.getPath(), fileService.getUploadFileScriptName());
-			URL url = new URL("http", fileServer.getHost(), fileServer.getPortNr(), urlPath);
-			StringBuilder sb = new StringBuilder();
-			sb.append(url.toString());
-			sb.append("?name=");
-			sb.append(logsFileName);
-			sb.append("&service=");
-			sb.append(serviceName);
-			sb.append("&mail=0");
-			// TODO: What does the mail option?
-			Integer ret = uploadCurrentLogFilesUsingStream(writer, sb.toString());
-			if (ret == HttpStatus.SC_OK) {
+			try {
+				String logsFileName = fileServer.uploadCurrentLogFiles(fileService, serviceName);
 				writer.writeStartElement("status");
 				writer.writeCharacters("success");
 				writer.writeEndElement();
@@ -1310,7 +1279,7 @@ public class DefaultXMLLoaderFactory {
 				writer.writeCharacters("file name is " + logsFileName);
 				writer.writeEndElement();
 				writer.writeEndElement();
-			} else {
+			} catch (Exception e) {
 				writer.writeStartElement("status");
 				writer.writeCharacters("failure");
 				writer.writeEndElement();
@@ -1319,50 +1288,10 @@ public class DefaultXMLLoaderFactory {
 				writer.writeCharacters("logs file upload did fail");
 				writer.writeEndElement();
 				writer.writeStartElement("message");
-				writer.writeCharacters("http server code is " + ret);
+				writer.writeCharacters(e.toString());
 				writer.writeEndElement();
 				writer.writeEndElement();
 			}
-		}
-
-		private Integer uploadCurrentLogFilesUsingStream(XMLStreamWriter writer, String uploadUri) throws Exception {
-			// get all log file names
-			LogsXMLLoader logsXMLLoader = (LogsXMLLoader) loaderFactory.getXMLLoader("/logs");
-			List<String> logFiles = logsXMLLoader.getCurrentLogFiles();
-			if (logFiles.isEmpty()) {
-				throw new WebCommandException("upload log files failed, no logs files found");
-			}
-			HttpClientUploadUtility uploadUtility = new HttpClientUploadUtility(uploadUri);
-			UploadRunnable uploadRunnable = uploadUtility.startUpload();
-			OutputStream os = uploadRunnable.getOutputStream();
-			ZipOutputStream zos = new ZipOutputStream(os);
-			for (String logFile : logFiles) {
-				String path = logFile.replace(File.separatorChar, '/');
-				InputStream is = WebUtil.loadResource(path);
-				if (is == null) {
-					continue;
-				}
-				ZipEntry entry = new ZipEntry(logFile);
-				entry.setComment("log file " + logFile);
-				zos.putNextEntry(entry);
-				try {
-					int readBytes = -1;
-					byte[] buffer = new byte[1 << 16];
-					while ((readBytes = is.read(buffer)) > 0) {
-						zos.write(buffer, 0, readBytes);
-					}
-				} catch (Exception e) {
-					this.addMeta("exception", e.toString());
-				} finally {
-					if (is != null) {
-						is.close();
-					}
-				}
-				zos.closeEntry();
-			}
-			zos.close();
-			Integer ret = uploadRunnable.close();
-			return ret;
 		}
 	}
 

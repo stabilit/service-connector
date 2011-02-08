@@ -54,9 +54,12 @@ public class HttpClientUploadUtility {
 	}
 
 	public void upload(InputStream is) throws IOException {
-		this.httpMethod.setRequestEntity(new InputStreamRequestEntity(is));
-		this.client.executeMethod(this.httpMethod);
-		this.httpMethod.releaseConnection();
+		try {
+			this.httpMethod.setRequestEntity(new InputStreamRequestEntity(is));
+			this.client.executeMethod(this.httpMethod);
+		} finally {
+			this.httpMethod.releaseConnection();
+		}
 		if (this.httpMethod.getStatusCode() != HttpStatus.SC_OK) {
 			throw new IOException("Http Client Upload failure: " + this.httpMethod.getStatusLine().toString());
 		}
@@ -94,11 +97,12 @@ public class HttpClientUploadUtility {
 			try {
 				HttpClientUploadUtility.this.client.executeMethod(HttpClientUploadUtility.this.httpMethod);
 				Integer statusCode = HttpClientUploadUtility.this.httpMethod.getStatusCode();
-				HttpClientUploadUtility.this.httpMethod.releaseConnection();				
 				return statusCode;
 			} catch (Exception e) {
 				logger.error(e.toString());
 				return -1;
+			} finally {
+				HttpClientUploadUtility.this.httpMethod.releaseConnection();			
 			}
 		}
 	}
