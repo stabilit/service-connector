@@ -78,7 +78,7 @@
 					<descriptors>
 						<descriptor>src/main/resources/descriptor.xml</descriptor>
 					</descriptors>
-					<finalName>scconsole</finalName>
+					<finalName>sc-console</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
@@ -100,7 +100,7 @@
 		<dependency>
 			<groupId>org.serviceconnector</groupId>
 			<artifactId>sc-lib</artifactId>
-			<version>final</version>
+			<version>all</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
