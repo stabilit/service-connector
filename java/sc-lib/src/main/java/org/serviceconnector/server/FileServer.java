@@ -61,8 +61,7 @@ public class FileServer extends Server {
 
 		if (session.isStreaming()) {
 			// streaming already started
-			httpCon = session.getHttpURLConnection();
-			out = httpCon.getOutputStream();
+			out = session.getOutputSteam();
 		} else {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
@@ -70,7 +69,7 @@ public class FileServer extends Server {
 					+ "/" + path + session.getUploadFileScriptName() + "?filename=" + remoteFileName + "&servicename="
 					+ message.getServiceName());
 			httpCon = (HttpURLConnection) url.openConnection();
-			httpCon.setRequestMethod("PUT");
+			httpCon.setRequestMethod("POST");
 			httpCon.setDoOutput(true);
 			httpCon.setDoInput(true);
 			// enable streaming of HTTP
@@ -80,6 +79,7 @@ public class FileServer extends Server {
 			// set session to streaming mode
 			session.startStreaming();
 			session.setHttpUrlConnection(httpCon);
+			session.setOutputStream(out);
 		}
 		try {
 			// write the data to the server

@@ -88,8 +88,8 @@ public class ServiceLoader {
 						.getNoDataIntervalSeconds());
 				break;
 			case CASCADED_FILE_SERVICE:
-				// TODO JOT
-				continue;
+				service = new CascadedFileService(serviceName);
+				break;
 			case SESSION_SERVICE:
 				service = new SessionService(serviceName);
 				break;
