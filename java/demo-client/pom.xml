@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.serviceconnector</groupId>
-	<artifactId>sc-client</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>sc-client</name>
-	<description>demo-client</description>
+	<artifactId>demo-client</artifactId>
+	<version>0.0.1</version>
+	<name>demo-client</name>
+	<description>sc demo client for verification of the installation</description>
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
@@ -53,7 +53,7 @@
 		<dependency>
 			<groupId>org.serviceconnector</groupId>
 			<artifactId>sc-lib</artifactId>
-			<version>final</version>
+			<version>all</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
