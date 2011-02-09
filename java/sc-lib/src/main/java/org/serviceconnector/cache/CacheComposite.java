@@ -267,22 +267,6 @@ public class CacheComposite implements Serializable {
 		this.loadingTimeout = loadingTimeout;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("SCMPCacheRoot [size=");
-		builder.append(size);
-		builder.append(", expiration=");
-		builder.append(expiration);
-		builder.append("]");
-		return builder.toString();
-	}
-
 	/**
 	 * Checks if is expired.
 	 * 
@@ -372,4 +356,44 @@ public class CacheComposite implements Serializable {
 		return sequenceNr == this.size;
 	}
 
+	/**
+	 * Checks if is valid cache id. This method checks if the cache ids sequence nr is within the valid
+	 * range 1 ... cache composite size.
+	 *
+	 * @param cacheId the cache id
+	 * @return true, if is valid cache id
+	 */
+	public boolean isValidCacheId(CacheId cacheId) {
+	   if (cacheId == null) {
+		   return false;		   
+	   }
+	   try {
+		   int sequenceNr = cacheId.getSequenceNrInt();
+		   if (sequenceNr <= 0) {
+			   return false;
+		   }
+		   if (sequenceNr > this.size) {
+			   return false;
+		   }
+		   return true;
+	   } catch(Exception e) {
+		   return false;
+	   }
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SCMPCacheRoot [size=");
+		builder.append(size);
+		builder.append(", expiration=");
+		builder.append(expiration);
+		builder.append("]");
+		return builder.toString();
+	}
 }

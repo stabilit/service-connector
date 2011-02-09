@@ -166,7 +166,7 @@ public class CacheTest extends CacheSuperUnitTest {
 			String partWrite = stringWrite + i;
 			SCMPMessage scmpMessageRead = new SCMPMessage();
 			scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id/" + i);
-			CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead.getCacheId());
+			CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead.getCacheId());			
 			if (cacheMessage == null) {
 				if (i < 11) {
 					Assert.fail("cacheMessage is null but should not");
@@ -174,6 +174,9 @@ public class CacheTest extends CacheSuperUnitTest {
 				}
 				break;
 			}
+			// check if cache id is valid
+			boolean validCacheId = cacheComposite.isValidCacheId(new CacheId(scmpMessageRead.getCacheId()));
+			Assert.assertEquals(true, validCacheId);
 			byte[] bufferRead = (byte[]) cacheMessage.getBody();
 			String stringRead = new String(bufferRead);
 			Assert.assertEquals(partWrite, stringRead);
@@ -280,4 +283,5 @@ public class CacheTest extends CacheSuperUnitTest {
 			Assert.assertEquals(partWrite, stringRead);
 		}
 	}
+
 }

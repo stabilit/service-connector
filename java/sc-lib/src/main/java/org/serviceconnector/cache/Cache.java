@@ -368,9 +368,11 @@ public class Cache {
 			scmpCacheId.setSequenceNr(String.valueOf(i));
 			localCacheKey.setCacheId(scmpCacheId.getFullCacheId());
 			ret = this.cacheImpl.remove(localCacheKey);
-			if (ret == false) {
-				return;
-			}
+			// don't stop in case of a failure, try to remove all valid sequence nr, if
+			// there is one missed, we won't remove all others
+			//if (ret == false) {
+			//	return;
+			//}
 		}
 		return;
 	}
