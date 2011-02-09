@@ -56,7 +56,7 @@ public class ConnectionTest extends IntegrationSuperTest{
 		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 		
 		for (int i = 0; i < 50000; i++) {
-			connection.connect();					// TODO JOT ##testing
+			connection.connect();					// TODO JOT ##testing läuft bei mir, mit Anzahl spielen auf VM 50000
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			TestUtil.checkReply(cbk.getMessageSync(3000));
