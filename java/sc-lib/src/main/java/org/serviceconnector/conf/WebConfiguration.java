@@ -87,16 +87,22 @@ public class WebConfiguration {
 		
 		this.scDownloadService = compositeConfiguration.getString(Constants.WEB_SC_DOWNLOAD_SERVICE, null);
 		logger.info(Constants.WEB_SC_DOWNLOAD_SERVICE + "=" + this.scDownloadService);
-		if (AppContext.getServiceRegistry().getService(this.scDownloadService) == null) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, 
-				Constants.WEB_SC_DOWNLOAD_SERVICE + "="+ this.scDownloadService + " service not found");
+		if (this.scDownloadService != null) {
+			// service must exist if it was speciffied
+			if (AppContext.getServiceRegistry().getService(this.scDownloadService) == null) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, Constants.WEB_SC_DOWNLOAD_SERVICE + "="
+						+ this.scDownloadService + " service not found");
+			}
 		}
-		
+
 		this.scUploadService = compositeConfiguration.getString(Constants.WEB_SC_UPLOAD_SERVICE, null);
 		logger.info(Constants.WEB_SC_UPLOAD_SERVICE + "=" + this.scUploadService);
-		if (AppContext.getServiceRegistry().getService(this.scDownloadService) == null) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, 
-				Constants.WEB_SC_UPLOAD_SERVICE + "="+ this.scUploadService + " service not found");
+		if (this.scUploadService != null) {
+			// service must exist if it was speciffied
+			if (AppContext.getServiceRegistry().getService(this.scUploadService) == null) {
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, Constants.WEB_SC_UPLOAD_SERVICE + "="
+						+ this.scUploadService + " service not found");
+			}
 		}
 	}
 

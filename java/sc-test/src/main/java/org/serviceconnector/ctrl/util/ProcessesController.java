@@ -289,7 +289,7 @@ public class ProcessesController {
 		}
 		proc.setLog4jFileName(log4jFileFullName);
 
-		String pidFileNameFull = userDir + fs + "log" + fs + "srv" + fs + serverName + ".pid";
+		String pidFileNameFull = userDir + fs + "logs" + fs + "srv" + fs + serverName + ".pid";
 		proc.setPidFileName(pidFileNameFull);
 
 		proc.setServiceNames(serviceNames);
@@ -447,7 +447,7 @@ public class ProcessesController {
 		}
 		proc.setLog4jFileName(log4jFileFullName);
 
-		String pidFileNameFull = userDir + fs + "log" + fs + "cln" + fs + clientName + ".pid";
+		String pidFileNameFull = userDir + fs + "logs" + fs + "cln" + fs + clientName + ".pid";
 		proc.setPidFileName(pidFileNameFull);
 
 		proc.setServiceNames(serviceName);
