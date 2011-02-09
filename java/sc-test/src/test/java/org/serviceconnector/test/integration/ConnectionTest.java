@@ -56,7 +56,7 @@ public class ConnectionTest extends IntegrationSuperTest{
 		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
 		
 		for (int i = 0; i < 50000; i++) {
-			connection.connect();
+			connection.connect();					// TODO JOT ##testing
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			TestUtil.checkReply(cbk.getMessageSync(3000));
@@ -93,7 +93,7 @@ public class ConnectionTest extends IntegrationSuperTest{
 			IIdleConnectionCallback idleCallback = new IdleCallback();
 			ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
 			connection.setContext(connectionContext);
-			connection.connect();
+			connection.connect();					// TODO JOT ##testing
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			TestUtil.checkReply(cbk.getMessageSync(3000));

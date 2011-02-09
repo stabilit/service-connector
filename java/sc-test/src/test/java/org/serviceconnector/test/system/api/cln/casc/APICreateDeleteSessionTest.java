@@ -263,7 +263,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		clientMgmt.detach();
 
 		// delete session
-		sessionService1.deleteSession();
+		sessionService1.deleteSession();			// TODO TRN ##testing
 		Assert.assertNull("the session ID is NOT null after deleteSession()", sessionService1.getSessionId());
 	}
 

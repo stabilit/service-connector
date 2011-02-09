@@ -54,7 +54,7 @@ public class MultipleNICTest extends IntegrationSuperTest {
 					TestUtil.checkReply(cbk.getMessageSync(1000));
 					req.destroy();
 				} catch (Exception e) {
-					Assert.fail("Connection to NIC : " + inetAddress.getHostAddress() + " failed!");
+					Assert.fail("Connection to NIC : " + inetAddress.getHostAddress() + " failed!");  // TODO JOT ##testing
 				}
 			}
 		}

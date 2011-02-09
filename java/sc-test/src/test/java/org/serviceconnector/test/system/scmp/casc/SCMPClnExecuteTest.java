@@ -196,7 +196,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 			clnExecuteCall.invoke(callback, 1000);
 			while (callback.messageReceived == false)
 				;
-			Assert.assertEquals(largeString, callback.reply.getBody());
+			Assert.assertEquals(largeString, callback.reply.getBody());		// TODO JOT ##testing
 			Assert.assertEquals(SCMPBodyType.TEXT.getValue(), callback.reply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
 			Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), callback.reply.getMessageType());
 		}

@@ -84,7 +84,7 @@ public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
 
-		msgCallback.waitForMessage(10);
+		msgCallback.waitForMessage(10);			// TODO JOT ##testing
 		Assert.assertEquals("Nr messages does not match", nrMessages, msgCallback.getMessageCount());
 		SCMessage response = msgCallback.getMessage();
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);

@@ -247,7 +247,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		clientMgmt.disableService(TestConstants.pubServiceName1);
 		clientMgmt.detach();
 
-		publishService.unsubscribe();
+		publishService.unsubscribe();		// TODO TRN ##testing
 		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
@@ -436,7 +436,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
-		publishService.unsubscribe();
+		publishService.unsubscribe();   // TODO TRN ##testing
 		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
