@@ -185,15 +185,15 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 		message.setMessageType(SCMPMsgType.ATTACH);
 		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
 		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
-		
+
 		for (int i = 0; i < 10000; i++) {
 			IConnection connection = connectionPool.getConnection();
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			cbk.getMessageSync(1000);
 			connectionPool.freeConnection(connection);
-			if ((i+1) % 5000 == 0) {
-				testLogger.info("connection nr " + (i+1) + "...");
+			if ((i + 1) % 5000 == 0) {
+				testLogger.info("connection nr " + (i + 1) + "...");
 			}
 		}
 	}
@@ -209,18 +209,18 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 		message.setMessageType(SCMPMsgType.ATTACH);
 		message.setHeader(SCMPHeaderAttributeKey.SC_VERSION, SCVersion.CURRENT.toString());
 		message.setHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, ldt);
-		
+
 		for (int i = 0; i < 10000; i++) {
 			ConnectionPool cp = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(),
 					this.keepAlivSeconds);
-			IConnection connection = cp.getConnection();	// TODO JOT ##testing
+			IConnection connection = cp.getConnection(); // TODO JOT ##testing läuft bei mir, mit Anzahl spielen auf VM 10000Times
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			cbk.getMessageSync(1000);
 			cp.freeConnection(connection);
 			cp.destroy();
-			if ((i+1) % 5000 == 0) {
-				testLogger.info("connection nr " + (i+1) + "...");
+			if ((i + 1) % 5000 == 0) {
+				testLogger.info("connection nr " + (i + 1) + "...");
 			}
 		}
 	}
