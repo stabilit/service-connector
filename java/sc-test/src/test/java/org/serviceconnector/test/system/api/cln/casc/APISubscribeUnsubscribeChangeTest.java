@@ -348,7 +348,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: passes
 	 */
 	@Test
-	public void t74_changeSubscriptionSameMask() throws Exception {   //TODO JOT ## testing
+	public void t74_changeSubscriptionSameMask() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		subMsgRequest.setDataLength(TestConstants.pangram.length());
@@ -466,7 +466,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: passes, exception caught
 	 */
 	@Test
-	public void t91_reject() throws Exception {  //TODO JOT ## testing
+	public void t91_reject() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		subMsgRequest.setDataLength(TestConstants.pangram.length());
