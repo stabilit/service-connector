@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,8 +33,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.log4j.Appender;
@@ -56,8 +53,8 @@ import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.FileSession;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.util.HttpClientUploadUtility;
-import org.serviceconnector.util.HttpClientUploadUtility.UploadRunnable;
 import org.serviceconnector.util.URLUtility;
+import org.serviceconnector.util.HttpClientUploadUtility.UploadRunnable;
 import org.serviceconnector.web.WebUtil;
 
 public class FileServer extends Server {

@@ -17,25 +17,13 @@ package org.serviceconnector.util;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.concurrent.TimeoutException;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.Category;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.scmp.SCMPError;
 
 /**
  * The Class DumpUtility. This class provides several dump utility functions.
@@ -43,6 +31,7 @@ import org.serviceconnector.scmp.SCMPError;
 public class DumpUtility {
 
 	/** The Constant logger. */
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(DumpUtility.class);
 
 	/**

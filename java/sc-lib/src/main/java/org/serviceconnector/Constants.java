@@ -173,6 +173,9 @@ public final class Constants {
 	/** The dump file extension */
 	public static final String DUMP_FILE_EXTENSION = ".xml";
 
+	/** The dump file encoding */
+	public static final String DUMP_FILE_ENCODING = "ISO-8859-1";
+	
 	/** File containing the SC logs (zipped). Created with the console command or WEB-GUI */
 	public static final String LOGS_FILE_NAME = "scLogs_";
 
@@ -182,8 +185,6 @@ public final class Constants {
 	/** The dump file extension */
 	public static final String LOGS_FILE_EXTENSION = ".zip";
 
-	/** The dump file encoding */
-	public static final String DUMP_FILE_ENCODING = "ISO-8859-1";
 	
 	/** The Constant IPV6_LOOPBACK_NIC. */
 	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
