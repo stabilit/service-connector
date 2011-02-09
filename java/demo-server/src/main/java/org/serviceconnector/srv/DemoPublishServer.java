@@ -149,9 +149,9 @@ public class DemoPublishServer extends Thread {
 
 		@Override
 		public void run() {
-			// sleep for 2 seconds before killing the server
+			// sleep before killing the server
 			try {
-				Thread.sleep(500);
+				Thread.sleep(200);
 				this.scPublishServer.deregister();
 				SCServer scServer = this.scPublishServer.getSCServer();
 				scServer.stopListener();

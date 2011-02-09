@@ -129,9 +129,9 @@ public class DemoSessionServer extends Thread {
 
 		@Override
 		public void run() {
-			// sleep for 2 seconds before killing the server
+			// sleep before killing the server
 			try {
-				Thread.sleep(500);
+				Thread.sleep(200);
 				this.server.deregister();
 				SCServer sc = server.getSCServer();
 				sc.stopListener();

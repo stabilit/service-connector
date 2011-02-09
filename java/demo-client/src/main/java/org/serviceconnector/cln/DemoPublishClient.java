@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.cln;
 
@@ -52,8 +52,8 @@ public class DemoPublishClient extends Thread {
 			// set up subscribe message
 			SCSubscribeMessage msg = new SCSubscribeMessage();
 			String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
-			msg.setSessionInfo("publishMessagesWithDelay"); // optional
-			msg.setData("1000|10"); // optional
+			msg.setSessionInfo("subscription-info"); // optional
+			msg.setData("certificate or what so ever"); // optional
 			msg.setMask(mask); // mandatory
 			msg.setNoDataIntervalSeconds(100); // mandatory
 			SCSubscribeMessage reply = service.subscribe(msg, cbk); // regular subscribe
@@ -61,7 +61,7 @@ public class DemoPublishClient extends Thread {
 			String sid = service.getSessionId();
 
 			// wait to receive messages
-			while (cbk.receivedMsg < 999) {
+			while (cbk.receivedMsg < 5) {
 				Thread.sleep(1500);
 			}
 		} catch (Exception e) {
@@ -69,8 +69,8 @@ public class DemoPublishClient extends Thread {
 		} finally {
 			try {
 				SCSubscribeMessage msg = new SCSubscribeMessage();
-				msg.setSessionInfo("kill server"); 
-				service.unsubscribe(5,msg); 
+				msg.setSessionInfo("kill server");
+				service.unsubscribe(5, msg);
 				sc.detach(2); // detaches from SC, stops communication
 			} catch (Exception e) {
 				logger.info("cleanup " + e.toString());
