@@ -93,7 +93,7 @@ public class ConnectionTest extends IntegrationSuperTest{
 			IIdleConnectionCallback idleCallback = new IdleCallback();
 			ConnectionContext connectionContext = new ConnectionContext(connection, idleCallback, 0);
 			connection.setContext(connectionContext);
-			connection.connect();					// TODO JOT ##testing
+			connection.connect();					// TODO JOT ##testing läuft bei mir, mit Anzahl spielen auf VM 1000
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			TestUtil.checkReply(cbk.getMessageSync(3000));
