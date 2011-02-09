@@ -189,7 +189,7 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 
 		SCMPDeRegisterServerCall deRegisterServerCall = new SCMPDeRegisterServerCall(this.requester, TestConstants.pubServerName1);
 		deRegisterServerCall.invoke(cbk, 2000);
-		TestUtil.checkReply(cbk.getMessageSync(5000));	//TODO JOT ##testing
+		TestUtil.checkReply(cbk.getMessageSync(5000));	//TODO JOT ##testing läuft
 	}
 
 	/**
