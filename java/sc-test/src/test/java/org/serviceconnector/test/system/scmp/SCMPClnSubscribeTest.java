@@ -24,10 +24,10 @@ import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.test.system.SystemSuperTest;
 
-public class SCMPClnSubscribeTest extends org.serviceconnector.test.system.scmp.casc.SCMPClnChangeSubscriptionTest {
+public class SCMPClnSubscribeTest extends org.serviceconnector.test.system.scmp.casc.SCMPClnSubscribeTest {
 
 	public SCMPClnSubscribeTest() {
-		SCMPClnChangeSubscriptionTest.setUpServiceConnectorAndServer();
+		SCMPClnSubscribeTest.setUpServiceConnectorAndServer();
 	}
 
 	public static void setUpServiceConnectorAndServer() {
@@ -46,6 +46,6 @@ public class SCMPClnSubscribeTest extends org.serviceconnector.test.system.scmp.
 		srvToSC0Defs.add(srvToSC0Def);
 
 		SystemSuperTest.scDefs = sc0Defs;
-		SCMPClnChangeSubscriptionTest.srvDefs = srvToSC0Defs;
+		SCMPClnSubscribeTest.srvDefs = srvToSC0Defs;
 	}
 }
