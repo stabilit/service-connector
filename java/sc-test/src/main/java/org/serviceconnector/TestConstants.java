@@ -51,9 +51,9 @@ public class TestConstants {
 	public static final String pubServiceName2 = "publish-2";
 	public static final String pubServerName1 = "publish-1";
 	public static final String filServiceName1 = "file-1";
-	public static final String filServiceLocation1 = "C:/stabilit/projects/EUREX/SC/kit/httpd/up-download/";
+	public static final String filServiceLocation1 = "up-download/";
 	public static final String filServiceName2 = "file-2";
-	public static final String filServiceLocation2 = "C:/stabilit/projects/EUREX/SC/kit/httpd/up-download/";
+	public static final String filServiceLocation2 = "up-download/";
 
 	public static final String killServerCmd = "kill";
 	public static final String rejectSessionCmd = "reject";
