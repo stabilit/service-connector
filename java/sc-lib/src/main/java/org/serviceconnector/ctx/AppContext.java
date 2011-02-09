@@ -415,7 +415,7 @@ public final class AppContext {
 					AppContext.executor.shutdownNow();
 				}
 			} else {
-				logger.error("destroy of AppContext failed - not allowed, communicators using ressources available");
+				logger.warn("resources can not be released - pending communicators active");
 			}
 		}
 	}
