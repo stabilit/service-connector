@@ -253,9 +253,9 @@ public class SCRequester implements IRequester {
 			operationTimeout.cancel(false);
 			// first handle connection - that user has a connection to work, if he has only 1
 			this.freeConnection();
-			this.scmpCallback.receive(scmpReply);
 			// removes canceled oti timeouts
 			AppContext.otiScheduler.purge();
+			this.scmpCallback.receive(scmpReply);
 		}
 
 		/**

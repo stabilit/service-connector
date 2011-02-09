@@ -122,9 +122,9 @@ public class Requester implements IRequester {
 			this.operationTimeout.cancel(false);
 			// first handle connection - that user has a connection to work, if he has only 1
 			this.freeConnection();
-			this.scmpCallback.receive(scmpReply);
 			// removes canceled oti timeouts
 			AppContext.otiScheduler.purge();
+			this.scmpCallback.receive(scmpReply);
 		}
 
 		/** {@inheritDoc} */
@@ -140,9 +140,9 @@ public class Requester implements IRequester {
 				// another exception occurred - just free the connection
 				this.freeConnection();
 			}
-			this.scmpCallback.receive(ex);
 			// removes canceled oti timeouts
 			AppContext.otiScheduler.purge();
+			this.scmpCallback.receive(ex);
 		}
 
 		/**

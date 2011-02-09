@@ -413,6 +413,7 @@ public final class AppContext {
 				}
 				if (AppContext.executor != null) {
 					AppContext.executor.shutdownNow();
+					AppContext.executor = null;
 				}
 			} else {
 				logger.warn("resources can not be released - pending communicators active");
