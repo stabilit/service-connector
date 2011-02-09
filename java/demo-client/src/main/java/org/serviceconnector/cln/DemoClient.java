@@ -30,7 +30,7 @@ public class DemoClient {
 		demoPublishClient.run();
 //		demoFileClient.start();
 		// sleep to assure deregister from server to SC is done!
-		Thread.sleep(1000);
+		Thread.sleep(500);
 		SCMgmtClient client = new SCMgmtClient("localhost", 9000, ConnectionType.NETTY_TCP);
 		client.attach();
 		client.killSC();
