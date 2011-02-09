@@ -211,7 +211,6 @@ public class APISubscriptionServerTest {
 //
 //		public SrvCallback(SCPublishServer scPublishServer) {
 //			super(scPublishServer);
-//			// TODO Auto-generated constructor stub
 //		}
 //
 //		private int messagesExchanged = 0;

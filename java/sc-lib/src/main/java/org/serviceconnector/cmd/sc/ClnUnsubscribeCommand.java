@@ -64,7 +64,7 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		String serviceName = reqMessage.getServiceName();
 
 		// check service is present
-		Service abstractService = this.validateService(serviceName);
+		Service abstractService = this.getService(serviceName);
 		String cascSubscriptionId = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);
 		Subscription cascSubscription = this.subscriptionRegistry.getSubscription(cascSubscriptionId);
 		String cascadedSCMask = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);

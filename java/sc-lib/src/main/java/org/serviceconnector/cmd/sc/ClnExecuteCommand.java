@@ -70,7 +70,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 		String serviceName = reqMessage.getServiceName();
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		// check service is present
-		Service abstractService = this.validateService(serviceName);
+		Service abstractService = this.getService(serviceName);
 
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:

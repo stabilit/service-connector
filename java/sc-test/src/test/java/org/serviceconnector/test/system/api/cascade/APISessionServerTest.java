@@ -242,7 +242,6 @@ public class APISessionServerTest {
 //
 //		public SrvCallback(SCSessionServer scSessionServer) {
 //			super(scSessionServer);
-//			// TODO Auto-generated constructor stub
 //		}
 //
 //		private int messagesExchanged = 0;

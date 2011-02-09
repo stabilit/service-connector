@@ -17,6 +17,7 @@
 package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -46,6 +47,12 @@ public class FileListCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
 		FileService fileService = this.validateFileService(message.getServiceName());
+		if (fileService.isEnabled() == false) {
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED, "service="
+					+ fileService.getName() + " is disabled");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
 		SCMPMessage reply = null;
 		try {
 			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);

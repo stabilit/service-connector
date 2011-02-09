@@ -131,48 +131,6 @@ public abstract class CommandAdapter implements ICommand {
 	}
 
 	/**
-	 * Validate service. Lookup service in service registry and verify service existence.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @return the service
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
-	 */
-	protected Service validateService(String serviceName) throws SCMPCommandException {
-		Service service = this.getService(serviceName);
-		if (service.isEnabled() == false) {
-			// no session allowed for DISABLED service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED, "service="
-					+ serviceName + " is disabled");
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
-		}
-		return service;
-	}
-
-	/**
-	 * Validate session service.
-	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @return the session service
-	 * @throws SCMPCommandException
-	 *             the SCMP command exception
-	 */
-	protected SessionService validateSessionService(String serviceName) throws SCMPCommandException {
-		Service service = this.validateService(serviceName);
-		if (service.getType() != ServiceType.SESSION_SERVICE) {
-			// service is not session service
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName
-					+ " is not session service");
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
-		}
-		return (SessionService) service;
-	}
-
-	/**
 	 * Validate publish service.
 	 * 
 	 * @param serviceName
@@ -182,7 +140,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *             the SCMP command exception
 	 */
 	protected PublishService validatePublishService(String serviceName) throws SCMPCommandException {
-		Service service = this.validateService(serviceName);
+		Service service = this.getService(serviceName);
 		return this.validatePublishService(service);
 	}
 
@@ -193,7 +151,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *            the service
 	 * @return the publish service
 	 * @throws SCMPCommandException
-	 *             the sCMP command exception
+	 *             the SCMP command exception
 	 */
 	protected PublishService validatePublishService(Service service) throws SCMPCommandException {
 		if (service.getType() != ServiceType.PUBLISH_SERVICE) {
@@ -216,7 +174,7 @@ public abstract class CommandAdapter implements ICommand {
 	 *             the SCMP command exception
 	 */
 	protected FileService validateFileService(String serviceName) throws SCMPCommandException {
-		Service service = this.validateService(serviceName);
+		Service service = this.getService(serviceName);
 		if (service.getType() != ServiceType.FILE_SERVICE) {
 			// service is not file service
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName

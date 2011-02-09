@@ -247,7 +247,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		clientMgmt.disableService(TestConstants.pubServiceName1);
 		clientMgmt.detach();
 
-		publishService.unsubscribe();		// TODO TRN ##testing
+		publishService.unsubscribe();
 		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
@@ -348,7 +348,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: passes
 	 */
 	@Test
-	public void t74_changeSubscriptionSameMask() throws Exception {
+	public void t74_changeSubscriptionSameMask() throws Exception {   //TODO JOT ## testing
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		subMsgRequest.setDataLength(TestConstants.pangram.length());
@@ -436,7 +436,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		Assert.assertEquals("message body is not the same length", subMsgRequest.getDataLength(), subMsgResponse.getDataLength());
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
-		publishService.unsubscribe();   // TODO TRN ##testing
+		publishService.unsubscribe();
 		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
 
@@ -466,7 +466,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	 * Expectation: passes, exception caught
 	 */
 	@Test
-	public void t91_reject() throws Exception {
+	public void t91_reject() throws Exception {  //TODO JOT ## testing
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		subMsgRequest.setDataLength(TestConstants.pangram.length());

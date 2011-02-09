@@ -395,7 +395,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 
 		// execute
 		request.setMessageInfo(TestConstants.echoCmd);
-		response = sessionService1.execute(request);   // TODO TRN ##testing
+		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
@@ -676,7 +676,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.echoCmd);
 		sessionService1.send(request);
 		msgCallback1.waitForMessage(10);
-		response = msgCallback1.getResponse();		// TODO TRN ##testing
+		response = msgCallback1.getResponse();
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());

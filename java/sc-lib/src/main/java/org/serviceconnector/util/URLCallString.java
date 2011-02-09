@@ -153,7 +153,7 @@ public class URLCallString {
 		try {
 			StringBuilder sb = new StringBuilder();
 			if (this.callKey != null) {
-				sb.append(URLEncoder.encode(this.callKey, "UTF-8"));
+				sb.append(URLEncoder.encode(this.callKey, Constants.URL_ENCODING));
 			}
 			sb.append(Constants.EQUAL_SIGN);
 			if (this.parameters == null) {

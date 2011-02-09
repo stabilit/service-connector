@@ -69,9 +69,15 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 
-		// check service is present
-		Service abstractService = this.validateService(serviceName);
-
+		// check service is present and enabled
+		Service abstractService = this.getService(serviceName);
+		if (abstractService.isEnabled() == false) {
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED, "service="
+					+ abstractService.getName() + " is disabled");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
+		
 		// enhance ipAddressList
 		String ipAddressList = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();

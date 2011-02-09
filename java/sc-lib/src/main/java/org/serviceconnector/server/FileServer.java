@@ -287,7 +287,6 @@ public class FileServer extends Server {
 		sb.append("&service=");
 		sb.append(serviceName);
 		sb.append("&mail=0");
-		// TODO: What does the mail option?
 		uploadCurrentLogFilesUsingStream(sb.toString());
 		return logsFileName;
 	}

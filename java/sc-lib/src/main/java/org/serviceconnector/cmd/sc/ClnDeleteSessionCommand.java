@@ -63,7 +63,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 		String serviceName = reqMessage.getServiceName();
 		// check service is present
-		Service abstractService = this.validateService(serviceName);
+		Service abstractService = this.getService(serviceName);
 
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:

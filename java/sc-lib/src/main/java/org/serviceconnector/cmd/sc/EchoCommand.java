@@ -61,7 +61,7 @@ public class EchoCommand extends CommandAdapter {
 		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 		// check service is present
-		Service abstractService = this.validateService(serviceName);
+		Service abstractService = this.getService(serviceName);
 
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:

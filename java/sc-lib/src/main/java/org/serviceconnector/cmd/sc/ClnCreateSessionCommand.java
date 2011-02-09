@@ -69,8 +69,14 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
-		// check service is present
-		Service abstractService = this.validateService(serviceName);
+		// check service is present and enabled
+		Service abstractService = this.getService(serviceName);
+		if (abstractService.isEnabled() == false) {
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED, "service="
+					+ abstractService.getName() + " is disabled");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
+		}
 
 		// enhance ipAddressList
 		String ipAddressList = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
@@ -83,8 +89,7 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 		switch (abstractService.getType()) {
 		case CASCADED_SESSION_SERVICE:
 			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
-			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response,
-					responderCallback);
+			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response, responderCallback);
 			cascadedSC.createSession(reqMessage, callback, oti);
 			return;
 		case SESSION_SERVICE:
@@ -112,7 +117,10 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			return;
 		case UNDEFINED:
 		default:
-			throw new SCMPCommandException(SCMPError.SC_ERROR, "create session not allowed for service " + serviceName);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SC_ERROR,
+					"create session not allowed for service " + serviceName);
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
 		}
 
 		// create session
