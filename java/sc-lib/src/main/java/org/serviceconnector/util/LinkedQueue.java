@@ -158,6 +158,7 @@ public class LinkedQueue<E> {
 	 *
 	 * @param <E> the element type
 	 */
+	@SuppressWarnings("hiding")
 	private class LinkedQueueIterator<E> implements Iterator<E> {
 
 		/** The node. */
@@ -166,6 +167,7 @@ public class LinkedQueue<E> {
 		/**
 		 * Instantiates a new linked queue iterator.
 		 */
+		@SuppressWarnings("unchecked")
 		public LinkedQueueIterator() {
 			this.node = (LinkedNode<E>) LinkedQueue.this.getFirst();
 		}

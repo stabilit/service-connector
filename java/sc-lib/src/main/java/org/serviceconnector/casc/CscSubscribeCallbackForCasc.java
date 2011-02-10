@@ -17,29 +17,29 @@
 package org.serviceconnector.casc;
 
 import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
+import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.res.IResponderCallback;
+import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
-/**
- * The Class CascSCUnsubscribeCallback.
- */
-public class CascSCUnsubscribeCallback extends ClnCommandCascCallback implements ISubscriptionCallback {
+public class CscSubscribeCallbackForCasc extends ClnCommandCascCallback implements ISubscriptionCallback {
 
-	/** The cascaded client. */
-	private CascadedClient cascClient;
 	/** The subscription. */
 	private Subscription cascSCSubscription;
+	private String cascSCMaskString;
 
-	public CascSCUnsubscribeCallback(IRequest request, IResponse response, IResponderCallback callback,
-			Subscription cascSCSubscription) {
+	public CscSubscribeCallbackForCasc(IRequest request, IResponse response, IResponderCallback callback,
+			Subscription cascSCSubscription, String cascSCMaksString) {
 		super(request, response, callback);
 		this.cascSCSubscription = cascSCSubscription;
+		this.cascSCMaskString = cascSCMaksString;
 	}
 
 	/** {@inheritDoc} */
@@ -48,28 +48,29 @@ public class CascSCUnsubscribeCallback extends ClnCommandCascCallback implements
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 
-		if (this.cascClient != null) {
-			// only if service cascaded update cascaded client with new subscription mask
-			String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
-			this.cascClient.setSubscriptionMask(new SubscriptionMask(newMask));
-			// only if service is cascaded - release permit
-			this.cascClient.getCascClientSemaphore().release();
+		if (reply.isFault() == false && reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION) == false) {
+			// change subscription for cascaded SC
+			SubscriptionQueue<SCMPMessage> queue = ((IPublishService) cascSCSubscription.getService()).getSubscriptionQueue();
+			SubscriptionMask cascSCMask = new SubscriptionMask(cascSCMaskString);
+			queue.changeSubscription(this.cascSCSubscription.getId(), cascSCMask);
+			cascSCSubscription.setMask(cascSCMask);
+			SubscriptionLogger.logChangeSubscribe(serviceName, this.cascSCSubscription.getId(), cascSCMaskString);
 		}
 		// forward reply to client
 		reply.setIsReply(true);
 		reply.setServiceName(serviceName);
-		reply.setMessageType(SCMPMsgType.CLN_UNSUBSCRIBE);
+		reply.setMessageType(SCMPMsgType.CSC_SUBSCRIBE);
 		response.setSCMP(reply);
 		this.responderCallback.responseCallback(request, response);
-	}
-
-	public void setCascClient(CascadedClient cascClient) {
-		this.cascClient = cascClient;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Subscription getSubscription() {
 		return this.cascSCSubscription;
+	}
+
+	public IRequest getRequest() {
+		return this.request;
 	}
 }

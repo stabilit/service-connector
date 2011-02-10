@@ -59,7 +59,7 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 			try {
 				Cache scmpCache = cacheManager.getCache(serviceName);
 				if (scmpCache == null) {
-					this.logger.error("cache write failed, no cache, service name = " + serviceName);
+					ClnExecuteCommandCascCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
 				} else {
 					// check if reply is fault
 					if (reply.isFault() || (cacheId == null && this.requestCacheId != null)) {
@@ -112,7 +112,7 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 				}
 			} catch (Exception e) {
 				CacheLogger.debug("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
-				this.logger.error(e.toString());
+				ClnExecuteCommandCascCallback.logger.error(e.toString());
 			}
 		}
 		// forward server reply to client

@@ -1,5 +1,4 @@
 /*
- * 
  * Copyright © 2010 STABILIT Informatik AG, Switzerland *
  * *
  * Licensed under the Apache License, Version 2.0 (the "License"); *
@@ -23,7 +22,6 @@ import java.io.InputStreamReader;
 import java.io.Writer;
 import java.net.URL;
 import java.security.InvalidParameterException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -968,8 +966,6 @@ public class DefaultXMLLoaderFactory {
 	 */
 	public static class AjaxSystemXMLLoader extends AbstractXMLLoader {
 
-		private static final SimpleDateFormat LOGS_FILE_SDF = new SimpleDateFormat(Constants.LOGS_FILE_NAME_FORMAT);
-
 		/**
 		 * Instantiates a new system xml loader.
 		 */
@@ -1209,7 +1205,8 @@ public class DefaultXMLLoaderFactory {
 		 * @throws Exception
 		 *             the exception
 		 */
-		private void downloadAndReplaceSingleFile(XMLStreamWriter writer, FileServer fileServer, FileService fileService, String remoteFile, File dstFile) throws Exception {
+		private void downloadAndReplaceSingleFile(XMLStreamWriter writer, FileServer fileServer, FileService fileService,
+				String remoteFile, File dstFile) throws Exception {
 			String status = "successful (copied)";
 			if (dstFile.exists()) {
 				status = "successful (replaced)";

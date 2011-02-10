@@ -52,14 +52,7 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 		super(requester, msgToSend);
 	}
 
-	/**
-	 * Invoke.
-	 * 
-	 * @param scmpCallback
-	 *            the scmp callback
-	 * @throws Exception
-	 *             the exception {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
@@ -80,11 +73,7 @@ public class SCMPClnSubscribeCall extends SCMPCallAdapter {
 		requestMessage.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, sessionInfo);
 	}
 
-	/**
-	 * Gets the message type.
-	 * 
-	 * @return the message type {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CLN_SUBSCRIBE;

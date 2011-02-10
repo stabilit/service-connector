@@ -18,7 +18,7 @@ package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;
-import org.serviceconnector.cmd.sc.ClnSubscribeCommandCallback;
+import org.serviceconnector.cmd.sc.SubscribeCommandCallback;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -71,7 +71,7 @@ public class PublishService extends StatefulService implements IPublishService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void allocateServerAndSubscribe(SCMPMessage msgToForward, ClnSubscribeCommandCallback callback,
+	public synchronized void allocateServerAndSubscribe(SCMPMessage msgToForward, SubscribeCommandCallback callback,
 			Subscription subscription, int timeoutMillis) throws Exception {
 		int numberOfServer = this.listOfServers.size();
 		if (numberOfServer == 0) {

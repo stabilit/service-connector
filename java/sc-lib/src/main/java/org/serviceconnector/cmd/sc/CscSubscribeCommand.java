@@ -18,6 +18,8 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.casc.ISubscriptionCallback;
+import org.serviceconnector.casc.CscSubscribeCallbackForCasc;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
@@ -30,6 +32,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.CascadedSC;
+import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.CascadedPublishService;
 import org.serviceconnector.service.NoFreeServerException;
 import org.serviceconnector.service.PublishService;
@@ -38,27 +41,15 @@ import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ValidatorUtility;
 
-/**
- * The Class ClnSubscribeCommand. Responsible for validation and execution of subscribe command. Allows subscribing to a publish
- * service.
- * 
- * @author JTraber
- */
-public class ClnSubscribeCommand extends CommandAdapter {
+public class CscSubscribeCommand extends CommandAdapter {
 
 	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ClnSubscribeCommand.class);
-
-	/**
-	 * Instantiates a ClnSubscribeCommand.
-	 */
-	public ClnSubscribeCommand() {
-	}
+	private final static Logger logger = Logger.getLogger(CscSubscribeCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CLN_SUBSCRIBE;
+		return SCMPMsgType.CSC_SUBSCRIBE;
 	}
 
 	/** {@inheritDoc} */
@@ -80,16 +71,17 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		String ipAddressList = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 		ipAddressList = ipAddressList + request.getRemoteSocketAddress().getAddress();
 		reqMessage.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, ipAddressList);
-		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 
-		String mask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
-		SubscriptionMask subscriptionMask = new SubscriptionMask(mask);
+		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		// create temporary Subscription for cascaded SC
 		String sessionInfo = (String) reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 		int noi = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
-		// create temporary subscription
-		Subscription tmpSubscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList, noi);
-		tmpSubscription.setService(abstractService);
-		reqMessage.setSessionId(tmpSubscription.getId());
+		String cscSCMaskString = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
+		String cascSubscriptionId = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);
+		Subscription cscSubscription = this.subscriptionRegistry.getSubscription(cascSubscriptionId);
+		SubscriptionMask cscMask = new SubscriptionMask(cscSCMaskString);
+		Subscription tmpCascSCSubscription = new Subscription(cscMask, sessionInfo, ipAddressList, noi);
+		tmpCascSCSubscription.setService(abstractService);
 
 		switch (abstractService.getType()) {
 		case CASCADED_PUBLISH_SERVICE:
@@ -97,14 +89,24 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
 			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
 			// add server to subscription
-			tmpSubscription.setServer(cascadedSC);
-			// service is cascaded - subscribe is made by a normal client
-			SubscribeCommandCallback callback = new SubscribeCommandCallback(request, response, responderCallback, tmpSubscription);
+			tmpCascSCSubscription.setServer(cascadedSC);
+
+			ISubscriptionCallback callback = null;
+			if (cscSubscription == null) {
+				// cascaded SC not subscribed yet
+				callback = new SubscribeCommandCallback(request, response, responderCallback, tmpCascSCSubscription);
+			} else {
+				// subscribe is made by an active cascaded SC on behalf of a client subscribe
+				callback = new CscSubscribeCallbackForCasc(request, response, responderCallback, cscSubscription,
+						cscSCMaskString);
+			}
 			cascadedSC.cascadedSCSubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
 			return;
 		}
 		// modify message only if it goes to server
 		reqMessage.removeHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
+		reqMessage.removeHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
+		reqMessage.removeHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);
 		// check service is present
 		PublishService service = this.validatePublishService(abstractService);
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
@@ -113,10 +115,17 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		// Following loop implements the wait mechanism in case of a busy connection pool
 		do {
 			try {
-				// service is local - normal client is subscribing
+				if (cscSubscription != null) {
+					// cascaded subscribe made by an active cascaded SC
+					CscSubscribeCallbackForCasc cascCallback = new CscSubscribeCallbackForCasc(request,
+							response, responderCallback, cscSubscription, cscSCMaskString);
+					((StatefulServer) cscSubscription.getServer()).subscribe(reqMessage, cascCallback, otiOnSCMillis);
+					break;
+				}
+				// cascaded subscribe made by an inactive cascaded SC - forward client subscribe to server
 				SubscribeCommandCallback callback = new SubscribeCommandCallback(request, response, responderCallback,
-						tmpSubscription);
-				service.allocateServerAndSubscribe(reqMessage, callback, tmpSubscription, otiOnSCMillis
+						tmpCascSCSubscription);
+				service.allocateServerAndSubscribe(reqMessage, callback, tmpCascSCSubscription, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
 				// no exception has been thrown - get out of wait loop
 				break;
@@ -158,17 +167,23 @@ public class ClnSubscribeCommand extends CommandAdapter {
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			ValidatorUtility.validateInt(1000, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
 			// ipAddressList mandatory
-			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
+			// sessionId mandatory
+			String sessionId = message.getSessionId();
+			ValidatorUtility.validateStringLength(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
 			// mask mandatory
-			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
+			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 			// noDataInterval mandatory
 			String noDataIntervalValue = message.getHeader(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 			ValidatorUtility.validateInt(10, noDataIntervalValue, 3600, SCMPError.HV_WRONG_NODATA_INTERVAL);
 			// sessionInfo is optional
-			String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
+			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
+			// cascadedMask
+			String cascadedMask = message.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
+			ValidatorUtility.validateStringLength(1, cascadedMask, 256, SCMPError.HV_WRONG_MASK);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

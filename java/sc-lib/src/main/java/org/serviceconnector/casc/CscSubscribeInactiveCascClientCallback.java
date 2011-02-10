@@ -20,20 +20,21 @@ import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Subscription;
+import org.serviceconnector.service.SubscriptionMask;
 
-/**
- * The Class CascClientCallback.
- */
-public class CascClientSubscribeCallback implements ISCMPMessageCallback {
+public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallback {
 
 	/** The command callback. */
 	private ISubscriptionCallback commandCallback;
 	/** The cascaded client. */
 	private CascadedClient cascClient;
+	/** The temporary cascaded mask. */
+	private String tmpCscMask;
 
-	public CascClientSubscribeCallback(ISubscriptionCallback commandCallback, CascadedClient cascClient) {
+	public CscSubscribeInactiveCascClientCallback(ISubscriptionCallback commandCallback, CascadedClient cascClient, String tmpCscMask) {
 		this.commandCallback = commandCallback;
 		this.cascClient = cascClient;
+		this.tmpCscMask = tmpCscMask;
 	}
 
 	/** {@inheritDoc} */
@@ -44,14 +45,15 @@ public class CascClientSubscribeCallback implements ISCMPMessageCallback {
 			// subscription successfully created
 			this.cascClient.setSubscribed(true);
 			this.cascClient.setSubscriptionId(reply.getSessionId());
+			this.cascClient.setSubscriptionMask(new SubscriptionMask(tmpCscMask));
 			this.cascClient.receivePublication();
 		}
 		try {
 			// forward reply to client
 			this.commandCallback.receive(reply);
 			// adding client subscription id to cascaded client
-			Subscription clientSubscription = this.commandCallback.getSubscription();
-			this.cascClient.addClientSubscriptionId(clientSubscription.getId(), clientSubscription.getMask());
+			Subscription cscScSubscription = this.commandCallback.getSubscription();
+			this.cascClient.addClientSubscriptionId(cscScSubscription.getId(), cscScSubscription.getMask());
 			// release permit
 			this.cascClient.getCascClientSemaphore().release();
 		} catch (Exception e) {

@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.casc;
 
-import org.serviceconnector.cmd.sc.ClnSubscribeCommandCallback;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -24,17 +23,18 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
-public class ClnSubscribeCascSubscribedCallback implements ISCMPMessageCallback {
+public class CscSubscribeActiveCascClientCallback implements ISCMPMessageCallback {
 
 	/** The request. */
 	protected IRequest request;
 	/** The cascaded client. */
 	private CascadedClient cascClient;
-	private ClnSubscribeCommandCallback callback;
+	private ISubscriptionCallback callback;
 
-	public ClnSubscribeCascSubscribedCallback(IRequest request, ClnSubscribeCommandCallback callback) {
+	public CscSubscribeActiveCascClientCallback(CascadedClient cascClient, IRequest request, ISubscriptionCallback callback) {
 		this.request = request;
 		this.callback = callback;
+		this.cascClient = cascClient;
 	}
 
 	/** {@inheritDoc} */

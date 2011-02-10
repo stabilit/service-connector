@@ -69,6 +69,12 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	CLN_UNSUBSCRIBE("CUN"),
 	/** The SRV_UNSUBSCRIBE. */
 	SRV_UNSUBSCRIBE("SUN"),
+	/** The CSC_SUBSCRIBE. */
+	CSC_SUBSCRIBE("XSU"),
+	/** The CSC_CHANGE_SUBSCRIPTION. */
+	CSC_CHANGE_SUBSCRIPTION("XHS"),
+	/** The CSC_UNSUBSCRIBE. */
+	CSC_UNSUBSCRIBE("XUN"),
 	/** The RECEIVE_PUBLICATION. */
 	RECEIVE_PUBLICATION("CRP"),
 	/** The PUBLISH. */
@@ -89,8 +95,7 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	/** The value. */
 	private String value;
 	/** The reverseMap, to get access to the enum constants by string value. */
-	private static final ReverseEnumMap<String, SCMPMsgType> reverseMap = new ReverseEnumMap<String, SCMPMsgType>(
-			SCMPMsgType.class);
+	private static final ReverseEnumMap<String, SCMPMsgType> reverseMap = new ReverseEnumMap<String, SCMPMsgType>(SCMPMsgType.class);
 
 	/**
 	 * Instantiates a SCMPMsgType.
@@ -114,7 +119,7 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	 *            the messageType as string
 	 * @return the msg type as object
 	 */
-	public static SCMPMsgType getMsgType(String messageTypeString ) {
+	public static SCMPMsgType getMsgType(String messageTypeString) {
 		SCMPMsgType msgType = reverseMap.get(messageTypeString);
 		if (msgType == null) {
 			// messageTypeString doesn't match to a valid SCMPMsgType

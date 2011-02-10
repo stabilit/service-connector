@@ -33,7 +33,6 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
-import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.PublishTimeout;
 import org.serviceconnector.service.Subscription;
@@ -42,7 +41,7 @@ import org.serviceconnector.service.SubscriptionMask;
 /**
  * The Class ClnSubscribeCommandCallback.
  */
-public class ClnSubscribeCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
+public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
 
 	/** The callback. */
 	private IResponderCallback responderCallback;
@@ -54,6 +53,8 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback, ISubsc
 	private Subscription tempSubscription;
 	/** The subscription registry. */
 	private SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
+	private SCMPMessage reqMessage;
+	private String msgType;
 
 	/**
 	 * Instantiates a new ClnExecuteCommandCallback.
@@ -67,19 +68,19 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback, ISubsc
 	 * @param tempSubscription
 	 *            the subscription
 	 */
-	public ClnSubscribeCommandCallback(IRequest request, IResponse response, IResponderCallback callback,
-			Subscription tempSubscription) {
+	public SubscribeCommandCallback(IRequest request, IResponse response, IResponderCallback callback, Subscription tempSubscription) {
 		this.responderCallback = callback;
 		this.request = request;
 		this.response = response;
 		this.tempSubscription = tempSubscription;
+		this.reqMessage = request.getMessage();
+		this.msgType = reqMessage.getMessageType();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
-		SCMPMessage reqMessage = request.getMessage();
-		String serviceName = reqMessage.getServiceName();
+		String serviceName = this.reqMessage.getServiceName();
 		int noDataIntervalSeconds = this.tempSubscription.getNoDataInterval();
 
 		if (reply.isFault() == false) {
@@ -111,7 +112,7 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback, ISubsc
 		// forward reply to client
 		reply.setIsReply(true);
 		reply.setServiceName(serviceName);
-		reply.setMessageType(SCMPMsgType.CLN_SUBSCRIBE);
+		reply.setMessageType(msgType);
 		response.setSCMP(reply);
 		this.responderCallback.responseCallback(request, response);
 	}
@@ -122,8 +123,7 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback, ISubsc
 		// creation failed remove from server
 		this.tempSubscription.getServer().removeSession(tempSubscription);
 		SCMPMessage fault = null;
-		SCMPMessage reqMessage = request.getMessage();
-		String serviceName = reqMessage.getServiceName();
+		String serviceName = this.reqMessage.getServiceName();
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
 			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln subscribe");
@@ -137,7 +137,7 @@ public class ClnSubscribeCommandCallback implements ISCMPMessageCallback, ISubsc
 		// forward reply to client
 		fault.setIsReply(true);
 		fault.setServiceName(serviceName);
-		fault.setMessageType(reqMessage.getMessageType());
+		fault.setMessageType(msgType);
 		response.setSCMP(fault);
 		this.responderCallback.responseCallback(request, response);
 	}

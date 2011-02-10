@@ -83,7 +83,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 			try {
 				Cache scmpCache = cacheManager.getCache(this.requestServiceName);
 				if (scmpCache == null) {
-					this.logger.error("cache write failed, no cache, service name = " + this.requestServiceName);
+					ClnExecuteCommandCallback.logger.error("cache write failed, no cache, service name = " + this.requestServiceName);
 				} else {
 					// check if reply is fault
 					if (reply.isFault() || (cacheId == null && this.requestCacheId != null)) {
@@ -136,7 +136,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 				}
 			} catch (Exception e) {
 				CacheLogger.debug("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
-				this.logger.error(e.toString());
+				ClnExecuteCommandCallback.logger.error(e.toString());
 			}
 		}
 		// forward server reply to client
@@ -187,7 +187,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 			try {
 				Cache scmpCache = cacheManager.getCache(this.requestServiceName);
 				if (scmpCache == null) {
-					this.logger.error("cache write failed, no cache, service name = " + this.requestServiceName);
+					ClnExecuteCommandCallback.logger.error("cache write failed, no cache, service name = " + this.requestServiceName);
 				} else {
 					// an exception did occur, remove those composite from cache
 					// remove request cacheId from cache
@@ -200,7 +200,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 				}
 			} catch (Exception e) {
 				CacheLogger.debug("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
-				this.logger.error(e.toString());
+				ClnExecuteCommandCallback.logger.error(e.toString());
 			}
 		}
 		this.responderCallback.responseCallback(request, response);
