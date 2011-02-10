@@ -29,16 +29,14 @@ public class SCConsole {
 
 	/**
 	 * @param args
-	 *            usage : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>|kill><br>
+	 *            usage : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>dump|clearCache|kill><br>
 	 *            samples: java -jar scconsole.jar -h localhost -p 7000 enable=abc<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 disable=abc<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 state=abc<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 sessions=abc<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 dump<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 clearCache<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 kill<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 dump<br>
-	 *            java -jar scconsole.jar -l log4j-sc.properties -c sc.properties startSC<br>
+	 *            java -jar scconsole.jar -h localhost -p 7000 kill<br>
 	 *            
 	 * system exit status<br>
 	 * 				0 = success
@@ -167,17 +165,14 @@ public class SCConsole {
 	}
 
 	private static void showError(String msg) {
-		System.err.println("error: " + msg);
-		System.out
-				.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>clear_cache|dump|kill|restartSC>");
+		System.err.println("\nerror: " + msg);
+		System.out.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>clearCache|dump|kill>");
 		System.out.println("\nsamples: java -jar scconsole.jar -h localhost -p 7000 enable=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 disable=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 state=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 sessions=abc");
-		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 clear_cache");
+		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 clearCache");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 dump");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 kill");
-		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 restartSC");
-		System.out.println("         java -jar scconsole.jar startSC");
 	}
 }
