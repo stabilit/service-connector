@@ -372,7 +372,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	public void t70_WaitsForConnectionTimeout() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.sleepCmd);
-		clnExecuteCall.setRequestBody("2000");
+		clnExecuteCall.setRequestBody("3000");
 		TestCallback cbk = new TestCallback();
 		clnExecuteCall.invoke(cbk, 10000);
 
@@ -380,10 +380,10 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 		Thread.sleep(20);
 		clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		TestCallback cbk1 = new TestCallback();
-		clnExecuteCall.invoke(cbk1, 3000);
+		clnExecuteCall.invoke(cbk1, 2000);
 
-		SCMPMessage reply = cbk.getMessageSync(3000);
-		SCMPMessage reply1 = cbk1.getMessageSync(3000);
+		SCMPMessage reply = cbk.getMessageSync(4000);
+		SCMPMessage reply1 = cbk1.getMessageSync(4000);
 
 		TestUtil.checkReply(reply);
 		Assert.assertTrue(reply1.isFault());
@@ -400,7 +400,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 		clnExecuteCall.setMessageInfo(TestConstants.sleepCmd);
 		clnExecuteCall.setRequestBody("2000");
 		TestCallback cbk = new TestCallback();
-		clnExecuteCall.invoke(cbk, 3000);
+		clnExecuteCall.invoke(cbk, 1500);
 		SCMPMessage responseMessage = cbk.getMessageSync(2000);
 		TestUtil.verifyError(responseMessage, SCMPError.OPERATION_TIMEOUT, SCMPMsgType.CLN_EXECUTE);
 	}
