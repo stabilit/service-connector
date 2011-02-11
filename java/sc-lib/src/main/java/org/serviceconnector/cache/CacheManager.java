@@ -15,6 +15,7 @@
  */
 package org.serviceconnector.cache;
 
+import java.io.OutputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -105,6 +106,11 @@ public class CacheManager {
 	 */
 	public void clearAll() {
 		CacheImplFactory.clearAll();
+	}
+	
+	public void dumpAll(OutputStream os) throws Exception {
+		XMLCacheDump cacheDump = new XMLCacheDump(os);
+		cacheDump.dumpAll(this);
 	}
 
 	/**

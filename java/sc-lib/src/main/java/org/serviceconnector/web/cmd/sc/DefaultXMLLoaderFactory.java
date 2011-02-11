@@ -1033,6 +1033,33 @@ public class DefaultXMLLoaderFactory {
 					}
 					return;
 				}
+				if ("dumpCache".equals(action)) {
+					logger.debug("SC dump cache by user interface");
+					try {
+						String dumpCachePath = AppContext.dumpCache();
+						writer.writeStartElement("status");
+						writer.writeCharacters("success");
+						writer.writeEndElement();
+						writer.writeStartElement("messages");
+						writer.writeStartElement("message");
+						writer.writeCharacters("SC dump cache done.");
+						writer.writeEndElement(); // message
+						writer.writeStartElement("message");
+						writer.writeCharacters(dumpCachePath);
+						writer.writeEndElement(); // message
+						writer.writeEndElement(); // messages
+					} catch (Exception e) {
+						writer.writeStartElement("status");
+						writer.writeCharacters("failure");
+						writer.writeEndElement();
+						writer.writeStartElement("messages");
+						writer.writeStartElement("message");
+						writer.writeCharacters(e.toString());
+						writer.writeEndElement(); // message
+						writer.writeEndElement(); // messages
+					}
+					return;
+				}
 				if ("terminate".equals(action)) {
 					logger.debug("SC terminated by user interface");
 					writer.writeStartElement("status");
@@ -1361,7 +1388,12 @@ public class DefaultXMLLoaderFactory {
 			if ("sc_dump_list".equals(action)) {
 				loadDumpListBody(writer, request);
 				return;
+			}			
+			if ("sc_dump_cache_list".equals(action)) {
+				loadDumpCacheListBody(writer, request);
+				return;
 			}
+
 			throw new InvalidParameterException("action parameter is invalid or unknown (action=" + action + ")");
 		}
 
@@ -1518,6 +1550,45 @@ public class DefaultXMLLoaderFactory {
 		private void loadDumpListBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 			String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
 			File[] files = DumpUtility.getDumpFiles(dumpPath);
+			writer.writeStartElement("dumplist");
+			writer.writeStartElement("path");
+			writer.writeCData(dumpPath);
+			writer.writeEndElement(); // close path tag
+			if (files != null) {
+				writer.writeStartElement("files");
+				for (int i = 0; i < files.length; i++) {
+					if (files[i].isFile()) {
+						writer.writeStartElement("file");
+						writer.writeStartElement("name");
+						writer.writeCData(files[i].getName());
+						writer.writeEndElement(); // close name tag
+						writer.writeStartElement("length");
+						writer.writeCData(String.valueOf(files[i].length()));
+						writer.writeEndElement(); // close length tag
+						writer.writeStartElement("lastModified");
+						Date lastModifiedDate = new Date(files[i].lastModified());
+						writer.writeCData(DateTimeUtility.getDateTimeAsString(lastModifiedDate));
+						writer.writeEndElement(); // close last modified tag
+						writer.writeEndElement(); // close file tag
+					}
+				}
+				writer.writeEndElement(); // close files tag
+			}
+			writer.writeEndElement(); // close dumplist tag
+
+			return;
+		}
+
+		/**
+		 * load body data for dump list action
+		 * 
+		 * @param writer
+		 * @param request
+		 * @throws Exception
+		 */
+		private void loadDumpCacheListBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
+			File[] files = DumpUtility.getDumpCacheFiles(dumpPath);
 			writer.writeStartElement("dumplist");
 			writer.writeStartElement("path");
 			writer.writeCData(dumpPath);

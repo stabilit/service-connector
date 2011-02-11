@@ -52,11 +52,31 @@ public class DumpUtility {
 		});
 		return fileArray;
 	}
-	
+
+	/**
+	 * Gets all dump cache files matching given criterias.
+	 * 
+	 * @param dumpPath
+	 *            the dump path
+	 * @return the dump files
+	 */
+	public static File[] getDumpCacheFiles(String dumpPath) {
+		File dumpPathFile = new File(dumpPath);
+		FileFilter fileFilter = new WildcardFileFilter(Constants.DUMP_CACHE_FILE_NAME + "*." + Constants.DUMP_CACHE_FILE_EXTENSION);
+		File[] fileArray = dumpPathFile.listFiles(fileFilter);
+		Arrays.sort(fileArray, new Comparator<File>() {
+			public int compare(File f1, File f2) {
+				return -Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
+			}
+		});
+		return fileArray;
+	}
+
 	/**
 	 * Delete all dump files for given dump path.
-	 *
-	 * @param dumpPath the dump path
+	 * 
+	 * @param dumpPath
+	 *            the dump path
 	 */
 	public static void deleteAllDumpFiles(String dumpPath) {
 		File dumpPathFile = new File(dumpPath);
@@ -65,13 +85,12 @@ public class DumpUtility {
 		for (File file : fileArray) {
 			file.delete();
 		}
-		return;	
+		return;
 	}
 
 	public static void readDumpFileToWriter(String dumpPath, String dumpFile, Writer writer) throws IOException {
 		String filePath = dumpPath + File.separator + dumpFile;
 		FileUtility.readFileToWriter(filePath, writer);
 	}
-	
-	
+
 }

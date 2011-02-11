@@ -143,7 +143,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		}
 		if (xmlDocument.isText()) {
 			xmlDocument.load(responseOutputStream);
-			response.setContentType("text/html");
+			response.setContentType("text/xml");
 			return;
 		}
 		xmlDocument.load(xmlOS);

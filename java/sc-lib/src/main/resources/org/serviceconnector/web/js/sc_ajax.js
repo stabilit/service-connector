@@ -56,7 +56,27 @@ function runGC() {
 }
 
 function scDump() {
+	var overlayDiv = document.getElementById("overlay");
+	overlayDiv.style.display = 'block';
+	var dialogBox = document.getElementById("DialogBox");
+	if (dialogBox != null) {
+       dialogBox.innerHTML = getDialogText("... Please Wait ...");
+       showLayer("DialogBox");
+       centerLayer("DialogBox", 400, 400, 0, 0);
+	}
 	ajaxSystem.ajaxCall('ajax/system?action=dump');	
+}
+
+function scDumpCache() {
+	var overlayDiv = document.getElementById("overlay");
+	overlayDiv.style.display = 'block';
+	var dialogBox = document.getElementById("DialogBox");
+	if (dialogBox != null) {
+       dialogBox.innerHTML = getDialogText("... Please Wait ...");
+       showLayer("DialogBox");
+       centerLayer("DialogBox", 400, 400, 0, 0);
+	}
+	ajaxSystem.ajaxCall('ajax/system?action=dumpCache');	
 }
 
 function scDumpClear() {
@@ -184,6 +204,9 @@ function systemCallback() {
 	}
 	if (action == "dump") {
 	    maintenanceCall("sc_dump_list");
+	}
+	if (action == "dumpCache") {
+	    maintenanceCall("sc_dump_cache_list");
 	}
 	if (action == "clearDump") {
 	    maintenanceCall("sc_dump_list");

@@ -17,6 +17,7 @@ package org.serviceconnector.ctx;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -438,10 +439,11 @@ public final class AppContext {
 		try {
 			// create directory if non existent
 			if (dumpDir.exists() == true || dumpDir.mkdirs()) {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(dumpDir + fs + dumpFileName));
+				String dumpFile = dumpDir + fs + dumpFileName;
+				BufferedWriter writer = new BufferedWriter(new FileWriter(dumpFile));
 				writer.write("dummy");
 				writer.close();
-				logger.info("SC dump created into file=" + dumpPath);
+				logger.info("SC dump created into file=" + dumpFile);
 				return dumpFileName;
 			} else {
 				logger.error("Creating SC dump file =" + dumpPath + " failed, can not create directory");
@@ -452,4 +454,39 @@ public final class AppContext {
 			throw e;
 		}
 	}
+	
+
+	/**
+	 * dumps the entire application context.
+	 */
+	public static String dumpCache() throws Exception {
+		String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
+		Calendar cal = Calendar.getInstance();
+		Date now = cal.getTime();
+		String fs = System.getProperty("file.separator");
+		String dumpFileName = null;
+		synchronized (DUMP_FILE_SDF) { // DUMP_FILE_SDF is not thread safe
+			String dateTimeString = DUMP_FILE_SDF.format(now);
+			dumpFileName = Constants.DUMP_CACHE_FILE_NAME + dateTimeString + Constants.DUMP_CACHE_FILE_EXTENSION;
+		}
+		File dumpDir = new File(dumpPath);
+		try {
+			// create directory if non existent
+			if (dumpDir.exists() == true || dumpDir.mkdirs()) {
+				CacheManager cacheManager = AppContext.getCacheManager();
+				String dumpCacheFile = dumpDir + fs + dumpFileName;
+				FileOutputStream fos = new FileOutputStream(dumpDir + fs + dumpFileName);
+				cacheManager.dumpAll(fos);
+				fos.close();
+				logger.info("SC dump created into file=" + dumpCacheFile);
+				return dumpFileName;
+			} else {
+				logger.error("Creating SC dump cache file =" + dumpPath + " failed, can not create directory");
+				throw new IOException("Creating SC dump cache file =" + dumpPath + " failed, can not create directory");
+			}
+		} catch (IOException e) {
+			logger.error("Creating SC dump file =" + dumpPath + " failed.", e);
+			throw e;
+		}
+	}	
 }

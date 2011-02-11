@@ -6,7 +6,14 @@
     <xsl:template match="/">      
       <xsl:choose>
         <xsl:when test="$action = 'sc_dump_list'">
-          <xsl:call-template name="scDumpList"/>
+          <xsl:call-template name="scDumpList">
+            <xsl:with-param name="title">SC Dump List</xsl:with-param>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:when test="$action = 'sc_dump_cache_list'">
+          <xsl:call-template name="scDumpList">
+            <xsl:with-param name="title">SC Dump Cache List</xsl:with-param>
+          </xsl:call-template>          
         </xsl:when>
         <xsl:when test="$action = 'sc_property_download'">
           <xsl:call-template name="downloadPropertyFile"/>
@@ -138,9 +145,10 @@
         </div>	  
 	</xsl:template>
 	<xsl:template name="scDumpList">
+	    <xsl:param name="title"/>
 	    <div class="sc_table">
 	       <div class="sc_table_title">
-	          SC Dump List [<xsl:value-of select="$body/dumplist/path"/>]
+	         <xsl:value-of select="$title"/> [<xsl:value-of select="$body/dumplist/path"/>]
 	       </div>
            <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
              <tr class="sc_table_header">
