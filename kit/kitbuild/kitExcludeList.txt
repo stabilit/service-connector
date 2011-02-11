@@ -1,4 +1,0 @@
-logs\*.*
-cache\*.*
-doc\*.pdf
-doc\javadoc\*.*
