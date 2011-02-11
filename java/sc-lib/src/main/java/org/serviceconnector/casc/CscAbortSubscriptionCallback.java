@@ -16,38 +16,30 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.casc;
 
-import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
-import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Subscription;
 
-/**
- * The Class CascSCUnsubscribeCallback.
- */
-public class CscUnsubscribeCallbackForCasc extends ClnCommandCascCallback implements ISubscriptionCallback {
+public class CscAbortSubscriptionCallback implements ISubscriptionCallback {
 
 	private Subscription subscription;
+	private IRequest request;
 
-	public CscUnsubscribeCallbackForCasc(IRequest request, IResponse response, IResponderCallback callback,
-			Subscription subscription) {
-		super(request, response, callback);
+	public CscAbortSubscriptionCallback(IRequest request, Subscription subscription) {
 		this.subscription = subscription;
+		this.request = request;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
-		SCMPMessage reqMessage = request.getMessage();
-		String serviceName = reqMessage.getServiceName();
-		// forward reply to client
-		reply.setIsReply(true);
-		reply.setServiceName(serviceName);
-		reply.setMessageType(SCMPMsgType.CSC_UNSUBSCRIBE);
-		response.setSCMP(reply);
-		this.responderCallback.responseCallback(request, response);
+		// nothing to do here
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void receive(Exception ex) {
+		// nothing to do here
 	}
 
 	/** {@inheritDoc} */

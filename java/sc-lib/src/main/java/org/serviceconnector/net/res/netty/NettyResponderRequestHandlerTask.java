@@ -114,7 +114,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 						response.setSCMP(nextSCMP);
 						// handling msgSequenceNr
 						if (SCMPMessageSequenceNr.necessaryToWrite(nextSCMP.getMessageType())) {
-							msgSequenceNr.incrementMsgSequenceNr();
+							msgSequenceNr.incrementAndGetMsgSequenceNr();
 							nextSCMP.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 						}
 						response.write();
@@ -130,7 +130,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 					SCMPMessage message = response.getSCMP();
 					// handling msgSequenceNr
 					if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
-						msgSequenceNr.incrementMsgSequenceNr();
+						msgSequenceNr.incrementAndGetMsgSequenceNr();
 						message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 					}
 					response.write();

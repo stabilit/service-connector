@@ -83,7 +83,7 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 		// handling msgSequenceNr
 		SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(reqMessage
 				.getSessionId());
-		msgSequenceNr.incrementMsgSequenceNr();
+		msgSequenceNr.incrementAndGetMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());

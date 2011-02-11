@@ -76,7 +76,7 @@ public class SrvUnsubscribeCommand extends SrvCommandAdapter {
 					Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT)));
 			// handling msgSequenceNr
 			SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
-			msgSequenceNr.incrementMsgSequenceNr();
+			msgSequenceNr.incrementAndGetMsgSequenceNr();
 			// set up reply
 			SCMPMessage reply = new SCMPMessage();
 			reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());

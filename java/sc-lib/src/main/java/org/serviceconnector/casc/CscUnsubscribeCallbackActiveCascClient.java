@@ -16,49 +16,49 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.casc;
 
-import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
-import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.scmp.ISCMPMessageCallback;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.Subscription;
+import org.serviceconnector.service.SubscriptionMask;
 
 /**
  * The Class CascSCUnsubscribeCallback.
  */
-public class CscUnsubscribeCallbackForCasc extends ClnCommandCascCallback implements ISubscriptionCallback {
+public class CscUnsubscribeCallbackActiveCascClient implements ISCMPMessageCallback {
+	/** The cascaded client. */
+	private CascadedClient cascClient;
+	private ISubscriptionCallback commandCallback;
+	/** The request. */
+	protected IRequest request;
 
-	private Subscription subscription;
-
-	public CscUnsubscribeCallbackForCasc(IRequest request, IResponse response, IResponderCallback callback,
-			Subscription subscription) {
-		super(request, response, callback);
-		this.subscription = subscription;
+	public CscUnsubscribeCallbackActiveCascClient(CascadedClient cascClient, ISubscriptionCallback callback) {
+		this.cascClient = cascClient;
+		this.commandCallback = callback;
+		this.request = callback.getRequest();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
 		SCMPMessage reqMessage = request.getMessage();
-		String serviceName = reqMessage.getServiceName();
+		// only if service cascaded update cascaded client with new subscription mask
+		String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
+		this.cascClient.setSubscriptionMask(new SubscriptionMask(newMask));
+		// only if service is cascaded - release permit
+		this.cascClient.getCascClientSemaphore().release();
+		try {
+			this.commandCallback.receive(reply);
+		} catch (Exception e) {
+			this.commandCallback.receive(e);
+		}
+	}
+
+	@Override
+	public void receive(Exception ex) {
+		// release permit
+		this.cascClient.getCascClientSemaphore().release();
 		// forward reply to client
-		reply.setIsReply(true);
-		reply.setServiceName(serviceName);
-		reply.setMessageType(SCMPMsgType.CSC_UNSUBSCRIBE);
-		response.setSCMP(reply);
-		this.responderCallback.responseCallback(request, response);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public Subscription getSubscription() {
-		return this.subscription;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public IRequest getRequest() {
-		return this.request;
+		this.commandCallback.receive(ex);
 	}
 }

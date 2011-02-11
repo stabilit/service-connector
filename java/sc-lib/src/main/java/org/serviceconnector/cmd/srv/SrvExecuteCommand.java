@@ -80,7 +80,7 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 		// handling msgSequenceNr
 		SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(reqMessage
 				.getSessionId());
-		msgSequenceNr.incrementMsgSequenceNr();
+		msgSequenceNr.incrementAndGetMsgSequenceNr();
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);

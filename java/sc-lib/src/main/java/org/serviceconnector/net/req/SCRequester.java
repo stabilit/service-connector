@@ -224,7 +224,7 @@ public class SCRequester implements IRequester {
 				SCMPMessage message = largeResponse.getPart();
 				if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
 					// increment msgSequenceNr
-					this.msgSequenceNr.incrementMsgSequenceNr();
+					this.msgSequenceNr.incrementAndGetMsgSequenceNr();
 					message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 				}
 				message.setCacheId(scmpReply.getCacheId());
@@ -274,7 +274,7 @@ public class SCRequester implements IRequester {
 			// handling msgSequenceNr
 			if (SCMPMessageSequenceNr.necessaryToWrite(message.getMessageType())) {
 				// increment msgSequenceNr
-				this.msgSequenceNr.incrementMsgSequenceNr();
+				this.msgSequenceNr.incrementAndGetMsgSequenceNr();
 				message.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			}
 			message.setCacheId(scmpReply.getCacheId());
@@ -318,7 +318,7 @@ public class SCRequester implements IRequester {
 			part = largeRequest.getNext();
 			// handling msgSequenceNr
 			if (SCMPMessageSequenceNr.necessaryToWrite(part.getMessageType())) {
-				this.msgSequenceNr.incrementMsgSequenceNr();
+				this.msgSequenceNr.incrementAndGetMsgSequenceNr();
 				part.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			}
 			this.connectionCtx.getConnection().send(part, this);

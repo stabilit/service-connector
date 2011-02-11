@@ -2,6 +2,7 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
+import org.serviceconnector.casc.ISubscriptionCallback;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
@@ -16,14 +17,14 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.service.PublishService;
+import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
 /**
  * The Class ClnChangeSubscriptionCommandCallback.
  */
-public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallback {
+public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
 
 	/** The callback. */
 	private IResponderCallback responderCallback;
@@ -67,7 +68,7 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 			if (rejectSubscriptionFlag == false) {
 				// session has not been rejected
 				String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
-				SubscriptionQueue<SCMPMessage> queue = ((PublishService) subscription.getService()).getSubscriptionQueue();
+				SubscriptionQueue<SCMPMessage> queue = ((IPublishService) subscription.getService()).getSubscriptionQueue();
 				SubscriptionMask mask = new SubscriptionMask(newMask);
 				SubscriptionLogger.logChangeSubscribe(serviceName, subscriptionId, newMask);
 				queue.changeSubscription(subscriptionId, mask);
@@ -112,5 +113,17 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 		Subscription subscription = this.subscriptionRegistry.getSubscription(subscriptionId);
 		this.subscriptionRegistry.scheduleSubscriptionTimeout(subscription);
 		this.responderCallback.responseCallback(request, response);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public IRequest getRequest() {
+		return this.request;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Subscription getSubscription() {
+		return this.subscription;
 	}
 }

@@ -90,7 +90,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 				SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
 			}
 			CscUnsubscribeCallbackForCasc callback = new CscUnsubscribeCallbackForCasc(request, response, responderCallback,
-					cascadedPublishService.getCascClient());
+					cascSubscription);
 			cascadedSC.cascadedSCUnsubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
 			return;
 		}

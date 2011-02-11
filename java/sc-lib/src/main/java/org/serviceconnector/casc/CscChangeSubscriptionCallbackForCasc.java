@@ -29,13 +29,13 @@ import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
-public class CscSubscribeCallbackForCasc extends ClnCommandCascCallback implements ISubscriptionCallback {
+public class CscChangeSubscriptionCallbackForCasc extends ClnCommandCascCallback implements ISubscriptionCallback {
 
 	/** The subscription. */
 	private Subscription cascSCSubscription;
 	private String cascSCMaskString;
 
-	public CscSubscribeCallbackForCasc(IRequest request, IResponse response, IResponderCallback callback,
+	public CscChangeSubscriptionCallbackForCasc(IRequest request, IResponse response, IResponderCallback callback,
 			Subscription cascSCSubscription, String cascSCMaksString) {
 		super(request, response, callback);
 		this.cascSCSubscription = cascSCSubscription;
@@ -59,7 +59,7 @@ public class CscSubscribeCallbackForCasc extends ClnCommandCascCallback implemen
 		// forward reply to client
 		reply.setIsReply(true);
 		reply.setServiceName(serviceName);
-		reply.setMessageType(SCMPMsgType.CSC_SUBSCRIBE);
+		reply.setMessageType(SCMPMsgType.CSC_CHANGE_SUBSCRIPTION);
 		response.setSCMP(reply);
 		this.responderCallback.responseCallback(request, response);
 	}

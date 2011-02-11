@@ -6,6 +6,7 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.service.CascadedPublishService;
 import org.serviceconnector.service.SubscriptionMask;
@@ -30,7 +31,9 @@ public class CascadedClient {
 
 	private boolean destroyed;
 
-	public String serviceName;
+	private String serviceName;
+
+	private SCMPMessageSequenceNr msgSequenceNr;
 
 	public CascadedClient(CascadedSC cascadedSC, CascadedPublishService publishService) {
 		this.subscribed = false;
@@ -43,6 +46,7 @@ public class CascadedClient {
 		this.serviceName = this.publishService.getName();
 		this.subscriptionMask = null;
 		this.clientSubscriptionIds = new HashMap<String, SubscriptionMask>();
+		this.msgSequenceNr = new SCMPMessageSequenceNr();
 	}
 
 	public boolean isSubscribed() {
@@ -126,7 +130,7 @@ public class CascadedClient {
 		// OTI for receive publication: DEFAULT_OPERATION_TIMEOUT_SECONDS + NO_DATA_INTERVAL
 		int oti = (Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS + this.getPublishService().getNoDataIntervalSeconds())
 				* Constants.SEC_TO_MILLISEC_FACTOR;
-		this.cascadedSC.receivePublication(this.publishService.getName(), this.subscriptionId, callback, oti);
+		this.cascadedSC.receivePublication(this, callback, oti);
 	}
 
 	public CascadedSC getCascadedSC() {
@@ -135,6 +139,10 @@ public class CascadedClient {
 
 	public boolean isDestroyed() {
 		return destroyed;
+	}
+
+	public SCMPMessageSequenceNr getMsgSequenceNr() {
+		return this.msgSequenceNr;
 	}
 
 	/**

@@ -19,7 +19,7 @@ package org.serviceconnector.cmd.sc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.casc.ISubscriptionCallback;
-import org.serviceconnector.casc.CscSubscribeCallbackForCasc;
+import org.serviceconnector.casc.CscChangeSubscriptionCallbackForCasc;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
@@ -97,7 +97,7 @@ public class CscSubscribeCommand extends CommandAdapter {
 				callback = new SubscribeCommandCallback(request, response, responderCallback, tmpCascSCSubscription);
 			} else {
 				// subscribe is made by an active cascaded SC on behalf of a client subscribe
-				callback = new CscSubscribeCallbackForCasc(request, response, responderCallback, cscSubscription,
+				callback = new CscChangeSubscriptionCallbackForCasc(request, response, responderCallback, cscSubscription,
 						cscSCMaskString);
 			}
 			cascadedSC.cascadedSCSubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
@@ -117,7 +117,7 @@ public class CscSubscribeCommand extends CommandAdapter {
 			try {
 				if (cscSubscription != null) {
 					// cascaded subscribe made by an active cascaded SC
-					CscSubscribeCallbackForCasc cascCallback = new CscSubscribeCallbackForCasc(request,
+					CscChangeSubscriptionCallbackForCasc cascCallback = new CscChangeSubscriptionCallbackForCasc(request,
 							response, responderCallback, cscSubscription, cscSCMaskString);
 					((StatefulServer) cscSubscription.getServer()).subscribe(reqMessage, cascCallback, otiOnSCMillis);
 					break;

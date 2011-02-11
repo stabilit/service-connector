@@ -82,7 +82,7 @@ public class SCFileService extends SCService {
 		// 1. checking preconditions and initialize
 		// create file session
 		this.createFileSession(operationTimeoutSeconds);
-		this.requester.getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
 		try {
 			SCServiceCallback callback = new SCServiceCallback(true);
@@ -140,7 +140,7 @@ public class SCFileService extends SCService {
 		// 1. checking preconditions and initialize
 		// create file session
 		this.createFileSession(operationTimeoutSeconds);
-		this.requester.getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
 		try {
 			SCServiceCallback callback = new SCServiceCallback(true);
@@ -189,7 +189,7 @@ public class SCFileService extends SCService {
 	 */
 	public synchronized List<String> listFiles(int operationTimeoutSeconds) throws Exception {
 		// 1. checking preconditions and initialize
-		this.requester.getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCServiceCallback callback = new SCServiceCallback(true);
 		SCMPFileListCall fileListCall = new SCMPFileListCall(this.requester, this.serviceName);
@@ -254,7 +254,7 @@ public class SCFileService extends SCService {
 	 */
 	private synchronized void deleteFileSession(int operationTimeoutSeconds) throws Exception {
 		// 1. checking preconditions and initialize
-		this.requester.getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
 		try {
 			SCServiceCallback callback = new SCServiceCallback(true);

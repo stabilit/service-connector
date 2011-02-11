@@ -53,13 +53,14 @@ public class SCMPMessageSequenceNr {
 	/**
 	 * Increment message sequence number.
 	 */
-	public void incrementMsgSequenceNr() {
+	public long incrementAndGetMsgSequenceNr() {
 		try {
 			this.msgSequenceNr++;
 		} catch (Exception e) {
 			// in case an exception number gets reseted
 			this.reset();
 		}
+		return this.msgSequenceNr;
 	}
 
 	/**

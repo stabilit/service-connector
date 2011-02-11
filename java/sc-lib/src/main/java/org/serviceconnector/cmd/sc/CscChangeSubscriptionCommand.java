@@ -18,13 +18,11 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.casc.CscUnsubscribeCallbackForCasc;
+import org.serviceconnector.casc.CscChangeSubscriptionCallbackForCasc;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.res.IResponderCallback;
-import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -35,18 +33,10 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.CascadedPublishService;
-import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Subscription;
-import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ValidatorUtility;
 
-/**
- * The Class ClnChangeSubscriptionCommand. Responsible for validation and execution of change subscription command. Allows changing
- * subscription mask on SC.
- * 
- * @author JTraber
- */
 public class CscChangeSubscriptionCommand extends CommandAdapter {
 
 	/** The Constant logger. */
@@ -55,7 +45,7 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CLN_CHANGE_SUBSCRIPTION;
+		return SCMPMsgType.CSC_CHANGE_SUBSCRIPTION;
 	}
 
 	/** {@inheritDoc} */
@@ -81,22 +71,12 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 			CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
 			// publish service is cascaded
 			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
-
-			SubscriptionQueue<SCMPMessage> queue = ((IPublishService) cascSubscription.getService()).getSubscriptionQueue();
-			// unsubscribe made by cascaded SC on behalf of his clients
-			SubscriptionMask cascSCMask = new SubscriptionMask(cascadedSCMask);
-			queue.changeSubscription(cascSubscription.getId(), cascSCMask);
-			cascSubscription.setMask(cascSCMask);
-			SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
-			// TODO JOT change subscription
-			// CscUnsubscribeCallbackForCasc callback = new CscUnsubscribeCallbackForCasc(request, response, responderCallback,
-			// cascadedPublishService.getCascClient());
-			// cascadedSC.cascadedSCUnsubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
+			ClnChangeSubscriptionCommandCallback callback = new ClnChangeSubscriptionCommandCallback(request, response,
+					responderCallback, cascSubscription);
+			cascadedSC.cascadedSCChangeSubscription(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
 			return;
 		}
-		String subscriptionId = reqMessage.getSessionId();
-		Subscription subscription = this.getSubscriptionById(subscriptionId);
-		StatefulServer server = (StatefulServer) subscription.getServer();
+		StatefulServer server = (StatefulServer) cascSubscription.getServer();
 
 		int otiOnSCMillis = (int) (oti * basicConf.getOperationTimeoutMultiplier());
 		int tries = (otiOnSCMillis / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
@@ -104,8 +84,8 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 		int i = 0;
 
 		do {
-			ClnChangeSubscriptionCommandCallback callback = new ClnChangeSubscriptionCommandCallback(request, response,
-					responderCallback, subscription);
+			CscChangeSubscriptionCallbackForCasc callback = new CscChangeSubscriptionCallbackForCasc(request, response,
+					responderCallback, cascSubscription, cascadedSCMask);
 			try {
 				server.changeSubscription(reqMessage, callback, otiOnSCMillis
 						- (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));

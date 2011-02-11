@@ -324,6 +324,18 @@ public class SCMPMessage {
 	}
 
 	/**
+	 * Sets the header by type and value.
+	 * 
+	 * @param headerType
+	 *            the header attribute
+	 * @param attributeValue
+	 *            the value
+	 */
+	public void setHeader(SCMPHeaderAttributeKey headerType, long attributeValue) {
+		this.header.put(headerType.getValue(), String.valueOf(attributeValue));
+	}
+
+	/**
 	 * Copies the header from another message.
 	 * 
 	 * @param sourceMessage

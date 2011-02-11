@@ -182,7 +182,7 @@ public class SCPublishService extends SCService {
 		}
 		String mask = scSubscribeMessage.getMask();
 		ValidatorUtility.validateMask(mask, SCMPError.HV_WRONG_MASK);
-		this.requester.getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCMPClnChangeSubscriptionCall changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester, this.serviceName,
 				this.sessionId);
@@ -229,7 +229,7 @@ public class SCPublishService extends SCService {
 		if (this.sessionActive == false) {
 			return;
 		}
-		this.requester.getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
 		SCPublishServiceCallback callback = new SCPublishServiceCallback(this, this.messageCallback);
 		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, this.serviceName,
@@ -303,7 +303,7 @@ public class SCPublishService extends SCService {
 			ValidatorUtility.validateStringLengthIgnoreNull(1, scSubscribeMessage.getSessionInfo(), 256,
 					SCMPError.HV_WRONG_SESSION_INFO);
 		}
-		this.requester.getSCMPMsgSequenceNr().incrementMsgSequenceNr();
+		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
 		try {
 			SCServiceCallback callback = new SCServiceCallback(true);
