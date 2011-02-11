@@ -23,14 +23,29 @@ import javax.xml.stream.XMLStreamWriter;
 import org.serviceconnector.SCVersion;
 import org.serviceconnector.util.DateTimeUtility;
 
+/**
+ * The Class XMLCacheDump.
+ */
 public class XMLCacheDump {
 	private XMLStreamWriter writer;
 
+	/**
+	 * Instantiates a new XML cache dump.
+	 *
+	 * @param os the os
+	 * @throws Exception the exception
+	 */
 	public XMLCacheDump(OutputStream os) throws Exception {
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		this.writer = factory.createXMLStreamWriter(os);
 	}
 
+	/**
+	 * Dump all cache instances into xml stream.
+	 *
+	 * @param cacheManager the cache manager
+	 * @throws Exception the exception
+	 */
 	public void dumpAll(CacheManager cacheManager) throws Exception {
 		this.writer.writeStartDocument();
 		this.writer.writeStartElement("cache-manager-dump");
@@ -62,6 +77,12 @@ public class XMLCacheDump {
 		this.writer.flush();
 	}
 
+	/**
+	 * Dump cache instance into xml stream.
+	 *
+	 * @param cache the cache
+	 * @throws Exception the exception
+	 */
 	private void dumpCache(Cache cache) throws Exception {
 		this.writer.writeStartElement("cache-dump");
 		this.writeElement("name", cache.getCacheName());
@@ -83,6 +104,13 @@ public class XMLCacheDump {
 		this.writer.writeEndElement(); // end of cache-dump
 	}
 
+	/**
+	 * Dump composite into xml stream.
+	 *
+	 * @param cache the cache
+	 * @param cacheKey the cache key
+	 * @throws Exception the exception
+	 */
 	private void dumpComposite(Cache cache, CacheKey cacheKey) throws Exception {
 		this.writer.writeStartElement("composite-dump");
 		String cacheId = cacheKey.getCacheId();
@@ -130,6 +158,13 @@ public class XMLCacheDump {
 
 	}
 
+	/**
+	 * Write element.
+	 *
+	 * @param name the name
+	 * @param value the value
+	 * @throws Exception the exception
+	 */
 	private void writeElement(String name, String value) throws Exception {
 		this.writer.writeStartElement(name);
 		if (value != null) {
@@ -138,18 +173,39 @@ public class XMLCacheDump {
 		this.writer.writeEndElement();
 	}
 
+	/**
+	 * Write element converting int value to String
+	 *
+	 * @param name the name
+	 * @param value the value
+	 * @throws Exception the exception
+	 */
 	private void writeElement(String name, int value) throws Exception {
 		this.writer.writeStartElement(name);
 		this.writer.writeCData(String.valueOf(value));
 		this.writer.writeEndElement();
 	}
 
+	/**
+	 * Write element converting long value to String
+	 *
+	 * @param name the name
+	 * @param value the value
+	 * @throws Exception the exception
+	 */
 	private void writeElement(String name, long value) throws Exception {
 		this.writer.writeStartElement(name);
 		this.writer.writeCData(String.valueOf(value));
 		this.writer.writeEndElement();
 	}
 
+	/**
+	 * Write element converting boolean value to String
+	 *
+	 * @param name the name
+	 * @param value the value
+	 * @throws Exception the exception
+	 */
 	private void writeElement(String name, boolean value) throws Exception {
 		this.writer.writeStartElement(name);
 		this.writer.writeCData(String.valueOf(value));

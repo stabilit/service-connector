@@ -210,7 +210,19 @@ public class ClnExecuteCommand extends CommandAdapter {
 		}
 		CacheId cacheId = new CacheId(message.getCacheId());
 		CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
-
+		if (cacheComposite == null) {
+			// we synchronized this part and check if any other thread did start loading in the meantime
+			synchronized (cacheManager) {
+				cacheComposite = scmpCache.getComposite(cacheId);
+				if (cacheComposite == null) {
+					CacheLogger.debug("cache does not exist, start loading from server");
+					// cache does not exist, this is the first request for it
+					int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+					scmpCache.startLoading(message.getCacheId(), oti);
+					return false;
+				}
+			}
+		}
 		if (cacheComposite != null) {
 			synchronized (cacheManager) {
 				// check if cache is loading
@@ -242,7 +254,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 					throw scmpCommandException;
 				}
 			}
-			if (cacheComposite.isLoaded() && cacheComposite.isExpired() == false) {				
+			if (cacheComposite.isLoaded() && cacheComposite.isExpired() == false) {
 				CacheLogger.debug("cache composite (" + cacheId + ") found and loaded, expiration time is "
 						+ cacheComposite.getExpiration());
 				// cache has been loaded, try to get cache message, get the first one if cache id belongs to composite id
@@ -254,10 +266,13 @@ public class ClnExecuteCommand extends CommandAdapter {
 					if (cacheComposite.isValidCacheId(cacheId)) {
 						scmpCache.removeComposite(cacheId.getCacheId());
 						// cache id sequence nr is valid, but message does not exist, cache is invalid
-						CacheLogger.error("cache has illegal state, loaded but message is not part of cache, cacheId=" + message.getCacheId());
-						CacheLogger.error("cache has illegal state, cache composite [" + cacheId.getCacheId() + " will be removed, retry again");
+						CacheLogger.error("cache has illegal state, loaded but message is not part of cache, cacheId="
+								+ message.getCacheId());
+						CacheLogger.error("cache has illegal state, cache composite [" + cacheId.getCacheId()
+								+ " will be removed, retry again");
 						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
-								"cache has illegal state, cache composite [" + cacheId.getCacheId() + " will be removed, retry again");
+								"cache has illegal state, cache composite [" + cacheId.getCacheId()
+										+ " will be removed, retry again");
 						scmpCommandException.setMessageType(this.getKey());
 						throw scmpCommandException;
 					}
@@ -297,12 +312,6 @@ public class ClnExecuteCommand extends CommandAdapter {
 				CacheLogger.debug("Sent a cache message to the client cacheId=" + cacheId);
 				return true; // message loaded from cache
 			}
-		}
-		if (cacheComposite == null) {
-			CacheLogger.debug("cache does not exist, start loading from server");
-			// cache does not exist, this is the first request for it
-			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-			scmpCache.startLoading(message.getCacheId(), oti);
 		}
 		return false; // message not loaded from cache
 	}
