@@ -39,10 +39,8 @@ import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
 public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
@@ -67,7 +65,7 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 1, 1, TestConstants.pubServiceName1);
+				TestConstants.PORT_SC0_CASC_TCP, 1, 1, TestConstants.pubServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 
 		SystemSuperTest.scDefs = scCascDefs;
@@ -113,7 +111,7 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		// publish 10 messages, wait 11 second after publish each message
 		subscribeCall.setRequestBody("10|11000");
 		TestCallback cbk = new TestCallback(true);
-		subscribeCall.invoke(cbk, 1000);
+		subscribeCall.invoke(cbk, 3000);
 		SCMPMessage reply = cbk.getMessageSync(2000);
 		TestUtil.checkReply(reply);
 		String sessionId = reply.getSessionId();
@@ -129,7 +127,7 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 				TestConstants.pubServerName1, sessionId);
 		// mask matches now
 		changeSubscriptionCall.setMask(TestConstants.mask);
-		changeSubscriptionCall.invoke(cbk, 1000);
+		changeSubscriptionCall.invoke(cbk, 3000);
 		TestUtil.checkReply(cbk.getMessageSync(1000));
 
 		// receive publication first message
@@ -139,51 +137,7 @@ public class SCMPClnChangeSubscriptionTest extends SystemSuperTest {
 		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
 
 		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
-		unSubscribeCall.invoke(cbk, 1000);
-		reply = cbk.getMessageSync(1000);
-		TestUtil.checkReply(reply);
-	}
-
-	/**
-	 * Description: change subscription twice, second one fails because there is no free connection<br>
-	 * Expectation: passes
-	 */
-	@Test
-	public void t20_ChangeTwiceFailsNoFreeConnection() throws Exception {
-		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
-
-		subscribeCall.setSessionInfo(TestConstants.publishCompressedMsgCmd);
-		subscribeCall.setNoDataIntervalSeconds(10);
-		subscribeCall.setMask(TestConstants.mask);
-		subscribeCall.setRequestBody("100");
-		TestCallback cbk = new TestCallback(true);
-		subscribeCall.invoke(cbk, 1000);
-		SCMPMessage reply = cbk.getMessageSync(1000);
-		TestUtil.checkReply(reply);
-		String sessionId = reply.getSessionId();
-
-		SCMPClnChangeSubscriptionCall changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester,
-				TestConstants.pubServerName1, sessionId);
-		// mask matches now
-		changeSubscriptionCall.setMask(TestConstants.mask);
-		changeSubscriptionCall.setSessionInfo(TestConstants.sleepCmd);
-		changeSubscriptionCall.setRequestBody("2000");
-		cbk = new TestCallback(true);
-		changeSubscriptionCall.invoke(cbk, 4000);
-
-		changeSubscriptionCall = new SCMPClnChangeSubscriptionCall(this.requester, TestConstants.pubServerName1, sessionId);
-		changeSubscriptionCall.setMask(TestConstants.mask);
-		TestCallback cbk1 = new TestCallback(true);
-		changeSubscriptionCall.invoke(cbk1, 1000);
-
-		TestUtil.checkReply(cbk.getMessageSync(4000));
-		reply = cbk1.getMessageSync(1000);
-		Assert.assertTrue(reply.isFault());
-		TestUtil.verifyError(reply, SCMPError.NO_FREE_CONNECTION, SCMPMsgType.CLN_CHANGE_SUBSCRIPTION); // TODO JOT ##testing läuft
-
-		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
-		cbk = new TestCallback(true);
-		unSubscribeCall.invoke(cbk, 1000);
+		unSubscribeCall.invoke(cbk, 3000);
 		reply = cbk.getMessageSync(1000);
 		TestUtil.checkReply(reply);
 	}
