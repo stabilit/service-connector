@@ -18,6 +18,8 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.net.req.Requester;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 public class SCMPFileListCall extends SCMPCallAdapter {
@@ -28,6 +30,10 @@ public class SCMPFileListCall extends SCMPCallAdapter {
 
 	public SCMPFileListCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);
+	}
+
+	public SCMPFileListCall(Requester requester, SCMPMessage msgToForward) {
+		super(requester, msgToForward);
 	}
 
 	/** {@inheritDoc} */

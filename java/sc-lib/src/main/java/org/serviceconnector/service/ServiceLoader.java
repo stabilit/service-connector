@@ -88,7 +88,12 @@ public class ServiceLoader {
 						.getNoDataIntervalSeconds());
 				break;
 			case CASCADED_FILE_SERVICE:
-				service = new CascadedFileService(serviceName);
+				server = AppContext.getServerRegistry().getServer(remotNodeName);
+				if (server == null) {
+					throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, " host=" + remotNodeName
+							+ " configured for service=" + serviceName + " is not configured");
+				}
+				service = new CascadedFileService(serviceName, (CascadedSC) server);
 				break;
 			case SESSION_SERVICE:
 				service = new SessionService(serviceName);

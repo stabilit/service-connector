@@ -19,6 +19,7 @@ package org.serviceconnector.cmd.sc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -27,8 +28,11 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.FileServer;
+import org.serviceconnector.service.CascadedFileService;
 import org.serviceconnector.service.FileService;
+import org.serviceconnector.service.Service;
 import org.serviceconnector.util.ValidatorUtility;
 
 public class FileListCommand extends CommandAdapter {
@@ -46,6 +50,19 @@ public class FileListCommand extends CommandAdapter {
 	@Override
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage message = request.getMessage();
+		String serviceName = message.getServiceName();
+		// check service is present
+		Service abstractService = this.getService(serviceName);
+		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+
+		switch (abstractService.getType()) {
+		case CASCADED_FILE_SERVICE:
+			CascadedSC cascadedSC = ((CascadedFileService) abstractService).getCascadedSC();
+			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response, responderCallback);
+			cascadedSC.serverGetFileList(message, callback, oti);
+			return;
+		}
+
 		FileService fileService = this.validateFileService(message.getServiceName());
 		if (fileService.isEnabled() == false) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SERVICE_DISABLED, "service="
@@ -55,7 +72,6 @@ public class FileListCommand extends CommandAdapter {
 		}
 		SCMPMessage reply = null;
 		try {
-			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			FileServer fileServer = fileService.getServer();
 			reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(), message
 					.getServiceName(), oti);

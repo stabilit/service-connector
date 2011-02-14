@@ -18,7 +18,9 @@ package org.serviceconnector.call;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 public class SCMPFileDownloadCall extends SCMPCallAdapter {
@@ -29,6 +31,10 @@ public class SCMPFileDownloadCall extends SCMPCallAdapter {
 
 	public SCMPFileDownloadCall(IRequester requester, String serviceName, String sessionId) {
 		super(requester, serviceName, sessionId);
+	}
+
+	public SCMPFileDownloadCall(Requester requester, SCMPMessage msgToForward) {
+		super(requester, msgToForward);
 	}
 
 	/** {@inheritDoc} */

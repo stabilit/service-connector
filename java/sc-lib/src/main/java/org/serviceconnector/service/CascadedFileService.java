@@ -16,9 +16,18 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
+import org.serviceconnector.server.CascadedSC;
+
 public class CascadedFileService extends Service {
 
-	public CascadedFileService(String name) {
+	protected CascadedSC cascadedSC;
+
+	public CascadedFileService(String name, CascadedSC cascadedSC) {
 		super(name, ServiceType.CASCADED_FILE_SERVICE);
+		this.cascadedSC = cascadedSC;
+	}
+
+	public CascadedSC getCascadedSC() {
+		return this.cascadedSC;
 	}
 }

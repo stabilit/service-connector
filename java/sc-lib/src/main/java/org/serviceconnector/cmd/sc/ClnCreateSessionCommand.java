@@ -32,6 +32,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.FileServer;
+import org.serviceconnector.service.CascadedFileService;
 import org.serviceconnector.service.CascadedSessionService;
 import org.serviceconnector.service.FileService;
 import org.serviceconnector.service.FileSession;
@@ -92,6 +93,11 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response, responderCallback);
 			cascadedSC.createSession(reqMessage, callback, oti);
 			return;
+		case CASCADED_FILE_SERVICE:
+			cascadedSC = ((CascadedFileService) abstractService).getCascadedSC();
+			callback = new ClnCommandCascCallback(request, response, responderCallback);
+			cascadedSC.createSession(reqMessage, callback, oti);
+			return;
 		case SESSION_SERVICE:
 			// code for type session service is below switch statement
 			break;
@@ -115,12 +121,6 @@ public class ClnCreateSessionCommand extends CommandAdapter {
 			response.setSCMP(reply);
 			responderCallback.responseCallback(request, response);
 			return;
-		case UNDEFINED:
-		default:
-			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SC_ERROR,
-					"create session not allowed for service " + serviceName);
-			scmpCommandException.setMessageType(getKey());
-			throw scmpCommandException;
 		}
 
 		// create session

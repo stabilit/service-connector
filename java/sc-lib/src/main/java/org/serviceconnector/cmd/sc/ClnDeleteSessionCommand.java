@@ -34,6 +34,7 @@ import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.FileServer;
 import org.serviceconnector.server.IServer;
 import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.service.CascadedFileService;
 import org.serviceconnector.service.CascadedSessionService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
@@ -70,6 +71,11 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			CascadedSC cascadedSC = ((CascadedSessionService) abstractService).getCascadedSC();
 			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response, responderCallback);
 			cascadedSC.deleteSession(reqMessage, callback, oti);
+			return;
+		case CASCADED_FILE_SERVICE:
+			cascadedSC = ((CascadedFileService) abstractService).getCascadedSC();
+			callback = new ClnCommandCascCallback(request, response, responderCallback);
+			cascadedSC.createSession(reqMessage, callback, oti);
 			return;
 		}
 

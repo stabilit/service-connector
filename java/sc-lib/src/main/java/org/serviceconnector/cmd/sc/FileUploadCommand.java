@@ -18,6 +18,7 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
@@ -26,8 +27,11 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.server.FileServer;
+import org.serviceconnector.service.CascadedFileService;
 import org.serviceconnector.service.FileSession;
+import org.serviceconnector.service.Service;
 import org.serviceconnector.util.ValidatorUtility;
 
 public class FileUploadCommand extends CommandAdapter {
@@ -44,13 +48,25 @@ public class FileUploadCommand extends CommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
-		SCMPMessage message = request.getMessage();
+		SCMPMessage message = request.getMessage();		
+		String serviceName = message.getServiceName();
+		// check service is present
+		Service abstractService = this.getService(serviceName);
+		int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+
+		switch (abstractService.getType()) {
+		case CASCADED_FILE_SERVICE:
+			CascadedSC cascadedSC = ((CascadedFileService) abstractService).getCascadedSC();
+			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response, responderCallback);
+			cascadedSC.serverUploadFile(message, callback, oti);
+			return;
+		}		
+		
 		FileSession session = (FileSession) this.getSessionById(message.getSessionId());
 		// cancel session timeout
 		this.sessionRegistry.cancelSessionTimeout(session);
 		SCMPMessage reply = null;
 		try {
-			int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			String remoteFileName = (String) message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
 
 			FileServer fileServer = session.getFileServer();

@@ -33,6 +33,9 @@ import org.serviceconnector.call.SCMPCscChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPCscSubscribeCall;
 import org.serviceconnector.call.SCMPCscUnsubscribeCall;
 import org.serviceconnector.call.SCMPEchoCall;
+import org.serviceconnector.call.SCMPFileDownloadCall;
+import org.serviceconnector.call.SCMPFileListCall;
+import org.serviceconnector.call.SCMPFileUploadCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.casc.CscAbortSubscriptionCallback;
@@ -41,6 +44,7 @@ import org.serviceconnector.casc.CscSubscribeActiveCascClientCallback;
 import org.serviceconnector.casc.CscSubscribeInactiveCascClientCallback;
 import org.serviceconnector.casc.CscUnsubscribeCallbackActiveCascClient;
 import org.serviceconnector.casc.ISubscriptionCallback;
+import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
 import org.serviceconnector.cmd.sc.ClnChangeSubscriptionCommandCallback;
 import org.serviceconnector.cmd.sc.CommandCallback;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
@@ -112,6 +116,39 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	public void serverDownloadFile(SCMPMessage msgToForward, ClnCommandCascCallback callback, int timeoutMillis) {
+		SCMPFileDownloadCall fileDownloadCall = new SCMPFileDownloadCall(this.requester, msgToForward);
+
+		try {
+			fileDownloadCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+		} catch (Exception e) {
+			// echo failed
+			callback.receive(e);
+		}
+	}
+
+	public void serverGetFileList(SCMPMessage msgToForward, ClnCommandCascCallback callback, int timeoutMillis) {
+		SCMPFileListCall fileListCall = new SCMPFileListCall(this.requester, msgToForward);
+
+		try {
+			fileListCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+		} catch (Exception e) {
+			// echo failed
+			callback.receive(e);
+		}
+	}
+
+	public void serverUploadFile(SCMPMessage msgToForward, ClnCommandCascCallback callback, int timeoutMillis) {
+		SCMPFileUploadCall fileUploadCall = new SCMPFileUploadCall(this.requester, msgToForward);
+
+		try {
+			fileUploadCall.invoke(callback, (int) (this.operationTimeoutMultiplier * timeoutMillis));
+		} catch (Exception e) {
+			// echo failed
+			callback.receive(e);
+		}
+	}
+
 	/**
 	 * Try acquire permit on cascaded client semaphore. This method is used to get permit to continue. Only one permit is available
 	 * per cascaded client. If no permit is available thread waits inside the semaphore. Operation breaks if OTI times out. After
@@ -173,8 +210,8 @@ public class CascadedSC extends Server implements IStatefulServer {
 				this.subscribeCascadedSCWithInActiveCascadedClient(cascClient, msgToForward, callback, oti);
 				return;
 			}
-			CscSubscribeActiveCascClientCallback cascCallback = new CscSubscribeActiveCascClientCallback(cascClient,
-					callback.getRequest(), callback);
+			CscSubscribeActiveCascClientCallback cascCallback = new CscSubscribeActiveCascClientCallback(cascClient, callback
+					.getRequest(), callback);
 			this.subscribeCascadedSCWithActiveCascadedClient(cascClient, msgToForward, cascCallback, oti);
 		} catch (Exception e) {
 			// release permit in case of an error
@@ -266,8 +303,8 @@ public class CascadedSC extends Server implements IStatefulServer {
 	}
 
 	public void receivePublication(CascadedClient cascClient, ISCMPMessageCallback callback, int timeoutMillis) {
-		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
-				cascClient.getServiceName(), cascClient.getSubscriptionId());
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, cascClient
+				.getServiceName(), cascClient.getSubscriptionId());
 		long msgSeqNr = cascClient.getMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		receivePublicationCall.getRequest().setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSeqNr);
 		try {
