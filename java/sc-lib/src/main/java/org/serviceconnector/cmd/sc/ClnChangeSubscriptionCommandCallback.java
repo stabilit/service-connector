@@ -60,6 +60,7 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
+		
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		String subscriptionId = subscription.getId();
@@ -83,9 +84,6 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 		reply.setMessageType(SCMPMsgType.CLN_CHANGE_SUBSCRIPTION);
 		reply.setSessionId(subscriptionId);
 		response.setSCMP(reply);
-		// schedule subscription timeout
-		Subscription subscription = this.subscriptionRegistry.getSubscription(subscriptionId);
-		this.subscriptionRegistry.scheduleSubscriptionTimeout(subscription);
 		this.responderCallback.responseCallback(request, response);
 	}
 
