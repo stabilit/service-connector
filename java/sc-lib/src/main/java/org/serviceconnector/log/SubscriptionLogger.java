@@ -28,7 +28,7 @@ public class SubscriptionLogger {
 	private static String SUBSCRIBE_STR = "subscription:%s - subscribing to:%s - with mask:%s";
 	private static String CHANGE_SUBSCRIBE_STR = "subscription:%s - change subscription to:%s - new mask:%s";
 	private static String UNSUBSCRIBE_STR = "subscription:%s - unsubscribing from:%s";
-	private static String CREATE_SUBSCRIPTION_STR = "create subscription:%s";
+	private static String CREATE_SUBSCRIPTION_STR = "create subscription:%s timeout=%s";
 	private static String DELETE_SUBSCRIPTION_STR = "delete subscription:%s";
 	private static String ABORT_SUBSCRIPTION_STR = "abort subscription:%s";
 
@@ -88,10 +88,10 @@ public class SubscriptionLogger {
 		return subscriptionLogger.isTraceEnabled();
 	}
 
-	public static void logCreateSubscription(String id) {
+	public static void logCreateSubscription(String id, double timeout) {
 		if (subscriptionLogger.isTraceEnabled()) {
 			Formatter format = new Formatter();
-			format.format(CREATE_SUBSCRIPTION_STR, id);
+			format.format(CREATE_SUBSCRIPTION_STR, id, timeout);
 			subscriptionLogger.trace(format.toString());
 			format.close();
 		}

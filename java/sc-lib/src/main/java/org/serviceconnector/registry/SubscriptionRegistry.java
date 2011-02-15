@@ -56,7 +56,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 *            the subscription
 	 */
 	public void addSubscription(String key, Subscription subscription) {
-		SubscriptionLogger.logCreateSubscription(subscription.getId());
+		SubscriptionLogger.logCreateSubscription(subscription.getId(), AppContext.getBasicConfiguration()
+				.getSubscriptionTimeoutMillis());
 		this.put(key, subscription);
 		this.scheduleSubscriptionTimeout(subscription);
 	}
@@ -164,7 +165,6 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		this.subscriptionScheduler.purge();
 		// important to set timeout null - rescheduling of same instance not possible
 		subscription.setTimeout(null);
-		logger.trace("cancel subscription timeout " + subscription.getId());
 	}
 
 	public void cancelSubscriptionTimeout(String key) {
