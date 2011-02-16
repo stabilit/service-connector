@@ -133,7 +133,9 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 			// mask mandatory
 			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
-			// TODO JAN/JOT ams actual mask mandatory
+			// actualMask mandatory
+			String actualMask = message.getHeader(SCMPHeaderAttributeKey.ACTUAL_MASK);
+			ValidatorUtility.validateStringLength(1, actualMask, 256, SCMPError.HV_WRONG_MASK);
 			// sessionInfo optional
 			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
