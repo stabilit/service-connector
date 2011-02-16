@@ -70,6 +70,7 @@ public class TestConstants {
 	public static final String echoAppError3Cmd = "echoAppError3";
 	public static final String echoAppError4Cmd = "echoAppError4";
 	public static final String largeResponseCmd = "largeResponse";
+	public static final String largeResponse10MBCmd= "largeResponse10MB";
 	public static final String sleepCmd = "sleep";
 	public static final String cacheCmd = "cache";
 

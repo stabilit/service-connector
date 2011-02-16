@@ -237,6 +237,13 @@ public class TestSessionServer extends TestStatefulServer {
 			return request;
 		}
 
+		// send back a 10MB large response
+		public SCMessage largeResponse10MB(SCMessage request, int operationTimeoutMillis) {
+			String largeString = TestUtil.get10MBString();
+			request.setData(largeString);
+			return request;
+		}
+
 		// causes caching response message
 		public SCMessage cache(SCMessage request, int operationTimeoutMillis) {
 			Calendar time = Calendar.getInstance();

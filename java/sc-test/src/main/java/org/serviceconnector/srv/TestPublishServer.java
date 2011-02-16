@@ -156,6 +156,11 @@ public class TestPublishServer extends TestStatefulServer {
 				} else if (sessionInfo.equals(TestConstants.echoAppErrorCmd)) {
 					response.setAppErrorCode(TestConstants.appErrorCode);
 					response.setAppErrorText(TestConstants.appErrorText);
+				} else if (sessionInfo.equals(TestConstants.sleepCmd)) {
+					// invoking a method synchronous
+					PublishThread th = new PublishThread();
+					th.sleep(request, operationTimeoutMillis);
+					return response;
 				} else {
 					PublishThread publishThread = new PublishThread(this.scPublishServer, sessionInfo, request,
 							operationTimeoutMillis);

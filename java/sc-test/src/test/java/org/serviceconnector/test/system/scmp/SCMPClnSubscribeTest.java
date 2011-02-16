@@ -19,9 +19,18 @@ package org.serviceconnector.test.system.scmp;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
+
+import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.TestUtil;
+import org.serviceconnector.call.SCMPClnSubscribeCall;
+import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
 public class SCMPClnSubscribeTest extends org.serviceconnector.test.system.scmp.casc.SCMPClnSubscribeTest {
@@ -47,5 +56,41 @@ public class SCMPClnSubscribeTest extends org.serviceconnector.test.system.scmp.
 
 		SystemSuperTest.scDefs = sc0Defs;
 		SCMPClnSubscribeTest.srvDefs = srvToSC0Defs;
+	}
+	
+	/**
+	 * Description: subscribe - waits 2 seconds - another subscribe fails because no free server is available<br>
+	 * Expectation: passes
+	 */
+	@Override
+	public void t30_FailsNoFreeServer() throws Exception {
+		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
+
+		subscribeCall.setSessionInfo(TestConstants.sleepCmd);
+		subscribeCall.setNoDataIntervalSeconds(10);
+		subscribeCall.setMask(TestConstants.mask);
+		TestCallback cbk = new TestCallback(true);
+		subscribeCall.setRequestBody("3000");
+		subscribeCall.invoke(cbk, 5000);
+
+		Thread.sleep(100);
+		subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
+
+		subscribeCall.setNoDataIntervalSeconds(10);
+		subscribeCall.setMask(TestConstants.mask);
+		TestCallback cbk1 = new TestCallback(true);
+		subscribeCall.invoke(cbk1, 2000);
+
+		SCMPMessage reply = cbk.getMessageSync(5000);
+		SCMPMessage reply1 = cbk1.getMessageSync(4000);
+		String sessionId = reply.getSessionId();
+
+		TestUtil.checkReply(reply);
+		Assert.assertTrue(reply1.isFault());
+		TestUtil.verifyError(reply1, SCMPError.NO_FREE_SERVER, SCMPMsgType.CLN_SUBSCRIBE);
+
+		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
+		unSubscribeCall.invoke(cbk, 4000);
+		TestUtil.checkReply(cbk.getMessageSync(4000));
 	}
 }

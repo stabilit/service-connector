@@ -325,11 +325,36 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	}
 
 	/**
+	 * Description: execute small request - larger response both compressed<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t51_SmallRequest10MBLargeResponseCompressed() throws Exception {
+		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
+		clnExecuteCall.setMessageInfo(TestConstants.largeResponse10MBCmd);
+		clnExecuteCall.setRequestBody("test body");
+		clnExecuteCall.setCompressed(true);
+		TestCallback cbk = new TestCallback(false);
+		clnExecuteCall.invoke(cbk, 300000);
+		SCMPMessage scmpReply = cbk.getMessageSync(300000);
+
+		String expectedResponse = TestUtil.get10MBString();
+		Assert.assertEquals(expectedResponse.length() + "", scmpReply.getBodyLength() + "");
+		Assert.assertEquals(expectedResponse, scmpReply.getBody());
+		Assert.assertEquals(SCMPBodyType.TEXT.getValue(), scmpReply.getHeader(SCMPHeaderAttributeKey.BODY_TYPE));
+		Assert.assertEquals(SCMPMsgType.CLN_EXECUTE.getValue(), scmpReply.getMessageType());
+		String serviceName = clnExecuteCall.getRequest().getServiceName();
+		String sessionId = clnExecuteCall.getRequest().getSessionId();
+		Assert.assertEquals(serviceName, scmpReply.getServiceName());
+		Assert.assertEquals(sessionId, scmpReply.getSessionId());
+	}
+
+	/**
 	 * Description: execute large request - small response both compressed<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t51_LargeRequestSmallResponseCompressed() throws Exception {
+	public void t52_LargeRequestSmallResponseCompressed() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		String largeString = TestUtil.getLargeString();
 		clnExecuteCall.setRequestBody(largeString);
@@ -346,7 +371,7 @@ public class SCMPClnExecuteTest extends SystemSuperTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t52_LargeRequestLargeResponseCompressed() throws Exception {
+	public void t53_LargeRequestLargeResponseCompressed() throws Exception {
 		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, this.sessionId);
 		String largeString = TestUtil.getLargeString();
 		clnExecuteCall.setMessageInfo(TestConstants.largeResponseCmd);

@@ -77,6 +77,17 @@ public class TestUtil {
 		return sb.toString();
 	}
 
+	public static String get10MBString() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < Integer.MAX_VALUE; i++) {
+			if (sb.length() > 10000000) {
+				break;
+			}
+			sb.append(i);
+		}
+		return sb.toString();
+	}
+
 	public static void checkLogFile(String log4jProperties, String logFileToCheck) throws Exception {
 
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
@@ -101,7 +112,7 @@ public class TestUtil {
 			}
 		}
 	}
-	
+
 	public static boolean deleteDir(File dir) {
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
