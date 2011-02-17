@@ -117,7 +117,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		TimeoutWrapper subscriptionTimeouter = new TimeoutWrapper(new SubscriptionTimeout(subscription));
 		// schedule sessionTimeouter in registry timer
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.subscriptionScheduler.schedule(
-				subscriptionTimeouter, AppContext.getBasicConfiguration().getSubscriptionTimeoutMillis(), TimeUnit.MILLISECONDS);
+				subscriptionTimeouter, (long) subscription.getSubscriptionTimeoutMillis(), TimeUnit.MILLISECONDS);
 		subscription.setTimeout(timeout);
 		logger.trace("schedule subscription timeout millis: " + AppContext.getBasicConfiguration().getSubscriptionTimeoutMillis()
 				+ " id: " + subscription.getId());

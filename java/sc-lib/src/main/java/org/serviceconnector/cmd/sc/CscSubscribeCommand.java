@@ -22,6 +22,7 @@ import org.serviceconnector.casc.CscChangeSubscriptionCallbackForCasc;
 import org.serviceconnector.casc.ISubscriptionCallback;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -80,7 +81,8 @@ public class CscSubscribeCommand extends CommandAdapter {
 		String cascSubscriptionId = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID);
 		Subscription cscSubscription = this.subscriptionRegistry.getSubscription(cascSubscriptionId);
 		SubscriptionMask cscMask = new SubscriptionMask(cscSCMaskString);
-		Subscription tmpCascSCSubscription = new Subscription(cscMask, sessionInfo, ipAddressList, noi);
+		Subscription tmpCascSCSubscription = new Subscription(cscMask, sessionInfo, ipAddressList, noi, AppContext
+				.getBasicConfiguration().getSubscriptionTimeoutMillis());
 		tmpCascSCSubscription.setService(abstractService);
 
 		switch (abstractService.getType()) {

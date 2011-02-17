@@ -76,7 +76,7 @@ public class PublishCommand extends CommandAdapter {
 		}
 		reply.setMessageType(this.getKey());
 		reply.setIsReply(true);
-		reply.setServiceName(message.getServiceName());
+		reply.setServiceName(serviceName);
 		response.setSCMP(reply);
 		responderCallback.responseCallback(request, response);
 	}
@@ -93,10 +93,10 @@ public class PublishCommand extends CommandAdapter {
 			String serviceName = message.getServiceName();
 			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 			// mask mandatory
-			String mask = (String) message.getHeader(SCMPHeaderAttributeKey.MASK);
+			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
 			// message info optional
-			String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point

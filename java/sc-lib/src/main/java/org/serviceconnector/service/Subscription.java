@@ -1,4 +1,5 @@
-/*
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
@@ -12,7 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
 import org.serviceconnector.server.IStatefulServer;
@@ -23,6 +24,8 @@ public class Subscription extends AbstractSession {
 	private SubscriptionMask mask;
 	/** The no data interval. */
 	private int noDataInterval = 0;
+	/** The subscription timeout seconds. */
+	private double subscriptionTimeoutMillis;
 
 	/**
 	 * Instantiates a new subscription.
@@ -30,10 +33,12 @@ public class Subscription extends AbstractSession {
 	 * @param mask
 	 *            the mask
 	 */
-	public Subscription(SubscriptionMask mask, String sessionInfo, String ipAddressList, int noDataInterval) {
+	public Subscription(SubscriptionMask mask, String sessionInfo, String ipAddressList, int noDataInterval,
+			double subscriptionTimeoutMillis) {
 		super(sessionInfo, ipAddressList);
 		this.mask = mask;
 		this.noDataInterval = noDataInterval;
+		this.subscriptionTimeoutMillis = subscriptionTimeoutMillis;
 	}
 
 	/**
@@ -55,6 +60,10 @@ public class Subscription extends AbstractSession {
 		this.mask = mask;
 	}
 
+	public double getSubscriptionTimeoutMillis() {
+		return this.subscriptionTimeoutMillis;
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public IStatefulServer getServer() {
@@ -70,7 +79,12 @@ public class Subscription extends AbstractSession {
 	public void setIpAddressList(String ipAddressList) {
 		this.ipAddressList = ipAddressList;
 	}
-	
+
+	/**
+	 * Gets the no data interval.
+	 * 
+	 * @return the no data interval
+	 */
 	public int getNoDataInterval() {
 		return noDataInterval;
 	}

@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -87,7 +88,8 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		String sessionInfo = reqMessage.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 		int noi = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		// create temporary subscription
-		Subscription tmpSubscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList, noi);
+		Subscription tmpSubscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList, noi, AppContext
+				.getBasicConfiguration().getSubscriptionTimeoutMillis());
 		tmpSubscription.setService(abstractService);
 		reqMessage.setSessionId(tmpSubscription.getId());
 
