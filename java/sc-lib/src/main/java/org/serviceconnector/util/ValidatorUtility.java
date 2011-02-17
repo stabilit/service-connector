@@ -325,6 +325,9 @@ public final class ValidatorUtility {
 	 */
 	public static void validateStringLengthTrim(int minSizeInc, String stringValue, int maxSizeInc, SCMPError error)
 			throws SCMPValidatorException {
+		if (stringValue == null) {
+			throw new SCMPValidatorException(error, "String value is missing");
+		}
 		ValidatorUtility.validateStringLength(minSizeInc, stringValue.trim(), maxSizeInc, error);
 	}
 
