@@ -17,6 +17,7 @@
 package org.serviceconnector;
 
 import java.lang.management.ManagementFactory;
+import java.security.InvalidParameterException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
@@ -34,7 +35,6 @@ import org.serviceconnector.log.JMXLoggingManager;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
 import org.serviceconnector.server.ServerLoader;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.service.ServiceLoader;
 import org.serviceconnector.util.CommandLineUtil;
 import org.serviceconnector.util.FileUtility;
@@ -96,7 +96,7 @@ public final class SC {
 	 */
 	private static void run(String configFileName) throws Exception {
 		if (configFileName == null) {
-			throw new SCServiceException("Configuration file is missing");
+			throw new InvalidParameterException("Configuration file is missing");
 		}
 		// write system information to log
 		SystemInfo.setConfigFileName(configFileName);
