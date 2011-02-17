@@ -25,7 +25,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.SCMPError;
@@ -96,7 +96,7 @@ public abstract class CommandAdapter implements ICommand {
 	}
 
 	/**
-	 * Gets the subscription queue by id.
+	 * Gets the publishMessageQueue by id.
 	 * 
 	 * @param subscriptionId
 	 *            the subscription id
@@ -104,9 +104,9 @@ public abstract class CommandAdapter implements ICommand {
 	 * @throws Exception
 	 *             the exception
 	 */
-	protected SubscriptionQueue<SCMPMessage> getSubscriptionQueueById(String subscriptionId) throws Exception {
+	protected PublishMessageQueue<SCMPMessage> getPublishMessageQueueById(String subscriptionId) throws Exception {
 		Subscription subscription = this.getSubscriptionById(subscriptionId);
-		return ((IPublishService) subscription.getService()).getSubscriptionQueue();
+		return ((IPublishService) subscription.getService()).getMessageQueue();
 	}
 
 	/**

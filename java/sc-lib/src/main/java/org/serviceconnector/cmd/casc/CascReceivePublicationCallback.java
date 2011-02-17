@@ -3,7 +3,7 @@ package org.serviceconnector.cmd.casc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.casc.CascadedClient;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
@@ -51,8 +51,8 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 			if (noData == false) {
 				// message received,insert in queue
 				logger.debug("receive publication for cascaded client put message in queue service=" + cascClient.getServiceName());
-				SubscriptionQueue<SCMPMessage> subscriptionQueue = this.cascClient.getPublishService().getSubscriptionQueue();
-				subscriptionQueue.insert(reply);
+				PublishMessageQueue<SCMPMessage> publishMessageQueue = this.cascClient.getPublishService().getMessageQueue();
+				publishMessageQueue.insert(reply);
 			}
 			// release permit
 			this.cascClient.getCascClientSemaphore().release();

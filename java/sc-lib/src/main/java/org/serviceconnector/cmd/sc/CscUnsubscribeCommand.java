@@ -25,7 +25,7 @@ import org.serviceconnector.cmd.casc.CscUnsubscribeCommandCallback;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.res.IResponderCallback;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -76,7 +76,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 			// publish service is cascaded
 			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
 
-			SubscriptionQueue<SCMPMessage> queue = ((IPublishService) cascSubscription.getService()).getSubscriptionQueue();
+			PublishMessageQueue<SCMPMessage> queue = ((IPublishService) cascSubscription.getService()).getMessageQueue();
 			if (cascadedSCMask == null) {
 				// unsubscribe made by cascaded SC on behalf of his last client
 				this.subscriptionRegistry.removeSubscription(cascSubscription.getId());
@@ -96,7 +96,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 			return;
 		}
 
-		SubscriptionQueue<SCMPMessage> queue = ((IPublishService) cascSubscription.getService()).getSubscriptionQueue();
+		PublishMessageQueue<SCMPMessage> queue = ((IPublishService) cascSubscription.getService()).getMessageQueue();
 		if (cascadedSCMask == null) {
 			// unsubscribe made by cascaded SC on behalf of his last client
 			this.subscriptionRegistry.removeSubscription(cascSubscription.getId());

@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.casc.CascadedClient;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.CascadedSC;
 
@@ -30,7 +30,7 @@ public class CascadedPublishService extends Service implements IPublishService {
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(CascadedPublishService.class);
 	/** The subscription queue. */
-	private SubscriptionQueue<SCMPMessage> subscriptionQueue;
+	private PublishMessageQueue<SCMPMessage> publishMessageQueue;
 	/** The cascaded sc. */
 	protected CascadedSC cascadedSC;
 	/** The cascaded client. */
@@ -43,11 +43,11 @@ public class CascadedPublishService extends Service implements IPublishService {
 		this.cascadedSC = cascadedSC;
 		this.cascClient = new CascadedClient(cascadedSC, this);
 		this.noDataIntervalSeconds = noDataIntervalSeconds;
-		this.subscriptionQueue = new SubscriptionQueue<SCMPMessage>();
+		this.publishMessageQueue = new PublishMessageQueue<SCMPMessage>();
 	}
 
-	public SubscriptionQueue<SCMPMessage> getSubscriptionQueue() {
-		return this.subscriptionQueue;
+	public PublishMessageQueue<SCMPMessage> getMessageQueue() {
+		return this.publishMessageQueue;
 	}
 
 	public void setCascadedSC(CascadedSC cascadedSC) {

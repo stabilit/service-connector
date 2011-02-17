@@ -59,7 +59,7 @@ import org.serviceconnector.net.res.ResponderRegistry;
 import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.FileServer;
@@ -216,9 +216,9 @@ public class DefaultXMLLoaderFactory {
 				this.writeBean(writer, service);
 				if (service instanceof PublishService) {
 					PublishService publishService = (PublishService) service;
-					SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService.getSubscriptionQueue();
+					PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
 					writer.writeStartElement("subscriptionQueueSize");
-					writer.writeCData(String.valueOf(subscriptionQueue.getSize()));
+					writer.writeCData(String.valueOf(publishMessageQueue.getSize()));
 					writer.writeEndElement();  // end of subscriptionQueueSize
 				}
 				if (service.getName().equals(serviceParameter)) {
@@ -236,9 +236,9 @@ public class DefaultXMLLoaderFactory {
 					}
 					if (service instanceof PublishService) {
  						PublishService publishService = (PublishService) service;
-						SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService.getSubscriptionQueue();
+						PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
 						writer.writeStartElement("subscriptionQueue");
-						Iterator<SCMPMessage> sqIter = subscriptionQueue.iterator();
+						Iterator<SCMPMessage> sqIter = publishMessageQueue.iterator();
 						while (sqIter.hasNext()) {
 							SCMPMessage scmpMessage = sqIter.next();
 							writer.writeStartElement("scmpMessage");
@@ -371,9 +371,9 @@ public class DefaultXMLLoaderFactory {
 					writer.writeStartElement("service");
 					if (service instanceof PublishService) {
 						PublishService publishService = (PublishService) service;
-						SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService.getSubscriptionQueue();
+						PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
 						writer.writeStartElement("subscriptionQueueSize");
-						writer.writeCData(String.valueOf(subscriptionQueue.getSize()));
+						writer.writeCData(String.valueOf(publishMessageQueue.getSize()));
 						writer.writeEndElement();  // end of subscriptionQueueSize
 					}
 					this.writeBean(writer, service);

@@ -8,7 +8,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -72,7 +72,7 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 			if (rejectSubscriptionFlag == false) {
 				// session has not been rejected
 				String newMask = reqMessage.getHeader(SCMPHeaderAttributeKey.MASK);
-				SubscriptionQueue<SCMPMessage> queue = ((IPublishService) subscription.getService()).getSubscriptionQueue();
+				PublishMessageQueue<SCMPMessage> queue = ((IPublishService) subscription.getService()).getMessageQueue();
 				SubscriptionMask mask = new SubscriptionMask(newMask);
 				SubscriptionLogger.logChangeSubscribe(serviceName, subscriptionId, newMask);
 				queue.changeSubscription(subscriptionId, mask);

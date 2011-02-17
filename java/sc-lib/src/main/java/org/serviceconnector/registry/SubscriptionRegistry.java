@@ -257,8 +257,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			 * 3. abort subscription on backend server<br>
 			 */
 			SubscriptionRegistry.this.removeSubscription(subscription);
-			SubscriptionQueue<SCMPMessage> subscriptionQueue = ((IPublishService) subscription.getService()).getSubscriptionQueue();
-			subscriptionQueue.unsubscribe(subscription.getId());
+			PublishMessageQueue<SCMPMessage> publishMessageQueue = ((IPublishService) subscription.getService()).getMessageQueue();
+			publishMessageQueue.unsubscribe(subscription.getId());
 
 			IStatefulServer server = subscription.getServer();
 			server.abortSession(subscription, "subscription timed out in registry");

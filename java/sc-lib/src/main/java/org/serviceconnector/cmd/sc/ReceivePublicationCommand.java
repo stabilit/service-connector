@@ -19,7 +19,7 @@ package org.serviceconnector.cmd.sc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.res.IResponderCallback;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -60,12 +60,12 @@ public class ReceivePublicationCommand extends CommandAdapter {
 		String subscriptionId = reqMessage.getSessionId();
 		SCMPMessage message = null;
 		// looks up subscription queue
-		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(subscriptionId);
-		synchronized (subscriptionQueue) {
+		PublishMessageQueue<SCMPMessage> publishMessageQueue = this.getPublishMessageQueueById(subscriptionId);
+		synchronized (publishMessageQueue) {
 			// cancel subscription timeout
 			this.subscriptionRegistry.cancelSubscriptionTimeout(subscriptionId);
 			// tries polling message
-			message = subscriptionQueue.getMessageOrListen(subscriptionId, request, response);
+			message = publishMessageQueue.getMessageOrListen(subscriptionId, request, response);
 			if (message == null) {
 				// no message available, switched to listening mode for new message
 				return;

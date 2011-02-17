@@ -19,7 +19,7 @@ package org.serviceconnector.cmd.sc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.res.IResponderCallback;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -60,7 +60,7 @@ public class PublishCommand extends CommandAdapter {
 		String serviceName = message.getServiceName();
 		// lookup service and checks properness
 		PublishService service = this.validatePublishService(serviceName);
-		SubscriptionQueue<SCMPMessage> queue = service.getSubscriptionQueue();
+		PublishMessageQueue<SCMPMessage> queue = service.getMessageQueue();
 		// throws an exception if failed
 		logger.trace("messag body : " + message.getBody());
 		queue.insert(message);

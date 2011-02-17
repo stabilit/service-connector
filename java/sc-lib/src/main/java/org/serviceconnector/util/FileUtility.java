@@ -1,28 +1,32 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.util;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.Enumeration;
 import java.util.concurrent.TimeoutException;
 
@@ -50,6 +54,30 @@ public class FileUtility {
 		File file = new File(filename);
 		if (file.exists()) {
 			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isFileLocked(String filename) {
+		File file = new File(filename);
+		if (file.exists()) {
+			// Get a file channel for the file
+			FileChannel channel;
+			try {
+				channel = new RandomAccessFile(file, "rw").getChannel();
+
+				// Use the file channel to create a lock on the file.
+				// This method blocks until it can retrieve the lock.
+				FileLock lock = channel.tryLock();
+				if (lock == null) {
+					// could not get lock - means some other instance is locking the file
+					return true;
+				}
+				lock.release();
+			} catch (Exception e) {
+			}
+			return false;
 		} else {
 			return false;
 		}
@@ -113,6 +141,17 @@ public class FileUtility {
 
 	/**
 	 * @param filename
+	 * @return true if the given file does not exist
+	 */
+	public static boolean notExistsOrUnlocked(String filename) {
+		if (exists(filename) == false || isFileLocked(filename) == false) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param filename
 	 *            to look for
 	 * @param nrSeconds
 	 *            to wait (check is done in 1 second interval)
@@ -120,14 +159,35 @@ public class FileUtility {
 	 *             if the file does not exist after the given time
 	 */
 	public static void waitExists(String filename, int nrSeconds) throws Exception {
-		if (exists(filename)) return;
+		if (exists(filename))
+			return;
 		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (exists(filename)) {
 				return;
 			}
 			Thread.sleep(100);
 		}
-		throw new TimeoutException("File:" + filename + " does not exist after " + nrSeconds + " seconds timeout.");
+		throw new TimeoutException("File:" + filename + " does not exist or unlocked after " + nrSeconds + " seconds timeout.");
+	}
+
+	/**
+	 * @param filename
+	 *            to look for
+	 * @param nrSeconds
+	 *            to wait (check is done in 1 second interval)
+	 * @throws Exception
+	 *             if the file does not exist after the given time
+	 */
+	public static void waitExistsAndLocked(String filename, int nrSeconds) throws Exception {
+		if (exists(filename) && isFileLocked(filename))
+			return;
+		for (int i = 0; i < (nrSeconds * 10); i++) {
+			if (exists(filename) && isFileLocked(filename)) {
+				return;
+			}
+			Thread.sleep(100);
+		}
+		throw new TimeoutException("File:" + filename + " does not exist or unlocked after " + nrSeconds + " seconds timeout.");
 	}
 
 	/**
@@ -138,10 +198,11 @@ public class FileUtility {
 	 * @throws Exception
 	 *             if the file still exists after the given time
 	 */
-	public static void waitNotExists(String filename, int nrSeconds) throws Exception {
-		if (notExists(filename)) return;
+	public static void waitNotExistsOrUnlocked(String filename, int nrSeconds) throws Exception {
+		if (notExistsOrUnlocked(filename))
+			return;
 		for (int i = 0; i < (nrSeconds * 10); i++) {
-			if (notExists(filename)) {
+			if (notExistsOrUnlocked(filename)) {
 				return;
 			}
 			Thread.sleep(100);
@@ -154,10 +215,11 @@ public class FileUtility {
 	 * 
 	 * @param fileNameFull
 	 *            the file name full
+	 * @return the lock
 	 * @throws Exception
 	 *             the exception
 	 */
-	public static void createPIDfile(String fileNameFull) throws Exception {
+	public static FileLock createPIDfileAndLock(String fileNameFull) throws Exception {
 		FileWriter fw = null;
 		try {
 			String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
@@ -173,8 +235,12 @@ public class FileUtility {
 				fw = new FileWriter(pidFile);
 				fw.write("pid: " + pid);
 				fw.flush();
-				logger.log(Level.OFF, "Create PID-file=" + fileNameFull + " PID=" + pid);
+				fw.close();
 			}
+			FileChannel channel = new RandomAccessFile(pidFile, "rw").getChannel();
+			FileLock lock = channel.lock();
+			logger.log(Level.OFF, "Create PID-file=" + fileNameFull + " PID=" + pid);
+			return lock;
 		} finally {
 			if (fw != null) {
 				fw.close();
@@ -183,7 +249,7 @@ public class FileUtility {
 	}
 
 	/**
-	 * Delete file. Catch all possible errors 
+	 * Delete file. Catch all possible errors
 	 */
 	public static void deleteFile(String fileNameFull) {
 		try {
@@ -227,20 +293,23 @@ public class FileUtility {
 
 	/**
 	 * Read file to writer.
-	 *
-	 * @param filePath the file path
-	 * @param writer the writer
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param filePath
+	 *            the file path
+	 * @param writer
+	 *            the writer
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static void readFileToWriter(String filePath, Writer writer) throws IOException {
 		FileReader fr = new FileReader(filePath);
 		char[] buffer = new char[1 << 16];
 		int bytesRead = -1;
-        while ((bytesRead = fr.read(buffer)) != -1) {
-           writer.write(buffer, 0, bytesRead);
-        }
-        fr.close();		
-        return;
+		while ((bytesRead = fr.read(buffer)) != -1) {
+			writer.write(buffer, 0, bytesRead);
+		}
+		fr.close();
+		return;
 	}
 
 }

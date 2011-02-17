@@ -39,7 +39,7 @@ import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.registry.SessionRegistry;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
@@ -409,8 +409,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 					// server already destroyed
 					continue;
 				}
-				SubscriptionQueue<SCMPMessage> queue = ((PublishService) ((StatefulServer) session.getServer()).getService())
-						.getSubscriptionQueue();
+				PublishMessageQueue<SCMPMessage> queue = ((PublishService) ((StatefulServer) session.getServer()).getService())
+						.getMessageQueue();
 				// unsubscribe subscription
 				queue.unsubscribe(session.getId());
 			} else {

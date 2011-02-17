@@ -22,7 +22,7 @@ import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.res.IResponderCallback;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -66,11 +66,11 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 		String subscriptionId = reqMessage.getSessionId();
 		// lookup session and checks properness
 		Subscription subscription = this.getSubscriptionById(subscriptionId);
-		// looks up subscription queue and stops publish mechanism
-		SubscriptionQueue<SCMPMessage> subscriptionQueue = this.getSubscriptionQueueById(subscriptionId);
+		// looks up publish message queue and stops publish mechanism
+		PublishMessageQueue<SCMPMessage> publishMessageQueue = this.getPublishMessageQueueById(subscriptionId);
 		// first remove subscription than unsubscribe
 		this.subscriptionRegistry.removeSubscription(subscription);
-		subscriptionQueue.unsubscribe(subscriptionId);
+		publishMessageQueue.unsubscribe(subscriptionId);
 
 		switch (abstractService.getType()) {
 		case CASCADED_PUBLISH_SERVICE:

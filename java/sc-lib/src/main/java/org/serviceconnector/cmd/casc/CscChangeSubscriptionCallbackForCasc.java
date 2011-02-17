@@ -18,7 +18,7 @@ package org.serviceconnector.cmd.casc;
 
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.res.IResponderCallback;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -49,7 +49,7 @@ public class CscChangeSubscriptionCallbackForCasc extends ClnCommandCascCallback
 
 		if (reply.isFault() == false && reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION) == false) {
 			// change subscription for cascaded SC
-			SubscriptionQueue<SCMPMessage> queue = ((IPublishService) cascSCSubscription.getService()).getSubscriptionQueue();
+			PublishMessageQueue<SCMPMessage> queue = ((IPublishService) cascSCSubscription.getService()).getMessageQueue();
 			SubscriptionMask cascSCMask = new SubscriptionMask(cascSCMaskString);
 			queue.changeSubscription(this.cascSCSubscription.getId(), cascSCMask);
 			cascSCSubscription.setMask(cascSCMask);

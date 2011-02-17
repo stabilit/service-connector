@@ -19,7 +19,7 @@ package org.serviceconnector.service;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.sc.SubscribeCommandCallback;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.StatefulServer;
@@ -35,7 +35,7 @@ public class PublishService extends StatefulService implements IPublishService {
 	private final static Logger logger = Logger.getLogger(PublishService.class);
 
 	/** The subscription queue. */
-	private SubscriptionQueue<SCMPMessage> subscriptionQueue;
+	private PublishMessageQueue<SCMPMessage> publishMessageQueue;
 
 	/**
 	 * Instantiates a new publish service.
@@ -45,7 +45,7 @@ public class PublishService extends StatefulService implements IPublishService {
 	 */
 	public PublishService(String name) {
 		super(name, ServiceType.PUBLISH_SERVICE);
-		this.subscriptionQueue = new SubscriptionQueue<SCMPMessage>();
+		this.publishMessageQueue = new PublishMessageQueue<SCMPMessage>();
 	}
 
 	/**
@@ -53,8 +53,8 @@ public class PublishService extends StatefulService implements IPublishService {
 	 * 
 	 * @return the subscription queue
 	 */
-	public SubscriptionQueue<SCMPMessage> getSubscriptionQueue() {
-		return this.subscriptionQueue;
+	public PublishMessageQueue<SCMPMessage> getMessageQueue() {
+		return this.publishMessageQueue;
 	}
 
 	/**

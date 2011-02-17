@@ -1,6 +1,6 @@
 package org.serviceconnector.service;
 
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.SCMPMessage;
 
 public interface IPublishService {
@@ -10,5 +10,5 @@ public interface IPublishService {
 	 * 
 	 * @return the subscription queue
 	 */
-	public abstract SubscriptionQueue<SCMPMessage> getSubscriptionQueue();
+	public abstract PublishMessageQueue<SCMPMessage> getMessageQueue();
 }

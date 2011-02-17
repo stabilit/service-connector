@@ -1,26 +1,22 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web.ctx;
 
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.EnvironmentConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.WebConfiguration;
-import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IXMLLoader;
 import org.serviceconnector.web.cmd.FlyweightWebCommandFactory;
@@ -31,55 +27,32 @@ import org.serviceconnector.web.cmd.sc.DefaultXMLLoaderFactory;
  * The Class WebContext.
  */
 public class WebContext {
+	// Factories
+	/** The loader factory. */
+	private static DefaultXMLLoaderFactory loaderFactory = new DefaultXMLLoaderFactory();
+	/** The web command factory. */
+	private static FlyweightWebCommandFactory webCommandFactory;
+	/** The web configuration. */
+	private static WebConfiguration webConfiguration = new WebConfiguration();
+
+	/**
+	 * Instantiates a new web context. Singelton.
+	 */
+	private WebContext() {
+	}
 
 	// initialize configurations in every case
 	static {
 		WebContext.webConfiguration = new WebConfiguration();
 	}
 
-	/** The instance. */
-	protected static WebContext instance = new WebContext();
-
-	// Factories
-	/** The loader factory. */
-	private static DefaultXMLLoaderFactory loaderFactory = new DefaultXMLLoaderFactory();
-
-	/** The web command factory. */
-	private static FlyweightWebCommandFactory webCommandFactory;
-
-	/** The composite configuration. */
-	private static CompositeConfiguration apacheCompositeConfig;
-
-	/** The web configuration. */
-	private static WebConfiguration webConfiguration = new WebConfiguration();
-
 	/**
-	 * Instantiates a new web context.
-	 */
-	public WebContext() {
-	}
-
-	public static void initConfiguration(String configFile) throws Exception {
-		WebContext.apacheCompositeConfig = new CompositeConfiguration();
-		// system properties override every setting
-		try {
-			// add environment variables to configuration
-			WebContext.apacheCompositeConfig.addConfiguration(new EnvironmentConfiguration());
-			WebContext.apacheCompositeConfig.addConfiguration(new PropertiesConfiguration(configFile));
-		} catch (Exception e) {
-			throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, e.toString());
-		}
-
-		WebContext.webConfiguration.load(WebContext.apacheCompositeConfig);
-	}
-
-	/**
-	 * Inits the context.
+	 * Initializes the commands.
 	 * 
 	 * @param webCommandFactory
 	 *            the web command factory
 	 */
-	public static void initContext(FlyweightWebCommandFactory webCommandFactory) {
+	public static void initCommands(FlyweightWebCommandFactory webCommandFactory) {
 		if (WebContext.webCommandFactory != null) {
 			// set only one time
 			return;

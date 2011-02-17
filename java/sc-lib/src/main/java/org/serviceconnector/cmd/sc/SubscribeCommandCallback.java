@@ -25,7 +25,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -91,12 +91,12 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 			boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 			if (rejectSubscriptionFlag == false) {
 				// subscription has not been rejected, add server to subscription
-				SubscriptionQueue<SCMPMessage> subscriptionQueue = ((IPublishService) this.tempSubscription.getService())
-						.getSubscriptionQueue();
-				PublishTimeout publishTimeout = new PublishTimeout(subscriptionQueue, noDataIntervalSeconds
+				PublishMessageQueue<SCMPMessage> publishMessageQueue = ((IPublishService) this.tempSubscription.getService())
+						.getMessageQueue();
+				PublishTimeout publishTimeout = new PublishTimeout(publishMessageQueue, noDataIntervalSeconds
 						* Constants.SEC_TO_MILLISEC_FACTOR);
 				SubscriptionMask subscriptionMask = tempSubscription.getMask();
-				subscriptionQueue.subscribe(tempSubscription.getId(), subscriptionMask, publishTimeout);
+				publishMessageQueue.subscribe(tempSubscription.getId(), subscriptionMask, publishTimeout);
 				// finally add subscription to the registry & schedule subscription timeout internal
 				this.subscriptionRegistry.addSubscription(tempSubscription.getId(), tempSubscription);
 				SubscriptionLogger.logSubscribe(serviceName, tempSubscription.getId(), subscriptionMask.getValue());

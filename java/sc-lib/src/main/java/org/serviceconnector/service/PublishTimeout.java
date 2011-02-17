@@ -2,7 +2,7 @@ package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
-import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.IResponse;
@@ -27,7 +27,7 @@ public class PublishTimeout implements ITimeout {
 	/** The noDataIntervalMillis. */
 	private int noDataIntervalMillis;
 	/** The subscription queue. */
-	private SubscriptionQueue<SCMPMessage> subscriptionQueue;
+	private PublishMessageQueue<SCMPMessage> publishMessageQueue;
 	/** The request. */
 	private IRequest request;
 	/** The response. */
@@ -36,16 +36,16 @@ public class PublishTimeout implements ITimeout {
 	/**
 	 * Instantiates a new publish timer run.
 	 * 
-	 * @param subscriptionQueue
-	 *            the subscription place
+	 * @param publishMessageQueue
+	 *            the publishMessageQueue
 	 * @param noDataIntervalMillis
 	 *            the timeout
 	 */
-	public PublishTimeout(SubscriptionQueue<SCMPMessage> subscriptionQueue, int noDataIntervalMillis) {
+	public PublishTimeout(PublishMessageQueue<SCMPMessage> publishMessageQueue, int noDataIntervalMillis) {
 		this.request = null;
 		this.response = null;
 		this.noDataIntervalMillis = noDataIntervalMillis;
-		this.subscriptionQueue = subscriptionQueue;
+		this.publishMessageQueue = publishMessageQueue;
 	}
 
 	/** {@inheritDoc} */
@@ -96,7 +96,7 @@ public class PublishTimeout implements ITimeout {
 				response.setSCMP(fault);
 			} else {
 				// tries polling from queue
-				SCMPMessage message = this.subscriptionQueue.getMessage(subscriptionId);
+				SCMPMessage message = this.publishMessageQueue.getMessage(subscriptionId);
 				if (message == null) {
 					logger.trace("no message found on queue - subscription timeout set up no data message subscriptionId="
 							+ subscriptionId);

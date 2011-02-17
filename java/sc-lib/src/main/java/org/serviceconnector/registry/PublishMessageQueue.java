@@ -34,7 +34,7 @@ import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;
 
 /**
- * The Class SubscriptionQueue. The SubscriptionQueue is responsible for queuing incoming data from server, to inform subscriptions
+ * The Class PublishMessageQueue. The PublishMessageQueue is responsible for queuing incoming data from server, to inform subscriptions
  * about new arrived messages, to observe there timeouts and to know there current position in queue (TimeAwareDataPointer). The
  * queue needs also to handle the deleting of consumed messages and to assure queue does not overflow.
  * 
@@ -42,10 +42,10 @@ import org.serviceconnector.util.LinkedQueue;
  *            the element type to handle in the queue
  * @author JTraber
  */
-public class SubscriptionQueue<E> {
+public class PublishMessageQueue<E> {
 
 	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SubscriptionQueue.class);
+	private final static Logger logger = Logger.getLogger(PublishMessageQueue.class);
 
 	private ScheduledThreadPoolExecutor timeoutScheduler;
 	/** The data queue. */
@@ -54,9 +54,9 @@ public class SubscriptionQueue<E> {
 	private Map<String, TimeAwareDataPointer> pointerMap;
 
 	/**
-	 * Instantiates a new SubscriptionQueue.
+	 * Instantiates a new PublishMessageQueue.
 	 */
-	public SubscriptionQueue() {
+	public PublishMessageQueue() {
 		this.dataQueue = new LinkedQueue<E>();
 		this.pointerMap = new ConcurrentHashMap<String, TimeAwareDataPointer>();
 		this.timeoutScheduler = new ScheduledThreadPoolExecutor(5);
@@ -216,7 +216,7 @@ public class SubscriptionQueue<E> {
 		// starts listening and schedules subscription timeout
 		dataPointer.startListen();
 		dataPointer.schedule();
-		logger.trace("Subscriptionqueue listen " + sessionId + " listen: " + dataPointer.listening);
+		logger.trace("PublishMessageQueue listen " + sessionId + " listen: " + dataPointer.listening);
 	}
 
 	/**
@@ -458,7 +458,7 @@ public class SubscriptionQueue<E> {
 				// important to set timeouter null - rescheduling of same instance not possible
 				this.timeout = null;
 				// removes canceled timeouts
-				SubscriptionQueue.this.timeoutScheduler.purge();
+				PublishMessageQueue.this.timeoutScheduler.purge();
 			}
 		}
 	}
@@ -490,7 +490,7 @@ public class SubscriptionQueue<E> {
 		/** {@inheritDoc} */
 		@Override
 		public void run() {
-			synchronized (SubscriptionQueue.this) {
+			synchronized (PublishMessageQueue.this) {
 				// stops listening - ITimerRun gets executed
 				this.dataPointer.stopListen();
 				// timeout target
