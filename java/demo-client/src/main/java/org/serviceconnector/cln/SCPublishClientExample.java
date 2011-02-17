@@ -1,5 +1,4 @@
-/*
- *-----------------------------------------------------------------------------*
+/*-----------------------------------------------------------------------------*
  *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
@@ -14,11 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- *-----------------------------------------------------------------------------*
-/*
-/**
- * 
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln;
 
 import org.serviceconnector.api.SCMessage;
@@ -27,15 +22,28 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCPublishService;
 
+/**
+ * The Class SCPublishClientExample.
+ */
 public class SCPublishClientExample {
 
+	/** The published message counter. */
 	private int publishedMessageCounter = 0;
 
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
 	public static void main(String[] args) {
 		SCPublishClientExample test = new SCPublishClientExample();
 		test.runExample();
 	}
 
+	/**
+	 * Run example.
+	 */
 	public void runExample() {
 		SCClient sc = null;
 		SCPublishService publishServiceA = null;
@@ -65,19 +73,30 @@ public class SCPublishClientExample {
 		}
 	}
 
+	/**
+	 * The Class TestPublishCallback.
+	 */
 	class TestPublishCallback extends SCMessageCallback {
 
+		/**
+		 * Instantiates a new test publish callback.
+		 * 
+		 * @param service
+		 *            the service
+		 */
 		public TestPublishCallback(SCPublishService service) {
 			super(service);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void receive(SCMessage reply) {
 			publishedMessageCounter++;
-			System.out.println("ClnAPIPublishSubscribeTestCase.TestPublishCallback.callback() counter = "
-					+ publishedMessageCounter);
+			System.out
+					.println("ClnAPIPublishSubscribeTestCase.TestPublishCallback.callback() counter = " + publishedMessageCounter);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void receive(Exception ex) {
 			ex.printStackTrace();

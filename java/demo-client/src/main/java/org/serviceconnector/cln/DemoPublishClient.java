@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln;
 
 import org.apache.log4j.Logger;
@@ -23,17 +24,27 @@ import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.net.ConnectionType;
 
+/**
+ * The Class DemoPublishClient.
+ */
 @SuppressWarnings("unused")
 public class DemoPublishClient extends Thread {
 
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(DemoPublishClient.class);
 
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
 	public static void main(String[] args) {
 		DemoPublishClient demoPublishClient = new DemoPublishClient();
 		demoPublishClient.start();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void run() {
 		// Connection to SC over HTTP
@@ -78,20 +89,32 @@ public class DemoPublishClient extends Thread {
 		}
 	}
 
+	/**
+	 * The Class DemoPublishClientCallback.
+	 */
 	private class DemoPublishClientCallback extends SCMessageCallback {
 
+		/** The received msg. */
 		public int receivedMsg = 0;
 
+		/**
+		 * Instantiates a new demo publish client callback.
+		 * 
+		 * @param service
+		 *            the service
+		 */
 		public DemoPublishClientCallback(SCPublishService service) {
 			super(service);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void receive(SCMessage reply) {
 			receivedMsg++;
 			System.out.println("DemoPublishClient.DemoPublishClientCallback.receive() " + reply.getData());
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void receive(Exception e) {
 			receivedMsg++;

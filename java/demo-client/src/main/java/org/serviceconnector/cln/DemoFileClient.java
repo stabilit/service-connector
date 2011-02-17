@@ -1,4 +1,5 @@
-/*
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
@@ -12,7 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln;
 
 import java.io.File;
@@ -26,16 +27,26 @@ import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
 import org.serviceconnector.net.ConnectionType;
 
+/**
+ * The Class DemoFileClient.
+ */
 public class DemoFileClient extends Thread {
 
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(DemoFileClient.class);
 
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
 	public static void main(String[] args) {
 		DemoFileClient demoFileClient = new DemoFileClient();
 		demoFileClient.start();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void run() {
 		// Connection to SC over HTTP
@@ -52,7 +63,7 @@ public class DemoFileClient extends Thread {
 			for (String fileName : fileNameList) {
 				System.out.println(fileName);
 			}
-			
+
 			File localFile = new File("src/main/resources/uploadContent.txt");
 			InputStream inpStream = new FileInputStream(localFile);
 			String targetFileName = "uploadContent.txt";

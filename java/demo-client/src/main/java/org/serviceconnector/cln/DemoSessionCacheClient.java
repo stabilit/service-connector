@@ -1,4 +1,5 @@
-/*
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
@@ -12,7 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cln;
 
 import org.apache.log4j.Logger;
@@ -22,19 +23,30 @@ import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.net.ConnectionType;
 
+/**
+ * The Class DemoSessionCacheClient.
+ */
 @SuppressWarnings("unused")
 public class DemoSessionCacheClient extends Thread {
 
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(DemoSessionCacheClient.class);
 
+	/** The pending request. */
 	private static boolean pendingRequest = false;
 
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
 	public static void main(String[] args) {
 		DemoSessionCacheClient demoSessionClient = new DemoSessionCacheClient();
 		demoSessionClient.start();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void run() {
 
@@ -63,7 +75,7 @@ public class DemoSessionCacheClient extends Thread {
 			SCMessage requestMsg = new SCMessage();
 			requestMsg.setCacheId("CBCD_SECURITY_MARKET");
 			SCMessage responseMsg = new SCMessage();
-			
+
 			for (int i = 0; i < 10; i++) {
 				requestMsg.setData("body nr : " + i);
 				logger.info("Message sent: " + requestMsg.getData());
@@ -101,22 +113,40 @@ public class DemoSessionCacheClient extends Thread {
 		}
 	}
 
+	/**
+	 * The Class DemoSessionClientCallback.
+	 */
 	private class DemoSessionClientCallback extends SCMessageCallback {
+
+		/** The reply message. */
 		private SCMessage replyMessage;
 
+		/**
+		 * Instantiates a new demo session client callback.
+		 * 
+		 * @param service
+		 *            the service
+		 */
 		public DemoSessionClientCallback(SCSessionService service) {
 			super(service);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void receive(SCMessage reply) {
 			this.replyMessage = reply;
 		}
 
+		/**
+		 * Gets the message.
+		 * 
+		 * @return the message
+		 */
 		public SCMessage getMessage() {
 			return this.replyMessage;
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void receive(Exception e) {
 		}
