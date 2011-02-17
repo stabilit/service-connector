@@ -83,7 +83,8 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 			try {
 				Cache scmpCache = cacheManager.getCache(this.requestServiceName);
 				if (scmpCache == null) {
-					ClnExecuteCommandCallback.logger.error("cache write failed, no cache, service name = " + this.requestServiceName);
+					ClnExecuteCommandCallback.logger.error("cache write failed, no cache, service name = "
+							+ this.requestServiceName);
 				} else {
 					// check if reply is fault
 					if (reply.isFault() || (cacheId == null && this.requestCacheId != null)) {
@@ -156,6 +157,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		logger.warn(ex);
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
@@ -187,7 +189,8 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 			try {
 				Cache scmpCache = cacheManager.getCache(this.requestServiceName);
 				if (scmpCache == null) {
-					ClnExecuteCommandCallback.logger.error("cache write failed, no cache, service name = " + this.requestServiceName);
+					ClnExecuteCommandCallback.logger.error("cache write failed, no cache, service name = "
+							+ this.requestServiceName);
 				} else {
 					// an exception did occur, remove those composite from cache
 					// remove request cacheId from cache

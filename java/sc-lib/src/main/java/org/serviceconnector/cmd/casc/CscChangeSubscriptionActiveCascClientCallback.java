@@ -14,9 +14,10 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.casc;
+package org.serviceconnector.cmd.casc;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.cmd.sc.ClnChangeSubscriptionCommandCallback;
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
@@ -78,6 +79,7 @@ public class CscChangeSubscriptionActiveCascClientCallback implements ISCMPMessa
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		logger.warn(ex);
 		// release permit
 		this.cascClient.getCascClientSemaphore().release();
 		// forward reply to client

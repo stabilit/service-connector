@@ -138,7 +138,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		}
 		// always cancel old timeouter before setting up a new one
 		this.cancelSessionTimeout(session);
-		logger.debug("schedule session " + session.getId() + " timeout " + (long) session.getSessionTimeoutSeconds());
+		logger.debug("schedule session " + session.getId() + " timeout in seconds " + (long) session.getSessionTimeoutSeconds());
 		// sets up session timeout
 		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session));
 		// schedule sessionTimeouter in registry timer

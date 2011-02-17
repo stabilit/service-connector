@@ -14,32 +14,32 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.casc;
+package org.serviceconnector.cmd.casc;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.casc.CascadedClient;
+import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
-public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallback {
+public class CscSubscribeActiveCascClientCallback implements ISCMPMessageCallback {
 
 	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CscSubscribeInactiveCascClientCallback.class);
+	private final static Logger logger = Logger.getLogger(CscSubscribeActiveCascClientCallback.class);
 
-	/** The command callback. */
-	private ISubscriptionCallback commandCallback;
+	/** The request. */
+	protected IRequest request;
 	/** The cascaded client. */
 	private CascadedClient cascClient;
-	/** The temporary cascaded mask. */
-	private String tmpCscMask;
+	private ISubscriptionCallback commandCallback;
 
-	public CscSubscribeInactiveCascClientCallback(ISubscriptionCallback commandCallback, CascadedClient cascClient,
-			String tmpCscMask) {
-		this.commandCallback = commandCallback;
+	public CscSubscribeActiveCascClientCallback(CascadedClient cascClient, IRequest request, ISubscriptionCallback callback) {
+		this.request = request;
+		this.commandCallback = callback;
 		this.cascClient = cascClient;
-		this.tmpCscMask = tmpCscMask;
 	}
 
 	/** {@inheritDoc} */
@@ -47,18 +47,15 @@ public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallb
 	public void receive(SCMPMessage reply) {
 		boolean rejectSubscriptionFlag = reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 		if (reply.isFault() == false && rejectSubscriptionFlag == false) {
+			// subscription successfully created
 			Subscription cscScSubscription = this.commandCallback.getSubscription();
 			try {
-				// needs to be done before, reply changes in receive
-				this.cascClient.setSubscriptionId(reply.getSessionId());
 				// forward reply to client
 				this.commandCallback.receive(reply);
-				// subscription successfully created
-				this.cascClient.setSubscribed(true);
-				this.cascClient.setSubscriptionMask(new SubscriptionMask(tmpCscMask));
-				this.cascClient.receivePublication();
 				// adding client subscription id to cascaded client
 				this.cascClient.addClientSubscriptionId(cscScSubscription.getId(), cscScSubscription.getMask());
+				this.cascClient.setSubscriptionMask(new SubscriptionMask(this.request.getMessage().getHeader(
+						SCMPHeaderAttributeKey.CASCADED_MASK)));
 				// release permit
 				this.cascClient.getCascClientSemaphore().release();
 				return;
@@ -81,6 +78,7 @@ public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallb
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		logger.warn(ex);
 		// release permit
 		this.cascClient.getCascClientSemaphore().release();
 		// forward reply to client

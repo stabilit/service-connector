@@ -308,7 +308,7 @@ public final class ValidatorUtility {
 		if (stringValue == null) {
 			return;
 		}
-		ValidatorUtility.validateStringLength(minSizeInc, stringValue, maxSizeInc, error);
+		ValidatorUtility.validateStringLengthTrim(minSizeInc, stringValue, maxSizeInc, error);
 	}
 
 	/**
@@ -323,13 +323,32 @@ public final class ValidatorUtility {
 	 * @throws SCMPValidatorException
 	 *             the SCMP validator exception
 	 */
+	public static void validateStringLengthTrim(int minSizeInc, String stringValue, int maxSizeInc, SCMPError error)
+			throws SCMPValidatorException {
+		ValidatorUtility.validateStringLength(minSizeInc, stringValue.trim(), maxSizeInc, error);
+	}
+
+	/**
+	 * Validate string length.
+	 * 
+	 * @param minSizeInc
+	 *            the minimum size inclusive
+	 * @param stringValue
+	 *            the string value
+	 * @param maxSizeInc
+	 *            the max size inclusive
+	 * @param error
+	 *            the error
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
 	public static void validateStringLength(int minSizeInc, String stringValue, int maxSizeInc, SCMPError error)
 			throws SCMPValidatorException {
 
 		if (stringValue == null) {
 			throw new SCMPValidatorException(error, "String value is missing");
 		}
-		int length = stringValue.trim().getBytes().length;
+		int length = stringValue.getBytes().length;
 		if (length < minSizeInc || length > maxSizeInc) {
 			throw new SCMPValidatorException(error, "StringValue length=" + length + " is not in range (" + minSizeInc + "-"
 					+ maxSizeInc + ")");

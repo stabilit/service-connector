@@ -35,7 +35,7 @@ public class CascadedPublishService extends Service implements IPublishService {
 	protected CascadedSC cascadedSC;
 	/** The cascaded client. */
 	private CascadedClient cascClient;
-
+	/** The no data interval seconds. */
 	private int noDataIntervalSeconds = 0;
 
 	public CascadedPublishService(String name, CascadedSC cascadedSC, int noDataIntervalSeconds) {
@@ -84,7 +84,11 @@ public class CascadedPublishService extends Service implements IPublishService {
 			// need to hand over client subscription ID's to the new cascaded client
 			Set<Entry<String, SubscriptionMask>> subscriptionSet = clientSubscriptionIds.entrySet();
 			for (Entry<String, SubscriptionMask> entry : subscriptionSet) {
-				this.cascClient.addClientSubscriptionId(entry.getKey(), entry.getValue());
+				try {
+					this.cascClient.addClientSubscriptionId(entry.getKey(), entry.getValue());
+				} catch (InvalidMaskLengthException e) {
+					// ignore exception not possible to occur
+				}
 			}
 			SubscriptionMask mask = new SubscriptionMask(this.cascClient.evalSubscriptionMaskFromClientSubscriptions());
 			this.cascClient.setSubscriptionMask(mask);

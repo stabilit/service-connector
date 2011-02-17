@@ -2,7 +2,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
-import org.serviceconnector.casc.ISubscriptionCallback;
+import org.apache.log4j.Logger;
+import org.serviceconnector.cmd.casc.ISubscriptionCallback;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.IRequest;
@@ -12,13 +13,15 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.Subscription;
 
 /**
  * The Class ClnUnsubscribeCommandCallback.
  */
 public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
-
+	/** The Constant logger. */
+	private final static Logger logger = Logger.getLogger(ClnUnsubscribeCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -58,6 +61,7 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		logger.warn(ex);
 		// free server from subscription
 		this.subscription.getServer().removeSession(subscription);
 		SCMPMessage fault = null;
@@ -66,6 +70,8 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln unsubscribe");
 		} else if (ex instanceof IOException) {
 			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln unsubscribe");
+		} else if (ex instanceof InvalidMaskLengthException) {
+			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage());
 		} else {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln unsubscribe failed");
 		}

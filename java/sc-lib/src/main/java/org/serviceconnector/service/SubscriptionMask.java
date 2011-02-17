@@ -71,11 +71,6 @@ public class SubscriptionMask {
 		return new String(this.mask);
 	}
 
-	public void addMask(String newMaskString) {
-		byte[] newMask = newMaskString.getBytes();
-		this.mask = SubscriptionMask.masking(this.mask, newMask);
-	}
-
 	/**
 	 * Masking. Combines base mask with given new mask.
 	 * 
@@ -84,8 +79,15 @@ public class SubscriptionMask {
 	 * @param newMask
 	 *            the new mask
 	 * @return the byte[]
+	 * @throws InvalidMaskLengthException
 	 */
-	public static byte[] masking(byte[] baseMask, byte[] newMask) {
+	public static byte[] masking(byte[] baseMask, byte[] newMask) throws InvalidMaskLengthException {
+
+		if (baseMask.length != newMask.length) {
+			throw new InvalidMaskLengthException("masks have different lengths, masking not allowed: baseMask=" + baseMask
+					+ " mask=" + newMask);
+		}
+
 		for (int byteIndex = 0; byteIndex < baseMask.length; byteIndex++) {
 			if (baseMask[byteIndex] == 0x25) {
 				// mask contains % on this position continue
@@ -107,8 +109,9 @@ public class SubscriptionMask {
 	 * @param mask2
 	 *            the mask2
 	 * @return the string
+	 * @throws InvalidMaskLengthException
 	 */
-	public static String masking(SubscriptionMask currentSubscriptionMask, String mask2) {
+	public static String masking(SubscriptionMask currentSubscriptionMask, String mask2) throws InvalidMaskLengthException {
 		return new String(SubscriptionMask.masking(currentSubscriptionMask.getValue().getBytes(), mask2.getBytes()));
 	}
 }

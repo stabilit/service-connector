@@ -18,6 +18,8 @@ package org.serviceconnector.cmd.casc;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+import org.serviceconnector.cmd.sc.ClnUnsubscribeCommandCallback;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.IRequest;
@@ -26,12 +28,14 @@ import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
+import org.serviceconnector.service.InvalidMaskLengthException;
 
 /**
  * The Class ClnCommandCascCallback.
  */
 public class ClnCommandCascCallback implements ISCMPMessageCallback {
-
+	/** The Constant logger. */
+	private final static Logger logger = Logger.getLogger(ClnUnsubscribeCommandCallback.class);
 	/** The callback. */
 	protected IResponderCallback responderCallback;
 	/** The request. */
@@ -74,12 +78,15 @@ public class ClnCommandCascCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		logger.warn(ex);
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
 			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC " + this.msgType);
 		} else if (ex instanceof IOException) {
 			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC " + this.msgType);
+		} else if (ex instanceof InvalidMaskLengthException) {
+			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage());
 		} else {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing " + this.msgType + " failed");
 		}

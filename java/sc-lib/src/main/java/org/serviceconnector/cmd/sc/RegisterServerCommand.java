@@ -149,7 +149,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		try {
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 			// scVersion mandatory
 			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
 			SCMPMessage.SC_VERSION.isSupported(scVersion);

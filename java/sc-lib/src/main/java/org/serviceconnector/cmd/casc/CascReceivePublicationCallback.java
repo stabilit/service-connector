@@ -1,7 +1,8 @@
-package org.serviceconnector.casc;
+package org.serviceconnector.cmd.casc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -67,6 +68,7 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		logger.warn(ex);
 		if (this.cascClient.isDestroyed() == true) {
 			// cascaded client already destroyed ignore exception
 			return;

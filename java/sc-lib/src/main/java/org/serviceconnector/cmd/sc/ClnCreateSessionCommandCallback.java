@@ -2,6 +2,7 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -22,6 +23,8 @@ import org.serviceconnector.service.Session;
  */
 public class ClnCreateSessionCommandCallback implements ISCMPMessageCallback {
 
+	/** The Constant logger. */
+	private final static Logger logger = Logger.getLogger(ClnCreateSessionCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -88,6 +91,7 @@ public class ClnCreateSessionCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		logger.warn(ex);
 		SCMPMessage fault = null;
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();

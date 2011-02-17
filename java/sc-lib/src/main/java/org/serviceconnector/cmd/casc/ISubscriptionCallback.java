@@ -1,4 +1,4 @@
-package org.serviceconnector.casc;
+package org.serviceconnector.cmd.casc;
 
 import org.serviceconnector.scmp.IRequest;
 import org.serviceconnector.scmp.ISCMPMessageCallback;

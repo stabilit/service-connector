@@ -18,8 +18,9 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.casc.ISubscriptionCallback;
+import org.serviceconnector.cmd.casc.ISubscriptionCallback;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
@@ -34,6 +35,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.service.IPublishService;
+import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.PublishTimeout;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
@@ -43,6 +45,8 @@ import org.serviceconnector.service.SubscriptionMask;
  */
 public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
 
+	/** The Constant logger. */
+	private final static Logger logger = Logger.getLogger(SubscribeCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -120,6 +124,7 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		logger.warn(ex);
 		// creation failed remove from server
 		this.tempSubscription.getServer().removeSession(tempSubscription);
 		SCMPMessage fault = null;
@@ -131,6 +136,8 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln subscribe");
 		} else if (ex instanceof InterruptedException) {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed, thread interrupted");
+		} else if (ex instanceof InvalidMaskLengthException) {
+			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage());
 		} else {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln subscribe failed");
 		}

@@ -23,7 +23,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.IStatefulServer;
@@ -58,8 +57,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	 *            the subscription
 	 */
 	public void addSubscription(String key, Subscription subscription) {
-		SubscriptionLogger.logCreateSubscription(subscription.getId(), AppContext.getBasicConfiguration()
-				.getSubscriptionTimeoutMillis());
+		SubscriptionLogger.logCreateSubscription(subscription.getId(), subscription.getSubscriptionTimeoutMillis());
 		this.put(key, subscription);
 		this.scheduleSubscriptionTimeout(subscription);
 	}
@@ -143,8 +141,8 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.subscriptionScheduler.schedule(
 				subscriptionTimeouter, (long) subscription.getSubscriptionTimeoutMillis(), TimeUnit.MILLISECONDS);
 		subscription.setTimeout(timeout);
-		logger.trace("schedule subscription timeout millis: " + AppContext.getBasicConfiguration().getSubscriptionTimeoutMillis()
-				+ " id: " + subscription.getId());
+		logger.trace("schedule subscription timeout millis: " + subscription.getSubscriptionTimeoutMillis() + " id: "
+				+ subscription.getId());
 	}
 
 	/**
@@ -240,7 +238,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		/** {@inheritDoc} */
 		@Override
 		public int getTimeoutMillis() {
-			return AppContext.getBasicConfiguration().getSubscriptionTimeoutMillis();
+			return (int) this.subscription.getSubscriptionTimeoutMillis();
 		}
 	}
 }

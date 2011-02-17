@@ -1,7 +1,8 @@
-package org.serviceconnector.cmd.sc;
+package org.serviceconnector.cmd.casc;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.scmp.IRequest;
@@ -12,10 +13,13 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.Subscription;
 
 public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 
+	/** The Constant logger. */
+	private final static Logger logger = Logger.getLogger(CscUnsubscribeCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -53,6 +57,7 @@ public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		logger.warn(ex);
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		if (reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK) == null) {
@@ -65,6 +70,8 @@ public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC csc unsubscribe");
 		} else if (ex instanceof IOException) {
 			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC csc unsubscribe");
+		} else if (ex instanceof InvalidMaskLengthException) {
+			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage());
 		} else {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing csc unsubscribe failed");
 		}

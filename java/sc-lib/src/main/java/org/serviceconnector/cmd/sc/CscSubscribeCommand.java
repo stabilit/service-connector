@@ -18,10 +18,10 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
-import org.serviceconnector.casc.CscChangeSubscriptionCallbackForCasc;
-import org.serviceconnector.casc.ISubscriptionCallback;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.cmd.casc.CscChangeSubscriptionCallbackForCasc;
+import org.serviceconnector.cmd.casc.ISubscriptionCallback;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -164,7 +164,7 @@ public class CscSubscribeCommand extends CommandAdapter {
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
 			String serviceName = message.getServiceName();
-			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+			ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 			ValidatorUtility.validateInt(1000, otiValue, 3600000, SCMPError.HV_WRONG_OPERATION_TIMEOUT);
@@ -173,7 +173,7 @@ public class CscSubscribeCommand extends CommandAdapter {
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 			// sessionId mandatory
 			String sessionId = message.getSessionId();
-			ValidatorUtility.validateStringLength(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
+			ValidatorUtility.validateStringLengthTrim(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
 			// mask mandatory
 			String mask = message.getHeader(SCMPHeaderAttributeKey.MASK);
 			ValidatorUtility.validateStringLength(1, mask, 256, SCMPError.HV_WRONG_MASK);
@@ -185,7 +185,7 @@ public class CscSubscribeCommand extends CommandAdapter {
 			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 			// cascadedMask
 			String cascadedMask = message.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
-			ValidatorUtility.validateStringLength(1, cascadedMask, 256, SCMPError.HV_WRONG_MASK);
+			ValidatorUtility.validateStringLengthTrim(1, cascadedMask, 256, SCMPError.HV_WRONG_MASK);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point
 			ex.setMessageType(getKey());

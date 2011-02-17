@@ -275,7 +275,7 @@ public class SCClient {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCFileService(this, serviceName, this.requester);
 	}
 
@@ -293,7 +293,7 @@ public class SCClient {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCSessionService(this, serviceName, this.requester);
 	}
 
@@ -311,7 +311,7 @@ public class SCClient {
 		if (serviceName == null) {
 			throw new InvalidParameterException("service name must be set");
 		}
-		ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCPublishService(this, serviceName, this.requester);
 	}
 

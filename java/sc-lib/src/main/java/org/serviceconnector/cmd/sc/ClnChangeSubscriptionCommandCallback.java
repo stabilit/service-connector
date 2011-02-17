@@ -2,7 +2,8 @@ package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
-import org.serviceconnector.casc.ISubscriptionCallback;
+import org.apache.log4j.Logger;
+import org.serviceconnector.cmd.casc.ISubscriptionCallback;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
@@ -18,6 +19,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.IPublishService;
+import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
@@ -25,7 +27,8 @@ import org.serviceconnector.service.SubscriptionMask;
  * The Class ClnChangeSubscriptionCommandCallback.
  */
 public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
-
+	/** The Constant logger. */
+	private final static Logger logger = Logger.getLogger(ClnChangeSubscriptionCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -60,7 +63,7 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 	/** {@inheritDoc} */
 	@Override
 	public void receive(SCMPMessage reply) {
-		
+
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		String subscriptionId = subscription.getId();
@@ -88,6 +91,7 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
+		logger.warn(ex);
 		SCMPMessage fault = null;
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
@@ -97,6 +101,8 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 			fault = new SCMPMessageFault(SCMPError.OPERATION_TIMEOUT, "Operation timeout expired on SC cln change subscription");
 		} else if (ex instanceof IOException) {
 			fault = new SCMPMessageFault(SCMPError.CONNECTION_EXCEPTION, "broken connection on SC cln change subscription");
+		} else if (ex instanceof InvalidMaskLengthException) {
+			fault = new SCMPMessageFault(SCMPError.HV_WRONG_MASK, ex.getMessage());
 		} else {
 			fault = new SCMPMessageFault(SCMPError.SC_ERROR, "executing cln change subscription failed");
 		}

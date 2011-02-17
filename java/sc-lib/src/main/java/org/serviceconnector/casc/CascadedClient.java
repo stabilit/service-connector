@@ -6,9 +6,11 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.cmd.casc.CascReceivePublicationCallback;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.service.CascadedPublishService;
+import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.SubscriptionMask;
 
 public class CascadedClient {
@@ -92,7 +94,12 @@ public class CascadedClient {
 				baseMask = mask;
 				continue;
 			}
-			baseMask = SubscriptionMask.masking(baseMask, mask);
+			try {
+				baseMask = SubscriptionMask.masking(baseMask, mask);
+			} catch (InvalidMaskLengthException e) {
+				// exception should never occur, cascaded client should not allowed client with different mask lengths
+				logger.error("Masking of client masks for cascaded client failed", e);
+			}
 		}
 		return new String(baseMask);
 	}
@@ -113,7 +120,12 @@ public class CascadedClient {
 		return clientSubscriptionIds;
 	}
 
-	public void addClientSubscriptionId(String clientSubscriptionId, SubscriptionMask clientMask) {
+	public void addClientSubscriptionId(String clientSubscriptionId, SubscriptionMask clientMask) throws InvalidMaskLengthException {
+		if (this.subscriptionMask != null && (this.subscriptionMask.getValue().length() != clientMask.getValue().length())) {
+			// client mask has invalid (different than current mask of cascaded client) length
+			throw new InvalidMaskLengthException("client mask has invalid length: clientSubscriptionId=" + clientSubscriptionId
+					+ " clientMask=" + clientMask);
+		}
 		this.clientSubscriptionIds.put(clientSubscriptionId, clientMask);
 	}
 

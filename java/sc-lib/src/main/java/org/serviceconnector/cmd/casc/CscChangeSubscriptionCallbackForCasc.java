@@ -14,9 +14,8 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.casc;
+package org.serviceconnector.cmd.casc;
 
-import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
 import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.registry.SubscriptionQueue;
