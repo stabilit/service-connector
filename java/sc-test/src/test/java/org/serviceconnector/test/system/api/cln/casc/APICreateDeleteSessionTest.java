@@ -174,11 +174,28 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 	}
 
 	/**
+	 * Description: create session and get sessionInfo from server<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t81_sessionInfo() throws Exception {
+		SCMessage request = new SCMessage(TestConstants.pangram);
+		String sessionInfo = "sessionInfoFromServer";
+		request.setSessionInfo(sessionInfo);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		Assert.assertEquals("sessionInfo is not the same", sessionInfo, response.getSessionInfo());
+		sessionService1.deleteSession();
+	}
+
+	/**
 	 * Description: Create session with service which has been disabled<br>
 	 * Expectation: throws SCServiceException
 	 */
 	@Test(expected = SCServiceException.class)
-	public void t81_disabledService() throws Exception {
+	public void t83_disabledService() throws Exception {
 		// disable service
 		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);
 		clientMgmt.attach();

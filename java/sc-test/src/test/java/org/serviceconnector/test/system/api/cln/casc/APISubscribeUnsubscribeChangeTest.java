@@ -15,15 +15,12 @@
  */
 package org.serviceconnector.test.system.api.cln.casc;
 
-import java.security.InvalidParameterException;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCPublishService;
-import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
@@ -80,6 +77,26 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		Assert.assertTrue("is not subscribed", publishService.isSubscribed());
 		publishService.unsubscribe();
 		Assert.assertNull("the session ID is not null", publishService.getSessionId());
+	}
+
+	/**
+	 * Description: subscribe, return SessionInfo<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t17_subscribeSessionInfo() throws Exception {
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
+		subMsgRequest.setMask(TestConstants.mask);
+		String sessionInfo = "sessionInfoFromServer";
+		subMsgRequest.setSessionInfo(sessionInfo);
+		subMsgRequest.setNoDataIntervalSeconds(100);
+		SCSubscribeMessage subMsgResponse = null;
+		msgCallback = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
+		Assert.assertEquals("sessionInfo is not the same", sessionInfo, subMsgResponse.getSessionInfo());
+		publishService.unsubscribe();
 	}
 
 	/**
@@ -306,7 +323,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		publishService.unsubscribe();
 		Assert.assertNull("the session ID is not null", publishService.getSessionId());
 	}
-	
+
 	/**
 	 * Description: change subscription without subscribing<br>
 	 * Expectation: throws SCServiceException
@@ -403,6 +420,28 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 
 		publishService.unsubscribe();
 		Assert.assertNull("the session ID is not null", publishService.getSessionId());
+	}
+
+	/**
+	 * Description: change subscription and get sessionInfo from server<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t76_changeSubscriptionSessionInfo() throws Exception {
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		String sessionInfo = "sessionInfoFromServer";
+		subMsgRequest.setSessionInfo(sessionInfo);
+		subMsgRequest.setDataLength(TestConstants.pangram.length());
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setNoDataIntervalSeconds(10);
+		SCSubscribeMessage subMsgResponse = null;
+		msgCallback = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgResponse = publishService.changeSubscription(subMsgRequest);
+		Assert.assertEquals("sessionInfo is not the same", sessionInfo, subMsgResponse.getSessionInfo());
+		publishService.unsubscribe();
 	}
 
 	/**
