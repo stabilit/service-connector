@@ -142,6 +142,7 @@ public class SCPublishService extends SCService {
 		replyToClient.setDataLength(reply.getBodyLength());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
+		replyToClient.setSessionInfo(reply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 		return replyToClient;
@@ -213,6 +214,7 @@ public class SCPublishService extends SCService {
 		replyToClient.setDataLength(reply.getBodyLength());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
+		replyToClient.setSessionInfo(reply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 		return replyToClient;

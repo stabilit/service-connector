@@ -71,16 +71,6 @@ public class Subscription extends AbstractSession {
 	}
 
 	/**
-	 * Sets the ip address list.
-	 * 
-	 * @param ipAddressList
-	 *            the new ip address list
-	 */
-	public void setIpAddressList(String ipAddressList) {
-		this.ipAddressList = ipAddressList;
-	}
-
-	/**
 	 * Gets the no data interval.
 	 * 
 	 * @return the no data interval

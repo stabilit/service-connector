@@ -74,8 +74,6 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 				SubscriptionLogger.logChangeSubscribe(serviceName, subscriptionId, newMask);
 				queue.changeSubscription(subscriptionId, mask);
 				subscription.setMask(mask);
-				String ipAddressList = reqMessage.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
-				subscription.setIpAddressList(ipAddressList);
 			}
 		}
 		// forward reply to client

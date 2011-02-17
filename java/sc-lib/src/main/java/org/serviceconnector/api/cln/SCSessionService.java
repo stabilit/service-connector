@@ -149,6 +149,7 @@ public class SCSessionService extends SCService {
 		replyToClient.setDataLength(reply.getBodyLength());
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
+		replyToClient.setSessionInfo(reply.getHeader(SCMPHeaderAttributeKey.SESSION_INFO));
 		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));
 		return replyToClient;
@@ -156,7 +157,7 @@ public class SCSessionService extends SCService {
 
 	/**
 	 * Execute with default operation timeout. Execute is a synchronous operation with the SC. Any reply will be received as return
-	 * of the methode.
+	 * of the method.
 	 * 
 	 * @param requestMsg
 	 *            the request message
@@ -169,7 +170,7 @@ public class SCSessionService extends SCService {
 	}
 
 	/**
-	 * Execute. Execute is a synchronous operation with the SC. Any reply will be received as return of the methode.
+	 * Execute. Execute is a synchronous operation with the SC. Any reply will be received as return of the method.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            allowed time to complete operation

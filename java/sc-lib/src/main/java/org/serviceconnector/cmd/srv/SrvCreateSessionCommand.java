@@ -102,6 +102,9 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 				SCMPMessageSequenceNr msgSequenceNr = SrvCommandAdapter.sessionCompositeRegistry.getSCMPMsgSequenceNr(sessionId);
 				reply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSequenceNr.getCurrentNr());
 			}
+			if (scReply.getSessionInfo() != null) {
+				reply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, scReply.getSessionInfo());
+			}
 		}
 		reply.setSessionId(reqMessage.getSessionId());
 		reply.setServiceName(serviceName);
@@ -128,10 +131,10 @@ public class SrvCreateSessionCommand extends SrvCommandAdapter {
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLength(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
 			// ipAddressList mandatory
-			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 			// sessionInfo optional
-			String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
+			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point

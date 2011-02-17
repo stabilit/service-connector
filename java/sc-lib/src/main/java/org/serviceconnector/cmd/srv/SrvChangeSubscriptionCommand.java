@@ -104,6 +104,9 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 			if (scReply.isReject()) {
 				reply.setHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION);
 			}
+			if (scReply.getSessionInfo() != null) {
+				reply.setHeader(SCMPHeaderAttributeKey.SESSION_INFO, scReply.getSessionInfo());
+			}
 		}
 		response.setSCMP(reply);
 		responderCallback.responseCallback(request, response);
