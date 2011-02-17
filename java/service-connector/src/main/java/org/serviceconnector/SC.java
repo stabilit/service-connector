@@ -17,6 +17,7 @@
 package org.serviceconnector;
 
 import java.lang.management.ManagementFactory;
+import java.nio.channels.FileLock;
 import java.security.InvalidParameterException;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -77,7 +78,6 @@ public final class SC {
 		logger.log(Level.OFF, "Service Connector " + SCVersion.CURRENT.toString() + " is starting ...");
 		String configFileName = CommandLineUtil.getArg(args, Constants.CLI_CONFIG_ARG);
 		try {
-			SC.addExitHandler();
 			SC.run(configFileName);
 		} catch (Exception ex) {
 			logger.fatal(ex.getMessage(), ex);
@@ -120,8 +120,8 @@ public final class SC {
 		// Initialize service connector command factory
 		AppContext.initCommands(new ServiceConnectorCommandFactory());
 		// Initialize web command factory
-		WebContext.initConfiguration(configFileName);
-		WebContext.initContext(new ServiceConnectorWebCommandFactory());
+		WebContext.getWebConfiguration().load(AppContext.getApacheCompositeConfig());
+		WebContext.initCommands(new ServiceConnectorWebCommandFactory());
 		// initialize JMX
 		SC.initializeJMX();
 
@@ -139,7 +139,9 @@ public final class SC {
 		// Write PID file
 		if (AppContext.getBasicConfiguration().isWritePID()) {
 			String fs = System.getProperty("file.separator");
-			FileUtility.createPIDfile(AppContext.getBasicConfiguration().getPidPath() + fs + Constants.PID_FILE_NAME);
+			FileLock pidLock = FileUtility.createPIDfileAndLock(AppContext.getBasicConfiguration().getPidPath() + fs
+					+ Constants.PID_FILE_NAME);
+			SC.addExitHandler(pidLock);
 		}
 		logger.log(Level.OFF, "Service Connector is running ...");
 	}
@@ -203,8 +205,8 @@ public final class SC {
 	/**
 	 * Adds the shutdown hook.
 	 */
-	private static void addExitHandler() {
-		Runtime.getRuntime().addShutdownHook(new SCExitHandler());
+	private static void addExitHandler(FileLock pidLock) {
+		Runtime.getRuntime().addShutdownHook(new SCExitHandler(pidLock));
 	}
 
 	/**
@@ -212,12 +214,22 @@ public final class SC {
 	 */
 	private static class SCExitHandler extends Thread {
 
+		private FileLock pidLock;
+
+		public SCExitHandler(FileLock pidLock) {
+			this.pidLock = pidLock;
+		}
+
 		/** {@inheritDoc} */
 		@Override
 		public void run() {
 			String fs = System.getProperty("file.separator");
 			AppContext.getCacheManager().destroy();
 			try {
+				if (this.pidLock != null) {
+					// release the file lock
+					this.pidLock.release();
+				}
 				if (AppContext.getBasicConfiguration() != null) {
 					String pidFileNameFull = AppContext.getBasicConfiguration().getPidPath() + fs + Constants.PID_FILE_NAME;
 					FileUtility.deleteFile(pidFileNameFull);
