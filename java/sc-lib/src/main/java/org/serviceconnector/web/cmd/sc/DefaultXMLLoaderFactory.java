@@ -30,8 +30,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.stream.XMLStreamException;
@@ -60,6 +60,7 @@ import org.serviceconnector.registry.ServerRegistry;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionQueue;
+import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.FileServer;
 import org.serviceconnector.server.Server;
@@ -69,6 +70,7 @@ import org.serviceconnector.service.PublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
+import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.DumpUtility;
 import org.serviceconnector.util.SystemInfo;
@@ -102,6 +104,8 @@ public class DefaultXMLLoaderFactory {
 		this.addXMLLoader("/services", loader);
 		loader = new SessionsXMLLoader();
 		this.addXMLLoader("/sessions", loader);
+		loader = new SubscriptionsXMLLoader();
+		this.addXMLLoader("/subscriptions", loader);
 		loader = new ServersXMLLoader();
 		this.addXMLLoader("/servers", loader);
 		loader = new RespondersXMLLoader();
@@ -214,7 +218,7 @@ public class DefaultXMLLoaderFactory {
 					SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService.getSubscriptionQueue();
 					writer.writeStartElement("subscriptionQueueSize");
 					writer.writeCData(String.valueOf(subscriptionQueue.getSize()));
-					writer.writeEndElement();
+					writer.writeEndElement();  // end of subscriptionQueueSize
 				}
 				if (service.getName().equals(serviceParameter)) {
 					// take a look into
@@ -225,8 +229,9 @@ public class DefaultXMLLoaderFactory {
 						for (StatefulServer server : serverList) {
 							writer.writeStartElement("server");
 							this.writeBean(writer, server);
-							writer.writeEndElement(); // close servers tag
+							writer.writeEndElement(); // close server tag
 						}
+						writer.writeEndElement(); // close servers tag
 					}
 					if (service instanceof PublishService) {
 						PublishService publishService = (PublishService) service;
@@ -243,14 +248,14 @@ public class DefaultXMLLoaderFactory {
 								writer.writeCData((String) headerEntry.getValue());
 								writer.writeEndElement();
 							}
-							writer.writeEndElement();
-							writer.writeEndElement();
+							writer.writeEndElement();  // end of header
+							writer.writeEndElement();  // end of scmpMessage
 						}
-						writer.writeEndElement();
+						writer.writeEndElement(); // end of subscriptionQueue
 					}
-					writer.writeEndElement(); // close details tag
+					writer.writeEndElement(); // end details tag
 				}
-				writer.writeEndElement(); // close services tag
+				writer.writeEndElement(); // end service tag
 			}
 			writer.writeEndElement(); // close services tag
 		}
@@ -316,6 +321,56 @@ public class DefaultXMLLoaderFactory {
 		@Override
 		public IFactoryable newInstance() {
 			return new SessionsXMLLoader();
+		}
+
+	}
+
+	/**
+	 * The Class SubscriptionsXMLLoader.
+	 */
+	public static class SubscriptionsXMLLoader extends AbstractXMLLoader {
+
+		/**
+		 * Instantiates a new default xml loader.
+		 */
+		public SubscriptionsXMLLoader() {
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+			String serverParameter = request.getParameter("server");
+			if (serverParameter != null) {
+				ServerRegistry serverRegistry = AppContext.getServerRegistry();
+				Server server = serverRegistry.getServer(serverParameter);
+				if (server != null) {
+					writer.writeStartElement("server");
+					this.writeBean(writer, server);
+					writer.writeEndElement();
+				}
+			}
+			SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
+			writer.writeStartElement("subscriptions");
+			Subscription[] subscriptions = subscriptionRegistry.getSubscriptions();
+			for (Subscription subscription : subscriptions) {
+				writer.writeStartElement("subscription");
+				this.writeBean(writer, subscription);
+				writer.writeEndElement();
+			}
+			writer.writeEndElement(); // close subscriptions tag
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public final void loadBody(Writer writer, IWebRequest request) throws Exception {
+			if (writer instanceof XMLStreamWriter) {
+				this.loadBody((XMLStreamWriter) writer, request);
+			}
+		}
+
+		@Override
+		public IFactoryable newInstance() {
+			return new SubscriptionsXMLLoader();
 		}
 
 	}

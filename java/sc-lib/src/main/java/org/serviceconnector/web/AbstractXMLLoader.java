@@ -42,6 +42,7 @@ import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
 import org.serviceconnector.util.SystemInfo;
@@ -417,6 +418,12 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						this.writeBean(writer, remoteNodeConfiguration);
 						writer.writeEndElement();
 						continue;
+					}
+					if (value instanceof SubscriptionMask) {
+						writer.writeStartElement("mask");
+						SubscriptionMask subscriptionMask = (SubscriptionMask) value;
+						writer.writeCData(subscriptionMask.getValue());
+						writer.writeEndElement();
 					}
 					writer.writeStartElement(name);
 					writer.writeCData(value.toString());

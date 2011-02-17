@@ -406,6 +406,14 @@ public class FileServer extends Server {
 		}
 	}
 
+	/**
+	 * Download and replace.
+	 *
+	 * @param fileService the file service
+	 * @param remoteFile the remote file
+	 * @param dstFile the dst file
+	 * @throws Exception the exception
+	 */
 	public void downloadAndReplace(FileService fileService, String remoteFile, File dstFile) throws Exception {
 		String path = fileService.getPath();
 		String urlPath = URLUtility.makePath(path, remoteFile);
@@ -424,5 +432,13 @@ public class FileServer extends Server {
 		httpCon.disconnect();
 		return;
 	}
-
+	
+	/**
+	 * Gets the max sessions.
+	 *
+	 * @return the max sessions
+	 */
+	public int getMaxSessions() {
+		return maxSessions;
+	}
 }

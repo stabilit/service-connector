@@ -64,7 +64,14 @@
 	    <td class="{$class}"><xsl:value-of select="portNr"/></td>
 	    <td class="{$class}"><xsl:value-of select="serverKey"/></td>
 	    <td class="{$class}"><xsl:value-of select="type"/></td>
-	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="maxSessions"/></xsl:call-template></td>
+	    <td class="{$class}">
+	      <xsl:choose>
+	        <xsl:when test="contains(type,'CASCADED')">-</xsl:when>
+	        <xsl:otherwise>
+	          <xsl:call-template name="fieldValue"><xsl:with-param name="value" select="maxSessions"/></xsl:call-template>
+	        </xsl:otherwise>
+	      </xsl:choose>
+	    </td>
 	    <td class="{$class}"><xsl:value-of select="maxConnections"/></td>
 	</xsl:template>
 	<xsl:template name="server_details">

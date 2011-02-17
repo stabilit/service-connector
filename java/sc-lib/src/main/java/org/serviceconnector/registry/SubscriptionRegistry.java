@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.registry;
 
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +28,7 @@ import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.IStatefulServer;
 import org.serviceconnector.service.IPublishService;
+import org.serviceconnector.service.Session;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.util.ITimeout;
 import org.serviceconnector.util.TimeoutWrapper;
@@ -97,6 +100,28 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	public Subscription getSubscription(String key) {
 		Subscription subscription = super.get(key);
 		return subscription;
+	}
+	
+	/**
+	 * Gets all subscriptions.
+	 * 
+	 * @return the subscriptions
+	 */
+	public Subscription[] getSubscriptions() {
+		try {
+			Set<Entry<String, Subscription>> entries = this.registryMap.entrySet();
+			Subscription[] subscriptions = new Subscription[entries.size()];
+			int index = 0;
+			for (Entry<String, Subscription> entry : entries) {
+				//String key = entry.getKey();
+				Subscription subscription = entry.getValue();
+				subscriptions[index++] = subscription;
+			}
+			return subscriptions;
+		} catch (Exception e) {
+			logger.error("getSubscriptions", e);
+		}
+		return null;
 	}
 
 	/**

@@ -98,7 +98,6 @@
             <th class="sc_table">connectionType</th>            
             <th class="sc_table">maxPoolSize</th>            
             <th class="sc_table">keepAliveInterval (s)</th>            
-            <th class="sc_table">maxSessions</th>            
           </tr>
           <tr>
             <xsl:variable name="remoteNodeConfiguration" select="$body/responders/responder/responderConfig/remoteNodeConfiguration[name = $remoteNode]"/>
@@ -109,7 +108,6 @@
             <td class="sc_table"><xsl:value-of select="$remoteNodeConfiguration/connectionType"/></td>            
             <td class="sc_table"><xsl:value-of select="$remoteNodeConfiguration/maxPoolSize"/></td>            
             <td class="sc_table"><xsl:value-of select="$remoteNodeConfiguration/keepAliveIntervalSeconds"/></td>            
-            <td class="sc_table"><xsl:value-of select="$remoteNodeConfiguration/maxSessions"/></td>            
           </tr>          
         </table>
        </div>	  

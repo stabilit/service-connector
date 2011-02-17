@@ -15,8 +15,8 @@
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_header">
             <th class="sc_table">Service State</th>
-            <th class="sc_table">Service Type</th>
             <th class="sc_table">Service Name</th>
+            <th class="sc_table">Service Type</th>
             <th class="sc_table">Servers</th>
             <th class="sc_table">Message Queue</th>
             <th class="sc_table">Allocated Sessions / Subscriptions</th>
@@ -64,19 +64,19 @@
 	        <xsl:otherwise>Disabled</xsl:otherwise>
 	      </xsl:choose>
 	    </td>
-	    <td class="{$class}"><xsl:value-of select="type"/></td>	    
 	    <xsl:choose>
 	      <xsl:when test="countServers &gt; 0">
-	         <td class="{$class}"><a class="sc_table" href="services?service={serviceName}"><xsl:value-of select="serviceName"/></a>&#160;</td>
+	         <td class="{$class}"><a class="sc_table" href="services?service={name}"><xsl:value-of select="name"/></a>&#160;</td>
           </xsl:when>
           <xsl:otherwise>	       
 	         <td class="{$class}"><xsl:value-of select="name"/>&#160;</td>
 	      </xsl:otherwise>
         </xsl:choose>       
+	    <td class="{$class}"><xsl:value-of select="type"/></td>	    
 	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countServers"/></xsl:call-template></td>
 	    <xsl:choose>
 	       <xsl:when test="subscriptionQueueSize &gt; 0">
-	         <td class="{$class}"><a class="sc_table" href="services?service={serviceName}&amp;subscription=yes"><xsl:value-of select="subscriptionQueueSize"/></a>&#160;</td>
+	         <td class="{$class}"><a class="sc_table" href="services?service={name}&amp;subscription=yes"><xsl:value-of select="subscriptionQueueSize"/></a>&#160;</td>
 	      </xsl:when>
 	      <xsl:otherwise>
 	         <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="subscriptionQueueSize"/></xsl:call-template></td>

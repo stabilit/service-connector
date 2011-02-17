@@ -66,10 +66,12 @@
 	    <xsl:call-template name="sc_dateTime">
 	      <xsl:with-param name="dateTime" select="$head/meta/@creation"/>
 	    </xsl:call-template>
+	    <!-- 
 	    <br/>
 	    <xsl:if test="string-length($userid) &gt; 0">
 	       User [<xsl:value-of select="$userid"/>]
 	    </xsl:if>
+	     -->
 	    <br/>
 	    <br/>
 	    Service Connector provided by <a href="http://www.stabilit.ch/" class="sc_header" target="stabilit">Stabilit</a>
@@ -89,6 +91,7 @@
     -->	  
 	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="services">Services</a></div>
 	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="sessions">Sessions</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="subscriptions">Subscriptions</a></div>
 	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="servers">Servers</a></div>
 	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="listeners">Listeners</a></div>
 	  <!-- 
