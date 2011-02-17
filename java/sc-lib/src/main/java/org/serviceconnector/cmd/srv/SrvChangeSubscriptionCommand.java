@@ -76,6 +76,7 @@ public class SrvChangeSubscriptionCommand extends SrvCommandAdapter {
 		scMessage.setSessionId(sessionId);
 		scMessage.setMask(reqMessage.getHeader(SCMPHeaderAttributeKey.MASK));
 		scMessage.setServiceName(reqMessage.getServiceName());
+		scMessage.setActualMask(reqMessage.getHeader(SCMPHeaderAttributeKey.ACTUAL_MASK));
 
 		// inform callback with scMessages
 		SCMessage scReply = srvService.getCallback().changeSubscription(scMessage,
