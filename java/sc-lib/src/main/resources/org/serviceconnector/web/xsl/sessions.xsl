@@ -136,11 +136,11 @@
 	    <td class="sc_table"><xsl:value-of select="$service/type"/></td>	    
 	    <td class="sc_table"><xsl:value-of select="$service/countServers"/></td>	    
 	    <xsl:choose>
-	       <xsl:when test="$service/subscriptionQueueSize &gt; 0">
-	         <td class="sc_table"><a class="sc_table" href="services?service={name}&amp;subscription=yes"><xsl:value-of select="$service/subscriptionQueueSize"/></a>&#160;</td>
+	       <xsl:when test="$service/publishMessageQueueSize &gt; 0">
+	         <td class="sc_table"><a class="sc_table" href="services?service={name}&amp;subscription=yes"><xsl:value-of select="$service/publishMessageQueueSize"/></a>&#160;</td>
 	      </xsl:when>
 	      <xsl:otherwise>
-	         <td class="sc_table"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="$service/subscriptionQueueSize"/></xsl:call-template></td>
+	         <td class="sc_table"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="$service/publishMessageQueueSize"/></xsl:call-template></td>
 	      </xsl:otherwise>
 	    </xsl:choose>
         <td class="sc_table"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="$service/countAllocatedSessions"/></xsl:call-template></td>

@@ -85,11 +85,11 @@
 	    <td class="{$class}"><xsl:value-of select="type"/></td>	    
 	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countServers"/></xsl:call-template></td>
 	    <xsl:choose>
-	       <xsl:when test="subscriptionQueueSize &gt; 0">
-	         <td class="{$class}"><a class="sc_table" href="services?service={name}&amp;subscription=yes"><xsl:value-of select="subscriptionQueueSize"/></a></td>
+	       <xsl:when test="publishMessageQueueSize &gt; 0">
+	         <td class="{$class}"><a class="sc_table" href="services?service={name}&amp;subscription=yes"><xsl:value-of select="publishMessageQueueSize"/></a></td>
 	      </xsl:when>
 	      <xsl:otherwise>
-	         <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="subscriptionQueueSize"/></xsl:call-template></td>
+	         <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="publishMessageQueueSize"/></xsl:call-template></td>
 	      </xsl:otherwise>
 	    </xsl:choose>
 	    <xsl:choose>
@@ -111,7 +111,7 @@
 	  <td colspan="7">
 	    <xsl:choose>
 	      <xsl:when test="$head/query/param/@subscription = 'yes'">
-	        <xsl:apply-templates select="details/subscriptionQueue"/>	    
+	        <xsl:apply-templates select="details/publishMessageQueue"/>	    
 	      </xsl:when>
 	      <xsl:otherwise>
 	        <xsl:apply-templates select="details/servers"/>	    
@@ -183,7 +183,7 @@
 	     </tr>	    
 	  </xsl:if>
 	</xsl:template>
-	<xsl:template match="subscriptionQueue">
+	<xsl:template match="publishMessageQueue">
 	    <div class="sc_table_details">
 	        <div class="sc_table_title">
 	           Messages in Subscription Queue [<xsl:value-of select="$serviceParam"/>]

@@ -217,9 +217,9 @@ public class DefaultXMLLoaderFactory {
 				if (service instanceof PublishService) {
 					PublishService publishService = (PublishService) service;
 					PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
-					writer.writeStartElement("subscriptionQueueSize");
+					writer.writeStartElement("publishMessageQueueSize");
 					writer.writeCData(String.valueOf(publishMessageQueue.getSize()));
-					writer.writeEndElement();  // end of subscriptionQueueSize
+					writer.writeEndElement();  // end of publishMessageQueueSize
 				}
 				if (service.getName().equals(serviceParameter)) {
 					// take a look into
@@ -237,7 +237,7 @@ public class DefaultXMLLoaderFactory {
 					if (service instanceof PublishService) {
  						PublishService publishService = (PublishService) service;
 						PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
-						writer.writeStartElement("subscriptionQueue");
+						writer.writeStartElement("publishMessageQueue");
 						Iterator<SCMPMessage> sqIter = publishMessageQueue.iterator();
 						while (sqIter.hasNext()) {
 							SCMPMessage scmpMessage = sqIter.next();
@@ -255,7 +255,7 @@ public class DefaultXMLLoaderFactory {
 							writer.writeEndElement();  // end of header
 							writer.writeEndElement();  // end of scmpMessage
 						}
-						writer.writeEndElement(); // end of subscriptionQueue
+						writer.writeEndElement(); // end of publishMessageQueue
 					}
 					writer.writeEndElement(); // end details tag
 				}
@@ -372,9 +372,9 @@ public class DefaultXMLLoaderFactory {
 					if (service instanceof PublishService) {
 						PublishService publishService = (PublishService) service;
 						PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
-						writer.writeStartElement("subscriptionQueueSize");
+						writer.writeStartElement("publishMessageQueueSize");
 						writer.writeCData(String.valueOf(publishMessageQueue.getSize()));
-						writer.writeEndElement();  // end of subscriptionQueueSize
+						writer.writeEndElement();  // end of publishMessageQueueSize
 					}
 					this.writeBean(writer, service);
 					writer.writeEndElement();
