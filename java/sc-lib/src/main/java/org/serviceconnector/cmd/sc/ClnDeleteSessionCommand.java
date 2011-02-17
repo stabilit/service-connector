@@ -148,7 +148,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			String msgSequenceNr = message.getMessageSequenceNr();
 			ValidatorUtility.validateLong(1, msgSequenceNr, SCMPError.HV_WRONG_MESSAGE_SEQUENCE_NR);
 			// serviceName mandatory
-			String serviceName = (String) message.getServiceName();
+			String serviceName = message.getServiceName();
 			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
@@ -157,7 +157,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLength(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
 			// sessionInfo optional
-			String sessionInfo = (String) message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
+			String sessionInfo = message.getHeader(SCMPHeaderAttributeKey.SESSION_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, sessionInfo, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point

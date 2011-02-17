@@ -159,10 +159,10 @@ public class ClnExecuteCommand extends CommandAdapter {
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLength(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
 			// message info optional
-			String messageInfo = (String) message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
+			String messageInfo = message.getHeader(SCMPHeaderAttributeKey.MSG_INFO);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, messageInfo, 256, SCMPError.HV_WRONG_MESSAGE_INFO);
 			// cacheId optional
-			String cacheId = (String) message.getHeader(SCMPHeaderAttributeKey.CACHE_ID);
+			String cacheId = message.getHeader(SCMPHeaderAttributeKey.CACHE_ID);
 			ValidatorUtility.validateStringLengthIgnoreNull(1, cacheId, 256, SCMPError.HV_WRONG_SESSION_INFO);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point

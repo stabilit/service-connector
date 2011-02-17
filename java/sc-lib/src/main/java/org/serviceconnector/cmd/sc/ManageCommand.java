@@ -72,7 +72,7 @@ public class ManageCommand extends CommandAdapter {
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
-		String ipAddress = (String) reqMsg.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+		String ipAddress = reqMsg.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 
 		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
@@ -137,7 +137,7 @@ public class ManageCommand extends CommandAdapter {
 		try {
 			SCMPMessage message = request.getMessage();
 			// ipAddressList mandatory
-			String ipAddressList = (String) message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
+			String ipAddressList = message.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 			ValidatorUtility.validateIpAddressList(ipAddressList);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point

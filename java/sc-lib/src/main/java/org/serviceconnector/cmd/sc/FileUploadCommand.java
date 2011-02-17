@@ -67,7 +67,7 @@ public class FileUploadCommand extends CommandAdapter {
 		this.sessionRegistry.cancelSessionTimeout(session);
 		SCMPMessage reply = null;
 		try {
-			String remoteFileName = (String) message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
+			String remoteFileName = message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
 
 			FileServer fileServer = session.getFileServer();
 
@@ -91,7 +91,7 @@ public class FileUploadCommand extends CommandAdapter {
 		try {
 			SCMPMessage message = request.getMessage();
 			// remoteFileName mandatory
-			String remoteFileName = (String) message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
+			String remoteFileName = message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
 			ValidatorUtility.validateStringLength(1, remoteFileName, 2562, SCMPError.HV_WRONG_REMOTE_FILE_NAME);
 			// operation timeout mandatory
 			String otiValue = message.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);

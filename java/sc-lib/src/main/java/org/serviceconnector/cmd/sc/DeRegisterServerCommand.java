@@ -88,7 +88,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 
 		try {
 			// serviceName mandatory
-			String serviceName = (String) message.getServiceName();
+			String serviceName = message.getServiceName();
 			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		} catch (HasFaultResponseException ex) {
 			// needs to set message type at this point

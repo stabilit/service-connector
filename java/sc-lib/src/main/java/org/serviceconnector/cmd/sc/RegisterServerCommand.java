@@ -148,7 +148,7 @@ public class RegisterServerCommand extends CommandAdapter {
 		SCMPMessage message = request.getMessage();
 		try {
 			// serviceName mandatory
-			String serviceName = (String) message.getServiceName();
+			String serviceName = message.getServiceName();
 			ValidatorUtility.validateStringLength(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 			// scVersion mandatory
 			String scVersion = message.getHeader(SCMPHeaderAttributeKey.SC_VERSION);
@@ -156,11 +156,11 @@ public class RegisterServerCommand extends CommandAdapter {
 			// localDateTime mandatory
 			ValidatorUtility.validateDateTime(message.getHeader(SCMPHeaderAttributeKey.LOCAL_DATE_TIME), SCMPError.HV_WRONG_LDT);
 			// maxSessions - validate with lower limit 1 mandatory
-			String maxSessionsValue = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
+			String maxSessionsValue = message.getHeader(SCMPHeaderAttributeKey.MAX_SESSIONS);
 			ValidatorUtility.validateInt(1, maxSessionsValue, SCMPError.HV_WRONG_MAX_SESSIONS);
 			int maxSessions = Integer.parseInt(maxSessionsValue);
 			// maxConnections - validate with lower limit 1 & higher limit maxSessions mandatory
-			String maxConnectionsValue = (String) message.getHeader(SCMPHeaderAttributeKey.MAX_CONNECTIONS);
+			String maxConnectionsValue = message.getHeader(SCMPHeaderAttributeKey.MAX_CONNECTIONS);
 			ValidatorUtility.validateInt(1, maxConnectionsValue, maxSessions, SCMPError.HV_WRONG_MAX_CONNECTIONS);
 			int maxConnections = Integer.parseInt(maxConnectionsValue);
 			if (maxConnections == 1 && maxSessions != 1) {
@@ -168,7 +168,7 @@ public class RegisterServerCommand extends CommandAdapter {
 				throw new SCMPValidatorException(SCMPError.HV_WRONG_MAX_SESSIONS, "maxSessions must be 1 if maxConnections is 1");
 			}
 			// portNr - portNr >= 1 && portNr <= 0xFFFF mandatory
-			String portNr = (String) message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
+			String portNr = message.getHeader(SCMPHeaderAttributeKey.PORT_NR);
 			ValidatorUtility.validateInt(1, portNr, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 			// keepAliveInterval mandatory
 			String kpi = message.getHeader(SCMPHeaderAttributeKey.KEEP_ALIVE_INTERVAL);
