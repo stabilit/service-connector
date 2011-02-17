@@ -19,6 +19,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.serviceconnector.test.system.api.cln.casc.APICreateDeleteSessionTest;
 import org.serviceconnector.test.system.api.cln.casc.APIExecuteAndSendTest;
+import org.serviceconnector.test.system.api.cln.casc.APIMultipleClientChangeSubscriptionTest;
+import org.serviceconnector.test.system.api.cln.casc.APIMultipleClientSubscribeTest;
 import org.serviceconnector.test.system.api.cln.casc.APIReceivePublicationTest;
 import org.serviceconnector.test.system.api.cln.casc.APISubscribeUnsubscribeChangeTest;
 import org.serviceconnector.test.system.scmp.casc.SCMPClnChangeSubscriptionTest;
@@ -35,6 +37,8 @@ import org.serviceconnector.test.system.scmp.casc.SCMPClnExecuteTest;
 		// API publish tests
 		APISubscribeUnsubscribeChangeTest.class,
 		APIReceivePublicationTest.class,
+		APIMultipleClientSubscribeTest.class,
+		APIMultipleClientChangeSubscriptionTest.class,
 
 		// SCMP session test
 		SCMPClnCreateSessionTest.class,

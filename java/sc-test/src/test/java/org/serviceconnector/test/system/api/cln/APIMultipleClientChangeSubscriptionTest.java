@@ -15,9 +15,10 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
-public class APIStressExecutionTest extends org.serviceconnector.test.system.api.cln.casc.APIStressExecutionTest {
+public class APIMultipleClientChangeSubscriptionTest extends
+		org.serviceconnector.test.system.api.cln.casc.APIMultipleClientChangeSubscriptionTest {
 
-	public APIStressExecutionTest() {
-		APIStressExecutionTest.setUpCascadedServiceConnectorAndServer();
+	public APIMultipleClientChangeSubscriptionTest() {
+		APIMultipleClientChangeSubscriptionTest.setUpServiceConnectorAndServer();
 	}
 }

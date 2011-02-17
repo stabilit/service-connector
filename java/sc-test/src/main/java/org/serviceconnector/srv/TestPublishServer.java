@@ -21,6 +21,7 @@
 package org.serviceconnector.srv;
 
 import java.lang.reflect.Method;
+import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,13 +83,6 @@ public class TestPublishServer extends TestStatefulServer {
 
 	@Override
 	public void run() {
-		// add exit handler
-		try {
-			this.addExitHandler(FileUtility.getLogPath() + fs + this.serverName + ".pid");
-		} catch (SCMPValidatorException e1) {
-			logger.fatal("unable to get path to pid file", e1);
-		}
-
 		ctr = new ThreadSafeCounter();
 
 		List<String> nics = new ArrayList<String>();
@@ -115,7 +109,14 @@ public class TestPublishServer extends TestStatefulServer {
 					server.deregister();
 				}
 			}
-			FileUtility.createPIDfile(FileUtility.getLogPath() + fs + this.serverName + ".pid");
+			FileLock pidLock = FileUtility.createPIDfileAndLock(FileUtility.getLogPath() + fs + this.serverName + ".pid");
+			// add exit handler
+			try {
+				this.addExitHandler(FileUtility.getLogPath() + fs + this.serverName + ".pid", pidLock);
+			} catch (SCMPValidatorException e1) {
+				logger.fatal("unable to get path to pid file", e1);
+			}
+
 			logger.log(Level.OFF, "TestPublishServer is running ...");
 		} catch (Exception e) {
 			logger.error("runPublishServer", e);

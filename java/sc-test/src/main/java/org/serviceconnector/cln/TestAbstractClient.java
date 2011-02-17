@@ -1,7 +1,9 @@
 package org.serviceconnector.cln;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.channels.FileLock;
 import java.util.List;
 
 import org.apache.log4j.Level;
@@ -36,9 +38,9 @@ public class TestAbstractClient extends Thread {
 	public void run() {
 		try {
 			try {
-				FileUtility.createPIDfile(FileUtility.getLogPath() + fs + this.clientName + ".pid");
+				FileLock pidLock = FileUtility.createPIDfileAndLock(FileUtility.getLogPath() + fs + this.clientName + ".pid");
 				// add exit handler
-				this.addExitHandler(FileUtility.getLogPath() + fs + this.clientName + ".pid");
+				this.addExitHandler(FileUtility.getLogPath() + fs + this.clientName + ".pid", pidLock);
 			} catch (SCMPValidatorException e1) {
 				logger.fatal("unable to get path to pid file", e1);
 			} catch (Exception e) {
@@ -122,8 +124,8 @@ public class TestAbstractClient extends Thread {
 	/**
 	 * Adds the shutdown hook.
 	 */
-	private void addExitHandler(String pidFileNameFull) {
-		TestClientExitHandler exitHandler = new TestClientExitHandler(pidFileNameFull);
+	private void addExitHandler(String pidFileNameFull, FileLock pidLock) {
+		TestClientExitHandler exitHandler = new TestClientExitHandler(pidFileNameFull, pidLock);
 		Runtime.getRuntime().addShutdownHook(exitHandler);
 	}
 
@@ -132,15 +134,21 @@ public class TestAbstractClient extends Thread {
 	 */
 	private static class TestClientExitHandler extends Thread {
 		private String pidFileNameFull = null;
+		private FileLock pidLock = null;
 
-		public TestClientExitHandler(String pidFileNameFull) {
+		public TestClientExitHandler(String pidFileNameFull, FileLock pidLock) {
 			this.pidFileNameFull = pidFileNameFull;
+			this.pidLock = pidLock;
 		}
 
 		@Override
 		public void run() {
 			File pidFile = new File(this.pidFileNameFull);
 			if (pidFile.exists()) {
+				try {
+					this.pidLock.release();
+				} catch (IOException e) {
+				}
 				pidFile.delete();
 				logger.log(Level.OFF, "Delete PID-file: " + this.pidFileNameFull);
 			}

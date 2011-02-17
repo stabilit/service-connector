@@ -94,9 +94,9 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 
 	/**
 	 * Description: publish 1 message with mask = " "<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: passes
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test
 	public void t104_publish() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP,
 				ConnectionType.NETTY_TCP);

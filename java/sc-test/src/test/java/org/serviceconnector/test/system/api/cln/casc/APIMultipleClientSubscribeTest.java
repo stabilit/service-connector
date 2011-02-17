@@ -32,7 +32,6 @@ import org.serviceconnector.test.system.SystemSuperTest;
 
 public class APIMultipleClientSubscribeTest extends SystemSuperTest {
 
-	/** The Constant testLogger. */
 	protected Map<String, ProcessCtx> srvCtx;
 	protected static List<ServerDefinition> srvDefs;
 

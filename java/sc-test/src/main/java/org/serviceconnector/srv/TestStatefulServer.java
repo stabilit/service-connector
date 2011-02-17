@@ -1,5 +1,8 @@
 package org.serviceconnector.srv;
 
+import java.io.IOException;
+import java.nio.channels.FileLock;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.srv.SCSessionServer;
@@ -96,8 +99,8 @@ public abstract class TestStatefulServer extends Thread {
 	/**
 	 * Adds the shutdown hook.
 	 */
-	protected void addExitHandler(String pidFileNameFull) {
-		TestServerExitHandler exitHandler = new TestServerExitHandler(pidFileNameFull);
+	protected void addExitHandler(String pidFileNameFull, FileLock pidLock) {
+		TestServerExitHandler exitHandler = new TestServerExitHandler(pidFileNameFull, pidLock);
 		Runtime.getRuntime().addShutdownHook(exitHandler);
 	}
 
@@ -106,13 +109,19 @@ public abstract class TestStatefulServer extends Thread {
 	 */
 	private static class TestServerExitHandler extends Thread {
 		private String pidFileNameFull = null;
+		private FileLock pidLock = null;
 
-		public TestServerExitHandler(String pidFileNameFull) {
+		public TestServerExitHandler(String pidFileNameFull, FileLock pidLock) {
 			this.pidFileNameFull = pidFileNameFull;
+			this.pidLock = pidLock;
 		}
 
 		@Override
 		public void run() {
+			try {
+				pidLock.release();
+			} catch (IOException e) {
+			}
 			FileUtility.deleteFile(this.pidFileNameFull);
 			logger.info("Delete PID-file=" + this.pidFileNameFull);
 			logger.log(Level.OFF, "TestServer exit");

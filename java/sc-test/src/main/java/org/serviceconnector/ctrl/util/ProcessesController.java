@@ -166,7 +166,7 @@ public class ProcessesController {
 		proc.setProcess(process);
 		int timeout = 15; // seconds
 		try {
-			FileUtility.waitExists(pidFileFullName, timeout);
+			FileUtility.waitExistsAndLocked(pidFileFullName, timeout);
 			testLogger.info(scName + " started");
 		} catch (Exception e) {
 			process.destroy();
@@ -182,10 +182,14 @@ public class ProcessesController {
 		int timeout = 15; // seconds
 		try {
 			if (FileUtility.exists(scProcess.getPidFileName())) {
-				SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, scProcess.getSCPort(), ConnectionType.NETTY_TCP);
-				client.attach(timeout);
-				client.killSC();
-				FileUtility.waitNotExists(scProcess.getPidFileName(), timeout);
+				// file exists
+				if (FileUtility.isFileLocked(scProcess.getPidFileName())) {
+					// file is locked - SC is running
+					SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, scProcess.getSCPort(), ConnectionType.NETTY_TCP);
+					client.attach(timeout);
+					client.killSC();
+				}
+				FileUtility.waitNotExistsOrUnlocked(scProcess.getPidFileName(), timeout);
 			}
 			testLogger.info(scProcess.getProcessName() + " stopped");
 		} catch (Exception e) {
@@ -209,8 +213,8 @@ public class ProcessesController {
 		Map<String, ProcessCtx> proccessContexts = new HashMap<String, ProcessCtx>();
 		for (ServerDefinition srvDef : serverDefs) {
 			ProcessCtx srvProcess = this.startServer(srvDef.getServerType(), srvDef.getLog4jproperty(), srvDef.getServerName(),
-					srvDef.getServerPort(), srvDef.getScPort(), srvDef.getMaxSessions(), srvDef.getMaxConnections(),
-					srvDef.getConnectionType(), srvDef.getServiceNames(), srvDef.getTimezone(), srvDef.getNics());
+					srvDef.getServerPort(), srvDef.getScPort(), srvDef.getMaxSessions(), srvDef.getMaxConnections(), srvDef
+							.getConnectionType(), srvDef.getServiceNames(), srvDef.getTimezone(), srvDef.getNics());
 			proccessContexts.put(srvDef.getServerName(), srvProcess);
 		}
 		return proccessContexts;
@@ -327,7 +331,8 @@ public class ProcessesController {
 		proc.setProcess(srvProcess);
 		int timeout = 15;
 		try {
-			FileUtility.waitExists(pidFileNameFull, timeout);
+			FileUtility.waitExistsAndLocked(pidFileNameFull, timeout);
+			;
 			testLogger.info("Server " + serverName + " started");
 		} catch (Exception e) {
 			srvProcess.destroy();
@@ -343,8 +348,8 @@ public class ProcessesController {
 		int timeout = 15; // seconds
 		try {
 			if (FileUtility.exists(srvProcess.getPidFileName())) {
-				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, srvProcess.getSCPort(),
-						srvProcess.getConnectionType());
+				SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, srvProcess.getSCPort(), srvProcess
+						.getConnectionType());
 				clientMgmt.attach(timeout);
 				String serviceName = srvProcess.getServiceNames().split(",")[0];
 				clientMgmt.enableService(serviceName); // service might be disabled during tests
@@ -370,7 +375,7 @@ public class ProcessesController {
 					}
 				}
 				clientMgmt.detach();
-				FileUtility.waitNotExists(srvProcess.getPidFileName(), timeout);
+				FileUtility.waitNotExistsOrUnlocked(srvProcess.getPidFileName(), timeout);
 			}
 			testLogger.info("Server " + srvProcess.getProcessName() + " stopped");
 		} catch (Exception e) {
@@ -481,7 +486,7 @@ public class ProcessesController {
 		proc.setProcess(clnProcess);
 		int timeout = 15;
 		try {
-			FileUtility.waitExists(pidFileNameFull, timeout);
+			FileUtility.waitExistsAndLocked(pidFileNameFull, timeout);
 			testLogger.info("Client " + clientName + " started");
 		} catch (Exception e) {
 			clnProcess.destroy();

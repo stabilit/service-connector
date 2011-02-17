@@ -159,7 +159,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		SCMPClnExecuteCall clnExecuteCall = new SCMPClnExecuteCall(this.requester, TestConstants.sesServerName1, sessionId);
 		clnExecuteCall.setMessageInfo(TestConstants.echoCmd);
 		clnExecuteCall.setRequestBody(TestConstants.pangram);
-		clnExecuteCall.invoke(cbk, 1000);
+		clnExecuteCall.invoke(cbk, 2000);
 		SCMPMessage msg = cbk.getMessageSync(3000);
 		TestUtil.verifyError(msg, SCMPError.SESSION_NOT_FOUND, SCMPMsgType.CLN_EXECUTE);
 	}

@@ -204,9 +204,9 @@ public class APISubscribeUnsubscribeChangeTest extends
 
 	/**
 	 * Description: subscribe with mask = " "<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: passes
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test
 	public void t22_subscribeBlankMask() throws Exception {
 		publishService = client.newPublishService(TestConstants.pubServiceName1);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);

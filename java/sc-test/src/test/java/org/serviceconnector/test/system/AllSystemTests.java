@@ -24,6 +24,8 @@ import org.serviceconnector.test.system.api.cln.APICreateDeleteSessionTest;
 import org.serviceconnector.test.system.api.cln.APIExecuteAndSendTest;
 import org.serviceconnector.test.system.api.cln.APIReceivePublicationTest;
 import org.serviceconnector.test.system.api.cln.APISubscribeUnsubscribeChangeTest;
+import org.serviceconnector.test.system.api.cln.APIMultipleClientChangeSubscriptionTest;
+import org.serviceconnector.test.system.api.cln.APIMultipleClientSubscribeTest;
 import org.serviceconnector.test.system.scmp.SCMPClnChangeSubscriptionTest;
 import org.serviceconnector.test.system.scmp.SCMPClnCreateSessionTest;
 import org.serviceconnector.test.system.scmp.SCMPClnExecuteTest;
@@ -42,6 +44,8 @@ import org.serviceconnector.test.system.scmp.SCMPGroupCallTest;
 		APISubscribeUnsubscribeChangeTest.class,
 		APIReceivePublicationTest.class,
 		APIAfterAbortOrRestartPublishTest.class,
+		APIMultipleClientSubscribeTest.class,
+		APIMultipleClientChangeSubscriptionTest.class,
 
 		// SCMP session test
 		SCMPClnCreateSessionTest.class,
