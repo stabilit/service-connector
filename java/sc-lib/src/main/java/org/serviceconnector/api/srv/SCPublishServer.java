@@ -125,6 +125,7 @@ public class SCPublishServer extends SCSessionServer {
 			throw new SCMPValidatorException(SCMPError.HV_ERROR, "publish message is missing");
 		}
 		synchronized (this.scServer) {
+			this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 			// get lock on scServer - only one server is allowed to communicate over the initial connection
 			SCMPPublishCall publishCall = new SCMPPublishCall(this.requester, serviceName);
 			publishCall.setRequestBody(publishMessage.getData());
