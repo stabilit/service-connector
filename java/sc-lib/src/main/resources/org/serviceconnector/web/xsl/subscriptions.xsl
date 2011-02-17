@@ -21,6 +21,7 @@
           <tr class="sc_table_header">
             <th class="sc_table">Service</th>
             <th class="sc_table">Subscription ID</th>
+            <th class="sc_table">Subscription Mask</th>
             <th class="sc_table">IP Addresslist</th>
             <th class="sc_table">Subscription Timeout (ms)</th>
             <th class="sc_table">No Data Interval (s)</th>
@@ -75,6 +76,7 @@
 	    <xsl:param name="class"/>
         <td class="{$class}"><a class="sc_table" href="subscriptions?service={server/serviceName}"><xsl:value-of select="server/serviceName"/></a></td>
 	    <td class="{$class}"><xsl:value-of select="id"/></td>
+	    <td class="{$class}"><xsl:value-of select="subscriptionMask"/></td>
 	    <td class="{$class}"><xsl:value-of select="ipAddressList"/></td>
 	    <td class="{$class}"><xsl:value-of select="subscriptionTimeoutMillis"/></td>
 	    <td class="{$class}"><xsl:value-of select="noDataInterval"/></td>

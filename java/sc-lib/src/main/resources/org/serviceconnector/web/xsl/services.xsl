@@ -228,6 +228,7 @@
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
 	            <th class="sc_table">Subscription ID</th>
+	            <th class="sc_table">Subscription Mask</th>
 	            <th class="sc_table">IP Addresslist</th>
 	            <th class="sc_table">Subscription Timeout (ms)</th>
 	            <th class="sc_table">No Data Interval (s)</th>
@@ -255,6 +256,7 @@
 	</xsl:template>
 	<xsl:template name="subscription_row">
 	    <td class="sc_table"><xsl:value-of select="id"/></td>
+	    <td class="sc_table"><xsl:value-of select="subscriptionMask"/></td>
 	    <td class="sc_table"><xsl:value-of select="ipAddressList"/></td>
 	    <td class="sc_table"><xsl:value-of select="subscriptionTimeoutMillis"/></td>
 	    <td class="sc_table"><xsl:value-of select="noDataInterval"/></td>
