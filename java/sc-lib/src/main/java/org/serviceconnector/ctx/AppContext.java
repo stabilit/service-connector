@@ -425,7 +425,7 @@ public final class AppContext {
 	/**
 	 * dumps the entire application context.
 	 */
-	public static String dump() throws IOException {
+	public static String dump() throws Exception {
 		String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
 		Calendar cal = Calendar.getInstance();
 		Date now = cal.getTime();
@@ -439,40 +439,6 @@ public final class AppContext {
 		try {
 			// create directory if non existent
 			if (dumpDir.exists() == true || dumpDir.mkdirs()) {
-				String dumpFile = dumpDir + fs + dumpFileName;
-				BufferedWriter writer = new BufferedWriter(new FileWriter(dumpFile));
-				writer.write("dummy");
-				writer.close();
-				logger.info("SC dump created into file=" + dumpFile);
-				return dumpFileName;
-			} else {
-				logger.error("Creating SC dump file =" + dumpPath + " failed, can not create directory");
-				throw new IOException("Creating SC dump file =" + dumpPath + " failed, can not create directory");
-			}
-		} catch (IOException e) {
-			logger.error("Creating SC dump file =" + dumpPath + " failed.", e);
-			throw e;
-		}
-	}
-	
-
-	/**
-	 * dumps the entire application context.
-	 */
-	public static String dumpCache() throws Exception {
-		String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
-		Calendar cal = Calendar.getInstance();
-		Date now = cal.getTime();
-		String fs = System.getProperty("file.separator");
-		String dumpFileName = null;
-		synchronized (DUMP_FILE_SDF) { // DUMP_FILE_SDF is not thread safe
-			String dateTimeString = DUMP_FILE_SDF.format(now);
-			dumpFileName = Constants.DUMP_CACHE_FILE_NAME + dateTimeString + Constants.DUMP_CACHE_FILE_EXTENSION;
-		}
-		File dumpDir = new File(dumpPath);
-		try {
-			// create directory if non existent
-			if (dumpDir.exists() == true || dumpDir.mkdirs()) {
 				CacheManager cacheManager = AppContext.getCacheManager();
 				String dumpCacheFile = dumpDir + fs + dumpFileName;
 				FileOutputStream fos = new FileOutputStream(dumpDir + fs + dumpFileName);
@@ -481,12 +447,12 @@ public final class AppContext {
 				logger.info("SC dump created into file=" + dumpCacheFile);
 				return dumpFileName;
 			} else {
-				logger.error("Creating SC dump cache file =" + dumpPath + " failed, can not create directory");
-				throw new IOException("Creating SC dump cache file =" + dumpPath + " failed, can not create directory");
+				logger.error("Creating SC dump file =" + dumpPath + " failed, can not create directory");
+				throw new IOException("Creating SC dump file =" + dumpPath + " failed, can not create directory");
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.error("Creating SC dump file =" + dumpPath + " failed.", e);
 			throw e;
 		}
-	}	
+	}
 }

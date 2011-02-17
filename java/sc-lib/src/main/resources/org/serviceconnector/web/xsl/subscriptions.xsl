@@ -19,7 +19,7 @@
           <tr class="sc_table_header">
             <th class="sc_table">Subscription ID</th>
             <th class="sc_table">IP Addresslist</th>
-            <th class="sc_table">Subscription Timeout (s)</th>
+            <th class="sc_table">Subscription Timeout (ms)</th>
             <th class="sc_table">No Data Interval (s)</th>
             <th class="sc_table">Server</th>
           </tr>
@@ -67,7 +67,7 @@
 	    <xsl:param name="class"/>
 	    <td class="{$class}"><xsl:value-of select="id"/></td>
 	    <td class="{$class}"><xsl:value-of select="ipAddressList"/></td>
-	    <td class="{$class}"><xsl:value-of select="subscriptionTimeoutSeconds"/></td>
+	    <td class="{$class}"><xsl:value-of select="subscriptionTimeoutMillis"/></td>
 	    <td class="{$class}"><xsl:value-of select="noDataInterval"/></td>
         <td class="{$class}"><a class="sc_table" href="subscriptions?server={server/serverKey}"><xsl:value-of select="server/host"/>:<xsl:value-of select="server/port"/></a></td>
 	</xsl:template>

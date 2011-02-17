@@ -176,18 +176,6 @@ public final class Constants {
 	/** The dump file encoding */
 	public static final String DUMP_FILE_ENCODING = "ISO-8859-1";
 
-	/** File containing the SC Cache dump. Created with the console command or WEB-GUI */
-	public static final String DUMP_CACHE_FILE_NAME = "scDumpCache_";
-
-	/** The dump file name format*/
-	public static final String DUMP_CACHE_FILE_NAME_FORMAT = "yyyyMMddHHmmssSSS";
-	
-	/** The dump file extension */
-	public static final String DUMP_CACHE_FILE_EXTENSION = ".xml";
-
-	/** The dump file encoding */
-	public static final String DUMP_CACHE_FILE_ENCODING = "ISO-8859-1";
-
 	/** File containing the SC logs (zipped). Created with the console command or WEB-GUI */
 	public static final String LOGS_FILE_NAME = "scLogs_";
 

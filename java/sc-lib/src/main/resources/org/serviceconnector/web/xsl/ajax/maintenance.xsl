@@ -10,11 +10,6 @@
             <xsl:with-param name="title">SC Dump List</xsl:with-param>
           </xsl:call-template>
         </xsl:when>
-        <xsl:when test="$action = 'sc_dump_cache_list'">
-          <xsl:call-template name="scDumpList">
-            <xsl:with-param name="title">SC Dump Cache List</xsl:with-param>
-          </xsl:call-template>          
-        </xsl:when>
         <xsl:when test="$action = 'sc_property_download'">
           <xsl:call-template name="downloadPropertyFile"/>
         </xsl:when>

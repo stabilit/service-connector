@@ -245,7 +245,10 @@ public class DefaultXMLLoaderFactory {
 							Map<String, String> header = scmpMessage.getHeader();
 							for (Entry<?, ?> headerEntry : header.entrySet()) {
 								writer.writeStartElement((String) headerEntry.getKey());
-								writer.writeCData((String) headerEntry.getValue());
+								Object value = headerEntry.getValue();
+								if (value != null) {
+								   writer.writeCData(value.toString());
+								}
 								writer.writeEndElement();
 							}
 							writer.writeEndElement();  // end of header
@@ -546,7 +549,9 @@ public class DefaultXMLLoaderFactory {
 						long length = file.length();
 						writer.writeAttribute("size", String.valueOf(length));
 					}
-					writer.writeCData(sFile);
+					if (sFile != null) {
+					   writer.writeCData(sFile);
+					}
 					writer.writeEndElement();
 				}
 				writer.writeEndElement(); // close appender tag
@@ -840,11 +845,15 @@ public class DefaultXMLLoaderFactory {
 			writer.writeStartElement("web-config");
 			String scDownloadService = webConfiguration.getScDownloadService();
 			writer.writeStartElement("scDownloadService");
-			writer.writeCData(scDownloadService);
+			if (scDownloadService != null) {
+			   writer.writeCData(scDownloadService);
+			}
 			writer.writeEndElement(); // end of scDownloadService
 			String scUploadService = webConfiguration.getScUploadService();
 			writer.writeStartElement("scUploadService");
-			writer.writeCData(scUploadService);
+			if (scUploadService != null) {
+			   writer.writeCData(scUploadService);
+			}
 			writer.writeEndElement(); // end of scUploadService
 			writer.writeEndElement(); // end of web-config
 		}
@@ -1045,7 +1054,9 @@ public class DefaultXMLLoaderFactory {
 			String action = request.getParameter("action");
 			writer.writeStartElement("system");
 			writer.writeStartElement("action");
-			writer.writeCData(action);
+			if (action != null) {
+			   writer.writeCData(action);
+			}
 			writer.writeEndElement(); // action
 			try {
 				if ("gc".equals(action)) {
@@ -1088,33 +1099,6 @@ public class DefaultXMLLoaderFactory {
 					}
 					return;
 				}
-				if ("dumpCache".equals(action)) {
-					logger.debug("SC dump cache by user interface");
-					try {
-						String dumpCachePath = AppContext.dumpCache();
-						writer.writeStartElement("status");
-						writer.writeCharacters("success");
-						writer.writeEndElement();
-						writer.writeStartElement("messages");
-						writer.writeStartElement("message");
-						writer.writeCharacters("SC dump cache done.");
-						writer.writeEndElement(); // message
-						writer.writeStartElement("message");
-						writer.writeCharacters(dumpCachePath);
-						writer.writeEndElement(); // message
-						writer.writeEndElement(); // messages
-					} catch (Exception e) {
-						writer.writeStartElement("status");
-						writer.writeCharacters("failure");
-						writer.writeEndElement();
-						writer.writeStartElement("messages");
-						writer.writeStartElement("message");
-						writer.writeCharacters(e.toString());
-						writer.writeEndElement(); // message
-						writer.writeEndElement(); // messages
-					}
-					return;
-				}
 				if ("terminate".equals(action)) {
 					logger.debug("SC terminated by user interface");
 					writer.writeStartElement("status");
@@ -1127,8 +1111,8 @@ public class DefaultXMLLoaderFactory {
 					writer.writeEndElement(); // messages
 					System.exit(1);
 				}
-				if ("clearDump".equals(action)) {
-					logger.debug("clear dump by user interface");
+				if ("deleteDump".equals(action)) {
+					logger.debug("delete dump by user interface");
 					String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
 					DumpUtility.deleteAllDumpFiles(dumpPath);
 					writer.writeStartElement("status");
@@ -1136,13 +1120,13 @@ public class DefaultXMLLoaderFactory {
 					writer.writeEndElement();
 					writer.writeStartElement("messages");
 					writer.writeStartElement("message");
-					writer.writeCharacters("Dump has been cleared.");
+					writer.writeCharacters("Dump files have been deleted.");
 					writer.writeEndElement(); // message
 					writer.writeEndElement(); // messages
 					return;
 				}
-				if ("resetCache".equals(action)) {
-					logger.debug("reset cache by user interface");
+				if ("clearCache".equals(action)) {
+					logger.debug("clear cache by user interface");
 					CacheManager cacheManager = AppContext.getCacheManager();
 					cacheManager.clearAll();
 					writer.writeStartElement("status");
@@ -1444,11 +1428,6 @@ public class DefaultXMLLoaderFactory {
 				loadDumpListBody(writer, request);
 				return;
 			}			
-			if ("sc_dump_cache_list".equals(action)) {
-				loadDumpCacheListBody(writer, request);
-				return;
-			}
-
 			throw new InvalidParameterException("action parameter is invalid or unknown (action=" + action + ")");
 		}
 
@@ -1482,7 +1461,10 @@ public class DefaultXMLLoaderFactory {
 						writer.writeStartElement("files");
 						for (int i = 0; i < files.length; i++) {
 							writer.writeStartElement("file");
-							writer.writeCData(files[i]);
+							String file = files[i];
+							if (file != null) {
+							    writer.writeCData(files[i]);
+							}
 							writer.writeEndElement();
 						}
 						writer.writeEndElement();
@@ -1514,7 +1496,10 @@ public class DefaultXMLLoaderFactory {
 						for (int i = 0; i < files.length; i++) {
 							if (files[i].isFile()) {
 								writer.writeStartElement("file");
-								writer.writeCData(files[i].getName());
+								String name = files[i].getName();
+								if (name != null) {									
+								   writer.writeCData(name);
+								}
 								writer.writeEndElement(); // close file tag
 							}
 						}
@@ -1556,8 +1541,8 @@ public class DefaultXMLLoaderFactory {
 						for (int i = 0; i < files.length; i++) {
 							String fileName = files[i];
 							if (fileName.startsWith(Constants.LOGS_FILE_NAME)) {
-								writer.writeStartElement("file");
-								writer.writeCData(files[i]);
+								writer.writeStartElement("file");								
+								writer.writeCData(fileName);
 								writer.writeEndElement();
 							}
 						}
@@ -1607,46 +1592,9 @@ public class DefaultXMLLoaderFactory {
 			File[] files = DumpUtility.getDumpFiles(dumpPath);
 			writer.writeStartElement("dumplist");
 			writer.writeStartElement("path");
-			writer.writeCData(dumpPath);
-			writer.writeEndElement(); // close path tag
-			if (files != null) {
-				writer.writeStartElement("files");
-				for (int i = 0; i < files.length; i++) {
-					if (files[i].isFile()) {
-						writer.writeStartElement("file");
-						writer.writeStartElement("name");
-						writer.writeCData(files[i].getName());
-						writer.writeEndElement(); // close name tag
-						writer.writeStartElement("length");
-						writer.writeCData(String.valueOf(files[i].length()));
-						writer.writeEndElement(); // close length tag
-						writer.writeStartElement("lastModified");
-						Date lastModifiedDate = new Date(files[i].lastModified());
-						writer.writeCData(DateTimeUtility.getDateTimeAsString(lastModifiedDate));
-						writer.writeEndElement(); // close last modified tag
-						writer.writeEndElement(); // close file tag
-					}
-				}
-				writer.writeEndElement(); // close files tag
+			if (dumpPath != null) {
+			   writer.writeCData(dumpPath);
 			}
-			writer.writeEndElement(); // close dumplist tag
-
-			return;
-		}
-
-		/**
-		 * load body data for dump list action
-		 * 
-		 * @param writer
-		 * @param request
-		 * @throws Exception
-		 */
-		private void loadDumpCacheListBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
-			String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
-			File[] files = DumpUtility.getDumpCacheFiles(dumpPath);
-			writer.writeStartElement("dumplist");
-			writer.writeStartElement("path");
-			writer.writeCData(dumpPath);
 			writer.writeEndElement(); // close path tag
 			if (files != null) {
 				writer.writeStartElement("files");
@@ -1654,7 +1602,10 @@ public class DefaultXMLLoaderFactory {
 					if (files[i].isFile()) {
 						writer.writeStartElement("file");
 						writer.writeStartElement("name");
-						writer.writeCData(files[i].getName());
+						String name = files[i].getName();
+						if (name != null) {
+						   writer.writeCData(name);
+						}
 						writer.writeEndElement(); // close name tag
 						writer.writeStartElement("length");
 						writer.writeCData(String.valueOf(files[i].length()));

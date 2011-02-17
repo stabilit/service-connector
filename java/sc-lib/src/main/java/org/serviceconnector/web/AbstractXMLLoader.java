@@ -420,7 +420,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						continue;
 					}
 					if (value instanceof SubscriptionMask) {
-						writer.writeStartElement("mask");
+						writer.writeStartElement("subscriptionMask");
 						SubscriptionMask subscriptionMask = (SubscriptionMask) value;
 						writer.writeCData(subscriptionMask.getValue());
 						writer.writeEndElement();

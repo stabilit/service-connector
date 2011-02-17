@@ -11,12 +11,10 @@
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
           <tr class="sc_table_even">
             <td id="sc_dump" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="SC Dump" type="button" value="SC Dump" onclick="javascript:scDump()"></input></td> 
-            <td id="sc_dump_cache" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="SC Dump Cache" type="button" value="SC Dump Cache" onclick="javascript:scDumpCache()"></input></td> 
             <td id="sc_dump_list" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="SC Dump List" type="button" value="Show SC Dump List" onclick="javascript:maintenanceCall('sc_dump_list')"></input></td> 
-            <td id="sc_dump_cache_list" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="SC Dump Cache List" type="button" value="Show SC Cache Dump List" onclick="javascript:maintenanceCall('sc_dump_cache_list')"></input></td> 
-            <td id="sc_dump_clear" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="SC Dump" type="button" value="Clear All SC Dumps" onclick="javascript:scDumpClear('sc_dump_clear')"></input></td> 
+            <td id="sc_dump_delete" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="SC Dump" type="button" value="Delete All SC Dumps" onclick="javascript:scDumpDelete('sc_dump_delete')"></input></td> 
             <td id="sc_terminate" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="Terminate SC" type="button" value="Terminate SC" onclick="javascript:terminateSC()"></input></td> 
-            <td id="sc_cache_reset" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="Terminate SC" type="button" value="Reset Cache" onclick="javascript:resetCache()"></input></td> 
+            <td id="sc_cache_clear" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="Terminate SC" type="button" value="Clear Cache" onclick="javascript:clearCache()"></input></td> 
             <td id="sc_translet_reset" style="float:left;width:200px;"><input class="sc_form_button" style="margin:10px;" name="Terminate SC" type="button" value="Reset Translet" onclick="javascript:resetTranslet()"></input></td>
           </tr>
         </table>

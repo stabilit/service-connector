@@ -67,24 +67,12 @@ function scDump() {
 	ajaxSystem.ajaxCall('ajax/system?action=dump');	
 }
 
-function scDumpCache() {
-	var overlayDiv = document.getElementById("overlay");
-	overlayDiv.style.display = 'block';
-	var dialogBox = document.getElementById("DialogBox");
-	if (dialogBox != null) {
-       dialogBox.innerHTML = getDialogText("... Please Wait ...");
-       showLayer("DialogBox");
-       centerLayer("DialogBox", 400, 400, 0, 0);
-	}
-	ajaxSystem.ajaxCall('ajax/system?action=dumpCache');	
-}
-
-function scDumpClear() {
-	var check = window.confirm("Clear all SC dump files! Are you sure?");
+function scDumpDelete() {
+	var check = window.confirm("Delete all SC dump files! Are you sure?");
 	if (check == false) {
 		return;
     }
-	ajaxSystem.ajaxCall('ajax/system?action=clearDump');	
+	ajaxSystem.ajaxCall('ajax/system?action=deleteDump');	
 }
 
 function terminateSC() {
@@ -99,13 +87,13 @@ function terminateSC() {
 	ajaxSystem.ajaxCall('ajax/system?action=terminate');	
 }
 
-function resetCache() {
-	var check = window.confirm("Reset Cache! Are you sure?");
+function clearCache() {
+	var check = window.confirm("Clear Cache! Are you sure?");
 	if (check == false) {
 		return;
     }
-	var resetCacheDiv = document.getElementById("sc_cache_reset");
-	ajaxSystem.ajaxCall('ajax/system?action=resetCache');	
+	var clearCacheDiv = document.getElementById("sc_cache_clear");
+	ajaxSystem.ajaxCall('ajax/system?action=clearCache');	
 }
 
 function resetTranslet() {
@@ -208,7 +196,7 @@ function systemCallback() {
 	if (action == "dumpCache") {
 	    maintenanceCall("sc_dump_cache_list");
 	}
-	if (action == "clearDump") {
+	if (action == "deleteDump") {
 	    maintenanceCall("sc_dump_list");
 	}
    	setStatusSuccess();
