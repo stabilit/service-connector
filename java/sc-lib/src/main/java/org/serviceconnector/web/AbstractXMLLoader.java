@@ -23,10 +23,12 @@ import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -294,6 +296,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		// }
 		// }
 		Method[] methods = obj.getClass().getMethods();
+		Set<String> methodSet = new HashSet<String>();
 		for (Method method : methods) {
 			Class<?>[] parameterTypes = method.getParameterTypes();
 			if (method.getParameterTypes() == null) {
@@ -303,6 +306,10 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 				continue;
 			}
 			String name = method.getName();
+			if (methodSet.contains(name)) {
+				continue;
+			}
+			methodSet.add(name);
 			if (name.startsWith("get") == false && name.startsWith("is") == false) {
 				continue;
 			}
@@ -324,6 +331,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					continue;
 				}
 			}
+			
 			try {
 				Object value = null;
 				try {

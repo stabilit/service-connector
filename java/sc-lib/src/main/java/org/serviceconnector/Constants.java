@@ -261,6 +261,10 @@ public final class Constants {
 	public static final String CACHE_MAX_ELEMENTS_ON_DISK = "cache.maxElementsOnDisk";
 	public static final String CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = "cache.expirationCheckIntervalSeconds";
 
+	// file server upload values
+	public static final String DEFAULT_UPLOAD_FILE_PARAM_NAME = "filename";
+	public static final String DEFAULT_UPLOAD_SERVICE_PARAM_NAME = "servicename";
+		
 	// web default values
 	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;
 	// web property keys

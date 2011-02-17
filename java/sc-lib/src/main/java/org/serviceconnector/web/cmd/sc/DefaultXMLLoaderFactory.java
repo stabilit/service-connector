@@ -352,6 +352,16 @@ public class DefaultXMLLoaderFactory {
 					writer.writeEndElement();
 				}
 			}
+			String serviceParameter = request.getParameter("service");
+			if (serviceParameter != null) {
+				ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
+				Service service = serviceRegistry.getService(serviceParameter);
+				if (service != null) {
+					writer.writeStartElement("service");
+					this.writeBean(writer, service);
+					writer.writeEndElement();
+				}
+			}
 			SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 			writer.writeStartElement("subscriptions");
 			Subscription[] subscriptions = subscriptionRegistry.getSubscriptions();

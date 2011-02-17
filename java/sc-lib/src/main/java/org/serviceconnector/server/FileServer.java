@@ -90,7 +90,7 @@ public class FileServer extends Server {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
 			URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort()
-					+ "/" + path + session.getUploadFileScriptName() + "?filename=" + remoteFileName + "&servicename="
+					+ "/" + path + session.getUploadFileScriptName() + "?" + Constants.DEFAULT_UPLOAD_FILE_PARAM_NAME + "=" + remoteFileName + "&" + Constants.DEFAULT_UPLOAD_SERVICE_PARAM_NAME + "="
 					+ message.getServiceName());
 			httpCon = (HttpURLConnection) url.openConnection();
 			httpCon.setRequestMethod("POST");
@@ -282,9 +282,13 @@ public class FileServer extends Server {
 		URL url = new URL("http", this.getHost(), this.getPortNr(), urlPath);
 		StringBuilder sb = new StringBuilder();
 		sb.append(url.toString());
-		sb.append("?name=");
+		sb.append("?");
+		sb.append(Constants.DEFAULT_UPLOAD_FILE_PARAM_NAME);
+		sb.append("=");
 		sb.append(logsFileName);
-		sb.append("&service=");
+		sb.append("&");
+		sb.append(Constants.DEFAULT_UPLOAD_SERVICE_PARAM_NAME);
+		sb.append("=");
 		sb.append(serviceName);
 		sb.append("&mail=0");
 		uploadCurrentLogFilesUsingStream(sb.toString());
