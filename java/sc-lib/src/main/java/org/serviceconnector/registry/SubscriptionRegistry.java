@@ -16,8 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.registry;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -115,6 +117,34 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 				subscriptions[index++] = subscription;
 			}
 			return subscriptions;
+		} catch (Exception e) {
+			logger.error("getSubscriptions", e);
+		}
+		return null;
+	}
+
+	/**
+	 * Gets all subscriptions for given service name
+	 * 
+	 * @return the subscriptions
+	 */
+	public Subscription[] getSubscriptions(String serviceName) {
+		if (serviceName == null) {
+			return this.getSubscriptions();
+		}
+		try {
+			Subscription[] sa = new Subscription[0];
+			List<Subscription> subscriptionList = new ArrayList<Subscription>();
+			Set<Entry<String, Subscription>> entries = this.registryMap.entrySet();
+			for (Entry<String, Subscription> entry : entries) {
+				//String key = entry.getKey();
+				Subscription subscription = entry.getValue();
+				String subscriptionServiceName = subscription.getService().getName();
+				if (subscriptionServiceName.equals(serviceName)) {
+					subscriptionList.add(subscription);
+				}
+			}
+			return subscriptionList.toArray(sa);
 		} catch (Exception e) {
 			logger.error("getSubscriptions", e);
 		}

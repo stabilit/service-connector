@@ -3,9 +3,12 @@
     <xsl:import href="template.xsl"/>
     <xsl:variable name="body" select="/sc-web/body"/>
     <xsl:variable name="head" select="/sc-web/head"/>
+    <xsl:variable name="serviceParam" select="$head/query/param/@service"/>
+    <xsl:variable name="subscriptionParam" select="$head/query/param/@subscription"/>
+    <xsl:variable name="showSessionsParam" select="$head/query/param/@showsessions"/>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('services', 'service=<xsl:value-of select="$head/query/param/@service"/>&amp;subscription=<xsl:value-of select="$head/query/param/@subscription"/>')", 10000);      
+      setInterval("contentCall('services', 'service=<xsl:value-of select="$head/query/param/@service"/>&amp;subscription=<xsl:value-of select="$head/query/param/@subscription"/>&amp;showsessions=<xsl:value-of select="$head/query/param/@showsessions"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table max_width">
@@ -50,11 +53,18 @@
 	        </xsl:call-template>
 	     </tr>	    
 	  </xsl:if>
-      <xsl:if test="details">
-        <tr>
-          <xsl:call-template name="service_details"/>
-        </tr>
-      </xsl:if>
+	  <xsl:choose>
+	    <xsl:when test="$showSessionsParam = 'yes' and details">
+          <tr>
+            <xsl:call-template name="subscription_details"/>
+          </tr>	    
+	    </xsl:when>
+	    <xsl:when test="details">
+          <tr>
+            <xsl:call-template name="service_details"/>
+          </tr>
+	    </xsl:when>
+	  </xsl:choose>
 	</xsl:template>
 	<xsl:template name="service_row">
 	    <xsl:param name="class"/>
@@ -76,13 +86,20 @@
 	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countServers"/></xsl:call-template></td>
 	    <xsl:choose>
 	       <xsl:when test="subscriptionQueueSize &gt; 0">
-	         <td class="{$class}"><a class="sc_table" href="services?service={name}&amp;subscription=yes"><xsl:value-of select="subscriptionQueueSize"/></a>&#160;</td>
+	         <td class="{$class}"><a class="sc_table" href="services?service={name}&amp;subscription=yes"><xsl:value-of select="subscriptionQueueSize"/></a></td>
 	      </xsl:when>
 	      <xsl:otherwise>
 	         <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="subscriptionQueueSize"/></xsl:call-template></td>
 	      </xsl:otherwise>
 	    </xsl:choose>
-        <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countAllocatedSessions"/></xsl:call-template></td>
+	    <xsl:choose>
+	       <xsl:when test="countAllocatedSessions &gt; 0 and type = 'PUBLISH_SERVICE'">
+	         <td class="{$class}"><a class="sc_table" href="services?service={name}&amp;showsessions=yes"><xsl:value-of select="countAllocatedSessions"/></a></td>
+	      </xsl:when>
+	      <xsl:otherwise>
+	         <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countAllocatedSessions"/></xsl:call-template></td>
+	      </xsl:otherwise>
+	    </xsl:choose>
         <td class="{$class}">
           <xsl:choose>
             <xsl:when test="type = 'PUBLISH_SERVICE'">-</xsl:when>
@@ -105,7 +122,7 @@
 	<xsl:template match="servers">
 	    <div class="sc_table_details">
 	        <div class="sc_table_title">
-	           List of servers
+	           List of servers [<xsl:value-of select="$serviceParam"/>]
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
@@ -169,14 +186,14 @@
 	<xsl:template match="subscriptionQueue">
 	    <div class="sc_table_details">
 	        <div class="sc_table_title">
-	           Subscription Queue
+	           Messages in Subscription Queue [<xsl:value-of select="$serviceParam"/>]
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
 	            <th class="sc_table">oti</th>
 	            <th class="sc_table">msk</th>
+	            <th class="sc_table">msn</th>
 	            <th class="sc_table">bty</th>
-	            <th class="sc_table">mid</th>
 	            <th class="sc_table">mty</th>
 	          </tr>          
 	          <xsl:apply-templates select="scmpMessage"/>
@@ -198,8 +215,49 @@
 	<xsl:template name="message_row">
 	    <td class="sc_table"><xsl:value-of select="header/oti"/></td>
 	    <td class="sc_table"><xsl:value-of select="header/msk"/></td>
+	    <td class="sc_table"><xsl:value-of select="header/msn"/></td>
 	    <td class="sc_table"><xsl:value-of select="header/bty"/></td>
-	    <td class="sc_table"><xsl:value-of select="header/mid"/></td>
 	    <td class="sc_table"><xsl:value-of select="header/mty"/></td>
+	</xsl:template>$
+	<xsl:template name="subscription_details">
+	  <td colspan="7">
+	    <div class="sc_table_details">
+	        <div class="sc_table_title">
+	           Subscribed Clients  [<xsl:value-of select="$serviceParam"/>]
+	        </div>             
+	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
+	          <tr class="sc_table_header">
+	            <th class="sc_table">Subscription ID</th>
+	            <th class="sc_table">IP Addresslist</th>
+	            <th class="sc_table">Subscription Timeout (ms)</th>
+	            <th class="sc_table">No Data Interval (s)</th>
+	            <th class="sc_table">Server</th>
+	          </tr> 
+	          <xsl:if test="not(details/servers/server/sessions/subscription)">
+                <tr class="sc_table_even"><td colspan="5" class="sc_table">no subscriptions</td></tr>
+              </xsl:if>          
+              <xsl:apply-templates select="details/servers/server/sessions/subscription"/>	                   
+	        </table>
+        </div>
+       </td>
+	</xsl:template>
+	<xsl:template match="subscription">
+      <xsl:if test="position() mod 2 = 0">
+	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
+	        <xsl:call-template name="subscription_row"/>
+	     </tr>	    
+	  </xsl:if>
+	  <xsl:if test="position() mod 2 != 0">
+	     <tr class="sc_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
+	        <xsl:call-template name="subscription_row"/>
+	     </tr>	    
+	  </xsl:if>
+	</xsl:template>
+	<xsl:template name="subscription_row">
+	    <td class="sc_table"><xsl:value-of select="id"/></td>
+	    <td class="sc_table"><xsl:value-of select="ipAddressList"/></td>
+	    <td class="sc_table"><xsl:value-of select="subscriptionTimeoutMillis"/></td>
+	    <td class="sc_table"><xsl:value-of select="noDataInterval"/></td>
+        <td class="sc_table"><xsl:value-of select="server/host"/>:<xsl:value-of select="server/port"/></td>
 	</xsl:template>
 </xsl:stylesheet>

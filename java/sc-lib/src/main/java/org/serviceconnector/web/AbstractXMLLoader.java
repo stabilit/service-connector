@@ -42,6 +42,7 @@ import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.connection.ConnectionPool;
 import org.serviceconnector.net.connection.IConnection;
 import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.registry.SubscriptionQueue;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
 import org.serviceconnector.service.SubscriptionMask;
@@ -432,6 +433,14 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						SubscriptionMask subscriptionMask = (SubscriptionMask) value;
 						writer.writeCData(subscriptionMask.getValue());
 						writer.writeEndElement();
+						continue;
+					}
+					if (value instanceof SubscriptionQueue) {
+						writer.writeStartElement("subscriptionQueue");
+						SubscriptionQueue<?> subscriptionQueue = (SubscriptionQueue<?>) value;
+						this.writeBean(writer, subscriptionQueue);
+						writer.writeEndElement();
+						continue;
 					}
 					writer.writeStartElement(name);
 					writer.writeCData(value.toString());

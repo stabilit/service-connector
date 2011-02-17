@@ -209,6 +209,7 @@ public class DefaultXMLLoaderFactory {
 			ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 			writer.writeStartElement("services");
 			String serviceParameter = request.getParameter("service");
+			String showSessionsParameter = request.getParameter("showsessions");
 			Service[] services = serviceRegistry.getServices();
 			for (Service service : services) {
 				writer.writeStartElement("service");
@@ -234,7 +235,7 @@ public class DefaultXMLLoaderFactory {
 						writer.writeEndElement(); // close servers tag
 					}
 					if (service instanceof PublishService) {
-						PublishService publishService = (PublishService) service;
+ 						PublishService publishService = (PublishService) service;
 						SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService.getSubscriptionQueue();
 						writer.writeStartElement("subscriptionQueue");
 						Iterator<SCMPMessage> sqIter = subscriptionQueue.iterator();
@@ -302,6 +303,16 @@ public class DefaultXMLLoaderFactory {
 					writer.writeEndElement();
 				}
 			}
+			String serviceParameter = request.getParameter("service");
+			if (serviceParameter != null) {
+				ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
+				Service service = serviceRegistry.getService(serviceParameter);
+				if (service != null) {
+					writer.writeStartElement("service");
+					this.writeBean(writer, service);
+					writer.writeEndElement();
+				}
+			}			
 			SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 			writer.writeStartElement("sessions");
 			Session[] sessions = sessionRegistry.getSessions();
@@ -358,6 +369,13 @@ public class DefaultXMLLoaderFactory {
 				Service service = serviceRegistry.getService(serviceParameter);
 				if (service != null) {
 					writer.writeStartElement("service");
+					if (service instanceof PublishService) {
+						PublishService publishService = (PublishService) service;
+						SubscriptionQueue<SCMPMessage> subscriptionQueue = publishService.getSubscriptionQueue();
+						writer.writeStartElement("subscriptionQueueSize");
+						writer.writeCData(String.valueOf(subscriptionQueue.getSize()));
+						writer.writeEndElement();  // end of subscriptionQueueSize
+					}
 					this.writeBean(writer, service);
 					writer.writeEndElement();
 				}

@@ -5,10 +5,12 @@
         <xsl:variable name="dateTime" select="/sc-web/head/meta/@creation"/>
 	    <xsl:value-of select="substring($dateTime,0,11)"/>&#160;
 	    <xsl:value-of select="substring($dateTime,12,8)"/>
+	    <!-- 
 	    <br/>
 	    <xsl:if test="string-length($userid) &gt; 0">
 	       User [<xsl:value-of select="$userid"/>]
 	    </xsl:if>
+	    -->
 	    <br/>
 	    <br/>
 	    Service Connector provided by <a href="http://www.stabilit.ch/" class="sc_header" target="stabilit">Stabilit</a>
