@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.service.InvalidMaskLengthException;
 import org.serviceconnector.service.SubscriptionMask;
 
 public class SCMPMessageMaskTest {
@@ -70,21 +71,12 @@ public class SCMPMessageMaskTest {
 	/**
 	 * Description: Combine to masks<br>
 	 * Expectation: passes
+	 * 
+	 * @throws InvalidMaskLengthException
 	 */
 	@Test
-	public void t15_maskingTest() {
+	public void t15_maskingTest() throws InvalidMaskLengthException {
 		byte[] combinedMask = SubscriptionMask.masking(TestConstants.mask.getBytes(), TestConstants.mask1.getBytes());
 		Assert.assertEquals("Combination of mask is wrong", TestConstants.combinedMask, new String(combinedMask));
-	}
-
-	/**
-	 * Description: Add a mask to a existing subscriptionMasks<br>
-	 * Expectation: passes
-	 */
-	@Test
-	public void t16_addMaskTest() {
-		SubscriptionMask subscriptionMask = new SubscriptionMask(TestConstants.mask);
-		subscriptionMask.addMask(TestConstants.mask1);
-		Assert.assertEquals("Combination of mask is wrong", TestConstants.combinedMask, subscriptionMask.getValue());
 	}
 }

@@ -84,6 +84,25 @@ public class TestPublishClient extends TestAbstractClient {
 		service.unsubscribe();
 	}
 
+	private void p_changeSubscriptionAfter500() throws Exception {
+		// 500 message or 10 seconds
+		this.waitForMessages(500, 10000);
+		SCSubscribeMessage scSubscribeMessage = new SCSubscribeMessage();
+		scSubscribeMessage.setMask(TestConstants.noRecvMask);
+		service.changeSubscription(scSubscribeMessage);
+		// sleep 10ms - a RCP with a old message might be on the way
+		Thread.sleep(10);
+		// reset received message counter
+		TestPublishServiceMessageCallback.receivedMsg = 0;
+		Thread.sleep(1000);
+		if (TestPublishServiceMessageCallback.receivedMsg != 0) {
+			logger.error(this.clientName + " received messages " + TestPublishServiceMessageCallback.receivedMsg
+					+ " but changed subscription with " + scSubscribeMessage.getMask());
+		}
+		scSubscribeMessage.setMask(TestConstants.mask);
+		service.changeSubscription(scSubscribeMessage);
+	}
+
 	public void f_subscribeReceive10000Unsubscribe() throws Exception {
 		this.p_initAttach();
 		this.scSubscribeMessage.setMask(TestConstants.mask);
@@ -106,7 +125,16 @@ public class TestPublishClient extends TestAbstractClient {
 		this.p_detach();
 		this.p_exit();
 	}
-	
+
+	public void f_subscribeReceive500ChangeSubscriptionUnsubscribe() throws Exception {
+		this.p_initAttach();
+		this.p_subscribe();
+		this.p_changeSubscriptionAfter500();
+		this.p_unsubscribeAfter500();
+		this.p_detach();
+		this.p_exit();
+	}
+
 	public void f_subscribeReceive20_12SecUnsubscribe() throws Exception {
 		this.p_initAttach();
 		this.scSubscribeMessage.setSessionInfo(TestConstants.publishMsgWithDelayCmd);

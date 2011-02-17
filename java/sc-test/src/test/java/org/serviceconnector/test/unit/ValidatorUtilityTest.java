@@ -215,9 +215,9 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 	@Test
 	public void t40_validateStringTest() throws SCMPValidatorException {
 		// length is between 1 and 4
-		ValidatorUtility.validateStringLength(1, "abc", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
+		ValidatorUtility.validateStringLengthTrim(1, "abc", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
 		// length is between 1 and 4
-		ValidatorUtility.validateStringLength(1, "a", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
+		ValidatorUtility.validateStringLengthTrim(1, "a", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void t41_validateStringTest() throws SCMPValidatorException {
-		ValidatorUtility.validateStringLength(2, "a", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
+		ValidatorUtility.validateStringLengthTrim(2, "a", FOUR, SCMPError.HV_WRONG_SESSION_INFO);
 	}
 
 	/**
@@ -235,7 +235,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 	 */
 	@Test(expected = SCMPValidatorException.class)
 	public void t42t40_validateStringTest_validateStringTest() throws SCMPValidatorException {
-		ValidatorUtility.validateStringLength(1, "abc", 2, SCMPError.HV_WRONG_SESSION_INFO);
+		ValidatorUtility.validateStringLengthTrim(1, "abc", 2, SCMPError.HV_WRONG_SESSION_INFO);
 	}
 
 }

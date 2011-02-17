@@ -70,7 +70,7 @@ public class TestConstants {
 	public static final String echoAppError3Cmd = "echoAppError3";
 	public static final String echoAppError4Cmd = "echoAppError4";
 	public static final String largeResponseCmd = "largeResponse";
-	public static final String largeResponse10MBCmd= "largeResponse10MB";
+	public static final String largeResponse10MBCmd = "largeResponse10MB";
 	public static final String sleepCmd = "sleep";
 	public static final String cacheCmd = "cache";
 
@@ -88,6 +88,7 @@ public class TestConstants {
 	public static final String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
 	public static final String mask1 = "0000635KLMNOPQRSTVWXYZ-----------X-----------";
 	public static final String maskSrv = "0000121%%%%%%%%%%%%%%%-----------X-----------";
+	public static final String noRecvMask = "                                             ";
 	public static final String combinedMask = "0000%%%%%%%%%%%%%%%%%%-----------X-----------";
 	public static final String appErrorText = "application error text";
 	public static final int appErrorCode = 45234;
