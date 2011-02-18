@@ -32,7 +32,6 @@ import org.serviceconnector.util.TimeMillis;
 /**
  * The Class CacheManager is the overall cache control class. All cache instance were controlled
  * by this cache manager.
- * 
  * The cache manager starts an internal thread controlling any cache entries for expiration or any
  * other state problems.
  */
@@ -83,7 +82,7 @@ public class CacheManager {
 			Service service = services[i];
 			String serviceName = service.getName();
 			ServiceType serviceType = service.getType();
-			if (serviceType == ServiceType.SESSION_SERVICE) {
+			if (serviceType == ServiceType.SESSION_SERVICE || serviceType == ServiceType.CASCADED_SESSION_SERVICE) {
 				Cache cache = new Cache(this, serviceName);
 				Statistics.getInstance().incrementCachedFiles(1);
 				this.cacheMap.put(serviceName, cache);
@@ -107,7 +106,7 @@ public class CacheManager {
 	public void clearAll() {
 		CacheImplFactory.clearAll();
 	}
-	
+
 	public void dumpAll(OutputStream os) throws Exception {
 		XMLCacheDump cacheDump = new XMLCacheDump(os);
 		cacheDump.dumpAll(this);
@@ -194,7 +193,6 @@ public class CacheManager {
 
 	/**
 	 * The Class ExpirationTimeoutThread.
-	 * 
 	 * This class control within a thread any cache instance for expiration or other state failures.
 	 */
 	private class ExpirationTimeoutRun implements Runnable {
@@ -230,7 +228,6 @@ public class CacheManager {
 		/**
 		 * cache expiration thread run method, checks withing given interval if any cache elements were expired and removes them
 		 * from cache.
-		 * 
 		 */
 		@Override
 		public void run() {

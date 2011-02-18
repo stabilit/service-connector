@@ -23,10 +23,10 @@ package org.serviceconnector.api.cln;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.SynchronousCallback;
 
 /**

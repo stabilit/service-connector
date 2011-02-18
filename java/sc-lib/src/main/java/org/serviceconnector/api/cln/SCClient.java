@@ -20,6 +20,7 @@ import java.security.InvalidParameterException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.call.SCMPAttachCall;
 import org.serviceconnector.call.SCMPDetachCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
@@ -30,7 +31,6 @@ import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**

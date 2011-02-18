@@ -16,28 +16,40 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.net.res;
 
-import org.serviceconnector.scmp.HasFaultResponseException;
-import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPMessage;
 
 /**
- * The Class SCMPFrameDecoderException. Decoding SCMP frame fails.
- * 
- * @author JTraber
+ * The Interface IResponse abstracts response.
  */
-public class SCMPFrameDecoderException extends HasFaultResponseException {
-
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -6537338790870840933L;
+public interface IResponse {
 
 	/**
-	 * Instantiates a new SCMPFrameDecoderException.
+	 * Gets the scmp.
 	 * 
-	 * @param errorCode
-	 *            the error code
+	 * @return the scmp
 	 */
-	public SCMPFrameDecoderException(SCMPError errorCode) {
-		super(errorCode);
-		this.setMessageType(SCMPMsgType.UNDEFINED);
-	}
+	public SCMPMessage getSCMP();
+
+	/**
+	 * Sets the scmp.
+	 * 
+	 * @param scmp
+	 *            the new scmp
+	 */
+	public void setSCMP(SCMPMessage scmp);
+
+	/**
+	 * Write the response.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void write() throws Exception;
+
+	/**
+	 * Checks if is response content is large.
+	 * 
+	 * @return true, if is large
+	 */
+	public boolean isLarge();
 }

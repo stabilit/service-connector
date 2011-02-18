@@ -26,7 +26,6 @@ import org.serviceconnector.web.cmd.IWebCommandValidator;
 import org.serviceconnector.web.cmd.NullWebCommandAccessible;
 import org.serviceconnector.web.cmd.NullWebCommandValidator;
 
-
 /**
  * The Class CommandAdapter. Adapter for every kind of command. Provides basic
  * functions that is used by executions of commands.

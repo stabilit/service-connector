@@ -16,9 +16,10 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.casc;
 
+import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
-import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.net.res.IResponse;
+import org.serviceconnector.scmp.ISubscriptionCallback;
 import org.serviceconnector.service.Subscription;
 
 public class CscUnsubscribeCallbackForCasc extends ClnCommandCascCallback implements ISubscriptionCallback {

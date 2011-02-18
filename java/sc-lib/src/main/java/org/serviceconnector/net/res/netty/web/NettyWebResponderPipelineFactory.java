@@ -23,6 +23,7 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
+import org.jboss.netty.handler.logging.LoggingHandler;
 import org.serviceconnector.Constants;
 
 
@@ -41,6 +42,8 @@ public class NettyWebResponderPipelineFactory implements ChannelPipelineFactory 
 		pipeline.addLast("encoder", new HttpResponseEncoder());
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
+		// logging handler
+		pipeline.addLast("logger", new LoggingHandler());
 		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyWebResponderRequestHandler());
 		return pipeline;

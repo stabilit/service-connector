@@ -9,9 +9,9 @@ import org.serviceconnector.cache.CacheLoadedException;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.CacheLogger;
+import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
-import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 

@@ -20,10 +20,10 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.sc.ClnUnsubscribeCommandCallback;
+import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
-import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;

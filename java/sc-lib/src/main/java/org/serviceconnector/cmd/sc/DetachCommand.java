@@ -18,9 +18,9 @@ package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
-import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 

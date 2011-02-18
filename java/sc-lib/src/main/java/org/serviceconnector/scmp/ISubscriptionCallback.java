@@ -1,7 +1,6 @@
-package org.serviceconnector.cmd.casc;
+package org.serviceconnector.scmp;
 
-import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.ISCMPMessageCallback;
+import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.service.Subscription;
 
 public interface ISubscriptionCallback extends ISCMPMessageCallback {

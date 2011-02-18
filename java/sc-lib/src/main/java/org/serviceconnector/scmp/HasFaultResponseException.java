@@ -17,6 +17,8 @@
 package org.serviceconnector.scmp;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.net.req.IRequest;
+import org.serviceconnector.net.res.IResponse;
 
 /**
  * The Class HasFaultResponseException. To inherit for exception classes which save specific information for the response. Used to

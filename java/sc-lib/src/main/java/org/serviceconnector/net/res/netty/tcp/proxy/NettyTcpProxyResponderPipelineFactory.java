@@ -21,6 +21,7 @@ import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
+import org.jboss.netty.handler.logging.LoggingHandler;
 
 public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFactory {
 
@@ -41,6 +42,8 @@ public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFac
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
+		// logging handler
+		pipeline.addLast("logger", new LoggingHandler());
 		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyTcpProxyResponderRequestHandler(cf, remoteHost, remotePort));
 		return pipeline;

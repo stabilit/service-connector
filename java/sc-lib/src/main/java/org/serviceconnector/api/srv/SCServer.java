@@ -27,6 +27,7 @@ import javax.activity.InvalidActivityException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
@@ -36,7 +37,6 @@ import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.Responder;
 import org.serviceconnector.scmp.SCMPError;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**

@@ -14,60 +14,30 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.scmp;
+package org.serviceconnector.net.res.netty;
 
-import java.net.InetSocketAddress;
+import org.serviceconnector.scmp.HasFaultResponseException;
+import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
- * The Interface IRequest abstracts a request.
+ * The Class SCMPFrameDecoderException. Decoding SCMP frame fails.
+ * 
+ * @author JTraber
  */
-public interface IRequest {
+public class SCMPFrameDecoderException extends HasFaultResponseException {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -6537338790870840933L;
 
 	/**
-	 * Gets the message type.
+	 * Instantiates a new SCMPFrameDecoderException.
 	 * 
-	 * @return the key message type in request.
-	 * @throws Exception
-	 *             the exception
+	 * @param errorCode
+	 *            the error code
 	 */
-	public SCMPMsgType getKey() throws Exception;
-
-	/**
-	 * Gets the message.
-	 * 
-	 * @return the message
-	 * @throws Exception
-	 *             the exception
-	 */
-	public SCMPMessage getMessage();
-
-	/**
-	 * Sets the scmp message in the request.
-	 * 
-	 * @param message
-	 *            the new scmp message
-	 */
-	public void setMessage(SCMPMessage message);
-
-	/**
-	 * Gets the socket address.
-	 * 
-	 * @return the socket address
-	 */
-	public InetSocketAddress getLocalSocketAddress();
-
-	/**
-	 * Gets the remote socket address.
-	 * 
-	 * @return the remote socket address
-	 */
-	public InetSocketAddress getRemoteSocketAddress();
-
-	/**
-	 * Load content on socket to the request. Decodes network frame into an scmp.
-	 * 
-	 * @throws Exception
-	 *             the exception
-	 */
-	public void load() throws Exception;
+	public SCMPFrameDecoderException(SCMPError errorCode) {
+		super(errorCode);
+		this.setMessageType(SCMPMsgType.UNDEFINED);
+	}
 }

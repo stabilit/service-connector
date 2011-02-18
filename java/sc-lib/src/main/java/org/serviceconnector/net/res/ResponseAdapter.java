@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.scmp;
+package org.serviceconnector.net.res;
 
 import java.io.ByteArrayOutputStream;
 
@@ -24,6 +24,7 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelEvent;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.IEncoderDecoder;
+import org.serviceconnector.scmp.SCMPMessage;
 
 /**
  * The Class ResponseAdapter. Provides basic functionality for responses.

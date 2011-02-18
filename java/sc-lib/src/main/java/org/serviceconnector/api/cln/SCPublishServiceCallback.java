@@ -1,9 +1,9 @@
 package org.serviceconnector.api.cln;
 
 import org.serviceconnector.api.SCPublishMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.SCServiceException;
 
 /**
  * The Class SCPublishServiceCallback. Responsible for handling the right communication sequence for publish subscribe protocol.

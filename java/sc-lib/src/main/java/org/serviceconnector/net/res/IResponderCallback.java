@@ -21,8 +21,7 @@
  */
 package org.serviceconnector.net.res;
 
-import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
+import org.serviceconnector.net.req.IRequest;
 
 /**
  * The Interface IResponderCallback. Interface should be implemented by responders they wants to support asynchronous commands.

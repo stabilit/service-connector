@@ -9,9 +9,9 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.req.IRequest;
+import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.registry.ServerRegistry;
-import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
 

@@ -16,7 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.casc;
 
-import org.serviceconnector.scmp.IRequest;
+import org.serviceconnector.net.req.IRequest;
+import org.serviceconnector.scmp.ISubscriptionCallback;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Subscription;
 

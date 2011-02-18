@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelEvent;
 import org.serviceconnector.log.ConnectionLogger;
-import org.serviceconnector.scmp.ResponseAdapter;
+import org.serviceconnector.net.res.ResponseAdapter;
 
 /**
  * The Class NettyTcpResponse is responsible for writing a response to a ChannelBuffer. Encodes SCMP to a TCP frame. Based on JBoss

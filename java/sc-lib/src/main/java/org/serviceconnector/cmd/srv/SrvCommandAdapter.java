@@ -25,11 +25,11 @@ import org.serviceconnector.cmd.ICommand;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.IResponderCallback;
+import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.net.res.SCMPSessionCompositeRegistry;
-import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMsgType;
 

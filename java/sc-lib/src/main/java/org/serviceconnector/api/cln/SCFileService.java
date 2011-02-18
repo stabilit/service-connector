@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPFileDownloadCall;
@@ -30,7 +31,6 @@ import org.serviceconnector.net.req.SCRequester;
 import org.serviceconnector.scmp.SCMPCompositeReceiver;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
-import org.serviceconnector.service.SCServiceException;
 
 /**
  * The Class SCFileService. SCFileService is a remote interface in client API to a file service and provides communication

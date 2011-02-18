@@ -19,6 +19,7 @@ package org.serviceconnector.cmd.casc;
 import org.apache.log4j.Logger;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
+import org.serviceconnector.scmp.ISubscriptionCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Subscription;

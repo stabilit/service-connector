@@ -2,10 +2,10 @@ package org.serviceconnector.service;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
+import org.serviceconnector.net.req.IRequest;
+import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
-import org.serviceconnector.scmp.IRequest;
-import org.serviceconnector.scmp.IResponse;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;

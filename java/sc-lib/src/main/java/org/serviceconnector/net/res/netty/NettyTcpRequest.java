@@ -25,7 +25,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.IEncoderDecoder;
-import org.serviceconnector.scmp.RequestAdapter;
+import org.serviceconnector.net.req.RequestAdapter;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.Statistics;
 

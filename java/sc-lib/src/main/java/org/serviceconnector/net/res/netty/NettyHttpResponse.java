@@ -27,7 +27,7 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.serviceconnector.log.ConnectionLogger;
-import org.serviceconnector.scmp.ResponseAdapter;
+import org.serviceconnector.net.res.ResponseAdapter;
 
 /**
  * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http frame. Based on JBoss

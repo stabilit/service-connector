@@ -14,11 +14,13 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.scmp;
+package org.serviceconnector.net.req;
 
 import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
  * The Class RequestAdapter. Provides basic functionality for requests.

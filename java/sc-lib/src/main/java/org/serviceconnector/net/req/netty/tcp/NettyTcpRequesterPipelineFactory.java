@@ -20,10 +20,11 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
+import org.jboss.netty.handler.logging.LoggingHandler;
 import org.jboss.netty.util.Timer;
 import org.serviceconnector.net.connection.ConnectionContext;
 import org.serviceconnector.net.req.netty.NettyIdleHandler;
-import org.serviceconnector.net.res.SCMPBasedFrameDecoder;
+import org.serviceconnector.net.res.netty.SCMPBasedFrameDecoder;
 
 
 /**
@@ -57,6 +58,8 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 				.getIdleTimeoutSeconds()));
 		// responsible for reading until SCMP frame is complete
 		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
+		// logging handler
+		pipeline.addLast("logger", new LoggingHandler());
 		// responsible for handling response
 		pipeline.addLast("requesterResponseHandler", new NettyTcpRequesterResponseHandler());
 		return pipeline;

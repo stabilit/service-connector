@@ -14,40 +14,63 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.scmp;
+package org.serviceconnector.net.req;
+
+import java.net.InetSocketAddress;
+
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
- * The Interface IResponse abstracts response.
+ * The Interface IRequest abstracts a request.
  */
-public interface IResponse {
+public interface IRequest {
 
 	/**
-	 * Gets the scmp.
+	 * Gets the message type.
 	 * 
-	 * @return the scmp
+	 * @return the key message type in request.
+	 * @throws Exception
+	 *             the exception
 	 */
-	public SCMPMessage getSCMP();
+	public SCMPMsgType getKey() throws Exception;
 
 	/**
-	 * Sets the scmp.
+	 * Gets the message.
 	 * 
-	 * @param scmp
-	 *            the new scmp
+	 * @return the message
+	 * @throws Exception
+	 *             the exception
 	 */
-	public void setSCMP(SCMPMessage scmp);
+	public SCMPMessage getMessage();
 
 	/**
-	 * Write the response.
+	 * Sets the scmp message in the request.
+	 * 
+	 * @param message
+	 *            the new scmp message
+	 */
+	public void setMessage(SCMPMessage message);
+
+	/**
+	 * Gets the socket address.
+	 * 
+	 * @return the socket address
+	 */
+	public InetSocketAddress getLocalSocketAddress();
+
+	/**
+	 * Gets the remote socket address.
+	 * 
+	 * @return the remote socket address
+	 */
+	public InetSocketAddress getRemoteSocketAddress();
+
+	/**
+	 * Load content on socket to the request. Decodes network frame into an scmp.
 	 * 
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void write() throws Exception;
-
-	/**
-	 * Checks if is response content is large.
-	 * 
-	 * @return true, if is large
-	 */
-	public boolean isLarge();
+	public void load() throws Exception;
 }
