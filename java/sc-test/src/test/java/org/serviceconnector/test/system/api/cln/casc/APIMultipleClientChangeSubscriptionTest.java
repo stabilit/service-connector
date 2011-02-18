@@ -126,4 +126,28 @@ public class APIMultipleClientChangeSubscriptionTest extends SystemSuperTest {
 		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
 	}
 
+	/**
+	 * Description: 3 clients changeSubscription 10000<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t15_3ClientsChangeSubscription10000() throws Exception {
+		int numberOfClients = 10;
+		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
+
+		ProcessCtx clientCtx3 = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client0", TestConstants.HOST,
+				TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
+				"f_subscribeReceive10000Unsubscribe");
+		clientCtxs[0] = clientCtx3;
+		for (int i = 1; i < clientCtxs.length; i++) {
+			ProcessCtx clientCtx = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
+					TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
+					"f_10000ChangeSubscription");
+			clientCtxs[i] = clientCtx;
+		}
+		APIMultipleClientChangeSubscriptionTest.ctrl.waitForClientTermination(clientCtxs);
+		// dont't check message.log might be an EXC because of broken CRP
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+	}
+
 }

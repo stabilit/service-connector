@@ -20,10 +20,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
 public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {

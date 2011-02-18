@@ -18,10 +18,10 @@ package org.serviceconnector.test.system.api.cln.casc;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCPublishService;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
 @SuppressWarnings("unused")
@@ -187,7 +187,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
+		subMsgRequest.setSessionInfo(TestConstants.rejectCmd);
 		subMsgRequest.setNoDataIntervalSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
@@ -203,7 +203,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
 		SCSubscribeMessage subMsgResponse = null;
 		subMsgRequest.setMask(TestConstants.mask);
-		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
+		subMsgRequest.setSessionInfo(TestConstants.rejectCmd);
 		subMsgRequest.setNoDataIntervalSeconds(100);
 		msgCallback = new MsgCallback(publishService);
 		Boolean passed = false;
@@ -445,6 +445,32 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 	}
 
 	/**
+	 * Description: change subscription gets rejected from server<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t77_changeSubscriptionReject() throws Exception {
+		publishService = client.newPublishService(TestConstants.pubServiceName1);
+		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
+		subMsgRequest.setMask(TestConstants.mask);
+		subMsgRequest.setNoDataIntervalSeconds(10);
+		SCSubscribeMessage subMsgResponse = null;
+		msgCallback = new MsgCallback(publishService);
+		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
+		subMsgRequest.setMask(TestConstants.mask);
+		try {
+			subMsgRequest.setSessionInfo(TestConstants.rejectCmd);
+			subMsgRequest.setMask(TestConstants.noRecvMask);
+			subMsgResponse = publishService.changeSubscription(subMsgRequest);
+			Assert.fail("test should throw exception");
+		} catch (SCServiceException e) {
+			Assert.assertEquals("is not appErrorCode", TestConstants.appErrorCode, e.getAppErrorCode());
+			Assert.assertEquals("is not appErrorText", TestConstants.appErrorText, e.getAppErrorText());
+		}
+		publishService.unsubscribe();
+	}
+
+	/**
 	 * Description: change subscription to disabled service<br>
 	 * Expectation: passes
 	 */
@@ -496,7 +522,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 
 		subMsgRequest.setMask(TestConstants.mask1);
-		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
+		subMsgRequest.setSessionInfo(TestConstants.rejectCmd);
 		subMsgResponse = publishService.changeSubscription(subMsgRequest);
 	}
 
@@ -520,7 +546,7 @@ public class APISubscribeUnsubscribeChangeTest extends APISystemSuperPublishClie
 		Assert.assertEquals("compression is not the same", subMsgRequest.isCompressed(), subMsgResponse.isCompressed());
 
 		subMsgRequest.setMask(TestConstants.mask1);
-		subMsgRequest.setSessionInfo(TestConstants.rejectSessionCmd);
+		subMsgRequest.setSessionInfo(TestConstants.rejectCmd);
 
 		Boolean passed = false;
 		try {

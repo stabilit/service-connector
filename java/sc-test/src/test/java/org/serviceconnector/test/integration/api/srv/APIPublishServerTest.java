@@ -20,10 +20,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCPublishMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.srv.SCPublishServerCallback;
 import org.serviceconnector.api.srv.SCServer;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
 
 public class APIPublishServerTest extends APIIntegrationSuperServerTest {

@@ -134,7 +134,7 @@ public class TestSessionServer extends TestStatefulServer {
 					KillThread<SCSessionServer> kill = new KillThread<SCSessionServer>(this.scSessionServer);
 					kill.start();
 					// watch out for reject request
-				} else if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
+				} else if (sessionInfo.equals(TestConstants.rejectCmd)) {
 					response.setReject(true);
 					response.setAppErrorCode(TestConstants.appErrorCode);
 					response.setAppErrorText(TestConstants.appErrorText);

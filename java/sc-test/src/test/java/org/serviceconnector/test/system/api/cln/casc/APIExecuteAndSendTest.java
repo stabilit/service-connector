@@ -23,10 +23,10 @@ import org.junit.Test;
 import org.serviceconnector.Constants;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
@@ -449,7 +449,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
-		request.setSessionInfo(TestConstants.rejectSessionCmd);
+		request.setSessionInfo(TestConstants.rejectCmd);
 		msgCallback1 = new MsgCallback(sessionService1);
 		try {
 			response = sessionService1.createSession(request, msgCallback1);
@@ -692,7 +692,7 @@ public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage(TestConstants.pangram);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
-		request.setSessionInfo(TestConstants.rejectSessionCmd);
+		request.setSessionInfo(TestConstants.rejectCmd);
 		msgCallback1 = new MsgCallback(sessionService1);
 		try {
 			response = sessionService1.createSession(request, msgCallback1);

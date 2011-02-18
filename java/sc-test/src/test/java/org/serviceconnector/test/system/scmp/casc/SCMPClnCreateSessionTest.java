@@ -128,7 +128,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 	@Test
 	public void t20_SessionRejected() throws Exception {
 		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
-		createSessionCall.setSessionInfo(TestConstants.rejectSessionCmd);
+		createSessionCall.setSessionInfo(TestConstants.rejectCmd);
 		createSessionCall.setEchoIntervalSeconds(300);
 		TestCallback cbk = new TestCallback();
 		createSessionCall.invoke(cbk, 4000);

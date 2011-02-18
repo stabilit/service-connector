@@ -18,9 +18,9 @@ package org.serviceconnector.test.integration.api.cln;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
 public class APIEnableDisableServiceTest extends APIIntegrationSuperClientTest {

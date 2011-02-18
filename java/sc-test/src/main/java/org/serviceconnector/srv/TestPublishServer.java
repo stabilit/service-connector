@@ -150,7 +150,7 @@ public class TestPublishServer extends TestStatefulServer {
 					KillThread<SCPublishServer> kill = new KillThread<SCPublishServer>(this.scPublishServer);
 					kill.start();
 					// watch out for reject request
-				} else if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
+				} else if (sessionInfo.equals(TestConstants.rejectCmd)) {
 					response.setReject(true);
 					response.setAppErrorCode(TestConstants.appErrorCode);
 					response.setAppErrorText(TestConstants.appErrorText);
@@ -182,7 +182,7 @@ public class TestPublishServer extends TestStatefulServer {
 			String sessionInfo = request.getSessionInfo();
 			if (sessionInfo != null) {
 				// watch out for reject request
-				if (sessionInfo.equals(TestConstants.rejectSessionCmd)) {
+				if (sessionInfo.equals(TestConstants.rejectCmd)) {
 					response.setReject(true);
 					response.setAppErrorCode(TestConstants.appErrorCode);
 					response.setAppErrorText(TestConstants.appErrorText);

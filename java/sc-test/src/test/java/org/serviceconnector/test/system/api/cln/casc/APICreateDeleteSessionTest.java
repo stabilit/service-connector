@@ -20,9 +20,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
@@ -218,7 +218,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		SCMessage request = new SCMessage();
 		SCMessage response = new SCMessage();
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
-		request.setSessionInfo(TestConstants.rejectSessionCmd);
+		request.setSessionInfo(TestConstants.rejectCmd);
 		Boolean passed = false;
 		try {
 			msgCallback1 = new MsgCallback(sessionService1);
@@ -243,7 +243,7 @@ public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest 
 		request.setCompressed(false);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
-		request.setSessionInfo(TestConstants.rejectSessionCmd);
+		request.setSessionInfo(TestConstants.rejectCmd);
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
 	}

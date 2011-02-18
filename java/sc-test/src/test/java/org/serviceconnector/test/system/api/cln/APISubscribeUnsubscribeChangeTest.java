@@ -20,9 +20,9 @@ import java.security.InvalidParameterException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.cmd.SCMPValidatorException;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
 @SuppressWarnings("unused")

@@ -33,6 +33,7 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestPublishServiceMessageCallback;
 import org.serviceconnector.TestSessionServiceMessageCallback;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCMgmtClient;
@@ -40,7 +41,6 @@ import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.log.Loggers;
 import org.serviceconnector.net.ConnectionType;
-import org.serviceconnector.service.SCServiceException;
 import org.serviceconnector.util.FileUtility;
 
 public class ProcessesController {
@@ -487,7 +487,7 @@ public class ProcessesController {
 		int timeout = 15;
 		try {
 			FileUtility.waitExistsAndLocked(pidFileNameFull, timeout);
-			testLogger.info("Client " + clientName + " started");
+			testLogger.info("Client " + clientName + " started doing: " + methodsToInvoke);
 		} catch (Exception e) {
 			clnProcess.destroy();
 			clnProcess.waitFor();

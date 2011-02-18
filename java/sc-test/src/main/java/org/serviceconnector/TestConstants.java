@@ -56,7 +56,7 @@ public class TestConstants {
 	public static final String filServiceLocation2 = "up-download/";
 
 	public static final String killServerCmd = "kill";
-	public static final String rejectSessionCmd = "reject";
+	public static final String rejectCmd = "reject";
 	public static final String doNothingCmd = "doNothing";
 	public static final String publishCompressedMsgCmd = "publishMessagesCompressed";
 	public static final String publishUncompressedMsgCmd = "publishMessagesUncompressed";

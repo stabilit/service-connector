@@ -73,14 +73,18 @@ public class TestPublishClient extends TestAbstractClient {
 	}
 
 	public void p_unsubscribeAfter10000() throws Exception {
-		// 10000 message or 50 seconds
-		this.waitForMessages(10000, 50000);
+		// 10000 message or 500 seconds
+		this.waitForMessages(10000, 500000);
 		service.unsubscribe();
 	}
 
 	public void p_unsubscribeAfter500() throws Exception {
 		// 500 message or 10 seconds
 		this.waitForMessages(500, 10000);
+		service.unsubscribe();
+	}
+
+	public void p_unsubscribe() throws Exception {
 		service.unsubscribe();
 	}
 
@@ -101,6 +105,19 @@ public class TestPublishClient extends TestAbstractClient {
 		}
 		scSubscribeMessage.setMask(TestConstants.mask);
 		service.changeSubscription(scSubscribeMessage);
+	}
+
+	private void p_changeSubscription10000() throws Exception {
+		SCSubscribeMessage scSubscribeMessage = new SCSubscribeMessage();
+
+		for (int i = 0; i < 10000; i++) {
+			if (i % 2 == 0) {
+				scSubscribeMessage.setMask(TestConstants.noRecvMask);
+			} else {
+				scSubscribeMessage.setMask(TestConstants.mask1);
+			}
+			service.changeSubscription(scSubscribeMessage);
+		}
 	}
 
 	public void f_subscribeReceive10000Unsubscribe() throws Exception {
@@ -131,6 +148,15 @@ public class TestPublishClient extends TestAbstractClient {
 		this.p_subscribe();
 		this.p_changeSubscriptionAfter500();
 		this.p_unsubscribeAfter500();
+		this.p_detach();
+		this.p_exit();
+	}
+
+	public void f_10000ChangeSubscription() throws Exception {
+		this.p_initAttach();
+		this.p_subscribe();
+		this.p_changeSubscription10000();
+		this.p_unsubscribe();
 		this.p_detach();
 		this.p_exit();
 	}
