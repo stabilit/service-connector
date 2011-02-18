@@ -18,9 +18,12 @@ package org.serviceconnector.web;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.registry.Registry;
+import org.serviceconnector.web.ctx.WebContext;
 
 /**
  * The Class WebSessionRegistry.
@@ -33,10 +36,21 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 	/** The instance. */
 	private static WebSessionRegistry instance = new WebSessionRegistry();
 
+	private ScheduledThreadPoolExecutor webSessionScheduler;
+
+	/** The expiration timeout run. */
+	private WebSessionExpirationTimeoutRun webSessionExpirationTimeoutRun;
+
 	/**
 	 * Instantiates a new web session registry.
 	 */
 	private WebSessionRegistry() {
+		this.webSessionScheduler = new ScheduledThreadPoolExecutor(1);
+		int webSessionScheduleTimeoutSeconds = WebContext.getWebConfiguration().getWebSessionScheduleTimeoutSeconds();
+		int webSessionTimeoutMinutes = WebContext.getWebConfiguration().getWebSessionTimeoutMinutes();
+		this.webSessionExpirationTimeoutRun = new WebSessionExpirationTimeoutRun(webSessionTimeoutMinutes);
+		this.webSessionScheduler.scheduleAtFixedRate(this.webSessionExpirationTimeoutRun, webSessionScheduleTimeoutSeconds, webSessionScheduleTimeoutSeconds, TimeUnit.SECONDS);
+		logger.debug("start web session expiration thread using timeout (s) = " + webSessionScheduleTimeoutSeconds);
 	}
 
 	/**
@@ -68,8 +82,34 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 	 */
 	public IWebSession getSession(String sessionId) {
 		IWebSession webSession = this.get(sessionId);
+		if (webSession != null) {
+			webSession.access();
+		}
 		return webSession;
 	}
+
+	/**
+	 * Removes the expired sessions.
+	 */
+	public synchronized void removeExpiredSessions(int timeoutMinutes) {
+		Object[] sessionKeys = this.getAllSessionKeys();
+		if (sessionKeys == null) {
+			return;
+		}
+		for (Object sessionKey : sessionKeys) {			
+			IWebSession session = (IWebSession) this.get((String)sessionKey);
+			if (session.isExpired(timeoutMinutes)) {
+				this.remove((String)sessionKey);
+			}
+		}
+	}
+	
+	public Object[] getAllSessionKeys() {
+		Object[] keys = this.keySetArray();
+		return keys;
+	}
+
+
 
 	/**
 	 * The Class WebSession.
@@ -81,6 +121,12 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 
 		/** The session id. */
 		private String sessionId;
+		
+		/** The creation time stamp. */
+		private long creationTimeStamp;
+		
+		/** The last access time stamp. */
+		private long accessTimeStamp;
 
 		/**
 		 * Instantiates a new web session.
@@ -89,6 +135,8 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 			attrMap = new HashMap<String, Object>();
 			UUID uuid = UUID.randomUUID();
 			this.sessionId = uuid.toString();
+			this.creationTimeStamp = System.currentTimeMillis();
+			this.accessTimeStamp = this.creationTimeStamp;
 			logger.debug("New web session created, id = " + this.sessionId);
 		}
 
@@ -116,6 +164,55 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 		public String getSessionId() {
 			return this.sessionId;
 		}
+		
+		/** {@inheritDoc} */
+		@Override
+    	public void access() {
+	    	this.accessTimeStamp = System.currentTimeMillis();
+	    }	
 
+		@Override
+		public boolean isExpired(long timeoutMinutes) {
+			long timeoutMillis = timeoutMinutes * 1000 * 60;
+			long currentMillis = System.currentTimeMillis();
+			if (this.accessTimeStamp + timeoutMillis < currentMillis) {
+				// current time is higher than max planned session inactivity time
+				return true;
+			}
+			return false;
+		}
+	}
+
+	/**
+	 * The Class WebSessionExpirationTimeoutThread.
+	 * 
+	 * This class controls within a thread any web session instance for expiration
+	 */
+	private class WebSessionExpirationTimeoutRun implements Runnable {
+
+		/** The max session inactivity timeout minutes. */
+		private int timeoutMinutes;
+
+		/**
+		 * Instantiates a new expiration timeout thread.
+		 * 
+		 * @param timeoutMinutes
+		 *            the timeout minutes
+		 */
+		public WebSessionExpirationTimeoutRun(int timeoutMinutes) {
+			this.timeoutMinutes = timeoutMinutes;
+		}
+
+		/**
+		 * web session expiration thread run method, checks withing given interval if web session elements were expired and removes
+		 * them
+		 * from web session registry.
+		 * 
+		 */
+		@Override
+		public void run() {
+			WebSessionRegistry.this.removeExpiredSessions(this.timeoutMinutes);
+			return;
+		}
 	}
 }

@@ -55,11 +55,19 @@ public class WebConfiguration {
 	 */
 	private String scDownloadService;
 	
+	/** The web session schedule timeout seconds. Defines the interval checking for any invalid web sessions. */
+	private int webSessionScheduleTimeoutSeconds;
+	
+	/** The web session timeout minutes. Defines how long a session is valid after inactivity. */
+	private int webSessionTimeoutMinutes;
+	
 	/**
 	 * Instantiates a new SCMP cache configuration.
 	 */
 	public WebConfiguration() {
 		this.xslTransformationCacheEnabled = Constants.DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED;
+		this.webSessionScheduleTimeoutSeconds = Constants.DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS;
+		this.webSessionTimeoutMinutes = Constants.DEFAULT_WEB_SESSION_TIMEOUT_MINUTES;
 		this.scDownloadService = null;
 		this.scUploadService = null;
 		this.pageHeaderPrefix = null;
@@ -115,6 +123,24 @@ public class WebConfiguration {
 		return xslTransformationCacheEnabled;
 	}
 
+	/**
+	 * Gets the web session schedule timeout seconds.
+	 *
+	 * @return the web session schedule timeout seconds
+	 */
+	public int getWebSessionScheduleTimeoutSeconds() {
+		return webSessionScheduleTimeoutSeconds;
+	}
+	
+	/**
+	 * Gets the web session timeout minutes.
+	 *
+	 * @return the web session timeout minutes
+	 */
+	public int getWebSessionTimeoutMinutes() {
+		return webSessionTimeoutMinutes;
+	}
+	
 	/**
 	 * Gets the page header prefix.
 	 *

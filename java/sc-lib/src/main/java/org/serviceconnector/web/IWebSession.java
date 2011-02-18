@@ -18,12 +18,48 @@ package org.serviceconnector.web;
 
 public interface IWebSession {
 
+	/**
+	 * Update access timestamp
+	 */
+	public abstract void access();
+
+	/**
+	 * Checks if is expired.
+	 *
+	 * @param timeoutMinutes the timeout minutes
+	 * @return true, if is expired
+	 */
+	public boolean isExpired(long timeoutMinutes);
+	
+	/**
+	 * Gets the session id.
+	 *
+	 * @return the session id
+	 */
 	public abstract String getSessionId();
 
+	/**
+	 * Gets the attribute.
+	 *
+	 * @param key the key
+	 * @return the attribute
+	 */
 	public abstract Object getAttribute(String key);
 
+	/**
+	 * Sets the attribute.
+	 *
+	 * @param key the key
+	 * @param value the value
+	 */
 	public abstract void setAttribute(String key, Object value);
 
+	/**
+	 * Removes the attribute.
+	 *
+	 * @param key the key
+	 * @return the object
+	 */
 	public abstract Object removeAttribute(String key);
 
 }

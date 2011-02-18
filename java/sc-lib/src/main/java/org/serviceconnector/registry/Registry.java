@@ -17,6 +17,7 @@
 package org.serviceconnector.registry;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -122,7 +123,16 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 	public Set<K> keySet() {
 		return this.registryMap.keySet();
 	}
-
+	
+	/**
+	 * Key set array.
+	 *
+	 * @return the object[]
+	 */
+	public Object[] keySetArray() {
+		return this.registryMap.keySet().toArray();
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {

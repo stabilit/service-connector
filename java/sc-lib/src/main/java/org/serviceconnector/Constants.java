@@ -267,6 +267,8 @@ public final class Constants {
 		
 	// web default values
 	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;
+	public static final int DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS = 180;  // default session inactivity control schedule timeout (3 minutes)
+	public static final int DEFAULT_WEB_SESSION_TIMEOUT_MINUTES = 30;  // default session inactivty timeout 30 minutes 
 	// web property keys
 	/** XSL transformation cache enebled = transformation will be done every cycle */
 	public static final String WEB_XSL_TRANSFORMATION_CACHE_ENABLED = "web.xslTransformationCache.enabled";
