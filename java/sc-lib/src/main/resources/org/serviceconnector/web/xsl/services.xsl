@@ -101,10 +101,7 @@
 	      </xsl:otherwise>
 	    </xsl:choose>
         <td class="{$class}">
-          <xsl:choose>
-            <xsl:when test="type = 'PUBLISH_SERVICE'">-</xsl:when>
-            <xsl:otherwise><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countAvailableSessions"/></xsl:call-template></xsl:otherwise>
-          </xsl:choose>          
+          <xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countAvailableSessions"/></xsl:call-template>
         </td>
 	</xsl:template>
 	<xsl:template name="service_details">
@@ -129,7 +126,10 @@
 	            <th class="sc_table">Host</th>
 	            <th class="sc_table">Port</th>
 	            <th class="sc_table">Max Connections</th>            
-	            <th class="sc_table">Sessions</th>            
+	            <th class="sc_table">
+	               <xsl:if test="server/sessions/session">Sessions</xsl:if>
+	               <xsl:if test="server/sessions/subscription">Subscriptions</xsl:if>
+	            </th>            
 	          </tr>          
 	          <xsl:apply-templates select="server"/>
 	        </table>
@@ -164,6 +164,13 @@
 	            </table>
 	          </td>	         
 	       </xsl:when>
+	       <xsl:when test="sessions/subscription">
+	          <td class="{$class}">
+	            <table class="sc_table">
+	              <xsl:apply-templates select="sessions/subscription" mode="server"/>
+	            </table>
+	          </td>
+	       </xsl:when>	         
 	       <xsl:otherwise>
 	          <td class="{$class}">-</td>	         
 	       </xsl:otherwise>
@@ -183,18 +190,29 @@
 	     </tr>	    
 	  </xsl:if>
 	</xsl:template>
+	<xsl:template match="subscription" mode="server">
+	  <xsl:if test="position() mod 2 = 0">
+	    <tr class="sc_sub_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
+	      <td class="sc_table"><img width="20" height="20" src="rightarrow.png"/></td>
+	      <td class="sc_table"><xsl:value-of select="id"/></td>
+	    </tr>	    
+	  </xsl:if>
+	  <xsl:if test="position() mod 2 != 0">
+	     <tr class="sc_sub_table_odd" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">	    
+	      <td class="sc_table"><img width="20" height="20" src="rightarrow.png"/></td>
+	      <td class="sc_table"><xsl:value-of select="id"/></td>
+	     </tr>	    
+	  </xsl:if>
+	</xsl:template>
 	<xsl:template match="publishMessageQueue">
 	    <div class="sc_table_details">
 	        <div class="sc_table_title">
-	           Messages in Subscription Queue [<xsl:value-of select="$serviceParam"/>]
+	           Message Queue [<xsl:value-of select="$serviceParam"/>]
 	        </div>             
 	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
 	          <tr class="sc_table_header">
-	            <th class="sc_table">oti</th>
 	            <th class="sc_table">msk</th>
 	            <th class="sc_table">msn</th>
-	            <th class="sc_table">bty</th>
-	            <th class="sc_table">mty</th>
 	          </tr>          
 	          <xsl:apply-templates select="scmpMessage"/>
 	        </table>
@@ -213,11 +231,8 @@
 	  </xsl:if>
 	</xsl:template>
 	<xsl:template name="message_row">
-	    <td class="sc_table"><xsl:value-of select="header/oti"/></td>
 	    <td class="sc_table"><xsl:value-of select="header/msk"/></td>
 	    <td class="sc_table"><xsl:value-of select="header/msn"/></td>
-	    <td class="sc_table"><xsl:value-of select="header/bty"/></td>
-	    <td class="sc_table"><xsl:value-of select="header/mty"/></td>
 	</xsl:template>$
 	<xsl:template name="subscription_details">
 	  <td colspan="7">
