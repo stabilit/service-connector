@@ -96,10 +96,10 @@ public class SCPublishService extends SCService {
 			SCMessageCallback scMessageCallback) throws Exception {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive) {
-			throw new SCServiceException("already subscribed");
+			throw new SCServiceException(this.serviceName + " already subscribed.");
 		}
 		if (scSubscribeMessage == null) {
-			throw new SCServiceException("scSubscribeMessage must not be null");
+			throw new SCServiceException("Subscribe message (scSubscribeMessage) must not be null.");
 		}
 		if (scMessageCallback == null) {
 			throw new InvalidParameterException("Callback must be set.");
@@ -120,13 +120,13 @@ public class SCPublishService extends SCService {
 		try {
 			subscribeCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			throw new SCServiceException("subscribe failed", e);
+			throw new SCServiceException("Subscribe failed.", e);
 		}
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
 			// reply is fault or rejected
-			SCServiceException ex = new SCServiceException("subscribe failed");
+			SCServiceException ex = new SCServiceException("Subscribe failed.");
 			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			ex.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
@@ -176,10 +176,10 @@ public class SCPublishService extends SCService {
 			throws Exception {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive == false) {
-			throw new SCServiceException("changeSubscription not possible - not subscribed");
+			throw new SCServiceException("ChangeSubscription not possible - not subscribed.");
 		}
 		if (scSubscribeMessage == null) {
-			throw new SCServiceException("scSubscribeMessage must not be null");
+			throw new SCServiceException("Subscribe message (scSubscribeMessage) must not be null.");
 		}
 		String mask = scSubscribeMessage.getMask();
 		ValidatorUtility.validateMask(mask, SCMPError.HV_WRONG_MASK);
@@ -195,13 +195,13 @@ public class SCPublishService extends SCService {
 		try {
 			changeSubscriptionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			throw new SCServiceException("change subscription failed", e);
+			throw new SCServiceException("Change subscription failed.", e);
 		}
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault() || reply.getHeaderFlag(SCMPHeaderAttributeKey.REJECT_SESSION)) {
 			// reply is fault or rejected
-			SCServiceException ex = new SCServiceException("change subscription failed");
+			SCServiceException ex = new SCServiceException("Change subscription failed.");
 			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			ex.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
@@ -242,10 +242,10 @@ public class SCPublishService extends SCService {
 		} catch (Exception e) {
 			// inactivate the session
 			this.sessionActive = false;
-			SCServiceException ex = new SCServiceException("receive publication failed");
+			SCServiceException ex = new SCServiceException("Receive publication failed.");
 			ex.setSCErrorCode(SCMPError.BROKEN_SUBSCRIPTION.getErrorCode());
-			ex.setSCErrorText(SCMPError.BROKEN_SUBSCRIPTION.getErrorText("receive publication for service=" + this.serviceName
-					+ " failed"));
+			ex.setSCErrorText(SCMPError.BROKEN_SUBSCRIPTION.getErrorText("Receive publication for service=" + this.serviceName
+					+ " failed."));
 			this.messageCallback.receive(ex);
 			return;
 		}
@@ -316,12 +316,12 @@ public class SCPublishService extends SCService {
 			try {
 				unsubscribeCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				throw new SCServiceException("unsubscribe failed", e);
+				throw new SCServiceException("Unsubscribe failed.", e);
 			}
 			// 3. receiving reply and error handling
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				SCServiceException ex = new SCServiceException("unsubscribe failed");
+				SCServiceException ex = new SCServiceException("Unsubscribe failed.");
 				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;

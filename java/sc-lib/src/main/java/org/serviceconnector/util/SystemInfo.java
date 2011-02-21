@@ -15,6 +15,7 @@
  */
 package org.serviceconnector.util;
 
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.ThreadMXBean;
@@ -123,11 +124,10 @@ public class SystemInfo {
 
 		MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
 		memBean.getHeapMemoryUsage();
-		// TODO JAN/JOT uncomment this before kitbuild
-		// File[] roots = File.listRoots();
-		// for (int i = 0; i < roots.length; i++) {
-		// availableDiskSpace += roots[i].getFreeSpace();
-		// }
+		File[] roots = File.listRoots();
+		for (int i = 0; i < roots.length; i++) {
+			availableDiskSpace += roots[i].getFreeSpace();
+		}
 
 		try {
 			localHostId = InetAddress.getLocalHost().toString();

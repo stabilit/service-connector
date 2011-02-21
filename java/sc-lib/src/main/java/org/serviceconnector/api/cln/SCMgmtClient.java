@@ -69,7 +69,7 @@ public class SCMgmtClient extends SCClient {
 	public void disableService(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			// disableService not possible - client not attached
-			throw new SCServiceException("client not attached - disableService not possible.");
+			throw new SCServiceException("Client not attached - disableService not possible.");
 		}
 		String body = this.manageCall(operationTimeout, Constants.CC_CMD_DISABLE + Constants.EQUAL_SIGN + serviceName);
 		if (body != null) {
@@ -97,7 +97,7 @@ public class SCMgmtClient extends SCClient {
 	public void enableService(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			// enableService not possible - client not attached
-			throw new SCServiceException("client not attached - enableService not possible.");
+			throw new SCServiceException("Client not attached - enableService not possible.");
 		}
 		String body = this.manageCall(operationTimeout, Constants.CC_CMD_ENABLE + Constants.EQUAL_SIGN + serviceName);
 		if (body != null) {
@@ -126,7 +126,7 @@ public class SCMgmtClient extends SCClient {
 	 */
 	public boolean isServiceEnabled(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
-			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
+			throw new SCServiceException("Client not attached - isServiceEnabled not possible.");
 		}
 		String body = this.inspectCall(operationTimeout, Constants.CC_CMD_STATE + Constants.EQUAL_SIGN + serviceName);
 		if (Constants.CC_CMD_ENABLE.equalsIgnoreCase(body)) {
@@ -160,7 +160,7 @@ public class SCMgmtClient extends SCClient {
 	 */
 	public String getWorkload(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
-			throw new SCServiceException("client not attached - isServiceEnabled not possible.");
+			throw new SCServiceException("Client not attached - isServiceEnabled not possible.");
 		}
 		return this.inspectCall(operationTimeout, Constants.CC_CMD_SESSIONS + Constants.EQUAL_SIGN + serviceName);
 	}
@@ -191,7 +191,7 @@ public class SCMgmtClient extends SCClient {
 	 */
 	public URLParameterString inspectCache(int operationTimeout, String serviceName, String cacheId) throws SCServiceException {
 		if (this.attached == false) {
-			throw new SCServiceException("client not attached - inspectCache not possible.");
+			throw new SCServiceException("Client not attached - inspectCache not possible.");
 		}
 		URLCallString callString = new URLCallString(Constants.CC_CMD_INSPECT_CACHE, serviceName, cacheId);
 		String body = this.inspectCall(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, callString.toString());
@@ -224,7 +224,7 @@ public class SCMgmtClient extends SCClient {
 	 */
 	public void clearCache(int operationTimeout) throws SCServiceException {
 		if (this.attached == false) {
-			throw new SCServiceException("client not attached - clearCache not possible.");
+			throw new SCServiceException("Client not attached - clearCache not possible.");
 		}
 		String body = this.manageCall(operationTimeout, Constants.CC_CMD_CLEAR_CACHE);
 		if (body != null) {
@@ -251,7 +251,7 @@ public class SCMgmtClient extends SCClient {
 	 */
 	public void dump(int operationTimeout) throws SCServiceException {
 		if (this.attached == false) {
-			throw new SCServiceException("client not attached - dump not possible.");
+			throw new SCServiceException("Client not attached - dump not possible.");
 		}
 		this.manageCall(operationTimeout, Constants.CC_CMD_DUMP);
 	}
@@ -264,7 +264,7 @@ public class SCMgmtClient extends SCClient {
 	 */
 	public void killSC() throws SCServiceException {
 		if (this.attached == false) {
-			throw new SCServiceException("client not attached - killSC not possible.");
+			throw new SCServiceException("Client not attached - killSC not possible.");
 		}
 		this.manageCall(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, Constants.CC_CMD_KILL);
 		try {
@@ -300,7 +300,7 @@ public class SCMgmtClient extends SCClient {
 			inspectCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.requester.destroy();
-			throw new SCServiceException("inspect request failed", e);
+			throw new SCServiceException("Inspect request failed. ", e);
 		}
 		if (instruction.equalsIgnoreCase(Constants.CC_CMD_KILL)) {
 			// on KILL SC cannot reply a message
@@ -340,7 +340,7 @@ public class SCMgmtClient extends SCClient {
 		}
 		SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
-			SCServiceException ex = new SCServiceException("manage failed");
+			SCServiceException ex = new SCServiceException("Manage failed.");
 			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw ex;

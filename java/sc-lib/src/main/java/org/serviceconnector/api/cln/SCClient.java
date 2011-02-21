@@ -105,10 +105,10 @@ public class SCClient {
 	public synchronized void attach(int operationTimeoutSeconds) throws Exception {
 		// 1. checking preconditions and validate
 		if (this.attached) {
-			throw new SCServiceException("already attached");
+			throw new SCServiceException("SCClient already attached.");
 		}
 		if (host == null) {
-			throw new InvalidParameterException("host is missing");
+			throw new InvalidParameterException("Host is missing.");
 		}
 		ValidatorUtility.validateInt(1, this.port, Constants.MAX_PORT_NR, SCMPError.HV_WRONG_PORTNR);
 		// 2. initialize call & invoke
@@ -122,7 +122,7 @@ public class SCClient {
 				attachCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				this.requester.destroy();
-				throw new SCServiceException("attach to " + host + ":" + port + " failed", e);
+				throw new SCServiceException("Attach to " + host + ":" + port + " failed. ", e);
 			}
 			// 3. receiving reply and error handling
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
@@ -130,7 +130,7 @@ public class SCClient {
 				this.requester.destroy();
 				// release resources
 				AppContext.destroy();
-				SCServiceException ex = new SCServiceException("attach to " + host + ":" + port + " failed");
+				SCServiceException ex = new SCServiceException("Attach to " + host + ":" + port + " failed.");
 				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
@@ -181,12 +181,12 @@ public class SCClient {
 			try {
 				detachCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				throw new SCServiceException("detach client failed", e);
+				throw new SCServiceException("Detach client failed. ", e);
 			}
 			// 3. receiving reply and error handling
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				SCServiceException ex = new SCServiceException("detach client failed");
+				SCServiceException ex = new SCServiceException("Detach client failed.");
 				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
@@ -256,7 +256,7 @@ public class SCClient {
 		// validate in this case its a local needed information
 		ValidatorUtility.validateInt(0, this.keepAliveIntervalSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 		if (this.attached) {
-			throw new SCServiceException("cannot set property, client is already attached");
+			throw new SCServiceException("Can not set property, client is already attached.");
 		}
 		this.keepAliveIntervalSeconds = keepAliveIntervalSeconds;
 	}
@@ -270,10 +270,10 @@ public class SCClient {
 	 */
 	public SCFileService newFileService(String serviceName) throws Exception {
 		if (this.attached == false) {
-			throw new SCServiceException("newFileService not possible - client not attached.");
+			throw new SCServiceException("Creating a new file service not possible - client not attached.");
 		}
 		if (serviceName == null) {
-			throw new InvalidParameterException("service name must be set");
+			throw new InvalidParameterException("Service name must be set.");
 		}
 		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCFileService(this, serviceName, this.requester);
@@ -288,10 +288,10 @@ public class SCClient {
 	 */
 	public SCSessionService newSessionService(String serviceName) throws Exception {
 		if (this.attached == false) {
-			throw new SCServiceException("newSessionService not possible - client not attached.");
+			throw new SCServiceException("Creating a new session service not possible - client not attached.");
 		}
 		if (serviceName == null) {
-			throw new InvalidParameterException("service name must be set");
+			throw new InvalidParameterException("Service name must be set.");
 		}
 		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCSessionService(this, serviceName, this.requester);
@@ -306,10 +306,10 @@ public class SCClient {
 	 */
 	public SCPublishService newPublishService(String serviceName) throws Exception {
 		if (this.attached == false) {
-			throw new SCServiceException("newPublishService not possible - client not attached.");
+			throw new SCServiceException("Creating a new publish service not possible - client not attached.");
 		}
 		if (serviceName == null) {
-			throw new InvalidParameterException("service name must be set");
+			throw new InvalidParameterException("Service name must be set.");
 		}
 		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
 		return new SCPublishService(this, serviceName, this.requester);
@@ -326,7 +326,7 @@ public class SCClient {
 	 */
 	public void setMaxConnections(int maxConnections) throws Exception {
 		if (this.attached) {
-			throw new SCServiceException("cannot set property, client is already attached");
+			throw new SCServiceException("Can not set property, client is already attached.");
 		}
 		ValidatorUtility.validateInt(1, maxConnections, SCMPError.HV_WRONG_MAX_CONNECTIONS);
 		this.maxConnections = maxConnections;

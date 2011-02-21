@@ -187,11 +187,11 @@ public class SCSessionServer {
 				try {
 					registerServerCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 				} catch (Exception e) {
-					throw new SCServiceException("register server failed", e);
+					throw new SCServiceException("Register server failed. ", e);
 				}
 				SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 				if (reply.isFault()) {
-					SCServiceException ex = new SCServiceException("register server failed");
+					SCServiceException ex = new SCServiceException("Register server failed.");
 					ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 					ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 					throw ex;
@@ -232,11 +232,11 @@ public class SCSessionServer {
 			try {
 				checkRegistrationCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				throw new SCServiceException("check registration failed", e);
+				throw new SCServiceException("Check registration failed. ", e);
 			}
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				SCServiceException ex = new SCServiceException("check registration failed");
+				SCServiceException ex = new SCServiceException("Check registration failed.");
 				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
@@ -279,11 +279,11 @@ public class SCSessionServer {
 				try {
 					deRegisterServerCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 				} catch (Exception e) {
-					throw new SCServiceException("deregister server failed", e);
+					throw new SCServiceException("Deregister server failed. ", e);
 				}
 				SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 				if (reply.isFault()) {
-					SCServiceException ex = new SCServiceException("deregister server failed");
+					SCServiceException ex = new SCServiceException("Deregister server failed.");
 					ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 					ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 					throw ex;

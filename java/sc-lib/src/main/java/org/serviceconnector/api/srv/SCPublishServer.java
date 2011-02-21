@@ -88,7 +88,7 @@ public class SCPublishServer extends SCSessionServer {
 	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
 			SCPublishServerCallback scCallback) throws Exception {
 		if (scCallback == null) {
-			throw new SCMPValidatorException(SCMPError.HV_ERROR, "callback is missing");
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "Callback is missing.");
 		}
 		this.doRegister(operationTimeoutSeconds, maxSessions, maxConnections);
 		// creating srvService & adding to registry
@@ -122,7 +122,7 @@ public class SCPublishServer extends SCSessionServer {
 	 */
 	public void publish(int operationTimeoutSeconds, SCPublishMessage publishMessage) throws Exception {
 		if (publishMessage == null) {
-			throw new SCMPValidatorException(SCMPError.HV_ERROR, "publish message is missing");
+			throw new SCMPValidatorException(SCMPError.HV_ERROR, "Publish message is missing.");
 		}
 		synchronized (this.scServer) {
 			this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
@@ -135,11 +135,11 @@ public class SCPublishServer extends SCSessionServer {
 			try {
 				publishCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				throw new SCServiceException("publish failed ", e);
+				throw new SCServiceException("Publish failed. ", e);
 			}
 			SCMPMessage message = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (message.isFault()) {
-				SCServiceException ex = new SCServiceException("publish failed");
+				SCServiceException ex = new SCServiceException("Publish failed.");
 				ex.setSCErrorCode(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(message.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;

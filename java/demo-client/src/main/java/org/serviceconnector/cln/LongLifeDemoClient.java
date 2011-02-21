@@ -64,8 +64,8 @@ public class LongLifeDemoClient extends Thread {
 			// set up subscribe message
 			SCSubscribeMessage msg = new SCSubscribeMessage();
 			String mask = "0000121ABCDEFGHIJKLMNO-----------X-----------";
-			msg.setSessionInfo("subscription-info"); // optional
-			msg.setData("certificate or what so ever"); // optional
+			msg.setSessionInfo("publishMessagesWithDelay"); // optional
+			msg.setData("500000|3000"); // optional
 			msg.setMask(mask); // mandatory
 			msg.setNoDataIntervalSeconds(100); // mandatory
 			SCSubscribeMessage reply = service.subscribe(msg, cbk); // regular subscribe

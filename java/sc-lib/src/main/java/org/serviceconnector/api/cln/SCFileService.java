@@ -92,12 +92,12 @@ public class SCFileService extends SCService {
 			try {
 				uploadFileCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				throw new SCServiceException("upload file failed ", e);
+				throw new SCServiceException("Upload file failed. ", e);
 			}
 			// 3. receiving reply and error handling
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				SCServiceException ex = new SCServiceException("upload file failed");
+				SCServiceException ex = new SCServiceException("Upload file failed.");
 				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
@@ -146,11 +146,15 @@ public class SCFileService extends SCService {
 			SCServiceCallback callback = new SCServiceCallback(true);
 			SCMPFileDownloadCall downloadFileCall = new SCMPFileDownloadCall(this.requester, this.serviceName, this.sessionId);
 			downloadFileCall.setRemoteFileName(remoteFileName);
-			downloadFileCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			try {
+				downloadFileCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
+			} catch (Exception e) {
+				throw new SCServiceException("Download file failed. ", e);
+			}
 			// 3. receiving reply and error handling
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				SCServiceException ex = new SCServiceException("download file failed");
+				SCServiceException ex = new SCServiceException("Download file failed.");
 				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
@@ -196,12 +200,12 @@ public class SCFileService extends SCService {
 		try {
 			fileListCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			throw new SCServiceException("list files failed ", e);
+			throw new SCServiceException("List files failed. ", e);
 		}
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
-			SCServiceException ex = new SCServiceException("list files failed");
+			SCServiceException ex = new SCServiceException("List files failed.");
 			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw ex;
@@ -230,12 +234,12 @@ public class SCFileService extends SCService {
 		try {
 			createSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			throw new SCServiceException("create file session failed ", e);
+			throw new SCServiceException("Create file session failed. ", e);
 		}
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
-			SCServiceException ex = new SCServiceException("create file session failed");
+			SCServiceException ex = new SCServiceException("Create file session failed.");
 			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw ex;
@@ -263,12 +267,12 @@ public class SCFileService extends SCService {
 			try {
 				deleteSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				throw new SCServiceException("delete file session failed ", e);
+				throw new SCServiceException("Delete file session failed. ", e);
 			}
 			// 3. receiving reply and error handling
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				SCServiceException ex = new SCServiceException("delete file session failed");
+				SCServiceException ex = new SCServiceException("Delete file session failed.");
 				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;

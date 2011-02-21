@@ -16,7 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.cln;
 
-import java.security.InvalidParameterException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -108,13 +107,13 @@ public class SCSessionService extends SCService {
 			throws Exception {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive) {
-			throw new SCServiceException("session already created - delete session first.");
+			throw new SCServiceException("Session already created - delete session first.");
 		}
 		if (messageCallback == null) {
-			throw new SCServiceException("message callback must be set.");
+			throw new SCServiceException("Message callback must be set.");
 		}
 		if (scMessage == null) {
-			throw new SCServiceException("scMessage must be set.");
+			throw new SCServiceException("Message (scMessage) must be set.");
 		}
 		this.messageCallback = messageCallback;
 		this.requester.getSCMPMsgSequenceNr().reset();
@@ -128,7 +127,7 @@ public class SCSessionService extends SCService {
 		try {
 			createSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			throw new SCServiceException("create session failed ", e);
+			throw new SCServiceException("Create session failed. ", e);
 		}
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
@@ -183,14 +182,14 @@ public class SCSessionService extends SCService {
 	public synchronized SCMessage execute(int operationTimeoutSeconds, SCMessage scMessage) throws Exception {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive == false) {
-			throw new SCServiceException("execute not possible, no active session.");
+			throw new SCServiceException("Execute not possible, no active session.");
 		}
 		if (this.pendingRequest) {
 			// pending Request - reply still outstanding
-			throw new SCServiceException("execute not possible, there is a pending request - two pending request are not allowed.");
+			throw new SCServiceException("Execute not possible, there is a pending request - two pending request are not allowed.");
 		}
 		if (scMessage == null) {
-			throw new SCServiceException("scMessage must be set.");
+			throw new SCServiceException("Message (scMessage) must be set.");
 		}
 		// cancel session timeout even if its running already
 		this.cancelSessionTimeout(true);
@@ -206,13 +205,13 @@ public class SCSessionService extends SCService {
 			clnExecuteCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.triggerSessionTimeout();
-			throw new SCServiceException("execute request failed ", e);
+			throw new SCServiceException("Execute request failed. ", e);
 		}
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		this.triggerSessionTimeout();
 		if (reply.isFault()) {
-			SCServiceException scEx = new SCServiceException("execute failed");
+			SCServiceException scEx = new SCServiceException("Execute failed.");
 			scEx.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			scEx.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw scEx;
@@ -256,14 +255,14 @@ public class SCSessionService extends SCService {
 	public synchronized void send(int operationtTimeoutSeconds, SCMessage scMessage) throws Exception {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive == false) {
-			throw new SCServiceException("send not possible, no active session.");
+			throw new SCServiceException("Send not possible, no active session.");
 		}
 		if (this.pendingRequest) {
 			// already executed before - reply still outstanding
-			throw new SCServiceException("send not possible, there is a pending request - two pending request are not allowed.");
+			throw new SCServiceException("Send not possible, there is a pending request - two pending request are not allowed.");
 		}
 		if (scMessage == null) {
-			throw new InvalidParameterException("Message must be set.");
+			throw new SCServiceException("Message (scMessage) must be set.");
 		}
 		// cancel session timeout even if its running already
 		this.cancelSessionTimeout(true);
@@ -282,7 +281,7 @@ public class SCSessionService extends SCService {
 		} catch (Exception e) {
 			this.pendingRequest = false;
 			this.triggerSessionTimeout();
-			throw new SCServiceException("send request failed ", e);
+			throw new SCServiceException("Send request failed. ", e);
 		}
 	}
 
@@ -307,9 +306,10 @@ public class SCSessionService extends SCService {
 		} catch (Exception e) {
 			// inactivate the session
 			this.sessionActive = false;
-			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
+			SCServiceException ex = new SCServiceException("Refreshing session by echo failed.");
 			ex.setSCErrorCode(SCMPError.BROKEN_SESSION.getErrorCode());
-			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("cannot send echo message for service=" + this.serviceName));
+			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("Can not send echo message for service=" + this.serviceName
+					+ "."));
 			this.messageCallback.receive(ex);
 			return;
 		}
@@ -318,10 +318,10 @@ public class SCSessionService extends SCService {
 		if (reply.isFault()) {
 			// inactivate the session
 			this.sessionActive = false;
-			SCServiceException ex = new SCServiceException("refreshing session by echo failed");
+			SCServiceException ex = new SCServiceException("Refreshing session by echo failed.");
 			ex.setSCErrorCode(SCMPError.BROKEN_SESSION.getErrorCode());
-			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("sending echo message for service=" + this.serviceName
-					+ " failed"));
+			ex.setSCErrorText(SCMPError.BROKEN_SESSION.getErrorText("Sending echo message for service=" + this.serviceName
+					+ " failed."));
 			this.messageCallback.receive(ex);
 			return;
 		}
@@ -380,7 +380,7 @@ public class SCSessionService extends SCService {
 		if (this.pendingRequest) {
 			// pending request - reply still outstanding
 			throw new SCServiceException(
-					"delete session not possible, there is a pending request - two pending request are not allowed.");
+					"Delete session not possible, there is a pending request - two pending request are not allowed.");
 		}
 		if (scMessage != null) {
 			// message might be null for deleteSession operation
@@ -401,12 +401,12 @@ public class SCSessionService extends SCService {
 			try {
 				deleteSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				throw new SCServiceException("delete session failed ", e);
+				throw new SCServiceException("Delete session failed ", e);
 			}
 			// 3. receiving reply and error handling
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				SCServiceException ex = new SCServiceException("delete session failed");
+				SCServiceException ex = new SCServiceException("Delete session failed.");
 				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 				throw ex;
