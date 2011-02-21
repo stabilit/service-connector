@@ -9,5 +9,6 @@ rem create kit
 echo -
 cd C:\stabilit\projects\EUREX\SC\kit
 copy ..\documents\SC_0_SCMP_E.pdf doc\ /y
+rem copy ..\documents\SC_4_Operation_E.pdf doc\ /y
 "C:\Program Files\WinZip\wzzip"     -ex -rP ..\sc-bin.zip @kitbuild\kitIncludeBinList.txt -x@kitbuild\kitExcludeBinList.txt
 "C:\Program Files\WinZip\wzzip" -yp -ex -rP ..\sc-src.zip @kitbuild\kitIncludeSrcList.txt -x@kitbuild\kitExcludeSrcList.txt
