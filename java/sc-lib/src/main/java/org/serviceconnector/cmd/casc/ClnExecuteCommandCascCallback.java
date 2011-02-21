@@ -50,13 +50,21 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 		String serviceName = this.request.getMessage().getServiceName();
 		// check for cache id
 		CacheManager cacheManager = null;
-		String cacheId = reply.getCacheId();
+		String cacheId = null;
+		String sCacheId = reply.getCacheId();
+		if (sCacheId != null) {
+			// this cache id is maybe a full cache id, but the server replies only the first part
+			CacheId localCacheId = new CacheId(sCacheId);
+			cacheId = localCacheId.getCacheId();
+			reply.setCacheId(cacheId); // replace sc cache id with its server part
+		}
 		if (cacheId != null || this.requestCacheId != null) {
 			// try save reply in cache
 			cacheManager = AppContext.getCacheManager();
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
 			try {
+				CacheLogger.debug("cache casc callback, sc replied full cache id (" + sCacheId + "), composite id (" + cacheId + ")");
 				Cache scmpCache = cacheManager.getCache(serviceName);
 				if (scmpCache == null) {
 					ClnExecuteCommandCascCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
