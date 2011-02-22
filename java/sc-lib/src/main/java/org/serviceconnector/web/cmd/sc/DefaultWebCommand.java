@@ -92,15 +92,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			Cookie jsessionidCookie = request.getCookie("JSESSIONID");
 			if (jsessionidCookie != null) {
 				jsessionidCookie.setMaxAge(0);
-				response.addCookie(jsessionidCookie);
-			} else {
-				webSession = request.getSession(true);
-				webSession.setHost(request.getHost());
-				webSession.setPort(request.getPort());
-				DefaultCookie cookie = new DefaultCookie("JSESSIONID", webSession.getSessionId());
-				cookie.setPath("/");
-				response.addCookie(cookie);
-				request.setAttribute("JSESSIONID", webSession.getSessionId());
+				response.addCookie(jsessionidCookie);			
 			}
 		}
 		// load xml model as stream
@@ -108,7 +100,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		XMLDocument xmlDocument = new XMLDocument(request);
 		if (this.isLoginAction(request)) {
 			try {
-				this.webCommandAccessible.login(request);
+				this.webCommandAccessible.login(request, response);
 				response.redirect("/");
 				return;
 			} catch (LoginException e) {

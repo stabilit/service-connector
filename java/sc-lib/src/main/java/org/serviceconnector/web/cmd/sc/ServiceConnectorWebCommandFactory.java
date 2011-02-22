@@ -19,10 +19,12 @@ package org.serviceconnector.web.cmd.sc;
 import net.sf.ehcache.config.InvalidConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.jboss.netty.handler.codec.http.DefaultCookie;
 import org.serviceconnector.conf.ListenerConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.web.IWebRequest;
+import org.serviceconnector.web.IWebResponse;
 import org.serviceconnector.web.IWebSession;
 import org.serviceconnector.web.LoginException;
 import org.serviceconnector.web.WebSessionRegistry;
@@ -91,7 +93,7 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 
 		/** {@inheritDoc} */
 		@Override
-		public void login(IWebRequest request) throws Exception {
+		public void login(IWebRequest request, IWebResponse response) throws Exception {
 			String userid = (String) request.getParameter("userid");
 			String password = (String) request.getParameter("password");
 			String contextUserid = this.getAccessibleContext().getUserid();
@@ -108,11 +110,17 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 			if (password.equals(contextPassword) == false) {
 				throw new LoginException("not authorized");
 			}
-			IWebSession webSession = request.getSession(false);
+			IWebSession webSession = request.getSession(true);
 			if (webSession == null) {
 				// check if has been created before
 				throw new LoginException("internal error, no session");
 			}
+			webSession.setHost(request.getHost());
+			webSession.setPort(request.getPort());
+			DefaultCookie cookie = new DefaultCookie("JSESSIONID", webSession.getSessionId());
+			cookie.setPath("/");
+			response.addCookie(cookie);
+			request.setAttribute("JSESSIONID", webSession.getSessionId());
 			webSession.setAttribute("userid", userid);
 			return;
 		}
