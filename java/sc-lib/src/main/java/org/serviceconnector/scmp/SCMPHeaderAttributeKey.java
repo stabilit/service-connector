@@ -35,6 +35,8 @@ public enum SCMPHeaderAttributeKey {
 	CACHE_EXPIRATION_DATETIME("ced"),
 	/** The CACHE_ID. */
 	CACHE_ID("cid"),
+	/** The CACHE_PARTN_NUMBER. */
+	CACHE_PARTN_NUMBER("cpn"),
 	/** The COMPRESSION. */
 	COMPRESSION("cmp"),
 	/** The ECHO_INTERVAL. */
@@ -95,7 +97,7 @@ public enum SCMPHeaderAttributeKey {
 	/** The Constant logger. */
 	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCMPHeaderAttributeKey.class);
-	
+
 	/** The value. */
 	private String value;
 
