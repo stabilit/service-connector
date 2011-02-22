@@ -32,7 +32,6 @@ import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.APIReceivePublicationTest;
-import org.serviceconnector.test.system.scmp.SCMPClnChangeSubscriptionTest;
 
 public class APISystemSuperPublishClientTest extends SystemSuperTest {
 
@@ -59,7 +58,7 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 		srvToSC0Defs.add(srvToSC0Def);
 
 		SystemSuperTest.scDefs = sc0Defs;
-		SCMPClnChangeSubscriptionTest.srvDefs = srvToSC0Defs;
+		SystemSuperTest.srvDefs = srvToSC0Defs;
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {

@@ -34,7 +34,7 @@ import org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeCha
 public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeChangeCasc1Test {
 
 	public APISubscribeUnsubscribeChangeTest() {
-		APISystemSuperPublishClientTest.setUpServiceConnectorAndServer();
+		APISubscribeUnsubscribeChangeTest.setUpServiceConnectorAndServer();
 	}
 
 	/**
