@@ -60,7 +60,8 @@ public class CacheTest extends CacheSuperUnitTest {
 		CacheId msgCacheId = scmpCache.putMessage(scmpMessageWrite);
 		SCMPMessage scmpMessageRead = new SCMPMessage();
 		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, 1233);
-		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, msgCacheId.getFullCacheId());
+		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, msgCacheId.getCacheId());
+		scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, msgCacheId.getSequenceNr());
 		CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead.getCacheId());
 		byte[] bufferRead = (byte[]) cacheMessage.getBody();
 		String stringRead = new String(bufferRead);
@@ -165,8 +166,9 @@ public class CacheTest extends CacheSuperUnitTest {
 		for (int i = 1; i <= 11; i++) {
 			String partWrite = stringWrite + i;
 			SCMPMessage scmpMessageRead = new SCMPMessage();
-			scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id/" + i);
-			CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead.getCacheId());			
+			scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+			scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, i);
+			CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead.getFullCacheId());			
 			if (cacheMessage == null) {
 				if (i < 11) {
 					Assert.fail("cacheMessage is null but should not");
@@ -175,7 +177,7 @@ public class CacheTest extends CacheSuperUnitTest {
 				break;
 			}
 			// check if cache id is valid
-			boolean validCacheId = cacheComposite.isValidCacheId(new CacheId(scmpMessageRead.getCacheId()));
+			boolean validCacheId = cacheComposite.isValidCacheId(scmpMessageRead.getFullCacheId());
 			Assert.assertEquals(true, validCacheId);
 			byte[] bufferRead = (byte[]) cacheMessage.getBody();
 			String stringRead = new String(bufferRead);
@@ -217,8 +219,9 @@ public class CacheTest extends CacheSuperUnitTest {
 		for (int i = 1; i <= 10001; i++) {
 			String partWrite = stringWrite + i;
 			SCMPMessage scmpMessageRead = new SCMPMessage();
-			scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id/" + i);
-			CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead.getCacheId());
+			scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+			scmpMessageRead.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, i);
+			CacheMessage cacheMessage = scmpCache.getMessage(scmpMessageRead.getFullCacheId());
 			if (cacheMessage == null) {
 				if (i < 10001) {
 					Assert.fail("cacheMessage is null but should not");

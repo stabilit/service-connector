@@ -130,9 +130,8 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 							scmpCache.startLoading(reply.getCacheId(), this.requestOTI);
 							messageCacheId = scmpCache.putMessage(reply);
 						}
-						String fullCacheId = messageCacheId.getFullCacheId();
-						CacheLogger.debug("cache message put done using full cache id = " + fullCacheId);
-						reply.setCacheId(fullCacheId);
+						CacheLogger.debug("cache message put done using full cacheId = " + messageCacheId.getCacheId() + ", cachePartNr=" + messageCacheId.getSequenceNr());
+						reply.setFullCacheId(messageCacheId);
 					}
 				}
 			} catch (Exception e) {

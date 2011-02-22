@@ -223,6 +223,7 @@ public class SCSessionService extends SCService {
 		replyToClient.setCompressed(reply.getHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION));
 		replyToClient.setSessionId(this.sessionId);
 		replyToClient.setCacheId(reply.getCacheId());
+		replyToClient.setCachePartNr(reply.getCachePartNr());
 		replyToClient.setMessageInfo(reply.getHeader(SCMPHeaderAttributeKey.MSG_INFO));
 		replyToClient.setAppErrorCode(reply.getHeaderInt(SCMPHeaderAttributeKey.APP_ERROR_CODE));
 		replyToClient.setAppErrorText(reply.getHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT));

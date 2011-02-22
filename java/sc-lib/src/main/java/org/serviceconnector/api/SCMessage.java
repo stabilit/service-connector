@@ -50,6 +50,11 @@ public class SCMessage {
 	 */
 	private String cacheId;
 	/**
+	 * The cache part nr.
+	 */
+	private String cachePartNr;
+	
+	/**
 	 * The service name. The service name is an abstract name and represents the logical address of the service. In order to allow
 	 * message routing the name must be unique in scope of the entire SC network. Service names must be agreed at the application
 	 * level and are stored in the SC configuration.
@@ -84,6 +89,7 @@ public class SCMessage {
 		this.sessionId = null;
 		this.sessionInfo = null;
 		this.cacheId = null;
+		this.cachePartNr = null;
 		this.appErrorCode = Constants.EMPTY_APP_ERROR_CODE;
 		this.appErrorText = null;
 		this.reject = false;
@@ -236,6 +242,15 @@ public class SCMessage {
 	public String getCacheId() {
 		return cacheId;
 	}
+	
+	/**
+	 * Gets the cache part nr.
+	 *
+	 * @return the cache part nr
+	 */
+	public String getCachePartNr() {
+		return cachePartNr;
+	}
 
 	/**
 	 * Gets the service name.
@@ -265,6 +280,15 @@ public class SCMessage {
 	 */
 	public void setCacheId(String cacheId) {
 		this.cacheId = cacheId;
+	}
+	
+	/**
+	 * Sets the cache part nr.
+	 *
+	 * @param cachePartNr the new cache part nr
+	 */
+	public void setCachePartNr(String cachePartNr) {
+		this.cachePartNr = cachePartNr;
 	}
 
 	/**

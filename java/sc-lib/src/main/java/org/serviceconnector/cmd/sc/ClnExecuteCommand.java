@@ -96,7 +96,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 			// ignore PRQ (part messages) and accept the ending REQ message only
 			// but do not ignore any POLL (PAC) messages
 			if (reqMessage.isPollRequest() == true || reqMessage.isPart() == false) {
-				logger.info("client execute command with cache id = " + reqMessage.getCacheId());
+				logger.info("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = " + reqMessage.getCachePartNr());
 				// try to load response from cache
 				try {
 					if (tryLoadingMessageFromCache(request, response, responderCallback)) {
@@ -152,7 +152,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 			// ignore PRQ (part messages) and accept the ending REQ message only
 			// but do not ignore any POLL (PAC) messages
 			if (reqMessage.isPollRequest() == true || reqMessage.isPart() == false) {
-				logger.info("client execute command with cache id = " + reqMessage.getCacheId());
+				logger.info("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = " + reqMessage.getCachePartNr());
 				// try to load response from cache
 				try {
 					if (tryLoadingMessageFromCascCache(request, response, responderCallback)) {
@@ -221,28 +221,23 @@ public class ClnExecuteCommand extends CommandAdapter {
 	 */
 	private boolean tryLoadingMessageFromCache(IRequest request, IResponse response, IResponderCallback responderCallback)
 			throws Exception {
-		CacheLogger.debug("try loading message from cache 1");
 		SCMPMessage message = request.getMessage();
 		if (message.getCacheId() == null) {
 			CacheLogger.debug("message has no cache id, isReply = " + message.isReply() + ", isPart = " + message.isPart()
 					+ ", message = " + message.isPollRequest());
 			return false;
 		}
-		CacheLogger.debug("try loading message from cache 2");
 		String sessionId = message.getSessionId();
 		CacheManager cacheManager = AppContext.getCacheManager();
-		CacheLogger.debug("try loading message from cache 3");
 		String serviceName = message.getServiceName();
-		CacheLogger.debug("try loading message from cache 4");
 		Cache scmpCache = cacheManager.getCache(serviceName);
-		CacheLogger.debug("try loading message from cache 5");
 		if (scmpCache == null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
 					"no cache instance, service=" + message.getServiceName());
 			scmpCommandException.setMessageType(this.getKey());
 			throw scmpCommandException;
 		}
-		CacheId cacheId = new CacheId(message.getCacheId());
+		CacheId cacheId = message.getFullCacheId();
 		CacheLogger.debug("try loading message from cache, serivceName (" + serviceName + "), cacheId (" + cacheId.toString() + ")");
 		CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 		if (cacheComposite == null) {
@@ -332,7 +327,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
-				scmpReply.setCacheId(cacheId.getFullCacheId());
+				scmpReply.setFullCacheId(cacheId);
 				if (cacheMessage.isCompressed()) {
 					scmpReply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 				}
@@ -366,29 +361,23 @@ public class ClnExecuteCommand extends CommandAdapter {
 	 */
 	private boolean tryLoadingMessageFromCascCache(IRequest request, IResponse response, IResponderCallback responderCallback)
 			throws Exception {
-		CacheLogger.debug("try loading message from cache 1");
 		SCMPMessage message = request.getMessage();
 		if (message.getCacheId() == null) {
 			CacheLogger.debug("message has no cache id, isReply = " + message.isReply() + ", isPart = " + message.isPart()
 					+ ", message = " + message.isPollRequest());
 			return false;
 		}
-		CacheLogger.debug("try loading message from cache 2");
-		String sessionId = message.getSessionId();
 		CacheManager cacheManager = AppContext.getCacheManager();
-		CacheLogger.debug("try loading message from cache 3");
 		String serviceName = message.getServiceName();
-		CacheLogger.debug("try loading message from cache 4");
 		Cache scmpCache = cacheManager.getCache(serviceName);
-		CacheLogger.debug("try loading message from cache 5");
 		if (scmpCache == null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
 					"no cache instance, service=" + message.getServiceName());
 			scmpCommandException.setMessageType(this.getKey());
 			throw scmpCommandException;
 		}
-		CacheId cacheId = new CacheId(message.getCacheId());
-		CacheLogger.debug("try loading message from cache, serivceName (" + serviceName + "), cacheId (" + cacheId.toString() + ")");
+		CacheId cacheId = message.getFullCacheId();
+		CacheLogger.debug("try loading message from cache, serivceName (" + serviceName + "), cacheId (" + cacheId.getCacheId() + ")");
 		CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 		if (cacheComposite == null) {
 			// we synchronized this part and check if any other thread did start loading in the meantime
@@ -415,7 +404,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 						CacheLogger.info("cache is loading, retry later, service=" + message.getServiceName() + " cacheId="
 								+ message.getCacheId());
 						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service="
-								+ message.getServiceName() + " cacheId=" + message.getCacheId());
+								+ message.getServiceName() + " cacheId=" + message.getCacheId() +  ", cachePartNr=" + message.getCachePartNr());
 						scmpCommandException.setMessageType(this.getKey());
 						throw scmpCommandException;
 					}
@@ -456,9 +445,9 @@ public class ClnExecuteCommand extends CommandAdapter {
 						scmpCommandException.setMessageType(this.getKey());
 						throw scmpCommandException;
 					}
-					CacheLogger.error("cache has illegal state, loaded but no message, cacheId=" + message.getCacheId());
+					CacheLogger.error("cache has illegal state, loaded but no message, cacheId=" + message.getCacheId() + ", cachePartNr=" + message.getCachePartNr());
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
-							"cache has illegal state, loaded but no message, cacheId=" + message.getCacheId());
+							"cache has illegal state, loaded but no message, cacheId=" + message.getCacheId() + ", cachePartNr=" + message.getCachePartNr());
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
@@ -477,7 +466,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 					scmpCommandException.setMessageType(this.getKey());
 					throw scmpCommandException;
 				}
-				scmpReply.setCacheId(cacheId.getFullCacheId());
+				scmpReply.setFullCacheId(cacheId);
 				if (cacheMessage.isCompressed()) {
 					scmpReply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 				}
@@ -485,7 +474,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 
 				response.setSCMP(scmpReply);
 				responderCallback.responseCallback(request, response);
-				CacheLogger.debug("Sent a cache message to the client cacheId=" + cacheId);
+				CacheLogger.debug("Sent a cache message to the client cacheId=" + cacheId.getCacheId() + ", cachePartNr=" + cacheId.getSequenceNr());
 				return true; // message loaded from cache
 			}
 		}

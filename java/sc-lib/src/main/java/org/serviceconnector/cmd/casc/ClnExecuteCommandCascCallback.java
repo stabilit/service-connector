@@ -50,21 +50,14 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 		String serviceName = this.request.getMessage().getServiceName();
 		// check for cache id
 		CacheManager cacheManager = null;
-		String cacheId = null;
-		String sCacheId = reply.getCacheId();
-		if (sCacheId != null) {
-			// this cache id is maybe a full cache id, but the server replies only the first part
-			CacheId localCacheId = new CacheId(sCacheId);
-			cacheId = localCacheId.getCacheId();
-			reply.setCacheId(cacheId); // replace sc cache id with its server part
-		}
+		String cacheId = reply.getCacheId();
 		if (cacheId != null || this.requestCacheId != null) {
 			// try save reply in cache
 			cacheManager = AppContext.getCacheManager();
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
 			try {
-				CacheLogger.debug("cache casc callback, sc replied full cache id (" + sCacheId + "), composite id (" + cacheId + ")");
+				CacheLogger.debug("cache casc callback, sc replied cacheId=" + cacheId);
 				Cache scmpCache = cacheManager.getCache(serviceName);
 				if (scmpCache == null) {
 					ClnExecuteCommandCascCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
@@ -93,7 +86,7 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 								if (cacheComposite != null) {
 									scmpCache.removeComposite(this.requestCacheId);
 									CacheLogger.warn("cache composite (" + this.requestCacheId
-											+ ") removed, server did reply different cache id, cache (" + cacheId + ")");
+											+ ") removed, server did reply different cacheId, cache (" + cacheId + ")");
 								}
 							}
 						}
@@ -113,9 +106,8 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 							scmpCache.startLoading(reply.getCacheId(), this.requestOTI);
 							messageCacheId = scmpCache.putMessage(reply);
 						}
-						String fullCacheId = messageCacheId.getFullCacheId();
-						CacheLogger.debug("cache message put done using full cache id = " + fullCacheId);
-						reply.setCacheId(fullCacheId);
+						CacheLogger.debug("cache message put done using full cacheId = " + messageCacheId.getCacheId() + ", cachePartNr=" + messageCacheId.getSequenceNr());
+						reply.setFullCacheId(messageCacheId);
 					}
 				}
 			} catch (Exception e) {

@@ -24,6 +24,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.SCVersion;
+import org.serviceconnector.cache.CacheId;
 
 /**
  * Service Connector Message Protocol. Data container for one message.
@@ -107,12 +108,42 @@ public class SCMPMessage {
 	}
 
 	/**
+	 * Gets the full cache id (CacheId/PartNr)
+	 * 
+	 * @return the full cache id
+	 */
+	public CacheId getFullCacheId() {
+		String cacheId = this.getHeader(SCMPHeaderAttributeKey.CACHE_ID);
+		String cachePartNr = this.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
+		return new CacheId(cacheId, cachePartNr);
+	}
+
+	/**
+	 * Sets the full cache id.
+	 *
+	 * @param cacheId the new full cache id
+	 */
+	public void setFullCacheId(CacheId cacheId) {
+		this.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId.getCacheId());
+		this.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, cacheId.getSequenceNr());
+	}
+
+	/**
 	 * Gets the cache id.
 	 * 
 	 * @return the cache id
 	 */
 	public String getCacheId() {
 		return this.getHeader(SCMPHeaderAttributeKey.CACHE_ID);
+	}
+
+	/**
+	 * Gets the cache part nr.
+	 * 
+	 * @return the cache part number
+	 */
+	public String getCachePartNr() {
+		return this.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER);
 	}
 
 	/**
@@ -126,6 +157,19 @@ public class SCMPMessage {
 			return;
 		}
 		this.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId);
+	}
+
+	/**
+	 * Sets the cache part number.
+	 * 
+	 * @param cacheId
+	 *            the new cache part number
+	 */
+	public void setCachePartNr(String cachePartNr) {
+		if (cachePartNr == null) {
+			return;
+		}
+		this.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, cachePartNr);
 	}
 
 	/**
