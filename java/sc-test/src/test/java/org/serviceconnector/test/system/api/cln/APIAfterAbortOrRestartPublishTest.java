@@ -64,7 +64,7 @@ public class APIAfterAbortOrRestartPublishTest extends APISystemSuperPublishClie
 		cbk.setExpectedMessages(nrMessages);
 		subMsgResponse = publishService.subscribe(subMsgRequest, cbk);
 
-		ctrl.stopServerEnvironment(pubSrvCtx);
+		ctrl.stopServerEnvironment(srvCtxs);
 
 		cbk.waitForMessage(10);
 
@@ -88,8 +88,8 @@ public class APIAfterAbortOrRestartPublishTest extends APISystemSuperPublishClie
 		msgCallback.setExpectedMessages(nrMessages);
 		subMsgResponse = publishService.subscribe(subMsgRequest, msgCallback);
 
-		ctrl.stopServerEnvironment(pubSrvCtx);
-		pubSrvCtx.put(TestConstants.pubServerName1, ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+		ctrl.stopServerEnvironment(srvCtxs);
+		srvCtxs.put(TestConstants.pubServerName1, ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
 				TestConstants.PORT_SC_TCP, 100, 10, TestConstants.pubServiceName1));
 

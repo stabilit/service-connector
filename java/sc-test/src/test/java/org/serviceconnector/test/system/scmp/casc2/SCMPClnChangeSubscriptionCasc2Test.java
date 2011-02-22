@@ -50,6 +50,6 @@ public class SCMPClnChangeSubscriptionCasc2Test extends SCMPClnChangeSubscriptio
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 
 		SystemSuperTest.scDefs = scCascDefs;
-		SCMPClnChangeSubscriptionCasc2Test.srvDefs = srvToSC0CascDefs;
+		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 }

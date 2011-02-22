@@ -53,6 +53,6 @@ public class SCMPClnExecuteCasc2Test extends SCMPClnExecuteCasc1Test {
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 
 		SystemSuperTest.scDefs = scCascDefs;
-		SCMPClnExecuteCasc2Test.srvDefs = srvToSC0CascDefs;
+		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 }

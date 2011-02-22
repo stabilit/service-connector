@@ -40,7 +40,7 @@ public class APIAfterSCAbortOrRestartSessionTest extends APISystemSuperSessionCl
 		Assert.assertNotNull("the session ID is null", sessionService1.getSessionId());
 
 		// stop test server now, it cannot be stopped without SC later
-		ctrl.stopServer(sesSrvCtxs.get(TestConstants.sesServerName1));
+		ctrl.stopServer(srvCtxs.get(TestConstants.sesServerName1));
 		ctrl.stopSC(scCtxs.get(TestConstants.SC0));
 
 		msgCallback1.waitForMessage(12);

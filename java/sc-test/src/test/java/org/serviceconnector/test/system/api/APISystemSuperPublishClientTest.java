@@ -16,8 +16,6 @@
 package org.serviceconnector.test.system.api;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import org.junit.After;
@@ -28,9 +26,7 @@ import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCMessageCallback;
 import org.serviceconnector.api.cln.SCPublishService;
-import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ServerDefinition;
-import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.APIReceivePublicationTest;
@@ -39,9 +35,7 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 
 	protected SCClient client;
 	protected SCPublishService publishService = null;
-	protected static Map<String, ProcessCtx> pubSrvCtx;
 	protected MsgCallback msgCallback = null;
-	protected static List<ServerDefinition> srvDefs;
 
 	public APISystemSuperPublishClientTest() {
 		APISystemSuperPublishClientTest.srvDefs = new ArrayList<ServerDefinition>();
@@ -54,7 +48,6 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		pubSrvCtx = ctrl.startServerEnvironment(srvDefs);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
@@ -71,50 +64,7 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 		} catch (Exception e) {
 		}
 		client = null;
-		try {
-			ctrl.stopServerEnvironment(pubSrvCtx);
-		} catch (Exception e) {
-		}
-		pubSrvCtx = null;
 		super.afterOneTest();
-	}
-
-	public static void setUpServiceConnectorAndServer() {
-		// SC definitions
-		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
-				TestConstants.log4jSC0Properties);
-		sc0Defs.add(sc0Def);
-
-		// server definitions
-		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 100, 10, TestConstants.pubServiceName1);
-		srvToSC0Defs.add(srvToSC0Def);
-
-		SystemSuperTest.scDefs = sc0Defs;
-		APISystemSuperPublishClientTest.srvDefs = srvToSC0Defs;
-	}
-
-	public static void setUp1CascadedServiceConnectorAndServer() {
-		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
-				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
-		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
-		scCascDefs.add(sc0CascDef);
-		scCascDefs.add(sc1CascDef);
-
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 100, 10, TestConstants.pubServiceName1);
-		srvToSC0CascDefs.add(srvToSC0CascDef);
-
-		SystemSuperTest.scDefs = scCascDefs;
-		APISystemSuperPublishClientTest.srvDefs = srvToSC0CascDefs;
 	}
 
 	protected class MsgCallback extends SCMessageCallback {

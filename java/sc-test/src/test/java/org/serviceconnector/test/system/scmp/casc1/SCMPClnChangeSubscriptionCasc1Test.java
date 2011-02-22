@@ -18,7 +18,6 @@ package org.serviceconnector.test.system.scmp.casc1;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -33,7 +32,6 @@ import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
 import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
-import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.ctx.AppContext;
@@ -46,8 +44,6 @@ import org.serviceconnector.test.system.SystemSuperTest;
 public class SCMPClnChangeSubscriptionCasc1Test extends SystemSuperTest {
 
 	protected SCRequester requester;
-	protected static Map<String, ProcessCtx> pubSrvCtx;
-	protected static List<ServerDefinition> srvDefs;
 
 	public SCMPClnChangeSubscriptionCasc1Test() {
 		SCMPClnChangeSubscriptionCasc1Test.setUp1CascadedServiceConnectorAndServer();
@@ -69,13 +65,12 @@ public class SCMPClnChangeSubscriptionCasc1Test extends SystemSuperTest {
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 
 		SystemSuperTest.scDefs = scCascDefs;
-		SCMPClnChangeSubscriptionCasc1Test.srvDefs = srvToSC0CascDefs;
+		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		pubSrvCtx = ctrl.startServerEnvironment(SCMPClnChangeSubscriptionCasc1Test.srvDefs);
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
 				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
 		AppContext.init();
@@ -88,11 +83,6 @@ public class SCMPClnChangeSubscriptionCasc1Test extends SystemSuperTest {
 		} catch (Exception e) {
 		}
 		this.requester = null;
-		try {
-			ctrl.stopServerEnvironment(pubSrvCtx);
-		} catch (Exception e) {
-		}
-		pubSrvCtx = null;
 		super.afterOneTest();
 	}
 

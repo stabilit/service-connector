@@ -44,7 +44,7 @@ public class SystemSuperTest {
 	protected static List<ServiceConnectorDefinition> scDefs;
 
 	protected static List<ServerDefinition> srvDefs;
-	protected static Map<String, ProcessCtx> sesSrvCtxs;
+	protected static Map<String, ProcessCtx> srvCtxs;
 
 	public SystemSuperTest() {
 		SystemSuperTest.srvDefs = new ArrayList<ServerDefinition>();
@@ -71,16 +71,16 @@ public class SystemSuperTest {
 		testLogger.info(">> " + name.getMethodName() + " <<");
 		threadCount = Thread.activeCount();
 		scCtxs = ctrl.startSCEnvironment(scDefs);
-		sesSrvCtxs = ctrl.startServerEnvironment(srvDefs);
+		srvCtxs = ctrl.startServerEnvironment(srvDefs);
 	}
 
 	@After
 	public void afterOneTest() throws Exception {
 		try {
-			ctrl.stopServerEnvironment(sesSrvCtxs);
+			ctrl.stopServerEnvironment(srvCtxs);
 		} catch (Exception e) {
 		}
-		sesSrvCtxs = null;
+		srvCtxs = null;
 		try {
 			ctrl.stopSCEnvironment(scCtxs);
 		} catch (Exception e) {

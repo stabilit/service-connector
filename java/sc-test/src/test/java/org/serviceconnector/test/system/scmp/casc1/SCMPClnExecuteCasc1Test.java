@@ -64,7 +64,6 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		sesSrvCtxs = ctrl.startServerEnvironment(SCMPClnExecuteCasc1Test.srvDefs);
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
 				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
 		AppContext.init();
@@ -87,7 +86,7 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 
 		SystemSuperTest.scDefs = scCascDefs;
-		SCMPClnExecuteCasc1Test.srvDefs = srvToSC0CascDefs;
+		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
 	@After
@@ -99,10 +98,6 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		} catch (Exception e) {
 		}
 		this.requester = null;
-		try {
-			ctrl.stopServerEnvironment(sesSrvCtxs);
-		} catch (Exception e) {
-		}
 		super.afterOneTest();
 	}
 

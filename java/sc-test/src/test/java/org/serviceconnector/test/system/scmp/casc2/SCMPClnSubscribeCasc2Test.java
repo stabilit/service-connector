@@ -50,6 +50,6 @@ public class SCMPClnSubscribeCasc2Test extends SCMPClnSubscribeCasc1Test {
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 
 		SystemSuperTest.scDefs = scCascDefs;
-		SCMPClnSubscribeCasc2Test.srvDefs = srvToSC0CascDefs;
+		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 }

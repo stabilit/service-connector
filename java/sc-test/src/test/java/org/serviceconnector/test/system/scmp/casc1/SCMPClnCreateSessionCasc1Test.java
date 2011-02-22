@@ -16,10 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.test.system.scmp.casc1;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -32,9 +28,6 @@ import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ServerDefinition;
-import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.SCRequester;
@@ -50,8 +43,6 @@ import org.serviceconnector.test.system.SystemSuperTest;
 public class SCMPClnCreateSessionCasc1Test extends SystemSuperTest {
 
 	protected SCRequester requester;
-	protected static List<ServerDefinition> srvDefs;
-	protected static Map<String, ProcessCtx> sesSrvCtxs;
 
 	public SCMPClnCreateSessionCasc1Test() {
 		SCMPClnCreateSessionCasc1Test.setUp1CascadedServiceConnectorAndServer();
@@ -60,7 +51,6 @@ public class SCMPClnCreateSessionCasc1Test extends SystemSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		sesSrvCtxs = ctrl.startServerEnvironment(SCMPClnCreateSessionCasc1Test.srvDefs);
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
 				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1));
 		AppContext.init();
@@ -73,30 +63,7 @@ public class SCMPClnCreateSessionCasc1Test extends SystemSuperTest {
 		} catch (Exception e) {
 		}
 		this.requester = null;
-		try {
-			ctrl.stopServerEnvironment(sesSrvCtxs);
-		} catch (Exception e) {
-		}
 		super.afterOneTest();
-	}
-
-	public static void setUp1CascadedServiceConnectorAndServer() {
-		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
-				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
-		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
-		scCascDefs.add(sc0CascDef);
-		scCascDefs.add(sc1CascDef);
-
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
-		srvToSC0CascDefs.add(srvToSC0CascDef);
-
-		SystemSuperTest.scDefs = scCascDefs;
-		SCMPClnCreateSessionCasc1Test.srvDefs = srvToSC0CascDefs;
 	}
 
 	/**
