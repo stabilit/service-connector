@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.system.api.cln.casc1;
+package org.serviceconnector.test.system.api.cln.casc2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -27,10 +30,29 @@ import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
-public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTest {
+public class APIStressExecutionCasc2Test extends SystemSuperTest {
 
-	public APIMultipleClientChangeSubscriptionCasc1Test() {
-		APIMultipleClientChangeSubscriptionCasc1Test.setUp1CascadedServiceConnectorAndServer();
+	protected Map<String, ProcessCtx> srvCtxs;
+	protected static List<ServerDefinition> srvDefs;
+	
+	public APIStressExecutionCasc2Test() {
+		APIStressExecutionCasc2Test.setUp1CascadedServiceConnectorAndServer();
+	}
+
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		srvCtxs = ctrl.startServerEnvironment(srvDefs);
+	}
+
+	@After
+	public void afterOneTest() throws Exception {
+		try {
+			ctrl.stopServerEnvironment(srvCtxs);
+		} catch (Exception e) {
+		}
+		srvCtxs = null;
+		super.afterOneTest();
 	}
 
 	public static void setUpServiceConnectorAndServer() {
@@ -42,17 +64,13 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 
 		// server definitions
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srv1ToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 10, 5, TestConstants.pubServerName1);
-		ServerDefinition srv2ToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServiceName2, 30002, TestConstants.PORT_SC_TCP, 10, 5,
-				TestConstants.pubServiceName2);
+		ServerDefinition srv1ToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
+				TestConstants.PORT_SC_TCP, 10, 5, TestConstants.sesServiceName1);
 		srvToSC0Defs.add(srv1ToSC0Def);
-		srvToSC0Defs.add(srv2ToSC0Def);
 
 		SystemSuperTest.scDefs = sc0Defs;
-		SystemSuperTest.srvDefs = srvToSC0Defs;
+		APIStressExecutionCasc2Test.srvDefs = srvToSC0Defs;
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
@@ -69,62 +87,49 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 		ServerDefinition srv1ToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
 				TestConstants.PORT_SC0_CASC_TCP, 10, 5, TestConstants.pubServerName1);
-		ServerDefinition srv2ToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServiceName2, 30002, TestConstants.PORT_SC0_CASC_TCP, 10, 5,
-				TestConstants.pubServiceName2);
 		srvToSC0CascDefs.add(srv1ToSC0CascDef);
-		srvToSC0CascDefs.add(srv2ToSC0CascDef);
 
 		SystemSuperTest.scDefs = scCascDefs;
-		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+		APIStressExecutionCasc2Test.srvDefs = srvToSC0CascDefs;
 	}
 
 	/**
-	 * Description: 3 clients Subscribe, 1 receives 10000, 2 receives 500 message and unsubscribe<br>
+	 * Description: Create session (regular)<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t11_3ClientsReceivingMessages() throws Exception {
-		int numberOfClients = 3;
+	public void t01_2Clients10000Messages() throws Exception {
+		int numberOfClients = 2;
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
-		ProcessCtx clientCtx3 = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client0", TestConstants.HOST,
-				TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
-				"f_subscribeReceive10000Unsubscribe");
-		clientCtxs[0] = clientCtx3;
-		for (int i = 1; i < clientCtxs.length; i++) {
-			ProcessCtx clientCtx = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
-					TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
-					"f_subscribeReceive500ChangeSubscriptionUnsubscribe");
+		for (int i = 0; i < clientCtxs.length; i++) {
+			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
+					TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
+					"f_execute1000MessagesAndExit");
 			clientCtxs[i] = clientCtx;
 		}
-		APIMultipleClientChangeSubscriptionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
-		// dont't check message.log might be an EXC because of broken CRP
+		APIStressExecutionCasc2Test.ctrl.waitForClientTermination(clientCtxs);
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
 		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
 	}
 
 	/**
-	 * Description: 3 clients changeSubscription 10000<br>
+	 * Description: Create session (regular)<br>
 	 * Expectation: passes
 	 */
 	@Test
-	public void t15_3ClientsChangeSubscription10000() throws Exception {
+	public void t05_10Clients100000Messages() throws Exception {
 		int numberOfClients = 10;
 		ProcessCtx[] clientCtxs = new ProcessCtx[numberOfClients];
 
-		ProcessCtx clientCtx3 = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client0", TestConstants.HOST,
-				TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
-				"f_subscribeReceive10000Unsubscribe");
-		clientCtxs[0] = clientCtx3;
-		for (int i = 1; i < clientCtxs.length; i++) {
-			ProcessCtx clientCtx = ctrl.startPublishClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
-					TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.pubServerName1, 50,
-					"f_10000ChangeSubscription");
+		for (int i = 0; i < clientCtxs.length; i++) {
+			ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client" + i, TestConstants.HOST,
+					TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 10, 60,
+					"f_execute100000MessagesAndExit");
 			clientCtxs[i] = clientCtx;
 		}
-		APIMultipleClientChangeSubscriptionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
-		// dont't check message.log might be an EXC because of broken CRP
+		APIStressExecutionCasc2Test.ctrl.waitForClientTermination(clientCtxs);
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
 		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
 	}
-
 }

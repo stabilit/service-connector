@@ -16,8 +16,9 @@
 package org.serviceconnector.test.system.api.cln;
 
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
+import org.serviceconnector.test.system.api.cln.casc1.APIExecuteAndSendCasc1Test;
 
-public class APIExecuteAndSendTest extends org.serviceconnector.test.system.api.cln.casc1.APIExecuteAndSendCasc1Test {
+public class APIExecuteAndSendTest extends APIExecuteAndSendCasc1Test {
 
 	public APIExecuteAndSendTest() {
 		APISystemSuperSessionClientTest.setUpServiceConnectorAndServer();

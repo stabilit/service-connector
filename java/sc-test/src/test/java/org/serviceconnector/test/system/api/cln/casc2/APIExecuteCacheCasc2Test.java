@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.system.api.cln.casc1;
+package org.serviceconnector.test.system.api.cln.casc2;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -30,10 +30,10 @@ import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 import org.serviceconnector.util.URLParameterString;
 
 @SuppressWarnings("unused")
-public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
+public class APIExecuteCacheCasc2Test extends APISystemSuperSessionClientTest {
 
-	public APIExecuteCacheCasc1Test() {
-		APISystemSuperSessionClientTest.setUp1CascadedServiceConnectorAndServer();
+	public APIExecuteCacheCasc2Test() {
+		APISystemSuperSessionClientTest.setUp2CascadedServiceConnectorAndServer();
 	}
 
 	protected SCMgmtClient mgmtClient;
@@ -233,8 +233,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService1.execute(request);
 		Assert.assertEquals("cacheFor1Hour", response.getData());
-		Assert.assertEquals("700", response.getCacheId());
-		Assert.assertEquals("1", response.getCachePartNr());
+		Assert.assertEquals("700/1", response.getCacheId());
 
 		// session service two gets message with cacheId 600
 		request.setData(TestConstants.pangram);
@@ -242,8 +241,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService2.execute(request);
 		Assert.assertEquals("cacheFor2Hour", response.getData());
-		Assert.assertEquals("600", response.getCacheId());
-		Assert.assertEquals("1", response.getCachePartNr());
+		Assert.assertEquals("600/1", response.getCacheId());
 
 		// session service one gets message with cacheId 600
 		request.setData(TestConstants.pangram);
@@ -251,8 +249,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService1.execute(request);
 		Assert.assertEquals("cacheFor2Hour", response.getData());
-		Assert.assertEquals("600", response.getCacheId());
-		Assert.assertEquals("1", response.getCachePartNr());
+		Assert.assertEquals("600/1", response.getCacheId());
 
 		// session service two gets message with cacheId 700
 		request.setData(TestConstants.pangram);
@@ -260,8 +257,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService2.execute(request);
 		Assert.assertEquals("cacheFor1Hour", response.getData());
-		Assert.assertEquals("700", response.getCacheId());
-		Assert.assertEquals("1", response.getCachePartNr());
+		Assert.assertEquals("700/1", response.getCacheId());
 
 		sessionService2.deleteSession();
 		sessionService1.deleteSession();
@@ -304,8 +300,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService1.execute(request);
 		Assert.assertEquals("refreshCache700", response.getData());
-		Assert.assertEquals("700", response.getCacheId());
-		Assert.assertEquals("1", response.getCachePartNr());
+		Assert.assertEquals("700/1", response.getCacheId());
 
 		// session service two gets message with cacheId 700
 		request.setData(TestConstants.pangram);
@@ -313,8 +308,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService2.execute(request);
 		Assert.assertEquals("refreshCache700", response.getData());
-		Assert.assertEquals("700", response.getCacheId());
-		Assert.assertEquals("1", response.getCachePartNr());
+		Assert.assertEquals("700/1", response.getCacheId());
 
 		sessionService2.deleteSession();
 		sessionService1.deleteSession();

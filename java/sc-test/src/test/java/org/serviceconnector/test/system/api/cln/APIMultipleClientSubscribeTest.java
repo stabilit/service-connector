@@ -15,7 +15,9 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
-public class APIMultipleClientSubscribeTest extends org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientSubscribeCasc1Test {
+import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientSubscribeCasc1Test;
+
+public class APIMultipleClientSubscribeTest extends APIMultipleClientSubscribeCasc1Test {
 
 	public APIMultipleClientSubscribeTest() {
 		APIMultipleClientSubscribeTest.setUpServiceConnectorAndServer();

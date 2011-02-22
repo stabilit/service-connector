@@ -51,15 +51,15 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 	protected static List<ServerDefinition> srvDefs;
 
 	public SCMPClnSubscribeCasc1Test() {
-		SCMPClnSubscribeCasc1Test.setUpCascadedServiceConnectorAndServer();
+		SCMPClnSubscribeCasc1Test.setUp1CascadedServiceConnectorAndServer();
 	}
 
-	public static void setUpCascadedServiceConnectorAndServer() {
+	public static void setUp1CascadedServiceConnectorAndServer() {
 		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
 		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
 				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
 		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-				TestConstants.SC1CASCProperties, TestConstants.log4jSC1CASCProperties);
+				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
 		scCascDefs.add(sc0CascDef);
 		scCascDefs.add(sc1CascDef);
 

@@ -24,10 +24,10 @@ import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
+import org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeChangeCasc1Test;
 
 @SuppressWarnings("unused")
-public class APISubscribeUnsubscribeChangeTest extends
-		org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeChangeCasc1Test {
+public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeChangeCasc1Test {
 
 	public APISubscribeUnsubscribeChangeTest() {
 		APISystemSuperPublishClientTest.setUpServiceConnectorAndServer();

@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.system.api.cln.casc1;
+package org.serviceconnector.test.system.api.cln.casc2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -27,10 +30,30 @@ import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
-public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTest {
+public class APIMultipleClientChangeSubscriptionCasc2Test extends SystemSuperTest {
 
-	public APIMultipleClientChangeSubscriptionCasc1Test() {
-		APIMultipleClientChangeSubscriptionCasc1Test.setUp1CascadedServiceConnectorAndServer();
+	/** The Constant testLogger. */
+	protected Map<String, ProcessCtx> srvCtx;
+	protected static List<ServerDefinition> srvDefs;
+
+	public APIMultipleClientChangeSubscriptionCasc2Test() {
+		APIMultipleClientChangeSubscriptionCasc2Test.setUp2CascadedServiceConnectorAndServer();
+	}
+
+	@Before
+	public void beforeOneTest() throws Exception {
+		super.beforeOneTest();
+		srvCtx = ctrl.startServerEnvironment(APIMultipleClientChangeSubscriptionCasc2Test.srvDefs);
+	}
+
+	@After
+	public void afterOneTest() throws Exception {
+		try {
+			ctrl.stopServerEnvironment(srvCtx);
+		} catch (Exception e) {
+		}
+		srvCtx = null;
+		super.afterOneTest();
 	}
 
 	public static void setUpServiceConnectorAndServer() {
@@ -52,7 +75,7 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 		srvToSC0Defs.add(srv2ToSC0Def);
 
 		SystemSuperTest.scDefs = sc0Defs;
-		SystemSuperTest.srvDefs = srvToSC0Defs;
+		APIMultipleClientChangeSubscriptionCasc2Test.srvDefs = srvToSC0Defs;
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
@@ -76,7 +99,7 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 		srvToSC0CascDefs.add(srv2ToSC0CascDef);
 
 		SystemSuperTest.scDefs = scCascDefs;
-		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+		APIMultipleClientChangeSubscriptionCasc2Test.srvDefs = srvToSC0CascDefs;
 	}
 
 	/**
@@ -98,7 +121,7 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 					"f_subscribeReceive500ChangeSubscriptionUnsubscribe");
 			clientCtxs[i] = clientCtx;
 		}
-		APIMultipleClientChangeSubscriptionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
+		APIMultipleClientChangeSubscriptionCasc2Test.ctrl.waitForClientTermination(clientCtxs);
 		// dont't check message.log might be an EXC because of broken CRP
 		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
 	}
@@ -122,7 +145,7 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 					"f_10000ChangeSubscription");
 			clientCtxs[i] = clientCtx;
 		}
-		APIMultipleClientChangeSubscriptionCasc1Test.ctrl.waitForClientTermination(clientCtxs);
+		APIMultipleClientChangeSubscriptionCasc2Test.ctrl.waitForClientTermination(clientCtxs);
 		// dont't check message.log might be an EXC because of broken CRP
 		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
 	}

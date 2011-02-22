@@ -17,9 +17,7 @@ package org.serviceconnector.test.system.api.cln;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
@@ -30,16 +28,12 @@ import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.api.cln.SCSessionService;
-import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
 public class APISessionSubscriptionTest extends SystemSuperTest {
 
-	private static List<ServerDefinition> srvDefs;
-	/** The Constant testLogger. */
-	protected Map<String, ProcessCtx> srvCtxs;
 	protected SCClient client;
 
 	public APISessionSubscriptionTest() {
@@ -49,7 +43,6 @@ public class APISessionSubscriptionTest extends SystemSuperTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		srvCtxs = ctrl.startServerEnvironment(srvDefs);
 		client = new SCClient(TestConstants.HOST, TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP);
 		client.attach();
 	}
@@ -69,15 +62,6 @@ public class APISessionSubscriptionTest extends SystemSuperTest {
 		APISessionSubscriptionTest.srvDefs = srvToSC0Defs;
 	}
 
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			ctrl.stopServerEnvironment(srvCtxs);
-		} catch (Exception e) {
-		}
-		super.afterOneTest();
-	}
-
 	/**
 	 * Description: Create session (regular)<br>
 	 * Expectation: passes
@@ -90,12 +74,12 @@ public class APISessionSubscriptionTest extends SystemSuperTest {
 		SCPublishService pubService = client.newPublishService(TestConstants.pubServerName1);
 		SCSubscribeMessage scSubscribeMessage = new SCSubscribeMessage();
 		scSubscribeMessage.setMask(TestConstants.mask);
-		pubService.subscribe(scSubscribeMessage, new TestPublishServiceMessageCallback(pubService));		
-		
+		pubService.subscribe(scSubscribeMessage, new TestPublishServiceMessageCallback(pubService));
+
 		SCPublishService pubService1 = client.newPublishService(TestConstants.pubServiceName1);
 		scSubscribeMessage.setNoDataIntervalSeconds(40);
 		pubService1.subscribe(scSubscribeMessage, new TestPublishServiceMessageCallback(pubService1));
-				
+
 		System.out.println("APISessionSubscriptionTest.t01_()");
 
 		try {

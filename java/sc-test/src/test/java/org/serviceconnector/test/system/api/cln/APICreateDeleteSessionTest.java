@@ -23,9 +23,10 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
+import org.serviceconnector.test.system.api.cln.casc1.APICreateDeleteSessionCasc1Test;
 
 @SuppressWarnings("unused")
-public class APICreateDeleteSessionTest extends org.serviceconnector.test.system.api.cln.casc1.APICreateDeleteSessionCasc1Test {
+public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test {
 
 	public APICreateDeleteSessionTest() {
 		APISystemSuperSessionClientTest.setUpServiceConnectorAndServer();

@@ -27,6 +27,9 @@ import org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeCha
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnChangeSubscriptionCasc1Test;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnCreateSessionCasc1Test;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnExecuteCasc1Test;
+import org.serviceconnector.test.system.scmp.casc2.SCMPClnChangeSubscriptionCasc2Test;
+import org.serviceconnector.test.system.scmp.casc2.SCMPClnCreateSessionCasc2Test;
+import org.serviceconnector.test.system.scmp.casc2.SCMPClnExecuteCasc2Test;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
@@ -45,7 +48,12 @@ import org.serviceconnector.test.system.scmp.casc1.SCMPClnExecuteCasc1Test;
 		// SCMP session test
 		SCMPClnCreateSessionCasc1Test.class,
 		SCMPClnExecuteCasc1Test.class,
-		SCMPClnChangeSubscriptionCasc1Test.class
+		SCMPClnChangeSubscriptionCasc1Test.class,
+		
+		// SCMP session test for cascaded 2 mode
+		SCMPClnCreateSessionCasc2Test.class,
+		SCMPClnExecuteCasc2Test.class,
+		SCMPClnChangeSubscriptionCasc2Test.class
 		})
 public class AllCascSystemTests {
 }

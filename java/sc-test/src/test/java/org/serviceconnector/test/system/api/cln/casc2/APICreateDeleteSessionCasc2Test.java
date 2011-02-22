@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.system.api.cln;
+package org.serviceconnector.test.system.api.cln.casc2;
 
-import org.serviceconnector.test.system.api.cln.casc1.APIStressExecutionCasc1Test;
+import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
+import org.serviceconnector.test.system.api.cln.casc1.APICreateDeleteSessionCasc1Test;
 
-public class APIStressExecutionTest extends APIStressExecutionCasc1Test {
+public class APICreateDeleteSessionCasc2Test extends APICreateDeleteSessionCasc1Test {
 
-	public APIStressExecutionTest() {
-		APIStressExecutionTest.setUp1CascadedServiceConnectorAndServer();
+	public APICreateDeleteSessionCasc2Test() {
+		APISystemSuperSessionClientTest.setUp2CascadedServiceConnectorAndServer();
 	}
 }

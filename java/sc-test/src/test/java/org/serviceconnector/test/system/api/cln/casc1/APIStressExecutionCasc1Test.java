@@ -15,82 +15,17 @@
  */
 package org.serviceconnector.test.system.api.cln.casc1;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.ctrl.util.ServerDefinition;
-import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
 public class APIStressExecutionCasc1Test extends SystemSuperTest {
 
-	protected Map<String, ProcessCtx> srvCtxs;
-	protected static List<ServerDefinition> srvDefs;
-	
 	public APIStressExecutionCasc1Test() {
-		APIStressExecutionCasc1Test.setUpCascadedServiceConnectorAndServer();
-	}
-
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		srvCtxs = ctrl.startServerEnvironment(srvDefs);
-	}
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			ctrl.stopServerEnvironment(srvCtxs);
-		} catch (Exception e) {
-		}
-		srvCtxs = null;
-		super.afterOneTest();
-	}
-
-	public static void setUpServiceConnectorAndServer() {
-		// SC definitions
-		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
-				TestConstants.log4jSC0Properties);
-		sc0Defs.add(sc0Def);
-
-		// server definitions
-		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-		ServerDefinition srv1ToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
-				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 10, 5, TestConstants.sesServiceName1);
-		srvToSC0Defs.add(srv1ToSC0Def);
-
-		SystemSuperTest.scDefs = sc0Defs;
-		APIStressExecutionCasc1Test.srvDefs = srvToSC0Defs;
-	}
-
-	public static void setUpCascadedServiceConnectorAndServer() {
-		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
-				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
-		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-				TestConstants.SC1CASCProperties, TestConstants.log4jSC1CASCProperties);
-		scCascDefs.add(sc0CascDef);
-		scCascDefs.add(sc1CascDef);
-
-		// server definitions
-		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srv1ToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC0_CASC_TCP, 10, 5, TestConstants.pubServerName1);
-		srvToSC0CascDefs.add(srv1ToSC0CascDef);
-
-		SystemSuperTest.scDefs = scCascDefs;
-		APIStressExecutionCasc1Test.srvDefs = srvToSC0CascDefs;
+		APIStressExecutionCasc1Test.setUp1CascadedServiceConnectorAndServer();
 	}
 
 	/**

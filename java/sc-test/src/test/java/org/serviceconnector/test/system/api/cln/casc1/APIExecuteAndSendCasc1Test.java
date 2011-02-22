@@ -34,7 +34,7 @@ import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest {
 
 	public APIExecuteAndSendCasc1Test() {
-		APISystemSuperSessionClientTest.setUpCascadedServiceConnectorAndServer();
+		APISystemSuperSessionClientTest.setUp1CascadedServiceConnectorAndServer();
 	}
 
 	/**

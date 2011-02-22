@@ -39,8 +39,11 @@ public class TestConstants {
 	public static final String log4jSC0Properties = "log4j-sc0.properties";
 	public static final String log4jSC1CASCProperties = "log4j-sc1-casc.properties";
 	public static final String log4jSC0CASCProperties = "log4j-sc0-casc.properties";
+	public static final String log4jSC2CASCProperties = "log4j-sc2-casc.properties";
 	public static final String SC0Properties = "sc0.properties";
-	public static final String SC1CASCProperties = "sc1-casc.properties";
+	public static final String SC1CASC1Properties = "sc1-casc1.properties";
+	public static final String SC1CASC2Properties = "sc1-casc2.properties";
+	public static final String SC2CASC2Properties = "sc2-casc2.properties";
 	public static final String SC0CASCProperties = "sc0-casc.properties";
 	public static final String SCNoInterfacesProperties = "sc-nointerfaces.properties";
 
@@ -101,6 +104,7 @@ public class TestConstants {
 
 	// SC names
 	public static final String SC0 = "sc0";
+	public static final String SC2_CASC = "sc2Casc";
 	public static final String SC1_CASC = "sc1Casc";
 	public static final String SC0_CASC = "sc0Casc";
 	public static final String RemoteNodeName = "TestRemoteNode";

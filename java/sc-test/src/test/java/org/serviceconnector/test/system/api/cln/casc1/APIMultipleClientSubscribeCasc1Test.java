@@ -17,10 +17,7 @@ package org.serviceconnector.test.system.api.cln.casc1;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
@@ -32,27 +29,8 @@ import org.serviceconnector.test.system.SystemSuperTest;
 
 public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 
-	protected Map<String, ProcessCtx> srvCtx;
-	protected static List<ServerDefinition> srvDefs;
-
 	public APIMultipleClientSubscribeCasc1Test() {
-		APIMultipleClientSubscribeCasc1Test.setUpCascadedServiceConnectorAndServer();
-	}
-
-	@Before
-	public void beforeOneTest() throws Exception {
-		super.beforeOneTest();
-		srvCtx = ctrl.startServerEnvironment(APIMultipleClientSubscribeCasc1Test.srvDefs);
-	}
-
-	@After
-	public void afterOneTest() throws Exception {
-		try {
-			ctrl.stopServerEnvironment(srvCtx);
-		} catch (Exception e) {
-		}
-		srvCtx = null;
-		super.afterOneTest();
+		APIMultipleClientSubscribeCasc1Test.setUp1CascadedServiceConnectorAndServer();
 	}
 
 	public static void setUpServiceConnectorAndServer() {
@@ -74,15 +52,15 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 		srvToSC0Defs.add(srv2ToSC0Def);
 
 		SystemSuperTest.scDefs = sc0Defs;
-		APIMultipleClientSubscribeCasc1Test.srvDefs = srvToSC0Defs;
+		SystemSuperTest.srvDefs = srvToSC0Defs;
 	}
 
-	public static void setUpCascadedServiceConnectorAndServer() {
+	public static void setUp1CascadedServiceConnectorAndServer() {
 		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
 		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
 				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
 		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-				TestConstants.SC1CASCProperties, TestConstants.log4jSC1CASCProperties);
+				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
 		scCascDefs.add(sc0CascDef);
 		scCascDefs.add(sc1CascDef);
 
@@ -98,7 +76,7 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 		srvToSC0CascDefs.add(srv2ToSC0CascDef);
 
 		SystemSuperTest.scDefs = scCascDefs;
-		APIMultipleClientSubscribeCasc1Test.srvDefs = srvToSC0CascDefs;
+		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
 	/**

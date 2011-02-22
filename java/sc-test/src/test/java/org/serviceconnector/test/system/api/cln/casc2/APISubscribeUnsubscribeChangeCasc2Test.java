@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.system.api.cln.casc1;
+package org.serviceconnector.test.system.api.cln.casc2;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,9 +25,9 @@ import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
 @SuppressWarnings("unused")
-public class APISubscribeUnsubscribeChangeCasc1Test extends APISystemSuperPublishClientTest {
+public class APISubscribeUnsubscribeChangeCasc2Test extends APISystemSuperPublishClientTest {
 
-	public APISubscribeUnsubscribeChangeCasc1Test() {
+	public APISubscribeUnsubscribeChangeCasc2Test() {
 		APISystemSuperPublishClientTest.setUp1CascadedServiceConnectorAndServer();
 	}
 

@@ -44,7 +44,7 @@ public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 	@Before
 	public void beforeOneTest() throws Exception {
 		scCtx1 = ctrl.startSC(TestConstants.SC0_CASC, TestConstants.log4jSC0CASCProperties, TestConstants.SC0CASCProperties);
-		scCtx2 = ctrl.startSC(TestConstants.SC1_CASC, TestConstants.log4jSC1CASCProperties, TestConstants.SC1CASCProperties);
+		scCtx2 = ctrl.startSC(TestConstants.SC1_CASC, TestConstants.log4jSC1CASCProperties, TestConstants.SC1CASC1Properties);
 		server1 = null;
 		server2 = null;
 	}

@@ -29,7 +29,7 @@ import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClientTest {
 
 	public APICreateDeleteSessionCasc1Test() {
-		APISystemSuperSessionClientTest.setUpCascadedServiceConnectorAndServer();
+		APISystemSuperSessionClientTest.setUp1CascadedServiceConnectorAndServer();
 	}
 
 	/**
