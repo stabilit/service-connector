@@ -30,7 +30,8 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoPublishServer extends Thread {
 
 	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(DemoPublishServer.class);
+	private final static Logger logger = Logger
+			.getLogger(DemoPublishServer.class);
 
 	/**
 	 * Main method if you like to start in debug mode.
@@ -46,7 +47,8 @@ public class DemoPublishServer extends Thread {
 		List<String> nics = new ArrayList<String>();
 		nics.add("localhost");
 
-		SCServer sc = new SCServer("localhost", 9000, nics, 9001, ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
+		SCServer sc = new SCServer("localhost", 9000, nics, 9001,
+				ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
 
 		try {
 			sc.setKeepAliveIntervalSeconds(10); // can be set before register
@@ -83,13 +85,15 @@ public class DemoPublishServer extends Thread {
 		}
 
 		@Override
-		public SCMessage changeSubscription(SCSubscribeMessage message, int operationTimeoutMillis) {
+		public SCMessage changeSubscription(SCSubscribeMessage message,
+				int operationTimeoutMillis) {
 			logger.info("PublishServer.SrvCallback.changeSubscription()");
 			return message;
 		}
 
 		@Override
-		public SCMessage subscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
+		public SCMessage subscribe(SCSubscribeMessage message,
+				int operationTimeoutMillis) {
 			logger.info("PublishServer.SrvCallback.subscribe()");
 			PublishThread publish = new PublishThread(this.scPublishServer);
 			publish.start();
@@ -97,7 +101,8 @@ public class DemoPublishServer extends Thread {
 		}
 
 		@Override
-		public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
+		public void unsubscribe(SCSubscribeMessage message,
+				int operationTimeoutMillis) {
 			logger.info("PublishServer.SrvCallback.unsubscribe()");
 			String sessionInfo = message.getSessionInfo();
 			// watch out for kill server message
@@ -130,7 +135,8 @@ public class DemoPublishServer extends Thread {
 				SCPublishMessage pubMessage = new SCPublishMessage();
 				for (int i = 0; i < 5; i++) {
 					pubMessage.setData("publish message nr : " + i);
-					pubMessage.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
+					pubMessage
+							.setMask("0000121%%%%%%%%%%%%%%%-----------X-----------");
 					publishSrv.publish(pubMessage);
 					Thread.sleep(2000);
 				}
@@ -153,11 +159,13 @@ public class DemoPublishServer extends Thread {
 			try {
 				Thread.sleep(200);
 				this.scPublishServer.deregister();
-				SCServer scServer = this.scPublishServer.getSCServer();
-				scServer.stopListener();
-				scServer.destroy();
+				;
 			} catch (Exception e) {
 				logger.error("run", e);
+			} finally {
+				SCServer sc = this.scPublishServer.getSCServer();
+				sc.stopListener();
+				sc.destroy();
 			}
 		}
 	}

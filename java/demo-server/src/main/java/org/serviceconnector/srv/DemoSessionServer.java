@@ -28,7 +28,8 @@ import org.serviceconnector.net.ConnectionType;
 
 public class DemoSessionServer extends Thread {
 	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(DemoSessionServer.class);
+	private final static Logger logger = Logger
+			.getLogger(DemoSessionServer.class);
 
 	/**
 	 * Main method if you like to start in debug mode.
@@ -49,7 +50,8 @@ public class DemoSessionServer extends Thread {
 		List<String> nics = new ArrayList<String>();
 		nics.add("localhost");
 
-		SCServer sc = new SCServer("localhost", 9000, nics, 9002, ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
+		SCServer sc = new SCServer("localhost", 9000, nics, 9002,
+				ConnectionType.DEFAULT_SERVER_CONNECTION_TYPE);
 
 		try {
 			sc.setKeepAliveIntervalSeconds(10); // can be set before register
@@ -57,13 +59,17 @@ public class DemoSessionServer extends Thread {
 			sc.startListener(); // regular
 
 			String serviceName = "session-1";
-			SCSessionServer server = sc.newSessionServer(serviceName); // no other params possible
+			SCSessionServer server = sc.newSessionServer(serviceName); // no
+																		// other
+																		// params
+																		// possible
 			int maxSess = 100;
 			int maxConn = 10;
 			SCSessionServerCallback cbk = newSrvCallback(server);
 			try {
 				server.register(maxSess, maxConn, cbk); // regular
-				// server.registerServer(10, maxSess, maxConn, cbk); // alternative with operation timeout
+				// server.registerServer(10, maxSess, maxConn, cbk); //
+				// alternative with operation timeout
 			} catch (Exception e) {
 				logger.error("runSessionServer", e);
 				server.deregister();
@@ -83,7 +89,8 @@ public class DemoSessionServer extends Thread {
 		}
 
 		@Override
-		public SCMessage createSession(SCMessage request, int operationTimeoutMillis) {
+		public SCMessage createSession(SCMessage request,
+				int operationTimeoutMillis) {
 			logger.info("Session created");
 			return request;
 		}
@@ -95,7 +102,8 @@ public class DemoSessionServer extends Thread {
 			// watch out for kill server message
 			if (sessionInfo != null) {
 				if (sessionInfo.equals("kill server")) {
-					System.out.println("DemoSessionServer.SrvCallback.deleteSession() kill server received");
+					System.out
+							.println("DemoSessionServer.SrvCallback.deleteSession() kill server received");
 					KillThread kill = new KillThread(this.scSessionServer);
 					kill.start();
 				}
@@ -115,7 +123,8 @@ public class DemoSessionServer extends Thread {
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());
 			}
-			System.out.println("DemoSessionServer.SrvCallback.execute() " + data);
+			System.out.println("DemoSessionServer.SrvCallback.execute() "
+					+ data);
 			return request;
 		}
 	}
@@ -133,11 +142,12 @@ public class DemoSessionServer extends Thread {
 			try {
 				Thread.sleep(200);
 				this.server.deregister();
+			} catch (Exception e) {
+				logger.error("run", e);
+			} finally {
 				SCServer sc = server.getSCServer();
 				sc.stopListener();
 				sc.destroy();
-			} catch (Exception e) {
-				logger.error("run", e);
 			}
 		}
 	}
