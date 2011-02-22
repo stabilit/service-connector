@@ -401,7 +401,7 @@ public final class AppContext {
 			if (attachedCommunicators.get() == 0) {
 				// no communicator active shutdown thread pool
 				ConnectionFactory.shutdownConnectionFactory();
-				if (AppContext.otiScheduler != null && AppContext.isScEnvironment() == false) {
+				if (AppContext.otiScheduler != null) {
 					// cancel operation timeout thread
 					AppContext.otiScheduler.shutdownNow();
 					AppContext.otiScheduler = null;
