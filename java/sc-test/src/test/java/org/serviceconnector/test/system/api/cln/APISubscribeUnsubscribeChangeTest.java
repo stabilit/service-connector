@@ -27,7 +27,7 @@ import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
 @SuppressWarnings("unused")
 public class APISubscribeUnsubscribeChangeTest extends
-		org.serviceconnector.test.system.api.cln.casc.APISubscribeUnsubscribeChangeTest {
+		org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeChangeCasc1Test {
 
 	public APISubscribeUnsubscribeChangeTest() {
 		APISystemSuperPublishClientTest.setUpServiceConnectorAndServer();

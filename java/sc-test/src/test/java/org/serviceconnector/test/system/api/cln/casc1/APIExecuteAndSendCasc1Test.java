@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.system.api.cln.casc;
+package org.serviceconnector.test.system.api.cln.casc1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +31,9 @@ import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
-public class APIExecuteAndSendTest extends APISystemSuperSessionClientTest {
+public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest {
 
-	public APIExecuteAndSendTest() {
+	public APIExecuteAndSendCasc1Test() {
 		APISystemSuperSessionClientTest.setUpCascadedServiceConnectorAndServer();
 	}
 

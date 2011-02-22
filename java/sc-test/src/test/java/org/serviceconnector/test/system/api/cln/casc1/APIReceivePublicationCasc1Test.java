@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.system.api.cln.casc;
+package org.serviceconnector.test.system.api.cln.casc1;
 
 import java.util.concurrent.TimeoutException;
 
@@ -25,9 +25,9 @@ import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.cln.SCPublishService;
 import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
-public class APIReceivePublicationTest extends APISystemSuperPublishClientTest {
+public class APIReceivePublicationCasc1Test extends APISystemSuperPublishClientTest {
 
-	public APIReceivePublicationTest() {
+	public APIReceivePublicationCasc1Test() {
 		APISystemSuperPublishClientTest.setUpCascadedServiceConnectorAndServer();
 	}
 

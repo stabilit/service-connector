@@ -15,7 +15,7 @@
  */
 package org.serviceconnector.test.system.api.cln;
 
-public class APIStressExecutionTest extends org.serviceconnector.test.system.api.cln.casc.APIStressExecutionTest {
+public class APIStressExecutionTest extends org.serviceconnector.test.system.api.cln.casc1.APIStressExecutionCasc1Test {
 
 	public APIStressExecutionTest() {
 		APIStressExecutionTest.setUpCascadedServiceConnectorAndServer();

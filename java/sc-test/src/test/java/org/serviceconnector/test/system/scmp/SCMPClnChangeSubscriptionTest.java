@@ -34,8 +34,9 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.SystemSuperTest;
+import org.serviceconnector.test.system.scmp.casc1.SCMPClnChangeSubscriptionCasc1Test;
 
-public class SCMPClnChangeSubscriptionTest extends org.serviceconnector.test.system.scmp.casc.SCMPClnChangeSubscriptionTest {
+public class SCMPClnChangeSubscriptionTest extends SCMPClnChangeSubscriptionCasc1Test {
 
 	public SCMPClnChangeSubscriptionTest() {
 		SCMPClnChangeSubscriptionTest.setUpServiceConnectorAndServer();
@@ -59,7 +60,7 @@ public class SCMPClnChangeSubscriptionTest extends org.serviceconnector.test.sys
 		SystemSuperTest.scDefs = sc0Defs;
 		SCMPClnChangeSubscriptionTest.srvDefs = srvToSC0Defs;
 	}
-	
+
 	/**
 	 * Description: change subscription twice, second one fails because there is no free connection<br>
 	 * Expectation: passes

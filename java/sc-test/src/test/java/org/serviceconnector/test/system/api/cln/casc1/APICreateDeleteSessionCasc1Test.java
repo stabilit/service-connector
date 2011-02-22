@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.system.api.cln.casc;
+package org.serviceconnector.test.system.api.cln.casc1;
 
 import junit.framework.Assert;
 
@@ -26,9 +26,9 @@ import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
-public class APICreateDeleteSessionTest extends APISystemSuperSessionClientTest {
+public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClientTest {
 
-	public APICreateDeleteSessionTest() {
+	public APICreateDeleteSessionCasc1Test() {
 		APISystemSuperSessionClientTest.setUpCascadedServiceConnectorAndServer();
 	}
 

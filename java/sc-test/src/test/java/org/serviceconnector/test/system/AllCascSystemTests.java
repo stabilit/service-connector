@@ -17,35 +17,35 @@ package org.serviceconnector.test.system;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.serviceconnector.test.system.api.cln.casc.APICreateDeleteSessionTest;
-import org.serviceconnector.test.system.api.cln.casc.APIExecuteAndSendTest;
-import org.serviceconnector.test.system.api.cln.casc.APIExecuteCacheTest;
-import org.serviceconnector.test.system.api.cln.casc.APIMultipleClientChangeSubscriptionTest;
-import org.serviceconnector.test.system.api.cln.casc.APIMultipleClientSubscribeTest;
-import org.serviceconnector.test.system.api.cln.casc.APIReceivePublicationTest;
-import org.serviceconnector.test.system.api.cln.casc.APISubscribeUnsubscribeChangeTest;
-import org.serviceconnector.test.system.scmp.casc.SCMPClnChangeSubscriptionTest;
-import org.serviceconnector.test.system.scmp.casc.SCMPClnCreateSessionTest;
-import org.serviceconnector.test.system.scmp.casc.SCMPClnExecuteTest;
+import org.serviceconnector.test.system.api.cln.casc1.APICreateDeleteSessionCasc1Test;
+import org.serviceconnector.test.system.api.cln.casc1.APIExecuteAndSendCasc1Test;
+import org.serviceconnector.test.system.api.cln.casc1.APIExecuteCacheCasc1Test;
+import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientChangeSubscriptionCasc1Test;
+import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientSubscribeCasc1Test;
+import org.serviceconnector.test.system.api.cln.casc1.APIReceivePublicationCasc1Test;
+import org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeChangeCasc1Test;
+import org.serviceconnector.test.system.scmp.casc1.SCMPClnChangeSubscriptionCasc1Test;
+import org.serviceconnector.test.system.scmp.casc1.SCMPClnCreateSessionCasc1Test;
+import org.serviceconnector.test.system.scmp.casc1.SCMPClnExecuteCasc1Test;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
 		// API session tests
-		APICreateDeleteSessionTest.class,
-		APIExecuteAndSendTest.class,
+		APICreateDeleteSessionCasc1Test.class,
+		APIExecuteAndSendCasc1Test.class,
 
 
 		// API publish tests
-		APISubscribeUnsubscribeChangeTest.class,
-		APIReceivePublicationTest.class,
-		APIMultipleClientSubscribeTest.class,
-		APIMultipleClientChangeSubscriptionTest.class,
-		APIExecuteCacheTest.class,
+		APISubscribeUnsubscribeChangeCasc1Test.class,
+		APIReceivePublicationCasc1Test.class,
+		APIMultipleClientSubscribeCasc1Test.class,
+		APIMultipleClientChangeSubscriptionCasc1Test.class,
+		APIExecuteCacheCasc1Test.class,
 
 		// SCMP session test
-		SCMPClnCreateSessionTest.class,
-		SCMPClnExecuteTest.class,
-		SCMPClnChangeSubscriptionTest.class
+		SCMPClnCreateSessionCasc1Test.class,
+		SCMPClnExecuteCasc1Test.class,
+		SCMPClnChangeSubscriptionCasc1Test.class
 		})
 public class AllCascSystemTests {
 }

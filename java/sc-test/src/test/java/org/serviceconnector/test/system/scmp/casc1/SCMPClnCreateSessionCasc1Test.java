@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.test.system.scmp.casc;
+package org.serviceconnector.test.system.scmp.casc1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,20 +47,20 @@ import org.serviceconnector.test.system.SystemSuperTest;
 /**
  * The Class ClnCreateSessionTestCase.
  */
-public class SCMPClnCreateSessionTest extends SystemSuperTest {
+public class SCMPClnCreateSessionCasc1Test extends SystemSuperTest {
 
 	protected SCRequester requester;
 	protected static List<ServerDefinition> srvDefs;
 	protected static Map<String, ProcessCtx> sesSrvCtxs;
 
-	public SCMPClnCreateSessionTest() {
-		SCMPClnCreateSessionTest.setUpCascadedServiceConnectorAndServer();
+	public SCMPClnCreateSessionCasc1Test() {
+		SCMPClnCreateSessionCasc1Test.setUpCascadedServiceConnectorAndServer();
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		sesSrvCtxs = ctrl.startServerEnvironment(SCMPClnCreateSessionTest.srvDefs);
+		sesSrvCtxs = ctrl.startServerEnvironment(SCMPClnCreateSessionCasc1Test.srvDefs);
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
 				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1));
 		AppContext.init();
@@ -96,7 +96,7 @@ public class SCMPClnCreateSessionTest extends SystemSuperTest {
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 
 		SystemSuperTest.scDefs = scCascDefs;
-		SCMPClnCreateSessionTest.srvDefs = srvToSC0CascDefs;
+		SCMPClnCreateSessionCasc1Test.srvDefs = srvToSC0CascDefs;
 	}
 
 	/**

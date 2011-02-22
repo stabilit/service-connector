@@ -23,11 +23,12 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.test.system.SystemSuperTest;
+import org.serviceconnector.test.system.scmp.casc1.SCMPClnExecuteCasc1Test;
 
 /**
  * @author JTraber
  */
-public class SCMPClnExecuteTest extends org.serviceconnector.test.system.scmp.casc.SCMPClnExecuteTest {
+public class SCMPClnExecuteTest extends SCMPClnExecuteCasc1Test {
 
 	public SCMPClnExecuteTest() {
 		SCMPClnExecuteTest.setUpServiceConnectorAndServer();

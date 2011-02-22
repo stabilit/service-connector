@@ -17,7 +17,7 @@ package org.serviceconnector.test.system.api.cln;
 
 import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
-public class APIReceivePublicationTest extends org.serviceconnector.test.system.api.cln.casc.APIReceivePublicationTest {
+public class APIReceivePublicationTest extends org.serviceconnector.test.system.api.cln.casc1.APIReceivePublicationCasc1Test {
 
 	public APIReceivePublicationTest() {
 		APISystemSuperPublishClientTest.setUpServiceConnectorAndServer();

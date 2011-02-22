@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.test.system.scmp.casc;
+package org.serviceconnector.test.system.scmp.casc1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,14 +44,14 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
-public class SCMPClnSubscribeTest extends SystemSuperTest {
+public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 
 	protected SCRequester requester;
 	protected static Map<String, ProcessCtx> pubSrvCtx;
 	protected static List<ServerDefinition> srvDefs;
 
-	public SCMPClnSubscribeTest() {
-		SCMPClnSubscribeTest.setUpCascadedServiceConnectorAndServer();
+	public SCMPClnSubscribeCasc1Test() {
+		SCMPClnSubscribeCasc1Test.setUpCascadedServiceConnectorAndServer();
 	}
 
 	public static void setUpCascadedServiceConnectorAndServer() {
@@ -70,13 +70,13 @@ public class SCMPClnSubscribeTest extends SystemSuperTest {
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 
 		SystemSuperTest.scDefs = scCascDefs;
-		SCMPClnSubscribeTest.srvDefs = srvToSC0CascDefs;
+		SCMPClnSubscribeCasc1Test.srvDefs = srvToSC0CascDefs;
 	}
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		pubSrvCtx = ctrl.startServerEnvironment(SCMPClnSubscribeTest.srvDefs);
+		pubSrvCtx = ctrl.startServerEnvironment(SCMPClnSubscribeCasc1Test.srvDefs);
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
 				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 10));
 		AppContext.init();

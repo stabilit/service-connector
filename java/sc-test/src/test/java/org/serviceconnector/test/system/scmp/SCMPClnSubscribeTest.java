@@ -32,8 +32,9 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.SystemSuperTest;
+import org.serviceconnector.test.system.scmp.casc1.SCMPClnSubscribeCasc1Test;
 
-public class SCMPClnSubscribeTest extends org.serviceconnector.test.system.scmp.casc.SCMPClnSubscribeTest {
+public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 
 	public SCMPClnSubscribeTest() {
 		SCMPClnSubscribeTest.setUpServiceConnectorAndServer();

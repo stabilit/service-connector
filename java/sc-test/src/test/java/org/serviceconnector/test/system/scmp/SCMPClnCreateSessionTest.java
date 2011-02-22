@@ -32,11 +32,12 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.SystemSuperTest;
+import org.serviceconnector.test.system.scmp.casc1.SCMPClnCreateSessionCasc1Test;
 
 /**
  * The Class ClnCreateSessionTestCase.
  */
-public class SCMPClnCreateSessionTest extends org.serviceconnector.test.system.scmp.casc.SCMPClnCreateSessionTest {
+public class SCMPClnCreateSessionTest extends SCMPClnCreateSessionCasc1Test {
 
 	public SCMPClnCreateSessionTest() {
 		SCMPClnCreateSessionTest.setUpServiceConnectorAndServer();

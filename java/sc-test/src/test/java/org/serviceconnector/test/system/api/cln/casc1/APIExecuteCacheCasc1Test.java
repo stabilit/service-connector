@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.system.api.cln.casc;
+package org.serviceconnector.test.system.api.cln.casc1;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -30,9 +30,9 @@ import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 import org.serviceconnector.util.URLParameterString;
 
 @SuppressWarnings("unused")
-public class APIExecuteCacheTest extends APISystemSuperSessionClientTest {
+public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 
-	public APIExecuteCacheTest() {
+	public APIExecuteCacheCasc1Test() {
 		APISystemSuperSessionClientTest.setUpCascadedServiceConnectorAndServer();
 	}
 
