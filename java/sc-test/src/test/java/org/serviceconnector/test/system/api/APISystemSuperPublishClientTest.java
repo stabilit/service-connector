@@ -32,6 +32,7 @@ import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.api.cln.APIReceivePublicationTest;
+import org.serviceconnector.test.system.scmp.SCMPClnChangeSubscriptionTest;
 
 public class APISystemSuperPublishClientTest extends SystemSuperTest {
 
@@ -41,6 +42,24 @@ public class APISystemSuperPublishClientTest extends SystemSuperTest {
 
 	public APISystemSuperPublishClientTest() {
 		APISystemSuperPublishClientTest.setUp1CascadedServiceConnectorAndServer();
+	}
+	
+	public static void setUpServiceConnectorAndServer() {
+		// SC definitions
+		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
+		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
+				TestConstants.log4jSC0Properties);
+		sc0Defs.add(sc0Def);
+
+		// server definitions
+		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
+				TestConstants.PORT_SC_TCP, 1, 1, TestConstants.pubServiceName1);
+		srvToSC0Defs.add(srvToSC0Def);
+
+		SystemSuperTest.scDefs = sc0Defs;
+		SCMPClnChangeSubscriptionTest.srvDefs = srvToSC0Defs;
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {

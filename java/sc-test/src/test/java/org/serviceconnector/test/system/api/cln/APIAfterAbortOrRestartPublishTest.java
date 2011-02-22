@@ -23,6 +23,10 @@ import org.serviceconnector.test.system.api.APISystemSuperPublishClientTest;
 
 public class APIAfterAbortOrRestartPublishTest extends APISystemSuperPublishClientTest {
 
+	public APIAfterAbortOrRestartPublishTest() {
+		APIAfterAbortOrRestartPublishTest.setUpServiceConnectorAndServer();
+	}
+
 	/**
 	 * Description: receive after SC abort <br>
 	 * Expectation: ?

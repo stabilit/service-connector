@@ -347,5 +347,9 @@ public class TestPublishServer extends TestStatefulServer {
 			}
 			return request;
 		}
+
+		public SCMessage sessionInfoFromServer(SCMessage request, int operationTimeoutMillis) {
+			return request;
+		}
 	}
 }

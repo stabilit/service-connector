@@ -29,7 +29,6 @@ import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
-import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.SCRequester;
@@ -41,16 +40,12 @@ import org.serviceconnector.test.system.SystemSuperTest;
 
 public class SCMPGroupCallTest extends SystemSuperTest {
 
-	private ProcessCtx sesSrvCtx;
 	private SCRequester requester;
 	private String sessionId;
 
 	@Before
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
-		sesSrvCtx = ctrl.startServer(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 1, 1,
-				TestConstants.sesServiceName1);
 		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
 				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1));
 		AppContext.init();
@@ -66,11 +61,6 @@ public class SCMPGroupCallTest extends SystemSuperTest {
 		} catch (Exception e) {
 		}
 		this.requester = null;
-		try {
-			ctrl.stopServer(sesSrvCtx);
-		} catch (Exception e) {
-		}
-		sesSrvCtx = null;
 		super.afterOneTest();
 	}
 

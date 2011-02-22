@@ -47,11 +47,7 @@ public class SystemSuperTest {
 	protected static Map<String, ProcessCtx> srvCtxs;
 
 	public SystemSuperTest() {
-		SystemSuperTest.srvDefs = new ArrayList<ServerDefinition>();
-		ServerDefinition srvDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION, TestConstants.log4jSrvProperties,
-				TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP, TestConstants.PORT_SC_TCP, 100, 10,
-				TestConstants.sesServiceName1);
-		SystemSuperTest.srvDefs.add(srvDef);
+		SystemSuperTest.setUpServiceConnectorAndServer();
 	}
 
 	@Rule
@@ -60,10 +56,6 @@ public class SystemSuperTest {
 	@BeforeClass
 	public static void beforeAllTests() throws Exception {
 		ctrl = new ProcessesController();
-		scDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition scDef = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
-				TestConstants.log4jSC0Properties);
-		scDefs.add(scDef);
 	}
 
 	@Before
