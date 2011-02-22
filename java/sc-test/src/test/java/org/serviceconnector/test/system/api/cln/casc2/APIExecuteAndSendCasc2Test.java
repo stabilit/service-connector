@@ -15,12 +15,11 @@
  */
 package org.serviceconnector.test.system.api.cln.casc2;
 
-import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIExecuteAndSendCasc1Test;
 
 public class APIExecuteAndSendCasc2Test extends APIExecuteAndSendCasc1Test {
 
 	public APIExecuteAndSendCasc2Test() {
-		APISystemSuperSessionClientTest.setUp2CascadedServiceConnectorAndServer();
+		APIExecuteAndSendCasc2Test.setUp2CascadedServiceConnectorAndServer();
 	}
 }

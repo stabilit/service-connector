@@ -23,7 +23,6 @@ import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ServerDefinition;
-import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.SystemSuperTest;
 
@@ -34,13 +33,9 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 	}
 
 	public static void setUpServiceConnectorAndServer() {
-		// SC definitions
-		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
-				TestConstants.log4jSC0Properties);
-		sc0Defs.add(sc0Def);
+		SystemSuperTest.setUpServiceConnectorAndServer();
 
-		// server definitions
+		// need two publish server here
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
 		ServerDefinition srv1ToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
@@ -50,21 +45,29 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 				TestConstants.pubServiceName2);
 		srvToSC0Defs.add(srv1ToSC0Def);
 		srvToSC0Defs.add(srv2ToSC0Def);
-
-		SystemSuperTest.scDefs = sc0Defs;
 		SystemSuperTest.srvDefs = srvToSC0Defs;
 	}
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
-		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
-				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
-		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
-		scCascDefs.add(sc0CascDef);
-		scCascDefs.add(sc1CascDef);
+		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
 
-		// server definitions
+		// need two publish server here
+		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
+		ServerDefinition srv1ToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
+				TestConstants.PORT_SC0_CASC_TCP, 10, 5, TestConstants.pubServerName1);
+		ServerDefinition srv2ToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+				TestConstants.log4jSrvProperties, TestConstants.pubServiceName2, 30002, TestConstants.PORT_SC0_CASC_TCP, 10, 5,
+				TestConstants.pubServiceName2);
+		srvToSC0CascDefs.add(srv1ToSC0CascDef);
+		srvToSC0CascDefs.add(srv2ToSC0CascDef);
+		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+	}
+
+	public static void setUp2CascadedServiceConnectorAndServer() {
+		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
+
+		// need two publish server here
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srv1ToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
 				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
@@ -75,7 +78,6 @@ public class APIMultipleClientChangeSubscriptionCasc1Test extends SystemSuperTes
 		srvToSC0CascDefs.add(srv1ToSC0CascDef);
 		srvToSC0CascDefs.add(srv2ToSC0CascDef);
 
-		SystemSuperTest.scDefs = scCascDefs;
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 

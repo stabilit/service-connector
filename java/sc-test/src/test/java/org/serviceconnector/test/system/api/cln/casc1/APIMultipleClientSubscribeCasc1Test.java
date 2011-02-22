@@ -79,6 +79,23 @@ public class APIMultipleClientSubscribeCasc1Test extends SystemSuperTest {
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
+	public static void setUp2CascadedServiceConnectorAndServer() {
+		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
+
+		// need two publish server here
+		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
+		ServerDefinition srv1ToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
+				TestConstants.PORT_SC0_CASC_TCP, 10, 5, TestConstants.pubServerName1);
+		ServerDefinition srv2ToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
+				TestConstants.log4jSrvProperties, TestConstants.pubServiceName2, 30002, TestConstants.PORT_SC0_CASC_TCP, 10, 5,
+				TestConstants.pubServiceName2);
+		srvToSC0CascDefs.add(srv1ToSC0CascDef);
+		srvToSC0CascDefs.add(srv2ToSC0CascDef);
+
+		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+	}
+
 	/**
 	 * Description: 2 clients Subscribe, receive 10000 message and unsubscribe<br>
 	 * Expectation: passes

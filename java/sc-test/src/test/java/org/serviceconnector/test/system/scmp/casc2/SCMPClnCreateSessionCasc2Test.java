@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.ctrl.util.ServerDefinition;
-import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.test.system.SystemSuperTest;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnCreateSessionCasc1Test;
 
@@ -35,24 +34,15 @@ public class SCMPClnCreateSessionCasc2Test extends SCMPClnCreateSessionCasc1Test
 	}
 
 	public static void setUp2CascadedServiceConnectorAndServer() {
-		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
-				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
-		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
-		ServiceConnectorDefinition sc2CascDef = new ServiceConnectorDefinition(TestConstants.SC2_CASC,
-				TestConstants.SC2CASC2Properties, TestConstants.log4jSC2CASCProperties);
-		scCascDefs.add(sc0CascDef);
-		scCascDefs.add(sc1CascDef);
-		scCascDefs.add(sc2CascDef);
+		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
 
+		// need to have a publish service here
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
 				TestConstants.PORT_SC0_CASC_TCP, 100, 10, TestConstants.sesServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
 
-		SystemSuperTest.scDefs = scCascDefs;
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 }
