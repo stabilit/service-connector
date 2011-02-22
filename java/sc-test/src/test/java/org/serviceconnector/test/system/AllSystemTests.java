@@ -39,7 +39,6 @@ import org.serviceconnector.test.system.scmp.SCMPGroupCallTest;
 		APIAfterSCAbortOrRestartSessionTest.class,
 		APIAfterAbortOrRestartSessionTest.class,
 
-
 		// API publish tests
 		APISubscribeUnsubscribeChangeTest.class,
 		APIReceivePublicationTest.class,

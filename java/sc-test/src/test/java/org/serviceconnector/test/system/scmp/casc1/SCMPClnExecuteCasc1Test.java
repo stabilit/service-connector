@@ -35,7 +35,6 @@ import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ServerDefinition;
-import org.serviceconnector.ctrl.util.ServiceConnectorDefinition;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.SCRequester;
@@ -69,10 +68,10 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		AppContext.init();
 		this.createSession();
 	}
-	
+
 	public static void setUpServiceConnectorAndServer() {
 		SystemSuperTest.setUpServiceConnectorAndServer();
-		// server definitions
+		// needs a server with 1 session/connection
 		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
@@ -81,23 +80,25 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		SystemSuperTest.srvDefs = srvToSC0Defs;
 	}
 
-
 	public static void setUp1CascadedServiceConnectorAndServer() {
-		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
-				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
-		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
-		scCascDefs.add(sc0CascDef);
-		scCascDefs.add(sc1CascDef);
-
+		SystemSuperTest.setUp1CascadedServiceConnectorAndServer();
+		// needs a server with 1 session/connection
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
 		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
 				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
 				TestConstants.PORT_SC0_CASC_TCP, 1, 1, TestConstants.sesServiceName1);
 		srvToSC0CascDefs.add(srvToSC0CascDef);
+		SystemSuperTest.srvDefs = srvToSC0CascDefs;
+	}
 
-		SystemSuperTest.scDefs = scCascDefs;
+	public static void setUp2CascadedServiceConnectorAndServer() {
+		SystemSuperTest.setUp2CascadedServiceConnectorAndServer();
+		// needs a server with 1 session/connection
+		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToSC0CascDef = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
+				TestConstants.PORT_SC0_CASC_TCP, 1, 1, TestConstants.sesServiceName1);
+		srvToSC0CascDefs.add(srvToSC0CascDef);
 		SystemSuperTest.srvDefs = srvToSC0CascDefs;
 	}
 
