@@ -39,25 +39,6 @@ public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 	public SCMPClnSubscribeTest() {
 		SCMPClnSubscribeTest.setUpServiceConnectorAndServer();
 	}
-
-	public static void setUpServiceConnectorAndServer() {
-		// SC definitions
-		List<ServiceConnectorDefinition> sc0Defs = new ArrayList<ServiceConnectorDefinition>();
-		ServiceConnectorDefinition sc0Def = new ServiceConnectorDefinition(TestConstants.SC0, TestConstants.SC0Properties,
-				TestConstants.log4jSC0Properties);
-		sc0Defs.add(sc0Def);
-
-		// server definitions
-		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
-
-		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_PUBLISH,
-				TestConstants.log4jSrvProperties, TestConstants.pubServerName1, TestConstants.PORT_PUB_SRV_TCP,
-				TestConstants.PORT_SC_TCP, 1, 1, TestConstants.pubServiceName1);
-		srvToSC0Defs.add(srvToSC0Def);
-
-		SystemSuperTest.scDefs = sc0Defs;
-		SCMPClnSubscribeTest.srvDefs = srvToSC0Defs;
-	}
 	
 	/**
 	 * Description: subscribe - waits 2 seconds - another subscribe fails because no free server is available<br>

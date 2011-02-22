@@ -19,7 +19,6 @@ package org.serviceconnector.test.system.scmp.casc1;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -33,7 +32,6 @@ import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
-import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.ctrl.util.ServerDefinition;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
@@ -52,8 +50,6 @@ import org.serviceconnector.test.system.SystemSuperTest;
 public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 
 	protected SCRequester requester;
-	protected static List<ServerDefinition> srvDefs;
-	protected static Map<String, ProcessCtx> sesSrvCtxs;
 	protected String sessionId;
 
 	public SCMPClnExecuteCasc1Test() {
