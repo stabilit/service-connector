@@ -40,6 +40,12 @@ import org.serviceconnector.test.system.scmp.casc2.SCMPClnExecuteCasc2Test;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
+		// test need to be at the begin, they check log files for EXC
+		APIMultipleClientSubscribeCasc1Test.class,
+		APIMultipleClientChangeSubscriptionCasc1Test.class,
+		APIMultipleClientSubscribeCasc2Test.class,
+		APIMultipleClientChangeSubscriptionCasc2Test.class,
+
 		// API session tests
 		APICreateDeleteSessionCasc1Test.class,
 		APIExecuteAndSendCasc1Test.class,
@@ -47,8 +53,6 @@ import org.serviceconnector.test.system.scmp.casc2.SCMPClnExecuteCasc2Test;
 		// API publish tests
 		APISubscribeUnsubscribeChangeCasc1Test.class,
 		APIReceivePublicationCasc1Test.class,
-		APIMultipleClientSubscribeCasc1Test.class,
-		APIMultipleClientChangeSubscriptionCasc1Test.class,
 		APIExecuteCacheCasc1Test.class,
 
 		// SCMP session test
@@ -63,8 +67,6 @@ import org.serviceconnector.test.system.scmp.casc2.SCMPClnExecuteCasc2Test;
 		// API publish tests for cascaded 2 mode
 		APISubscribeUnsubscribeChangeCasc2Test.class,
 		APIReceivePublicationCasc2Test.class,
-		APIMultipleClientSubscribeCasc2Test.class,
-		APIMultipleClientChangeSubscriptionCasc2Test.class,
 		APIExecuteCacheCasc2Test.class,
 		
 		// SCMP session test for cascaded 2 mode

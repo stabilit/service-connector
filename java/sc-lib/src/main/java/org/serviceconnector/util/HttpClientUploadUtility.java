@@ -37,17 +37,11 @@ public class HttpClientUploadUtility {
 	private final static Logger logger = Logger.getLogger(HttpClientUploadUtility.class);
 
 	private String uri;
-	private String contentType;
 	private HttpClient client;
 	private PostMethod httpMethod;
 
 	public HttpClientUploadUtility(String uri) {
-		this(uri, null);
-	}
-
-	public HttpClientUploadUtility(String uri, String contentType) {
 		this.uri = uri;
-		this.contentType = contentType;
 		this.client = new HttpClient();
 		this.httpMethod = new PostMethod(this.uri);
 		this.httpMethod.setContentChunked(true);
@@ -74,6 +68,9 @@ public class HttpClientUploadUtility {
 		return uploadRunnable;
 	}
 
+	/**
+	 * The Class UploadRunnable. Needs to be a separate thread if UI wants show a progress bar.
+	 */
 	public class UploadRunnable implements Callable<Integer> {
 		private CircularByteBuffer cbb;
 		private Future<Integer> future;
@@ -95,6 +92,7 @@ public class HttpClientUploadUtility {
 		@Override
 		public Integer call() {
 			try {
+				// reads buffer intern until the end of output stream
 				HttpClientUploadUtility.this.client.executeMethod(HttpClientUploadUtility.this.httpMethod);
 				Integer statusCode = HttpClientUploadUtility.this.httpMethod.getStatusCode();
 				return statusCode;
@@ -102,7 +100,7 @@ public class HttpClientUploadUtility {
 				logger.error(e.toString());
 				return -1;
 			} finally {
-				HttpClientUploadUtility.this.httpMethod.releaseConnection();			
+				HttpClientUploadUtility.this.httpMethod.releaseConnection();
 			}
 		}
 	}
