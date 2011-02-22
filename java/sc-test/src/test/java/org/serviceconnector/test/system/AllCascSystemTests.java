@@ -24,6 +24,13 @@ import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientChangeSub
 import org.serviceconnector.test.system.api.cln.casc1.APIMultipleClientSubscribeCasc1Test;
 import org.serviceconnector.test.system.api.cln.casc1.APIReceivePublicationCasc1Test;
 import org.serviceconnector.test.system.api.cln.casc1.APISubscribeUnsubscribeChangeCasc1Test;
+import org.serviceconnector.test.system.api.cln.casc2.APICreateDeleteSessionCasc2Test;
+import org.serviceconnector.test.system.api.cln.casc2.APIExecuteAndSendCasc2Test;
+import org.serviceconnector.test.system.api.cln.casc2.APIExecuteCacheCasc2Test;
+import org.serviceconnector.test.system.api.cln.casc2.APIMultipleClientChangeSubscriptionCasc2Test;
+import org.serviceconnector.test.system.api.cln.casc2.APIMultipleClientSubscribeCasc2Test;
+import org.serviceconnector.test.system.api.cln.casc2.APIReceivePublicationCasc2Test;
+import org.serviceconnector.test.system.api.cln.casc2.APISubscribeUnsubscribeChangeCasc2Test;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnChangeSubscriptionCasc1Test;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnCreateSessionCasc1Test;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnExecuteCasc1Test;
@@ -37,7 +44,6 @@ import org.serviceconnector.test.system.scmp.casc2.SCMPClnExecuteCasc2Test;
 		APICreateDeleteSessionCasc1Test.class,
 		APIExecuteAndSendCasc1Test.class,
 
-
 		// API publish tests
 		APISubscribeUnsubscribeChangeCasc1Test.class,
 		APIReceivePublicationCasc1Test.class,
@@ -49,6 +55,17 @@ import org.serviceconnector.test.system.scmp.casc2.SCMPClnExecuteCasc2Test;
 		SCMPClnCreateSessionCasc1Test.class,
 		SCMPClnExecuteCasc1Test.class,
 		SCMPClnChangeSubscriptionCasc1Test.class,
+		
+		// API session tests for cascaded 2 mode
+		APICreateDeleteSessionCasc2Test.class,
+		APIExecuteAndSendCasc2Test.class,
+
+		// API publish tests for cascaded 2 mode
+		APISubscribeUnsubscribeChangeCasc2Test.class,
+		APIReceivePublicationCasc2Test.class,
+		APIMultipleClientSubscribeCasc2Test.class,
+		APIMultipleClientChangeSubscriptionCasc2Test.class,
+		APIExecuteCacheCasc2Test.class,
 		
 		// SCMP session test for cascaded 2 mode
 		SCMPClnCreateSessionCasc2Test.class,
