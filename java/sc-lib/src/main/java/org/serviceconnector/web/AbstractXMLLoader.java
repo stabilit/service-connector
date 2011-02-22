@@ -319,9 +319,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 				continue;
 			}
 			if (name.startsWith("get")) {
-			   name = String.valueOf(name.charAt(3)).toLowerCase() + name.substring(4);
+				name = String.valueOf(name.charAt(3)).toLowerCase() + name.substring(4);
 			} else {
-			   name = String.valueOf(name.charAt(2)).toLowerCase() + name.substring(3);				
+				name = String.valueOf(name.charAt(2)).toLowerCase() + name.substring(3);
 			}
 			if ("class".equals(name)) {
 				continue;
@@ -336,7 +336,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					continue;
 				}
 			}
-			
+
 			try {
 				Object value = null;
 				try {
@@ -473,7 +473,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeCharacters(String.valueOf(size));
 		writer.writeEndElement(); // end of sessions
 	}
-	
+
 	/**
 	 * Write runtime.
 	 * 
@@ -505,5 +505,44 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeStartElement("peakThreadCount");
 		writer.writeCData(String.valueOf(SystemInfo.getPeakThreadCount()));
 		writer.writeEndElement(); // end of peakThreadCount
+	}
+
+	/**
+	 * Write success to xml stream using given message text.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param msg
+	 *            the msg
+	 */
+	public void writeSuccess(XMLStreamWriter writer, String msg) throws Exception {
+		writer.writeStartElement("status");
+		writer.writeCharacters("success");
+		writer.writeEndElement();
+		writer.writeStartElement("messages");
+		writer.writeStartElement("message");
+		writer.writeCharacters(msg);
+		writer.writeEndElement(); // message
+		writer.writeEndElement(); // messages
+
+	}
+
+	/**
+	 * Write failure to xml stream using given message text.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param msg
+	 *            the msg
+	 */
+	public void writeFailure(XMLStreamWriter writer, String msg) throws Exception {
+		writer.writeStartElement("status");
+		writer.writeCharacters("failure");
+		writer.writeEndElement();
+		writer.writeStartElement("messages");
+		writer.writeStartElement("message");
+		writer.writeCharacters(msg);
+		writer.writeEndElement(); // message
+		writer.writeEndElement(); // messages
 	}
 }

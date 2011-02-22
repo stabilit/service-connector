@@ -68,10 +68,10 @@
 	</xsl:template>
 	<xsl:template name="service_row">
 	    <xsl:param name="class"/>
-	    <td class="{$class}">
+	    <td class="{$class}" id="service_state">
 	      <xsl:choose>
-	        <xsl:when test="enabled = 'true'">Enabled</xsl:when>
-	        <xsl:otherwise>Disabled</xsl:otherwise>
+	        <xsl:when test="enabled = 'true'"><a class="sc_table"  href="javascript:disableService('{name}');">Enabled</a></xsl:when>
+	        <xsl:otherwise><a class="sc_table" href="javascript:enableService('{name}')">Disabled</a></xsl:otherwise>
 	      </xsl:choose>
 	    </td>
 	    <xsl:choose>

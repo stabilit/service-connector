@@ -51,6 +51,22 @@ function errorCallback() {
    	setStatusError();
 }
 
+function enableService(name) {
+	var check = window.confirm("Enable service " + name + "?");
+	if (check == false) {
+		return;
+    }
+	ajaxSystem.ajaxCall('ajax/system?action=enableService&service=' + name);	
+}
+
+function disableService(name) {
+	var check = window.confirm("Disable service " + name + "?");
+	if (check == false) {
+		return;
+    }
+	ajaxSystem.ajaxCall('ajax/system?action=disableService&service=' + name);	
+}
+
 function runGC() {
 	ajaxSystem.ajaxCall('ajax/system?action=gc');	
 }
@@ -179,7 +195,13 @@ function systemCallback() {
        centerLayer("DialogBox", 400, 400, 0, 0);
 	}
 	var action = this.ajaxGetParam("action");
-	var service = this.ajaxGetParam("service");
+	var service = this.ajaxGetParam("service");	
+	if (action == "enableService") {
+        window.location.reload();        		
+	}
+	if (action == "disableService") {
+        window.location.reload();        		
+	}
 	if (action == "downloadAndReplace") {
 		if (service != null) {
 		    maintenanceCall("sc_property_download", service);
