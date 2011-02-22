@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web.netty;
 
+import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,8 @@ public class NettyWebRequest extends AbstractWebRequest {
 	 * @param httpRequest
 	 *            the request
 	 */
-	public NettyWebRequest(HttpRequest httpRequest) {
+	public NettyWebRequest(HttpRequest httpRequest, InetSocketAddress localAddress) {
+		super(localAddress);
 		this.request = httpRequest;
 		if (this.request != null) {
 			// http get
@@ -77,7 +79,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 			}
 		}
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
 	public String getURL() {
@@ -109,7 +111,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 		}
 		for (Cookie cookie : cookies) {
 			if (key.equals(cookie.getName())) {
-				return cookie;
+			   return cookie;
 			}
 		}
 		return null;

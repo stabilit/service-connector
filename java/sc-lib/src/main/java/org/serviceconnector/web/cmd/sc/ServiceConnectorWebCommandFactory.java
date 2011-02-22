@@ -25,6 +25,7 @@ import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebSession;
 import org.serviceconnector.web.LoginException;
+import org.serviceconnector.web.WebSessionRegistry;
 import org.serviceconnector.web.cmd.FlyweightWebCommandFactory;
 import org.serviceconnector.web.cmd.IWebCommand;
 import org.serviceconnector.web.cmd.IWebCommandAccessible;
@@ -145,7 +146,7 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 				return;
 			}
 			webSession.removeAttribute("userid");
-
+			WebSessionRegistry.getCurrentInstance().removeSession(webSession);            
 		}
 
 		/** {@inheritDoc} */

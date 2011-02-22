@@ -243,6 +243,10 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		writer.writeStartElement("info");
 		this.writeBean(writer, systemInfo);
 		writer.writeEndElement(); // close info tag
+		// write web info
+		writer.writeStartElement("webinfo");
+		this.writeWebInfo(writer);
+		writer.writeEndElement(); // end of web info
 		// write runtime info
 		writer.writeStartElement("runtime");
 		this.writeRuntime(writer);
@@ -455,6 +459,21 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		}
 	}
 
+	/**
+	 * Write web info.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @throws XMLStreamException
+	 *             the xML stream exception
+	 */
+	public void writeWebInfo(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeStartElement("sessions");
+		int size = WebSessionRegistry.getCurrentInstance().getSize();
+		writer.writeCharacters(String.valueOf(size));
+		writer.writeEndElement(); // end of sessions
+	}
+	
 	/**
 	 * Write runtime.
 	 * 

@@ -39,6 +39,30 @@ public interface IWebSession {
 	public abstract String getSessionId();
 
 	/**
+	 * Gets the host.
+	 *
+	 * @return the host
+	 */
+	public abstract String getHost();
+
+	/**
+	 * Sets the host.
+	 */
+	public abstract void setHost(String host);
+	/**
+	 * Gets the port.
+	 *
+	 * @return the port
+	 */
+	public abstract int getPort();
+	
+	/**
+	 * Sets the port.
+	 *
+	 * @param port the new port
+	 */
+	public abstract void setPort(int port);
+	/**
 	 * Gets the attribute.
 	 *
 	 * @param key the key

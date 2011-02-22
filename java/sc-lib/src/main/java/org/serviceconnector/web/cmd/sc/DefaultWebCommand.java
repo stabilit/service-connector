@@ -32,6 +32,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.handler.codec.http.Cookie;
+import org.jboss.netty.handler.codec.http.DefaultCookie;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
 import org.serviceconnector.web.IWebSession;
@@ -94,7 +95,11 @@ public class DefaultWebCommand extends WebCommandAdapter {
 				response.addCookie(jsessionidCookie);
 			} else {
 				webSession = request.getSession(true);
-				response.addCookie("JSESSIONID", webSession.getSessionId());
+				webSession.setHost(request.getHost());
+				webSession.setPort(request.getPort());
+				DefaultCookie cookie = new DefaultCookie("JSESSIONID", webSession.getSessionId());
+				cookie.setPath("/");
+				response.addCookie(cookie);
 				request.setAttribute("JSESSIONID", webSession.getSessionId());
 			}
 		}

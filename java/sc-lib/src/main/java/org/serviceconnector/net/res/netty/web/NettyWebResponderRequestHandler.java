@@ -63,7 +63,7 @@ public class NettyWebResponderRequestHandler extends SimpleChannelUpstreamHandle
 		responderRegistry.setThreadLocal(port);
 		HttpRequest httpRequest = (HttpRequest) event.getMessage();
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-		IWebRequest webRequest = new NettyWebRequest(httpRequest);
+		IWebRequest webRequest = new NettyWebRequest(httpRequest, ((InetSocketAddress) channel.getLocalAddress()));
 		IWebResponse webResponse = new NettyWebResponse(httpResponse);
 		IWebCommand webCommand = WebContext.getWebCommand(webRequest);
 		webCommand.run(webRequest, webResponse);

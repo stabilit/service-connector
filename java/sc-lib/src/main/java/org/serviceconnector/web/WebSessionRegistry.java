@@ -49,7 +49,8 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 		int webSessionScheduleTimeoutSeconds = WebContext.getWebConfiguration().getWebSessionScheduleTimeoutSeconds();
 		int webSessionTimeoutMinutes = WebContext.getWebConfiguration().getWebSessionTimeoutMinutes();
 		this.webSessionExpirationTimeoutRun = new WebSessionExpirationTimeoutRun(webSessionTimeoutMinutes);
-		this.webSessionScheduler.scheduleAtFixedRate(this.webSessionExpirationTimeoutRun, webSessionScheduleTimeoutSeconds, webSessionScheduleTimeoutSeconds, TimeUnit.SECONDS);
+		this.webSessionScheduler.scheduleAtFixedRate(this.webSessionExpirationTimeoutRun, webSessionScheduleTimeoutSeconds,
+				webSessionScheduleTimeoutSeconds, TimeUnit.SECONDS);
 		logger.debug("start web session expiration thread using timeout (s) = " + webSessionScheduleTimeoutSeconds);
 	}
 
@@ -89,6 +90,17 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 	}
 
 	/**
+	 * Removes the session.
+	 *
+	 * @param session the session
+	 */
+	public void removeSession(IWebSession session) {
+		if (session == null) {
+			return;
+		}
+		this.remove(session.getSessionId());
+	}
+	/**
 	 * Removes the expired sessions.
 	 */
 	public synchronized void removeExpiredSessions(int timeoutMinutes) {
@@ -96,20 +108,18 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 		if (sessionKeys == null) {
 			return;
 		}
-		for (Object sessionKey : sessionKeys) {			
-			IWebSession session = (IWebSession) this.get((String)sessionKey);
+		for (Object sessionKey : sessionKeys) {
+			IWebSession session = (IWebSession) this.get((String) sessionKey);
 			if (session.isExpired(timeoutMinutes)) {
-				this.remove((String)sessionKey);
+				this.remove((String) sessionKey);
 			}
 		}
 	}
-	
+
 	public Object[] getAllSessionKeys() {
 		Object[] keys = this.keySetArray();
 		return keys;
 	}
-
-
 
 	/**
 	 * The Class WebSession.
@@ -119,12 +129,18 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 		/** The attr map. */
 		private Map<String, Object> attrMap;
 
+		/** The host. */
+		private String host;
+
+		/** The port. */
+		private int port;
+
 		/** The session id. */
 		private String sessionId;
-		
+
 		/** The creation time stamp. */
 		private long creationTimeStamp;
-		
+
 		/** The last access time stamp. */
 		private long accessTimeStamp;
 
@@ -134,6 +150,8 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 		public WebSession() {
 			attrMap = new HashMap<String, Object>();
 			UUID uuid = UUID.randomUUID();
+			this.host = null;
+			this.port = 0;
 			this.sessionId = uuid.toString();
 			this.creationTimeStamp = System.currentTimeMillis();
 			this.accessTimeStamp = this.creationTimeStamp;
@@ -161,15 +179,39 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 
 		/** {@inheritDoc} */
 		@Override
+		public String getHost() {
+			return this.host;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void setHost(String host) {
+			this.host = host;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public int getPort() {
+			return this.port;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void setPort(int port) {
+			this.port = port;
+		}
+
+		/** {@inheritDoc} */
+		@Override
 		public String getSessionId() {
 			return this.sessionId;
 		}
-		
+
 		/** {@inheritDoc} */
 		@Override
-    	public void access() {
-	    	this.accessTimeStamp = System.currentTimeMillis();
-	    }	
+		public void access() {
+			this.accessTimeStamp = System.currentTimeMillis();
+		}
 
 		@Override
 		public boolean isExpired(long timeoutMinutes) {

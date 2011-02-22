@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web;
 
+import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,26 @@ import org.jboss.netty.handler.codec.http.Cookie;
  */
 public interface IWebRequest {
 
+	/**
+	 * Gets the local server address.
+	 *
+	 * @return the local address
+	 */
+	public InetSocketAddress getLocalAddress();
+
+	/**
+	 * Gets the host.
+	 *
+	 * @return the host
+	 */
+	public String getHost();
+
+	/**
+	 * Gets the port.
+	 *
+	 * @return the port
+	 */
+	public int getPort();
 	/**
 	 * Returns the URI (or path) of this request.
 	 * 
@@ -95,4 +116,5 @@ public interface IWebRequest {
 	 * @return the parameter map
 	 */
 	public abstract Map<String, List<String>> getParameterMap();
+
 }

@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import org.apache.log4j.Logger;
 import org.jboss.netty.handler.codec.http.Cookie;
 import org.jboss.netty.handler.codec.http.CookieEncoder;
-import org.jboss.netty.handler.codec.http.DefaultCookie;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.web.IWebResponse;
@@ -84,17 +83,6 @@ public class NettyWebResponse implements IWebResponse {
 	@Override
 	public void setContentType(String contentType) {
 		this.response.addHeader("Content-Type", contentType);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void addCookie(String key, String value) {
-		DefaultCookie cookie = new DefaultCookie(key, value);
-		cookie.setPath("/");
-		if (this.ce == null) {
-			this.ce = new CookieEncoder(true);
-		}
-		this.ce.addCookie(cookie);
 	}
 
 	/** {@inheritDoc} */

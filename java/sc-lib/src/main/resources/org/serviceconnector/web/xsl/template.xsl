@@ -147,9 +147,16 @@
            Runtime
         </div>             
         <table border="0" class="sc_table border_right" cellspacing="0" cellpadding="0">
+          <xsl:apply-templates select="$body/system/webinfo"/>        
           <xsl:apply-templates select="$body/system/runtime"/>        
         </table>
       </div>
+	</xsl:template>
+	<xsl:template match="webinfo">
+	  <tr class="sc_table_even">
+	    <td class="sc_table_even">Web Sessions</td>	  
+	    <td class="sc_table_even"><xsl:value-of select="sessions"/></td>	  
+	  </tr>	  
 	</xsl:template>
 	<xsl:template match="runtime">
 	  <tr class="sc_table_even">

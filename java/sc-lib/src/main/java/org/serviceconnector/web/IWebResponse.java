@@ -60,16 +60,6 @@ public interface IWebResponse {
 	/**
 	 * Adds the cookie.
 	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
-	 */
-	public abstract void addCookie(String key, String value);
-
-	/**
-	 * Adds the cookie.
-	 * 
 	 * @param cookie
 	 *            the cookie
 	 */
