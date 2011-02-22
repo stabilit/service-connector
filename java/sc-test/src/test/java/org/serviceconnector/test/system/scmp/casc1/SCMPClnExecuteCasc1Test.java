@@ -69,6 +69,18 @@ public class SCMPClnExecuteCasc1Test extends SystemSuperTest {
 		AppContext.init();
 		this.createSession();
 	}
+	
+	public static void setUpServiceConnectorAndServer() {
+		SystemSuperTest.setUpServiceConnectorAndServer();
+		// server definitions
+		List<ServerDefinition> srvToSC0Defs = new ArrayList<ServerDefinition>();
+		ServerDefinition srvToSC0Def = new ServerDefinition(TestConstants.COMMUNICATOR_TYPE_SESSION,
+				TestConstants.log4jSrvProperties, TestConstants.sesServerName1, TestConstants.PORT_SES_SRV_TCP,
+				TestConstants.PORT_SC_TCP, 1, 1, TestConstants.sesServiceName1);
+		srvToSC0Defs.add(srvToSC0Def);
+		SystemSuperTest.srvDefs = srvToSC0Defs;
+	}
+
 
 	public static void setUp1CascadedServiceConnectorAndServer() {
 		List<ServiceConnectorDefinition> scCascDefs = new ArrayList<ServiceConnectorDefinition>();
