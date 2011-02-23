@@ -217,7 +217,7 @@ public class TestPublishServer extends TestStatefulServer {
 
 		@Override
 		public void abortSubscription(SCMessage request, int operationTimeoutMillis) {
-			logger.log(Level.OFF, "Unsubscribe with sid=" + request.getSessionId());
+			logger.log(Level.OFF, "Abort subscription with sid=" + request.getSessionId());
 		}
 	}
 
