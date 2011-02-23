@@ -214,6 +214,11 @@ public class TestPublishServer extends TestStatefulServer {
 			logger.log(Level.OFF, "Unsubscribe with sid=" + request.getSessionId() + " mask=" + request.getMask());
 			SubscriptionLogger.logUnsubscribe("publish-1", request.getSessionId());
 		}
+
+		@Override
+		public void abortSubscription(SCMessage request, int operationTimeoutMillis) {
+			logger.log(Level.OFF, "Unsubscribe with sid=" + request.getSessionId());
+		}
 	}
 
 	private class PublishThread extends Thread {

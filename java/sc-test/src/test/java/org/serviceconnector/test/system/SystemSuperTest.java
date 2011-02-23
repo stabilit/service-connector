@@ -128,7 +128,7 @@ public class SystemSuperTest {
 		ServiceConnectorDefinition sc0CascDef = new ServiceConnectorDefinition(TestConstants.SC0_CASC,
 				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
 		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
-				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
+				TestConstants.SC1CASC2Properties, TestConstants.log4jSC1CASCProperties);
 		ServiceConnectorDefinition sc2CascDef = new ServiceConnectorDefinition(TestConstants.SC2_CASC,
 				TestConstants.SC2CASC2Properties, TestConstants.log4jSC2CASCProperties);
 		scCascDefs.add(sc0CascDef);

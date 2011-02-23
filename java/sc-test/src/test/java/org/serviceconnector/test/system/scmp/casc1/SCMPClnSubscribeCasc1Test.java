@@ -235,7 +235,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t43_SlowClient() throws Exception {
+	public void t43_SlowClient_SubscriptionTimesOut() throws Exception {
 		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
 
 		subscribeCall.setNoDataIntervalSeconds(10);
@@ -310,5 +310,11 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		receivePublicationCall2.invoke(cbk1, 2000);
 		reply1 = cbk1.getMessageSync(1000);
 		TestUtil.verifyError(reply1, SCMPError.SUBSCRIPTION_NOT_FOUND, SCMPMsgType.RECEIVE_PUBLICATION);
+
+		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1,
+				sessionId1);
+		unSubscribeCall.invoke(new TestCallback(false), 3000);
+		unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId2);
+		unSubscribeCall.invoke(new TestCallback(false), 3000);
 	}
 }
