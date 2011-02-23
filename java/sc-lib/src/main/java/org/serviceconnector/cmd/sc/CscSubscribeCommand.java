@@ -82,7 +82,7 @@ public class CscSubscribeCommand extends CommandAdapter {
 		Subscription cscSubscription = this.subscriptionRegistry.getSubscription(cascSubscriptionId);
 		SubscriptionMask cscMask = new SubscriptionMask(cscSCMaskString);
 		Subscription tmpCascSCSubscription = new Subscription(cscMask, sessionInfo, ipAddressList, noi, AppContext
-				.getBasicConfiguration().getSubscriptionTimeoutMillis());
+				.getBasicConfiguration().getSubscriptionTimeoutMillis(), true);
 		tmpCascSCSubscription.setService(abstractService);
 
 		switch (abstractService.getType()) {

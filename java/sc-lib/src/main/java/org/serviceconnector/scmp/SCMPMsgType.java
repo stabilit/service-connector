@@ -45,6 +45,8 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	SRV_DELETE_SESSION("SDS"),
 	/** The SRV_ABORT_SESSION. */
 	SRV_ABORT_SESSION("SAS"),
+	/** The CSC_ABORT_SESSION. */
+	CSC_ABORT_SESSION("XAS"),
 	/** The REGISTER_SERVER. */
 	REGISTER_SERVER("REG"),
 	/** The CHECK_REGISTRATION. */

@@ -152,8 +152,8 @@ public class ListenerConfiguration {
 			}
 			RemoteNodeConfiguration remoteNodeConfig = remoteNodeListConfiguration.getRequesterConfigurations().get(remoteNode);
 
-			// remote node must be a web server
-			if ((remoteNodeConfig.getServerType() == ServerType.WEB_SERVER) == false) {
+			// remote node must be a web server or a cascaded SC
+			if ((remoteNodeConfig.getServerType() == ServerType.WEB_SERVER || remoteNodeConfig.getServerType() == ServerType.CASCADED_SC) == false) {
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "remote node=" + remoteNode
 						+ " is not a web server");
 			}

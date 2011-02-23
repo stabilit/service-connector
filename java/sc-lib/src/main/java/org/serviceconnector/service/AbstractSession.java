@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
 import java.util.UUID;
@@ -34,14 +35,15 @@ public abstract class AbstractSession {
 	protected String ipAddressList;
 	/** The session info. */
 	private String sessionInfo;
-
 	/** The session timeout. */
 	private ScheduledFuture<TimeoutWrapper> timeout;
-
 	/** The timeouter task. */
 	private TimeoutWrapper timeouterTask;
-
+	/** The service. */
 	private Service service;
+
+	/** The cascaded, indicates if session has been created by a cascaded client or a real client. */
+	private boolean cascaded;
 
 	/**
 	 * Instantiates a new session.
@@ -52,12 +54,17 @@ public abstract class AbstractSession {
 	 *            the ip address list
 	 */
 	public AbstractSession(String sessionInfo, String ipAddressList) {
+		this(sessionInfo, ipAddressList, false);
+	}
+
+	public AbstractSession(String sessionInfo, String ipAddressList, boolean cascaded) {
 		UUID uuid = UUID.randomUUID();
 		this.id = uuid.toString();
 		this.server = null;
 		this.timeout = null;
 		this.ipAddressList = ipAddressList;
 		this.sessionInfo = sessionInfo;
+		this.cascaded = cascaded;
 	}
 
 	/**
@@ -150,6 +157,15 @@ public abstract class AbstractSession {
 	 */
 	public TimeoutWrapper getTimeouterTask() {
 		return this.timeouterTask;
+	}
+
+	/**
+	 * Checks if is cascaded session. Indicates if session has been created by a cascaded client or a real client.
+	 * 
+	 * @return true, if is cascaded
+	 */
+	public boolean isCascaded() {
+		return this.cascaded;
 	}
 
 	/**

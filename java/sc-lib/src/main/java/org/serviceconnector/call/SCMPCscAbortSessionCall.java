@@ -14,68 +14,37 @@
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
-package org.serviceconnector.service;
+package org.serviceconnector.call;
 
-import org.serviceconnector.server.IStatefulServer;
+import org.apache.log4j.Logger;
+import org.serviceconnector.net.req.IRequester;
+import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPMsgType;
 
-public class Subscription extends AbstractSession {
+/**
+ * The Class SCMPCscAbortSessionCall. Call aborts a session from a cascaded client.
+ */
+public class SCMPCscAbortSessionCall extends SCMPCallAdapter {
 
-	/** The mask in bytes. */
-	private SubscriptionMask mask;
-	/** The no data interval. */
-	private int noDataInterval = 0;
-	/** The subscription timeout seconds. */
-	private double subscriptionTimeoutMillis;
-
-	/**
-	 * Instantiates a new subscription.
-	 * 
-	 * @param mask
-	 *            the mask
-	 */
-	public Subscription(SubscriptionMask mask, String sessionInfo, String ipAddressList, int noDataInterval,
-			double subscriptionTimeoutMillis, boolean cascaded) {
-		super(sessionInfo, ipAddressList, cascaded);
-		this.mask = mask;
-		this.noDataInterval = noDataInterval;
-		this.subscriptionTimeoutMillis = subscriptionTimeoutMillis;
-	}
+	/** The Constant logger. */
+	@SuppressWarnings("unused")
+	private final static Logger logger = Logger.getLogger(SCMPCscAbortSessionCall.class);
 
 	/**
-	 * Gets the mask.
+	 * Instantiates a new SCMP csc abort session call.
 	 * 
-	 * @return the mask
+	 * @param req
+	 *            the requester
+	 * @param receivedMessage
+	 *            the received message
 	 */
-	public SubscriptionMask getMask() {
-		return mask;
-	}
-
-	/**
-	 * Sets the mask.
-	 * 
-	 * @param mask
-	 *            the new mask
-	 */
-	public void setMask(SubscriptionMask mask) {
-		this.mask = mask;
-	}
-
-	public double getSubscriptionTimeoutMillis() {
-		return this.subscriptionTimeoutMillis;
+	public SCMPCscAbortSessionCall(IRequester req, SCMPMessage receivedMessage) {
+		super(req, receivedMessage);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public IStatefulServer getServer() {
-		return (IStatefulServer) this.server;
-	}
-
-	/**
-	 * Gets the no data interval.
-	 * 
-	 * @return the no data interval
-	 */
-	public int getNoDataInterval() {
-		return noDataInterval;
+	public SCMPMsgType getMessageType() {
+		return SCMPMsgType.CSC_ABORT_SESSION;
 	}
 }

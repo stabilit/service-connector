@@ -34,7 +34,8 @@ import org.serviceconnector.util.LinkedNode;
 import org.serviceconnector.util.LinkedQueue;
 
 /**
- * The Class PublishMessageQueue. The PublishMessageQueue is responsible for queuing incoming data from server, to inform subscriptions
+ * The Class PublishMessageQueue. The PublishMessageQueue is responsible for queuing incoming data from server, to inform
+ * subscriptions
  * about new arrived messages, to observe there timeouts and to know there current position in queue (TimeAwareDataPointer). The
  * queue needs also to handle the deleting of consumed messages and to assure queue does not overflow.
  * 
@@ -261,14 +262,16 @@ public class PublishMessageQueue<E> {
 	public synchronized void unsubscribe(String sessionId) {
 		logger.trace("unsubscribe");
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
-		if (dataPointer.listening) {
+		if (dataPointer != null && dataPointer.listening) {
 			// unsubscribe & pointer is in listen mode - run a timeout
 			dataPointer.cancel();
 			dataPointer.publishTimeout.timeout();
 			dataPointer.stopListen();
 		}
 		this.pointerMap.remove(sessionId);
-		dataPointer.destroy();
+		if (dataPointer != null) {
+			dataPointer.destroy();
+		}
 	}
 
 	/**

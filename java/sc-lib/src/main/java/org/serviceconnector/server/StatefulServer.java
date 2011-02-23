@@ -38,8 +38,8 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SessionLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.Requester;
-import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.PublishMessageQueue;
+import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.SCMPError;
@@ -305,16 +305,23 @@ public class StatefulServer extends Server implements IStatefulServer {
 	@Override
 	public void abortSession(AbstractSession session, String reason) {
 		// delete session in global registries
-		StatefulServer.sessionRegistry.removeSession(session.getId());
-		StatefulServer.subscriptionRegistry.removeSubscription(session.getId());
+		if (session instanceof Subscription) {
+			StatefulServer.subscriptionRegistry.removeSubscription(session.getId());
+			PublishMessageQueue<SCMPMessage> queue = ((PublishService) ((StatefulServer) session.getServer()).getService())
+					.getMessageQueue();
+			// unsubscribe subscription
+			queue.unsubscribe(session.getId());
+		} else {
+			StatefulServer.sessionRegistry.removeSession((Session) session);
+		}
 		// delete session on this server
 		this.removeSession(session);
-		CommandCallback callback = null;
 
+		if (session.isCascaded() == true) {
+			// session is of type cascaded - do not forward to server
+			return;
+		}
 		int oti = this.basicConf.getSrvAbortOTIMillis();
-		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
-		int i = 0;
-		int otiOnServerMillis = 0;
 		// set up abort message
 		SCMPMessage abortMessage = new SCMPMessage();
 		abortMessage.setHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE, SCMPError.SESSION_ABORT.getErrorCode());
@@ -322,6 +329,14 @@ public class StatefulServer extends Server implements IStatefulServer {
 		abortMessage.setServiceName(this.getServiceName());
 		abortMessage.setSessionId(session.getId());
 		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
+		this.abortSessionAndWaitMech(oti, abortMessage, reason);
+	}
+
+	public void abortSessionAndWaitMech(int oti, SCMPMessage abortMessage, String reason) {
+		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
+		int i = 0;
+		CommandCallback callback = null;
+		int otiOnServerMillis = 0;
 		try {
 			// Following loop implements the wait mechanism in case of a busy connection pool
 			do {
@@ -415,6 +430,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 				queue.unsubscribe(session.getId());
 			} else {
 				StatefulServer.sessionRegistry.removeSession((Session) session);
+			}
+			if (session.isCascaded() == true) {
+				// session is of type cascaded - do not forward to server
+				return;
 			}
 			abortMessage.setSessionId(session.getId());
 			abortMessage.setServiceName(this.getServiceName());

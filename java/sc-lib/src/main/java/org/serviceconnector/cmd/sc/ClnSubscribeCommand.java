@@ -89,7 +89,7 @@ public class ClnSubscribeCommand extends CommandAdapter {
 		int noi = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.NO_DATA_INTERVAL);
 		// create temporary subscription
 		Subscription tmpSubscription = new Subscription(subscriptionMask, sessionInfo, ipAddressList, noi, AppContext
-				.getBasicConfiguration().getSubscriptionTimeoutMillis());
+				.getBasicConfiguration().getSubscriptionTimeoutMillis(), false);
 		tmpSubscription.setService(abstractService);
 		reqMessage.setSessionId(tmpSubscription.getId());
 

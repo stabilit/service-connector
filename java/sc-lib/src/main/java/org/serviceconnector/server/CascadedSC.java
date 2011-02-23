@@ -29,6 +29,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
+import org.serviceconnector.call.SCMPCscAbortSessionCall;
 import org.serviceconnector.call.SCMPCscChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPCscSubscribeCall;
 import org.serviceconnector.call.SCMPCscUnsubscribeCall;
@@ -51,6 +52,7 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.netty.NettyHttpRequest;
+import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
 import org.serviceconnector.scmp.ISubscriptionCallback;
@@ -287,6 +289,51 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	public void cascadedSCAbortSubscription(CascadedClient cascClient, SCMPMessage msgToForward, ISubscriptionCallback callback,
+			int timeoutMillis) {
+		int oti = (int) (this.operationTimeoutMultiplier * timeoutMillis);
+		long boforeAcquireTime = System.currentTimeMillis();
+		if (this.tryAcquirePermitOnCascClientSemaphore(cascClient, oti, callback) == false) {
+			// could not get permit to process - response done inside method
+			return;
+		}
+		// calculate new OTI, reduce original by wait time in acquire
+		oti = oti - (int) (System.currentTimeMillis() - boforeAcquireTime);
+		// try catch block to assure releasing permit in case of any error - very important!
+		try {
+			// remove (cascaded SC / client) from cascaded client list
+			cascClient.removeClientSubscriptionId(msgToForward.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID));
+			cascClient.removeClientSubscriptionId(msgToForward.getSessionId());
+
+			msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
+			msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
+
+			Map<String, SubscriptionMask> clnSubscriptions = cascClient.getClientSubscriptionIds();
+			if (clnSubscriptions.size() != 0) {
+				// cascaded client still has client subscriptions set cascaded mask
+				String cascadedMask = cascClient.evalSubscriptionMaskFromClientSubscriptions();
+				msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_MASK, cascadedMask);
+				cascClient.setSubscriptionMask(new SubscriptionMask(cascadedMask));
+				SCMPCscAbortSessionCall cscAbortCall = new SCMPCscAbortSessionCall(this.requester, msgToForward);
+				cscAbortCall.invoke(callback, oti);
+				return;
+			}
+			try {
+				// no client subscription left - destroy client after XAS
+				SCMPCscAbortSessionCall cscAbortCall = new SCMPCscAbortSessionCall(this.requester, msgToForward);
+				cscAbortCall.invoke(callback, oti);
+			} finally {
+				// destroy cascaded client in any case
+				cascClient.destroy();
+			}
+		} catch (Exception e) {
+			callback.receive(e);
+		} finally {
+			// release permit in case any case
+			cascClient.getCascClientSemaphore().release();
+		}
+	}
+
 	public void unsubscribeCascadedClientInErrorCases(CascadedClient cascClient) {
 		try {
 			SCMPMessage msg = new SCMPMessage();
@@ -382,17 +429,22 @@ public class CascadedSC extends Server implements IStatefulServer {
 		if (session instanceof Subscription) {
 			Subscription subscription = (Subscription) session;
 			CascadedPublishService casService = (CascadedPublishService) subscription.getService();
+
+			PublishMessageQueue<SCMPMessage> queue = casService.getMessageQueue();
+			// unsubscribe subscription
+			queue.unsubscribe(subscription.getId());
+
 			CascadedClient cascClient = casService.getCascClient();
-			SCMPMessage unsubMessage = new SCMPMessage();
-			unsubMessage.setSessionId(subscription.getId());
+			SCMPMessage abortMessage = new SCMPMessage();
+			abortMessage.setSessionId(subscription.getId());
 
 			long msgSeqNr = cascClient.getMsgSequenceNr().incrementAndGetMsgSequenceNr();
-			unsubMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSeqNr);
-			unsubMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, casService.getName());
+			abortMessage.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, msgSeqNr);
+			abortMessage.setHeader(SCMPHeaderAttributeKey.SERVICE_NAME, casService.getName());
 
 			IRequest request = new NettyHttpRequest(null, null, null);
-			request.setMessage(unsubMessage);
-			this.cascadedSCUnsubscribe(cascClient, unsubMessage, new CscAbortSubscriptionCallback(request, subscription),
+			request.setMessage(abortMessage);
+			this.cascadedSCAbortSubscription(cascClient, abortMessage, new CscAbortSubscriptionCallback(request, subscription),
 					Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		} else {
 			logger.error("session which is in relation with a cascadedSC timed out - should nerver occur");

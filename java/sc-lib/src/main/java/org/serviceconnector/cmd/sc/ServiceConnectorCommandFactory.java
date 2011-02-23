@@ -67,6 +67,8 @@ public class ServiceConnectorCommandFactory extends FlyweightCommandFactory {
 		this.addCommand(cscUnsubscribeCommand.getKey(), cscUnsubscribeCommand);
 		ICommand cscChangeSubscriptionCommand = new CscChangeSubscriptionCommand();
 		this.addCommand(cscChangeSubscriptionCommand.getKey(), cscChangeSubscriptionCommand);
+		ICommand cscAbortSessionCommand = new CscAbortSessionCommand();
+		this.addCommand(cscAbortSessionCommand.getKey(), cscAbortSessionCommand);
 		ICommand receivePublicationCommand = new ReceivePublicationCommand();
 		this.addCommand(receivePublicationCommand.getKey(), receivePublicationCommand);
 		ICommand publishCommand = new PublishCommand();
