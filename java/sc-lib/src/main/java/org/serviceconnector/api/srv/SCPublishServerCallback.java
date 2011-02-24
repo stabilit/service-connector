@@ -1,4 +1,5 @@
-/*
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
@@ -12,7 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.srv;
 
 import org.serviceconnector.api.SCMessage;
@@ -77,10 +78,12 @@ public abstract class SCPublishServerCallback {
 
 	/**
 	 * Abort subscription.
-	 *
-	 * @param scMessage the sc message
-	 * @param operationTimeoutMillis the operation timeout in milliseconds
+	 * 
+	 * @param scMessage
+	 *            the sc message
+	 * @param operationTimeoutMillis
+	 *            the operation timeout millis
 	 */
-	public void abortSubscription(SCMessage scMessage, int operationTimeoutMillis) {
+	public void abortSubscription(SCSubscribeMessage scMessage, int operationTimeoutMillis) {
 	}
 }
