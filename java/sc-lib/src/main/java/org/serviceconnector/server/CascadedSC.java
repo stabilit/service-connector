@@ -263,7 +263,10 @@ public class CascadedSC extends Server implements IStatefulServer {
 		// try catch block to assure releasing permit in case of any error - very important!
 		try {
 			// remove (cascaded SC / client) from cascaded client list
-			cascClient.removeClientSubscriptionId(msgToForward.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID));
+			if (msgToForward.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK) == null) {
+				// remove cascaded client, he unsubscribes himself
+				cascClient.removeClientSubscriptionId(msgToForward.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID));
+			}
 			cascClient.removeClientSubscriptionId(msgToForward.getSessionId());
 
 			Map<String, SubscriptionMask> clnSubscriptions = cascClient.getClientSubscriptionIds();
@@ -305,7 +308,6 @@ public class CascadedSC extends Server implements IStatefulServer {
 			cascClient.removeClientSubscriptionId(msgToForward.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID));
 			cascClient.removeClientSubscriptionId(msgToForward.getSessionId());
 
-			msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
 			msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
 
 			Map<String, SubscriptionMask> clnSubscriptions = cascClient.getClientSubscriptionIds();

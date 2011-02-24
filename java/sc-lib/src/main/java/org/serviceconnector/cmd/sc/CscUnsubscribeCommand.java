@@ -69,6 +69,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 		Subscription cascSubscription = this.getSubscriptionById(cascSubscriptionId);
 		String cascadedSCMask = reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK);
 		int oti = reqMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		PublishMessageQueue<SCMPMessage> publishMessageQueue = ((IPublishService) cascSubscription.getService()).getMessageQueue();
 
 		switch (abstractService.getType()) {
 		case CASCADED_PUBLISH_SERVICE:
@@ -76,27 +77,27 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 			// publish service is cascaded
 			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
 
-			PublishMessageQueue<SCMPMessage> queue = ((IPublishService) cascSubscription.getService()).getMessageQueue();
 			if (cascadedSCMask == null) {
 				// unsubscribe made by cascaded SC on behalf of his last client
 				this.subscriptionRegistry.removeSubscription(cascSubscription.getId());
-				queue.unsubscribe(cascSubscription.getId());
+				publishMessageQueue.unsubscribe(cascSubscription.getId());
 				cascSubscription.getServer().removeSession(cascSubscription);
 				SubscriptionLogger.logUnsubscribe(serviceName, cascSubscription.getId());
 			} else {
 				// unsubscribe made by cascaded SC on behalf of his clients
 				SubscriptionMask cascSCMask = new SubscriptionMask(cascadedSCMask);
-				queue.changeSubscription(cascSubscription.getId(), cascSCMask);
+				publishMessageQueue.changeSubscription(cascSubscription.getId(), cascSCMask);
 				cascSubscription.setMask(cascSCMask);
 				SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
 			}
 			CscUnsubscribeCallbackForCasc callback = new CscUnsubscribeCallbackForCasc(request, response, responderCallback,
 					cascSubscription);
 			cascadedSC.cascadedSCUnsubscribe(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
+			// delete unreferenced nodes in queue
+			publishMessageQueue.removeNonreferencedNodes();
 			return;
 		}
 
-		PublishMessageQueue<SCMPMessage> publishMessageQueue = ((IPublishService) cascSubscription.getService()).getMessageQueue();
 		if (cascadedSCMask == null) {
 			// unsubscribe made by cascaded SC on behalf of his last client
 			this.subscriptionRegistry.removeSubscription(cascSubscription.getId());
@@ -113,6 +114,8 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 				// no need to forward to server
 				response.setSCMP(reply);
 				responderCallback.responseCallback(request, response);
+				// delete unreferenced nodes in queue
+				publishMessageQueue.removeNonreferencedNodes();
 				return;
 			}
 		} else {

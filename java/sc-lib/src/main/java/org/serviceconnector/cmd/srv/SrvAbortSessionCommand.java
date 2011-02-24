@@ -20,10 +20,13 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCSubscribeMessage;
 import org.serviceconnector.api.srv.SrvPublishService;
 import org.serviceconnector.api.srv.SrvService;
+import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.api.srv.SrvSessionService;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
+import org.serviceconnector.net.res.IResponder;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.scmp.HasFaultResponseException;
@@ -62,9 +65,25 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		// look up srvService
-		SrvService srvService = this.getSrvServiceByServiceName(serviceName);
-
+		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
+		IResponder responder = AppContext.getResponderRegistry().getCurrentResponder();
+		int listenerPort = responder.getListenerConfig().getPort();
+		SrvService srvService = srvServiceRegistry.getSrvService(serviceName + "_" + listenerPort);
 		String sessionId = reqMessage.getSessionId();
+
+		if (srvService == null) {
+			// service not available anymore set up reply
+			SCMPMessage reply = new SCMPMessage();
+			reply.setServiceName(serviceName);
+			reply.setSessionId(reqMessage.getSessionId());
+			reply.setMessageType(this.getKey());
+			response.setSCMP(reply);
+			// delete session in SCMPSessionCompositeRegistry
+			SrvCommandAdapter.sessionCompositeRegistry.removeSession(sessionId);
+			responderCallback.responseCallback(request, response);
+			return;
+		}
+
 		// create scMessage
 		SCSubscribeMessage scMessage = new SCSubscribeMessage();
 		scMessage.setData(reqMessage.getBody());
