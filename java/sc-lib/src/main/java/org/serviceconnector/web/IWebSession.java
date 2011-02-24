@@ -39,6 +39,20 @@ public interface IWebSession {
 	public abstract String getSessionId();
 
 	/**
+	 * Gets the user agent.
+	 *
+	 * @return the user agent
+	 */
+	public abstract String getUserAgent();
+
+	/**
+	 * Sets the user agent.
+	 *
+	 * @param userAgent the new user agent
+	 */
+	public abstract void setUserAgent(String userAgent);
+
+	/**
 	 * Gets the host.
 	 *
 	 * @return the host
@@ -49,6 +63,19 @@ public interface IWebSession {
 	 * Sets the host.
 	 */
 	public abstract void setHost(String host);
+	
+	/**
+	 * Gets the remote host.
+	 *
+	 * @return the remote host
+	 */
+	public abstract String getRemoteHost();
+
+	/**
+	 * Sets the remote host host.
+	 */
+	public abstract void setRemoteHost(String host);
+
 	/**
 	 * Gets the port.
 	 *
@@ -62,6 +89,20 @@ public interface IWebSession {
 	 * @param port the new port
 	 */
 	public abstract void setPort(int port);
+	/**
+	 * Gets the port.
+	 *
+	 * @return the port
+	 */
+	public abstract int getRemotePort();
+	
+	/**
+	 * Sets the port.
+	 *
+	 * @param port the new port
+	 */
+	public abstract void setRemotePort(int port);
+	
 	/**
 	 * Gets the attribute.
 	 *

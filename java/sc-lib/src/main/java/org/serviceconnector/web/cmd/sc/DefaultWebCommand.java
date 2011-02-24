@@ -31,8 +31,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
-import org.jboss.netty.handler.codec.http.Cookie;
-import org.jboss.netty.handler.codec.http.DefaultCookie;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
 import org.serviceconnector.web.IWebSession;
@@ -88,20 +86,25 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			return;
 		}
 		IWebSession webSession = request.getSession(false);
-		if (webSession == null) {
-			Cookie jsessionidCookie = request.getCookie("JSESSIONID");
-			if (jsessionidCookie != null) {
-				jsessionidCookie.setMaxAge(0);
-				response.addCookie(jsessionidCookie);			
-			}
-		}
+// cookie replaced by url encoding
+//		if (webSession == null) {
+//			Cookie jsessionidCookie = request.getCookie("JSESSIONID");
+//			if (jsessionidCookie != null) {
+//				jsessionidCookie.setMaxAge(0);
+//				response.addCookie(jsessionidCookie);			
+//			}
+//		}
 		// load xml model as stream
 		ByteArrayOutputStream xmlOS = new ByteArrayOutputStream();
 		XMLDocument xmlDocument = new XMLDocument(request);
 		if (this.isLoginAction(request)) {
 			try {
-				this.webCommandAccessible.login(request, response);
-				response.redirect("/");
+				webSession = this.webCommandAccessible.login(request, response);
+				if (webSession != null) {
+				    response.redirect("/;sid=" + webSession.getSessionId());
+				} else {
+				    response.redirect("/;");				
+				}
 				return;
 			} catch (LoginException e) {
 				xmlDocument.addException(e);

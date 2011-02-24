@@ -3,7 +3,7 @@
     <xsl:import href="template.xsl"/>
     <xsl:template name="sc_script">
     function loadResource() {
-       resourceCall('<xsl:value-of select="$body/resource/@path"/>');
+       resourceCall('<xsl:value-of select="$urlencoded"/>', '<xsl:value-of select="$body/resource/@path"/>');
     }
     </xsl:template>
     <xsl:template name="sc_content">
@@ -24,8 +24,8 @@
 	</xsl:template>
 	<xsl:template name="sc_menu_left">
 	  <xsl:if test="$head/query/param/@id = 'logs'">	    
-        <xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./logs?date={substring-after($head/query/param/@name,'.log.')}">Logs</a></div>
+        <xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./logs{$urlencoded}?date={substring-after($head/query/param/@name,'.log.')}">Logs</a></div>
       </xsl:if> 
-	  <xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./resource?name={$head/query/param/@name}"><xsl:value-of select="$head/query/param/@name"/></a></div>
+	  <xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./resource{$urlencoded}?name={$head/query/param/@name}"><xsl:value-of select="$head/query/param/@name"/></a></div>
 	</xsl:template>
 </xsl:stylesheet>

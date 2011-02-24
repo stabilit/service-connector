@@ -3,18 +3,18 @@
     <xsl:import href="template.xsl"/>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('logs', 'date=<xsl:value-of select="$head/query/param/@date"/>')", 10000);      
+      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'logs', 'date=<xsl:value-of select="$head/query/param/@date"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table max_width">
         <div class="sc_table_title">
            Log files 
            <xsl:if test="$body/logs/@previous">
-             <a class="sc_table_title"  alt="{$body/logs/@previous}" title="{$body/logs/@previous}" href="./logs?date={$body/logs/@previous}">&lt;&lt;</a>
+             <a class="sc_table_title"  alt="{$body/logs/@previous}" title="{$body/logs/@previous}" href="./logs{$urlencoded}?date={$body/logs/@previous}">&lt;&lt;</a>
            </xsl:if>
            &#160;<xsl:value-of select="$body/logs/@current"/>&#160;
            <xsl:if test="$body/logs/@next">             
-             <a class="sc_table_title" alt="{$body/logs/@next}" title="{$body/logs/@next}" href="./logs?date={$body/logs/@next}">&gt;&gt;</a>
+             <a class="sc_table_title" alt="{$body/logs/@next}" title="{$body/logs/@next}" href="./logs{$urlencoded}?date={$body/logs/@next}">&gt;&gt;</a>
            </xsl:if>
         </div>             
         <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
@@ -29,7 +29,7 @@
         </table>
       </div>
     </xsl:template>
-	<xsl:template name="sc_menu_left"><xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./logs">Logs</a></div></xsl:template>
+	<xsl:template name="sc_menu_left"><xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./logs{$urlencoded}">Logs</a></div></xsl:template>
 	<xsl:template match="appender">
 	  <xsl:if test="position() mod 2 = 0">
 	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
@@ -53,7 +53,7 @@
 	    <td class="{$class}">
 	      <xsl:choose>
 	        <xsl:when test="file/@size">
-  	          <a class="sc_table" href="./resource?id=logs&amp;name={file}"><xsl:value-of select="file"/></a>
+  	          <a class="sc_table" href="./resource{$urlencoded}?id=logs&amp;name={file}"><xsl:value-of select="file"/></a>
 	          &#160;
 	          (<xsl:value-of select="file/@size"/>)
 	        </xsl:when>

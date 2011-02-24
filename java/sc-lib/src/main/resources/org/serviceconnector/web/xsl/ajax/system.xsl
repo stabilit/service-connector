@@ -3,9 +3,11 @@
 	<xsl:variable name="head" select="/sc-web/head"/>
 	<xsl:variable name="body" select="/sc-web/body"/>
 	<xsl:variable name="system" select="$body/system[2]"/>
+	<xsl:variable name="urlencoded" select="/sc-web/head/meta/@urlencoded"/>
     <xsl:template match="/">
       <xsl:text disable-output-escaping="yes">&lt;!--action:</xsl:text><xsl:value-of select="$system/action"/><xsl:text disable-output-escaping="yes">:action--&gt;</xsl:text>
       <xsl:text disable-output-escaping="yes">&lt;!--service:</xsl:text><xsl:value-of select="$system/service"/><xsl:text disable-output-escaping="yes">:service--&gt;</xsl:text>
+      <xsl:text disable-output-escaping="yes">&lt;!--sid:</xsl:text><xsl:value-of select="$urlencoded"/><xsl:text disable-output-escaping="yes">:sid--&gt;</xsl:text>
       <table border="0" cellspacing="0" cellpadding="0" width="100%" class="sc_dialog_table">
         <tr>
           <th class="sc_dialog_table_header" style="width:20px;">&#160;</th>

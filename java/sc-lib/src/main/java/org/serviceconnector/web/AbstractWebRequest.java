@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.jboss.netty.handler.codec.http.Cookie;
 
 /**
  * The Class AbstractWebRequest.
@@ -37,33 +36,63 @@ public abstract class AbstractWebRequest implements IWebRequest {
 	/** The local address. */
 	private InetSocketAddress localAddress;
 
+	/** The remote address. */
+	private InetSocketAddress remoteAddress;
+
+	/** The encoded session id. */
+	protected String encodedSessionId;
+
 	/**
 	 * Instantiates a new abstract web request.
+	 * 
+	 * @param localAddress
+	 *            the local address
+	 * @param remoteAddress
+	 *            the remote address
 	 */
-	public AbstractWebRequest(InetSocketAddress localAddress) {
+	public AbstractWebRequest(InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
 		this.localAddress = localAddress;
+		this.remoteAddress = remoteAddress;
 		attrMap = new HashMap<String, Object>();
+		this.encodedSessionId = null;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the attribute.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return the attribute {@inheritDoc}
+	 */
 	@Override
 	public Object getAttribute(String key) {
 		return this.attrMap.get(key);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Sets the attribute.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value {@inheritDoc}
+	 */
 	@Override
 	public void setAttribute(String key, Object value) {
 		this.attrMap.put(key, value);
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.serviceconnector.web.IWebRequest#getLocalAddress()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public InetSocketAddress getLocalAddress() {
 		return this.localAddress;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public InetSocketAddress getRemoteAddress() {
+		return remoteAddress;
 	}
 
 	/**
@@ -76,14 +105,29 @@ public abstract class AbstractWebRequest implements IWebRequest {
 		this.localAddress = localAddress;
 	}
 
+	/**
+	 * Sets the remote address.
+	 * 
+	 * @param remoteAddress
+	 *            the new remote address
+	 */
+	public void setRemoteAddress(InetSocketAddress remoteAddress) {
+		this.remoteAddress = remoteAddress;
+	}
+
+	/** {@inheritDoc} */
 	@Override
 	public String getHost() {
 		return this.getLocalAddress().getHostName();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.serviceconnector.web.IWebRequest#getPort()
-	 */
+	/** {@inheritDoc} */
+	@Override
+	public String getRemoteHost() {
+		return this.getRemoteAddress().getHostName();
+	}
+
+	/** {@inheritDoc} */
 	@Override
 	public int getPort() {
 		return this.getLocalAddress().getPort();
@@ -91,40 +135,85 @@ public abstract class AbstractWebRequest implements IWebRequest {
 
 	/** {@inheritDoc} */
 	@Override
+	public int getRemotePort() {
+		return this.getRemoteAddress().getPort();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public IWebSession getSession(boolean create) {
-		// try to get JSESSIONID from cookie request
-		Cookie jsessionidCookie = this.getCookie("JSESSIONID");
-		if (jsessionidCookie != null) {
-			String sessionId = jsessionidCookie.getValue();
-			if (sessionId != null) {
-				IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
-				if (webSession != null) {
-					// check if web session belongs to same port
-					String webSessionHost = webSession.getHost();
-					String myHost = this.getHost();
-					if (webSessionHost != null && webSessionHost.equals(myHost)) {
-						int webSessionPort = webSession.getPort();
-						int myPort = this.getPort();
-						if (webSessionPort == myPort) {
-							return webSession;
-						}
-					}
+		if (this.encodedSessionId != null) {
+			IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(encodedSessionId);
+			if (webSession != null) {
+				// check if web session belongs to same local port, client and user agent
+				if (this.isMySession(webSession)) {
+				    return webSession;
 				}
 			}
-			// session is no more valid
 		}
-		// check for jsessionid in request attribute
-		String sessionId = (String) this.getAttribute("JSESSIONID");
-		if (sessionId != null) {
-			IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
-			if (webSession != null) {
-				return webSession;
-			}
-		}
+// cookie replaced by url encoding		
+//		// try to get JSESSIONID from cookie request
+//		Cookie jsessionidCookie = this.getCookie("JSESSIONID");
+//		if (jsessionidCookie != null) {
+//			String sessionId = jsessionidCookie.getValue();
+//			if (sessionId != null) {
+//				IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
+//				if (webSession != null) {
+//					// check if web session belongs to same port
+//					String webSessionHost = webSession.getHost();
+//					String myHost = this.getHost();
+//					if (webSessionHost != null && webSessionHost.equals(myHost)) {
+//						int webSessionPort = webSession.getPort();
+//						int myPort = this.getPort();
+//						if (webSessionPort == myPort) {
+//							return webSession;
+//						}
+//					}
+//				}
+//			}
+//			// session is no more valid
+//		}
+//		// check for jsessionid in request attribute
+//		String sessionId = (String) this.getAttribute("JSESSIONID");
+//		if (sessionId != null) {
+//			IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
+//			if (webSession != null) {
+//				return webSession;
+//			}
+//		}
 		if (create == true) {
 			return WebSessionRegistry.getCurrentInstance().newSession();
 		}
 		return null;
+	}
+
+	private boolean isMySession(IWebSession webSession) {
+		String userAgent = webSession.getUserAgent();
+		String webLocalHost = webSession.getHost();		
+		String webRemoteHost = webSession.getRemoteHost();
+		int webLocalPort = webSession.getPort();
+		int webRemotePort = webSession.getRemotePort();
+		if (userAgent == null) {
+			return false;
+		}
+		if (userAgent.equals(this.getHeader("User-Agent")) == false) {
+			return false;
+		}
+		if (webLocalHost == null || webRemoteHost == null) {
+			return false;
+		}
+		if (webLocalHost.equals(this.getHost()) == false) {
+			return false;
+		}
+		if (webRemoteHost.equals(this.getRemoteHost()) == false) {
+			return false;
+		}
+		if (webLocalPort != this.getPort()) {
+			return false;
+		}
+		return true;
 	}
 
 }

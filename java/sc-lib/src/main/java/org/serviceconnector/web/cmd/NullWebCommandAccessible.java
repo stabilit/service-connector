@@ -19,6 +19,7 @@ package org.serviceconnector.web.cmd;
 import org.apache.log4j.Logger;
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
+import org.serviceconnector.web.IWebSession;
 import org.serviceconnector.web.LoginException;
 
 /**
@@ -48,7 +49,7 @@ public final class NullWebCommandAccessible implements IWebCommandAccessible {
 
 	/** {@inheritDoc} */
 	@Override
-	public void login(IWebRequest request, IWebResponse response) throws Exception {
+	public IWebSession login(IWebRequest request, IWebResponse response) throws Exception {
 		throw new LoginException("not authorized");
 	}
 

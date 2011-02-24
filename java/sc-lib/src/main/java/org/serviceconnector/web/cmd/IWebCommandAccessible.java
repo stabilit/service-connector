@@ -18,6 +18,7 @@ package org.serviceconnector.web.cmd;
 
 import org.serviceconnector.web.IWebRequest;
 import org.serviceconnector.web.IWebResponse;
+import org.serviceconnector.web.IWebSession;
 
 
 /**
@@ -32,10 +33,11 @@ public interface IWebCommandAccessible {
 	 * 
 	 * @param request
 	 *            the request
+	 * @return 
 	 * @throws Exception
 	 *             the exception
 	 */
-	public abstract void login(IWebRequest request, IWebResponse response) throws Exception;
+	public abstract IWebSession login(IWebRequest request, IWebResponse response) throws Exception;
 
 	/**
 	 * Checks if is accessible.

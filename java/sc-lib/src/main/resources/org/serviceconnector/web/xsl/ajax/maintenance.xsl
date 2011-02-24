@@ -179,7 +179,7 @@
 	<xsl:template name="dump_file_row">
 	    <xsl:param name="class"/>
 	    <td class="{$class}"><xsl:value-of select="position()"/></td>	    
-	    <td class="{$class}"><a class="sc_table" href="./dump?name={name}" target="{name}"><xsl:value-of select="name"/></a></td>	    
+	    <td class="{$class}"><a class="sc_table" href="./dump{$urlencoded}?name={name}" target="{name}"><xsl:value-of select="name"/></a></td>	    
 	    <td class="{$class}"><xsl:value-of select="lastModified"/></td>	    
 	    <td class="{$class}"><xsl:value-of select="length"/></td>	    
 	</xsl:template>	

@@ -18,6 +18,7 @@ package org.serviceconnector.web.netty;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,7 +45,9 @@ public class NettyWebRequest extends AbstractWebRequest {
 
 	/** The parameters. */
 	private Map<String, List<String>> parameters;
-
+	
+	private String url;
+	
 	private Set<Cookie> cookies;
 
 	/**
@@ -53,13 +56,20 @@ public class NettyWebRequest extends AbstractWebRequest {
 	 * @param httpRequest
 	 *            the request
 	 */
-	public NettyWebRequest(HttpRequest httpRequest, InetSocketAddress localAddress) {
-		super(localAddress);
+	public NettyWebRequest(HttpRequest httpRequest, InetSocketAddress localAddress, InetSocketAddress remoteAddress) {
+		super(localAddress, remoteAddress);
 		this.request = httpRequest;
+		this.url = null;
 		if (this.request != null) {
+			// extract any encoded session in url
+			String sid = this.parseEncodedSessionId(); 
 			// http get
+			this.parameters = new HashMap<String, List<String>>();
 			QueryStringDecoder qsd = new QueryStringDecoder(this.getURL());
-			this.parameters = qsd.getParameters();
+			Map<String, List<String>> qsdParameters = qsd.getParameters();
+			if (qsdParameters != null) {
+				this.parameters.putAll(qsdParameters);
+			}
 			// http post
 			ChannelBuffer content = request.getContent();
 			if (content.readable()) {
@@ -83,9 +93,21 @@ public class NettyWebRequest extends AbstractWebRequest {
 	/** {@inheritDoc} */
 	@Override
 	public String getURL() {
+		if (this.url != null) {
+			return this.url;
+		}
 		return this.request.getUri();
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public String getHeader(String key) {
+		if (this.request == null) {
+			return null;
+		}
+		return this.request.getHeader(key);
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public String getParameter(String name) {
@@ -121,5 +143,34 @@ public class NettyWebRequest extends AbstractWebRequest {
 	@Override
 	public Map<String, List<String>> getParameterMap() {
 		return this.parameters;
+	}
+	
+	/**
+	 * Gets the encoded session id.
+	 *
+	 * @return the encoded session id
+	 */
+	private String parseEncodedSessionId() {
+		StringBuffer sbURL = new StringBuffer();
+		String url = this.getURL();
+		int paramsIndex = url.indexOf("?");
+		String[] splittedURL = url.split("[;?]");
+		for (int i = 0; i < splittedURL.length; i++) {
+			String splitted = splittedURL[i];
+			if (splitted.startsWith("sid")) {
+				if (i == 1) {
+				   sbURL.append(splittedURL[0]);
+				}
+				this.encodedSessionId = splitted.substring(4);
+				if (paramsIndex >= 0) {
+				    sbURL.append(url.substring(paramsIndex, url.length()));
+				}
+				this.url = sbURL.toString();
+				this.setAttribute("JSESSIONID", this.encodedSessionId);
+				return this.encodedSessionId;
+			}
+		}
+		this.url = url;
+		return null;
 	}
 }

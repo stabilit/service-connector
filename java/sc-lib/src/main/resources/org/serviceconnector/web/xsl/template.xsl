@@ -4,6 +4,7 @@
 	<xsl:variable name="head" select="/sc-web/head"/>
 	<xsl:variable name="body" select="/sc-web/body"/>
 	<xsl:variable name="userid" select="/sc-web/head/meta/@userid"/>
+	<xsl:variable name="urlencoded" select="/sc-web/head/meta/@urlencoded"/>
 	<xsl:output
 			method="html"
 			doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"
@@ -79,27 +80,27 @@
 	</xsl:template>
 	<xsl:template name="sc_menu">
 	   <div id="sc_menu_left">
-	     <div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./">Home</a></div><xsl:call-template name="sc_menu_left"/>
+	     <div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./{$urlencoded}">Home</a></div><xsl:call-template name="sc_menu_left"/>
 	   </div>
 	   <div id="sc_menu_right">
-	     <div class="sc_menu_item" style="float:right" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="?action=logout">Logout</a></div>
+	     <div class="sc_menu_item" style="float:right" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="{$urlencoded}?action=logout">Logout</a></div>
 	   </div>
 	</xsl:template>
 	<xsl:template name="sc_navigation">
 	<!-- 
-	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item" href="status">Status</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item" href="status{$urlencoded}">Status</a></div>
     -->	  
-	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="services">Services</a></div>
-	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="sessions">Sessions</a></div>
-	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="subscriptions">Subscriptions</a></div>
-	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="servers">Servers</a></div>
-	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="listeners">Listeners</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="services{$urlencoded}">Services</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="sessions{$urlencoded}">Sessions</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="subscriptions{$urlencoded}">Subscriptions</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="servers{$urlencoded}">Servers</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="listeners{$urlencoded}">Listeners</a></div>
 	  <!-- 
-	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="network">Network</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="network{$urlencoded}">Network</a></div>
 	   -->
-	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="cache">Cache</a></div>
-	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="maintenance">Maintenance</a></div>
-	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="logs">Logs</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="cache{$urlencoded}">Cache</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="maintenance{$urlencoded}">Maintenance</a></div>
+	  <div class="sc_navigation_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_navigation_item"  href="logs{$urlencoded}">Logs</a></div>
 	  <div class="sc_navigation_item" style="height:20px;"></div>
 	  <div id="sc_info">
 		  <xsl:call-template name="sc_info"/> 
@@ -188,7 +189,7 @@
 	    <td class="sc_table_even"><xsl:value-of select="peakThreadCount"/></td>	  
 	  </tr>
 	  <tr>
-	    <td colspan="2" class="sc_table_even"><a class="sc_table" href="javascript:runGC()">Run GC</a></td>
+	    <td colspan="2" class="sc_table_even"><a class="sc_table" href="javascript:runGC('{$urlencoded}')">Run GC</a></td>
 	  </tr>
 	</xsl:template> 
 	<xsl:template name="sc_statistics">

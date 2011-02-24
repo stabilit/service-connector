@@ -8,7 +8,7 @@
     <xsl:variable name="showSessionsParam" select="$head/query/param/@showsessions"/>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('services', 'service=<xsl:value-of select="$head/query/param/@service"/>&amp;subscription=<xsl:value-of select="$head/query/param/@subscription"/>&amp;showsessions=<xsl:value-of select="$head/query/param/@showsessions"/>')", 10000);      
+      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'services', 'service=<xsl:value-of select="$head/query/param/@service"/>&amp;subscription=<xsl:value-of select="$head/query/param/@subscription"/>&amp;showsessions=<xsl:value-of select="$head/query/param/@showsessions"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table max_width">
@@ -31,7 +31,7 @@
         </table>
       </div>
     </xsl:template>
-	<xsl:template name="sc_menu_left"><xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./services">Services</a></div></xsl:template>
+	<xsl:template name="sc_menu_left"><xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./services{$urlencoded}">Services</a></div></xsl:template>
 	<xsl:template match="service">
 	  <xsl:if test="position() mod 2 = 0">
 	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
@@ -70,13 +70,13 @@
 	    <xsl:param name="class"/>
 	    <td class="{$class}" id="service_state">
 	      <xsl:choose>
-	        <xsl:when test="enabled = 'true'"><a class="sc_table"  href="javascript:disableService('{name}');">Enabled</a></xsl:when>
-	        <xsl:otherwise><a class="sc_table" href="javascript:enableService('{name}')">Disabled</a></xsl:otherwise>
+	        <xsl:when test="enabled = 'true'"><a class="sc_table"  href="javascript:disableService('{$urlencoded}', '{name}');">Enabled</a></xsl:when>
+	        <xsl:otherwise><a class="sc_table" href="javascript:enableService('{$urlencoded}', '{name}')">Disabled</a></xsl:otherwise>
 	      </xsl:choose>
 	    </td>
 	    <xsl:choose>
 	      <xsl:when test="countServers &gt; 0">
-	         <td class="{$class}"><a class="sc_table" href="services?service={name}"><xsl:value-of select="name"/></a>&#160;</td>
+	         <td class="{$class}"><a class="sc_table" href="services{$urlencoded}?service={name}"><xsl:value-of select="name"/></a>&#160;</td>
           </xsl:when>
           <xsl:otherwise>	       
 	         <td class="{$class}"><xsl:value-of select="name"/>&#160;</td>
@@ -86,7 +86,7 @@
 	    <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countServers"/></xsl:call-template></td>
 	    <xsl:choose>
 	       <xsl:when test="publishMessageQueueSize &gt; 0">
-	         <td class="{$class}"><a class="sc_table" href="services?service={name}&amp;subscription=yes"><xsl:value-of select="publishMessageQueueSize"/></a></td>
+	         <td class="{$class}"><a class="sc_table" href="services{$urlencoded}?service={name}&amp;subscription=yes"><xsl:value-of select="publishMessageQueueSize"/></a></td>
 	      </xsl:when>
 	      <xsl:otherwise>
 	         <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="publishMessageQueueSize"/></xsl:call-template></td>
@@ -94,7 +94,7 @@
 	    </xsl:choose>
 	    <xsl:choose>
 	       <xsl:when test="countAllocatedSessions &gt; 0 and type = 'PUBLISH_SERVICE'">
-	         <td class="{$class}"><a class="sc_table" href="services?service={name}&amp;showsessions=yes"><xsl:value-of select="countAllocatedSessions"/></a></td>
+	         <td class="{$class}"><a class="sc_table" href="services{$urlencoded}?service={name}&amp;showsessions=yes"><xsl:value-of select="countAllocatedSessions"/></a></td>
 	      </xsl:when>
 	      <xsl:otherwise>
 	         <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="countAllocatedSessions"/></xsl:call-template></td>

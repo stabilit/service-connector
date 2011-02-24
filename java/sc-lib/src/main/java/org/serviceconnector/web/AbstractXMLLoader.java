@@ -189,6 +189,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 			writer.writeStartElement("meta");
 			writer.writeAttribute("jsessionid", webSession.getSessionId());
 			writer.writeEndElement(); // close meta tag
+			writer.writeStartElement("meta");
+			writer.writeAttribute("urlencoded", ";sid=" + webSession.getSessionId());
+			writer.writeEndElement(); // close meta tag
 		}
 		for (Entry<String, String> entry : this.metaMap.entrySet()) {
 			writer.writeStartElement("meta");

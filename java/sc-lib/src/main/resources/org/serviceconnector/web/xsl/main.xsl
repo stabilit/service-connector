@@ -32,7 +32,7 @@
 	    <td class="{$class}"><xsl:value-of select="local-name()"/></td>
 	    <td class="{$class}">
 	      <xsl:if test="local-name() = 'configFileName'">
-	         <a class="sc_table" href="./resource?name={.}"><xsl:value-of select="."/></a>
+	         <a class="sc_table" href="./resource{$urlencoded}?name={.}"><xsl:value-of select="."/></a>
 	      </xsl:if>
 	      <xsl:if test="local-name() != 'configFileName'">
 	         <xsl:value-of select="."/>

@@ -91,8 +91,9 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 
 	/**
 	 * Removes the session.
-	 *
-	 * @param session the session
+	 * 
+	 * @param session
+	 *            the session
 	 */
 	public void removeSession(IWebSession session) {
 		if (session == null) {
@@ -100,6 +101,7 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 		}
 		this.remove(session.getSessionId());
 	}
+
 	/**
 	 * Removes the expired sessions.
 	 */
@@ -129,11 +131,20 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 		/** The attr map. */
 		private Map<String, Object> attrMap;
 
-		/** The host. */
+		/** The user agent. */
+		private String userAgent;
+		
+		/** The local server host. */
 		private String host;
 
-		/** The port. */
+		/** The local server port. */
 		private int port;
+
+		/** The remote host. */
+		private String remoteHost;
+
+		/** The remote port. */
+		private int remotePort;
 
 		/** The session id. */
 		private String sessionId;
@@ -150,8 +161,11 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 		public WebSession() {
 			attrMap = new HashMap<String, Object>();
 			UUID uuid = UUID.randomUUID();
+			this.userAgent = null;
 			this.host = null;
+			this.remoteHost = null;
 			this.port = 0;
+			this.remotePort = 0;
 			this.sessionId = uuid.toString();
 			this.creationTimeStamp = System.currentTimeMillis();
 			this.accessTimeStamp = this.creationTimeStamp;
@@ -179,6 +193,18 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 
 		/** {@inheritDoc} */
 		@Override
+		public String getUserAgent() {
+			return this.userAgent;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void setUserAgent(String userAgent) {
+			this.userAgent = userAgent;
+		}
+		
+		/** {@inheritDoc} */
+		@Override
 		public String getHost() {
 			return this.host;
 		}
@@ -203,6 +229,30 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 
 		/** {@inheritDoc} */
 		@Override
+		public String getRemoteHost() {
+			return this.remoteHost;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void setRemoteHost(String remoteHost) {
+			this.remoteHost = remoteHost;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public int getRemotePort() {
+			return this.remotePort;
+		}
+
+		/** {@inheritDoc} */
+		@Override
+		public void setRemotePort(int remotePort) {
+			this.remotePort = remotePort;
+		}
+
+		/** {@inheritDoc} */
+		@Override
 		public String getSessionId() {
 			return this.sessionId;
 		}
@@ -223,6 +273,7 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 			}
 			return false;
 		}
+
 	}
 
 	/**

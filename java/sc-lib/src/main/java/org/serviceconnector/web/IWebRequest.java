@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.jboss.netty.handler.codec.http.Cookie;
 
-
 /**
  * The Interface IWebRequest abstracts a web request.
  */
@@ -30,24 +29,46 @@ public interface IWebRequest {
 
 	/**
 	 * Gets the local server address.
-	 *
+	 * 
 	 * @return the local address
 	 */
 	public InetSocketAddress getLocalAddress();
 
 	/**
+	 * Gets the remote address.
+	 * 
+	 * @return the remote address
+	 */
+	public InetSocketAddress getRemoteAddress();
+
+	/**
 	 * Gets the host.
-	 *
+	 * 
 	 * @return the host
 	 */
 	public String getHost();
 
 	/**
 	 * Gets the port.
-	 *
+	 * 
 	 * @return the port
 	 */
 	public int getPort();
+
+	/**
+	 * Gets the remote host.
+	 * 
+	 * @return the remote host
+	 */
+	public String getRemoteHost();
+
+	/**
+	 * Gets the remote port.
+	 * 
+	 * @return the remote port
+	 */
+	public int getRemotePort();
+
 	/**
 	 * Returns the URI (or path) of this request.
 	 * 
@@ -63,6 +84,14 @@ public interface IWebRequest {
 	 * @return the cookie
 	 */
 	public abstract Cookie getCookie(String key);
+
+	/**
+	 * Gets the http header for given key if any otherwise null
+	 *
+	 * @param key the key
+	 * @return the header
+	 */
+	public abstract String getHeader(String key);
 
 	/**
 	 * Gets the parameter.

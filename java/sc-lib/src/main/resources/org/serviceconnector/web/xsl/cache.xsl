@@ -5,7 +5,7 @@
     <xsl:variable name="head" select="/sc-web/head"/>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('cache', 'cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;composite=<xsl:value-of select="$head/query/param/@composite"/>')", 10000);      
+      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'cache', 'cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;composite=<xsl:value-of select="$head/query/param/@composite"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
         <div class="sc_table max_width">
@@ -31,7 +31,7 @@
         </table>
       </div>
     </xsl:template>
-	<xsl:template name="sc_menu_left"><xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./cache">Cache</a></div></xsl:template>
+	<xsl:template name="sc_menu_left"><xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./cache{$urlencoded}">Cache</a></div></xsl:template>
 	<xsl:template match="cache">
 	  <xsl:if test="position() mod 2 = 0">
 	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
@@ -65,7 +65,7 @@
 	    <td class="{$class}">
 	      <xsl:choose>
 	        <xsl:when test="compositeSize &gt; 0">
-	         <a class="sc_table" href="cache?cache={serviceName}"><xsl:value-of select="compositeSize"/></a>
+	         <a class="sc_table" href="cache{$urlencoded}?cache={serviceName}"><xsl:value-of select="compositeSize"/></a>
             </xsl:when>
             <xsl:otherwise>	       
 	         <xsl:value-of select="compositeSize"/>
@@ -127,7 +127,7 @@
 	    <td class="{$class}">
 	      <xsl:choose>
 	        <xsl:when test="size &gt; 0">
-	         <a class="sc_table" href="cache?cache={$head/query/param/@cache}&amp;composite={key}"><xsl:value-of select="size"/></a>
+	         <a class="sc_table" href="cache{$urlencoded}?cache={$head/query/param/@cache}&amp;composite={key}"><xsl:value-of select="size"/></a>
             </xsl:when>
             <xsl:otherwise>	       
 	         <xsl:value-of select="size"/>

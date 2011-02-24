@@ -6,7 +6,7 @@
     <xsl:variable name="remoteNode" select="$head/query/param/@remoteNode"/>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('listeners', 'remoteNode=<xsl:value-of select="$remoteNode"/>')", 10000);      
+      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'listeners', 'remoteNode=<xsl:value-of select="$remoteNode"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
       <div class="sc_table max_width">
@@ -34,7 +34,7 @@
         </table>
       </div>
     </xsl:template>
-	<xsl:template name="sc_menu_left"><xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./listeners">Listeners</a></div></xsl:template>
+	<xsl:template name="sc_menu_left"><xsl:call-template name="menu_separator"/><div class="sc_menu_item" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)"><a class="sc_menu_item" href="./listeners{$urlencoded}">Listeners</a></div></xsl:template>
 	<xsl:template match="responder">
 	  <xsl:if test="position() mod 2 = 0">
 	     <tr class="sc_table_even" onmouseover="javascript:setStyleOver(this)" onmouseout="javascript:setStyleOut(this)">
@@ -75,7 +75,7 @@
 	    <td class="{$class}">
 	      <xsl:choose>  
 	        <xsl:when test="responderConfig/remoteNodeConfiguration/name">
-	          <a class="sc_table" href="listeners?remoteNode={responderConfig/remoteNodeConfiguration/name}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="responderConfig/remoteNodeConfiguration/name"/></xsl:call-template></a>
+	          <a class="sc_table" href="listeners{$urlencoded}?remoteNode={responderConfig/remoteNodeConfiguration/name}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="responderConfig/remoteNodeConfiguration/name"/></xsl:call-template></a>
 	        </xsl:when>
 	        <xsl:otherwise>
 	          <xsl:call-template name="fieldValue"><xsl:with-param name="value" select="responderConfig/remoteNodeConfiguration/name"/></xsl:call-template>

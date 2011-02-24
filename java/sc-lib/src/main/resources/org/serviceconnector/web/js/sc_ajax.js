@@ -51,27 +51,27 @@ function errorCallback() {
    	setStatusError();
 }
 
-function enableService(name) {
+function enableService(sid, name) {
 	var check = window.confirm("Enable service " + name + "?");
 	if (check == false) {
 		return;
     }
-	ajaxSystem.ajaxCall('ajax/system?action=enableService&service=' + name);	
+	ajaxSystem.ajaxCall('ajax/system' + sid + '?action=enableService&service=' + name);	
 }
 
-function disableService(name) {
+function disableService(sid, name) {
 	var check = window.confirm("Disable service " + name + "?");
 	if (check == false) {
 		return;
     }
-	ajaxSystem.ajaxCall('ajax/system?action=disableService&service=' + name);	
+	ajaxSystem.ajaxCall('ajax/system' + sid + '?action=disableService&service=' + name);	
 }
 
-function runGC() {
-	ajaxSystem.ajaxCall('ajax/system?action=gc');	
+function runGC(sid) {
+	ajaxSystem.ajaxCall('ajax/system' + sid + '?action=gc');	
 }
 
-function scDump() {
+function scDump(sid) {
 	var overlayDiv = document.getElementById("overlay");
 	overlayDiv.style.display = 'block';
 	var dialogBox = document.getElementById("DialogBox");
@@ -80,18 +80,18 @@ function scDump() {
        showLayer("DialogBox");
        centerLayer("DialogBox", 400, 400, 0, 0);
 	}
-	ajaxSystem.ajaxCall('ajax/system?action=dump');	
+	ajaxSystem.ajaxCall('ajax/system' + sid + '?action=dump');	
 }
 
-function scDumpDelete() {
+function scDumpDelete(sid) {
 	var check = window.confirm("Delete all SC dump files! Are you sure?");
 	if (check == false) {
 		return;
     }
-	ajaxSystem.ajaxCall('ajax/system?action=deleteDump');	
+	ajaxSystem.ajaxCall('ajax/system' + sid + '?action=deleteDump');	
 }
 
-function terminateSC() {
+function terminateSC(sid) {
 	var check = window.confirm("Terminate SC! Are you sure?");
 	if (check == false) {
 		return;
@@ -100,25 +100,25 @@ function terminateSC() {
 	if (terminateDiv != null) {
 		terminateDiv.innerHTML = "service connector is terminating ...";
 	}
-	ajaxSystem.ajaxCall('ajax/system?action=terminate');	
+	ajaxSystem.ajaxCall('ajax/system' + sid + '?action=terminate');	
 }
 
-function clearCache() {
+function clearCache(sid) {
 	var check = window.confirm("Clear Cache! Are you sure?");
 	if (check == false) {
 		return;
     }
 	var clearCacheDiv = document.getElementById("sc_cache_clear");
-	ajaxSystem.ajaxCall('ajax/system?action=clearCache');	
+	ajaxSystem.ajaxCall('ajax/system' + sid + '?action=clearCache');	
 }
 
-function resetTranslet() {
+function resetTranslet(sid) {
 	var check = window.confirm("Reset Translet! Are you sure?");
 	if (check == false) {
 		return;
     }
 	var resetTransletDiv = document.getElementById("sc_translet_reset");
-	ajaxSystem.ajaxCall('ajax/system?action=resetTranslet');	
+	ajaxSystem.ajaxCall('ajax/system' + sid + '?action=resetTranslet');	
 }
 
 function getDialogText(msg) {
@@ -196,6 +196,7 @@ function systemCallback() {
 	}
 	var action = this.ajaxGetParam("action");
 	var service = this.ajaxGetParam("service");	
+	var sid = this.ajaxGetParam("sid");	
 	if (action == "enableService") {
         window.location.reload();        		
 	}
@@ -204,22 +205,22 @@ function systemCallback() {
 	}
 	if (action == "downloadAndReplace") {
 		if (service != null) {
-		    maintenanceCall("sc_property_download", service);
+		    maintenanceCall(sid, "sc_property_download", service);
 		}
 	}
 	if (action == "uploadLogFiles") {
 		if (service != null) {
-		    maintenanceCall("sc_logs_upload", service);
+		    maintenanceCall(sid, "sc_logs_upload", service);
 		}
 	}
 	if (action == "dump") {
-	    maintenanceCall("sc_dump_list");
+	    maintenanceCall(sid, "sc_dump_list");
 	}
 	if (action == "dumpCache") {
-	    maintenanceCall("sc_dump_cache_list");
+	    maintenanceCall(sid, "sc_dump_cache_list");
 	}
 	if (action == "deleteDump") {
-	    maintenanceCall("sc_dump_list");
+	    maintenanceCall(sid, "sc_dump_list");
 	}
    	setStatusSuccess();
 }
@@ -251,8 +252,8 @@ function resourceCallback() {
 	}
 }
 
-function resourceCall(name) {
-	ajaxResource.ajaxCall('ajax/resource?name='+name);
+function resourceCall(sid, name) {
+	ajaxResource.ajaxCall('ajax/resource'+sid +'?name='+name);
 }
 
 var ajaxResource = new AjaxCallObject('Resource', 'ajax/resource', resourceCallback, errorCallback);
@@ -277,9 +278,9 @@ function contentCallback() {
 	}
 }
 
-function contentCall(id, query) {
+function contentCall(sid, id, query) {
 //	alert('ajax/content?id='+id + '&' + query);
-	ajaxContent.ajaxCall('ajax/content?id='+id + '&' + query);
+	ajaxContent.ajaxCall('ajax/content' + sid + '?id='+id + '&' + query);
 }
 
 var ajaxContent = new AjaxCallObject('Content', 'ajax/content', contentCallback, errorCallback);
@@ -294,14 +295,14 @@ function maintenanceCallback() {
 	}
 }
 
-function maintenanceCall(action, service, query) {
+function maintenanceCall(sid, action, service, query) {
 //	var dialogBox = document.getElementById("DialogBox");
 //	if (dialogBox != null) {
 //       dialogBox.innerHTML = getDialogText("... Please Wait ...");
 //       showLayer("DialogBox");
 //       centerLayer("DialogBox", 400, 400, 0, 0);
 //	}
-	ajaxMaintenance.ajaxCall('ajax/maintenance?action=' + action + '&service='+service + '&' + query);
+	ajaxMaintenance.ajaxCall('ajax/maintenance' + sid + '?action=' + action + '&service='+service + '&' + query);
 }
 
 var ajaxMaintenance = new AjaxCallObject('Maintenanace', 'ajax/maintenance', maintenanceCallback, errorCallback);
