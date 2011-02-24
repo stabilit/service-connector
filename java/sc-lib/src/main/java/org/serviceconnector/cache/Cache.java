@@ -693,7 +693,7 @@ public class Cache {
 	 * @param cacheId
 	 *            the cache id
 	 */
-	public void startLoading(String cacheId, int loadingTimeout) {
+	public void startLoading(String sessionId, String cacheId, int loadingTimeout) {
 		try {
 			CacheComposite cacheComposite = this.getComposite(cacheId);
 			CacheKey cacheKey = new CacheKey(cacheId);
@@ -702,6 +702,7 @@ public class Cache {
 				this.removeComposite(cacheKey);
 			}
 			cacheComposite = new CacheComposite();
+			cacheComposite.setLoadingSessionId(sessionId);
 			cacheComposite.setSize(0);
 			cacheComposite.setLoadingTimeout(loadingTimeout);
 			cacheComposite.setCacheState(CACHE_STATE.LOADING);

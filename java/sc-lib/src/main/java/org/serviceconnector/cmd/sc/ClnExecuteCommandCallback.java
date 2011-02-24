@@ -89,13 +89,18 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 					// check if reply is fault
 					if (reply.isFault() || (cacheId == null && this.requestCacheId != null)) {
 						if (cacheId == null) {
+							CacheLogger.warn("cache: server did reply with no cacheId (null), requestCacheId=" + this.requestCacheId);						
 							cacheId = this.requestCacheId;
 						}
 						// remove cacheId from cache
 						CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 						if (cacheComposite != null) {
 							scmpCache.removeComposite(cacheId);
-							CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + cacheId + ")");
+							if (reply.isFault()) {
+							    CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + cacheId + ")");
+							} else {
+							    CacheLogger.warn("cache composite removed, server did reply no cacheId, cache (" + cacheId + ")");							
+							}
 						}
 					} else {
 						// check if clients cache id is different to servers reply cache id, if
@@ -122,12 +127,12 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 						} catch (CacheLoadedException e) {
 							CacheLogger.warn("cache put message failed, already loaded, remove cache (" + reply.getCacheId()
 									+ ") and start loading");
-							scmpCache.startLoading(reply.getCacheId(), this.requestOTI);
+							scmpCache.startLoading(reply.getSessionId(), reply.getCacheId(), this.requestOTI);
 							messageCacheId = scmpCache.putMessage(reply);
 						} catch (CacheExpiredException e) {
 							CacheLogger.warn("cache put message failed, expired, remove cache (" + reply.getCacheId()
 									+ ") and start loading");
-							scmpCache.startLoading(reply.getCacheId(), this.requestOTI);
+							scmpCache.startLoading(reply.getSessionId(), reply.getCacheId(), this.requestOTI);
 							messageCacheId = scmpCache.putMessage(reply);
 						}
 						CacheLogger.debug("cache message put done using full cacheId = " + messageCacheId.getCacheId() + ", cachePartNr=" + messageCacheId.getSequenceNr());

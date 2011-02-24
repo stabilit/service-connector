@@ -189,7 +189,7 @@ public class CacheExpirationThreadRunTest extends SuperUnitTest {
 		Date expirationDate = DateTimeUtility.getIncrementTimeMillis(now, +TimeMillis.HOUR.getMillis());
 		scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,
 				DateTimeUtility.getDateTimeAsString(expirationDate));
-		scmpCache.startLoading("dummy.cache.id", 2000);
+		scmpCache.startLoading("dummy.sessionid", "dummy.cache.id", 2000);
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {

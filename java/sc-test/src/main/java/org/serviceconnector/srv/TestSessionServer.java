@@ -249,6 +249,7 @@ public class TestSessionServer extends TestStatefulServer {
 			Calendar time = Calendar.getInstance();
 			String dataString = (String) request.getData();
 
+			logger.info("cache call");
 			if (dataString.equals("cidNoCed")) {
 				logger.info("cidNoCed");
 				// reply without setting CacheExpirationDateTime
@@ -276,6 +277,12 @@ public class TestSessionServer extends TestStatefulServer {
 				request.setCacheExpirationDateTime(time.getTime());
 				String largeMessage = TestUtil.getLargeString();
 				request.setData(largeMessage);
+			} else if (dataString.startsWith("cache10MBString1Hour")) {
+				logger.info("cacheLargeMessageFor1Hour");
+				time.add(Calendar.HOUR_OF_DAY, 1);
+				request.setCacheExpirationDateTime(time.getTime());
+				String largeMessage = TestUtil.get10MBString();
+				request.setData(largeMessage);
 			} else if (dataString.startsWith("cacheExpired1Hour")) {
 				logger.info("cacheExpired1Hour");
 				time.add(Calendar.HOUR_OF_DAY, -1);
@@ -296,6 +303,7 @@ public class TestSessionServer extends TestStatefulServer {
 				}
 				request.setCacheExpirationDateTime(time.getTime());
 			} else {
+				logger.info("cache no special key");
 				// no special key, we set default expiration time to 1 hour, otherwise SC will not accept the message for its cache
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());

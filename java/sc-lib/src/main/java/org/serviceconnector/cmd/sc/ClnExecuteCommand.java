@@ -241,7 +241,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 		}
 		CacheId cacheId = message.getFullCacheId();
 		CacheLogger
-				.debug("try loading message from cache, serivceName (" + serviceName + "), cacheId (" + cacheId.toString() + ")");
+				.debug("try loading message from cache, serviceName (" + serviceName + "), cacheId (" + cacheId.toString() + ")");
 		CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 		if (cacheComposite == null) {
 			// we synchronized this part and check if any other thread did start loading in the meantime
@@ -251,7 +251,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 					CacheLogger.debug("cache does not exist, start loading from server");
 					// cache does not exist, this is the first request for it
 					int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-					scmpCache.startLoading(message.getCacheId(), oti);
+					scmpCache.startLoading(message.getSessionId(), message.getCacheId(), oti);
 					return false;
 				}
 			}
@@ -271,6 +271,20 @@ public class ClnExecuteCommand extends CommandAdapter {
 								+ message.getServiceName() + " cacheId=" + message.getCacheId());
 						scmpCommandException.setMessageType(this.getKey());
 						throw scmpCommandException;
+					}
+					// check if this request belongs to same session id as loading cache session id
+					if (cacheComposite.isLoadingSessionId(message.getSessionId()) == false) {
+						CacheLogger.info("cache is loading (other sessionId), retry later, service=" + message.getServiceName()
+								+ " cacheId=" + message.getCacheId() + ", cache loadingSessionId="
+								+ cacheComposite.getLoadingSessionId() + ", message sessionId=" + message.getSessionId());
+						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_LOADING, "service="
+								+ message.getServiceName() + " cacheId=" + message.getCacheId());
+						scmpCommandException.setMessageType(this.getKey());
+						throw scmpCommandException;
+					} else {
+						CacheLogger.debug("cache is loading (same sessionId) service=" + message.getServiceName() + " cacheId="
+								+ message.getCacheId() + ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
+								+ ", message sessionId=" + message.getSessionId());
 					}
 				}
 			}

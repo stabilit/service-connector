@@ -80,6 +80,9 @@ public class CacheComposite implements Serializable {
 	/** The cache state. {@link CACHE_STATE} */
 	private CACHE_STATE cacheState;
 
+	/** The loading session id. */	
+	private String loadingSessionId;
+	
 	/** The loading timeout (ms). This timeout tells, how long we can wait in the loading state. */
 	private long loadingTimeout;
 
@@ -104,9 +107,42 @@ public class CacheComposite implements Serializable {
 		this.creationTimeMillis = this.creationTime.getTime();
 		this.lastModifiedTime = this.creationTime;
 		this.lastModifiedTimeMillis = this.creationTimeMillis;
+		this.loadingSessionId = null;
 		this.loadingTimeout = -1L;
 	}
 
+	
+	/**
+	 * Gets the loading session id.
+	 *
+	 * @return the loading session id
+	 */
+	public String getLoadingSessionId() {
+		return loadingSessionId;
+	}
+	
+	/**
+	 * Sets the loading session id.
+	 *
+	 * @param loadingSessionId the new loading session id
+	 */
+	public void setLoadingSessionId(String loadingSessionId) {
+		this.loadingSessionId = loadingSessionId;
+	}
+	
+	/**
+	 * Checks if is loading session id.
+	 *
+	 * @param sessiondId the sessiond id
+	 * @return true, if is loading session id
+	 */
+	public boolean isLoadingSessionId(String sessionId) {
+		if (this.loadingSessionId == null) {
+			return false;
+		}
+		return this.loadingSessionId.equals(sessionId);
+	}
+	
 	/**
 	 * Gets the size.
 	 * 
