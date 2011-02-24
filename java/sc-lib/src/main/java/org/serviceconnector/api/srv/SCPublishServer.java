@@ -75,7 +75,7 @@ public class SCPublishServer extends SCSessionServer {
 	 * Register server.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            allowed time to complete operation
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param maxSessions
 	 *            the max sessions to serve
 	 * @param maxConnections
@@ -114,7 +114,7 @@ public class SCPublishServer extends SCSessionServer {
 	 * Publish.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            allowed time to complete operation
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param publishMessage
 	 *            the publish message
 	 * @throws Exception

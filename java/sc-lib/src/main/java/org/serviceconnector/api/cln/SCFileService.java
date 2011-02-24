@@ -70,7 +70,7 @@ public class SCFileService extends SCService {
 	 * Upload file.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            allowed time to complete operation
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param remoteFileName
 	 *            the remote file name to store the file
 	 * @param inStream

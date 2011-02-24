@@ -33,6 +33,10 @@ public class SCMPValidatorException extends HasFaultResponseException {
 		super(SCMPError.HV_ERROR);
 	}
 
+	public SCMPValidatorException(String info) {
+		this(SCMPError.HV_ERROR, info);
+	}
+
 	public SCMPValidatorException(SCMPError error, String additionalInfo) {
 		super(error, additionalInfo);
 	}

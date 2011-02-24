@@ -36,7 +36,7 @@ import org.serviceconnector.util.URLParameterString;
  * @author JTrnka
  */
 public class SCMgmtClient extends SCClient {
-	
+
 	/** The Constant logger. */
 	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCMgmtClient.class);
@@ -62,7 +62,8 @@ public class SCMgmtClient extends SCClient {
 	/**
 	 * Disable service on SC.
 	 * 
-	 * @param operationTimeout
+	 * @param operationTimeoutSeconds
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param serviceName
 	 * @throws SCServiceException
 	 */
@@ -90,7 +91,8 @@ public class SCMgmtClient extends SCClient {
 	/**
 	 * Enable service on SC.
 	 * 
-	 * @param operationTimeout
+	 * @param operationTimeoutSeconds
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param serviceName
 	 *            the service name
 	 */
@@ -119,7 +121,8 @@ public class SCMgmtClient extends SCClient {
 	/**
 	 * Checks if service is enabled on SC.
 	 * 
-	 * @param operationTimeout
+	 * @param operationTimeoutSeconds
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param serviceName
 	 *            the service name
 	 * @return true, if is service enabled
@@ -151,7 +154,8 @@ public class SCMgmtClient extends SCClient {
 	/**
 	 * Returns the number of available and allocated sessions for given service name.
 	 * 
-	 * @param operationTimeout
+	 * @param operationTimeoutSeconds
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param serviceName
 	 *            the service name
 	 * @return string containing the available and allocated sessions, e.g. "4/2".
@@ -178,10 +182,12 @@ public class SCMgmtClient extends SCClient {
 	public URLParameterString inspectCache(String serviceName, String cacheId) throws SCServiceException {
 		return this.inspectCache(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName, cacheId);
 	}
+
 	/**
 	 * inspects the cache for given service name and cacheId.
 	 * 
-	 * @param operationTimeout
+	 * @param operationTimeoutSeconds
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param serviceName
 	 *            the service name
 	 * @param cacheId
@@ -214,11 +220,12 @@ public class SCMgmtClient extends SCClient {
 	public void clearCache() throws SCServiceException {
 		this.clearCache(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
-	
+
 	/**
 	 * Clears the cache for given service name.
 	 * 
-	 * @param operationTimeout
+	 * @param operationTimeoutSeconds
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
@@ -245,7 +252,8 @@ public class SCMgmtClient extends SCClient {
 	/**
 	 * Request dump.
 	 * 
-	 * @param operationTimeout
+	 * @param operationTimeoutSeconds
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
@@ -286,6 +294,8 @@ public class SCMgmtClient extends SCClient {
 	/**
 	 * Inspect call.
 	 * 
+	 * @param operationTimeoutSeconds
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param instruction
 	 *            the instruction
 	 * @return the string
@@ -319,8 +329,11 @@ public class SCMgmtClient extends SCClient {
 	/**
 	 * Process a manage call.
 	 * 
+	 * @param operationTimeoutSeconds
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param instruction
 	 *            the instruction
+	 * @return the string
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */

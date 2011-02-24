@@ -94,7 +94,7 @@ public class SCSessionService extends SCService {
 	 * Creates the session.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the operation timeout seconds
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param scMessage
 	 *            the SC message
 	 * @param messageCallback
@@ -160,7 +160,7 @@ public class SCSessionService extends SCService {
 	 * 
 	 * @param requestMsg
 	 *            the request message
-	 * @return the sC message
+	 * @return the SC message
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -172,7 +172,7 @@ public class SCSessionService extends SCService {
 	 * Execute. Execute is a synchronous operation with the SC. Any reply will be received as return of the method.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            allowed time to complete operation
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param scMessage
 	 *            the SC message to execute
 	 * @return the reply
@@ -246,8 +246,8 @@ public class SCSessionService extends SCService {
 	/**
 	 * Send. Asynchronous operation. Send is an asynchronous operation with the SC. Any reply will be informed over the callback.
 	 * 
-	 * @param operationtTimeoutSeconds
-	 *            allowed time to complete operation
+	 * @param operationTimeoutSeconds
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @param scMessage
 	 *            the SC message
 	 * @throws Exception
@@ -368,7 +368,7 @@ public class SCSessionService extends SCService {
 	 * Delete session.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            allowed time to complete operation
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @throws Exception
 	 *             the exception
 	 */

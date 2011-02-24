@@ -83,14 +83,17 @@ public class SCClient {
 	}
 
 	/**
-	 * Attach client to SC.
+	 * Attach client to SC. Default operation timeout used.
 	 * 
-	 * @throws Exception
-	 *             the exception
-	 * @throws InvalidParameterException
-	 *             port is not within limits 0 to 0xFFFF, host unset
+	 * @throws SCMPValidatorException
+	 *             port is not within limits 0 to 0xFFFF<br>
+	 *             host is missing<br>
+	 * @throws SCServiceException
+	 *             instance already attached before<br>
+	 *             attach to host failed<br>
+	 *             error message from SC received<br>
 	 */
-	public synchronized void attach() throws Exception {
+	public synchronized void attach() throws SCServiceException, SCMPValidatorException {
 		this.attach(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
@@ -98,17 +101,22 @@ public class SCClient {
 	 * Attach client to SC.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the operation timeout
-	 * @throws InvalidParameterException
-	 *             port is not within limits 0 to 0xFFFF or host is missing<br>
+	 *            the allowed time in seconds to complete the operation until it stops
+	 * @throws SCMPValidatorException
+	 *             port is not within limits 0 to 0xFFFF<br>
+	 *             host is missing<br>
+	 * @throws SCServiceException
+	 *             instance already attached before<br>
+	 *             attach to host failed<br>
+	 *             error message from SC received<br>
 	 */
-	public synchronized void attach(int operationTimeoutSeconds) throws Exception {
+	public synchronized void attach(int operationTimeoutSeconds) throws SCServiceException, SCMPValidatorException {
 		// 1. checking preconditions and validate
 		if (this.attached) {
 			throw new SCServiceException("SCClient already attached.");
 		}
 		if (host == null) {
-			throw new InvalidParameterException("Host is missing.");
+			throw new SCMPValidatorException("Host is missing.");
 		}
 		ValidatorUtility.validateInt(1, this.port, Constants.MAX_PORT_NR, SCMPError.HV_WRONG_PORTNR);
 		// 2. initialize call & invoke
@@ -164,7 +172,7 @@ public class SCClient {
 	 * Detach client from SC.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the operation timeout
+	 *            the allowed time in seconds to complete the operation until it stops
 	 * @throws Exception
 	 *             the exception
 	 */
