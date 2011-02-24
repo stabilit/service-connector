@@ -18,12 +18,15 @@ package org.serviceconnector.test.system.scmp;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.serviceconnector.TestCallback;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.call.SCMPClnSubscribeCall;
 import org.serviceconnector.call.SCMPClnUnsubscribeCall;
+import org.serviceconnector.call.SCMPReceivePublicationCall;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.test.system.scmp.casc1.SCMPClnSubscribeCasc1Test;
@@ -33,7 +36,7 @@ public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 	public SCMPClnSubscribeTest() {
 		SCMPClnSubscribeTest.setUpServiceConnectorAndServer();
 	}
-	
+
 	/**
 	 * Description: subscribe - waits 2 seconds - another subscribe fails because no free server is available<br>
 	 * Expectation: passes
@@ -68,5 +71,48 @@ public class SCMPClnSubscribeTest extends SCMPClnSubscribeCasc1Test {
 		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
 		unSubscribeCall.invoke(cbk, 4000);
 		TestUtil.checkReply(cbk.getMessageSync(4000));
+	}
+
+	/**
+	 * Description: This test fills the messageQueue with 100'000 messages<br>
+	 * Expectation: passes, SC should work properly with 100'000 messages
+	 */
+	@Test
+	public void t50_FillMessageQueueWith100000Messages() throws Exception {
+		SCMPClnSubscribeCall subscribeCall = new SCMPClnSubscribeCall(this.requester, TestConstants.pubServerName1);
+
+		subscribeCall.setNoDataIntervalSeconds(10);
+		subscribeCall.setSessionInfo(TestConstants.publishMsgWithDelayCmd);
+		subscribeCall.setMask(TestConstants.mask);
+		subscribeCall.setRequestBody("100003|1");
+		TestCallback cbk = new TestCallback(true);
+		subscribeCall.invoke(cbk, 2000);
+		SCMPMessage reply = cbk.getMessageSync(2000);
+		TestUtil.checkReply(reply);
+		String sessionId = reply.getSessionId();
+
+		Thread.sleep(55000);
+		// receive publication - get message
+		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester,
+				TestConstants.pubServerName1, sessionId);
+		receivePublicationCall.invoke(cbk, 20000);
+		reply = cbk.getMessageSync(20000);
+		TestUtil.checkReply(reply);
+		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
+		Thread.sleep(55000);
+		receivePublicationCall.invoke(cbk, 20000);
+		reply = cbk.getMessageSync(20000);
+		TestUtil.checkReply(reply);
+		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
+		Thread.sleep(55000);
+		receivePublicationCall.invoke(cbk, 20000);
+		reply = cbk.getMessageSync(20000);
+		TestUtil.checkReply(reply);
+		Assert.assertFalse(reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA));
+		Thread.sleep(55000);
+		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
+		unSubscribeCall.invoke(cbk, 3000);
+		reply = cbk.getMessageSync(3000);
+		TestUtil.checkReply(reply);
 	}
 }
