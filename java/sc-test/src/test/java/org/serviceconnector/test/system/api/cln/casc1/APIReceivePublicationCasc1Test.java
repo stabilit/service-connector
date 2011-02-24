@@ -240,9 +240,9 @@ public class APIReceivePublicationCasc1Test extends APISystemSuperPublishClientT
 		response = cbk2.getMessage();
 		Assert.assertEquals("message body is empty", true, response.getDataLength() > 0);
 
-		service1.unsubscribe(2);
+		service1.unsubscribe(4);
 		Assert.assertNull("the session ID is not null)", service1.getSessionId());
-		service2.unsubscribe(2);
+		service2.unsubscribe(4);
 		Assert.assertNull("the session ID is not null)", service2.getSessionId());
 	}
 }
