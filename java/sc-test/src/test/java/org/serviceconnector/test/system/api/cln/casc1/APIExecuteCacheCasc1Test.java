@@ -22,10 +22,12 @@ import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
 import org.serviceconnector.cache.CacheComposite.CACHE_STATE;
 import org.serviceconnector.net.ConnectionType;
+import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 import org.serviceconnector.util.URLParameterString;
 
@@ -321,12 +323,50 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
+	 * Description: sessionService1 exchange a large message into cache, sessionService2 gets same message on same service
+	 * instances, sessionService2 gets an exception<br>
+	 * Expectation: cache loading exception
+	 */
+	@Test
+	public void t12_2ClientsCacheAndGetSameMessage() throws Exception {
+		String largeMessage = TestUtil.get10MBString();
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+
+		SCSessionService sessionService2 = client.newSessionService(TestConstants.sesServiceName1);
+		MsgCallback msgCallback2 = new MsgCallback(sessionService1);
+		response = sessionService2.createSession(request, msgCallback2);
+
+		// session service starts storing large message with cacheId 700
+		request.setData(largeMessage);
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		sessionService1.send(request);
+		// to assure service1 started loading cache
+		Thread.sleep(10);
+		// session service2 starts getting large message from cache with cacheId 700
+		request.setData("randomContent");
+		request.setMessageInfo(null);
+		request.setCacheId("700");
+		try {
+			response = sessionService2.execute(request);
+			Assert.fail("should throw exception");
+		} catch (SCServiceException e) {
+			Assert.assertEquals(SCMPError.CACHE_LOADING, e.getAppErrorCode());
+		}
+	}
+
+	/**
 	 * Description: sessionService exchange a large message, sessionService1 exchange a message, with same cacheId's on two service
 	 * instances, sessionService two gets message from cache<br>
 	 * Expectation: get messages from cache
 	 */
 	@Test
-	public void t12_2ClientsLargeMessage() throws Exception {
+	public void t13_2ClientsLargeMessage() throws Exception {
 		String largeMessage = TestUtil.getLargeString();
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);
