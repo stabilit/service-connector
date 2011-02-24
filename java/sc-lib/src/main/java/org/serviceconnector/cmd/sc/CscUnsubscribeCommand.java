@@ -96,11 +96,11 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 			return;
 		}
 
-		PublishMessageQueue<SCMPMessage> queue = ((IPublishService) cascSubscription.getService()).getMessageQueue();
+		PublishMessageQueue<SCMPMessage> publishMessageQueue = ((IPublishService) cascSubscription.getService()).getMessageQueue();
 		if (cascadedSCMask == null) {
 			// unsubscribe made by cascaded SC on behalf of his last client
 			this.subscriptionRegistry.removeSubscription(cascSubscription.getId());
-			queue.unsubscribe(cascSubscription.getId());
+			publishMessageQueue.unsubscribe(cascSubscription.getId());
 			cascSubscription.getServer().removeSession(cascSubscription);
 			SubscriptionLogger.logUnsubscribe(serviceName, cascSubscription.getId());
 
@@ -118,7 +118,7 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 		} else {
 			// unsubscribe made by cascaded SC on behalf of his clients
 			SubscriptionMask cascSCMask = new SubscriptionMask(cascadedSCMask);
-			queue.changeSubscription(cascSubscription.getId(), cascSCMask);
+			publishMessageQueue.changeSubscription(cascSubscription.getId(), cascSCMask);
 			cascSubscription.setMask(cascSCMask);
 			SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
 		}
@@ -136,6 +136,8 @@ public class CscUnsubscribeCommand extends CommandAdapter {
 				// set up callback for normal client unsubscribe operation
 				callback = new CscUnsubscribeCommandCallback(request, response, responderCallback, cascSubscription);
 				server.unsubscribe(reqMessage, callback, otiOnSCMillis - (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
+				// delete unreferenced nodes in queue
+				publishMessageQueue.removeNonreferencedNodes();
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {

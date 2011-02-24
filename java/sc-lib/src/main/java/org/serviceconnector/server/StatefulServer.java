@@ -307,10 +307,12 @@ public class StatefulServer extends Server implements IStatefulServer {
 		// delete session in global registries
 		if (session instanceof Subscription) {
 			StatefulServer.subscriptionRegistry.removeSubscription(session.getId());
-			PublishMessageQueue<SCMPMessage> queue = ((PublishService) ((StatefulServer) session.getServer()).getService())
-					.getMessageQueue();
+			PublishMessageQueue<SCMPMessage> publishMessageQueue = ((PublishService) ((StatefulServer) session.getServer())
+					.getService()).getMessageQueue();
 			// unsubscribe subscription
-			queue.unsubscribe(session.getId());
+			publishMessageQueue.unsubscribe(session.getId());
+			// remove non referenced nodes
+			publishMessageQueue.removeNonreferencedNodes();
 		} else {
 			StatefulServer.sessionRegistry.removeSession((Session) session);
 		}
@@ -424,10 +426,12 @@ public class StatefulServer extends Server implements IStatefulServer {
 					// server already destroyed
 					continue;
 				}
-				PublishMessageQueue<SCMPMessage> queue = ((PublishService) ((StatefulServer) session.getServer()).getService())
-						.getMessageQueue();
+				PublishMessageQueue<SCMPMessage> publishMessageQueue = ((PublishService) ((StatefulServer) session.getServer())
+						.getService()).getMessageQueue();
 				// unsubscribe subscription
-				queue.unsubscribe(session.getId());
+				publishMessageQueue.unsubscribe(session.getId());
+				// remove non referenced nodes
+				publishMessageQueue.removeNonreferencedNodes();
 			} else {
 				StatefulServer.sessionRegistry.removeSession((Session) session);
 			}

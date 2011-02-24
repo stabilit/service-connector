@@ -95,6 +95,8 @@ public class ClnUnsubscribeCommand extends CommandAdapter {
 				// set up callback for normal client unsubscribe operation
 				callback = new ClnUnsubscribeCommandCallback(request, response, responderCallback, subscription);
 				server.unsubscribe(reqMessage, callback, otiOnSCMillis - (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS));
+				// delete unreferenced nodes in queue
+				publishMessageQueue.removeNonreferencedNodes();
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (ConnectionPoolBusyException ex) {

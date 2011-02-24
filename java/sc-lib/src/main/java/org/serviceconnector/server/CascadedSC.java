@@ -430,9 +430,10 @@ public class CascadedSC extends Server implements IStatefulServer {
 			Subscription subscription = (Subscription) session;
 			CascadedPublishService casService = (CascadedPublishService) subscription.getService();
 
-			PublishMessageQueue<SCMPMessage> queue = casService.getMessageQueue();
+			PublishMessageQueue<SCMPMessage> publishMessageQueue = casService.getMessageQueue();
 			// unsubscribe subscription
-			queue.unsubscribe(subscription.getId());
+			publishMessageQueue.unsubscribe(subscription.getId());
+			publishMessageQueue.removeNonreferencedNodes();
 
 			CascadedClient cascClient = casService.getCascClient();
 			SCMPMessage abortMessage = new SCMPMessage();

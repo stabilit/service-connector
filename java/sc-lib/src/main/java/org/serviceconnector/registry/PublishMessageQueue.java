@@ -184,7 +184,7 @@ public class PublishMessageQueue<E> {
 	 * Removes the non referenced nodes. Starts removing nodes in first position of queue - stops at the position a node is
 	 * referenced.
 	 */
-	private synchronized void removeNonreferencedNodes() {
+	public synchronized void removeNonreferencedNodes() {
 		LinkedNode<E> node = this.dataQueue.getFirst();
 		while (node != null) {
 			if (node.isReferenced()) {

@@ -88,17 +88,17 @@ public class CscAbortSessionCommand extends CommandAdapter {
 		}
 		StatefulServer server = (StatefulServer) cascSubscription.getServer();
 
-		PublishMessageQueue<SCMPMessage> queue = ((IPublishService) cascSubscription.getService()).getMessageQueue();
+		PublishMessageQueue<SCMPMessage> publishMessageQueue = ((IPublishService) cascSubscription.getService()).getMessageQueue();
 		if (cascadedSCMask == null) {
 			// subscription abort made by cascaded SC on behalf of his last client
 			this.subscriptionRegistry.removeSubscription(cascSubscription.getId());
-			queue.unsubscribe(cascSubscription.getId());
+			publishMessageQueue.unsubscribe(cascSubscription.getId());
 			cascSubscription.getServer().removeSession(cascSubscription);
 			SubscriptionLogger.logUnsubscribe(serviceName, cascSubscription.getId());
 		} else {
 			// unsubscribe made by cascaded SC on behalf of a clients, others are left
 			SubscriptionMask cascSCMask = new SubscriptionMask(cascadedSCMask);
-			queue.changeSubscription(cascSubscription.getId(), cascSCMask);
+			publishMessageQueue.changeSubscription(cascSubscription.getId(), cascSCMask);
 			cascSubscription.setMask(cascSCMask);
 			SubscriptionLogger.logChangeSubscribe(serviceName, cascSubscription.getId(), cascadedSCMask);
 		}
@@ -115,6 +115,8 @@ public class CscAbortSessionCommand extends CommandAdapter {
 		reqMessage.setIsReply(true);
 		response.setSCMP(reqMessage);
 		responderCallback.responseCallback(request, response);
+		// delete unreferenced nodes in queue
+		publishMessageQueue.removeNonreferencedNodes();
 	}
 
 	/** {@inheritDoc} */
