@@ -370,7 +370,9 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					if (value instanceof Service) {
 						Service service = (Service) value;
 						writer.writeStartElement("service");
-						this.writeBean(writer, service);
+						writer.writeStartElement("name");
+						writer.writeCData(service.getName());
+						writer.writeEndElement();
 						writer.writeEndElement();
 						continue;
 					}
