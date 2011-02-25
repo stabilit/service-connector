@@ -15,10 +15,6 @@
  */
 package org.serviceconnector.test.integration.api.srv;
 
-import java.security.InvalidParameterException;
-
-import javax.activity.InvalidActivityException;
-
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
@@ -53,9 +49,9 @@ public class APIRegisterPublishServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with no service name<br>
-	 * Expectation:	throws InvalidParameterException
+	 * Expectation:	throws SCMPValidatorException
 	 */
-	@Test (expected = InvalidParameterException.class)
+	@Test (expected = SCMPValidatorException.class)
 	public void t102_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_PUB_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
@@ -212,9 +208,9 @@ public class APIRegisterPublishServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with 1 session and 1 connection twice<br>
-	 * Expectation:	throws InvalidActivityException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = InvalidActivityException.class)
+	@Test (expected = SCServiceException.class)
 	public void t114_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_PUB_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
@@ -297,9 +293,9 @@ public class APIRegisterPublishServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with no service name<br>
-	 * Expectation:	throws InvalidParameterException
+	 * Expectation:	throws SCMPValidatorException
 	 */
-	@Test (expected = InvalidParameterException.class)
+	@Test (expected = SCMPValidatorException.class)
 	public void t202_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_PUB_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
@@ -454,9 +450,9 @@ public class APIRegisterPublishServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with 1 session and 1 connection twice<br>
-	 * Expectation:	throws InvalidActivityException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = InvalidActivityException.class)
+	@Test (expected = SCServiceException.class)
 	public void t214_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_PUB_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
