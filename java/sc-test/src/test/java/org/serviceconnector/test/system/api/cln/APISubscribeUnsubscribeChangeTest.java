@@ -53,9 +53,9 @@ public class APISubscribeUnsubscribeChangeTest extends APISubscribeUnsubscribeCh
 
 	/**
 	 * Description: subscribe with service name = null<br>
-	 * Expectation: throws InvalidParameterException
+	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = InvalidParameterException.class)
+	@Test(expected = SCServiceException.class)
 	public void t08_subscribeNullService() throws Exception {
 		publishService = client.newPublishService(null);
 		SCSubscribeMessage subMsgRequest = new SCSubscribeMessage(TestConstants.pangram);
