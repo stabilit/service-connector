@@ -22,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.serviceconnector.TestConstants;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCClient;
 import org.serviceconnector.api.cln.SCFileService;
 import org.serviceconnector.api.cln.SCPublishService;
@@ -45,9 +46,9 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 
 	/**
 	 * Description: create new session service with service name = null<br> 
-	 * Expectation:	throws InvalidParameterException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test(expected = InvalidParameterException.class)
+	@Test(expected = SCServiceException.class)
 	public void t101_newSessionServiceNameNull() throws Exception {
 		client.newSessionService(null);
 	}
@@ -129,9 +130,9 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	
 	/**
 	 * Description: create new publish service with name = null<br> 
-	 * Expectation:	throws InvalidParameterException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test(expected = InvalidParameterException.class)
+	@Test(expected = SCServiceException.class)
 	public void t201_newPublisServiceNameNull() throws Exception {
 		client.newPublishService(null);
 	}
@@ -211,9 +212,9 @@ public class APINewServiceTest extends APIIntegrationSuperClientTest {
 	
 	/**
 	 * Description: create new file service with name = null<br> 
-	 * Expectation:	throws InvalidParameterException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test(expected = InvalidParameterException.class)
+	@Test(expected = SCServiceException.class)
 	public void t301_newFileServiceNameNull() throws Exception {
 		client.newFileService(null);
 	}
