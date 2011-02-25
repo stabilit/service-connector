@@ -286,6 +286,7 @@ public class Cache {
 				}
 				cacheComposite = new CacheComposite();
 				// insert cache composite
+				cacheComposite.setLoadingSessionId(message.getSessionId());
 				cacheComposite.setSize(0);
 				cacheComposite.setCacheState(CACHE_STATE.LOADING);
 				this.putRegistry(cacheKey);
