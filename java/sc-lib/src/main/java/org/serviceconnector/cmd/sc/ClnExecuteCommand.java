@@ -96,7 +96,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 			// ignore PRQ (part messages) and accept the ending REQ message only
 			// but do not ignore any POLL (PAC) messages
 			if (reqMessage.isPollRequest() == true || reqMessage.isPart() == false) {
-				logger.info("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
+				CacheLogger.debug("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
 						+ reqMessage.getCachePartNr());
 				// try to load response from cache
 				try {
@@ -241,14 +241,14 @@ public class ClnExecuteCommand extends CommandAdapter {
 		}
 		CacheId cacheId = message.getFullCacheId();
 		CacheLogger
-				.debug("try loading message from cache, serviceName (" + serviceName + "), cacheId (" + cacheId.toString() + ")");
+				.debug("try loading message from cache, serviceName (" + serviceName + "), cacheId (" + cacheId.toString() + "), sessionId (" + message.getSessionId() + ")");
 		CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 		if (cacheComposite == null) {
 			// we synchronized this part and check if any other thread did start loading in the meantime
 			synchronized (cacheManager) {
 				cacheComposite = scmpCache.getComposite(cacheId);
 				if (cacheComposite == null) {
-					CacheLogger.debug("cache does not exist, start loading from server");
+					CacheLogger.debug("cache does not exist, start loading from server, request sessionId=" + message.getSessionId());
 					// cache does not exist, this is the first request for it
 					int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 					scmpCache.startLoading(message.getSessionId(), message.getCacheId(), oti);
@@ -261,7 +261,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 				// check if cache is loading
 				if (cacheComposite.isLoading()) {
 					// check if it is a part request and sequence nr in cache equals cache composite size
-					CacheLogger.debug("cache is loading (" + cacheId + ")");
+					CacheLogger.debug("cache is loading (" + cacheId + "), loadingSessionId=" + cacheComposite.getLoadingSessionId());
 					int size = cacheComposite.getSize();
 					int sequenceNr = cacheId.getSequenceNrInt();
 					if (!(message.isPart() && (sequenceNr == size))) {
@@ -311,7 +311,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 				if (cacheMessage == null) {
 					// cache message is not part of this composite, check if message sequence number is valid or out of scope
 					if (cacheComposite.isValidCacheId(cacheId)) {
-						scmpCache.removeComposite(cacheId.getCacheId());
+						scmpCache.removeComposite(message.getSessionId(), cacheId.getCacheId());
 						// cache id sequence nr is valid, but message does not exist, cache is invalid
 						CacheLogger.error("cache has illegal state, loaded but message is not part of cache, cacheId="
 								+ message.getCacheId());

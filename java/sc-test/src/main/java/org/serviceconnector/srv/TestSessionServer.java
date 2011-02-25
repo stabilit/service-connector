@@ -278,7 +278,7 @@ public class TestSessionServer extends TestStatefulServer {
 				String largeMessage = TestUtil.getLargeString();
 				request.setData(largeMessage);
 			} else if (dataString.startsWith("cache10MBString1Hour")) {
-				logger.info("cacheLargeMessageFor1Hour");
+				logger.info("cache10MBMessageFor1Hour");
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());
 				String largeMessage = TestUtil.get10MBString();

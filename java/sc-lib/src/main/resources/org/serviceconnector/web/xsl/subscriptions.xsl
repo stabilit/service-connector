@@ -73,7 +73,7 @@
 	</xsl:template>
 	<xsl:template name="subscription_row">
 	    <xsl:param name="class"/>
-        <td class="{$class}"><a class="sc_table" href="subscriptions{$urlencoded}?service={server/serviceName}"><xsl:value-of select="server/serviceName"/></a></td>
+        <td class="{$class}"><a class="sc_table" href="subscriptions{$urlencoded}?service={service/name}"><xsl:value-of select="service/name"/></a></td>
 	    <td class="{$class}"><xsl:value-of select="id"/></td>
 	    <td class="{$class}"><xsl:value-of select="subscriptionMask"/></td>
 	    <td class="{$class}"><xsl:value-of select="ipAddressList"/></td>

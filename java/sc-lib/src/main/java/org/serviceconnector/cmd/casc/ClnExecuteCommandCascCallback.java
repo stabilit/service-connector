@@ -73,17 +73,24 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 							// ignore PRQ (part messages) and accept the ending REQ message only
 							// but do not ignore any POLL (PAC) messages
 							if (this.requestMessage.isPollRequest() == true || this.requestMessage.isPart() == false) {
-							   CacheLogger.warn("cache: server did reply with no cacheId (null) we use requestCacheId=" + this.requestCacheId + ", request sessiondId=" + this.requestMessage.getSessionId());
+								CacheLogger.warn("cache: server did reply with no cacheId (null) we use requestCacheId="
+										+ this.requestCacheId + ", request sessiondId=" + this.requestMessage.getSessionId());
 							}
 						}
 						// remove cacheId from cache
 						CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 						if (cacheComposite != null) {
-							scmpCache.removeComposite(cacheId);
-							if (reply.isFault()) {
-							    CacheLogger.warn("cache casc: cache composite removed, server did reply with fault, cache (" + cacheId + "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId() + ", request sessiondId=" + this.requestMessage.getSessionId());
-							} else {
-							    CacheLogger.warn("cache casc: cache composite removed, server did reply no cacheId, cache (" + cacheId + "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId() + ", request sessiondId=" + this.requestMessage.getSessionId());
+							if (cacheComposite.isLoadingSessionId(this.requestMessage.getSessionId())) {
+								scmpCache.removeComposite(this.requestMessage.getSessionId(), cacheId);
+								if (reply.isFault()) {
+									CacheLogger.warn("cache casc: cache composite removed, server did reply with fault, cache ("
+											+ cacheId + "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
+											+ ", request sessiondId=" + this.requestMessage.getSessionId());
+								} else {
+									CacheLogger.warn("cache casc: cache composite removed, server did reply no cacheId, cache ("
+											+ cacheId + "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
+											+ ", request sessiondId=" + this.requestMessage.getSessionId());
+								}
 							}
 						}
 					} else {
@@ -97,9 +104,11 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 								// remove cacheId from cache
 								CacheComposite cacheComposite = scmpCache.getComposite(this.requestCacheId);
 								if (cacheComposite != null) {
-									scmpCache.removeComposite(this.requestCacheId);
-									CacheLogger.warn("cache composite (" + this.requestCacheId
-											+ ") removed, server did reply different cacheId, cache (" + cacheId + ")");
+									if (cacheComposite.isLoadingSessionId(this.requestMessage.getSessionId())) {
+										scmpCache.removeComposite(this.requestMessage.getSessionId(), this.requestCacheId);
+										CacheLogger.warn("cache composite (" + this.requestCacheId
+												+ ") removed, server did reply different cacheId, cache (" + cacheId + ")");
+									}
 								}
 							}
 						}
@@ -119,7 +128,8 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 							scmpCache.startLoading(reply.getSessionId(), reply.getCacheId(), this.requestOTI);
 							messageCacheId = scmpCache.putMessage(reply);
 						}
-						CacheLogger.debug("cache message put done using full cacheId = " + messageCacheId.getCacheId() + ", cachePartNr=" + messageCacheId.getSequenceNr());
+						CacheLogger.debug("cache message put done using full cacheId = " + messageCacheId.getCacheId()
+								+ ", cachePartNr=" + messageCacheId.getSequenceNr());
 						reply.setFullCacheId(messageCacheId);
 					}
 				}

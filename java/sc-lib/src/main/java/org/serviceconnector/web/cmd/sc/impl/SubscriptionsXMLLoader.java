@@ -28,7 +28,7 @@ import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.Server;
-import org.serviceconnector.service.PublishService;
+import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.web.AbstractXMLLoader;
@@ -64,8 +64,8 @@ public class SubscriptionsXMLLoader extends AbstractXMLLoader {
 			Service service = serviceRegistry.getService(serviceParameter);
 			if (service != null) {
 				writer.writeStartElement("service");
-				if (service instanceof PublishService) {
-					PublishService publishService = (PublishService) service;
+				if (service instanceof IPublishService) {
+					IPublishService publishService = (IPublishService) service;
 					PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
 					writer.writeStartElement("publishMessageQueueSize");
 					writer.writeCData(String.valueOf(publishMessageQueue.getSize()));

@@ -44,7 +44,7 @@ import org.serviceconnector.util.ValidatorUtility;
  * The default cache implementation uses the EHCache <a href="http://www.ehcache.org">http://www.ehcache.org</a> library.
  * 
  * Inside each cache a {@link CacheCompositeRegistry} instance keeps control over all cache keys. This registry
- * instance is for internal use only. 
+ * instance is for internal use only.
  */
 
 public class Cache {
@@ -177,7 +177,7 @@ public class Cache {
 	 * 
 	 * @param cacheId
 	 *            the cache id <CacheId>/<SequenceNr>
-	 * @return the message for given cacheId 
+	 * @return the message for given cacheId
 	 * @throws CacheException
 	 *             the cache exception
 	 */
@@ -218,7 +218,7 @@ public class Cache {
 
 	/**
 	 * This method puts a new scmp message instance into the cache. The scmp message will be wrapped
-	 * by a {@link CacheMessage} instance. Only the body and the {@link SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR} are 
+	 * by a {@link CacheMessage} instance. Only the body and the {@link SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR} are
 	 * kept in the cache message.
 	 * 
 	 * Each message requires a composite instance. If no composite instance exists, then a composite instance will be
@@ -238,6 +238,7 @@ public class Cache {
 	 */
 	public synchronized CacheId putMessage(SCMPMessage message) throws CacheException {
 		try {
+			String sessionId = message.getSessionId();
 			String cacheId = message.getCacheId();
 			if (cacheId == null) {
 				throw new CacheException("no cacheId");
@@ -266,6 +267,16 @@ public class Cache {
 					CacheLogger.debug("cache composite=" + cacheKey + " is expired!");
 					throw new CacheExpiredException("cache composite=" + cacheKey + " is expired!");
 				}
+				// check if cache composite loading session id belongs to message sessionId
+				if (cacheComposite.isLoadingSessionId(sessionId) == false) {
+					// put message with wrong session id
+					CacheLogger.debug("cache composite=" + cacheKey
+							+ " message put failed, wrong session id, cache loadingSessionId="
+							+ cacheComposite.getLoadingSessionId() + ", message sessionId=" + message.getSessionId());
+					throw new CacheExpiredException("cache composite=" + cacheKey
+							+ " message put failed, wrong session id, cache loadingSessionId="
+							+ cacheComposite.getLoadingSessionId() + ", message sessionId=" + message.getSessionId());
+				}
 			}
 			if ((cacheComposite == null)) {
 				// this is the first message, check if expiration date time is availabled
@@ -290,7 +301,7 @@ public class Cache {
 			cacheComposite.setSize(newSize); // increment size
 			String cacheExpirationDateTime = message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
 			if (newSize == 1 && cacheExpirationDateTime == null) {
-				this.removeComposite(cacheKey);
+				this.removeComposite(sessionId, cacheKey);
 				throw new CacheException("cacheExpirationDateTime is missing, composite has been removed");
 			}
 			// check for expiration date time, but only if this is the first message part
@@ -300,7 +311,7 @@ public class Cache {
 				cacheComposite.setExpiration(cacheExpirationDateTime);
 				if (cacheComposite.isExpired()) {
 					CacheLogger.info("composite=" + scmpCacheId + " is expired, expiration=" + cacheExpirationDateTime);
-					this.removeComposite(cacheKey);
+					this.removeComposite(sessionId, cacheKey);
 					throw new CacheException("composite=" + scmpCacheId + " is expired");
 				}
 			}
@@ -334,8 +345,8 @@ public class Cache {
 	 * @param cacheId
 	 *            the cache id
 	 */
-	public void removeComposite(String cacheId) {
-		this.removeComposite(new CacheKey(cacheId));
+	public void removeComposite(String sessionId, String cacheId) {
+		this.removeComposite(sessionId, new CacheKey(cacheId));
 	}
 
 	/**
@@ -344,13 +355,30 @@ public class Cache {
 	 * @param cacheKey
 	 *            the cache key as String
 	 */
-	public synchronized void removeComposite(CacheKey cacheKey) {
+	public synchronized void removeComposite(String sessionId, CacheKey cacheKey) {
 		// remove all parts
 		CacheComposite cacheComposite = null;
 		Object value = this.cacheImpl.get(cacheKey);
 		if (value != null && value instanceof CacheComposite) {
 			cacheComposite = (CacheComposite) value;
 		}
+		if (cacheComposite == null) {
+			return;
+		}
+		if (cacheComposite.isLoadingSessionId(sessionId) == false) {
+			return;
+		}
+		removeCompositeImmediate(cacheKey, cacheComposite);
+		return;
+	}
+
+	/**
+	 * Removes the composite immediate
+	 *
+	 * @param cacheKey the cache key
+	 * @param cacheComposite the cache composite
+	 */
+	private void removeCompositeImmediate(CacheKey cacheKey, CacheComposite cacheComposite) {
 		if (cacheComposite == null) {
 			return;
 		}
@@ -370,11 +398,10 @@ public class Cache {
 			ret = this.cacheImpl.remove(localCacheKey);
 			// don't stop in case of a failure, try to remove all valid sequence nr, if
 			// there is one missed, we won't remove all others
-			//if (ret == false) {
-			//	return;
-			//}
+			// if (ret == false) {
+			// return;
+			// }
 		}
-		return;
 	}
 
 	/**
@@ -640,14 +667,14 @@ public class Cache {
 				// check if loading timeout did expire
 				if (cacheComposite.isLoadingExpired()) {
 					// modification timeout expired, remove this composite from cache
-					this.removeComposite(new CacheKey(cacheId));
+					this.removeExpiredComposite(new CacheKey(cacheId));
 					CacheLogger.warn("cache has been removed, reason: cache is loading but loading timeout exceeded, cacheId = "
 							+ cacheId);
 				}
 				// check if last modification timeout expired
 				if (cacheComposite.isModificationExpired()) {
 					// modification timeout expired, remove this composite from cache
-					this.removeComposite(new CacheKey(cacheId));
+					this.removeExpiredComposite(new CacheKey(cacheId));
 					CacheLogger.warn("remove composite while loading cache due timeout expiration, cacheId=" + cacheId);
 				}
 				return true;
@@ -699,7 +726,7 @@ public class Cache {
 			CacheKey cacheKey = new CacheKey(cacheId);
 			if (cacheComposite != null) {
 				// remove this cache composite
-				this.removeComposite(cacheKey);
+				this.removeCompositeImmediate(cacheKey, cacheComposite);
 			}
 			cacheComposite = new CacheComposite();
 			cacheComposite.setLoadingSessionId(sessionId);

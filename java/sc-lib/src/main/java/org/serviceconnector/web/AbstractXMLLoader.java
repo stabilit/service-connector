@@ -26,9 +26,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -45,6 +45,7 @@ import org.serviceconnector.net.req.IRequester;
 import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.server.Server;
 import org.serviceconnector.server.StatefulServer;
+import org.serviceconnector.service.Service;
 import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.DateTimeUtility;
 import org.serviceconnector.util.Statistics;
@@ -363,6 +364,13 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 							}
 							writer.writeEndElement();
 						}
+						writer.writeEndElement();
+						continue;
+					}
+					if (value instanceof Service) {
+						Service service = (Service) value;
+						writer.writeStartElement("service");
+						this.writeBean(writer, service);
 						writer.writeEndElement();
 						continue;
 					}

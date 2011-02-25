@@ -398,12 +398,55 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
+	 * Description: sessionService1 exchange a large message into cache, sessionService2 gets same message on same service
+	 * The second small client request will be faster than the first one, beacause cache loading will start when the last
+	 * client part did arrive on sc.
+	 * instances, sessionService2 gets an exception<br>
+	 * Expectation: cache loading exception
+	 */
+	@Test
+	public void t13_2ClientsOneLargeOneSmallRequestCacheAndGetSameMessage() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+
+		SCSessionService sessionService2 = client.newSessionService(TestConstants.sesServiceName1);
+		MsgCallback msgCallback2 = new MsgCallback(sessionService1);
+		response = sessionService2.createSession(request, msgCallback2);
+
+		// session service starts storing large message with cacheId 700
+		String largeMessage = TestUtil.get10MBString();
+		request.setData(largeMessage);
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+//		System.out.println("sessionService1 sessionId=" + sessionService1.getSessionId());
+		sessionService1.send(request);
+		// to assure service1 started loading cache
+		Thread.sleep(100);
+		// session service2 starts getting large message from cache with cacheId 700
+		request.setData(TestConstants.pangram);
+		request.setMessageInfo(null);
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+//		System.out.println("sessionService2 sessionId=" + sessionService2.getSessionId());
+		response = sessionService2.execute(request);
+		Assert.assertEquals(TestConstants.pangram, response.getData());
+		// get response from sessionService1 request
+		msgCallback1.waitForMessage(60);
+		response = msgCallback1.getResponse();
+		Assert.assertEquals(TestConstants.pangram, response.getData());
+	}
+
+	/**
 	 * Description: sessionService exchange a large message, sessionService1 exchange a message, with same cacheId's on two service
 	 * instances, sessionService two gets message from cache<br>
 	 * Expectation: get messages from cache
 	 */
 	@Test
-	public void t13_2ClientsLargeMessage() throws Exception {
+	public void t14_2ClientsLargeMessage() throws Exception {
 		String largeMessage = TestUtil.getLargeString();
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);

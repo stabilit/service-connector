@@ -30,7 +30,7 @@ import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.StatefulServer;
-import org.serviceconnector.service.PublishService;
+import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.web.AbstractXMLLoader;
@@ -58,8 +58,8 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 		for (Service service : services) {
 			writer.writeStartElement("service");
 			this.writeBean(writer, service);
-			if (service instanceof PublishService) {
-				PublishService publishService = (PublishService) service;
+			if (service instanceof IPublishService) {
+				IPublishService publishService = (IPublishService) service;
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
 				writer.writeStartElement("publishMessageQueueSize");
 				writer.writeCData(String.valueOf(publishMessageQueue.getSize()));
@@ -78,8 +78,8 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 					}
 					writer.writeEndElement(); // close servers tag
 				}
-				if (service instanceof PublishService) {
-					PublishService publishService = (PublishService) service;
+				if (service instanceof IPublishService) {
+					IPublishService publishService = (IPublishService) service;
 					PublishMessageQueue<SCMPMessage> publishMessageQueue = publishService.getMessageQueue();
 					writer.writeStartElement("publishMessageQueue");
 					Iterator<SCMPMessage> sqIter = publishMessageQueue.iterator();

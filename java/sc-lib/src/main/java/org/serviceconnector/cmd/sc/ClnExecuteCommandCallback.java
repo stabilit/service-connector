@@ -1,24 +1,23 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheExpiredException;
@@ -52,7 +51,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 	/** The request. */
 	private IRequest request;
 	/** The response. */
-	private IResponse response;	
+	private IResponse response;
 	/** The request message. */
 	private SCMPMessage requestMessage;
 	/** The session id. */
@@ -113,17 +112,24 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 							// ignore PRQ (part messages) and accept the ending REQ message only
 							// but do not ignore any POLL (PAC) messages
 							if (this.requestMessage.isPollRequest() == true || this.requestMessage.isPart() == false) {
-							   CacheLogger.warn("cache: server did reply with no cacheId (null) we use requestCacheId=" + this.requestCacheId + ", request sessiondId=" + this.sessionId);
+								CacheLogger.warn("cache: server did reply with no cacheId (null) we use requestCacheId="
+										+ this.requestCacheId + ", request sessiondId=" + this.sessionId);
 							}
 						}
 						// remove cacheId from cache
 						CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 						if (cacheComposite != null) {
-							scmpCache.removeComposite(cacheId);
-							if (reply.isFault()) {
-							    CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + cacheId + "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId() + ", request sessionId=" + this.sessionId);
-							} else {
-							    CacheLogger.warn("cache composite removed, server did reply no cacheId, cache (" + cacheId + "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId() + ", request sessionId=" + this.sessionId);
+							if (cacheComposite.isLoadingSessionId(sessionId)) {
+								scmpCache.removeComposite(sessionId, cacheId);
+								if (reply.isFault()) {
+									CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + cacheId
+											+ "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
+											+ ", request sessionId=" + this.sessionId);
+								} else {
+									CacheLogger.warn("cache composite removed, server did reply no cacheId, cache (" + cacheId
+											+ "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
+											+ ", request sessionId=" + this.sessionId);
+								}
 							}
 						}
 						// this happens when initial client request belongs to large message
@@ -138,9 +144,11 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 								// remove cacheId from cache
 								CacheComposite cacheComposite = scmpCache.getComposite(this.requestCacheId);
 								if (cacheComposite != null) {
-									scmpCache.removeComposite(this.requestCacheId);
-									CacheLogger.warn("cache composite (" + this.requestCacheId
-											+ ") removed, server did reply different cache id, cache (" + cacheId + ")");
+									if (cacheComposite.isLoadingSessionId(sessionId)) {
+										scmpCache.removeComposite(sessionId, this.requestCacheId);
+										CacheLogger.warn("cache composite (" + this.requestCacheId
+												+ ") removed, server did reply different cache id, cache (" + cacheId + ")");
+									}
 								}
 							}
 						}
@@ -160,7 +168,8 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 							scmpCache.startLoading(reply.getSessionId(), reply.getCacheId(), this.requestOTI);
 							messageCacheId = scmpCache.putMessage(reply);
 						}
-						CacheLogger.debug("cache message put done using full cacheId = " + messageCacheId.getCacheId() + ", cachePartNr=" + messageCacheId.getSequenceNr());
+						CacheLogger.debug("cache message put done using full cacheId = " + messageCacheId.getCacheId()
+								+ ", cachePartNr=" + messageCacheId.getSequenceNr());
 						reply.setFullCacheId(messageCacheId);
 					}
 				}
@@ -225,7 +234,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 					// remove request cacheId from cache
 					CacheComposite cacheComposite = scmpCache.getComposite(this.requestCacheId);
 					if (cacheComposite != null) {
-						scmpCache.removeComposite(this.requestCacheId);
+						scmpCache.removeComposite(this.sessionId, this.requestCacheId);
 						CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + this.requestCacheId
 								+ ")");
 					}
