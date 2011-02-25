@@ -73,6 +73,7 @@ public class CacheLoadingTest extends CacheSuperUnitTest {
 	@Test
 	public void t02_partCacheLoadingTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
+		String sessionId = "dummy.sessionid";
 		String stringWrite = "this is the part buffer nr = ";
 		for (int i = 1; i <= 10; i++) {
 			String partWrite = stringWrite + i;
@@ -86,6 +87,7 @@ public class CacheLoadingTest extends CacheSuperUnitTest {
 			scmpMessageWrite.setBody(buffer);
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
+			scmpMessageWrite.setSessionId(sessionId);
 			Date now = new Date();
 			Date expirationDate = DateTimeUtility.getIncrementTimeMillis(now, TimeMillis.HOUR.getMillis());
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME,

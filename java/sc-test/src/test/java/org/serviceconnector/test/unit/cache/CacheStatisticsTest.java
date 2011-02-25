@@ -79,6 +79,7 @@ public class CacheStatisticsTest extends CacheSuperUnitTest {
 	@Test
 	public void t02_partElementSizeTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
+		String sessionId = "dummy.sessionid";
 		int elementSize = scmpCache.getElementSize();
 		Assert.assertEquals(0, elementSize);
 		String stringWrite = "this is the part buffer nr = ";
@@ -97,6 +98,7 @@ public class CacheStatisticsTest extends CacheSuperUnitTest {
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, expirationDateTimeString);
+			scmpMessageWrite.setSessionId(sessionId);
 			scmpCache.putMessage(scmpMessageWrite);
 		}
 		elementSize = scmpCache.getElementSize();
@@ -114,6 +116,7 @@ public class CacheStatisticsTest extends CacheSuperUnitTest {
 	@SuppressWarnings("unused")
 	public void t03_largePartElementSizeTest() throws CacheException {
 		Cache scmpCache = this.cacheManager.getCache("dummy");
+		String sessionId = "dummy.sessionid";
 		int elementSize = scmpCache.getElementSize();
 		Assert.assertEquals(0, elementSize);
 		String stringWrite = "this is the part buffer nr = ";
@@ -132,6 +135,7 @@ public class CacheStatisticsTest extends CacheSuperUnitTest {
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, String.valueOf(1233 + i));
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_ID, "dummy.cache.id");
 			scmpMessageWrite.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, expirationDateTimeString);
+			scmpMessageWrite.setSessionId(sessionId);
 			scmpCache.putMessage(scmpMessageWrite);
 		}
 		elementSize = scmpCache.getElementSize();
