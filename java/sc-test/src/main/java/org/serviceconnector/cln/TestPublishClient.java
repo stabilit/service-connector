@@ -15,6 +15,7 @@ public class TestPublishClient extends TestAbstractClient {
 	private SCPublishService service;
 	private TestPublishServiceMessageCallback callback;
 	private SCSubscribeMessage scSubscribeMessage = new SCSubscribeMessage();
+	private String sessionId;
 
 	public TestPublishClient() {
 		scSubscribeMessage.setMask(TestConstants.mask);
@@ -188,8 +189,8 @@ public class TestPublishClient extends TestAbstractClient {
 		while (TestPublishServiceMessageCallback.receivedMsg < numberOfMessages) {
 			Thread.sleep(200);
 			if ((System.currentTimeMillis() - start) > maxTimeMillis) {
-				logger.error(this.clientName + " could not receive " + numberOfMessages + " messages in " + maxTimeMillis
-						+ " milliseconds received: " + TestPublishServiceMessageCallback.receivedMsg + ".");
+				logger.error(this.clientName + " sid=" + this.sessionId + "could not receive " + numberOfMessages + " messages in "
+						+ maxTimeMillis + " milliseconds received: " + TestPublishServiceMessageCallback.receivedMsg + ".");
 				break;
 			}
 		}
