@@ -31,7 +31,7 @@ public abstract class SCMessageCallback {
 	private final static Logger logger = Logger.getLogger(SCMessageCallback.class);
 
 	/** The service which is using the message callback. */
-	private SCService service;
+	protected SCService service;
 
 	/**
 	 * Instantiates a new SCMessageCallback.

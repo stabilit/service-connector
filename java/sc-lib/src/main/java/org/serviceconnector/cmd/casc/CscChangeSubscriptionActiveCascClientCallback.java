@@ -18,9 +18,9 @@ package org.serviceconnector.cmd.casc;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.casc.CascadedClient;
-import org.serviceconnector.cmd.sc.ClnChangeSubscriptionCommandCallback;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.scmp.ISCMPMessageCallback;
+import org.serviceconnector.scmp.ISubscriptionCallback;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.service.Subscription;
@@ -34,10 +34,9 @@ public class CscChangeSubscriptionActiveCascClientCallback implements ISCMPMessa
 	protected IRequest request;
 	/** The cascaded client. */
 	private CascadedClient cascClient;
-	private ClnChangeSubscriptionCommandCallback commandCallback;
+	private ISubscriptionCallback commandCallback;
 
-	public CscChangeSubscriptionActiveCascClientCallback(CascadedClient cascClient, IRequest request,
-			ClnChangeSubscriptionCommandCallback callback) {
+	public CscChangeSubscriptionActiveCascClientCallback(CascadedClient cascClient, IRequest request, ISubscriptionCallback callback) {
 		this.request = request;
 		this.commandCallback = callback;
 		this.cascClient = cascClient;

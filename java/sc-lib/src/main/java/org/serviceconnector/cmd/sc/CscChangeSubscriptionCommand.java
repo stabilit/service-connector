@@ -71,8 +71,8 @@ public class CscChangeSubscriptionCommand extends CommandAdapter {
 			CascadedPublishService cascadedPublishService = (CascadedPublishService) abstractService;
 			// publish service is cascaded
 			CascadedSC cascadedSC = cascadedPublishService.getCascadedSC();
-			ClnChangeSubscriptionCommandCallback callback = new ClnChangeSubscriptionCommandCallback(request, response,
-					responderCallback, cascSubscription);
+			CscChangeSubscriptionCallbackForCasc callback = new CscChangeSubscriptionCallbackForCasc(request, response,
+					responderCallback, cascSubscription, cascadedSCMask);
 			cascadedSC.cascadedSCChangeSubscription(cascadedPublishService.getCascClient(), reqMessage, callback, oti);
 			return;
 		}

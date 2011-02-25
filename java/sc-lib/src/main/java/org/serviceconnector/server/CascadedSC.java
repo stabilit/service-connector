@@ -45,7 +45,6 @@ import org.serviceconnector.cmd.casc.CscChangeSubscriptionActiveCascClientCallba
 import org.serviceconnector.cmd.casc.CscSubscribeActiveCascClientCallback;
 import org.serviceconnector.cmd.casc.CscSubscribeInactiveCascClientCallback;
 import org.serviceconnector.cmd.casc.CscUnsubscribeCallbackActiveCascClient;
-import org.serviceconnector.cmd.sc.ClnChangeSubscriptionCommandCallback;
 import org.serviceconnector.cmd.sc.CommandCallback;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
@@ -222,8 +221,8 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
-	public void cascadedSCChangeSubscription(CascadedClient cascClient, SCMPMessage msgToForward,
-			ClnChangeSubscriptionCommandCallback callback, int timeoutMillis) {
+	public void cascadedSCChangeSubscription(CascadedClient cascClient, SCMPMessage msgToForward, ISubscriptionCallback callback,
+			int timeoutMillis) {
 		int oti = (int) (this.operationTimeoutMultiplier * timeoutMillis);
 		long boforeAcquireTime = System.currentTimeMillis();
 		if (this.tryAcquirePermitOnCascClientSemaphore(cascClient, oti, callback) == false) {
@@ -305,7 +304,10 @@ public class CascadedSC extends Server implements IStatefulServer {
 		// try catch block to assure releasing permit in case of any error - very important!
 		try {
 			// remove (cascaded SC / client) from cascaded client list
-			cascClient.removeClientSubscriptionId(msgToForward.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID));
+			if (msgToForward.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK) == null) {
+				// remove cascaded client, he unsubscribes himself
+				cascClient.removeClientSubscriptionId(msgToForward.getHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID));
+			}
 			cascClient.removeClientSubscriptionId(msgToForward.getSessionId());
 
 			msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_SUBSCRIPTION_ID, cascClient.getSubscriptionId());
