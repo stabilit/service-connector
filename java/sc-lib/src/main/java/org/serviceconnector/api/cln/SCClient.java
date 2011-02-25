@@ -16,8 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.cln;
 
-import java.security.InvalidParameterException;
-
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
@@ -83,7 +81,7 @@ public class SCClient {
 	}
 
 	/**
-	 * Attach client to SC. Default operation timeout used.
+	 * Attach client to SC with default operation timeout.
 	 * 
 	 * @throws SCMPValidatorException
 	 *             port is not within limits 0 to 0xFFFF<br>
@@ -91,7 +89,7 @@ public class SCClient {
 	 * @throws SCServiceException
 	 *             instance already attached before<br>
 	 *             attach to host failed<br>
-	 *             error message from SC received<br>
+	 *             error message received from SC <br>
 	 */
 	public synchronized void attach() throws SCServiceException, SCMPValidatorException {
 		this.attach(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -101,14 +99,14 @@ public class SCClient {
 	 * Attach client to SC.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @throws SCMPValidatorException
 	 *             port is not within limits 0 to 0xFFFF<br>
 	 *             host is missing<br>
 	 * @throws SCServiceException
 	 *             instance already attached before<br>
 	 *             attach to host failed<br>
-	 *             error message from SC received<br>
+	 *             error message received from SC <br>
 	 */
 	public synchronized void attach(int operationTimeoutSeconds) throws SCServiceException, SCMPValidatorException {
 		// 1. checking preconditions and validate
@@ -159,12 +157,13 @@ public class SCClient {
 	}
 
 	/**
-	 * Detach client from SC.
+	 * Detach client from SC with default operation timeout.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             detach to host failed<br>
+	 *             error message received from SC<br>
 	 */
-	public synchronized void detach() throws Exception {
+	public synchronized void detach() throws SCServiceException {
 		this.detach(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
@@ -172,11 +171,12 @@ public class SCClient {
 	 * Detach client from SC.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
-	 * @throws Exception
-	 *             the exception
+	 *            the allowed time in seconds to complete the operation
+	 * @throws SCServiceException
+	 *             detach to host failed<br>
+	 *             error message received from SC<br>
 	 */
-	public synchronized void detach(int operationTimeoutSeconds) throws Exception {
+	public synchronized void detach(int operationTimeoutSeconds) throws SCServiceException {
 		// 1. checking preconditions and initialize
 		if (this.attached == false) {
 			// client is not attached just ignore
@@ -210,6 +210,72 @@ public class SCClient {
 				AppContext.destroy();
 			}
 		}
+	}
+
+	/**
+	 * Creates a new file service.
+	 * 
+	 * @param serviceName
+	 *            the service name of the file service to use
+	 * @throws SCMPValidatorException
+	 *             serviceName not within length limits 1 to 32 bytes <br>
+	 * @throws SCServiceException
+	 *             called method after attach
+	 * @return the file service
+	 */
+	public SCFileService newFileService(String serviceName) throws SCServiceException, SCMPValidatorException {
+		if (this.attached == false) {
+			throw new SCServiceException("Creating a new file service not possible - client not attached.");
+		}
+		if (serviceName == null) {
+			throw new SCMPValidatorException("Service name must be set.");
+		}
+		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		return new SCFileService(this, serviceName, this.requester);
+	}
+
+	/**
+	 * Creates a new session service.
+	 * 
+	 * @param serviceName
+	 *            the service name of the session service to use
+	 * @throws SCMPValidatorException
+	 *             serviceName not within length limits 1 to 32 bytes <br>
+	 * @throws SCServiceException
+	 *             called method after attach
+	 * @return the session service
+	 */
+	public SCSessionService newSessionService(String serviceName) throws SCServiceException, SCMPValidatorException {
+		if (this.attached == false) {
+			throw new SCServiceException("Creating a new session service not possible - client not attached.");
+		}
+		if (serviceName == null) {
+			throw new SCMPValidatorException("Service name must be set.");
+		}
+		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		return new SCSessionService(this, serviceName, this.requester);
+	}
+
+	/**
+	 * Creates a new publish service.
+	 * 
+	 * @param serviceName
+	 *            the service name of the publish service to use
+	 * @throws SCMPValidatorException
+	 *             serviceName not within length limits 1 to 32 bytes <br>
+	 * @throws SCServiceException
+	 *             called method after attach
+	 * @return the publish service
+	 */
+	public SCPublishService newPublishService(String serviceName) throws SCServiceException, SCMPValidatorException {
+		if (this.attached == false) {
+			throw new SCServiceException("Creating a new publish service not possible - client not attached.");
+		}
+		if (serviceName == null) {
+			throw new SCMPValidatorException("Service name must be set.");
+		}
+		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
+		return new SCPublishService(this, serviceName, this.requester);
 	}
 
 	/**
@@ -256,11 +322,11 @@ public class SCClient {
 	 * @param keepAliveIntervalSeconds
 	 *            Example: 300
 	 * @throws SCMPValidatorException
-	 * @throws Exception
-	 *             SCMPValidatorException - keepAliveIntervalSeconds not within limits 0 to 3600 <br>
-	 *             SCServiceException - if called after attach
+	 *             keepAliveIntervalSeconds not within limits 0 to 3600 <br>
+	 * @throws SCServiceException
+	 *             called method after attach
 	 */
-	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) throws Exception {
+	public void setKeepAliveIntervalSeconds(int keepAliveIntervalSeconds) throws SCServiceException, SCMPValidatorException {
 		// validate in this case its a local needed information
 		ValidatorUtility.validateInt(0, this.keepAliveIntervalSeconds, 3600, SCMPError.HV_WRONG_KEEPALIVE_INTERVAL);
 		if (this.attached) {
@@ -270,69 +336,16 @@ public class SCClient {
 	}
 
 	/**
-	 * Creates a new file service.
-	 * 
-	 * @param serviceName
-	 *            the service name of the file service to use
-	 * @return the file service
-	 */
-	public SCFileService newFileService(String serviceName) throws Exception {
-		if (this.attached == false) {
-			throw new SCServiceException("Creating a new file service not possible - client not attached.");
-		}
-		if (serviceName == null) {
-			throw new InvalidParameterException("Service name must be set.");
-		}
-		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
-		return new SCFileService(this, serviceName, this.requester);
-	}
-
-	/**
-	 * Creates a new session service.
-	 * 
-	 * @param serviceName
-	 *            the service name of the session service to use
-	 * @return the session service
-	 */
-	public SCSessionService newSessionService(String serviceName) throws Exception {
-		if (this.attached == false) {
-			throw new SCServiceException("Creating a new session service not possible - client not attached.");
-		}
-		if (serviceName == null) {
-			throw new InvalidParameterException("Service name must be set.");
-		}
-		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
-		return new SCSessionService(this, serviceName, this.requester);
-	}
-
-	/**
-	 * Creates a new publish service.
-	 * 
-	 * @param serviceName
-	 *            the service name of the publish service to use
-	 * @return the publish service
-	 */
-	public SCPublishService newPublishService(String serviceName) throws Exception {
-		if (this.attached == false) {
-			throw new SCServiceException("Creating a new publish service not possible - client not attached.");
-		}
-		if (serviceName == null) {
-			throw new InvalidParameterException("Service name must be set.");
-		}
-		ValidatorUtility.validateStringLengthTrim(1, serviceName, 32, SCMPError.HV_WRONG_SERVICE_NAME);
-		return new SCPublishService(this, serviceName, this.requester);
-	}
-
-	/**
 	 * Sets the max connections of the pool which is connecting to SC.
 	 * 
 	 * @param maxConnections
 	 *            the new max connections used by connection pool.
-	 * @throws Exception
-	 *             SCMPValidatorException - if maxConnections smaller one <br>
-	 *             SCServiceException - when called after attach()
+	 * @throws SCMPValidatorException
+	 *             maxConnections smaller one<br>
+	 * @throws SCServiceException
+	 *             called method after attach
 	 */
-	public void setMaxConnections(int maxConnections) throws Exception {
+	public void setMaxConnections(int maxConnections) throws SCServiceException, SCMPValidatorException {
 		if (this.attached) {
 			throw new SCServiceException("Can not set property, client is already attached.");
 		}

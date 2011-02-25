@@ -121,7 +121,7 @@ public class SCSessionServer {
 	 * Register server.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @param maxSessions
 	 *            the max sessions to serve
 	 * @param maxConnections
@@ -148,7 +148,7 @@ public class SCSessionServer {
 	 * Do register.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @param maxSessions
 	 *            the max sessions to serve
 	 * @param maxConnections
@@ -217,7 +217,7 @@ public class SCSessionServer {
 	 * Check registration. This message can be sent from the registered server to SC in order to check its registration
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -258,7 +258,7 @@ public class SCSessionServer {
 	 * Deregister server.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @throws Exception
 	 *             the exception
 	 */

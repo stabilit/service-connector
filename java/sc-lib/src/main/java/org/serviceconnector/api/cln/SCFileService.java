@@ -15,11 +15,13 @@
  */
 package org.serviceconnector.api.cln;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
@@ -37,6 +39,9 @@ import org.serviceconnector.scmp.SCMPMessage;
  * functions.
  */
 public class SCFileService extends SCService {
+
+	/** The Constant logger. */
+	private final static Logger logger = Logger.getLogger(SCFileService.class);
 
 	/**
 	 * Instantiates a new sC file service.
@@ -59,10 +64,12 @@ public class SCFileService extends SCService {
 	 *            the remote file name to store the file
 	 * @param inStream
 	 *            stream to upload
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             create file session to SC failed<br>
+	 *             upload file to Server failed<br>
+	 *             error message received from SC<br>
 	 */
-	public synchronized void uploadFile(String remoteFileName, InputStream inStream) throws Exception {
+	public synchronized void uploadFile(String remoteFileName, InputStream inStream) throws SCServiceException {
 		this.uploadFile(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, remoteFileName, inStream);
 	}
 
@@ -70,15 +77,18 @@ public class SCFileService extends SCService {
 	 * Upload file.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @param remoteFileName
 	 *            the remote file name to store the file
 	 * @param inStream
 	 *            stream to upload
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             create file session to SC failed<br>
+	 *             upload file to Server failed<br>
+	 *             error message received from SC<br>
 	 */
-	public synchronized void uploadFile(int operationTimeoutSeconds, String remoteFileName, InputStream inStream) throws Exception {
+	public synchronized void uploadFile(int operationTimeoutSeconds, String remoteFileName, InputStream inStream)
+			throws SCServiceException {
 		// 1. checking preconditions and initialize
 		// create file session
 		this.createFileSession(operationTimeoutSeconds);
@@ -116,10 +126,12 @@ public class SCFileService extends SCService {
 	 *            the remote name of the file
 	 * @param outStream
 	 *            the out stream to store download
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             create file session to SC failed<br>
+	 *             download file from Server failed<br>
+	 *             error message received from SC<br>
 	 */
-	public synchronized void downloadFile(String remoteFileName, OutputStream outStream) throws Exception {
+	public synchronized void downloadFile(String remoteFileName, OutputStream outStream) throws SCServiceException {
 		this.downloadFile(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, remoteFileName, outStream);
 	}
 
@@ -127,16 +139,19 @@ public class SCFileService extends SCService {
 	 * Download file.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            allowed time to complete operation
+	 *            the allowed time in seconds to complete the operation
 	 * @param remoteFileName
 	 *            the remote name of the file
 	 * @param outStream
 	 *            the out stream to store download
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             create file session to SC failed<br>
+	 *             download file from Server failed<br>
+	 *             writing to OutputStream failed<br>
+	 *             error message received from SC<br>
 	 */
 	public synchronized void downloadFile(int operationTimeoutSeconds, String remoteFileName, OutputStream outStream)
-			throws Exception {
+			throws SCServiceException {
 		// 1. checking preconditions and initialize
 		// create file session
 		this.createFileSession(operationTimeoutSeconds);
@@ -165,6 +180,8 @@ public class SCFileService extends SCService {
 				return;
 			}
 			outStream.write((byte[]) reply.getBody());
+		} catch (IOException e) {
+			throw new SCServiceException("Writing to OutputStream failed. ", e);
 		} finally {
 			// always delete file session
 			this.deleteFileSession(operationTimeoutSeconds);
@@ -178,20 +195,21 @@ public class SCFileService extends SCService {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized List<String> listFiles() throws Exception {
+	public synchronized List<String> listFiles() throws SCServiceException {
 		return this.listFiles(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
 	/**
-	 * List files.
+	 * List available files on server directory.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            allowed time to complete operation
+	 *            the allowed time in seconds to complete the operation
 	 * @return the list of files on the remote server
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             list files from Server failed<br>
+	 *             error message received from SC<br>
 	 */
-	public synchronized List<String> listFiles(int operationTimeoutSeconds) throws Exception {
+	public synchronized List<String> listFiles(int operationTimeoutSeconds) throws SCServiceException {
 		// 1. checking preconditions and initialize
 		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
@@ -217,12 +235,13 @@ public class SCFileService extends SCService {
 	}
 
 	/**
-	 * Creates the file session.
+	 * Creates the file session on SC.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            allowed time to complete operation
+	 *            the allowed time in seconds to complete the operation
 	 * @throws SCServiceException
-	 *             the sC service exception
+	 *             create file session on SC failed<br>
+	 *             error message received from SC<br>
 	 */
 	private void createFileSession(int operationTimeoutSeconds) throws SCServiceException {
 		// 1. checking preconditions and initialize
@@ -234,12 +253,12 @@ public class SCFileService extends SCService {
 		try {
 			createSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			throw new SCServiceException("Create file session failed. ", e);
+			throw new SCServiceException("Create file session on SC failed. ", e);
 		}
 		// 3. receiving reply and error handling
 		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
-			SCServiceException ex = new SCServiceException("Create file session failed.");
+			SCServiceException ex = new SCServiceException("Create file session on SC failed.");
 			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
 			ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
 			throw ex;
@@ -249,14 +268,15 @@ public class SCFileService extends SCService {
 	}
 
 	/**
-	 * Delete file session.
+	 * Delete file session on SC.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            allowed time to complete operation
-	 * @throws Exception
-	 *             the exception
+	 *            the allowed time in seconds to complete the operation
+	 * @throws SCServiceException
+	 *             delete file session on SC failed<br>
+	 *             error message received from SC<br>
 	 */
-	private synchronized void deleteFileSession(int operationTimeoutSeconds) throws Exception {
+	private synchronized void deleteFileSession(int operationTimeoutSeconds) {
 		// 1. checking preconditions and initialize
 		this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();
 		// 2. initialize call & invoke
@@ -267,15 +287,15 @@ public class SCFileService extends SCService {
 			try {
 				deleteSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
-				throw new SCServiceException("Delete file session failed. ", e);
+				// only logging the failure no further action
+				logger.warn("deleting file session on SC failed sid=" + sessionId, e);
+				return;
 			}
 			// 3. receiving reply and error handling
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
-				SCServiceException ex = new SCServiceException("Delete file session failed.");
-				ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
-				ex.setSCErrorText(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_TEXT));
-				throw ex;
+				// only logging the failure no further action
+				logger.warn("deleting file session on SC failed sid=" + sessionId);
 			}
 		} finally {
 			// 4. post process, reply to client

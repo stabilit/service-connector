@@ -63,7 +63,7 @@ public class SCMgmtClient extends SCClient {
 	 * Disable service on SC.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @param serviceName
 	 * @throws SCServiceException
 	 */
@@ -92,7 +92,7 @@ public class SCMgmtClient extends SCClient {
 	 * Enable service on SC.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @param serviceName
 	 *            the service name
 	 */
@@ -122,7 +122,7 @@ public class SCMgmtClient extends SCClient {
 	 * Checks if service is enabled on SC.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @param serviceName
 	 *            the service name
 	 * @return true, if is service enabled
@@ -155,7 +155,7 @@ public class SCMgmtClient extends SCClient {
 	 * Returns the number of available and allocated sessions for given service name.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @param serviceName
 	 *            the service name
 	 * @return string containing the available and allocated sessions, e.g. "4/2".
@@ -187,7 +187,7 @@ public class SCMgmtClient extends SCClient {
 	 * inspects the cache for given service name and cacheId.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @param serviceName
 	 *            the service name
 	 * @param cacheId
@@ -225,7 +225,7 @@ public class SCMgmtClient extends SCClient {
 	 * Clears the cache for given service name.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
@@ -253,7 +253,7 @@ public class SCMgmtClient extends SCClient {
 	 * Request dump.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @throws SCServiceException
 	 *             the SC service exception
 	 */
@@ -295,7 +295,7 @@ public class SCMgmtClient extends SCClient {
 	 * Inspect call.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @param instruction
 	 *            the instruction
 	 * @return the string
@@ -330,7 +330,7 @@ public class SCMgmtClient extends SCClient {
 	 * Process a manage call.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @param instruction
 	 *            the instruction
 	 * @return the string

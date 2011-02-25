@@ -83,7 +83,7 @@ public class SCPublishService extends SCService {
 	 * Subscribe.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @param scSubscribeMessage
 	 *            the SC subscribe message
 	 * @param scMessageCallback
@@ -165,7 +165,7 @@ public class SCPublishService extends SCService {
 	 * Change subscription.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @param scSubscribeMessage
 	 *            the SC subscribe message
 	 * @return the SC subscribe message
@@ -277,7 +277,7 @@ public class SCPublishService extends SCService {
 	 * Unsubscribe.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -289,7 +289,7 @@ public class SCPublishService extends SCService {
 	 * Unsubscribe.
 	 * 
 	 * @param operationTimeoutSeconds
-	 *            the allowed time in seconds to complete the operation until it stops
+	 *            the allowed time in seconds to complete the operation
 	 * @throws Exception
 	 *             the exception
 	 */
