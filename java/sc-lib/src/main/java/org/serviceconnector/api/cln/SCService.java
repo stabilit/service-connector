@@ -67,14 +67,14 @@ public abstract class SCService {
 	}
 
 	/**
-	 * Sets the request complete.
+	 * Sets the request complete. Used only internally (method visibility).
 	 */
 	synchronized void setRequestComplete() {
 		this.pendingRequest = false;
 	}
 
 	/**
-	 * Gets the SC client.
+	 * Gets the associated SC client.
 	 * 
 	 * @return the SC client
 	 */

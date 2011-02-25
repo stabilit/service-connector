@@ -41,19 +41,40 @@ public class SCMgmtClient extends SCClient {
 	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(SCMgmtClient.class);
 
+	/**
+	 * Instantiates a new SC management client.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 */
 	public SCMgmtClient(String host, int port) {
 		super(host, port);
 	}
 
+	/**
+	 * Instantiates a new SC management client.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param connectionType
+	 *            the connection type
+	 */
 	public SCMgmtClient(String host, int port, ConnectionType connectionType) {
 		super(host, port, connectionType);
 	}
 
 	/**
-	 * Disable service on SC.
+	 * Disable service on SC with default operation timeout.
 	 * 
 	 * @param serviceName
 	 * @throws SCServiceException
+	 *             client not attached<br>
+	 *             manage call to SC failed<br>
+	 *             body not null after manage call<br>
 	 */
 	public void disableService(String serviceName) throws SCServiceException {
 		this.disableService(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
@@ -66,6 +87,9 @@ public class SCMgmtClient extends SCClient {
 	 *            the allowed time in seconds to complete the operation
 	 * @param serviceName
 	 * @throws SCServiceException
+	 *             client not attached<br>
+	 *             manage call to SC failed<br>
+	 *             body not null after manage call<br>
 	 */
 	public void disableService(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
@@ -79,10 +103,14 @@ public class SCMgmtClient extends SCClient {
 	}
 
 	/**
-	 * Disable service on SC.
+	 * Disable service on SC with default operation timeout.
 	 * 
 	 * @param serviceName
+	 *            the service name
 	 * @throws SCServiceException
+	 *             client not attached<br>
+	 *             manage call to SC failed<br>
+	 *             body not null after manage call<br>
 	 */
 	public void enableService(String serviceName) throws SCServiceException {
 		this.enableService(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
@@ -95,6 +123,10 @@ public class SCMgmtClient extends SCClient {
 	 *            the allowed time in seconds to complete the operation
 	 * @param serviceName
 	 *            the service name
+	 * @throws SCServiceException
+	 *             client not attached<br>
+	 *             manage call to SC failed<br>
+	 *             body not null after manage call<br>
 	 */
 	public void enableService(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
@@ -108,11 +140,15 @@ public class SCMgmtClient extends SCClient {
 	}
 
 	/**
-	 * Checks if service is enabled on SC.
+	 * Checks if service is enabled on SC with default operation timeout.
 	 * 
 	 * @param serviceName
 	 *            the service name
 	 * @return true, if is service enabled
+	 * @throws SCServiceException
+	 *             client not attached<br>
+	 *             the inspect call failed<br>
+	 *             error message received from SC<br>
 	 */
 	public boolean isServiceEnabled(String serviceName) throws SCServiceException {
 		return this.isServiceEnabled(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
@@ -126,6 +162,10 @@ public class SCMgmtClient extends SCClient {
 	 * @param serviceName
 	 *            the service name
 	 * @return true, if is service enabled
+	 * @throws SCServiceException
+	 *             client not attached<br>
+	 *             the inspect call failed<br>
+	 *             error message received from SC<br>
 	 */
 	public boolean isServiceEnabled(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
@@ -139,13 +179,16 @@ public class SCMgmtClient extends SCClient {
 	}
 
 	/**
-	 * Returns the number of available and allocated sessions for given service name.
+	 * Returns the number of available and allocated sessions for given service name. Uses default operation timeout to complete
+	 * operation.
 	 * 
 	 * @param serviceName
 	 *            the service name
 	 * @return string containing the available and allocated sessions, e.g. "4/2".
 	 * @throws SCServiceException
-	 *             the SC service exception
+	 *             client not attached<br>
+	 *             the inspect call failed<br>
+	 *             error message received from SC<br>
 	 */
 	public String getWorkload(String serviceName) throws SCServiceException {
 		return this.getWorkload(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
@@ -160,7 +203,9 @@ public class SCMgmtClient extends SCClient {
 	 *            the service name
 	 * @return string containing the available and allocated sessions, e.g. "4/2".
 	 * @throws SCServiceException
-	 *             the SC service exception
+	 *             client not attached<br>
+	 *             the inspect call failed<br>
+	 *             error message received from SC<br>
 	 */
 	public String getWorkload(int operationTimeout, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
@@ -170,21 +215,24 @@ public class SCMgmtClient extends SCClient {
 	}
 
 	/**
-	 * inspects the cache for given service name and cacheId.
+	 * inspects the cache for given service name and cacheId. Uses default operation timeout to complete
+	 * operation.
 	 * 
 	 * @param serviceName
 	 *            the service name
 	 * @param cacheId
 	 *            the cache id
 	 * @throws SCServiceException
-	 *             the SC service exception
+	 *             client not attached<br>
+	 *             the inspect call failed<br>
+	 *             error message received from SC<br>
 	 */
 	public URLParameterString inspectCache(String serviceName, String cacheId) throws SCServiceException {
 		return this.inspectCache(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName, cacheId);
 	}
 
 	/**
-	 * inspects the cache for given service name and cacheId.
+	 * Inspects the cache for given service name and cacheId.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
@@ -193,7 +241,9 @@ public class SCMgmtClient extends SCClient {
 	 * @param cacheId
 	 *            the cache id
 	 * @throws SCServiceException
-	 *             the SC service exception
+	 *             client not attached<br>
+	 *             the inspect call failed<br>
+	 *             error message received from SC<br>
 	 */
 	public URLParameterString inspectCache(int operationTimeout, String serviceName, String cacheId) throws SCServiceException {
 		if (this.attached == false) {
@@ -212,10 +262,12 @@ public class SCMgmtClient extends SCClient {
 	}
 
 	/**
-	 * Clears the cache.
+	 * Clears the cache. Uses default operation timeout to complete operation.
 	 * 
 	 * @throws SCServiceException
-	 *             the SC service exception
+	 *             client not attached<br>
+	 *             body not null after manage call<br>
+	 *             manage call to SC failed<br>
 	 */
 	public void clearCache() throws SCServiceException {
 		this.clearCache(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -227,7 +279,9 @@ public class SCMgmtClient extends SCClient {
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
 	 * @throws SCServiceException
-	 *             the SC service exception
+	 *             client not attached<br>
+	 *             body not null after manage call<br>
+	 *             manage call to SC failed<br>
 	 */
 	public void clearCache(int operationTimeout) throws SCServiceException {
 		if (this.attached == false) {
@@ -240,22 +294,24 @@ public class SCMgmtClient extends SCClient {
 	}
 
 	/**
-	 * Request dump.
+	 * Request dump of SC. Uses default operation timeout to complete operation.
 	 * 
 	 * @throws SCServiceException
-	 *             the SC service exception
+	 *             client not attached<br>
+	 *             manage call to SC failed<br>
 	 */
 	public void dump() throws SCServiceException {
 		this.dump(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
 	/**
-	 * Request dump.
+	 * Request dump of SC.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
 	 * @throws SCServiceException
-	 *             the SC service exception
+	 *             client not attached<br>
+	 *             manage call to SC failed<br>
 	 */
 	public void dump(int operationTimeout) throws SCServiceException {
 		if (this.attached == false) {
@@ -267,8 +323,9 @@ public class SCMgmtClient extends SCClient {
 	/**
 	 * Kill SC.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             client not attached<br>
+	 *             manage call to SC failed<br>
 	 */
 	public void killSC() throws SCServiceException {
 		if (this.attached == false) {
@@ -300,7 +357,8 @@ public class SCMgmtClient extends SCClient {
 	 *            the instruction
 	 * @return the string
 	 * @throws SCServiceException
-	 *             the sC service exception
+	 *             the inspect call to SC failed<br>
+	 *             error message received from SC<br>
 	 */
 	private String inspectCall(int operationTimeout, String instruction) throws SCServiceException {
 		SCMPInspectCall inspectCall = new SCMPInspectCall(this.requester);
@@ -335,7 +393,8 @@ public class SCMgmtClient extends SCClient {
 	 *            the instruction
 	 * @return the string
 	 * @throws SCServiceException
-	 *             the SC service exception
+	 *             manage call to SC failed<br>
+	 *             error message received from SC<br>
 	 */
 	private String manageCall(int operationTimeout, String instruction) throws SCServiceException {
 		SCMPManageCall manageCall = new SCMPManageCall(this.requester);
