@@ -28,7 +28,6 @@ import org.serviceconnector.call.SCMPPublishCall;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 
@@ -56,7 +55,7 @@ public class SCPublishServer extends SCSessionServer {
 	}
 
 	/**
-	 * Register server with default operation timeout.
+	 * Register server on SC with default operation timeout.
 	 * 
 	 * @param maxSessions
 	 *            the max sessions to serve
@@ -72,7 +71,7 @@ public class SCPublishServer extends SCSessionServer {
 	}
 
 	/**
-	 * Register server.
+	 * Register server on SC.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
@@ -86,9 +85,9 @@ public class SCPublishServer extends SCSessionServer {
 	 *             the exception
 	 */
 	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
-			SCPublishServerCallback scCallback) throws Exception {
+			SCPublishServerCallback scCallback) throws SCServiceException, SCMPValidatorException {
 		if (scCallback == null) {
-			throw new SCMPValidatorException(SCMPError.HV_ERROR, "Callback is missing.");
+			throw new SCMPValidatorException("Callback is missing.");
 		}
 		this.doRegister(operationTimeoutSeconds, maxSessions, maxConnections);
 		// creating srvService & adding to registry
@@ -99,19 +98,19 @@ public class SCPublishServer extends SCSessionServer {
 	}
 
 	/**
-	 * Publish with default operation timeout.
+	 * Publish message to SC with default operation timeout.
 	 * 
 	 * @param publishMessage
 	 *            the publish message
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void publish(SCPublishMessage publishMessage) throws Exception {
+	public void publish(SCPublishMessage publishMessage) throws SCServiceException, SCMPValidatorException {
 		this.publish(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, publishMessage);
 	}
 
 	/**
-	 * Publish.
+	 * Publish message to SC.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
@@ -120,9 +119,10 @@ public class SCPublishServer extends SCSessionServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void publish(int operationTimeoutSeconds, SCPublishMessage publishMessage) throws Exception {
+	public void publish(int operationTimeoutSeconds, SCPublishMessage publishMessage) throws SCServiceException,
+			SCMPValidatorException {
 		if (publishMessage == null) {
-			throw new SCMPValidatorException(SCMPError.HV_ERROR, "Publish message is missing.");
+			throw new SCMPValidatorException("Publish message is missing.");
 		}
 		synchronized (this.scServer) {
 			this.requester.getSCMPMsgSequenceNr().incrementAndGetMsgSequenceNr();

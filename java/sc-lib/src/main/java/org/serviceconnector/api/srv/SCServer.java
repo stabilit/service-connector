@@ -17,13 +17,10 @@ package org.serviceconnector.api.srv;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-
-import javax.activity.InvalidActivityException;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -226,21 +223,21 @@ public class SCServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void startListener() throws Exception {
+	public synchronized void startListener() throws SCServiceException, SCMPValidatorException {
 		if (this.listening == true) {
-			throw new InvalidActivityException("listener is already started not allowed to start again.");
+			throw new SCServiceException("listener is already started not allowed to start again.");
 		}
 		if (this.scHost == null) {
-			throw new InvalidParameterException("host must be set.");
+			throw new SCMPValidatorException("host must be set.");
 		}
 		if (this.connectionType == null) {
-			throw new InvalidParameterException("connectionType must be set.");
+			throw new SCMPValidatorException("connectionType must be set.");
 		}
 		ValidatorUtility.validateInt(1, this.scPort, Constants.MAX_PORT_NR, SCMPError.HV_WRONG_PORTNR);
 		ValidatorUtility.validateInt(1, this.listenerPort, Constants.MAX_PORT_NR, SCMPError.HV_WRONG_PORTNR);
 
 		if (this.scPort == this.listenerPort) {
-			throw new InvalidParameterException("SC port and listener port must not be the same.");
+			throw new SCMPValidatorException("SC port and listener port must not be the same.");
 		}
 
 		if (this.nics == null || this.nics.size() == 0) {
@@ -254,13 +251,13 @@ public class SCServer {
 							// ignore IPV6_LOOPBACK_NIC, bind not possible on this NIC
 							continue;
 						}
-						nics.add(inetAddress.getHostAddress());						
+						nics.add(inetAddress.getHostAddress());
 						logger.debug("SCServer listens on " + inetAddress.getHostAddress());
 					}
 				}
 			} catch (Exception e) {
 				logger.fatal("unable to detect network interface", e);
-				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong interface");
+				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "Wrong interface.");
 			}
 		}
 
@@ -276,7 +273,7 @@ public class SCServer {
 		} catch (Exception ex) {
 			this.listening = false;
 			logger.error("unable to start listener :" + listenerConfig.getName(), ex);
-			throw ex;
+			throw new SCServiceException("Unable to start listener.", ex);
 		}
 		this.listening = true;
 		// initialize requester, maxConnection = 1 only 1 connection allowed for register server
@@ -315,12 +312,12 @@ public class SCServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCSessionServer newSessionServer(String serviceName) throws Exception {
+	public SCSessionServer newSessionServer(String serviceName) throws SCServiceException, SCMPValidatorException {
 		if (this.listening == false) {
-			throw new SCServiceException("newSessionServer not possible - server not listening.");
+			throw new SCServiceException("NewSessionServer not possible - server not listening.");
 		}
 		if (serviceName == null) {
-			throw new InvalidParameterException("service name must be set");
+			throw new SCMPValidatorException("service name must be set");
 		}
 		return new SCSessionServer(this, serviceName, requester);
 	}
@@ -334,12 +331,12 @@ public class SCServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public SCPublishServer newPublishServer(String serviceName) throws Exception {
+	public SCPublishServer newPublishServer(String serviceName) throws SCServiceException, SCMPValidatorException {
 		if (this.listening == false) {
 			throw new SCServiceException("newPublishServer not possible - server not listening.");
 		}
 		if (serviceName == null) {
-			throw new InvalidParameterException("service name must be set");
+			throw new SCMPValidatorException("service name must be set");
 		}
 		return new SCPublishServer(this, serviceName, requester);
 	}

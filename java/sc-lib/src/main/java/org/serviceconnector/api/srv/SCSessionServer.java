@@ -18,8 +18,6 @@ package org.serviceconnector.api.srv;
 
 import java.util.List;
 
-import javax.activity.InvalidActivityException;
-
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
@@ -31,7 +29,6 @@ import org.serviceconnector.cmd.srv.ServerCommandFactory;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.net.req.SCRequester;
-import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.DateTimeUtility;
@@ -113,7 +110,8 @@ public class SCSessionServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void register(int maxSessions, int maxConnections, SCSessionServerCallback scCallback) throws Exception {
+	public synchronized void register(int maxSessions, int maxConnections, SCSessionServerCallback scCallback)
+			throws SCServiceException, SCMPValidatorException {
 		this.register(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
 	}
 
@@ -132,9 +130,9 @@ public class SCSessionServer {
 	 *             the exception
 	 */
 	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
-			SCSessionServerCallback scCallback) throws Exception {
+			SCSessionServerCallback scCallback) throws SCServiceException, SCMPValidatorException {
 		if (scCallback == null) {
-			throw new SCMPValidatorException(SCMPError.HV_ERROR, "callback is missing");
+			throw new SCMPValidatorException("Callback is missing.");
 		}
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		this.doRegister(operationTimeoutSeconds, maxSessions, maxConnections);
@@ -156,12 +154,13 @@ public class SCSessionServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	protected synchronized void doRegister(int operationTimeoutSeconds, int maxSessions, int maxConnections) throws Exception {
+	protected synchronized void doRegister(int operationTimeoutSeconds, int maxSessions, int maxConnections)
+			throws SCServiceException {
 		if (this.scServer.isListening() == false) {
-			throw new InvalidActivityException("Listener must be started before register service is allowed.");
+			throw new SCServiceException("Listener must be started before register service is allowed.");
 		}
 		if (this.registered) {
-			throw new InvalidActivityException("Server already registered for a service.");
+			throw new SCServiceException("Server already registered for a service.");
 		}
 		// already validated
 		int listenerPort = this.scServer.getListenerPort();
@@ -209,7 +208,7 @@ public class SCSessionServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void checkRegistration() throws Exception {
+	public synchronized void checkRegistration() throws SCServiceException {
 		this.checkRegistration(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
@@ -221,9 +220,9 @@ public class SCSessionServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void checkRegistration(int operationTimeoutSeconds) throws Exception {
+	public synchronized void checkRegistration(int operationTimeoutSeconds) throws SCServiceException {
 		if (this.registered == false) {
-			throw new InvalidActivityException("Server already is not registered for a service.");
+			throw new SCServiceException("Server already is not registered for a service.");
 		}
 		synchronized (this.scServer) {
 			// get lock on scServer - only one server is allowed to communicate over the initial connection
@@ -250,7 +249,7 @@ public class SCSessionServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void deregister() throws Exception {
+	public synchronized void deregister() throws SCServiceException {
 		this.deregister(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
@@ -262,7 +261,7 @@ public class SCSessionServer {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public synchronized void deregister(int operationTimeoutSeconds) throws Exception {
+	public synchronized void deregister(int operationTimeoutSeconds) throws SCServiceException {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();
 		if (this.registered == false) {
 			// sc server not registered - deregister not necessary
