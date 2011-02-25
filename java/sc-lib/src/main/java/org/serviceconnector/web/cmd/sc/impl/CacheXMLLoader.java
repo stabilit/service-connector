@@ -142,6 +142,9 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeStartElement("loadingTimeout");
 		writer.writeCharacters(String.valueOf(cacheComposite.getLoadingTimeout()));
 		writer.writeEndElement(); // end of loadingTimeout
+		writer.writeStartElement("loadingSessionId");
+		writer.writeCharacters(String.valueOf(cacheComposite.getLoadingSessionId()));
+		writer.writeEndElement(); // end of loadingSessionId
 		writer.writeStartElement("expiration");
 		if (cacheComposite.getExpiration() != null) {
 			writer.writeCharacters(cacheComposite.getExpiration());

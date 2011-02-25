@@ -123,7 +123,12 @@
     <xsl:template name="composite_row">
 	    <xsl:param name="class"/>
 	    <td class="{$class}"><xsl:value-of select="key"/></td>
-	    <td class="{$class}"><xsl:value-of select="state"/></td>
+	    <td class="{$class}">
+	      <xsl:value-of select="state"/>
+	      <xsl:if test="state = 'LOADING'">
+	        &#160;(<xsl:value-of select="loadingSessionId"/>)
+	      </xsl:if>
+	    </td>
 	    <td class="{$class}">
 	      <xsl:choose>
 	        <xsl:when test="size &gt; 0">

@@ -201,6 +201,42 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
+	 * Description: exchange 10mb large message with cacheId, server reply with cacheExpirationTime<br>
+	 * Expectation: get large message from cache
+	 */
+	@Test
+	public void t08_cache10MBLargeMessage() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		String largeMessage = TestUtil.get10MBString();
+		request.setData(largeMessage); // internal cache timeout on server one hour
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		response = sessionService1.execute(request);
+		// inspect cache entry
+		URLParameterString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+		Assert.assertEquals("success", inspectResponse.getValue("return"));
+		Assert.assertEquals(CACHE_STATE.LOADED.toString(), inspectResponse.getValue("cacheState"));
+		Assert.assertEquals("700", inspectResponse.getValue("cacheId"));
+		Assert.assertEquals("163", inspectResponse.getValue("cacheSize"));
+		request.setData("cacheFor1Hour");
+		response = sessionService1.execute(request);
+		Assert.assertEquals(largeMessage, response.getData());
+		// inspect cache entry
+		inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+		Assert.assertEquals("success", inspectResponse.getValue("return"));
+		Assert.assertEquals(CACHE_STATE.LOADED.toString(), inspectResponse.getValue("cacheState"));
+		Assert.assertEquals("700", inspectResponse.getValue("cacheId"));
+		Assert.assertEquals("163", inspectResponse.getValue("cacheSize"));
+
+		sessionService1.deleteSession();
+	}
+
+	/**
 	 * Description: sessionService exchange a message, sessionService1 exchange a message, with different cacheId's on two service
 	 * instances<br>
 	 * Expectation: get messages from cache

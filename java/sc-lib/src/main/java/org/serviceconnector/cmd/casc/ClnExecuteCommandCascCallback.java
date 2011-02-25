@@ -24,6 +24,7 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 	private final static Logger logger = Logger.getLogger(ClnExecuteCommandCascCallback.class);
 	/** The request cache id. */
 	private String requestCacheId;
+	private SCMPMessage requestMessage;
 	/** The request oti. */
 	private int requestOTI;
 
@@ -39,9 +40,9 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 	 */
 	public ClnExecuteCommandCascCallback(IRequest request, IResponse response, IResponderCallback callback) {
 		super(request, response, callback);
-		SCMPMessage message = this.request.getMessage();
-		this.requestCacheId = message.getCacheId();
-		this.requestOTI = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		this.requestMessage = this.request.getMessage();
+		this.requestCacheId = this.requestMessage.getCacheId();
+		this.requestOTI = this.requestMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 	}
 
 	/** {@inheritDoc} */
@@ -66,17 +67,23 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 					// check if reply is fault
 					if (reply.isFault() || (cacheId == null && this.requestCacheId != null)) {
 						if (cacheId == null) {
-							CacheLogger.warn("cache casc: sc did reply with no cacheId (null), requestCacheId=" + this.requestCacheId);						
 							cacheId = this.requestCacheId;
+							// this happens, when client request belongs to large message
+							// caching is enabled, if message request is a large message, then
+							// ignore PRQ (part messages) and accept the ending REQ message only
+							// but do not ignore any POLL (PAC) messages
+							if (this.requestMessage.isPollRequest() == true || this.requestMessage.isPart() == false) {
+							   CacheLogger.warn("cache: server did reply with no cacheId (null) we use requestCacheId=" + this.requestCacheId + ", request sessiondId=" + this.requestMessage.getSessionId());
+							}
 						}
 						// remove cacheId from cache
 						CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 						if (cacheComposite != null) {
 							scmpCache.removeComposite(cacheId);
 							if (reply.isFault()) {
-							    CacheLogger.warn("cache casc: composite removed, sc did reply with fault, cache (" + cacheId + ")");
+							    CacheLogger.warn("cache casc: cache composite removed, server did reply with fault, cache (" + cacheId + "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId() + ", request sessiondId=" + this.requestMessage.getSessionId());
 							} else {
-							    CacheLogger.warn("cache casc: composite removed, sc did reply no cacheId, cache (" + cacheId + ")");							
+							    CacheLogger.warn("cache casc: cache composite removed, server did reply no cacheId, cache (" + cacheId + "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId() + ", request sessiondId=" + this.requestMessage.getSessionId());
 							}
 						}
 					} else {

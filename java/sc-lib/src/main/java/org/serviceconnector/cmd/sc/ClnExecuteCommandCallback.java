@@ -1,8 +1,24 @@
+/*
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ */
 package org.serviceconnector.cmd.sc;
 
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.cache.Cache;
 import org.serviceconnector.cache.CacheComposite;
 import org.serviceconnector.cache.CacheExpiredException;
@@ -36,7 +52,9 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 	/** The request. */
 	private IRequest request;
 	/** The response. */
-	private IResponse response;
+	private IResponse response;	
+	/** The request message. */
+	private SCMPMessage requestMessage;
 	/** The session id. */
 	private String sessionId;
 	/** The request cache id. */
@@ -63,10 +81,10 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 		this.request = request;
 		this.response = response;
 		this.sessionId = sessionId;
-		SCMPMessage message = this.request.getMessage();
-		this.requestCacheId = message.getCacheId();
-		this.requestServiceName = message.getServiceName();
-		this.requestOTI = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
+		this.requestMessage = this.request.getMessage();
+		this.requestCacheId = requestMessage.getCacheId();
+		this.requestServiceName = requestMessage.getServiceName();
+		this.requestOTI = requestMessage.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
 	}
 
 	/** {@inheritDoc} */
@@ -89,19 +107,26 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 					// check if reply is fault
 					if (reply.isFault() || (cacheId == null && this.requestCacheId != null)) {
 						if (cacheId == null) {
-							CacheLogger.warn("cache: server did reply with no cacheId (null), requestCacheId=" + this.requestCacheId);						
 							cacheId = this.requestCacheId;
+							// this happens, when client request belongs to large message
+							// caching is enabled, if message request is a large message, then
+							// ignore PRQ (part messages) and accept the ending REQ message only
+							// but do not ignore any POLL (PAC) messages
+							if (this.requestMessage.isPollRequest() == true || this.requestMessage.isPart() == false) {
+							   CacheLogger.warn("cache: server did reply with no cacheId (null) we use requestCacheId=" + this.requestCacheId + ", request sessiondId=" + this.sessionId);
+							}
 						}
 						// remove cacheId from cache
 						CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 						if (cacheComposite != null) {
 							scmpCache.removeComposite(cacheId);
 							if (reply.isFault()) {
-							    CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + cacheId + ")");
+							    CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + cacheId + "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId() + ", request sessionId=" + this.sessionId);
 							} else {
-							    CacheLogger.warn("cache composite removed, server did reply no cacheId, cache (" + cacheId + ")");							
+							    CacheLogger.warn("cache composite removed, server did reply no cacheId, cache (" + cacheId + "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId() + ", request sessionId=" + this.sessionId);
 							}
 						}
+						// this happens when initial client request belongs to large message
 					} else {
 						// check if clients cache id is different to servers reply cache id, if
 						// so delete cache entry for clients id
