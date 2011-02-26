@@ -189,11 +189,11 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 
 		SCMPDeRegisterServerCall deRegisterServerCall = new SCMPDeRegisterServerCall(this.requester, TestConstants.pubServerName1);
 		deRegisterServerCall.invoke(cbk, 2000);
-		TestUtil.checkReply(cbk.getMessageSync(5000));	//TODO JOT ##testing läuft
+		TestUtil.checkReply(cbk.getMessageSync(10000));	//TODO JOT ##testing läuft
 	}
 
 	/**
-	 * Description: register server call twice<br>
+	 * Description: register server twice<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -214,10 +214,10 @@ public class SCMPRegisterDeregisterServerTest extends IntegrationSuperTest {
 		// first deregister server call
 		SCMPDeRegisterServerCall deRegisterServerCall = new SCMPDeRegisterServerCall(this.requester, TestConstants.pubServerName1);
 		deRegisterServerCall.invoke(cbk, 5000);
-		TestUtil.checkReply(cbk.getMessageSync(8000));
+		TestUtil.checkReply(cbk.getMessageSync(10000));
 		// second deregister server call
 		deRegisterServerCall.invoke(cbk, 5000);
-		SCMPMessage reply = cbk.getMessageSync(8000);
+		SCMPMessage reply = cbk.getMessageSync(10000);
 		Assert.assertTrue(reply.isFault());
 		Assert.assertEquals(SCMPMsgType.DEREGISTER_SERVER.getValue(), reply.getHeader(SCMPHeaderAttributeKey.MSG_TYPE));
 		Assert.assertEquals(SCMPError.SERVER_NOT_FOUND.getErrorCode(), reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));

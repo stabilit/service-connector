@@ -205,9 +205,9 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with 1 session and 1 connection twice<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t114_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_TCP, TestConstants.PORT_SES_SRV_TCP, ConnectionType.NETTY_TCP); 
 		server.startListener();
@@ -470,9 +470,9 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 
 	/**
 	 * Description:	register session server with 1 session and 1 connection twice<br>
-	 * Expectation:	throws SCMPValidatorException
+	 * Expectation:	throws SCServiceException
 	 */
-	@Test (expected = SCMPValidatorException.class)
+	@Test (expected = SCServiceException.class)
 	public void t214_register() throws Exception {
 		server = new SCServer(TestConstants.HOST, TestConstants.PORT_SC_HTTP, TestConstants.PORT_SES_SRV_HTTP, ConnectionType.NETTY_HTTP); 
 		server.startListener();
