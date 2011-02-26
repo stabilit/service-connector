@@ -201,6 +201,50 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
+	 * Description: exchange large message with cacheId repeating times<br>
+	 * The first large client call loads the cache and accesses the server.<br>
+	 * The following client calls (also large message) MUST read the reply from the cache, NO ACCESS
+	 * to the server is allowed.
+	 * Expectation: get large message from cache
+	 */
+	@Test
+	public void t07_2_cacheLargeMessage() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		Thread.sleep(1000);
+		{ // first time
+			String largeMessage = TestUtil.getLargeString();
+			request.setData(largeMessage); // internal cache timeout on server one hour
+			request.setCacheId("700");
+			request.setMessageInfo(TestConstants.cacheCmd);
+			response = sessionService1.execute(request);
+			Assert.assertEquals(largeMessage, response.getData());
+			// inspect cache entry
+			URLParameterString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+			Assert.assertEquals("success", inspectResponse.getValue("return"));
+			Assert.assertEquals(CACHE_STATE.LOADED.toString(), inspectResponse.getValue("cacheState"));
+			Assert.assertEquals("700", inspectResponse.getValue("cacheId"));
+			Assert.assertEquals("2", inspectResponse.getValue("cacheSize"));
+		}
+		Thread.sleep(1000);
+		// next client calls, do not access srv, read from cache
+		for (int i = 0; i < 10; i++) {
+			String largeMessage = TestUtil.getLargeString();
+			request.setData(largeMessage); // internal cache timeout on server one hour
+			request.setCacheId("700");
+			request.setMessageInfo(TestConstants.cacheCmd);
+			response = sessionService1.execute(request);
+			Assert.assertEquals(largeMessage, response.getData());
+			Thread.sleep(1000);
+		}
+		sessionService1.deleteSession();
+	}
+
+	/**
 	 * Description: exchange 10mb large message with cacheId, server reply with cacheExpirationTime<br>
 	 * Expectation: get large message from cache
 	 */
@@ -377,7 +421,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		response = sessionService2.createSession(request, msgCallback2);
 
 		// session service starts storing large message with cacheId 700
-//		request.setData(largeMessage);
+		// request.setData(largeMessage);
 		request.setData("cache10MBString1Hour");
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
@@ -422,7 +466,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setData(largeMessage);
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
-//		System.out.println("sessionService1 sessionId=" + sessionService1.getSessionId());
+		// System.out.println("sessionService1 sessionId=" + sessionService1.getSessionId());
 		sessionService1.send(request);
 		// to assure service1 started loading cache
 		Thread.sleep(100);
@@ -431,13 +475,17 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(null);
 		request.setCacheId("700");
 		request.setMessageInfo(TestConstants.cacheCmd);
-//		System.out.println("sessionService2 sessionId=" + sessionService2.getSessionId());
-		response = sessionService2.execute(request);
-		Assert.assertEquals(TestConstants.pangram, response.getData());
+		try {
+			response = sessionService2.execute(request);
+			Assert.fail("Should throw an exception but did not.");
+		} catch (SCServiceException e) {
+			Assert.assertEquals(SCMPError.CACHE_LOADING.getErrorCode(), e.getSCErrorCode());
+		}
 		// get response from sessionService1 request
 		msgCallback1.waitForMessage(60);
-		response = msgCallback1.getResponse();
-		Assert.assertEquals(TestConstants.pangram, response.getData());
+		response = msgCallback1.getResponse();		
+		SCMessage response2 = sessionService2.execute(request);
+		Assert.assertEquals(response.getData(), response2.getData());
 	}
 
 	/**

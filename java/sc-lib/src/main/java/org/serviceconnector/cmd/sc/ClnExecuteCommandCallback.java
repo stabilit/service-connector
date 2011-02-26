@@ -111,23 +111,24 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 							// caching is enabled, if message request is a large message, then
 							// ignore PRQ (part messages) and accept the ending REQ message only
 							// but do not ignore any POLL (PAC) messages
-							if (this.requestMessage.isPollRequest() == true || this.requestMessage.isPart() == false) {
-								CacheLogger.warn("cache: server did reply with no cacheId (null) we use requestCacheId="
-										+ this.requestCacheId + ", request sessiondId=" + this.sessionId);
-							}
+//							if (this.requestMessage.isPollRequest() == true || this.requestMessage.isPart() == false) {
+//								CacheLogger.warn("cache: server did reply with no cacheId (null) we use requestCacheId="
+//										+ this.requestCacheId + ", request sessiondId=" + this.sessionId);
+//							}
 						}
 						// remove cacheId from cache
 						CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 						if (cacheComposite != null) {
-							if (cacheComposite.isLoadingSessionId(sessionId)) {
+							// in this case the case composite state must be PART_LOADING otherwise remove this composite from cache							
+							if (cacheComposite.isLoadingSessionId(sessionId) && cacheComposite.isPartLoading() == false) {
 								scmpCache.removeComposite(sessionId, cacheId);
 								if (reply.isFault()) {
 									CacheLogger.warn("cache composite removed, server did reply with fault, cache (" + cacheId
-											+ "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
+											+ "), cacheComposite state=" + cacheComposite.getCacheState() + ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
 											+ ", request sessionId=" + this.sessionId);
 								} else {
 									CacheLogger.warn("cache composite removed, server did reply no cacheId, cache (" + cacheId
-											+ "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
+											+ "), cacheComposite state=" + cacheComposite.getCacheState() + ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
 											+ ", request sessionId=" + this.sessionId);
 								}
 							}
@@ -160,12 +161,12 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 						} catch (CacheLoadedException e) {
 							CacheLogger.warn("cache put message failed, already loaded, remove cache (" + reply.getCacheId()
 									+ ") and start loading");
-							scmpCache.startLoading(reply.getSessionId(), reply.getCacheId(), this.requestOTI);
+							scmpCache.startLoading(reply, this.requestOTI);
 							messageCacheId = scmpCache.putMessage(reply);
 						} catch (CacheExpiredException e) {
 							CacheLogger.warn("cache put message failed, expired, remove cache (" + reply.getCacheId()
 									+ ") and start loading");
-							scmpCache.startLoading(reply.getSessionId(), reply.getCacheId(), this.requestOTI);
+							scmpCache.startLoading(reply, this.requestOTI);
 							messageCacheId = scmpCache.putMessage(reply);
 						}
 						CacheLogger.debug("cache message put done using full cacheId = " + messageCacheId.getCacheId()

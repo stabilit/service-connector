@@ -298,6 +298,11 @@ public class Cache {
 				}
 				cacheComposite = (CacheComposite) value;
 			}
+			if (cacheComposite.isPartLoading()) {
+				CacheLogger.debug("cache composite=" + cacheKey + " PART_LOADING state changed to LOADING, loadingSessionId="
+						+ cacheComposite.getLoadingSessionId() + ", message sessionId=" + message.getSessionId());
+				cacheComposite.setCacheState(CACHE_STATE.LOADING);
+			}
 			int newSize = cacheComposite.getSize() + 1;
 			cacheComposite.setSize(newSize); // increment size
 			String cacheExpirationDateTime = message.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME);
@@ -375,9 +380,11 @@ public class Cache {
 
 	/**
 	 * Removes the composite immediate
-	 *
-	 * @param cacheKey the cache key
-	 * @param cacheComposite the cache composite
+	 * 
+	 * @param cacheKey
+	 *            the cache key
+	 * @param cacheComposite
+	 *            the cache composite
 	 */
 	private void removeCompositeImmediate(CacheKey cacheKey, CacheComposite cacheComposite) {
 		if (cacheComposite == null) {
@@ -721,8 +728,10 @@ public class Cache {
 	 * @param cacheId
 	 *            the cache id
 	 */
-	public void startLoading(String sessionId, String cacheId, int loadingTimeout) {
+	public void startLoading(SCMPMessage message, int loadingTimeout) {
 		try {
+			String sessionId = message.getSessionId();
+			String cacheId = message.getCacheId();
 			CacheComposite cacheComposite = this.getComposite(cacheId);
 			CacheKey cacheKey = new CacheKey(cacheId);
 			if (cacheComposite != null) {
@@ -733,15 +742,19 @@ public class Cache {
 			cacheComposite.setLoadingSessionId(sessionId);
 			cacheComposite.setSize(0);
 			cacheComposite.setLoadingTimeout(loadingTimeout);
-			cacheComposite.setCacheState(CACHE_STATE.LOADING);
+			if (message.isPollRequest() == true || message.isPart() == false) {
+				CacheLogger.debug("start loading cache, cacheId=" + cacheId + ", state is " + CACHE_STATE.LOADING);
+				cacheComposite.setCacheState(CACHE_STATE.LOADING);
+			} else {
+				CacheLogger.debug("start loading cache, cacheId=" + cacheId + ", state is " + CACHE_STATE.PART_LOADING);
+				cacheComposite.setCacheState(CACHE_STATE.PART_LOADING);
+			}
 			this.putRegistry(cacheKey);
 			Statistics.getInstance().incrementCachedMessages(0);
 			this.cacheImpl.put(cacheKey, cacheComposite);
-			CacheLogger.debug("start loading cache, cacheId=" + cacheId);
 		} catch (CacheException e) {
 			CacheLogger.error("startLoading", e);
 		}
 		return;
 	}
-
 }

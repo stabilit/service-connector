@@ -80,15 +80,16 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 						// remove cacheId from cache
 						CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 						if (cacheComposite != null) {
-							if (cacheComposite.isLoadingSessionId(this.requestMessage.getSessionId())) {
+							// in this case the case composite state must be PART_LOADING otherwise remove this composite from cache							
+							if (cacheComposite.isLoadingSessionId(this.requestMessage.getSessionId()) && cacheComposite.isPartLoading() == false) {
 								scmpCache.removeComposite(this.requestMessage.getSessionId(), cacheId);
 								if (reply.isFault()) {
 									CacheLogger.warn("cache casc: cache composite removed, server did reply with fault, cache ("
-											+ cacheId + "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
+											+ cacheId + "), cacheComposite state=" + cacheComposite.getCacheState() + ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
 											+ ", request sessiondId=" + this.requestMessage.getSessionId());
 								} else {
 									CacheLogger.warn("cache casc: cache composite removed, server did reply no cacheId, cache ("
-											+ cacheId + "), cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
+											+ cacheId + "), cacheComposite state=" + cacheComposite.getCacheState() + ", cache loadingSessionId=" + cacheComposite.getLoadingSessionId()
 											+ ", request sessiondId=" + this.requestMessage.getSessionId());
 								}
 							}
@@ -120,12 +121,12 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 						} catch (CacheLoadedException e) {
 							CacheLogger.warn("cache put message failed, already loaded, remove cache (" + reply.getCacheId()
 									+ ") and start loading");
-							scmpCache.startLoading(reply.getSessionId(), reply.getCacheId(), this.requestOTI);
+							scmpCache.startLoading(reply, this.requestOTI);
 							messageCacheId = scmpCache.putMessage(reply);
 						} catch (CacheExpiredException e) {
 							CacheLogger.warn("cache put message failed, expired, remove cache (" + reply.getCacheId()
 									+ ") and start loading");
-							scmpCache.startLoading(reply.getSessionId(), reply.getCacheId(), this.requestOTI);
+							scmpCache.startLoading(reply, this.requestOTI);
 							messageCacheId = scmpCache.putMessage(reply);
 						}
 						CacheLogger.debug("cache message put done using full cacheId = " + messageCacheId.getCacheId()

@@ -49,6 +49,8 @@ public class CacheComposite implements Serializable {
 		UNDEFINDED,
 		/** The LOADING state, the cache is loading. */
 		LOADING,
+		/** The PART_LOADING state, the cache is loading part. */
+		PART_LOADING,
 		/** The LOADED state, the cache has been loaded and is accessible. */
 		LOADED;
 	};
@@ -80,9 +82,9 @@ public class CacheComposite implements Serializable {
 	/** The cache state. {@link CACHE_STATE} */
 	private CACHE_STATE cacheState;
 
-	/** The loading session id. */	
+	/** The loading session id. */
 	private String loadingSessionId;
-	
+
 	/** The loading timeout (ms). This timeout tells, how long we can wait in the loading state. */
 	private long loadingTimeout;
 
@@ -111,29 +113,30 @@ public class CacheComposite implements Serializable {
 		this.loadingTimeout = -1L;
 	}
 
-	
 	/**
 	 * Gets the loading session id.
-	 *
+	 * 
 	 * @return the loading session id
 	 */
 	public String getLoadingSessionId() {
 		return loadingSessionId;
 	}
-	
+
 	/**
 	 * Sets the loading session id.
-	 *
-	 * @param loadingSessionId the new loading session id
+	 * 
+	 * @param loadingSessionId
+	 *            the new loading session id
 	 */
 	public void setLoadingSessionId(String loadingSessionId) {
 		this.loadingSessionId = loadingSessionId;
 	}
-	
+
 	/**
 	 * Checks if is loading session id.
-	 *
-	 * @param sessiondId the sessiond id
+	 * 
+	 * @param sessiondId
+	 *            the sessiond id
 	 * @return true, if is loading session id
 	 */
 	public boolean isLoadingSessionId(String sessionId) {
@@ -142,7 +145,7 @@ public class CacheComposite implements Serializable {
 		}
 		return this.loadingSessionId.equals(sessionId);
 	}
-	
+
 	/**
 	 * Gets the size.
 	 * 
@@ -227,7 +230,22 @@ public class CacheComposite implements Serializable {
 	 * @return true, if is loading
 	 */
 	public boolean isLoading() {
-		return this.cacheState == CACHE_STATE.LOADING;
+		if (this.cacheState == CACHE_STATE.LOADING) {
+			return true;
+		}
+	    return this.isPartLoading();
+	}
+
+	/**
+	 * Checks if this composite is part loading. {@link CACHE_STATE}
+	 * 
+	 * @return true, if is part loading
+	 */
+	public boolean isPartLoading() {
+		if (this.cacheState == CACHE_STATE.PART_LOADING) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -395,28 +413,29 @@ public class CacheComposite implements Serializable {
 	/**
 	 * Checks if is valid cache id. This method checks if the cache ids sequence nr is within the valid
 	 * range 1 ... cache composite size.
-	 *
-	 * @param cacheId the cache id
+	 * 
+	 * @param cacheId
+	 *            the cache id
 	 * @return true, if is valid cache id
 	 */
 	public boolean isValidCacheId(CacheId cacheId) {
-	   if (cacheId == null) {
-		   return false;		   
-	   }
-	   try {
-		   int sequenceNr = cacheId.getSequenceNrInt();
-		   if (sequenceNr <= 0) {
-			   return false;
-		   }
-		   if (sequenceNr > this.size) {
-			   return false;
-		   }
-		   return true;
-	   } catch(Exception e) {
-		   return false;
-	   }
+		if (cacheId == null) {
+			return false;
+		}
+		try {
+			int sequenceNr = cacheId.getSequenceNrInt();
+			if (sequenceNr <= 0) {
+				return false;
+			}
+			if (sequenceNr > this.size) {
+				return false;
+			}
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
