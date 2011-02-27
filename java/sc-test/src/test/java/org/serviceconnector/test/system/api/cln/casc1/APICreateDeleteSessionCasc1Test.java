@@ -23,6 +23,7 @@ import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.api.cln.SCSessionService;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
@@ -50,9 +51,9 @@ public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClient
 
 	/**
 	 * Description: Create session to publish service<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t06_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
@@ -67,7 +68,7 @@ public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClient
 	 * create session (sessionService)<br>
 	 * TODO JOT/TRN how do we distinguish between session for file services??
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t07_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
@@ -78,9 +79,9 @@ public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClient
 
 	/**
 	 * Description: Create session to service not served by a server<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t09_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
@@ -119,9 +120,9 @@ public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClient
 
 	/**
 	 * Description: Create session twice<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t60_createSessionTwice() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
@@ -192,9 +193,9 @@ public class APICreateDeleteSessionCasc1Test extends APISystemSuperSessionClient
 
 	/**
 	 * Description: Create session with service which has been disabled<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t83_disabledService() throws Exception {
 		// disable service
 		SCMgmtClient clientMgmt = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP);

@@ -47,9 +47,9 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 
 	/**
 	 * Description: Create session to service which does not exist<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t08_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
@@ -60,9 +60,9 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 
 	/**
 	 * Description: Create session with operationTimeout = 0<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t10_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
@@ -72,9 +72,9 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 
 	/**
 	 * Description: Create session with operationTimeout = -1<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t11_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
@@ -84,9 +84,9 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 
 	/**
 	 * Description: Create session with operationTimeout = 3601<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t12_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
@@ -96,9 +96,9 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 
 	/**
 	 * Description: Create session with message = new Object<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t13_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setData(new Object());
@@ -109,9 +109,9 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 
 	/**
 	 * Description: Create session with messageInfo = ""<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t14_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setMessageInfo("");
@@ -122,9 +122,9 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 
 	/**
 	 * Description: Create session with messageInfo = " "<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t15_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setMessageInfo(" ");
@@ -135,9 +135,9 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 
 	/**
 	 * Description: Create session with messageInfo = 257chars<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t16_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setMessageInfo(TestConstants.stringLength257);
@@ -148,9 +148,9 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 
 	/**
 	 * Description: Create session with sessionInfo = ""<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t17_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setSessionInfo("");
@@ -161,9 +161,9 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 
 	/**
 	 * Description: Create session with sessionInfo = " "<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t18_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setSessionInfo(" ");
@@ -174,9 +174,9 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 
 	/**
 	 * Description: Create session with sessionInfo = 257char<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t19_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setSessionInfo(TestConstants.stringLength257);

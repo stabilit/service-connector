@@ -18,6 +18,7 @@ package org.serviceconnector.test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.serviceconnector.test.integration.AllIntegrationTests;
+import org.serviceconnector.test.system.AllCascSystemTests;
 import org.serviceconnector.test.system.AllSystemTests;
 import org.serviceconnector.test.unit.AllUnitTests;
 
@@ -25,6 +26,7 @@ import org.serviceconnector.test.unit.AllUnitTests;
 @Suite.SuiteClasses( {
 	AllUnitTests.class,
 	AllIntegrationTests.class, 
-	AllSystemTests.class})
+	AllSystemTests.class,
+	AllCascSystemTests.class})
 public class AllTests {
 }

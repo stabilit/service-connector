@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.serviceconnector.TestConstants;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
+import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctrl.util.ProcessCtx;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
@@ -28,9 +29,9 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 
 	/**
 	 * Description: create session after SC was aborted<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t01_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
@@ -87,9 +88,9 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 
 	/**
 	 * Description: delete session after SC was aborted<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t04_deleteSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
@@ -105,9 +106,9 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 
 	/**
 	 * Description: create session after server was aborted<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t30_createSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
@@ -206,9 +207,9 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 
 	/**
 	 * Description: delete session after server was aborted<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t35_deleteSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
@@ -246,9 +247,9 @@ public class APIAfterAbortOrRestartSessionTest extends APISystemSuperSessionClie
 
 	/**
 	 * Description: delete session after server has been restarted<br>
-	 * Expectation: throws SCServiceException
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test(expected = SCServiceException.class)
+	@Test(expected = SCMPValidatorException.class)
 	public void t51_deleteSession() throws Exception {
 		SCMessage request = null;
 		SCMessage response = null;
