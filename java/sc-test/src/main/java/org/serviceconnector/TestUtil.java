@@ -1,8 +1,11 @@
 package org.serviceconnector;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -125,5 +128,20 @@ public class TestUtil {
 		}
 		// The directory is now empty so delete it
 		return dir.delete();
+	}
+
+	public static void create200MBFile(String filePath) throws Exception {
+		File file = new File(filePath);
+		if (file.exists() == false) {
+			file.createNewFile();
+		}
+		byte[] garbage = TestUtil.get10MBString().getBytes();
+		FileOutputStream fout = new FileOutputStream(filePath);
+		OutputStream out = new BufferedOutputStream(fout);
+		for (int i = 0; i < 20; i++) {
+			out.write(garbage);
+			out.flush();
+		}
+		out.close();
 	}
 }
