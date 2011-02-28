@@ -17,6 +17,7 @@
 package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
 import org.serviceconnector.net.req.IRequest;
@@ -48,7 +49,7 @@ public class FileUploadCommand extends CommandAdapter {
 	/** {@inheritDoc} */
 	@Override
 	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
-		SCMPMessage message = request.getMessage();		
+		SCMPMessage message = request.getMessage();
 		String serviceName = message.getServiceName();
 		// check service is present
 		Service abstractService = this.getService(serviceName);
@@ -60,21 +61,21 @@ public class FileUploadCommand extends CommandAdapter {
 			ClnCommandCascCallback callback = new ClnCommandCascCallback(request, response, responderCallback);
 			cascadedSC.serverUploadFile(message, callback, oti);
 			return;
-		}		
-		
+		}
+
 		FileSession session = (FileSession) this.getSessionById(message.getSessionId());
 		// cancel session timeout
 		this.sessionRegistry.cancelSessionTimeout(session);
 		SCMPMessage reply = null;
 		try {
 			String remoteFileName = message.getHeader(SCMPHeaderAttributeKey.REMOTE_FILE_NAME);
-
 			FileServer fileServer = session.getFileServer();
-
 			reply = fileServer.serverUploadFile(session, message, remoteFileName, oti);
 		} catch (Exception e) {
-			// forward server reply to client
-			reply = new SCMPMessage();
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UPLOAD_FILE_FAILED,
+					"Error occured in file server on SC.");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
 		} finally {
 			reply.setIsReply(true);
 			reply.setMessageType(getKey());

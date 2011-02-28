@@ -32,9 +32,6 @@ import org.serviceconnector.util.DateTimeUtility;
  */
 public class CacheComposite implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6142075299284577556L;
 
 	/** The Constant logger. */

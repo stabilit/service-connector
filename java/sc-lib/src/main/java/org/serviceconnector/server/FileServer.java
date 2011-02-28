@@ -90,10 +90,10 @@ public class FileServer extends Server {
 			// first stream package arrived - set up URL connection
 			String path = session.getPath();
 			URL url = new URL("http://" + this.remoteNodeConfiguration.getHost() + ":" + this.remoteNodeConfiguration.getPort()
-					+ "/" + path + session.getUploadFileScriptName() + "?" + Constants.DEFAULT_UPLOAD_FILE_PARAM_NAME + "=" + remoteFileName + "&" + Constants.DEFAULT_UPLOAD_SERVICE_PARAM_NAME + "="
-					+ message.getServiceName());
+					+ "/" + path + session.getUploadFileScriptName() + "?" + Constants.DEFAULT_UPLOAD_FILE_PARAM_NAME + "="
+					+ remoteFileName + "&" + Constants.DEFAULT_UPLOAD_SERVICE_PARAM_NAME + "=" + message.getServiceName());
 			httpCon = (HttpURLConnection) url.openConnection();
-			httpCon.setRequestMethod("POST");
+			httpCon.setRequestMethod("PUT");
 			httpCon.setDoOutput(true);
 			httpCon.setDoInput(true);
 			// enable streaming of HTTP
@@ -118,6 +118,7 @@ public class FileServer extends Server {
 		if (message.isPart() == false) {
 			// last package arrived
 			out.close();
+			httpCon = session.getHttpURLConnection();
 			if (httpCon.getResponseCode() != HttpResponseStatus.OK.getCode()) {
 				// error handling
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.UPLOAD_FILE_FAILED, httpCon.getResponseMessage());
@@ -259,7 +260,6 @@ public class FileServer extends Server {
 	 * Upload current log files. This method gets all current log file names and store them all in zip compressed stream.
 	 * This stream is loaded up to our file server (this). The uploading path is identified by the file service instance.
 	 * The service name identifies the uploading service instance which is part of the zipped file name.
-	 * 
 	 * Note: There is no file session required.
 	 * 
 	 * @param fileService
@@ -412,11 +412,15 @@ public class FileServer extends Server {
 
 	/**
 	 * Download and replace.
-	 *
-	 * @param fileService the file service
-	 * @param remoteFile the remote file
-	 * @param dstFile the dst file
-	 * @throws Exception the exception
+	 * 
+	 * @param fileService
+	 *            the file service
+	 * @param remoteFile
+	 *            the remote file
+	 * @param dstFile
+	 *            the dst file
+	 * @throws Exception
+	 *             the exception
 	 */
 	public void downloadAndReplace(FileService fileService, String remoteFile, File dstFile) throws Exception {
 		String path = fileService.getPath();
@@ -436,10 +440,10 @@ public class FileServer extends Server {
 		httpCon.disconnect();
 		return;
 	}
-	
+
 	/**
 	 * Gets the max sessions.
-	 *
+	 * 
 	 * @return the max sessions
 	 */
 	public int getMaxSessions() {

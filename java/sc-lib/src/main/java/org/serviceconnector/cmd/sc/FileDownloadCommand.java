@@ -17,6 +17,7 @@
 package org.serviceconnector.cmd.sc;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.cmd.casc.ClnCommandCascCallback;
 import org.serviceconnector.net.req.IRequest;
@@ -72,8 +73,10 @@ public class FileDownloadCommand extends CommandAdapter {
 			FileServer fileServer = session.getFileServer();
 			reply = fileServer.serverDownloadFile(session, message, remoteFileName, oti);
 		} catch (Exception e) {
-			// forward server reply to client
-			reply = new SCMPMessage();
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.DOWNLOAD_FILE_FAILED,
+					"Error occured in file server on SC.");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
 		} finally {
 			reply.setIsReply(true);
 			reply.setMessageType(getKey());

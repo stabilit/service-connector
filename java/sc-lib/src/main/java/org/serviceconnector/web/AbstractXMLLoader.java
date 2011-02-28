@@ -26,9 +26,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -452,7 +452,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 						writer.writeEndElement();
 						continue;
 					}
-					if (value instanceof PublishMessageQueue) {
+					if (value instanceof PublishMessageQueue<?>) {
 						writer.writeStartElement("subscriptionQueue");
 						PublishMessageQueue<?> publishMessageQueue = (PublishMessageQueue<?>) value;
 						this.writeBean(writer, publishMessageQueue);
