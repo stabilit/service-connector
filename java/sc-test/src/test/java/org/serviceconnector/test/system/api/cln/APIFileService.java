@@ -165,12 +165,12 @@ public class APIFileService extends APISystemSuperSessionClientTest {
 		InputStream inpStream = new FileInputStream(inputFile);
 		service.uploadFile(remoteFileName, inpStream);
 		inpStream.close();
-		FileUtility.waitExists(TestConstants.filServiceLocation2 + remoteFileName, 0);
+//		FileUtility.waitExists(TestConstants.filServiceLocation2 + remoteFileName, 0);
 
 		// download now
 		localFile = "download200MBContent.txt";
 		localpath = "src/main/resources/";
-		remoteFileName = localFile;
+		remoteFileName = "upload200MBFile.txt";
 		File outputFile = new File(localpath + localFile);
 		FileOutputStream outStream = new FileOutputStream(outputFile);
 		service.downloadFile(remoteFileName, outStream); // regular download
