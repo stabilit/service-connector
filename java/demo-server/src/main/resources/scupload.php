@@ -56,21 +56,26 @@ $replyTo = $from;                                                         // rep
  ********************************************************************************
 *********************************************************************************/
 
-/* PUT data in stdin Stream */
-$putdata = fopen("php://input","r");
-$fileName = null;  // no default
-$service = null;   // no default
-$sendMailFlag = 0; // send mail flag, default is 0 (will NOT sent mail)
-if (isset($_REQUEST['filename'])) {
-	$fileName = $_REQUEST['filename']; 
+try {
+	/* PUT data in stdin Stream */
+	$putdata = fopen("php://input","r");
+	$fileName = null;  // no default
+	$service = null;   // no default
+	$sendMailFlag = 0; // send mail flag, default is 0 (will NOT sent mail)
+	if (isset($_REQUEST['filename'])) {
+		$fileName = $_REQUEST['filename']; 
+	}
+	if (isset($_REQUEST['servicename'])) {
+		$service = $_REQUEST['servicename']; 
+	}
+	if (isset($_REQUEST['sendmail'])) {
+		$sendMailFlag = $_REQUEST['sendmail']; 
+	}
+} catch(Exception $e) {
+	header($_SERVER["SERVER_PROTOCOL"]." 500 Server Error - ".$e->getMessage());
+	echo 'exception: '.$e->getMessage().'<br/>';
+    exit;
 }
-if (isset($_REQUEST['servicename'])) {
-	$service = $_REQUEST['servicename']; 
-}
-if (isset($_REQUEST['sendmail'])) {
-	$sendMailFlag = $_REQUEST['sendmail']; 
-}
-
 // check input params
 if ($fileName == null) {
 	header($_SERVER["SERVER_PROTOCOL"]." 400 Bad Request - filename is missing");
@@ -93,16 +98,23 @@ if ($service == "") {
 	exit;
 }
 
-/* Open file to write */
-$fp = fopen($fileName,"w");
-
-/* Loop - reading 1 Kb and write it to file */
-while ($data = fread($putdata,1024)) {
-	fwrite($fp,$data);
+try {
+	/* Open file to write */
+	$fp = fopen($fileName,"w");
+	
+	/* Loop - reading 1 Kb and write it to file */
+	while ($data = fread($putdata,1024)) {
+		fwrite($fp,$data);
+	}
+	/* Close the stream */
+	fclose($fp);
+	fclose($putdata);
+} catch(Exception $e) {
+	header($_SERVER["SERVER_PROTOCOL"]." 500 Server Error - ".$e->getMessage());
+	echo 'exception: '.$e->getMessage().'<br/>';
+    exit;
 }
-/* Close the stream */
-fclose($fp);
-fclose($putdata);
+
 if ($sendMailFlag == 1) {
 	try {
         $now = date("Y-m-d H:i:s");
