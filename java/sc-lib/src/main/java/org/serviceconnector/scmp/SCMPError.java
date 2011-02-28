@@ -128,6 +128,8 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	OPERATION_TIMEOUT("504", "The server did not timely respond to the request."),
 	/** The UPLOAD_FILE_FAILED. */
 	UPLOAD_FILE_FAILED("505", "Upload file failed."),
+	/** The DOWNLOAD_FILE_FAILED. */
+	DOWNLOAD_FILE_FAILED("506", "Download file failed."),
 
 	/** The SC_ERROR. */
 	SC_ERROR("600", "Service Connector error."),

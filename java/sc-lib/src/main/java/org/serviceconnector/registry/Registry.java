@@ -135,7 +135,7 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		StringBuffer dump = new StringBuffer();
+		StringBuilder dump = new StringBuilder();
 		for (Object key : registryMap.keySet()) {
 			dump.append(key);
 			dump.append(":");
