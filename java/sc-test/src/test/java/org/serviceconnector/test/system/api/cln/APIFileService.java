@@ -113,7 +113,7 @@ public class APIFileService extends APISystemSuperSessionClientTest {
 		String remoteFileName = "uploadedFile.txt";
 		File inputFile = new File(localpath + localFile);
 		InputStream inpStream = new FileInputStream(inputFile);
-		service.uploadFile(remoteFileName, inpStream);
+		service.uploadFile(180, remoteFileName, inpStream);
 		inpStream.close();
 		FileUtility.waitExists(TestConstants.filServiceLocation2 + remoteFileName, 0);
 
@@ -123,7 +123,7 @@ public class APIFileService extends APISystemSuperSessionClientTest {
 		remoteFileName = "uploadedFile.txt";
 		File outputFile = new File(localpath + localFile);
 		FileOutputStream outStream = new FileOutputStream(outputFile);
-		service.downloadFile(remoteFileName, outStream); // regular download
+		service.downloadFile(180, remoteFileName, outStream);
 		outStream.close();
 		FileUtility.waitExists(localpath + localFile, 0);
 		FileUtility.deleteFile(localpath + localFile);
@@ -143,7 +143,7 @@ public class APIFileService extends APISystemSuperSessionClientTest {
 		String remoteFileName = localFile;
 		File inputFile = new File(localpath + localFile);
 		InputStream inpStream = new FileInputStream(inputFile);
-		service.uploadFile(80, remoteFileName, inpStream);
+		service.uploadFile(300, remoteFileName, inpStream);
 		inpStream.close();
 		FileUtility.waitExists(TestConstants.filServiceLocation2 + remoteFileName, 0);
 		FileUtility.deleteFile(TestConstants.filServiceLocation2 + remoteFileName);
@@ -163,7 +163,7 @@ public class APIFileService extends APISystemSuperSessionClientTest {
 		String remoteFileName = localFile;
 		File inputFile = new File(localpath + localFile);
 		InputStream inpStream = new FileInputStream(inputFile);
-		service.uploadFile(remoteFileName, inpStream);
+		service.uploadFile(300, remoteFileName, inpStream);
 		inpStream.close();
 //		FileUtility.waitExists(TestConstants.filServiceLocation2 + remoteFileName, 0);
 
