@@ -46,7 +46,9 @@ import org.serviceconnector.scmp.SCMPError;
  *<p>
  * Version number designates the interface signature. It starts at 0 and is incremented by 1. New versions are compatible, but may
  * contain additional features. V2.(x+1)-zzz is compatible with V2.(x)-zzz but needs recompilation and review of the application code
- * where the product is used. Revision number designates the actual development stage. It starts at 1 and is incremented by 1. New
+ * where the product is used. 
+ *<p>
+ * Revision number designates the actual development stage. It starts at 1 and is incremented by 1. New
  * versions are fully compatible. V2.4-(z+1) is compatible with V2.4-z
  * 
  * @author JTraber
@@ -54,7 +56,7 @@ import org.serviceconnector.scmp.SCMPError;
 public enum SCVersion {
 
 	/** The current version. */
-	CURRENT(2, 0, 1),
+	CURRENT(1, 2, 0),
 	/** The version to make tests - DO NOT CHANGE ! */
 	TEST(3, 2, 5);
 

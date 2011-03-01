@@ -117,6 +117,7 @@ public class FileServer extends Server {
 			if (httpCon.getResponseCode() != HttpResponseStatus.OK.getCode()) {
 				// error handling
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.UPLOAD_FILE_FAILED, httpCon.getResponseMessage());
+				logger.warn("Upload file failed " + httpCon.getResponseMessage());
 				return fault;
 			}
 			httpCon.disconnect();
@@ -149,6 +150,7 @@ public class FileServer extends Server {
 			} catch (Exception e) {
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " "
 						+ e.getMessage());
+				logger.warn("Download file request failed " + httpCon.getResponseMessage());
 				return fault;
 			}
 			// set session to streaming mode
@@ -179,7 +181,7 @@ public class FileServer extends Server {
 			throws Exception {
 		HttpURLConnection httpCon = null;
 		String urlPath = URLUtility.makePath(path, listScriptName);
-		urlPath += "?servicename=" + serviceName;
+		urlPath += "?" + Constants.DEFAULT_UPLOAD_SERVICE_PARAM_NAME + "=" + serviceName;
 		URL url = new URL("http", this.remoteNodeConfiguration.getHost(), this.remoteNodeConfiguration.getPort(), urlPath);
 		httpCon = (HttpURLConnection) url.openConnection();
 		httpCon.setRequestMethod("GET");
@@ -194,6 +196,7 @@ public class FileServer extends Server {
 		} catch (Exception e) {
 			SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " "
 					+ e.getMessage());
+			logger.warn("List file request failed " + httpCon.getResponseMessage());
 			return fault;
 		}
 		try {
@@ -215,6 +218,7 @@ public class FileServer extends Server {
 			return reply;
 		} catch (Exception e) {
 			SCMPMessageFault fault = new SCMPMessageFault(e);
+			logger.warn("List file failed " + httpCon.getResponseMessage());
 			return fault;
 		}
 	}
@@ -280,7 +284,6 @@ public class FileServer extends Server {
 		sb.append(Constants.DEFAULT_UPLOAD_SERVICE_PARAM_NAME);
 		sb.append("=");
 		sb.append(serviceName);
-		sb.append("&mail=0");
 		uploadCurrentLogFilesUsingStream(sb.toString());
 		return logsFileName;
 	}
