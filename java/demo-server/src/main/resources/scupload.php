@@ -23,14 +23,17 @@ header("Content-Type: text/plain");
 #			see sc.properties for details
 # 3) Configure the web server (apache) alias corresponding to the path to 
 #    get files from the right directory see also httpd-sc.conf
+# 4) check the php.ini configuration eventually increase memory_limit
+#		see also: http://www.radinks.com/upload/config.php
 #
 # This script will be invoked from SC via the url:
-# 	 http://host:port/path/scupload.php?filename=remoteFileName&servicename=demo
+# 	 http://host:port/path/scupload.php?filename=remoteFileName&servicename=file-1
 #
 # Mail option:
 #  Optionally the script may send a notification mail when a file has been 
-#  successfully uploaded. You must configure the php.ini to allow mail communication
-#
+#  successfully uploaded. 
+#  You must configure the smtp server in php.ini or use ini_set in order to 
+#  allow mail communication
 # ------------------------------------------------------------------------------
 */
 
@@ -131,6 +134,6 @@ if ($sendMailFlag == 1) {
 
 function mailErrorHandler($errno, $errstr)
 	{
-	header($_SERVER["SERVER_PROTOCOL"]." 400 Bad Request - sending mail failed Error:[$errno] $errstr");
+	header($_SERVER["SERVER_PROTOCOL"]." 500 Server Error - sending mail failed Error:[$errno] $errstr");
 	}
 ?>

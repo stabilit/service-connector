@@ -91,7 +91,7 @@ public class APIFileServiceCasc1 extends APISystemSuperSessionClientTest {
 		String remoteFileName = "uploadedFile.txt";
 		File inputFile = new File(localpath + localFile);
 		InputStream inpStream = new FileInputStream(inputFile);
-		service.uploadFile(remoteFileName, inpStream);
+		service.uploadFile(180, remoteFileName, inpStream);
 		inpStream.close();
 
 		// list now
@@ -179,7 +179,7 @@ public class APIFileServiceCasc1 extends APISystemSuperSessionClientTest {
 		remoteFileName = "upload200MBFile.txt";
 		File outputFile = new File(localpath + localFile);
 		FileOutputStream outStream = new FileOutputStream(outputFile);
-		service.downloadFile(remoteFileName, outStream); // regular download
+		service.downloadFile(300, remoteFileName, outStream); // regular download
 		outStream.close();
 		FileUtility.waitExists(localpath + localFile, 0);
 		FileUtility.deleteFile(localpath + localFile);
