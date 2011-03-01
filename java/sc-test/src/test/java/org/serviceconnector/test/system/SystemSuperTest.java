@@ -110,7 +110,7 @@ public class SystemSuperTest {
 				TestConstants.SC0CASCProperties, TestConstants.log4jSC0CASCProperties);
 		ServiceConnectorDefinition sc1CascDef = new ServiceConnectorDefinition(TestConstants.SC1_CASC,
 				TestConstants.SC1CASC1Properties, TestConstants.log4jSC1CASCProperties);
-		scCascDefs.add(sc0CascDef);
+		 scCascDefs.add(sc0CascDef);
 		scCascDefs.add(sc1CascDef);
 
 		List<ServerDefinition> srvToSC0CascDefs = new ArrayList<ServerDefinition>();
