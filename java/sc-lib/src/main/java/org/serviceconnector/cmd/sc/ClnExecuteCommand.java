@@ -91,24 +91,21 @@ public class ClnExecuteCommand extends CommandAdapter {
 		if (reqMessage.getCacheId() != null) {
 			cacheManager = AppContext.getCacheManager();
 		}
+
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
-			// caching is enabled, if message request is a large message, then
-			// ignore PRQ (part messages) and accept the ending REQ message only
-			// but do not ignore any POLL (PAC) messages
-//			if (reqMessage.isPollRequest() == true || reqMessage.isPart() == false) {
-				CacheLogger.debug("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
-						+ reqMessage.getCachePartNr() + ", part is = " + reqMessage.isPart() + ", poll is " + reqMessage.isPollRequest());
-				// try to load response from cache
-				try {
-					if (tryLoadingMessageFromCache(request, response, responderCallback, false)) {
-						return;
-					}
-				} catch (Exception e) {
-					session.setPendingRequest(false);
-					this.sessionRegistry.scheduleSessionTimeout(session);
-					throw e;
+			CacheLogger.debug("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
+					+ reqMessage.getCachePartNr() + ", part is = " + reqMessage.isPart() + ", poll is "
+					+ reqMessage.isPollRequest());
+			// try to load response from cache
+			try {
+				if (tryLoadingMessageFromCache(request, response, responderCallback, false)) {
+					return;
 				}
-//			}
+			} catch (Exception e) {
+				session.setPendingRequest(false);
+				this.sessionRegistry.scheduleSessionTimeout(session);
+				throw e;
+			}
 		}
 		ClnExecuteCommandCallback callback = null;
 		StatefulServer server = session.getStatefulServer();
@@ -140,6 +137,14 @@ public class ClnExecuteCommand extends CommandAdapter {
 		} while (++i < tries);
 	}
 
+	/**
+	 * Execute cascaded service.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param responderCallback the responder callback
+	 * @throws Exception the exception
+	 */
 	private void executeCascadedService(IRequest request, IResponse response, IResponderCallback responderCallback)
 			throws Exception {
 		SCMPMessage reqMessage = request.getMessage();
@@ -150,20 +155,15 @@ public class ClnExecuteCommand extends CommandAdapter {
 			cacheManager = AppContext.getCacheManager();
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
-			// caching is enabled, if message request is a large message, then
-			// ignore PRQ (part messages) and accept the ending REQ message only
-			// but do not ignore any POLL (PAC) messages
-			if (reqMessage.isPollRequest() == true || reqMessage.isPart() == false) {
-				logger.info("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
-						+ reqMessage.getCachePartNr());
-				// try to load response from cache
-				try {
-					if (tryLoadingMessageFromCache(request, response, responderCallback, true)) {
-						return;
-					}
-				} catch (Exception e) {
-					throw e;
+			logger.info("client execute command with cache id = " + reqMessage.getCacheId() + ", cache part nr = "
+					+ reqMessage.getCachePartNr());
+			// try to load response from cache
+			try {
+				if (tryLoadingMessageFromCache(request, response, responderCallback, true)) {
+					return;
 				}
+			} catch (Exception e) {
+				throw e;
 			}
 		}
 		Service abstractService = this.getService(serviceName);
@@ -240,18 +240,19 @@ public class ClnExecuteCommand extends CommandAdapter {
 			throw scmpCommandException;
 		}
 		CacheId cacheId = message.getFullCacheId();
-		CacheLogger
-				.debug("try loading message from cache, serviceName (" + serviceName + "), cacheId (" + cacheId.toString() + "), sessionId (" + message.getSessionId() + ")");
+		CacheLogger.debug("try loading message from cache, serviceName (" + serviceName + "), cacheId (" + cacheId.toString()
+				+ "), sessionId (" + message.getSessionId() + ")");
 		CacheComposite cacheComposite = scmpCache.getComposite(cacheId);
 		if (cacheComposite == null) {
 			// we synchronized this part and check if any other thread did start loading in the meantime
 			synchronized (cacheManager) {
 				cacheComposite = scmpCache.getComposite(cacheId);
 				if (cacheComposite == null) {
-					CacheLogger.debug("cache does not exist, start loading from server, request sessionId=" + message.getSessionId());
+					CacheLogger.debug("cache does not exist, start loading from server, request sessionId="
+							+ message.getSessionId());
 					// cache does not exist, this is the first request for it
 					int oti = message.getHeaderInt(SCMPHeaderAttributeKey.OPERATION_TIMEOUT);
-				    scmpCache.startLoading(message, oti);					
+					scmpCache.startLoading(message, oti);
 					return false;
 				}
 			}
@@ -261,7 +262,8 @@ public class ClnExecuteCommand extends CommandAdapter {
 				// check if cache is loading
 				if (cacheComposite.isLoading()) {
 					// check if it is a part request and sequence nr in cache equals cache composite size
-					CacheLogger.debug("cache is loading (" + cacheId + ") cacheComposite state=" + cacheComposite.getCacheState() + ", loadingSessionId=" + cacheComposite.getLoadingSessionId());
+					CacheLogger.debug("cache is loading (" + cacheId + ") cacheComposite state=" + cacheComposite.getCacheState()
+							+ ", loadingSessionId=" + cacheComposite.getLoadingSessionId());
 					int size = cacheComposite.getSize();
 					int sequenceNr = cacheId.getSequenceNrInt();
 					if (!(message.isPart() && (sequenceNr == size)) && cacheComposite.isPartLoading() == false) {
@@ -305,12 +307,12 @@ public class ClnExecuteCommand extends CommandAdapter {
 				// check if this request message belongs to a part message and is not poll
 				if (!(message.isPollRequest() == true || message.isPart() == false)) {
 					// this request belongs to a client large message part, do not reply with any content, just a PAC
-					CacheLogger.debug("cache composite (" + cacheId + ") found but ignored (part is=" + message.isPart() + ", poll is " + message.isPollRequest() + ", expiration time is "
-							+ cacheComposite.getExpiration());
+					CacheLogger.debug("cache composite (" + cacheId + ") found but ignored (part is=" + message.isPart()
+							+ ", poll is " + message.isPollRequest() + ", expiration time is " + cacheComposite.getExpiration());
 					SCMPPart scmpReply = null;
 					scmpReply = new SCMPPart(true);
 					scmpReply.setHeader(message);
-//					scmpReply.setBody(message.getBody());
+					// scmpReply.setBody(message.getBody());
 					response.setSCMP(scmpReply);
 					responderCallback.responseCallback(request, response);
 					return true;
