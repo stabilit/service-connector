@@ -31,9 +31,7 @@ import org.serviceconnector.test.integration.IntegrationSuperTest;
 public class SCConsoleTest extends IntegrationSuperTest {
 
 	protected static class ExitException extends SecurityException {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = -8667013915273056665L;
 		public final int status;
 
@@ -505,6 +503,21 @@ public class SCConsoleTest extends IntegrationSuperTest {
 					Constants.CC_CMD_SESSIONS + "=notExistingService" });
 		} catch (ExitException e) {
 			Assert.assertEquals(4, e.status);
+		}
+	}
+	
+	/**
+	 * Description: start console with "-h localhost -p 9000 sessions=*<br>
+	 * (unknown service name)<br>
+	 * Expectation: passes with exitCode = 0 "Success"<br>
+	 */
+	@Test
+	public void t55_sessions_command_wildCard() throws Exception {
+		try {
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+					Constants.CC_CMD_SESSIONS + "=*" });
+		} catch (ExitException e) {
+			Assert.assertEquals(0, e.status);
 		}
 	}
 

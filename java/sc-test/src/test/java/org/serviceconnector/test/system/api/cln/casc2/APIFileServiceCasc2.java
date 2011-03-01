@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and *
  * limitations under the License. *
  */
-package org.serviceconnector.test.system.api.cln;
+package org.serviceconnector.test.system.api.cln.casc2;
 
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 import org.serviceconnector.test.system.api.cln.casc1.APIFileServiceCasc1;
 
-public class APIFileService extends APIFileServiceCasc1 {
+public class APIFileServiceCasc2 extends APIFileServiceCasc1 {
 
-	public APIFileService() {
-		APISystemSuperSessionClientTest.setUpServiceConnectorAndServer();
+	public APIFileServiceCasc2() {
+		APISystemSuperSessionClientTest.setUp2CascadedServiceConnectorAndServer();
 	}
 }

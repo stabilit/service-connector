@@ -29,7 +29,7 @@ import org.serviceconnector.cache.CacheComposite.CACHE_STATE;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
-import org.serviceconnector.util.URLParameterString;
+import org.serviceconnector.util.URLResponseString;
 
 @SuppressWarnings("unused")
 public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
@@ -75,7 +75,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setCacheId("700");
 		response = sessionService1.execute(request);
 		// inspect cache entry
-		URLParameterString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+		URLResponseString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
 		Assert.assertEquals(inspectResponse.getValue("return"), "notfound");
 	}
 
@@ -96,7 +96,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService1.execute(request);
 		// inspect cache entry
-		URLParameterString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+		URLResponseString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
 		Assert.assertEquals("success", inspectResponse.getValue("return"));
 		Assert.assertEquals(CACHE_STATE.LOADED.toString(), inspectResponse.getValue("cacheState"));
 		Assert.assertEquals("700", inspectResponse.getValue("cacheId"));
@@ -191,7 +191,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		response = sessionService1.execute(request);
 		Assert.assertEquals(largeMessage, response.getData());
 		// inspect cache entry
-		URLParameterString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+		URLResponseString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
 		Assert.assertEquals("success", inspectResponse.getValue("return"));
 		Assert.assertEquals(CACHE_STATE.LOADED.toString(), inspectResponse.getValue("cacheState"));
 		Assert.assertEquals("700", inspectResponse.getValue("cacheId"));
@@ -224,7 +224,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 			response = sessionService1.execute(request);
 			Assert.assertEquals(largeMessage, response.getData());
 			// inspect cache entry
-			URLParameterString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+			URLResponseString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
 			Assert.assertEquals("success", inspectResponse.getValue("return"));
 			Assert.assertEquals(CACHE_STATE.LOADED.toString(), inspectResponse.getValue("cacheState"));
 			Assert.assertEquals("700", inspectResponse.getValue("cacheId"));
@@ -262,7 +262,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		request.setMessageInfo(TestConstants.cacheCmd);
 		response = sessionService1.execute(request);
 		// inspect cache entry
-		URLParameterString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+		URLResponseString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
 		Assert.assertEquals("success", inspectResponse.getValue("return"));
 		Assert.assertEquals(CACHE_STATE.LOADED.toString(), inspectResponse.getValue("cacheState"));
 		Assert.assertEquals("700", inspectResponse.getValue("cacheId"));
@@ -533,7 +533,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	@Test
 	public void t20_cacheServerTimeoutReply() throws Exception {
 		// inspect cache
-		URLParameterString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+		URLResponseString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
 		Assert.assertEquals(inspectResponse.getValue("return"), "notfound");
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);
@@ -566,7 +566,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	@Test
 	public void t21_cacheServerRepliesOtherCacheId() throws Exception {
 		// inspect cache
-		URLParameterString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
+		URLResponseString inspectResponse = mgmtClient.inspectCache(TestConstants.sesServiceName1, "700");
 		Assert.assertEquals(inspectResponse.getValue("return"), "notfound");
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);
