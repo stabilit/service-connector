@@ -17,6 +17,8 @@
 package org.serviceconnector.cmd.sc;
 
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -31,7 +33,6 @@ import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.res.IResponderCallback;
 import org.serviceconnector.net.res.IResponse;
-import org.serviceconnector.registry.Registry;
 import org.serviceconnector.scmp.HasFaultResponseException;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
@@ -41,8 +42,8 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.service.Service;
 import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.StatefulService;
-import org.serviceconnector.util.URLCallString;
-import org.serviceconnector.util.URLParameterString;
+import org.serviceconnector.util.URLRequestString;
+import org.serviceconnector.util.URLResponseString;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -74,9 +75,10 @@ public class InspectCommand extends CommandAdapter {
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
 
-		URLCallString urlCallString = new URLCallString();
-		urlCallString.parseString(bodyString);
-		String callKey = urlCallString.getCallKey();
+		URLRequestString urlRequestString = new URLRequestString();
+		urlRequestString.parseString(bodyString);
+		String callKey = urlRequestString.getCallKey();
+		String serviceName = urlRequestString.getParameter(0);
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -84,33 +86,17 @@ public class InspectCommand extends CommandAdapter {
 		scmpReply.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 		scmpReply.setMessageType(getKey());
 
-		if (bodyString == null) {
-			String inspectString = "serviceRegistry&" + this.getRegistryInspectString(this.serviceRegistry);
-			inspectString += "sessionRegistry&" + this.getRegistryInspectString(this.sessionRegistry);
-			inspectString += "serverRegistry&" + this.getRegistryInspectString(this.serverRegistry);
-
-			// dump internal registries
-			scmpReply.setBody(inspectString);
-			response.setSCMP(scmpReply);
-			// initiate responder to send reply
-			responderCallback.responseCallback(request, response);
-			return;
-		}
-		if (bodyString.startsWith(Constants.CC_CMD_STATE)) {
+		if (Constants.CC_CMD_STATE.equalsIgnoreCase(callKey)) {
 			// state for service requested
-			String serviceName = bodyString.substring(6);
 			logger.debug("state request for service:" + serviceName);
 
 			if (this.serviceRegistry.containsKey(serviceName)) {
 				if (this.serviceRegistry.getService(serviceName).isEnabled() == true) {
 					scmpReply.setBody(Constants.CC_CMD_ENABLE);
 					logger.debug("service:" + serviceName + "is enabled");
-				} else if (this.serviceRegistry.getService(serviceName).isEnabled() == false) {
+				} else {
 					scmpReply.setBody(Constants.CC_CMD_DISABLE);
 					logger.debug("service:" + serviceName + "is disabled");
-				} else {
-					scmpReply.setBody("?");
-					logger.debug("service:" + serviceName + "is state unknown");
 				}
 			} else {
 				logger.debug("service=" + serviceName + " not found");
@@ -121,10 +107,18 @@ public class InspectCommand extends CommandAdapter {
 			responderCallback.responseCallback(request, response);
 			return;
 		}
-		if (bodyString.startsWith(Constants.CC_CMD_SESSIONS)) {
+		if (Constants.CC_CMD_SESSIONS.equalsIgnoreCase(callKey)) {
 			// state for service requested
-			String serviceName = bodyString.substring(9);
-			logger.debug("sessions request for service:" + serviceName);
+			logger.debug("sessions request for service: " + serviceName);
+
+			if (serviceName.equalsIgnoreCase(Constants.WILD_CARD_SIGN)) {
+				scmpReply.setBody(getSessionsOfServicesString());
+				response.setSCMP(scmpReply);
+				// initiate responder to send reply
+				responderCallback.responseCallback(request, response);
+				return;
+			}
+
 			Service service = this.getService(serviceName);
 			if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE) {
 				// wrong service type
@@ -140,8 +134,7 @@ public class InspectCommand extends CommandAdapter {
 			return;
 		}
 		if (Constants.CC_CMD_INSPECT_CACHE.equalsIgnoreCase(callKey)) {
-			String serviceName = urlCallString.getParameter(0);
-			String cacheId = urlCallString.getParameter(1);
+			String cacheId = urlRequestString.getParameter(1);
 			logger.debug("cache inspect for serviceName: " + serviceName + ", cacheId:" + cacheId);
 			String cacheInspectString = getCacheInspectString(serviceName, cacheId);
 			scmpReply.setBody(cacheInspectString);
@@ -150,7 +143,6 @@ public class InspectCommand extends CommandAdapter {
 			responderCallback.responseCallback(request, response);
 			return;
 		}
-
 		logger.error("wrong inspect command body=" + bodyString); // body has bad syntax
 		scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_INSPECT_COMMAND, bodyString);
 		response.setSCMP(scmpReply);
@@ -189,7 +181,7 @@ public class InspectCommand extends CommandAdapter {
 	 * @throws SCMPCommandException
 	 *             the SCMP command exception
 	 */
-	private String getCacheInspectString(String serviceName, String cacheId) throws SCMPCommandException {
+	private String getCacheInspectString(String serviceName, String cacheId) throws Exception {
 		CacheManager cacheManager = AppContext.getCacheManager();
 		if (cacheManager == null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_MANAGER_ERROR,
@@ -206,23 +198,20 @@ public class InspectCommand extends CommandAdapter {
 		try {
 			CacheComposite cacheComposite = cache.getComposite(cacheId);
 			if (cacheComposite == null) {
-				URLParameterString parameterString = new URLParameterString();
-				parameterString.put("cacheId", cacheId);
-				parameterString.put("return", "notfound");
-				return parameterString.toString();
+				return URLResponseString.toURLResponseString("cacheId", cacheId, "return", "notfound");
 			}
 			CACHE_STATE cacheState = cacheComposite.getCacheState();
 			// Date creationTime = cacheComposite.getCreationTime();
 			// Date lastModifiedTime = cacheComposite.getLastModifiedTime();
 			String expirationDateTime = cacheComposite.getExpiration();
 			int size = cacheComposite.getSize();
-			URLParameterString parameterString = new URLParameterString();
-			parameterString.put("return", "success");
-			parameterString.put("cacheId", cacheId);
-			parameterString.put("cacheState", cacheState.toString());
-			parameterString.put("cacheSize", String.valueOf(size));
-			parameterString.put("cacheExpiration", expirationDateTime);
-			return parameterString.toString();
+			Map<String, String> parameters = new HashMap<String, String>();
+			parameters.put("return", "success");
+			parameters.put("cacheId", cacheId);
+			parameters.put("cacheState", cacheState.toString());
+			parameters.put("cacheSize", String.valueOf(size));
+			parameters.put("cacheExpiration", expirationDateTime);
+			return URLResponseString.toURLResponseString(parameters);
 		} catch (CacheException e) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR, e.toString());
 			scmpCommandException.setMessageType(getKey());
@@ -230,18 +219,29 @@ public class InspectCommand extends CommandAdapter {
 		}
 	}
 
-	/**
-	 * Gets the registry inspect string.
-	 * 
-	 * @param registry
-	 *            the registry
-	 * @return the registry inspect string
-	 */
-	private String getRegistryInspectString(Registry<?, ?> registry) {
-		String string = registry.toString();
-		if (registry.getSize() == 0) {
-			string += "@";
+	private String getSessionsOfServicesString() {
+		StringBuilder sb = new StringBuilder();
+
+		Service[] services = this.serviceRegistry.getServices();
+		int counter = 0;
+		for (Service service : services) {
+			switch (service.getType()) {
+			case SESSION_SERVICE:
+			case PUBLISH_SERVICE:
+				StatefulService statefulService = (StatefulService) service;
+				sb.append(statefulService.getName());
+				sb.append(Constants.EQUAL_SIGN);
+				sb.append(statefulService.getCountAllocatedSessions());
+				sb.append("/");
+				sb.append(statefulService.getCountAvailableSessions());
+				if (counter != services.length) {
+					sb.append(Constants.AMPERSAND_SIGN);
+				}
+				break;
+			default:
+				continue;
+			}
 		}
-		return string;
+		return sb.toString();
 	}
 }

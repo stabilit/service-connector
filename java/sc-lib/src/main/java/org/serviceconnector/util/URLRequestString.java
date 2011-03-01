@@ -25,41 +25,38 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 
 /**
- * The Class URLCallString supports the following format:
- * This class is not synchronized.
+ * The Class URLRequestString supports the following format:
  * callKey=parameter1&parameter2&parameter3&...
  * All parameters and the call key are url encoded (see {@link java.net.URLEncoder}) using UTF-8
  * The parse Method decodes a given string using url decoding (see {@link java.net.URLDecoder} using UTF-8
+ * This class is not synchronized.
  */
-
-public class URLCallString {
+public class URLRequestString {
 
 	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(URLCallString.class);
-
+	private final static Logger logger = Logger.getLogger(URLRequestString.class);
 	/** The call key. */
 	private String callKey;
-
 	/** The parameters. */
 	private String[] parameters;
 
 	/**
-	 * Instantiates a new URL call string.
+	 * Instantiates a new URL request string.
 	 */
-	public URLCallString() {
+	public URLRequestString() {
 		this.callKey = null;
 		this.parameters = null;
 	}
 	
 	/**
-	 * Instantiates a new call string.
+	 * Instantiates a new request string.
 	 * 
 	 * @param callKey
 	 *            the call key
 	 * @param parameters
 	 *            the parameters
 	 */
-	public URLCallString(String callKey, String... parameters) {
+	public URLRequestString(String callKey, String... parameters) {
 		this.callKey = callKey;
 		this.parameters = parameters;
 	}
@@ -155,10 +152,10 @@ public class URLCallString {
 			if (this.callKey != null) {
 				sb.append(URLEncoder.encode(this.callKey, Constants.URL_ENCODING));
 			}
-			sb.append(Constants.EQUAL_SIGN);
-			if (this.parameters == null) {
+			if (this.parameters == null || this.parameters.length == 0) {
 				return sb.toString();
 			}
+			sb.append(Constants.EQUAL_SIGN);
 			for (int i = 0; i < this.parameters.length; i++) {
 				if (i > 0) {
 					sb.append(Constants.AMPERSAND_SIGN);

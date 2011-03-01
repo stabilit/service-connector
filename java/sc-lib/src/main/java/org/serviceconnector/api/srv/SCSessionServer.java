@@ -126,8 +126,13 @@ public class SCSessionServer {
 	 *            the max connections pool uses to connect to SC
 	 * @param scCallback
 	 *            the SC callback
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             listener not started yet<br>
+	 *             server already registered for service<br>
+	 *             register server on SC failed<br>
+	 *             error message received from SC <br>
+	 * @throws SCMPValidatorException
+	 *             callback is not set<br>
 	 */
 	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
 			SCSessionServerCallback scCallback) throws SCServiceException, SCMPValidatorException {
@@ -151,8 +156,11 @@ public class SCSessionServer {
 	 *            the max sessions to serve
 	 * @param maxConnections
 	 *            the max connections pool uses to connect to SC
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             listener not started yet<br>
+	 *             server already registered for service<br>
+	 *             register server on SC failed<br>
+	 *             error message received from SC <br>
 	 */
 	protected synchronized void doRegister(int operationTimeoutSeconds, int maxSessions, int maxConnections)
 			throws SCServiceException {
@@ -222,7 +230,7 @@ public class SCSessionServer {
 	 */
 	public synchronized void checkRegistration(int operationTimeoutSeconds) throws SCServiceException {
 		if (this.registered == false) {
-			throw new SCServiceException("Server already is not registered for a service.");
+			throw new SCServiceException("Server is not registered for a service.");
 		}
 		synchronized (this.scServer) {
 			// get lock on scServer - only one server is allowed to communicate over the initial connection

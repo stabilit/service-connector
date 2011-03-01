@@ -34,6 +34,7 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.util.URLRequestString;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -74,6 +75,10 @@ public class ManageCommand extends CommandAdapter {
 		String bodyString = (String) reqMsg.getBody();
 		String ipAddress = reqMsg.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 
+		URLRequestString urlRequestString = new URLRequestString();
+		urlRequestString.parseString(bodyString);
+		String callKey = urlRequestString.getCallKey();
+
 		// set up response
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -90,12 +95,10 @@ public class ManageCommand extends CommandAdapter {
 			responderCallback.responseCallback(request, response);
 			return;
 		}
-		String command = m.group(1);
-		String function = m.group(2);
-		String serviceName = m.group(3);
+		String serviceName = urlRequestString.getParameter(0);
 
 		// kill command
-		if ((ipAddress.equals(localHost.getHostAddress())) && (command.equalsIgnoreCase(Constants.CC_CMD_KILL))) {
+		if ((ipAddress.equals(localHost.getHostAddress())) && Constants.CC_CMD_KILL.equalsIgnoreCase(callKey)) {
 			// kill request is allowed from localhost only!
 			logger.info("SC stopped by kill console command");
 			response.setSCMP(scmpReply);
@@ -106,14 +109,14 @@ public class ManageCommand extends CommandAdapter {
 		}
 
 		// other commands
-		if (command.equals(Constants.CC_CMD_DUMP)) {
+		if (Constants.CC_CMD_DUMP.equalsIgnoreCase(callKey)) {
 			AppContext.dump();
-		} else if (command.equals(Constants.CC_CMD_CLEAR_CACHE)) {
+		} else if (Constants.CC_CMD_CLEAR_CACHE.equalsIgnoreCase(callKey)) {
 			CacheManager cacheManager = AppContext.getCacheManager();
 			cacheManager.clearAll();
 		} else if (this.serviceRegistry.containsKey(serviceName)) {
 			// service exists
-			if (function.equalsIgnoreCase(Constants.CC_CMD_ENABLE)) {
+			if (Constants.CC_CMD_ENABLE.equalsIgnoreCase(callKey)) {
 				// enable service
 				logger.info("enable service=" + serviceName);
 				this.serviceRegistry.getService(serviceName).setEnabled(true);

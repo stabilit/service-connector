@@ -63,10 +63,16 @@ public class SCPublishServer extends SCSessionServer {
 	 *            the max connections pool uses to connect to SC
 	 * @param scCallback
 	 *            the SC callback
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             listener not started yet<br>
+	 *             server already registered for service<br>
+	 *             register server on SC failed<br>
+	 *             error message received from SC <br>
+	 * @throws SCMPValidatorException
+	 *             callback is not set<br>
 	 */
-	public synchronized void register(int maxSessions, int maxConnections, SCPublishServerCallback scCallback) throws Exception {
+	public synchronized void register(int maxSessions, int maxConnections, SCPublishServerCallback scCallback)
+			throws SCServiceException, SCMPValidatorException {
 		this.register(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, maxSessions, maxConnections, scCallback);
 	}
 
@@ -81,8 +87,13 @@ public class SCPublishServer extends SCSessionServer {
 	 *            the max connections pool uses to connect to SC
 	 * @param scCallback
 	 *            the SC callback
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             listener not started yet<br>
+	 *             server already registered for service<br>
+	 *             register server on SC failed<br>
+	 *             error message received from SC <br>
+	 * @throws SCMPValidatorException
+	 *             callback is not set<br>
 	 */
 	public synchronized void register(int operationTimeoutSeconds, int maxSessions, int maxConnections,
 			SCPublishServerCallback scCallback) throws SCServiceException, SCMPValidatorException {
@@ -102,8 +113,12 @@ public class SCPublishServer extends SCSessionServer {
 	 * 
 	 * @param publishMessage
 	 *            the publish message
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             server not registered yet<br>
+	 *             publish to SC failed<br>
+	 *             error message received from SC <br>
+	 * @throws SCMPValidatorException
+	 *             publish message is not set<br>
 	 */
 	public void publish(SCPublishMessage publishMessage) throws SCServiceException, SCMPValidatorException {
 		this.publish(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, publishMessage);
@@ -116,11 +131,18 @@ public class SCPublishServer extends SCSessionServer {
 	 *            the allowed time in seconds to complete the operation
 	 * @param publishMessage
 	 *            the publish message
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             server not registered yet<br>
+	 *             publish to SC failed<br>
+	 *             error message received from SC <br>
+	 * @throws SCMPValidatorException
+	 *             publish message is not set<br>
 	 */
 	public void publish(int operationTimeoutSeconds, SCPublishMessage publishMessage) throws SCServiceException,
 			SCMPValidatorException {
+		if (this.registered == false) {
+			throw new SCServiceException("Server is not registered for a service.");
+		}
 		if (publishMessage == null) {
 			throw new SCMPValidatorException("Publish message is missing.");
 		}

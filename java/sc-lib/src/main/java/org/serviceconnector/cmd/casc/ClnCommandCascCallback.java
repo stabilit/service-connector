@@ -19,7 +19,6 @@ package org.serviceconnector.cmd.casc;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.cmd.sc.ClnUnsubscribeCommandCallback;
 import org.serviceconnector.net.req.IRequest;
 import org.serviceconnector.net.req.netty.IdleTimeoutException;
 import org.serviceconnector.net.res.IResponderCallback;
@@ -35,7 +34,7 @@ import org.serviceconnector.service.InvalidMaskLengthException;
  */
 public class ClnCommandCascCallback implements ISCMPMessageCallback {
 	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ClnUnsubscribeCommandCallback.class);
+	private final static Logger logger = Logger.getLogger(ClnCommandCascCallback.class);
 	/** The callback. */
 	protected IResponderCallback responderCallback;
 	/** The request. */

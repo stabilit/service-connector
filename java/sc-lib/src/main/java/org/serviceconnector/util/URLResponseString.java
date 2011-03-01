@@ -23,39 +23,35 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 
 /**
- * The Class URLParameterString supports the following format:
- * 
- * This class is not synchronized.
- * 
+ * The Class URLResponseString supports the following format:
  * key1=value1&key2=value2&...
- * 
  * All keys and values url encoded (see {@link java.net.URLEncoder}) using UTF-8
- * 
  * The parse Method decodes a given string using url decoding (see {@link java.net.URLDecoder} using UTF-8
+ * This class is not synchronized.
  */
-
-public class URLParameterString {
+public class URLResponseString {
 
 	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(URLParameterString.class);
-
+	private final static Logger logger = Logger.getLogger(URLResponseString.class);
 	/** The parameters. */
 	private Map<String, String> map;
 
 	/**
-	 * Instantiates a new URL parameter string.
+	 * Instantiates a new URL response string.
 	 */
-	public URLParameterString() {
-		this.map = null;
+	public URLResponseString() {
+		this.map = new HashMap<String, String>();
 	}
 
-	public URLParameterString(String parameterString) throws UnsupportedEncodingException {
+	public URLResponseString(String parameterString) throws UnsupportedEncodingException {
+		this();
 		this.parseString(parameterString);
 	}
 
@@ -67,22 +63,27 @@ public class URLParameterString {
 	 * @return the value
 	 */
 	public String getValue(String key) {
-		if (this.map == null) {
-			return null;
-		}
 		return this.map.get(key);
 	}
 
 	/**
+	 * Gets the response parameters.
+	 * 
+	 * @return the entries
+	 */
+	public Set<Entry<String, String>> getParameters() {
+		return this.map.entrySet();
+	}
+
+	/**
 	 * Put key and value, if same key exists then replace its value.
-	 *
-	 * @param key the key
-	 * @param value the value
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
 	 */
 	public void put(String key, String value) {
-		if (this.map == null) {
-			this.map = new HashMap<String, String>();
-		}
 		this.map.put(key, value);
 	}
 
@@ -98,7 +99,6 @@ public class URLParameterString {
 			return;
 		}
 		String[] parameterStringArray = encodedString.split(Constants.AMPERSAND_SIGN);
-		this.map = null;
 		this.map = new HashMap<String, String>();
 		for (int i = 0; i < parameterStringArray.length; i++) {
 			String[] splitted = parameterStringArray[i].split(Constants.EQUAL_SIGN);
@@ -112,15 +112,11 @@ public class URLParameterString {
 
 	/**
 	 * return url encoded string
-	 * 
 	 * callKey=parameter1&parameter2&parameter3&...
 	 * 
 	 * @return the string
 	 */
 	public String toString() {
-		if (this.map == null) {
-			return "";
-		}
 		try {
 			int index = 0;
 			Iterator<Entry<String, String>> entryIter = this.map.entrySet().iterator();
@@ -132,13 +128,12 @@ public class URLParameterString {
 				Entry<String, String> entry = entryIter.next();
 				String key = entry.getKey();
 				String value = entry.getValue();
-				if (key != null) {
-			       sb.append(URLEncoder.encode(key, Constants.URL_ENCODING));
-			       sb.append(Constants.EQUAL_SIGN);
-				}
+				sb.append(URLEncoder.encode(key, Constants.URL_ENCODING));
+				sb.append(Constants.EQUAL_SIGN);
 				if (value != null) {
-			       sb.append(URLEncoder.encode(value, Constants.URL_ENCODING));
-				} else {				
+					sb.append(URLEncoder.encode(value, Constants.URL_ENCODING));
+				} else {
+					sb.append(URLEncoder.encode("", Constants.URL_ENCODING));
 				}
 			}
 			return sb.toString();
@@ -146,5 +141,60 @@ public class URLParameterString {
 			logger.error("unsupported url encoding format", e);
 		}
 		return null;
+	}
+
+	/**
+	 * Converts the key value map into a URL response string.
+	 * 
+	 * @param parameters
+	 *            the parameters
+	 * @return the string
+	 * @throws UnsupportedEncodingException
+	 *             the unsupported encoding exception
+	 */
+	public static String toURLResponseString(String... parameters) throws UnsupportedEncodingException {
+
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < parameters.length - 1; i += 2) {
+			sb.append(URLEncoder.encode(parameters[i], Constants.URL_ENCODING));
+			sb.append(Constants.EQUAL_SIGN);
+			sb.append(URLEncoder.encode(parameters[i + 1], Constants.URL_ENCODING));
+			if (i != parameters.length - 1) {
+				sb.append(Constants.AMPERSAND_SIGN);
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Converts the key value map into a URL response string.
+	 * 
+	 * @param responseParameter
+	 *            the response parameter
+	 * @return the string
+	 * @throws UnsupportedEncodingException
+	 *             the unsupported encoding exception
+	 */
+	public static String toURLResponseString(Map<String, String> responseParameter) throws UnsupportedEncodingException {
+		int index = 0;
+		Iterator<Entry<String, String>> entryIter = responseParameter.entrySet().iterator();
+		StringBuilder sb = new StringBuilder();
+		while (entryIter.hasNext()) {
+			if (index++ > 0) {
+				sb.append(Constants.AMPERSAND_SIGN);
+			}
+			Entry<String, String> entry = entryIter.next();
+			String key = entry.getKey();
+			String value = entry.getValue();
+
+			sb.append(URLEncoder.encode(key, Constants.URL_ENCODING));
+			sb.append(Constants.EQUAL_SIGN);
+			if (value != null) {
+				sb.append(URLEncoder.encode(value, Constants.URL_ENCODING));
+			} else {
+				sb.append(URLEncoder.encode("", Constants.URL_ENCODING));
+			}
+		}
+		return sb.toString();
 	}
 }

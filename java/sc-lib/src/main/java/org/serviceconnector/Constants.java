@@ -208,6 +208,7 @@ public final class Constants {
 	public static final String CC_CMD_DUMP = "dump";
 	public static final String EQUAL_SIGN = "=";
 	public static final String AMPERSAND_SIGN = "&";
+	public static final String WILD_CARD_SIGN = "*";
 	public static final String URL_ENCODING = "UTF-8";		// TODO SC default is "ISO-8859-1" does it match?
 
 	/*

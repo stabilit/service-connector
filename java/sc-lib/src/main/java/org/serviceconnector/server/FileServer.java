@@ -105,14 +105,9 @@ public class FileServer extends Server {
 			session.setHttpUrlConnection(httpCon);
 			session.setOutputStream(out);
 		}
-		try {
-			// write the data to the server
-			out.write((byte[]) message.getBody());
-			out.flush();
-		} catch (Exception e) {
-			SCMPMessageFault fault = new SCMPMessageFault(e);
-			return fault;
-		}
+		// write the data to the server
+		out.write((byte[]) message.getBody());
+		out.flush();
 
 		SCMPMessage reply = null;
 		if (message.isPart() == false) {
@@ -161,28 +156,23 @@ public class FileServer extends Server {
 			session.setHttpUrlConnection(httpCon);
 			session.setInputStream(in);
 		}
-		try {
-			// write the data to the client
-			SCMPMessage reply = null;
-			byte[] fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
-			int readBytes = in.read(fullBuffer);
-			if (readBytes < 0) {
-				// this is the end
-				reply = new SCMPMessage();
-				reply.setBody(new byte[0]);
-				in.close();
-				session.getHttpURLConnection().disconnect();
-				session.stopStreaming();
-				return reply;
-			}
-			// set up part request, no poll request
-			reply = new SCMPPart(false);
-			reply.setBody(fullBuffer, 0, readBytes);
+		// write the data to the client
+		SCMPMessage reply = null;
+		byte[] fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
+		int readBytes = in.read(fullBuffer);
+		if (readBytes < 0) {
+			// this is the end
+			reply = new SCMPMessage();
+			reply.setBody(new byte[0]);
+			in.close();
+			session.getHttpURLConnection().disconnect();
+			session.stopStreaming();
 			return reply;
-		} catch (Exception e) {
-			SCMPMessageFault fault = new SCMPMessageFault(e);
-			return fault;
 		}
+		// set up part request, no poll request
+		reply = new SCMPPart(false);
+		reply.setBody(fullBuffer, 0, readBytes);
+		return reply;
 	}
 
 	public SCMPMessage serverGetFileList(String path, String listScriptName, String serviceName, int timeoutSeconds)

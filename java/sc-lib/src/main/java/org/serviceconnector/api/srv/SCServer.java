@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.srv;
 
 import java.net.InetAddress;
@@ -217,21 +218,26 @@ public class SCServer {
 	/**
 	 * Start listener.
 	 * 
+	 * @throws SCServiceException
+	 *             listener is already started<br>
+	 *             SC host not set<br>
+	 *             ConnectionType not set<br>
+	 *             starting listener fails<br>
 	 * @throws SCMPValidatorException
 	 *             scPort Number > 1 and < 65535<br>
 	 *             listenerPort Number > 1 and < 65535<br>
-	 * @throws Exception
-	 *             the exception
+	 *             SC port and listener port are the same<br>
+	 *             bind to interface failed<be>
 	 */
 	public synchronized void startListener() throws SCServiceException, SCMPValidatorException {
 		if (this.listening == true) {
-			throw new SCServiceException("listener is already started not allowed to start again.");
+			throw new SCServiceException("Listener is already started not allowed to start again.");
 		}
 		if (this.scHost == null) {
-			throw new SCMPValidatorException("host must be set.");
+			throw new SCMPValidatorException("Host must be set.");
 		}
 		if (this.connectionType == null) {
-			throw new SCMPValidatorException("connectionType must be set.");
+			throw new SCMPValidatorException("ConnectionType must be set.");
 		}
 		ValidatorUtility.validateInt(1, this.scPort, Constants.MAX_PORT_NR, SCMPError.HV_WRONG_PORTNR);
 		ValidatorUtility.validateInt(1, this.listenerPort, Constants.MAX_PORT_NR, SCMPError.HV_WRONG_PORTNR);
@@ -309,8 +315,10 @@ public class SCServer {
 	 * @param serviceName
 	 *            the service name
 	 * @return the SC session server
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             server not listening<br>
+	 * @throws SCMPValidatorException
+	 *             service name not set<br>
 	 */
 	public SCSessionServer newSessionServer(String serviceName) throws SCServiceException, SCMPValidatorException {
 		if (this.listening == false) {
@@ -328,8 +336,10 @@ public class SCServer {
 	 * @param serviceName
 	 *            the service name
 	 * @return the SC publish server
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             server not listening<br>
+	 * @throws SCMPValidatorException
+	 *             service name not set<br>
 	 */
 	public SCPublishServer newPublishServer(String serviceName) throws SCServiceException, SCMPValidatorException {
 		if (this.listening == false) {

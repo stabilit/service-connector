@@ -75,7 +75,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 		case CASCADED_FILE_SERVICE:
 			cascadedSC = ((CascadedFileService) abstractService).getCascadedSC();
 			callback = new ClnCommandCascCallback(request, response, responderCallback);
-			cascadedSC.createSession(reqMessage, callback, oti);
+			cascadedSC.deleteSession(reqMessage, callback, oti);
 			return;
 		}
 

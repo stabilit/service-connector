@@ -72,6 +72,7 @@ public class FileUploadCommand extends CommandAdapter {
 			FileServer fileServer = session.getFileServer();
 			reply = fileServer.serverUploadFile(session, message, remoteFileName, oti);
 		} catch (Exception e) {
+			reply = new SCMPMessage();
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UPLOAD_FILE_FAILED,
 					"Error occured in file server on SC.");
 			scmpCommandException.setMessageType(getKey());
