@@ -130,6 +130,8 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 	UPLOAD_FILE_FAILED("505", "Upload file failed."),
 	/** The DOWNLOAD_FILE_FAILED. */
 	DOWNLOAD_FILE_FAILED("506", "Download file failed."),
+	/** The GET_FILE_LIST. */
+	GET_FILE_LIST_FAILED("507", "Get file list failed."),
 
 	/** The SC_ERROR. */
 	SC_ERROR("600", "Service Connector error."),

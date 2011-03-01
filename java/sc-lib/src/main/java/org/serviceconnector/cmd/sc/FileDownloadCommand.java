@@ -78,14 +78,13 @@ public class FileDownloadCommand extends CommandAdapter {
 					"Error occured in file server on SC.");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
-		} finally {
-			reply.setIsReply(true);
-			reply.setMessageType(getKey());
-			response.setSCMP(reply);
-			// schedule session timeout
-			this.sessionRegistry.scheduleSessionTimeout(session);
-			responderCallback.responseCallback(request, response);
 		}
+		reply.setIsReply(true);
+		reply.setMessageType(getKey());
+		response.setSCMP(reply);
+		// schedule session timeout
+		this.sessionRegistry.scheduleSessionTimeout(session);
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */

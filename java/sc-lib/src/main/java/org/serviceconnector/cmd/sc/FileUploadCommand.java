@@ -72,19 +72,18 @@ public class FileUploadCommand extends CommandAdapter {
 			FileServer fileServer = session.getFileServer();
 			reply = fileServer.serverUploadFile(session, message, remoteFileName, oti);
 		} catch (Exception e) {
-			reply = new SCMPMessage();
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.UPLOAD_FILE_FAILED,
 					"Error occured in file server on SC.");
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
-		} finally {
-			reply.setIsReply(true);
-			reply.setMessageType(getKey());
-			response.setSCMP(reply);
-			// schedule session timeout
-			this.sessionRegistry.scheduleSessionTimeout(session);
-			responderCallback.responseCallback(request, response);
 		}
+		reply.setIsReply(true);
+		reply.setMessageType(getKey());
+		response.setSCMP(reply);
+		// schedule session timeout
+		this.sessionRegistry.scheduleSessionTimeout(session);
+		responderCallback.responseCallback(request, response);
+
 	}
 
 	/** {@inheritDoc} */

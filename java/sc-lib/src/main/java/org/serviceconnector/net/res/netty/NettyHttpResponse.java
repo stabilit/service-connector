@@ -30,8 +30,8 @@ import org.serviceconnector.log.ConnectionLogger;
 import org.serviceconnector.net.res.ResponseAdapter;
 
 /**
- * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http frame. Based on JBoss
- * Netty.
+ * The Class NettyHttpResponse is responsible for writing a response to a ChannelBuffer. Encodes scmp to a Http frame. Based on
+ * JBoss Netty.
  */
 public class NettyHttpResponse extends ResponseAdapter {
 
@@ -56,6 +56,9 @@ public class NettyHttpResponse extends ResponseAdapter {
 		HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 		ChannelBuffer buffer = getBuffer();
 		httpResponse.setContent(buffer);
+		httpResponse.addHeader(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
+		httpResponse.addHeader(HttpHeaders.Names.CACHE_CONTROL, HttpHeaders.Values.NO_CACHE);
+		httpResponse.addHeader(HttpHeaders.Names.PRAGMA, HttpHeaders.Values.NO_CACHE);
 		httpResponse.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.readableBytes()));
 		// Write the response.
 		event.getChannel().write(httpResponse);

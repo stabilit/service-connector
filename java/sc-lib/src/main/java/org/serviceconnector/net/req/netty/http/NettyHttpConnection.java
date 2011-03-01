@@ -109,6 +109,8 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 		request.addHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
 		request.addHeader(HttpHeaders.Names.CONTENT_TYPE, scmp.getBodyType().getMimeType());
 		request.addHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(buffer.length));
+		request.addHeader(HttpHeaders.Names.CACHE_CONTROL, HttpHeaders.Values.NO_CACHE);
+		request.addHeader(HttpHeaders.Names.PRAGMA, HttpHeaders.Values.NO_CACHE);
 
 		NettyHttpRequesterResponseHandler handler = channel.getPipeline().get(NettyHttpRequesterResponseHandler.class);
 		handler.setCallback(callback);

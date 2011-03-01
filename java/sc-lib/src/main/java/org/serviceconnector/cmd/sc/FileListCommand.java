@@ -76,14 +76,15 @@ public class FileListCommand extends CommandAdapter {
 			reply = fileServer.serverGetFileList(fileService.getPath(), fileService.getGetFileListScriptName(), message
 					.getServiceName(), oti);
 		} catch (Exception e) {
-			// forward server reply to client
-			reply = new SCMPMessage();
-		} finally {
-			reply.setIsReply(true);
-			reply.setMessageType(getKey());
-			response.setSCMP(reply);
-			responderCallback.responseCallback(request, response);
+			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.GET_FILE_LIST_FAILED,
+					"Error occured in get file list on SC.");
+			scmpCommandException.setMessageType(getKey());
+			throw scmpCommandException;
 		}
+		reply.setIsReply(true);
+		reply.setMessageType(getKey());
+		response.setSCMP(reply);
+		responderCallback.responseCallback(request, response);
 	}
 
 	/** {@inheritDoc} */
