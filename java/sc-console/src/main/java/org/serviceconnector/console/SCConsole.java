@@ -15,6 +15,8 @@
  */
 package org.serviceconnector.console;
 
+import java.util.Set;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,13 +25,15 @@ import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.CommandLineUtil;
+import org.serviceconnector.util.URLResponseString;
 import org.serviceconnector.util.ValidatorUtility;
 
 public class SCConsole {
 
 	/**
 	 * @param args
-	 *            usage : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>dump|clearCache|kill><br>
+	 *            usage : java -jar scconsole.jar -h <host> -p <port>
+	 *            <<<enable|disable|state|sessions>=service>dump|clearCache|kill><br>
 	 *            samples: java -jar scconsole.jar -h localhost -p 7000 enable=abc<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 disable=abc<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 state=abc<br>
@@ -37,14 +41,12 @@ public class SCConsole {
 	 *            java -jar scconsole.jar -h localhost -p 7000 clearCache<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 dump<br>
 	 *            java -jar scconsole.jar -h localhost -p 7000 kill<br>
-	 *            
-	 * system exit status<br>
-	 * 				0 = success
-	 * 				1 = error parsing arguments
-	 * 				3 = invalid command
-	 * 				4 = service not found
-	 * 				5 = unexpected error 
-	 *            
+	 *            system exit status<br>
+	 *            0 = success
+	 *            1 = error parsing arguments
+	 *            3 = invalid command
+	 *            4 = service not found
+	 *            5 = unexpected error
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
@@ -97,14 +99,14 @@ public class SCConsole {
 
 		/** The Constant COMMAND_REGEX_STRING. */
 		String regex = "(" + Constants.CC_CMD_KILL + "|" + Constants.CC_CMD_DUMP + "|" + Constants.CC_CMD_CLEAR_CACHE + "|("
-				+ Constants.CC_CMD_ENABLE + "|" + Constants.CC_CMD_DISABLE + "|" + Constants.CC_CMD_STATE + "|" + Constants.CC_CMD_SESSIONS + ")"
-				+ Constants.EQUAL_SIGN + "(.*))";
+				+ Constants.CC_CMD_ENABLE + "|" + Constants.CC_CMD_DISABLE + "|" + Constants.CC_CMD_STATE + "|"
+				+ Constants.CC_CMD_SESSIONS + ")" + Constants.EQUAL_SIGN + "(.*))";
 		int status = 0;
 
 		Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 		Matcher m = pattern.matcher(bodyString);
 		if (!m.matches()) {
-			showError("invalid or no command="+bodyString);
+			showError("invalid or no command=" + bodyString);
 			return 3;
 		}
 		String command = m.group(1);
@@ -149,8 +151,13 @@ public class SCConsole {
 				client.detach();
 			} else if (function.equalsIgnoreCase(Constants.CC_CMD_SESSIONS)) {
 				try {
-					String sessions = client.getWorkload(serviceName);
-					System.out.println("Service [" + serviceName + "] has " + sessions + " sessions");
+					URLResponseString responseString = client.getWorkload(serviceName);
+					Set<Entry<String, String>> parameters = responseString.getParameters();
+					StringBuilder sb = new StringBuilder();
+					for (Entry<String, String> param : parameters) {
+						sb.append("Service [" + param.getKey() + "] has " + param.getValue() + " sessions");
+					}
+					System.out.println(sb.toString());
 				} catch (Exception e) {
 					System.out.println("Service [" + serviceName + "] does not exist!");
 					status = 4;
@@ -166,7 +173,8 @@ public class SCConsole {
 
 	private static void showError(String msg) {
 		System.err.println("\nerror: " + msg);
-		System.out.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>clearCache|dump|kill>");
+		System.out
+				.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>clearCache|dump|kill>");
 		System.out.println("\nsamples: java -jar scconsole.jar -h localhost -p 7000 enable=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 disable=abc");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 state=abc");
