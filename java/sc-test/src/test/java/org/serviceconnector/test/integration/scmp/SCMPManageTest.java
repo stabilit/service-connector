@@ -45,10 +45,8 @@ public class SCMPManageTest extends IntegrationSuperTest {
 	public void beforeOneTest() throws Exception {
 		super.beforeOneTest();
 		AppContext.init();
-		this.requester = new SCRequester(new RemoteNodeConfiguration(
-				TestConstants.RemoteNodeName, TestConstants.HOST,
-				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP
-						.getValue(), 0, 1));
+		this.requester = new SCRequester(new RemoteNodeConfiguration(TestConstants.RemoteNodeName, TestConstants.HOST,
+				TestConstants.PORT_SC_HTTP, ConnectionType.NETTY_HTTP.getValue(), 0, 1));
 	}
 
 	@After
@@ -71,21 +69,18 @@ public class SCMPManageTest extends IntegrationSuperTest {
 		TestCallback cbk = new TestCallback();
 
 		// disable service
-		manageCall.setRequestBody(Constants.CC_CMD_DISABLE
-				+ Constants.QUESTION_MARK + Constants.SERVICE_NAME
+		manageCall.setRequestBody(Constants.CC_CMD_DISABLE + Constants.QUESTION_MARK + Constants.SERVICE_NAME
 				+ Constants.EQUAL_SIGN + TestConstants.sesServerName1);
 		manageCall.invoke(cbk, 1000);
 		SCMPMessage result = cbk.getMessageSync(3000);
 		TestUtil.checkReply(result);
 		// try to create a session on disabled service - should fail
 		SCMPMessage fault = this.clnCreateSession();
-		TestUtil.verifyError(fault, SCMPError.SERVICE_DISABLED,
-				SCMPMsgType.CLN_CREATE_SESSION);
+		TestUtil.verifyError(fault, SCMPError.SERVICE_DISABLED, SCMPMsgType.CLN_CREATE_SESSION);
 
 		// enable service
-		manageCall.setRequestBody(Constants.CC_CMD_ENABLE
-				+ Constants.QUESTION_MARK + Constants.SERVICE_NAME
-				+ Constants.EQUAL_SIGN + TestConstants.sesServerName1);
+		manageCall.setRequestBody(Constants.CC_CMD_ENABLE + Constants.QUESTION_MARK + Constants.SERVICE_NAME + Constants.EQUAL_SIGN
+				+ TestConstants.sesServerName1);
 		manageCall.invoke(cbk, 1000);
 		result = cbk.getMessageSync(3000);
 		TestUtil.checkReply(result);
@@ -101,8 +96,7 @@ public class SCMPManageTest extends IntegrationSuperTest {
 		TestCallback cbk = new TestCallback();
 
 		// disable service
-		manageCall.setRequestBody(Constants.CC_CMD_DISABLE
-				+ Constants.QUESTION_MARK + Constants.SERVICE_NAME
+		manageCall.setRequestBody(Constants.CC_CMD_DISABLE + Constants.QUESTION_MARK + Constants.SERVICE_NAME
 				+ Constants.EQUAL_SIGN + TestConstants.sesServerName1);
 		manageCall.invoke(cbk, 1000);
 		SCMPMessage result = cbk.getMessageSync(3000);
@@ -110,13 +104,11 @@ public class SCMPManageTest extends IntegrationSuperTest {
 
 		// state of enableService
 		SCMPInspectCall inspectCall = new SCMPInspectCall(this.requester);
-		inspectCall.setRequestBody(Constants.CC_CMD_STATE
-				+ Constants.QUESTION_MARK + Constants.SERVICE_NAME
-				+ Constants.EQUAL_SIGN + TestConstants.sesServerName1);
+		inspectCall.setRequestBody(Constants.CC_CMD_STATE + Constants.QUESTION_MARK + Constants.SERVICE_NAME + Constants.EQUAL_SIGN
+				+ TestConstants.sesServerName1);
 		inspectCall.invoke(cbk, 1000);
 		result = cbk.getMessageSync(3000);
-		Assert.assertEquals(Constants.CC_CMD_DISABLE, result.getBody()
-				.toString());
+		Assert.assertEquals(TestConstants.sesServerName1 + Constants.EQUAL_SIGN + Boolean.FALSE, result.getBody().toString());
 	}
 
 	/**
@@ -126,8 +118,7 @@ public class SCMPManageTest extends IntegrationSuperTest {
 	 *             the exception
 	 */
 	private SCMPMessage clnCreateSession() throws Exception {
-		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(
-				this.requester, TestConstants.sesServerName1);
+		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, TestConstants.sesServerName1);
 		createSessionCall.setSessionInfo("sessionInfo");
 		createSessionCall.setEchoIntervalSeconds(3600);
 		TestCallback cbk = new TestCallback();
