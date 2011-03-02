@@ -155,6 +155,9 @@ public class SCConsole {
 					status = 4;
 				}
 				client.detach();
+			} else {
+				System.out.println("Error - wrong call key in request string.");
+				status = 3;
 			}
 
 		} catch (Exception e) {
