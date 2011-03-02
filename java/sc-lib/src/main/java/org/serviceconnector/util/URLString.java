@@ -125,18 +125,15 @@ public class URLString {
 			return;
 		}
 		try {
-			String[] callKeyAndParamPairs = encodedString.split("\\" + Constants.QUESTION_MARK);
-			if (callKeyAndParamPairs.length <= 0 || callKeyAndParamPairs.length > 2) {
-				throw new UnsupportedEncodingException("unsupported url call string format");
-			}
-			this.callKey = callKeyAndParamPairs[0];
-
-			if (callKeyAndParamPairs.length == 1) {
-				// no parameters
+			int posQuestionMark = encodedString.indexOf(Constants.QUESTION_MARK);
+			if (posQuestionMark != -1) {
+				this.callKey = encodedString.substring(0, posQuestionMark);
+			} else {
+				this.callKey = encodedString;
 				return;
 			}
-			String[] keyValuePairs = callKeyAndParamPairs[1].split(Constants.AMPERSAND_SIGN);
-
+			String params = encodedString.substring(posQuestionMark + 1);
+			String[] keyValuePairs = params.split(Constants.AMPERSAND_SIGN);
 			for (int i = 0; i < keyValuePairs.length; i++) {
 				String keyValuePair = keyValuePairs[i];
 				String[] keyValue = keyValuePair.split(Constants.EQUAL_SIGN);
