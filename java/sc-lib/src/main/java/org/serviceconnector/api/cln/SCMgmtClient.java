@@ -367,7 +367,7 @@ public class SCMgmtClient extends SCClient {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - dump not possible.");
 		}
-		String urlString = URLString.toURLRequestString(Constants.CC_CMD_CLEAR_CACHE);
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_DUMP);
 		this.manageCall(operationTimeoutSeconds, urlString);
 	}
 

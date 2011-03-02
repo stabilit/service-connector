@@ -103,15 +103,20 @@ public class URLString {
 		if (encodedString == null) {
 			return;
 		}
-		String[] parameterStringArray = encodedString.split(Constants.AMPERSAND_SIGN);
-		this.map = new HashMap<String, String>();
-		for (int i = 0; i < parameterStringArray.length; i++) {
-			String[] splitted = parameterStringArray[i].split(Constants.EQUAL_SIGN);
-			if (splitted.length == 2) {
-				String key = URLDecoder.decode(splitted[0], Constants.URL_ENCODING);
-				String value = URLDecoder.decode(splitted[1], Constants.URL_ENCODING);
-				this.map.put(key, value);
+		try {
+			String[] parameterStringArray = encodedString.split(Constants.AMPERSAND_SIGN);
+			this.map = new HashMap<String, String>();
+			for (int i = 0; i < parameterStringArray.length; i++) {
+				String[] splitted = parameterStringArray[i].split(Constants.EQUAL_SIGN);
+				if (splitted.length == 2) {
+					String key = URLDecoder.decode(splitted[0], Constants.URL_ENCODING);
+					String value = URLDecoder.decode(splitted[1], Constants.URL_ENCODING);
+					this.map.put(key, value);
+				}
 			}
+		} catch (Exception e) {
+			LOGGER.warn(e);
+			throw new UnsupportedEncodingException("unsupported url response string");
 		}
 	}
 
@@ -119,25 +124,29 @@ public class URLString {
 		if (encodedString == null) {
 			return;
 		}
+		try {
+			String[] callKeyAndParamPairs = encodedString.split("\\" + Constants.QUESTION_MARK);
+			if (callKeyAndParamPairs.length <= 0 || callKeyAndParamPairs.length > 2) {
+				throw new UnsupportedEncodingException("unsupported url call string format");
+			}
+			this.callKey = callKeyAndParamPairs[0];
 
-		String[] callKeyAndParamPairs = encodedString.split("\\" + Constants.QUESTION_MARK);
-		if (callKeyAndParamPairs.length <= 0 || callKeyAndParamPairs.length > 2) {
-			throw new UnsupportedEncodingException("unsupported url call string format");
-		}
-		this.callKey = callKeyAndParamPairs[0];
+			if (callKeyAndParamPairs.length == 1) {
+				// no parameters
+				return;
+			}
+			String[] keyValuePairs = callKeyAndParamPairs[1].split(Constants.AMPERSAND_SIGN);
 
-		if (callKeyAndParamPairs.length == 1) {
-			// no parameters
-			return;
-		}
-		String[] keyValuePairs = callKeyAndParamPairs[1].split(Constants.AMPERSAND_SIGN);
-
-		for (int i = 0; i < keyValuePairs.length; i++) {
-			String keyValuePair = keyValuePairs[i];
-			String[] keyValue = keyValuePair.split(Constants.EQUAL_SIGN);
-			String key = URLDecoder.decode(keyValue[0], Constants.URL_ENCODING);
-			String value = URLDecoder.decode(keyValue[1], Constants.URL_ENCODING);
-			this.map.put(key, value);
+			for (int i = 0; i < keyValuePairs.length; i++) {
+				String keyValuePair = keyValuePairs[i];
+				String[] keyValue = keyValuePair.split(Constants.EQUAL_SIGN);
+				String key = URLDecoder.decode(keyValue[0], Constants.URL_ENCODING);
+				String value = URLDecoder.decode(keyValue[1], Constants.URL_ENCODING);
+				this.map.put(key, value);
+			}
+		} catch (Exception e) {
+			LOGGER.warn(e);
+			throw new UnsupportedEncodingException("unsupported url encoding format");
 		}
 	}
 
@@ -168,7 +177,8 @@ public class URLString {
 				}
 			}
 			return sb.toString();
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
+			LOGGER.warn(e);
 			LOGGER.error("unsupported url encoding format", e);
 		}
 		return null;
@@ -184,15 +194,19 @@ public class URLString {
 	 *             the unsupported encoding exception
 	 */
 	public static String toURLResponseString(String... parameters) throws UnsupportedEncodingException {
-
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < parameters.length - 1; i += 2) {
-			sb.append(URLEncoder.encode(parameters[i], Constants.URL_ENCODING));
-			sb.append(Constants.EQUAL_SIGN);
-			sb.append(URLEncoder.encode(parameters[i + 1], Constants.URL_ENCODING));
-			if (i != parameters.length - 1) {
-				sb.append(Constants.AMPERSAND_SIGN);
+		try {
+			for (int i = 0; i < parameters.length - 1; i += 2) {
+				sb.append(URLEncoder.encode(parameters[i], Constants.URL_ENCODING));
+				sb.append(Constants.EQUAL_SIGN);
+				sb.append(URLEncoder.encode(parameters[i + 1], Constants.URL_ENCODING));
+				if (i != parameters.length - 1) {
+					sb.append(Constants.AMPERSAND_SIGN);
+				}
 			}
+		} catch (Exception e) {
+			LOGGER.warn(e);
+			throw new UnsupportedEncodingException("unsupported response parameters");
 		}
 		return sb.toString();
 	}
@@ -210,38 +224,48 @@ public class URLString {
 		int index = 0;
 		Iterator<Entry<String, String>> entryIter = responseParameter.entrySet().iterator();
 		StringBuilder sb = new StringBuilder();
-		while (entryIter.hasNext()) {
-			if (index++ > 0) {
-				sb.append(Constants.AMPERSAND_SIGN);
-			}
-			Entry<String, String> entry = entryIter.next();
-			String key = entry.getKey();
-			String value = entry.getValue();
+		try {
+			while (entryIter.hasNext()) {
+				if (index++ > 0) {
+					sb.append(Constants.AMPERSAND_SIGN);
+				}
+				Entry<String, String> entry = entryIter.next();
+				String key = entry.getKey();
+				String value = entry.getValue();
 
-			sb.append(URLEncoder.encode(key, Constants.URL_ENCODING));
-			sb.append(Constants.EQUAL_SIGN);
-			if (value != null) {
-				sb.append(URLEncoder.encode(value, Constants.URL_ENCODING));
-			} else {
-				sb.append(URLEncoder.encode("", Constants.URL_ENCODING));
+				sb.append(URLEncoder.encode(key, Constants.URL_ENCODING));
+				sb.append(Constants.EQUAL_SIGN);
+				if (value != null) {
+					sb.append(URLEncoder.encode(value, Constants.URL_ENCODING));
+				} else {
+					sb.append(URLEncoder.encode("", Constants.URL_ENCODING));
+				}
 			}
+		} catch (Exception e) {
+			LOGGER.warn(e);
+			throw new UnsupportedEncodingException("unsupported response parameters");
 		}
 		return sb.toString();
 	}
 
 	public static String toURLRequestString(String... parameters) throws UnsupportedEncodingException {
 		StringBuilder sb = new StringBuilder();
-		sb.append(URLEncoder.encode(parameters[0], Constants.URL_ENCODING));
-		if (parameters.length > 1) {
-			sb.append(Constants.QUESTION_MARK);
-		}
-		for (int i = 1; i < parameters.length - 1; i += 2) {
-			sb.append(URLEncoder.encode(parameters[i], Constants.URL_ENCODING));
-			sb.append(Constants.EQUAL_SIGN);
-			sb.append(URLEncoder.encode(parameters[i + 1], Constants.URL_ENCODING));
-			if (i != parameters.length - 2) {
-				sb.append(Constants.AMPERSAND_SIGN);
+		try {
+			sb.append(URLEncoder.encode(parameters[0], Constants.URL_ENCODING));
+			if (parameters.length > 1) {
+				sb.append(Constants.QUESTION_MARK);
 			}
+			for (int i = 1; i < parameters.length - 1; i += 2) {
+				sb.append(URLEncoder.encode(parameters[i], Constants.URL_ENCODING));
+				sb.append(Constants.EQUAL_SIGN);
+				sb.append(URLEncoder.encode(parameters[i + 1], Constants.URL_ENCODING));
+				if (i != parameters.length - 2) {
+					sb.append(Constants.AMPERSAND_SIGN);
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.warn(e);
+			throw new UnsupportedEncodingException("unsupported request parameters");
 		}
 		return sb.toString();
 	}
