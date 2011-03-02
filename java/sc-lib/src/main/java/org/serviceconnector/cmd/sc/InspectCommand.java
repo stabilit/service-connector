@@ -77,7 +77,7 @@ public class InspectCommand extends CommandAdapter {
 		URLString urlRequestString = new URLString();
 		urlRequestString.parseRequestURLString(bodyString);
 		String callKey = urlRequestString.getCallKey();
-		String serviceName = urlRequestString.getParamValue("serviceName");
+		String serviceName = urlRequestString.getParamValue(Constants.SERVICE_NAME);
 
 		SCMPMessage scmpReply = new SCMPMessage();
 		scmpReply.setIsReply(true);
@@ -94,10 +94,10 @@ public class InspectCommand extends CommandAdapter {
 				scmpReply.setBody(this.getStateOfServicesString());
 			} else if (this.serviceRegistry.containsKey(serviceName)) {
 				if (this.serviceRegistry.getService(serviceName).isEnabled() == true) {
-					scmpReply.setBody(Constants.CC_CMD_ENABLE);
+					scmpReply.setBody(Constants.SERVICE_NAME + Constants.EQUAL_SIGN + Constants.CC_CMD_ENABLE);
 					logger.debug("service:" + serviceName + "is enabled");
 				} else {
-					scmpReply.setBody(Constants.CC_CMD_DISABLE);
+					scmpReply.setBody(Constants.SERVICE_NAME + Constants.EQUAL_SIGN + Constants.CC_CMD_DISABLE);
 					logger.debug("service:" + serviceName + "is disabled");
 				}
 			} else {
@@ -200,7 +200,7 @@ public class InspectCommand extends CommandAdapter {
 		try {
 			CacheComposite cacheComposite = cache.getComposite(cacheId);
 			if (cacheComposite == null) {
-				return URLString.toURLResponseString("cacheId", cacheId, "return", "notfound");
+				return URLString.toURLResponseString(Constants.CACHE_ID, cacheId, "return", "notfound");
 			}
 			CACHE_STATE cacheState = cacheComposite.getCacheState();
 			// Date creationTime = cacheComposite.getCreationTime();
@@ -209,7 +209,7 @@ public class InspectCommand extends CommandAdapter {
 			int size = cacheComposite.getSize();
 			Map<String, String> parameters = new HashMap<String, String>();
 			parameters.put("return", "success");
-			parameters.put("cacheId", cacheId);
+			parameters.put(Constants.CACHE_ID, cacheId);
 			parameters.put("cacheState", cacheState.toString());
 			parameters.put("cacheSize", String.valueOf(size));
 			parameters.put("cacheExpiration", expirationDateTime);
