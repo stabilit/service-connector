@@ -440,14 +440,14 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	}
 
 	/**
-	 * Description: start console with "-h 127.0.0.1 -p 9000 state?serviceName=*" parameters<br>
+	 * Description: start console with "-h 127.0.0.1 -p 9000 state?serviceName=.*" parameters<br>
 	 * Expectation: passes with exitCode = 0 "Success" <br>
 	 */
 	@Test
 	public void t27_state_wildCard() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", String.valueOf(TestConstants.PORT_SC_TCP),
-					Constants.CC_CMD_STATE + "?serviceName=*" });
+					Constants.CC_CMD_STATE + "?serviceName=.*" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
@@ -492,7 +492,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 		client.attach();
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
-					Constants.CC_CMD_DISABLE + "?serviceName=*" });
+					Constants.CC_CMD_DISABLE + "?serviceName=.*" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
@@ -500,7 +500,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 				TestConstants.sesServiceName1));
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
-					Constants.CC_CMD_ENABLE + "?serviceName=*" });
+					Constants.CC_CMD_ENABLE + "?serviceName=.*" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
@@ -553,7 +553,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	}
 
 	/**
-	 * Description: start console with "-h localhost -p 9000 sessions?serviceName=*<br>
+	 * Description: start console with "-h localhost -p 9000 sessions?serviceName=.*<br>
 	 * (unknown service name)<br>
 	 * Expectation: passes with exitCode = 0 "Success"<br>
 	 */
@@ -561,7 +561,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	public void t57_sessions_command_wildCard() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
-					Constants.CC_CMD_SESSIONS + "?serviceName=*" });
+					Constants.CC_CMD_SESSIONS + "?serviceName=.*" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
