@@ -17,15 +17,13 @@ package org.serviceconnector.console;
 
 import java.util.Set;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.util.CommandLineUtil;
-import org.serviceconnector.util.URLResponseString;
+import org.serviceconnector.util.URLString;
 import org.serviceconnector.util.ValidatorUtility;
 
 public class SCConsole {
@@ -97,61 +95,51 @@ public class SCConsole {
 	 */
 	private static int run(String arg0, String arg1, String bodyString) throws Exception {
 
-		/** The Constant COMMAND_REGEX_STRING. */
-		String regex = "(" + Constants.CC_CMD_KILL + "|" + Constants.CC_CMD_DUMP + "|" + Constants.CC_CMD_CLEAR_CACHE + "|("
-				+ Constants.CC_CMD_ENABLE + "|" + Constants.CC_CMD_DISABLE + "|" + Constants.CC_CMD_STATE + "|"
-				+ Constants.CC_CMD_SESSIONS + ")" + Constants.EQUAL_SIGN + "(.*))";
+		URLString urlRequestString = new URLString();
+		urlRequestString.parseRequestURLString(bodyString);
+		String callKey = urlRequestString.getCallKey();
+		String serviceName = urlRequestString.getParamValue("serviceName");
 		int status = 0;
-
-		Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-		Matcher m = pattern.matcher(bodyString);
-		if (!m.matches()) {
-			showError("invalid or no command=" + bodyString);
-			return 3;
-		}
-		String command = m.group(1);
-		String function = m.group(2);
-		String serviceName = m.group(3);
-
 		try {
 			SCMgmtClient client = new SCMgmtClient(arg0, Integer.parseInt(arg1), ConnectionType.NETTY_TCP);
 			client.attach();
 
-			if (command.equalsIgnoreCase(Constants.CC_CMD_KILL)) {
+			if (callKey.equalsIgnoreCase(Constants.CC_CMD_KILL)) {
 				client.killSC();
 				System.out.println("SC exit requested");
-			} else if (command.equalsIgnoreCase(Constants.CC_CMD_DUMP)) {
+			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_DUMP)) {
 				client.dump();
 				System.out.println("SC dump requested");
 				client.detach();
-			} else if (command.equalsIgnoreCase(Constants.CC_CMD_CLEAR_CACHE)) {
+			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_CLEAR_CACHE)) {
 				client.clearCache();
 				System.out.println("Cache has been cleared");
 				client.detach();
-			} else if (function.equalsIgnoreCase(Constants.CC_CMD_ENABLE)) {
+			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_ENABLE)) {
 				client.enableService(serviceName);
 				System.out.println("Service [" + serviceName + "] has been enabled");
 				client.detach();
-			} else if (function.equalsIgnoreCase(Constants.CC_CMD_DISABLE)) {
+			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_DISABLE)) {
 				client.disableService(serviceName);
 				System.out.println("Service [" + serviceName + "] has been disabled");
 				client.detach();
-			} else if (function.equalsIgnoreCase(Constants.CC_CMD_STATE)) {
+			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_STATE)) {
 				try {
-					boolean enabled = client.isServiceEnabled(serviceName);
-					if (enabled) {
-						System.out.println("Service [" + serviceName + "] is enabled");
-					} else {
-						System.out.println("Service [" + serviceName + "] is disabled");
+					URLString responseString = client.isServiceEnabled(serviceName);
+					Set<Entry<String, String>> parameters = responseString.getParameters();
+					StringBuilder sb = new StringBuilder();
+					for (Entry<String, String> param : parameters) {
+						sb.append("Service [" + param.getKey() + "] is " + param.getValue());
 					}
+					System.out.println(sb.toString());
 				} catch (Exception e) {
 					System.out.println("Service [" + serviceName + "] does not exist!");
 					status = 4;
 				}
 				client.detach();
-			} else if (function.equalsIgnoreCase(Constants.CC_CMD_SESSIONS)) {
+			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_SESSIONS)) {
 				try {
-					URLResponseString responseString = client.getWorkload(serviceName);
+					URLString responseString = client.getWorkload(serviceName);
 					Set<Entry<String, String>> parameters = responseString.getParameters();
 					StringBuilder sb = new StringBuilder();
 					for (Entry<String, String> param : parameters) {
@@ -164,6 +152,7 @@ public class SCConsole {
 				}
 				client.detach();
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			status = 5;
