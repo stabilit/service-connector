@@ -19,7 +19,7 @@ package org.serviceconnector;
 import org.apache.log4j.Logger;
 
 /**
- * The class Constants. SCM constants.
+ * The class Constants. SC constants.
  * 
  * @author JTraber
  */
@@ -38,7 +38,7 @@ public final class Constants {
 	 */
 	/** The default SC character set (encoding). */
 	public static final String DEFAULT_ENCODING = "ISO-8859-1";
-	
+
 	/** Default value used if no ECHO_TIMEOUT_MULTIPLIER is configured */
 	public static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
 
@@ -139,7 +139,7 @@ public final class Constants {
 
 	/** Seconds to milliseconds calculation factor */
 	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
-	
+
 	/** flag to enable / disable command validation. */
 	public static final boolean COMMAND_VALIDATION_ENABLED = true;
 
@@ -167,9 +167,9 @@ public final class Constants {
 	/** File containing the SC dump. Created with the console command or WEB-GUI */
 	public static final String DUMP_FILE_NAME = "scDump_";
 
-	/** The dump file name format*/
+	/** The dump file name format */
 	public static final String DUMP_FILE_NAME_FORMAT = "yyyyMMddHHmmssSSS";
-	
+
 	/** The dump file extension */
 	public static final String DUMP_FILE_EXTENSION = ".xml";
 
@@ -179,13 +179,12 @@ public final class Constants {
 	/** File containing the SC logs (zipped). Created with the console command or WEB-GUI */
 	public static final String LOGS_FILE_NAME = "scLogs_";
 
-	/** The dump file name format*/
+	/** The dump file name format */
 	public static final String LOGS_FILE_NAME_FORMAT = "yyyyMMddHHmmssSSS";
-	
+
 	/** The dump file extension */
 	public static final String LOGS_FILE_EXTENSION = ".zip";
 
-	
 	/** The Constant IPV6_LOOPBACK_NIC. */
 	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
 
@@ -208,8 +207,11 @@ public final class Constants {
 	public static final String CC_CMD_DUMP = "dump";
 	public static final String EQUAL_SIGN = "=";
 	public static final String AMPERSAND_SIGN = "&";
+	public static final String QUESTION_MARK = "?";
 	public static final String WILD_CARD_SIGN = "*";
-	public static final String URL_ENCODING = "UTF-8";		// TODO SC default is "ISO-8859-1" does it match?
+	public static final String URL_ENCODING = "UTF-8"; // TODO SC default is "ISO-8859-1" does it match?
+	public static final String SERVICE_NAME = "serviceName";
+	public static final String CACHE_ID = "cacheId";
 
 	/*
 	 * Constants for syntax in sc.properies ************************************
@@ -265,11 +267,12 @@ public final class Constants {
 	// file server upload values
 	public static final String DEFAULT_UPLOAD_FILE_PARAM_NAME = "filename";
 	public static final String DEFAULT_UPLOAD_SERVICE_PARAM_NAME = "servicename";
-		
+
 	// web default values
 	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;
-	public static final int DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS = 180;  // default session inactivity control schedule timeout (3 minutes)
-	public static final int DEFAULT_WEB_SESSION_TIMEOUT_MINUTES = 30;  // default session inactivty timeout 30 minutes 
+	public static final int DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS = 180; // default session inactivity control schedule
+																				// timeout (3 minutes)
+	public static final int DEFAULT_WEB_SESSION_TIMEOUT_MINUTES = 30; // default session inactivty timeout 30 minutes
 	// web property keys
 	/** XSL transformation cache enebled = transformation will be done every cycle */
 	public static final String WEB_XSL_TRANSFORMATION_CACHE_ENABLED = "web.xslTransformationCache.enabled";
@@ -279,8 +282,7 @@ public final class Constants {
 	public static final String WEB_SC_UPLOAD_SERVICE = "web.scUploadService";
 	/** file service used for download via GUI */
 	public static final String WEB_SC_DOWNLOAD_SERVICE = "web.scDownloadService";
-	
-	
+
 	/*
 	 * SCMP protocol constants ***********************
 	 */

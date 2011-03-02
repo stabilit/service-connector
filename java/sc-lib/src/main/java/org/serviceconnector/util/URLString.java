@@ -30,29 +30,26 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 
 /**
- * The Class URLResponseString supports the following format:
+ * The Class URLString supports the following format:
  * key1=value1&key2=value2&...
  * All keys and values url encoded (see {@link java.net.URLEncoder}) using UTF-8
  * The parse Method decodes a given string using url decoding (see {@link java.net.URLDecoder} using UTF-8
  * This class is not synchronized.
  */
-public class URLResponseString {
+public class URLString {
 
 	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(URLResponseString.class);
+	private final static Logger logger = Logger.getLogger(URLString.class);
 	/** The parameters. */
 	private Map<String, String> map;
+	/** The call key. */
+	private String callKey;
 
 	/**
 	 * Instantiates a new URL response string.
 	 */
-	public URLResponseString() {
+	public URLString() {
 		this.map = new HashMap<String, String>();
-	}
-
-	public URLResponseString(String parameterString) throws UnsupportedEncodingException {
-		this();
-		this.parseString(parameterString);
 	}
 
 	/**
@@ -62,7 +59,7 @@ public class URLResponseString {
 	 *            the key
 	 * @return the value
 	 */
-	public String getValue(String key) {
+	public String getParamValue(String key) {
 		return this.map.get(key);
 	}
 
@@ -83,8 +80,16 @@ public class URLResponseString {
 	 * @param value
 	 *            the value
 	 */
-	public void put(String key, String value) {
+	public void putParam(String key, String value) {
 		this.map.put(key, value);
+	}
+
+	public String getCallKey() {
+		return this.callKey;
+	}
+
+	public void setCallKey(String callKey) {
+		this.callKey = callKey;
 	}
 
 	/**
@@ -94,7 +99,7 @@ public class URLResponseString {
 	 *            the encoded string
 	 * @throws UnsupportedEncodingException
 	 */
-	public void parseString(String encodedString) throws UnsupportedEncodingException {
+	public void parseResponseURLString(String encodedString) throws UnsupportedEncodingException {
 		if (encodedString == null) {
 			return;
 		}
@@ -107,6 +112,27 @@ public class URLResponseString {
 				String value = URLDecoder.decode(splitted[1], Constants.URL_ENCODING);
 				this.map.put(key, value);
 			}
+		}
+	}
+
+	public void parseRequestURLString(String encodedString) throws UnsupportedEncodingException {
+		if (encodedString == null) {
+			return;
+		}
+
+		String[] callKeyAndParamPairs = encodedString.split("\\" + Constants.QUESTION_MARK);
+		if (callKeyAndParamPairs.length <= 0 || callKeyAndParamPairs.length > 2) {
+			throw new UnsupportedEncodingException("unsupported url call string format");
+		}
+		this.callKey = callKeyAndParamPairs[0];
+		String[] keyValuePairs = callKeyAndParamPairs[1].split(Constants.AMPERSAND_SIGN);
+
+		for (int i = 0; i < keyValuePairs.length; i++) {
+			String keyValuePair = keyValuePairs[i];
+			String[] keyValue = keyValuePair.split(Constants.EQUAL_SIGN);
+			String key = URLDecoder.decode(keyValue[0], Constants.URL_ENCODING);
+			String value = URLDecoder.decode(keyValue[1], Constants.URL_ENCODING);
+			this.map.put(key, value);
 		}
 	}
 
@@ -193,6 +219,23 @@ public class URLResponseString {
 				sb.append(URLEncoder.encode(value, Constants.URL_ENCODING));
 			} else {
 				sb.append(URLEncoder.encode("", Constants.URL_ENCODING));
+			}
+		}
+		return sb.toString();
+	}
+
+	public static String toURLRequestString(String... parameters) throws UnsupportedEncodingException {
+		StringBuilder sb = new StringBuilder();
+		sb.append(URLEncoder.encode(parameters[0], Constants.URL_ENCODING));
+		if (parameters.length > 1) {
+			sb.append(Constants.QUESTION_MARK);
+		}
+		for (int i = 1; i < parameters.length - 1; i += 2) {
+			sb.append(URLEncoder.encode(parameters[i], Constants.URL_ENCODING));
+			sb.append(Constants.EQUAL_SIGN);
+			sb.append(URLEncoder.encode(parameters[i + 1], Constants.URL_ENCODING));
+			if (i != parameters.length - 2) {
+				sb.append(Constants.AMPERSAND_SIGN);
 			}
 		}
 		return sb.toString();

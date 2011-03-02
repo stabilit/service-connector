@@ -17,8 +17,6 @@
 package org.serviceconnector.cmd.sc;
 
 import java.net.InetAddress;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -34,7 +32,8 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
-import org.serviceconnector.util.URLRequestString;
+import org.serviceconnector.service.Service;
+import org.serviceconnector.util.URLString;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
@@ -47,14 +46,6 @@ public class ManageCommand extends CommandAdapter {
 
 	/** The Constant logger. */
 	private final static Logger logger = Logger.getLogger(ManageCommand.class);
-
-	/** The Constant MANAGE_REGEX_STRING. */
-	private static final String MANAGE_REGEX_STRING = "(" + Constants.CC_CMD_KILL + "|" + Constants.CC_CMD_DUMP + "|"
-			+ Constants.CC_CMD_CLEAR_CACHE + "|(" + Constants.CC_CMD_ENABLE + "|" + Constants.CC_CMD_DISABLE + ")"
-			+ Constants.EQUAL_SIGN + "(.*))";
-
-	/** The Constant MANAGE_PATTERN. */
-	private static final Pattern MANAGE_PATTERN = Pattern.compile(MANAGE_REGEX_STRING, Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * Instantiates a new manage command.
@@ -75,8 +66,8 @@ public class ManageCommand extends CommandAdapter {
 		String bodyString = (String) reqMsg.getBody();
 		String ipAddress = reqMsg.getHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST);
 
-		URLRequestString urlRequestString = new URLRequestString();
-		urlRequestString.parseString(bodyString);
+		URLString urlRequestString = new URLString();
+		urlRequestString.parseRequestURLString(bodyString);
 		String callKey = urlRequestString.getCallKey();
 
 		// set up response
@@ -86,16 +77,7 @@ public class ManageCommand extends CommandAdapter {
 		InetAddress localHost = InetAddress.getLocalHost();
 		scmpReply.setHeader(SCMPHeaderAttributeKey.IP_ADDRESS_LIST, localHost.getHostAddress());
 
-		Matcher m = MANAGE_PATTERN.matcher(bodyString);
-		if (!m.matches()) {
-			logger.error("wrong manage command body=" + bodyString); // body has bad syntax
-			scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_MANAGE_COMMAND, bodyString);
-			response.setSCMP(scmpReply);
-			// initiate responder to send reply
-			responderCallback.responseCallback(request, response);
-			return;
-		}
-		String serviceName = urlRequestString.getParameter(0);
+		String serviceName = urlRequestString.getParamValue(Constants.SERVICE_NAME);
 
 		// kill command
 		if ((ipAddress.equals(localHost.getHostAddress())) && Constants.CC_CMD_KILL.equalsIgnoreCase(callKey)) {
@@ -111,27 +93,72 @@ public class ManageCommand extends CommandAdapter {
 		// other commands
 		if (Constants.CC_CMD_DUMP.equalsIgnoreCase(callKey)) {
 			AppContext.dump();
-		} else if (Constants.CC_CMD_CLEAR_CACHE.equalsIgnoreCase(callKey)) {
+			response.setSCMP(scmpReply);
+			responderCallback.responseCallback(request, response);
+			return;
+		}
+
+		if (Constants.CC_CMD_CLEAR_CACHE.equalsIgnoreCase(callKey)) {
 			CacheManager cacheManager = AppContext.getCacheManager();
 			cacheManager.clearAll();
-		} else if (this.serviceRegistry.containsKey(serviceName)) {
-			// service exists
-			if (Constants.CC_CMD_ENABLE.equalsIgnoreCase(callKey)) {
+			response.setSCMP(scmpReply);
+			responderCallback.responseCallback(request, response);
+			return;
+		}
+
+		if (Constants.CC_CMD_ENABLE.equalsIgnoreCase(callKey)) {
+			if (serviceName.equalsIgnoreCase(Constants.WILD_CARD_SIGN)) {
+				// enable all services
+				this.modifyStateOfAllServices(true);
+			} else if (this.serviceRegistry.containsKey(serviceName) == false) {
+				logger.debug("service=" + serviceName + " not found");
+				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
+			} else {
 				// enable service
 				logger.info("enable service=" + serviceName);
 				this.serviceRegistry.getService(serviceName).setEnabled(true);
+			}
+			response.setSCMP(scmpReply);
+			responderCallback.responseCallback(request, response);
+			return;
+		}
+
+		if (Constants.CC_CMD_DISABLE.equalsIgnoreCase(callKey)) {
+			if (serviceName.equalsIgnoreCase(Constants.WILD_CARD_SIGN)) {
+				// disable all services
+				this.modifyStateOfAllServices(false);
+			} else if (this.serviceRegistry.containsKey(serviceName) == false) {
+				logger.debug("service=" + serviceName + " not found");
+				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			} else {
 				// disable service
 				logger.info("disable service=" + serviceName);
 				this.serviceRegistry.getService(serviceName).setEnabled(false);
 			}
-		} else {
-			logger.debug("service=" + serviceName + " not found");
-			scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
+			response.setSCMP(scmpReply);
+			responderCallback.responseCallback(request, response);
+			return;
 		}
+		logger.error("wrong manage command body=" + bodyString); // body has bad syntax
+		scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_MANAGE_COMMAND, bodyString);
 		response.setSCMP(scmpReply);
 		// initiate responder to send reply
 		responderCallback.responseCallback(request, response);
+	}
+
+	/**
+	 * Modify state of all services.
+	 * 
+	 * @param enable
+	 *            the enable
+	 */
+	private void modifyStateOfAllServices(boolean enable) {
+		Service[] services = this.serviceRegistry.getServices();
+
+		for (Service service : services) {
+			logger.info("set service=" + service.getName() + "state enable=" + enable);
+			service.setEnabled(enable);
+		}
 	}
 
 	/** {@inheritDoc} */
