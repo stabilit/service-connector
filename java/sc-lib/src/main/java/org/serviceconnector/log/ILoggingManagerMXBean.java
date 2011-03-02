@@ -22,107 +22,107 @@ package org.serviceconnector.log;
 public interface ILoggingManagerMXBean {
 
 	/**
-	 * Gets the root LOGGER level.
+	 * Gets the root logger level.
 	 * 
-	 * @return the root LOGGER level
+	 * @return the root logger level
 	 */
 	public abstract String getRootLoggerLevel();
 
 	/**
-	 * Sets the root LOGGER level.
+	 * Sets the root logger level.
 	 * 
 	 * @param levelValue
-	 *            the new root LOGGER level
+	 *            the new root logger level
 	 */
 	public abstract void setRootLoggerLevel(String levelValue);
 
 	/**
-	 * Sets the connection LOGGER level.
+	 * Sets the connection logger level.
 	 * 
 	 * @param levelValue
-	 *            the new connection LOGGER level
+	 *            the new connection logger level
 	 */
 	public abstract void setConnectionLoggerLevel(String levelValue);
 
 	/**
-	 * Gets the connection LOGGER level.
+	 * Gets the connection logger level.
 	 * 
-	 * @return the connection LOGGER level
+	 * @return the connection logger level
 	 */
 	public abstract String getConnectionLoggerLevel();
 
 	/**
-	 * Sets the cache LOGGER level.
+	 * Sets the cache logger level.
 	 * 
 	 * @param levelValue
-	 *            the new cache LOGGER level
+	 *            the new cache logger level
 	 */
 	public abstract void setCacheLoggerLevel(String levelValue);
 
 	/**
-	 * Gets the cache LOGGER level.
+	 * Gets the cache logger level.
 	 * 
-	 * @return the cache LOGGER level
+	 * @return the cache logger level
 	 */
 	public abstract String getCacheLoggerLevel();
 
 	/**
-	 * Sets the message LOGGER level.
+	 * Sets the message logger level.
 	 * 
 	 * @param levelValue
-	 *            the new message LOGGER level
+	 *            the new message logger level
 	 */
 	public abstract void setMessageLoggerLevel(String levelValue);
 
 	/**
-	 * Gets the message LOGGER level.
+	 * Gets the message logger level.
 	 * 
-	 * @return the message LOGGER level
+	 * @return the message logger level
 	 */
 	public abstract String getMessageLoggerLevel();
 
 	/**
-	 * Sets the performance LOGGER level.
+	 * Sets the performance logger level.
 	 * 
 	 * @param levelValue
-	 *            the new performance LOGGER level
+	 *            the new performance logger level
 	 */
 	public abstract void setPerformanceLoggerLevel(String levelValue);
 
 	/**
-	 * Gets the performance LOGGER level.
+	 * Gets the performance logger level.
 	 * 
-	 * @return the performance LOGGER level
+	 * @return the performance logger level
 	 */
 	public abstract String getPerformanceLoggerLevel();
 
 	/**
-	 * Sets the session LOGGER level.
+	 * Sets the session logger level.
 	 * 
 	 * @param levelValue
-	 *            the new session LOGGER level
+	 *            the new session logger level
 	 */
 	public abstract void setSessionLoggerLevel(String levelValue);
 
 	/**
-	 * Gets the session LOGGER level.
+	 * Gets the session logger level.
 	 * 
-	 * @return the session LOGGER level
+	 * @return the session logger level
 	 */
 	public abstract String getSessionLoggerLevel();
 
 	/**
-	 * Sets the subscription LOGGER level.
+	 * Sets the subscription logger level.
 	 * 
 	 * @param levelValue
-	 *            the new subscription LOGGER level
+	 *            the new subscription logger level
 	 */
 	public abstract void setSubscriptionLoggerLevel(String levelValue);
 
 	/**
-	 * Gets the subscription LOGGER level.
+	 * Gets the subscription logger level.
 	 * 
-	 * @return the subscription LOGGER level
+	 * @return the subscription logger level
 	 */
 	public abstract String getSubscriptionLoggerLevel();
 }

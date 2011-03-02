@@ -42,7 +42,7 @@ import org.serviceconnector.web.WebUtil;
  */
 public class LogsXMLLoader extends AbstractXMLLoader {
 
-	/** The distinct LOGGER set, prevent multiple entries of log files */
+	/** The distinct logger set, prevent multiple entries of log files. */
 	private Set<String> distinctLoggerSet;
 
 	/**
@@ -92,10 +92,10 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		writer.writeEndElement(); // close logs tag
 	}
 
-	public void writeLogger(XMLStreamWriter writer, Logger LOGGER, Date today, Date current) throws XMLStreamException {
-		writer.writeStartElement("LOGGER");
-		writer.writeAttribute("name", LOGGER.getName());
-		Enumeration<?> appenders = LOGGER.getAllAppenders();
+	public void writeLogger(XMLStreamWriter writer, Logger logger, Date today, Date current) throws XMLStreamException {
+		writer.writeStartElement("logger");
+		writer.writeAttribute("name", logger.getName());
+		Enumeration<?> appenders = logger.getAllAppenders();
 		while (appenders.hasMoreElements()) {
 			Appender appender = (Appender) appenders.nextElement();
 			String appenderName = appender.getName();
@@ -125,7 +125,7 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 			}
 			writer.writeEndElement(); // close appender tag
 		}
-		writer.writeEndElement(); // close LOGGER tag
+		writer.writeEndElement(); // close logger tag
 	}
 
 	@Override
@@ -149,8 +149,8 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		return logFileList;
 	}
 
-	protected void addLogFiles(Logger LOGGER, List<String> logFileList) {
-		Enumeration<?> appenders = LOGGER.getAllAppenders();
+	protected void addLogFiles(Logger logger, List<String> logFileList) {
+		Enumeration<?> appenders = logger.getAllAppenders();
 		while (appenders.hasMoreElements()) {
 			Appender appender = (Appender) appenders.nextElement();
 			String appenderName = appender.getName();
