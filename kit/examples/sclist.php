@@ -16,8 +16,17 @@
  *  limitations under the License.                                             *
  *-----------------------------------------------------------------------------*/
 /*
-#   instructions for use  								
-#	- Call the script http://host:port/path/sclist.php
+# Instructions for use:
+# 1) Put this file into the directory to which files will be uploaded
+# 2) Configure sc.properties, define file service and remote node
+#			see sc.properties for details
+# 3) Configure the web server (apache) alias corresponding to the path to 
+#    get files from the right directory see also httpd-sc.conf
+#
+# This script will be invoked from SC via the url:
+# 	 http://host:port/path/sclist.php
+# It returns the list of files in the directory (exluding aall *.php) to SC
+# The list entries are delimitted by "|" character.  					
 # ------------------------------------------------------------------------------
 */
 if ($handle = opendir('.')) {

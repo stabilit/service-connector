@@ -3,7 +3,7 @@ Service Connector - open source messaging middleware
 
  Kit structure:
  --------------
- sc-bin-V9.9-999.zip - kit containing only binaries binaries
+ sc-bin_V9.9-999.zip - kit containing only binaries binaries
  --/bin					(binaries a scripts to manage sc)
    /bin/unix		(script to run sc as deamon on unix/linux. see the readme.txt)
    /bin/win32		(script and runables to run sc as Windows service on win32 platform)
@@ -12,7 +12,7 @@ Service Connector - open source messaging middleware
    /cache				(sc writes temporary cache-files here. See also sc property cache.diskPath)
    /logs				(sc writes all log and dump files here. See log4j properties)
    
- sc-src-V9.9-999.zip - kit containing binaries and additional resources required for development
+ sc-src_V9.9-999.zip - kit containing binaries and additional resources required for development
  --/doc					(sc documentation and java docs)
    /examples		(additional scripts examples and file service configurations)
    /sources			(sources of sc and the demo application)
