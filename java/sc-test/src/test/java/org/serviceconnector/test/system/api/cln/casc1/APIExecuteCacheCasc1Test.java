@@ -196,7 +196,6 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		Assert.assertEquals(CACHE_STATE.LOADED.toString(), inspectResponse.getParamValue("cacheState"));
 		Assert.assertEquals("700", inspectResponse.getParamValue("cacheId"));
 		Assert.assertEquals("2", inspectResponse.getParamValue("cacheSize"));
-
 		sessionService1.deleteSession();
 	}
 
