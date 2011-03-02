@@ -175,6 +175,15 @@ public class SCConsole {
 					status = 4;
 				}
 				client.detach();
+			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_INSPECT_CACHE)) {
+				try {
+					String cacheId = urlRequestString.getParamValue("cacheId");
+					client.inspectCache(serviceName, cacheId);
+					System.out.println("Service [" + serviceName + ", " + cacheId + "] has been inscpected");
+				} catch (SCServiceException e) {
+					System.out.println("Service [" + serviceName + "] does not exist!");
+					status = 4;
+				}
 			} else {
 				SCConsole.showError("Error - wrong call key in request string.");
 				status = 3;
