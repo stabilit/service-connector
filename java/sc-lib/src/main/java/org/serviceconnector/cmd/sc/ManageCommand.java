@@ -156,7 +156,7 @@ public class ManageCommand extends CommandAdapter {
 		Service[] services = this.serviceRegistry.getServices();
 
 		for (Service service : services) {
-			LOGGER.info("set service=" + service.getName() + "state enable=" + enable);
+			LOGGER.info("set service=" + service.getName() + " state enable=" + enable);
 			service.setEnabled(enable);
 		}
 	}
