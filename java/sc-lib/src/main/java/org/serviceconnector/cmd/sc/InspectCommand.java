@@ -89,15 +89,10 @@ public class InspectCommand extends CommandAdapter {
 			// state for service requested
 			logger.debug("state request for service:" + serviceName);
 
-			if (this.serviceRegistry.containsKey(serviceName)) {
-				if (serviceName.equalsIgnoreCase(Constants.WILD_CARD_SIGN)) {
-					// get state of all services
-					scmpReply.setBody(this.getStateOfServicesString());
-					response.setSCMP(scmpReply);
-					// initiate responder to send reply
-					responderCallback.responseCallback(request, response);
-					return;
-				}
+			if (serviceName.equalsIgnoreCase(Constants.WILD_CARD_SIGN)) {
+				// get state of all services
+				scmpReply.setBody(this.getStateOfServicesString());
+			} else if (this.serviceRegistry.containsKey(serviceName)) {
 				if (this.serviceRegistry.getService(serviceName).isEnabled() == true) {
 					scmpReply.setBody(Constants.CC_CMD_ENABLE);
 					logger.debug("service:" + serviceName + "is enabled");

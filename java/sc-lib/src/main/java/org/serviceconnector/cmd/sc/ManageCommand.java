@@ -85,8 +85,8 @@ public class ManageCommand extends CommandAdapter {
 			logger.info("SC stopped by kill console command");
 			response.setSCMP(scmpReply);
 			responderCallback.responseCallback(request, response);
-			// wait a second until the response has been sent
-			Thread.sleep(1000);
+			// wait 300 milliseconds until the response has been sent
+			Thread.sleep(300);
 			System.exit(0);
 		}
 

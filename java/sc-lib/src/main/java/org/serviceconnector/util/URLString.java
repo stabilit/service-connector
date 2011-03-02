@@ -125,6 +125,11 @@ public class URLString {
 			throw new UnsupportedEncodingException("unsupported url call string format");
 		}
 		this.callKey = callKeyAndParamPairs[0];
+
+		if (callKeyAndParamPairs.length == 1) {
+			// no parameters
+			return;
+		}
 		String[] keyValuePairs = callKeyAndParamPairs[1].split(Constants.AMPERSAND_SIGN);
 
 		for (int i = 0; i < keyValuePairs.length; i++) {
