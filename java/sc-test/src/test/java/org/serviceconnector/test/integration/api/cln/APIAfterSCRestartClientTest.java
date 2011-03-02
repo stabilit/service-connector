@@ -132,9 +132,9 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 				TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 
 		client.enableService(TestConstants.sesServiceName1);
-		Assert.assertEquals("Service is not enabled", Boolean.TRUE.toString(),
-				client.isServiceEnabled(TestConstants.sesServiceName1)
-						.getParamValue(TestConstants.sesServiceName1));
+		Assert.assertEquals("Service is not enabled", "enabled", client
+				.isServiceEnabled(TestConstants.sesServiceName1).getParamValue(
+						TestConstants.sesServiceName1));
 	}
 
 	/**
@@ -155,9 +155,8 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 				TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 
 		client.disableService(TestConstants.sesServiceName1);
-		Assert.assertEquals("Service is not disabled",
-				Boolean.FALSE.toString(), client.isServiceEnabled(
-						TestConstants.sesServiceName1).getParamValue(
+		Assert.assertEquals("Service is not disabled", "disabled", client
+				.isServiceEnabled(TestConstants.sesServiceName1).getParamValue(
 						TestConstants.sesServiceName1));
 	}
 
@@ -279,9 +278,9 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 				TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 
 		client.enableService(TestConstants.sesServiceName1);
-		Assert.assertEquals("Service is not enabled", Boolean.TRUE.toString(),
-				client.isServiceEnabled(TestConstants.sesServiceName1)
-						.getParamValue(TestConstants.sesServiceName1));
+		Assert.assertEquals("Service is not enabled", "enabled", client
+				.isServiceEnabled(TestConstants.sesServiceName1).getParamValue(
+						TestConstants.sesServiceName1));
 	}
 
 	/**
@@ -302,9 +301,8 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 				TestConstants.log4jSC0Properties, TestConstants.SC0Properties);
 
 		client.disableService(TestConstants.sesServiceName1);
-		Assert.assertEquals("Service is not disabled",
-				Boolean.FALSE.toString(), client.isServiceEnabled(
-						TestConstants.sesServiceName1).getParamValue(
+		Assert.assertEquals("Service is not disabled", "disabled", client
+				.isServiceEnabled(TestConstants.sesServiceName1).getParamValue(
 						TestConstants.sesServiceName1));
 	}
 

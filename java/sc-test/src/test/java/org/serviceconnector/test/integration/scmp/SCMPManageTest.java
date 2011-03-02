@@ -108,7 +108,7 @@ public class SCMPManageTest extends IntegrationSuperTest {
 				+ TestConstants.sesServerName1);
 		inspectCall.invoke(cbk, 1000);
 		result = cbk.getMessageSync(3000);
-		Assert.assertEquals(TestConstants.sesServerName1 + Constants.EQUAL_SIGN + Boolean.FALSE, result.getBody().toString());
+		Assert.assertEquals(TestConstants.sesServerName1 + Constants.EQUAL_SIGN + "disabled", result.getBody().toString());
 	}
 
 	/**
