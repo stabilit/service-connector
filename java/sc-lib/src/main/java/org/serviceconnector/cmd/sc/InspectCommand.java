@@ -94,7 +94,7 @@ public class InspectCommand extends CommandAdapter {
 			try {
 				// get state of all services
 				scmpReply.setBody(this.getStateOfServicesString(serviceName));
-			} catch (NotFoundException e) {
+			} catch (Exception e) {
 				LOGGER.debug("service=" + serviceName + " not found");
 				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			}
@@ -109,7 +109,7 @@ public class InspectCommand extends CommandAdapter {
 			try {
 				// get sessions of all services
 				scmpReply.setBody(this.getSessionsOfServicesString(serviceName));
-			} catch (NotFoundException e) {
+			} catch (Exception e) {
 				LOGGER.debug("service=" + serviceName + " not found");
 				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			}

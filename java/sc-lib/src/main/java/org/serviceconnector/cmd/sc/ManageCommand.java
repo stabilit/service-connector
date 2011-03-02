@@ -145,13 +145,16 @@ public class ManageCommand extends CommandAdapter {
 	private boolean modifyStateOfServices(boolean enable, String serviceNameRegex) {
 		boolean ret = false;
 		Service[] services = this.serviceRegistry.getServices();
-
-		for (Service service : services) {
-			if (service.getName().matches(serviceNameRegex)) {
-				LOGGER.info("set service=" + service.getName() + "state enable=" + enable);
-				service.setEnabled(enable);
-				ret = true;
+		try {
+			for (Service service : services) {
+				if (service.getName().matches(serviceNameRegex)) {
+					LOGGER.info("set service=" + service.getName() + "state enable=" + enable);
+					service.setEnabled(enable);
+					ret = true;
+				}
 			}
+		} catch (Exception e) {
+			ret = false;
 		}
 		return ret;
 	}
