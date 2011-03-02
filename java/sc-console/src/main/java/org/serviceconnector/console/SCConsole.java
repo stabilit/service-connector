@@ -15,6 +15,7 @@
  */
 package org.serviceconnector.console;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -167,10 +168,11 @@ public class SCConsole {
 				SCConsole.showError("Error - wrong call key in request string.");
 				status = 3;
 			}
-
+		} catch (UnsupportedEncodingException e) {
+			SCConsole.showError("Error in request string, encoding failed.");
+			status = 5;
 		} catch (Exception e) {
 			e.printStackTrace();
-			SCConsole.showError("Error in request string.");
 			status = 5;
 		}
 		return status;

@@ -37,7 +37,6 @@ import org.serviceconnector.util.URLString;
 public class SCMgmtClient extends SCClient {
 
 	/** The Constant LOGGER. */
-	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCMgmtClient.class);
 
 	/**
@@ -75,8 +74,10 @@ public class SCMgmtClient extends SCClient {
 	 *             client not attached<br>
 	 *             manage call to SC failed<br>
 	 *             body not null after manage call<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public void disableService(String serviceName) throws SCServiceException {
+	public void disableService(String serviceName) throws SCServiceException, UnsupportedEncodingException {
 		this.disableService(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
 	}
 
@@ -89,21 +90,18 @@ public class SCMgmtClient extends SCClient {
 	 *            the service name
 	 * @throws SCServiceException
 	 *             client not attached<br>
-	 *             encoding of request URL failed<br>
 	 *             manage call to SC failed<br>
 	 *             body not null after manage call<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public void disableService(int operationTimeoutSeconds, String serviceName) throws SCServiceException {
+	public void disableService(int operationTimeoutSeconds, String serviceName) throws SCServiceException,
+			UnsupportedEncodingException {
 		if (this.attached == false) {
 			// disableService not possible - client not attached
 			throw new SCServiceException("Client not attached - disableService not possible.");
 		}
-		String urlString = null;
-		try {
-			urlString = URLString.toURLRequestString(Constants.CC_CMD_DISABLE, Constants.SERVICE_NAME, serviceName);
-		} catch (Exception e) {
-			throw new SCServiceException("Disable service failed, encoding of request URL failed.");
-		}
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_DISABLE, Constants.SERVICE_NAME, serviceName);
 		String body = this.manageCall(operationTimeoutSeconds, urlString);
 		if (body != null) {
 			throw new SCServiceException(body);
@@ -119,8 +117,10 @@ public class SCMgmtClient extends SCClient {
 	 *             client not attached<br>
 	 *             manage call to SC failed<br>
 	 *             body not null after manage call<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request failed<br>
 	 */
-	public void enableService(String serviceName) throws SCServiceException {
+	public void enableService(String serviceName) throws SCServiceException, UnsupportedEncodingException {
 		this.enableService(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
 	}
 
@@ -133,21 +133,18 @@ public class SCMgmtClient extends SCClient {
 	 *            the service name
 	 * @throws SCServiceException
 	 *             client not attached<br>
-	 *             encoding of request URL failed<br>
 	 *             manage call to SC failed<br>
 	 *             body not null after manage call<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request failed<br>
 	 */
-	public void enableService(int operationTimeoutSeconds, String serviceName) throws SCServiceException {
+	public void enableService(int operationTimeoutSeconds, String serviceName) throws SCServiceException,
+			UnsupportedEncodingException {
 		if (this.attached == false) {
 			// enableService not possible - client not attached
 			throw new SCServiceException("Client not attached - enableService not possible.");
 		}
-		String urlString = null;
-		try {
-			urlString = URLString.toURLRequestString(Constants.CC_CMD_ENABLE, Constants.SERVICE_NAME, serviceName);
-		} catch (Exception e) {
-			throw new SCServiceException("Enable service failed, encoding of request URL failed. ");
-		}
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_ENABLE, Constants.SERVICE_NAME, serviceName);
 		String body = this.manageCall(operationTimeoutSeconds, urlString);
 		if (body != null) {
 			throw new SCServiceException(body);
@@ -164,8 +161,10 @@ public class SCMgmtClient extends SCClient {
 	 *             client not attached<br>
 	 *             the inspect call failed<br>
 	 *             error message received from SC<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public URLString isServiceEnabled(String serviceName) throws SCServiceException {
+	public URLString isServiceEnabled(String serviceName) throws SCServiceException, UnsupportedEncodingException {
 		return this.isServiceEnabled(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
 	}
 
@@ -179,20 +178,17 @@ public class SCMgmtClient extends SCClient {
 	 * @return the uRL response string
 	 * @throws SCServiceException
 	 *             client not attached<br>
-	 *             encoding of request URL failed<br>
 	 *             the inspect call failed<br>
 	 *             error message received from SC<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public URLString isServiceEnabled(int operationTimeout, String serviceName) throws SCServiceException {
+	public URLString isServiceEnabled(int operationTimeout, String serviceName) throws SCServiceException,
+			UnsupportedEncodingException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - isServiceEnabled not possible.");
 		}
-		String urlString = null;
-		try {
-			urlString = URLString.toURLRequestString(Constants.CC_CMD_STATE, Constants.SERVICE_NAME, serviceName);
-		} catch (Exception e) {
-			throw new SCServiceException("Requesting service state failed, encoding of request URL failed.");
-		}
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_STATE, Constants.SERVICE_NAME, serviceName);
 		String body = this.inspectCall(operationTimeout, urlString);
 		try {
 			URLString urlResponse = new URLString();
@@ -214,8 +210,10 @@ public class SCMgmtClient extends SCClient {
 	 *             client not attached<br>
 	 *             the inspect call failed<br>
 	 *             error message received from SC<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public URLString getWorkload(String serviceName) throws SCServiceException {
+	public URLString getWorkload(String serviceName) throws SCServiceException, UnsupportedEncodingException {
 		return this.getWorkload(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
 	}
 
@@ -231,17 +229,15 @@ public class SCMgmtClient extends SCClient {
 	 *             client not attached<br>
 	 *             the inspect call failed<br>
 	 *             error message received from SC<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public URLString getWorkload(int operationTimeoutSeconds, String serviceName) throws SCServiceException {
+	public URLString getWorkload(int operationTimeoutSeconds, String serviceName) throws SCServiceException,
+			UnsupportedEncodingException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - isServiceEnabled not possible.");
 		}
-		String urlString = null;
-		try {
-			urlString = URLString.toURLRequestString(Constants.CC_CMD_SESSIONS, Constants.SERVICE_NAME, serviceName);
-		} catch (Exception e) {
-			throw new SCServiceException("Requesting sessions of service failed, encoding of request URL failed.");
-		}
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_SESSIONS, Constants.SERVICE_NAME, serviceName);
 		String body = this.inspectCall(operationTimeoutSeconds, urlString);
 		try {
 			URLString urlResponse = new URLString();
@@ -265,8 +261,10 @@ public class SCMgmtClient extends SCClient {
 	 *             client not attached<br>
 	 *             the inspect call failed<br>
 	 *             error message received from SC<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public URLString inspectCache(String serviceName, String cacheId) throws SCServiceException {
+	public URLString inspectCache(String serviceName, String cacheId) throws SCServiceException, UnsupportedEncodingException {
 		return this.inspectCache(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName, cacheId);
 	}
 
@@ -282,21 +280,18 @@ public class SCMgmtClient extends SCClient {
 	 * @return the uRL string
 	 * @throws SCServiceException
 	 *             client not attached<br>
-	 *             encoding of request URL failed<br>
 	 *             the inspect call failed<br>
 	 *             error message received from SC<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public URLString inspectCache(int operationTimeoutSeconds, String serviceName, String cacheId) throws SCServiceException {
+	public URLString inspectCache(int operationTimeoutSeconds, String serviceName, String cacheId) throws SCServiceException,
+			UnsupportedEncodingException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - inspectCache not possible.");
 		}
-		String urlString = null;
-		try {
-			urlString = URLString.toURLRequestString(Constants.CC_CMD_INSPECT_CACHE, Constants.SERVICE_NAME, serviceName,
-					Constants.CACHE_ID, cacheId);
-		} catch (Exception e) {
-			throw new SCServiceException("Inspecting cache failed, encoding of request URL failed.");
-		}
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_INSPECT_CACHE, Constants.SERVICE_NAME, serviceName,
+				Constants.CACHE_ID, cacheId);
 		String body = this.inspectCall(operationTimeoutSeconds, urlString);
 		try {
 			URLString urlResponse = new URLString();
@@ -314,8 +309,10 @@ public class SCMgmtClient extends SCClient {
 	 *             client not attached<br>
 	 *             body not null after manage call<br>
 	 *             manage call to SC failed<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public void clearCache() throws SCServiceException {
+	public void clearCache() throws SCServiceException, UnsupportedEncodingException {
 		this.clearCache(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
@@ -326,20 +323,16 @@ public class SCMgmtClient extends SCClient {
 	 *            the allowed time in seconds to complete the operation
 	 * @throws SCServiceException
 	 *             client not attached<br>
-	 *             encoding of request URL failed
 	 *             body not null after manage call<br>
 	 *             manage call to SC failed<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public void clearCache(int operationTimeoutSeconds) throws SCServiceException {
+	public void clearCache(int operationTimeoutSeconds) throws SCServiceException, UnsupportedEncodingException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - clearCache not possible.");
 		}
-		String urlString = null;
-		try {
-			urlString = URLString.toURLRequestString(Constants.CC_CMD_CLEAR_CACHE);
-		} catch (Exception e) {
-			throw new SCServiceException("Clear cache failed, encoding of request URL failed.");
-		}
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_CLEAR_CACHE);
 		String body = this.manageCall(operationTimeoutSeconds, urlString);
 		if (body != null) {
 			throw new SCServiceException(body);
@@ -352,8 +345,10 @@ public class SCMgmtClient extends SCClient {
 	 * @throws SCServiceException
 	 *             client not attached<br>
 	 *             manage call to SC failed<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public void dump() throws SCServiceException {
+	public void dump() throws SCServiceException, UnsupportedEncodingException {
 		this.dump(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
@@ -364,19 +359,15 @@ public class SCMgmtClient extends SCClient {
 	 *            the allowed time in seconds to complete the operation
 	 * @throws SCServiceException
 	 *             client not attached<br>
-	 *             encoding of request URL failed
 	 *             manage call to SC failed<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public void dump(int operationTimeoutSeconds) throws SCServiceException {
+	public void dump(int operationTimeoutSeconds) throws SCServiceException, UnsupportedEncodingException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - dump not possible.");
 		}
-		String urlString = null;
-		try {
-			urlString = URLString.toURLRequestString(Constants.CC_CMD_CLEAR_CACHE);
-		} catch (Exception e) {
-			throw new SCServiceException("Clear cache failed, encoding of request URL failed.");
-		}
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_CLEAR_CACHE);
 		this.manageCall(operationTimeoutSeconds, urlString);
 	}
 
@@ -385,19 +376,15 @@ public class SCMgmtClient extends SCClient {
 	 * 
 	 * @throws SCServiceException
 	 *             client not attached<br>
-	 *             encoding of request URL failed
 	 *             manage call to SC failed<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
 	 */
-	public void killSC() throws SCServiceException {
+	public void killSC() throws SCServiceException, UnsupportedEncodingException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - killSC not possible.");
 		}
-		String urlString = null;
-		try {
-			urlString = URLString.toURLRequestString(Constants.CC_CMD_KILL);
-		} catch (Exception e) {
-			throw new SCServiceException("Clear cache failed, encoding of request URL failed.");
-		}
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_KILL);
 		this.manageCall(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, urlString);
 		try {
 			// sleep to assure kill is sent
