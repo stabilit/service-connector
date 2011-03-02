@@ -274,7 +274,7 @@ public class SCSessionService extends SCService {
 	/**
 	 * Send. Asynchronous operation. Send is an asynchronous operation with the SC. Any reply will be informed over the callback.
 	 * 
-	 * @param operationTimeoutSeconds
+	 * @param operationtTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
 	 * @param scMessage
 	 *            the SC message
