@@ -133,7 +133,11 @@ public class SCConsole {
 					Set<Entry<String, String>> parameters = responseString.getParameters();
 					StringBuilder sb = new StringBuilder();
 					for (Entry<String, String> param : parameters) {
-						sb.append("Service [" + param.getKey() + "] is " + param.getValue());
+						sb.append("Service [");
+						sb.append(param.getKey());
+						sb.append("] is ");
+						sb.append(param.getValue());
+						sb.append("\n");
 					}
 					System.out.println(sb.toString());
 				} catch (Exception e) {
@@ -147,7 +151,11 @@ public class SCConsole {
 					Set<Entry<String, String>> parameters = responseString.getParameters();
 					StringBuilder sb = new StringBuilder();
 					for (Entry<String, String> param : parameters) {
-						sb.append("Service [" + param.getKey() + "] has " + param.getValue() + " sessions");
+						sb.append("Service [");
+						sb.append(param.getKey());
+						sb.append("] has ");
+						sb.append(param.getValue());
+						sb.append("sessions\n");
 					}
 					System.out.println(sb.toString());
 				} catch (Exception e) {
