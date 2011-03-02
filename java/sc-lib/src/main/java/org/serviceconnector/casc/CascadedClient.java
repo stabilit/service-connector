@@ -15,8 +15,8 @@ import org.serviceconnector.service.SubscriptionMask;
 
 public class CascadedClient {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CascadedClient.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(CascadedClient.class);
 
 	private boolean subscribed;
 	private String subscriptionId;
@@ -53,7 +53,7 @@ public class CascadedClient {
 
 	public boolean isSubscribed() {
 		if (this.destroyed == true) {
-			logger.warn("cascaded client gots destroyed before");
+			LOGGER.warn("cascaded client gots destroyed before");
 			// client is already destroyed
 			return false;
 		}
@@ -62,7 +62,7 @@ public class CascadedClient {
 
 	public void setSubscribed(boolean subscribed) {
 		if (this.destroyed == true) {
-			logger.warn("cascaded client can not be set subscribed it gots destroyed before");
+			LOGGER.warn("cascaded client can not be set subscribed it gots destroyed before");
 			// client is already destroyed
 			this.subscribed = false;
 		}
@@ -98,7 +98,7 @@ public class CascadedClient {
 				baseMask = SubscriptionMask.masking(baseMask, mask);
 			} catch (InvalidMaskLengthException e) {
 				// exception should never occur, cascaded client should not allowed client with different mask lengths
-				logger.error("Masking of client masks for cascaded client failed", e);
+				LOGGER.error("Masking of client masks for cascaded client failed", e);
 			}
 		}
 		return new String(baseMask);
@@ -168,7 +168,7 @@ public class CascadedClient {
 			// cascaded client got already destroyed
 			return;
 		}
-		logger.warn("cascadedClient gets destroyed service=" + this.getServiceName());
+		LOGGER.warn("cascadedClient gets destroyed service=" + this.getServiceName());
 		this.destroyed = true;
 		this.subscribed = false;
 		// release threads waiting for permits, just allow any thread to continue

@@ -51,8 +51,8 @@ import org.serviceconnector.web.ctx.WebContext;
  */
 public final class SC {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SC.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SC.class);
 
 	/**
 	 * Instantiates a new service connector.
@@ -74,13 +74,13 @@ public final class SC {
 			showError("no argumments");
 			System.exit(1);
 		}
-		logger.log(Level.OFF, ">>>");
-		logger.log(Level.OFF, "Service Connector " + SCVersion.CURRENT.toString() + " is starting ...");
+		LOGGER.log(Level.OFF, ">>>");
+		LOGGER.log(Level.OFF, "Service Connector " + SCVersion.CURRENT.toString() + " is starting ...");
 		String configFileName = CommandLineUtil.getArg(args, Constants.CLI_CONFIG_ARG);
 		try {
 			SC.run(configFileName);
 		} catch (Exception ex) {
-			logger.fatal(ex.getMessage(), ex);
+			LOGGER.fatal(ex.getMessage(), ex);
 			showError(ex.toString());
 			System.exit(1);
 		}
@@ -143,7 +143,7 @@ public final class SC {
 					+ Constants.PID_FILE_NAME);
 			SC.addExitHandler(pidLock);
 		}
-		logger.log(Level.OFF, "Service Connector is running ...");
+		LOGGER.log(Level.OFF, "Service Connector is running ...");
 	}
 
 	/**
@@ -177,23 +177,23 @@ public final class SC {
 	 *             the exception
 	 */
 	private static void writeSystemInfoToLog() throws Exception {
-		logger.info("SC configuration=" + SystemInfo.getConfigFileName());
-		logger.info("Java version=" + SystemInfo.getJavaVersion());
-		logger.info("VM version=" + SystemInfo.getVmVersion());
-		logger.info("Local host=" + SystemInfo.getLocalHostId());
-		logger.info("OS=" + SystemInfo.getOs());
-		logger.info("OS patch level=" + SystemInfo.getOsPatchLevel());
-		logger.info("CPU type=" + SystemInfo.getCpuType());
-		logger.info("User dir=" + SystemInfo.getUserDir());
-		logger.info("Country setting=" + SystemInfo.getCountrySetting());
-		logger.info("User timezone=" + SystemInfo.getUserTimezone());
-		logger.info("UTC Offset=" + SystemInfo.getUtcOffset());
-		logger.info("Startup date=" + SystemInfo.getStartupDateTime());
-		logger.info("Available processors=" + SystemInfo.getAvailableProcessors());
-		logger.info("Max memory=" + SystemInfo.getMaxMemory());
-		logger.info("Free memory=" + SystemInfo.getFreeMemory());
-		logger.info("Total memory=" + SystemInfo.getTotalMemory());
-		logger.info("Available disk memory=" + SystemInfo.getAvailableDiskSpace());
+		LOGGER.info("SC configuration=" + SystemInfo.getConfigFileName());
+		LOGGER.info("Java version=" + SystemInfo.getJavaVersion());
+		LOGGER.info("VM version=" + SystemInfo.getVmVersion());
+		LOGGER.info("Local host=" + SystemInfo.getLocalHostId());
+		LOGGER.info("OS=" + SystemInfo.getOs());
+		LOGGER.info("OS patch level=" + SystemInfo.getOsPatchLevel());
+		LOGGER.info("CPU type=" + SystemInfo.getCpuType());
+		LOGGER.info("User dir=" + SystemInfo.getUserDir());
+		LOGGER.info("Country setting=" + SystemInfo.getCountrySetting());
+		LOGGER.info("User timezone=" + SystemInfo.getUserTimezone());
+		LOGGER.info("UTC Offset=" + SystemInfo.getUtcOffset());
+		LOGGER.info("Startup date=" + SystemInfo.getStartupDateTime());
+		LOGGER.info("Available processors=" + SystemInfo.getAvailableProcessors());
+		LOGGER.info("Max memory=" + SystemInfo.getMaxMemory());
+		LOGGER.info("Free memory=" + SystemInfo.getFreeMemory());
+		LOGGER.info("Total memory=" + SystemInfo.getTotalMemory());
+		LOGGER.info("Available disk memory=" + SystemInfo.getAvailableDiskSpace());
 	}
 
 	private static void showError(String msg) {
@@ -233,12 +233,12 @@ public final class SC {
 				if (AppContext.getBasicConfiguration() != null) {
 					String pidFileNameFull = AppContext.getBasicConfiguration().getPidPath() + fs + Constants.PID_FILE_NAME;
 					FileUtility.deleteFile(pidFileNameFull);
-					logger.info("Delete PID-file=" + pidFileNameFull);
+					LOGGER.info("Delete PID-file=" + pidFileNameFull);
 				}
 			} catch (Exception e) {
 			}
-			logger.log(Level.OFF, "Service Connector exit");
-			logger.log(Level.OFF, "<<<");
+			LOGGER.log(Level.OFF, "Service Connector exit");
+			LOGGER.log(Level.OFF, "<<<");
 		}
 	}
 }

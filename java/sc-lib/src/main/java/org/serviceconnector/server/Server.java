@@ -33,8 +33,8 @@ import org.serviceconnector.net.req.Requester;
  */
 public abstract class Server implements IServer {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(Server.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(Server.class);
 
 	protected RemoteNodeConfiguration remoteNodeConfiguration;
 
@@ -78,7 +78,7 @@ public abstract class Server implements IServer {
 	 * Destroy server.
 	 */
 	public void destroy() {
-		logger.info("server destroy " + this.serverKey);
+		LOGGER.info("server destroy " + this.serverKey);
 		this.requester.destroy();
 		AppContext.getServerRegistry().removeServer(this.getServerKey());
 		this.requester = null;

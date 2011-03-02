@@ -28,8 +28,8 @@ import org.serviceconnector.net.res.IResponse;
  */
 public abstract class HasFaultResponseException extends Exception {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(HasFaultResponseException.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(HasFaultResponseException.class);
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3781800906847958120L;
 	/** The fault message. */
@@ -115,7 +115,7 @@ public abstract class HasFaultResponseException extends Exception {
 			fault.setHeader(message, SCMPHeaderAttributeKey.SERVICE_NAME);
 			fault.setHeader(message, SCMPHeaderAttributeKey.SESSION_ID);
 		} catch (Exception e) {
-			logger.warn("not possible to set service name in EXC of execute command.");
+			LOGGER.warn("not possible to set service name in EXC of execute command.");
 		}
 	}
 

@@ -43,8 +43,8 @@ import org.serviceconnector.web.cmd.sc.impl.TimerXMLLoader;
  */
 public class DefaultXMLLoaderFactory {
 
-	/** The Constant logger. */
-	public final static Logger logger = Logger.getLogger(DefaultXMLLoaderFactory.class);
+	/** The Constant LOGGER. */
+	public final static Logger LOGGER = Logger.getLogger(DefaultXMLLoaderFactory.class);
 
 	/** The loader factory. */
 	protected static DefaultXMLLoaderFactory loaderFactory = new DefaultXMLLoaderFactory();

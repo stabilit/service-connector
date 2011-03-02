@@ -60,8 +60,8 @@ import org.serviceconnector.scmp.SCMPError;
  */
 public final class AppContext {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(AppContext.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(AppContext.class);
 
 	private static final SimpleDateFormat DUMP_FILE_SDF = new SimpleDateFormat(Constants.DUMP_FILE_NAME_FORMAT);
 	/** The SC environment. Indicates that AppContext is running in a SC environment */
@@ -415,7 +415,7 @@ public final class AppContext {
 					AppContext.executor = null;
 				}
 			} else {
-				logger.warn("resources can not be released - pending communicators active");
+				LOGGER.warn("resources can not be released - pending communicators active");
 			}
 		}
 	}
@@ -442,14 +442,14 @@ public final class AppContext {
 				FileOutputStream fos = new FileOutputStream(dumpDir + fs + dumpFileName);
 				cacheManager.dumpAll(fos);
 				fos.close();
-				logger.info("SC dump created into file=" + dumpCacheFile);
+				LOGGER.info("SC dump created into file=" + dumpCacheFile);
 				return dumpFileName;
 			} else {
-				logger.error("Creating SC dump file =" + dumpPath + " failed, can not create directory");
+				LOGGER.error("Creating SC dump file =" + dumpPath + " failed, can not create directory");
 				throw new IOException("Creating SC dump file =" + dumpPath + " failed, can not create directory");
 			}
 		} catch (Exception e) {
-			logger.error("Creating SC dump file =" + dumpPath + " failed.", e);
+			LOGGER.error("Creating SC dump file =" + dumpPath + " failed.", e);
 			throw e;
 		}
 	}

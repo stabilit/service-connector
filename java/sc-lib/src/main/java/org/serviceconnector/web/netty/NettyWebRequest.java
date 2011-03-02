@@ -35,19 +35,21 @@ import org.serviceconnector.web.AbstractWebRequest;
  * The Class NettyWebRequest.
  */
 public class NettyWebRequest extends AbstractWebRequest {
-
-	/** The Constant logger. */
+	
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(NettyWebRequest.class);
+	private final static Logger LOGGER = Logger.getLogger(NettyWebRequest.class);
 
 	/** The request. */
 	private HttpRequest request;
 
 	/** The parameters. */
 	private Map<String, List<String>> parameters;
-	
+
+	/** The url. */
 	private String url;
-	
+
+	/** The cookies. */
 	private Set<Cookie> cookies;
 
 	/**
@@ -62,7 +64,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 		this.url = null;
 		if (this.request != null) {
 			// extract any encoded session in url
-			this.parseEncodedSessionId(); 
+			this.parseEncodedSessionId();
 			// http get
 			this.parameters = new HashMap<String, List<String>>();
 			QueryStringDecoder qsd = new QueryStringDecoder(this.getURL());
@@ -89,7 +91,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 			}
 		}
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public String getURL() {
@@ -107,7 +109,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 		}
 		return this.request.getHeader(key);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public String getParameter(String name) {
@@ -133,7 +135,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 		}
 		for (Cookie cookie : cookies) {
 			if (key.equals(cookie.getName())) {
-			   return cookie;
+				return cookie;
 			}
 		}
 		return null;
@@ -141,36 +143,36 @@ public class NettyWebRequest extends AbstractWebRequest {
 
 	/** {@inheritDoc} */
 	@Override
-	public Map<String, List<String>> getParameterMap() {
+	public final Map<String, List<String>> getParameterMap() {
 		return this.parameters;
 	}
-	
+
 	/**
 	 * Gets the encoded session id.
-	 *
+	 * 
 	 * @return the encoded session id
 	 */
 	private String parseEncodedSessionId() {
 		StringBuffer sbURL = new StringBuffer();
-		String url = this.getURL();
-		int paramsIndex = url.indexOf("?");
-		String[] splittedURL = url.split("[;?]");
+		String localUrl = this.getURL();
+		int paramsIndex = localUrl.indexOf("?");
+		String[] splittedURL = localUrl.split("[;?]");
 		for (int i = 0; i < splittedURL.length; i++) {
 			String splitted = splittedURL[i];
 			if (splitted.startsWith("sid")) {
 				if (i == 1) {
-				   sbURL.append(splittedURL[0]);
+					sbURL.append(splittedURL[0]);
 				}
 				this.encodedSessionId = splitted.substring(4);
 				if (paramsIndex >= 0) {
-				    sbURL.append(url.substring(paramsIndex, url.length()));
+					sbURL.append(localUrl.substring(paramsIndex, localUrl.length()));
 				}
 				this.url = sbURL.toString();
 				this.setAttribute("JSESSIONID", this.encodedSessionId);
 				return this.encodedSessionId;
 			}
 		}
-		this.url = url;
+		this.url = localUrl;
 		return null;
 	}
 }

@@ -27,8 +27,8 @@ import org.serviceconnector.service.SubscriptionMask;
 
 public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallback {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CscSubscribeInactiveCascClientCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(CscSubscribeInactiveCascClientCallback.class);
 	/** The command callback. */
 	private ISubscriptionCallback commandCallback;
 	/** The cascaded client. */
@@ -75,14 +75,14 @@ public class CscSubscribeInactiveCascClientCallback implements ISCMPMessageCallb
 		try {
 			this.commandCallback.receive(reply);
 		} catch (Exception e) {
-			logger.warn("receive rejected or fault reply failed", e);
+			LOGGER.warn("receive rejected or fault reply failed", e);
 		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		LOGGER.warn(ex);
 		// release permit
 		this.cascClient.getCascClientSemaphore().release();
 		// forward reply to client

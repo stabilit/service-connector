@@ -30,9 +30,9 @@ import org.apache.log4j.Logger;
  */
 public abstract class Service {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(Service.class);
+	private final static Logger LOGGER = Logger.getLogger(Service.class);
 
 	/** The type. */
 	private ServiceType type;

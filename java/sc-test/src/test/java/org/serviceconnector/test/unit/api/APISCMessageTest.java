@@ -33,9 +33,9 @@ import org.serviceconnector.test.unit.SuperUnitTest;
  */
 public class APISCMessageTest extends SuperUnitTest {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(APISCMessageTest.class);
+	private final static Logger LOGGER = Logger.getLogger(APISCMessageTest.class);
 
 	private SCMessage message;
 

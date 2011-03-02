@@ -38,8 +38,8 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class PublishCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(PublishCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(PublishCommand.class);
 
 	/**
 	 * Instantiates a new PublishCommand.
@@ -62,7 +62,7 @@ public class PublishCommand extends CommandAdapter {
 		PublishService service = this.validatePublishService(serviceName);
 		PublishMessageQueue<SCMPMessage> queue = service.getMessageQueue();
 		// throws an exception if failed
-		logger.trace("messag body : " + message.getBody());
+		LOGGER.trace("messag body : " + message.getBody());
 		queue.insert(message);
 
 		// reply to server
@@ -103,7 +103,7 @@ public class PublishCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

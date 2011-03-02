@@ -23,7 +23,7 @@ public class TestPublishClient extends TestAbstractClient {
 	}
 
 	static {
-		TestAbstractClient.logger = Logger.getLogger(TestPublishClient.class);
+		TestAbstractClient.LOGGER = Logger.getLogger(TestPublishClient.class);
 	}
 
 	/**
@@ -43,9 +43,9 @@ public class TestPublishClient extends TestAbstractClient {
 	 *            [10] methodsToInvoke
 	 */
 	public static void main(String[] args) throws Exception {
-		logger.log(Level.OFF, "TestPublishClient is starting ...");
+		LOGGER.log(Level.OFF, "TestPublishClient is starting ...");
 		for (int i = 0; i < args.length; i++) {
-			logger.log(Level.OFF, "args[" + i + "]:" + args[i]);
+			LOGGER.log(Level.OFF, "args[" + i + "]:" + args[i]);
 		}
 		TestPublishClient testClient = new TestPublishClient();
 		testClient.setClientName(args[0]);
@@ -101,7 +101,7 @@ public class TestPublishClient extends TestAbstractClient {
 		TestPublishServiceMessageCallback.receivedMsg = 0;
 		Thread.sleep(1000);
 		if (TestPublishServiceMessageCallback.receivedMsg != 0) {
-			logger.error(this.clientName + " received messages " + TestPublishServiceMessageCallback.receivedMsg
+			LOGGER.error(this.clientName + " received messages " + TestPublishServiceMessageCallback.receivedMsg
 					+ " but changed subscription with " + scSubscribeMessage.getMask());
 		}
 		scSubscribeMessage.setMask(TestConstants.mask);
@@ -189,7 +189,7 @@ public class TestPublishClient extends TestAbstractClient {
 		while (TestPublishServiceMessageCallback.receivedMsg < numberOfMessages) {
 			Thread.sleep(200);
 			if ((System.currentTimeMillis() - start) > maxTimeMillis) {
-				logger.error(this.clientName + " sid=" + this.sessionId + "could not receive " + numberOfMessages + " messages in "
+				LOGGER.error(this.clientName + " sid=" + this.sessionId + "could not receive " + numberOfMessages + " messages in "
 						+ maxTimeMillis + " milliseconds received: " + TestPublishServiceMessageCallback.receivedMsg + ".");
 				break;
 			}

@@ -27,9 +27,9 @@ import org.apache.log4j.Logger;
  */
 public class RegistryEntryWrapperJMX implements IRegistryEntryWrapperMXBean {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(RegistryEntryWrapperJMX.class);
+	private final static Logger LOGGER = Logger.getLogger(RegistryEntryWrapperJMX.class);
 	
 	/** The map bean. */
 	Object obj;

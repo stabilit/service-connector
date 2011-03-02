@@ -30,9 +30,9 @@ import org.serviceconnector.server.StatefulServer;
  */
 public class PublishService extends StatefulService implements IPublishService {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(PublishService.class);
+	private final static Logger LOGGER = Logger.getLogger(PublishService.class);
 
 	/** The subscription queue. */
 	private PublishMessageQueue<SCMPMessage> publishMessageQueue;

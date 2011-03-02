@@ -26,9 +26,9 @@ import org.apache.log4j.Logger;
  */
 public class Statistics {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger logger = Logger.getLogger(Statistics.class);
+	private static final Logger LOGGER = Logger.getLogger(Statistics.class);
 	
 	/** The instance. */
 	private static Statistics instance = new Statistics();
@@ -52,7 +52,7 @@ public class Statistics {
 	private int cachedFiles = 0;
 	
 	/**
-	 * Instantiates a new statistic logger. Private for singelton use.
+	 * Instantiates a new statistic LOGGER. Private for singelton use.
 	 */
 	private Statistics() {
 	}

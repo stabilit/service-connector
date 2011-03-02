@@ -50,8 +50,8 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class RegisterServerCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(RegisterServerCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(RegisterServerCommand.class);
 
 	/**
 	 * Instantiates a new RegisterServerCommand.
@@ -100,7 +100,7 @@ public class RegisterServerCommand extends CommandAdapter {
 				server.immediateConnect();
 			}
 		} catch (Exception ex) {
-			logger.error("immediate connect", ex);
+			LOGGER.error("immediate connect", ex);
 			HasFaultResponseException communicationException = new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION,
 					"immediate connect to server=" + serverKey);
 			communicationException.setMessageType(getKey());
@@ -178,7 +178,7 @@ public class RegisterServerCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

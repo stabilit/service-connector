@@ -42,8 +42,8 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class DeRegisterServerCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(DeRegisterServerCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(DeRegisterServerCommand.class);
 
 	/**
 	 * Instantiates a new DeRegisterServerCommand.
@@ -95,7 +95,7 @@ public class DeRegisterServerCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

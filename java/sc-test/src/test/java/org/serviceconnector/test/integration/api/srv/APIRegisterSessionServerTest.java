@@ -29,9 +29,9 @@ import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
 
 public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(APIRegisterSessionServerTest.class);
+	private final static Logger LOGGER = Logger.getLogger(APIRegisterSessionServerTest.class);
 
 	/**
 	 * Description:	register session server on port SC is not listening<br>

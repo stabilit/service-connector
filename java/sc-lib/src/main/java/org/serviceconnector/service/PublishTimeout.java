@@ -19,8 +19,8 @@ import org.serviceconnector.util.ITimeout;
  */
 public class PublishTimeout implements ITimeout {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(PublishTimeout.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(PublishTimeout.class);
 	/** The subscription registry. */
 	private SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 
@@ -77,7 +77,7 @@ public class PublishTimeout implements ITimeout {
 	/** {@inheritDoc} */
 	@Override
 	public void timeout() {
-		logger.trace("timeout publishTimer");
+		LOGGER.trace("timeout publishTimer");
 		String subscriptionId = null;
 		try {
 			// extracting subscriptionId from request message
@@ -86,10 +86,10 @@ public class PublishTimeout implements ITimeout {
 			SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 			subscriptionId = reqMsg.getSessionId();
 
-			logger.trace("timeout publishTimer datapointer subscriptionId " + subscriptionId);
+			LOGGER.trace("timeout publishTimer datapointer subscriptionId " + subscriptionId);
 			Subscription subscription = subscriptionRegistry.getSubscription(subscriptionId);
 			if (subscription == null) {
-				logger.trace("subscription not found - already deleted subscriptionId=" + subscriptionId);
+				LOGGER.trace("subscription not found - already deleted subscriptionId=" + subscriptionId);
 				// subscription has already been deleted
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SUBSCRIPTION_NOT_FOUND, subscriptionId);
 				fault.setMessageType(reqMsg.getMessageType());
@@ -98,14 +98,14 @@ public class PublishTimeout implements ITimeout {
 				// tries polling from queue
 				SCMPMessage message = this.publishMessageQueue.getMessage(subscriptionId);
 				if (message == null) {
-					logger.trace("no message found on queue - subscription timeout set up no data message subscriptionId="
+					LOGGER.trace("no message found on queue - subscription timeout set up no data message subscriptionId="
 							+ subscriptionId);
 					// no message found on queue - subscription timeout set up no data message
 					reqMsg.setHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 					reqMsg.setIsReply(true);
 					this.response.setSCMP(reqMsg);
 				} else {
-					logger.trace("message found on queue - subscription timeout set up reply message subscriptionId="
+					LOGGER.trace("message found on queue - subscription timeout set up reply message subscriptionId="
 							+ subscriptionId);
 					// set up reply
 					SCMPMessage reply = null;
@@ -133,7 +133,7 @@ public class PublishTimeout implements ITimeout {
 				}
 			}
 		} catch (Exception ex) {
-			logger.warn("timeout expired procedure failed :" + ex.getMessage());
+			LOGGER.warn("timeout expired procedure failed :" + ex.getMessage());
 			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, ex.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
@@ -144,7 +144,7 @@ public class PublishTimeout implements ITimeout {
 			try {
 				this.response.write();
 			} catch (Exception e) {
-				logger.warn("timeout expired procedure failed :" + e.getMessage());
+				LOGGER.warn("timeout expired procedure failed :" + e.getMessage());
 			}
 		}
 	}

@@ -32,9 +32,9 @@ import org.serviceconnector.ctx.AppContext;
  */
 public class Responder implements IResponder {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(Responder.class);
+	private final static Logger LOGGER = Logger.getLogger(Responder.class);
 
 	/** The listener configuration. */
 	private ListenerConfiguration listenerConfig;

@@ -40,8 +40,8 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class CheckRegistrationCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CheckRegistrationCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(CheckRegistrationCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -89,7 +89,7 @@ public class CheckRegistrationCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

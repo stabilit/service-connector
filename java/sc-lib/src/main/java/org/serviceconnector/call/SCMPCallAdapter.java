@@ -32,8 +32,8 @@ import org.serviceconnector.scmp.SCMPPart;
  */
 public abstract class SCMPCallAdapter implements ISCMPCall {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SCMPCallAdapter.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SCMPCallAdapter.class);
 
 	/** The client to used to invoke the call. */
 	protected IRequester requester;
@@ -176,7 +176,7 @@ public abstract class SCMPCallAdapter implements ISCMPCall {
 		@Override
 		public void invoke(ISCMPMessageCallback callback, int timeoutMillis) throws Exception {
 			if (this.groupState == SCMPGroupState.CLOSE) {
-				logger.warn("tried to invoke groupCall but state of group is closed");
+				LOGGER.warn("tried to invoke groupCall but state of group is closed");
 			}
 			SCMPMessage callSCMP = this.parentCall.getRequest();
 			SCMPCallAdapter.this.requestMessage.setInternalStatus(SCMPInternalStatus.GROUP);

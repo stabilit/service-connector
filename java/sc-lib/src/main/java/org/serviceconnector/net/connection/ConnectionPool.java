@@ -47,8 +47,8 @@ import org.serviceconnector.util.SynchronousCallback;
  */
 public class ConnectionPool {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ConnectionPool.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ConnectionPool.class);
 
 	/** The port. */
 	private int port;
@@ -195,7 +195,7 @@ public class ConnectionPool {
 		try {
 			connection.connect(); // can throw an exception
 		} catch (Exception ex) {
-			logger.debug("Unable to establish new connection.", ex);
+			LOGGER.debug("Unable to establish new connection.", ex);
 			throw new ConnectionPoolConnectException("Unable to establish new connection.", ex);
 		}
 		return connection;
@@ -211,7 +211,7 @@ public class ConnectionPool {
 	 */
 	public synchronized void freeConnection(IConnection connection) {
 		if (this.usedConnections.remove(connection) == false) {
-			logger.warn("connection does not exist in pool - not possible to free");
+			LOGGER.warn("connection does not exist in pool - not possible to free");
 			return;
 		}
 		if (closeOnFree && (this.freeConnections.size() + this.usedConnections.size() >= this.minConnections)) {
@@ -269,7 +269,7 @@ public class ConnectionPool {
 		try {
 			connection.disconnect();
 		} catch (Exception ex) {
-			logger.error("destroy disconnect", ex);
+			LOGGER.error("destroy disconnect", ex);
 		} finally {
 			connection.destroy();
 		}
@@ -285,7 +285,7 @@ public class ConnectionPool {
 		try {
 			connection.disconnect();
 		} catch (Exception ex) {
-			logger.error("disconnect", ex);
+			LOGGER.error("disconnect", ex);
 		}
 	}
 
@@ -305,7 +305,7 @@ public class ConnectionPool {
 		try {
 			connection.disconnect();
 		} catch (Exception ex) {
-			logger.error("force disconnect", ex);
+			LOGGER.error("force disconnect", ex);
 		}
 	}
 
@@ -343,7 +343,7 @@ public class ConnectionPool {
 					return;
 				}
 			} catch (Exception ex) {
-				logger.error("create connection", ex);
+				LOGGER.error("create connection", ex);
 				return;
 			}
 			this.freeConnections.add(connection);
@@ -424,7 +424,7 @@ public class ConnectionPool {
 			connection.incrementNrOfIdles();
 			this.freeConnections.add(connection);
 		} catch (Exception ex) {
-			logger.error("send keepalive failed - connection gets destroyed", ex);
+			LOGGER.error("send keepalive failed - connection gets destroyed", ex);
 			this.forceClosingConnection(connection);
 		}
 	}

@@ -29,8 +29,8 @@ import org.serviceconnector.api.cln.SCSessionService;
  */
 public class SCAsyncSessionClientExample {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SCAsyncSessionClientExample.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SCAsyncSessionClientExample.class);
 
 	/** The message received. */
 	private static boolean messageReceived = false;
@@ -144,7 +144,7 @@ public class SCAsyncSessionClientExample {
 		 */
 		@Override
 		public void receive(Exception ex) {
-			logger.error("callback", ex);
+			LOGGER.error("callback", ex);
 		}
 	}
 }

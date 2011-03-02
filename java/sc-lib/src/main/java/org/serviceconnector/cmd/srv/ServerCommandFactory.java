@@ -27,9 +27,9 @@ import org.serviceconnector.cmd.ICommand;
  */
 public class ServerCommandFactory extends FlyweightCommandFactory {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(ServerCommandFactory.class);
+	private final static Logger LOGGER = Logger.getLogger(ServerCommandFactory.class);
 
 	public ServerCommandFactory() {
 		ICommand srvCreateSessionCommand = new SrvCreateSessionCommand();

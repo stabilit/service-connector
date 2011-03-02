@@ -25,9 +25,9 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 public class SCMPFileDownloadCall extends SCMPCallAdapter {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPFileDownloadCall.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPFileDownloadCall.class);
 
 	public SCMPFileDownloadCall(IRequester requester, String serviceName, String sessionId) {
 		super(requester, serviceName, sessionId);

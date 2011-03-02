@@ -31,8 +31,8 @@ public class PerformanceSessionClient implements Runnable {
 
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(PerformanceSessionClient.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(PerformanceSessionClient.class);
 	private final CountDownLatch beforeAttachSignal;
 	private final CountDownLatch afterAttachSignal;
 	private final CountDownLatch attachedSignal;
@@ -87,7 +87,7 @@ public class PerformanceSessionClient implements Runnable {
 			}
 
 		} catch (Exception e) {
-			logger.fatal("run", e);
+			LOGGER.fatal("run", e);
 		} finally {
 			try {
 				sc.detach();

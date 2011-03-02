@@ -24,9 +24,9 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 public class SCMPFileListCall extends SCMPCallAdapter {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPFileListCall.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPFileListCall.class);
 
 	public SCMPFileListCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);

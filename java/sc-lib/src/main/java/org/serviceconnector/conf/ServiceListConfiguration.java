@@ -28,8 +28,8 @@ import org.serviceconnector.scmp.SCMPError;
 
 public class ServiceListConfiguration {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ServiceListConfiguration.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ServiceListConfiguration.class);
 
 	private Map<String, ServiceConfiguration> serviceConfigurations;
 
@@ -55,7 +55,7 @@ public class ServiceListConfiguration {
 			// adding service to list
 			this.serviceConfigurations.put(serviceName, serviceConfig);
 			// show it
-			logger.info("Service=" + serviceConfig.toString());
+			LOGGER.info("Service=" + serviceConfig.toString());
 		}
 	}
 

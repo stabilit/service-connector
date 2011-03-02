@@ -36,9 +36,9 @@ import org.serviceconnector.net.connection.IIdleConnectionCallback;
  */
 public class NettyIdleHandler extends IdleStateHandler {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(NettyIdleHandler.class);
+	private final static Logger LOGGER = Logger.getLogger(NettyIdleHandler.class);
 
 	private ConnectionContext connectionContext;
 

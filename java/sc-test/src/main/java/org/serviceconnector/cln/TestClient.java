@@ -23,8 +23,8 @@ import org.serviceconnector.TestConstants;
 
 public class TestClient {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(TestClient.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(TestClient.class);
 
 	/**
 	 * start test process
@@ -44,9 +44,9 @@ public class TestClient {
 	 *            [11] methodsToInvoke (split by | "initAattach|detach")
 	 */
 	public static void main(String[] args) {
-		logger.log(Level.OFF, "TestClient starting ...");
+		LOGGER.log(Level.OFF, "TestClient starting ...");
 		for (int i = 0; i < args.length; i++) {
-			logger.log(Level.OFF, "args[" + i + "]:" + args[i]);
+			LOGGER.log(Level.OFF, "args[" + i + "]:" + args[i]);
 		}
 		TestAbstractClient client = null;
 		if (args[0].equals(TestConstants.COMMUNICATOR_TYPE_SESSION)) {

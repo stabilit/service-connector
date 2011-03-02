@@ -38,8 +38,8 @@ import org.serviceconnector.util.TimeoutWrapper;
  */
 public class SubscriptionRegistry extends Registry<String, Subscription> {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SubscriptionRegistry.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SubscriptionRegistry.class);
 
 	/** The timer. Timer instance is responsible to observe subscription timeouts. */
 	private ScheduledThreadPoolExecutor subscriptionScheduler;
@@ -116,7 +116,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			}
 			return subscriptions;
 		} catch (Exception e) {
-			logger.error("getSubscriptions", e);
+			LOGGER.error("getSubscriptions", e);
 		}
 		return null;
 	}
@@ -144,7 +144,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			}
 			return subscriptionList.toArray(sa);
 		} catch (Exception e) {
-			logger.error("getSubscriptions", e);
+			LOGGER.error("getSubscriptions", e);
 		}
 		return null;
 	}
@@ -169,7 +169,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		ScheduledFuture<TimeoutWrapper> timeout = (ScheduledFuture<TimeoutWrapper>) this.subscriptionScheduler.schedule(
 				subscriptionTimeouter, (long) subscription.getSubscriptionTimeoutMillis(), TimeUnit.MILLISECONDS);
 		subscription.setTimeout(timeout);
-		logger.trace("schedule subscription timeout millis: " + subscription.getSubscriptionTimeoutMillis() + " id: "
+		LOGGER.trace("schedule subscription timeout millis: " + subscription.getSubscriptionTimeoutMillis() + " id: "
 				+ subscription.getId());
 	}
 
@@ -199,7 +199,7 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 			// no subscription timeout has been set up for this subscription
 			return;
 		}
-		logger.trace("cancel subscription timeout " + subscription.getId());
+		LOGGER.trace("cancel subscription timeout " + subscription.getId());
 		boolean cancelSuccess = subscriptionTimeout.cancel(false);
 		if (cancelSuccess == false) {
 			SubscriptionLogger.warn("cancel of subscription timeout failed :" + subscription.getId() + " delay millis: "

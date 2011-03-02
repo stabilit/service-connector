@@ -36,9 +36,9 @@ public enum ServerType implements IReversibleEnum<String, ServerType> {
 	CASCADED_SC("cascadedSC"), //
 	UNDEFINED("undefined");
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(ServerType.class);
+	private final static Logger LOGGER = Logger.getLogger(ServerType.class);
 
 	/** The value. */
 	private String value;

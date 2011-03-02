@@ -37,9 +37,9 @@ import org.serviceconnector.net.req.netty.NettyIdleHandler;
  */
 public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(NettyHttpRequesterPipelineFactory.class);
+	private final static Logger LOGGER = Logger.getLogger(NettyHttpRequesterPipelineFactory.class);
 	
 	/** The timer to observe timeouts. */
 	private Timer timer;
@@ -66,7 +66,7 @@ public class NettyHttpRequesterPipelineFactory implements ChannelPipelineFactory
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
 		// logging handler
-		pipeline.addLast("logger", new LoggingHandler());
+		pipeline.addLast("LOGGER", new LoggingHandler());
 		// responsible for handle responses - Stabilit
 		pipeline.addLast("requesterResponseHandler", new NettyHttpRequesterResponseHandler());
 		return pipeline;

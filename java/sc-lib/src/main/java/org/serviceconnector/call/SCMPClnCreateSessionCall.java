@@ -32,9 +32,9 @@ import org.serviceconnector.scmp.SCMPMsgType;
  */
 public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPClnCreateSessionCall.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPClnCreateSessionCall.class);
 
 	/**
 	 * Instantiates a new SCMPClnCreateSessionCall.

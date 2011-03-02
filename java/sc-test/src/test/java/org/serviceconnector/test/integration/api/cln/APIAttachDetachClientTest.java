@@ -28,9 +28,9 @@ import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
 public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(APIAttachDetachClientTest.class);
+	private final static Logger LOGGER = Logger.getLogger(APIAttachDetachClientTest.class);
 
 	/**
 	 * helper create the client with different parameters

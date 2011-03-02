@@ -27,9 +27,9 @@ import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
 
 public class APICheckRegistrationTest extends APIIntegrationSuperServerTest {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(APICheckRegistrationTest.class);
+	private final static Logger LOGGER = Logger.getLogger(APICheckRegistrationTest.class);
 
 	/**
 	 * Description:	check session server registration<br>

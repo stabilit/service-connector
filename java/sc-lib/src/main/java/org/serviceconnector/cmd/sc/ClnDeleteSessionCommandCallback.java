@@ -20,8 +20,8 @@ import org.serviceconnector.service.Session;
  */
 public class ClnDeleteSessionCommandCallback implements ISCMPMessageCallback {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ClnDeleteSessionCommandCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ClnDeleteSessionCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -76,7 +76,7 @@ public class ClnDeleteSessionCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		LOGGER.warn(ex);
 		// free server from session
 		server.removeSession(session);
 		SCMPMessage fault = null;

@@ -34,8 +34,8 @@ import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 
 public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(NettyTcpProxyResponderRequestHandler.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(NettyTcpProxyResponderRequestHandler.class);
 
 	private final ClientSocketChannelFactory cf;
 	private final String remoteHost;
@@ -88,7 +88,7 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
-		logger.warn(th.toString());
+		LOGGER.warn(th.toString());
 	}
 
 	private static class OutboundHandler extends SimpleChannelUpstreamHandler {

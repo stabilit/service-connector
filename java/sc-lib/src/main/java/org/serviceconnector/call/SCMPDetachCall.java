@@ -28,9 +28,9 @@ import org.serviceconnector.scmp.SCMPMsgType;
  */
 public class SCMPDetachCall extends SCMPCallAdapter {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPDetachCall.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPDetachCall.class);
 
 	/**
 	 * Instantiates a new SCMPDetachCall.

@@ -17,8 +17,8 @@ import org.serviceconnector.util.FileUtility;
 
 public class TestAbstractClient extends Thread {
 
-	/** The Constant logger, must be initialized in subclass. */
-	protected static Logger logger = null;
+	/** The Constant LOGGER, must be initialized in subclass. */
+	protected static Logger LOGGER = null;
 	/** The Constant sessionLogger. */
 	protected static final String fs = System.getProperty("file.separator");
 	protected ThreadSafeCounter ctr;
@@ -42,9 +42,9 @@ public class TestAbstractClient extends Thread {
 				// add exit handler
 				this.addExitHandler(FileUtility.getLogPath() + fs + this.clientName + ".pid", pidLock);
 			} catch (SCMPValidatorException e1) {
-				logger.fatal("unable to get path to pid file", e1);
+				LOGGER.fatal("unable to get path to pid file", e1);
 			} catch (Exception e) {
-				logger.fatal("unable to create pid file", e);
+				LOGGER.fatal("unable to create pid file", e);
 			}
 			ctr = new ThreadSafeCounter();
 
@@ -53,7 +53,7 @@ public class TestAbstractClient extends Thread {
 					Method method = this.getClass().getMethod(methodString);
 					method.invoke(this);
 				} catch (Exception e) {
-					logger.error("runClient " + methodString, e);
+					LOGGER.error("runClient " + methodString, e);
 				}
 			}
 		} finally {
@@ -150,10 +150,10 @@ public class TestAbstractClient extends Thread {
 				} catch (IOException e) {
 				}
 				pidFile.delete();
-				logger.log(Level.OFF, "Delete PID-file: " + this.pidFileNameFull);
+				LOGGER.log(Level.OFF, "Delete PID-file: " + this.pidFileNameFull);
 			}
-			logger.log(Level.OFF, "TestClient exiting");
-			logger.log(Level.OFF, "<<<");
+			LOGGER.log(Level.OFF, "TestClient exiting");
+			LOGGER.log(Level.OFF, "<<<");
 		}
 	}
 }

@@ -18,8 +18,8 @@ import org.serviceconnector.service.Subscription;
 
 public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CscUnsubscribeCommandCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(CscUnsubscribeCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -57,7 +57,7 @@ public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		LOGGER.warn(ex);
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();
 		if (reqMessage.getHeader(SCMPHeaderAttributeKey.CASCADED_MASK) == null) {

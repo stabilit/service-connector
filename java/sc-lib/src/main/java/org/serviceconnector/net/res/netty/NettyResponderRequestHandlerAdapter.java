@@ -17,8 +17,8 @@ import org.serviceconnector.server.StatefulServer;
 
 public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelUpstreamHandler {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(NettyResponderRequestHandlerAdapter.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(NettyResponderRequestHandlerAdapter.class);
 
 	/**
 	 * Message received.
@@ -66,7 +66,7 @@ public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelU
 				if ((server instanceof StatefulServer) == false) {
 					continue;
 				}
-				logger.debug("clean up dead server with key " + wildKey);
+				LOGGER.debug("clean up dead server with key " + wildKey);
 				StatefulServer statefulServer = (StatefulServer) server;
 				statefulServer.abortSessionsAndDestroy("clean up dead server");
 			}

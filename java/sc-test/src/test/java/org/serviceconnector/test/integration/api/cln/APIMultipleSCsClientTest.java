@@ -28,9 +28,9 @@ import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
 public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(APIMultipleSCsClientTest.class);
+	private final static Logger LOGGER = Logger.getLogger(APIMultipleSCsClientTest.class);
 
 	private static ProcessCtx scCtx2;
 	private static ProcessCtx scCtx1;

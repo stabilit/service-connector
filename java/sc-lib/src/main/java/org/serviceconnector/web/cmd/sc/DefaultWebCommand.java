@@ -50,8 +50,8 @@ import org.serviceconnector.web.ctx.WebContext;
  */
 public class DefaultWebCommand extends WebCommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(DefaultWebCommand.class);
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getLogger(DefaultWebCommand.class);
 
 	/**
 	 * Instantiates a new default web command.
@@ -71,9 +71,9 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		// check if session is available
 		String url = request.getURL();
 		if (url != null) {
-			//logger.debug(url);
+			//LOGGER.debug(url);
 		} else {
-			logger.warn("url is null");
+			LOGGER.warn("url is null");
 		}
 		OutputStream responseOutputStream = response.getOutputStream();
 		if (isResource(url)) {
@@ -510,7 +510,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			if (transformer == null) {
 				transformer = XSLTTransformerFactory.getInstance().newTransformer(this.getXSLPath(""));				
 			} else {
-				//logger.debug("transform using xslt " + xslPath);
+				//LOGGER.debug("transform using xslt " + xslPath);
 			}
 			if (transformer == null) {
                 throw new NotFoundException("xslt resource " + xslPath + " not found");

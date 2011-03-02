@@ -29,9 +29,9 @@ import org.serviceconnector.scmp.SCMPMsgType;
  */
 public abstract class RequestAdapter implements IRequest {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(RequestAdapter.class);
+	private final static Logger LOGGER = Logger.getLogger(RequestAdapter.class);
 
 	/** The scmp message. */
 	private SCMPMessage message;

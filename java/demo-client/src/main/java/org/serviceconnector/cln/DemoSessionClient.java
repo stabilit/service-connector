@@ -29,8 +29,8 @@ import org.serviceconnector.net.ConnectionType;
 @SuppressWarnings("unused")
 public class DemoSessionClient {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(DemoSessionClient.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(DemoSessionClient.class);
 
 	/**
 	 * The main method.
@@ -77,28 +77,28 @@ public class DemoSessionClient {
 			for (int i = 0; i < 5; i++) {
 				requestMsg.setData("body nr : " + i);
 				responseMsg = service.execute(requestMsg); // regular synchronous call
-				logger.info("Message sent sync: " + requestMsg.getData());
-				logger.info("Message received sync: " + responseMsg.getData());
+				LOGGER.info("Message sent sync: " + requestMsg.getData());
+				LOGGER.info("Message received sync: " + responseMsg.getData());
 				Thread.sleep(2000);
 			}
 			for (int i = 0; i < 5; i++) {
 				requestMsg.setData("body nr : " + i);
 				service.send(requestMsg); // regular asynchronous call
-				logger.info("Message sent async: " + requestMsg.getData());
+				LOGGER.info("Message sent async: " + requestMsg.getData());
 				Thread.sleep(2000);
 			}
 
 			requestMsg.setData("cache message body");
 			requestMsg.setCacheId("700");
 			responseMsg = service.execute(requestMsg); // regular synchronous call
-			logger.info("Message sent to put in cache: " + requestMsg.getData());
-			logger.info("Message received: " + responseMsg.getData());
+			LOGGER.info("Message sent to put in cache: " + requestMsg.getData());
+			LOGGER.info("Message received: " + responseMsg.getData());
 
 			responseMsg = service.execute(requestMsg); // regular synchronous call
-			logger.info("Message sent with cacheId: " + requestMsg.getData());
-			logger.info("Message received from cache: " + responseMsg.getData());
+			LOGGER.info("Message sent with cacheId: " + requestMsg.getData());
+			LOGGER.info("Message received from cache: " + responseMsg.getData());
 		} catch (Exception e) {
-			logger.error("run", e);
+			LOGGER.error("run", e);
 		} finally {
 			try {
 				SCMessage msg = new SCMessage();
@@ -106,7 +106,7 @@ public class DemoSessionClient {
 				service.deleteSession(5, msg);
 				sc.detach(2); // detaches from SC, stops communication
 			} catch (Exception e) {
-				logger.error("cleanup", e);
+				LOGGER.error("cleanup", e);
 			}
 		}
 	}

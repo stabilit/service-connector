@@ -23,8 +23,8 @@ import org.serviceconnector.service.Session;
  */
 public class ClnCreateSessionCommandCallback implements ISCMPMessageCallback {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ClnCreateSessionCommandCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ClnCreateSessionCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -91,7 +91,7 @@ public class ClnCreateSessionCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		LOGGER.warn(ex);
 		SCMPMessage fault = null;
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();

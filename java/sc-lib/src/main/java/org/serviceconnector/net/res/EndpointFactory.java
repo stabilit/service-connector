@@ -31,8 +31,8 @@ import org.serviceconnector.net.res.netty.web.NettyWebEndpoint;
  */
 public class EndpointFactory {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(EndpointFactory.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(EndpointFactory.class);
 
 	public IEndpoint createEndpoint(String key) {
 		if (ConnectionType.NETTY_HTTP.getValue().equalsIgnoreCase(key)) {
@@ -44,7 +44,7 @@ public class EndpointFactory {
 		} else if (ConnectionType.NETTY_PROXY_HTTP.getValue().equalsIgnoreCase(key)) {
 			return new NettyTcpProxyEndpoint();
 		} else {
-			logger.fatal("key : " + key + " not found!");
+			LOGGER.fatal("key : " + key + " not found!");
 			throw new InvalidParameterException("key : " + key + " not found!");
 		}
 	}

@@ -30,9 +30,9 @@ import org.serviceconnector.net.res.ResponseAdapter;
  */
 public class NettyTcpResponse extends ResponseAdapter {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(NettyTcpResponse.class);
+	private final static Logger LOGGER = Logger.getLogger(NettyTcpResponse.class);
 
 	/**
 	 * Instantiates a new netty tcp response.

@@ -34,9 +34,9 @@ public class CacheComposite implements Serializable {
 
 	private static final long serialVersionUID = 6142075299284577556L;
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(CacheComposite.class);
+	private final static Logger LOGGER = Logger.getLogger(CacheComposite.class);
 
 	/**
 	 * The Enum CACHE_STATE.

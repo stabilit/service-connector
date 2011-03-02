@@ -29,9 +29,9 @@ import org.serviceconnector.Constants;
 
 public class NettyWebResponderPipelineFactory implements ChannelPipelineFactory {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(NettyWebResponderPipelineFactory.class);
+	private final static Logger LOGGER = Logger.getLogger(NettyWebResponderPipelineFactory.class);
 	
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {
@@ -43,7 +43,7 @@ public class NettyWebResponderPipelineFactory implements ChannelPipelineFactory 
 		// responsible for aggregate chunks - Netty
 		pipeline.addLast("aggregator", new HttpChunkAggregator(Constants.MAX_HTTP_CONTENT_LENGTH));
 		// logging handler
-		pipeline.addLast("logger", new LoggingHandler());
+		pipeline.addLast("LOGGER", new LoggingHandler());
 		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyWebResponderRequestHandler());
 		return pipeline;

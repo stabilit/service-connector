@@ -36,9 +36,9 @@ import org.serviceconnector.util.URLString;
  */
 public class SCMgmtClient extends SCClient {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMgmtClient.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMgmtClient.class);
 
 	/**
 	 * Instantiates a new SC management client.

@@ -30,8 +30,8 @@ import org.serviceconnector.web.ctx.WebContext;
  */
 public class WebSessionRegistry extends Registry<String, IWebSession> {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(WebSessionRegistry.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(WebSessionRegistry.class);
 
 	/** The instance. */
 	private static WebSessionRegistry instance = new WebSessionRegistry();
@@ -51,7 +51,7 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 		this.webSessionExpirationTimeoutRun = new WebSessionExpirationTimeoutRun(webSessionTimeoutMinutes);
 		this.webSessionScheduler.scheduleAtFixedRate(this.webSessionExpirationTimeoutRun, webSessionScheduleTimeoutSeconds,
 				webSessionScheduleTimeoutSeconds, TimeUnit.SECONDS);
-		logger.debug("start web session expiration thread using timeout (s) = " + webSessionScheduleTimeoutSeconds);
+		LOGGER.debug("start web session expiration thread using timeout (s) = " + webSessionScheduleTimeoutSeconds);
 	}
 
 	/**
@@ -169,7 +169,7 @@ public class WebSessionRegistry extends Registry<String, IWebSession> {
 			this.sessionId = uuid.toString();
 			this.creationTimeStamp = System.currentTimeMillis();
 			this.accessTimeStamp = this.creationTimeStamp;
-			logger.debug("New web session created, id = " + this.sessionId);
+			LOGGER.debug("New web session created, id = " + this.sessionId);
 		}
 
 		/** {@inheritDoc} */

@@ -29,8 +29,8 @@ import org.serviceconnector.net.ConnectionType;
 
 public class DemoPublishServer extends Thread {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger
 			.getLogger(DemoPublishServer.class);
 
 	/**
@@ -69,7 +69,7 @@ public class DemoPublishServer extends Thread {
 				throw e;
 			}
 		} catch (Exception e) {
-			logger.error("runPublishServer", e);
+			LOGGER.error("runPublishServer", e);
 			sc.stopListener();
 			sc.destroy();
 		}
@@ -77,8 +77,8 @@ public class DemoPublishServer extends Thread {
 
 	private class SrvCallback extends SCPublishServerCallback {
 
-		/** The Constant logger. */
-		private final Logger logger = Logger.getLogger(SrvCallback.class);
+		/** The Constant LOGGER. */
+		private final Logger LOGGER = Logger.getLogger(SrvCallback.class);
 
 		public SrvCallback(SCPublishServer publishSrv) {
 			super(publishSrv);
@@ -87,14 +87,14 @@ public class DemoPublishServer extends Thread {
 		@Override
 		public SCMessage changeSubscription(SCSubscribeMessage message,
 				int operationTimeoutMillis) {
-			logger.info("PublishServer.SrvCallback.changeSubscription()");
+			LOGGER.info("PublishServer.SrvCallback.changeSubscription()");
 			return message;
 		}
 
 		@Override
 		public SCMessage subscribe(SCSubscribeMessage message,
 				int operationTimeoutMillis) {
-			logger.info("PublishServer.SrvCallback.subscribe()");
+			LOGGER.info("PublishServer.SrvCallback.subscribe()");
 			PublishThread publish = new PublishThread(this.scPublishServer);
 			publish.start();
 			return message;
@@ -103,7 +103,7 @@ public class DemoPublishServer extends Thread {
 		@Override
 		public void unsubscribe(SCSubscribeMessage message,
 				int operationTimeoutMillis) {
-			logger.info("PublishServer.SrvCallback.unsubscribe()");
+			LOGGER.info("PublishServer.SrvCallback.unsubscribe()");
 			String sessionInfo = message.getSessionInfo();
 			// watch out for kill server message
 			if (sessionInfo != null) {
@@ -112,7 +112,7 @@ public class DemoPublishServer extends Thread {
 						KillThread kill = new KillThread(this.scPublishServer);
 						kill.start();
 					} catch (Exception ex) {
-						logger.error("unsubscribe", ex);
+						LOGGER.error("unsubscribe", ex);
 					}
 				}
 			}
@@ -141,7 +141,7 @@ public class DemoPublishServer extends Thread {
 					Thread.sleep(2000);
 				}
 			} catch (Exception e) {
-				logger.warn("publish failed");
+				LOGGER.warn("publish failed");
 			}
 		}
 	}
@@ -161,7 +161,7 @@ public class DemoPublishServer extends Thread {
 				this.scPublishServer.deregister();
 				;
 			} catch (Exception e) {
-				logger.error("run", e);
+				LOGGER.error("run", e);
 			} finally {
 				SCServer sc = this.scPublishServer.getSCServer();
 				sc.stopListener();

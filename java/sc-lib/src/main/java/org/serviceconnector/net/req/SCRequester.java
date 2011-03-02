@@ -46,8 +46,8 @@ import org.serviceconnector.util.TimeoutWrapper;
  */
 public class SCRequester implements IRequester {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SCRequester.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SCRequester.class);
 	/** The context. */
 	private RemoteNodeConfiguration remoteNodeConfiguration;
 	private SCMPMessageSequenceNr msgSequenceNr;
@@ -193,7 +193,7 @@ public class SCRequester implements IRequester {
 				this.largeRequest = null;
 				if (scmpReply.isPart() && this.requestMsg.isGroup() == false) {
 					// response is a part - response is large, continue polling
-					logger.debug("sc requester callback scmpReply cache id = " + scmpReply.getCacheId());
+					LOGGER.debug("sc requester callback scmpReply cache id = " + scmpReply.getCacheId());
 					this.handlingLargeResponse(scmpReply);
 					return;
 				}
@@ -207,7 +207,7 @@ public class SCRequester implements IRequester {
 
 			// ------------------- handling large response -------------------
 			if (this.largeResponse != null) {
-				logger.debug("sc requester callback large response cache id = " + scmpReply.getCacheId());
+				LOGGER.debug("sc requester callback large response cache id = " + scmpReply.getCacheId());
 				// large response message is processing - continue procedure
 				this.largeResponse.add(scmpReply);
 				if (scmpReply.isPart() == false) {
@@ -230,7 +230,7 @@ public class SCRequester implements IRequester {
 				// updating cache part number for poll request
 				message.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, scmpReply
 						.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER));
-				logger.debug("handling large response using cache id = " + message.getCacheId());
+				LOGGER.debug("handling large response using cache id = " + message.getCacheId());
 				// poll & exit
 				this.connectionCtx.getConnection().send(message, this);
 				return;
@@ -282,10 +282,10 @@ public class SCRequester implements IRequester {
 			// updating cache part number for poll request
 			message.setHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER, scmpReply
 					.getHeader(SCMPHeaderAttributeKey.CACHE_PARTN_NUMBER));
-			logger.debug("handling large response using cache id = " + message.getCacheId());
+			LOGGER.debug("handling large response using cache id = " + message.getCacheId());
 			// poll & exit
 			this.connectionCtx.getConnection().send(message, this);
-			logger.debug("handling large response after send using cache id = " + message.getCacheId());
+			LOGGER.debug("handling large response after send using cache id = " + message.getCacheId());
 		}
 
 		/**
@@ -316,7 +316,7 @@ public class SCRequester implements IRequester {
 					 */
 					return true;
 				}
-				logger.warn("largeRequest.hasNext() == false but part request not done");
+				LOGGER.warn("largeRequest.hasNext() == false but part request not done");
 				return true;
 			}
 			part = largeRequest.getNext();
@@ -354,7 +354,7 @@ public class SCRequester implements IRequester {
 			try {
 				SCRequester.this.connectionPool.freeConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
-				logger.error("freeConnection", e);
+				LOGGER.error("freeConnection", e);
 			}
 		}
 
@@ -366,7 +366,7 @@ public class SCRequester implements IRequester {
 			try {
 				SCRequester.this.connectionPool.forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception e) {
-				logger.error("disconnectConnection", e);
+				LOGGER.error("disconnectConnection", e);
 			}
 		}
 

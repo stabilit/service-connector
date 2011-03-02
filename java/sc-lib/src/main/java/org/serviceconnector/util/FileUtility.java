@@ -43,8 +43,8 @@ import org.serviceconnector.scmp.SCMPError;
  */
 public class FileUtility {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(FileUtility.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(FileUtility.class);
 
 	/**
 	 * @param filename
@@ -239,7 +239,7 @@ public class FileUtility {
 			}
 			FileChannel channel = new RandomAccessFile(pidFile, "rw").getChannel();
 			FileLock lock = channel.lock();
-			logger.log(Level.OFF, "Create PID-file=" + fileNameFull + " PID=" + pid);
+			LOGGER.log(Level.OFF, "Create PID-file=" + fileNameFull + " PID=" + pid);
 			return lock;
 		} finally {
 			if (fw != null) {
@@ -266,7 +266,7 @@ public class FileUtility {
 	 * @return directory configured for appender in the current log4j configuration file
 	 */
 	public static String getLogPath() throws SCMPValidatorException {
-		Category rootLogger = logger.getParent();
+		Category rootLogger = LOGGER.getParent();
 		Enumeration<?> appenders = rootLogger.getAllAppenders();
 		FileAppender fileAppender = null;
 		while (appenders.hasMoreElements()) {

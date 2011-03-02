@@ -44,9 +44,9 @@ public enum SCMPHeaderKey {
 	/** The KRS. KEEP ALIVE RESPONSE. */
 	KRS;
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPHeaderKey.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPHeaderKey.class);
 
 	/**
 	 * Gets the msg header key by string.

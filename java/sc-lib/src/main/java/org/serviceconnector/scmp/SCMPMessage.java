@@ -33,8 +33,8 @@ import org.serviceconnector.cache.CacheId;
  */
 public class SCMPMessage {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SCMPMessage.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SCMPMessage.class);
 
 	/** The Constant SCMP_VERSION. */
 	public static final SCMPVersion SCMP_VERSION = SCMPVersion.CURRENT;
@@ -477,7 +477,7 @@ public class SCMPMessage {
 		try {
 			intValue = Integer.parseInt(value);
 		} catch (Exception ex) {
-			logger.warn("getHeaderInt " + ex.toString());
+			LOGGER.warn("getHeaderInt " + ex.toString());
 			return null;
 		}
 		return intValue;

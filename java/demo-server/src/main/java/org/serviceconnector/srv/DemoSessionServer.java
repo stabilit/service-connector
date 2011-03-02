@@ -27,8 +27,8 @@ import org.serviceconnector.api.srv.SCSessionServerCallback;
 import org.serviceconnector.net.ConnectionType;
 
 public class DemoSessionServer extends Thread {
-	/** The Constant logger. */
-	private final static Logger logger = Logger
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger
 			.getLogger(DemoSessionServer.class);
 
 	/**
@@ -71,12 +71,12 @@ public class DemoSessionServer extends Thread {
 				// server.registerServer(10, maxSess, maxConn, cbk); //
 				// alternative with operation timeout
 			} catch (Exception e) {
-				logger.error("runSessionServer", e);
+				LOGGER.error("runSessionServer", e);
 				server.deregister();
 				throw e;
 			}
 		} catch (Exception e) {
-			logger.error("runSessionServer", e);
+			LOGGER.error("runSessionServer", e);
 			sc.stopListener();
 			sc.destroy();
 		}
@@ -91,13 +91,13 @@ public class DemoSessionServer extends Thread {
 		@Override
 		public SCMessage createSession(SCMessage request,
 				int operationTimeoutMillis) {
-			logger.info("Session created");
+			LOGGER.info("Session created");
 			return request;
 		}
 
 		@Override
 		public void deleteSession(SCMessage request, int operationTimeoutMillis) {
-			logger.info("Session deleted");
+			LOGGER.info("Session deleted");
 			String sessionInfo = request.getSessionInfo();
 			// watch out for kill server message
 			if (sessionInfo != null) {
@@ -112,7 +112,7 @@ public class DemoSessionServer extends Thread {
 
 		@Override
 		public void abortSession(SCMessage request, int operationTimeoutMillis) {
-			logger.info("Session aborted");
+			LOGGER.info("Session aborted");
 		}
 
 		@Override
@@ -143,7 +143,7 @@ public class DemoSessionServer extends Thread {
 				Thread.sleep(200);
 				this.server.deregister();
 			} catch (Exception e) {
-				logger.error("run", e);
+				LOGGER.error("run", e);
 			} finally {
 				SCServer sc = server.getSCServer();
 				sc.stopListener();

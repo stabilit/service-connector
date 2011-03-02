@@ -28,9 +28,9 @@ import org.apache.log4j.Logger;
  */
 public class LinkedQueue<E> {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(LinkedQueue.class);
+	private final static Logger LOGGER = Logger.getLogger(LinkedQueue.class);
 
 	/**
 	 * The first actual node, if it exists, is always at this.head.next. After

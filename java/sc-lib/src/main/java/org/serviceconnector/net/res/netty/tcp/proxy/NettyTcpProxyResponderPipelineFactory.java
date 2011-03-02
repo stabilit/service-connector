@@ -29,9 +29,9 @@ public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFac
 	private final String remoteHost;
 	private final int remotePort;
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(NettyTcpProxyResponderPipelineFactory.class);
+	private final static Logger LOGGER = Logger.getLogger(NettyTcpProxyResponderPipelineFactory.class);
 
 	public NettyTcpProxyResponderPipelineFactory(ClientSocketChannelFactory cf, String remoteHost, int remotePort) {
 		this.cf = cf;
@@ -43,7 +43,7 @@ public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFac
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
 		// logging handler
-		pipeline.addLast("logger", new LoggingHandler());
+		pipeline.addLast("LOGGER", new LoggingHandler());
 		// responsible for handle requests - Stabilit
 		pipeline.addLast("handler", new NettyTcpProxyResponderRequestHandler(cf, remoteHost, remotePort));
 		return pipeline;

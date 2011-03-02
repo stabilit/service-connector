@@ -64,8 +64,8 @@ import org.serviceconnector.service.SubscriptionMask;
 
 public class CascadedSC extends Server implements IStatefulServer {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CascadedSC.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(CascadedSC.class);
 
 	/** The subscriptions, list of subscriptions allocated on cascaded SC. */
 	private List<AbstractSession> subscriptions;
@@ -168,18 +168,18 @@ public class CascadedSC extends Server implements IStatefulServer {
 		boolean permit = false;
 		Semaphore cascClientSemaphore = cascClient.getCascClientSemaphore();
 		try {
-			logger.trace("acquire permit callback=" + callback.getClass());
+			LOGGER.trace("acquire permit callback=" + callback.getClass());
 			permit = cascClientSemaphore.tryAcquire(oti, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException ex) {
 			// thread interrupted during acquire a permit on semaphore
 			callback.receive(ex);
-			logger.warn("thread interrupted during acquire a permit on semaphore service=" + cascClient.getServiceName(), ex);
+			LOGGER.warn("thread interrupted during acquire a permit on semaphore service=" + cascClient.getServiceName(), ex);
 			return false;
 		}
 		if (permit == false) {
 			// thread didn't get a permit in time
 			callback.receive(new IdleTimeoutException("oti expired. operation - could not be completed."));
-			logger.warn("thread didn't get a permit in time service=" + cascClient.getServiceName());
+			LOGGER.warn("thread didn't get a permit in time service=" + cascClient.getServiceName());
 			return false;
 		}
 		if (cascClient.isDestroyed() == true) {
@@ -187,7 +187,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 			callback.receive(new IdleTimeoutException("oti expired. operation - could not be completed."));
 			// release permit
 			cascClientSemaphore.release();
-			logger.warn("cascaded client got destroyed in the meantime, stop operation service=" + cascClient.getServiceName());
+			LOGGER.warn("cascaded client got destroyed in the meantime, stop operation service=" + cascClient.getServiceName());
 			return false;
 		}
 		return permit;
@@ -349,7 +349,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 			unsubscribeCall.invoke(new CommandCallback(false), Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS
 					* Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
-			logger.warn("unsubscribing cascaded client failed service=" + cascClient.getServiceName(), e);
+			LOGGER.warn("unsubscribing cascaded client failed service=" + cascClient.getServiceName(), e);
 		}
 	}
 
@@ -452,7 +452,7 @@ public class CascadedSC extends Server implements IStatefulServer {
 			this.cascadedSCAbortSubscription(cascClient, abortMessage, new CscAbortSubscriptionCallback(request, subscription),
 					Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS * Constants.SEC_TO_MILLISEC_FACTOR);
 		} else {
-			logger.error("session which is in relation with a cascadedSC timed out - should nerver occur");
+			LOGGER.error("session which is in relation with a cascadedSC timed out - should nerver occur");
 		}
 	}
 

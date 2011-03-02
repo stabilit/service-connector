@@ -20,8 +20,8 @@ import org.serviceconnector.scmp.SCMPMessage;
  */
 public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ClnExecuteCommandCascCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ClnExecuteCommandCascCallback.class);
 	/** The request cache id. */
 	private String requestCacheId;
 	private SCMPMessage requestMessage;
@@ -61,7 +61,7 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 				CacheLogger.debug("cache casc callback, sc replied cacheId=" + cacheId);
 				Cache scmpCache = cacheManager.getCache(serviceName);
 				if (scmpCache == null) {
-					ClnExecuteCommandCascCallback.logger.error("cache write failed, no cache, service name = " + serviceName);
+					ClnExecuteCommandCascCallback.LOGGER.error("cache write failed, no cache, service name = " + serviceName);
 				} else {
 					// check if reply is fault
 					// check if reply is fault
@@ -136,7 +136,7 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 				}
 			} catch (Exception e) {
 				CacheLogger.debug("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
-				ClnExecuteCommandCascCallback.logger.error(e.toString());
+				ClnExecuteCommandCascCallback.LOGGER.error(e.toString());
 			}
 		}
 		// forward server reply to client

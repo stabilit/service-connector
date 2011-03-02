@@ -40,8 +40,8 @@ import org.serviceconnector.util.Statistics;
  */
 public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandler {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(NettyTcpRequesterResponseHandler.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(NettyTcpRequesterResponseHandler.class);
 	/** The scmp callback. */
 	private ISCMPMessageCallback scmpCallback;
 	/** The pending request. */
@@ -78,7 +78,7 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			return;
 		}
 		// unsolicited input, message not expected - race condition
-		logger.error("unsolicited input, message not expected, no reply was outstanding!");
+		LOGGER.error("unsolicited input, message not expected, no reply was outstanding!");
 	}
 
 	/** {@inheritDoc} */
@@ -99,9 +99,9 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 			}
 		}
 		if (th instanceof java.io.IOException) {
-			logger.warn(th); // regular disconnect causes this expected exception
+			LOGGER.warn(th); // regular disconnect causes this expected exception
 		} else {
-			logger.error("Response error", th);
+			LOGGER.error("Response error", th);
 		}
 	}
 
@@ -135,13 +135,13 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 				ret = (SCMPMessage) encoderDecoder.decode(bais);
 				NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ret);
 			} catch (Throwable th) {
-				logger.error("receive message", th);
+				LOGGER.error("receive message", th);
 				if ((th instanceof Exception) == false) {
 					try {
 						SCCallbackException ex = new SCCallbackException("exception raised in callback", th);
 						NettyTcpRequesterResponseHandler.this.scmpCallback.receive(ex);
 					} catch (Throwable th1) {
-						logger.error("receive exception", th);
+						LOGGER.error("receive exception", th);
 					}
 				}
 			}
@@ -159,11 +159,11 @@ public class NettyTcpRequesterResponseHandler extends SimpleChannelUpstreamHandl
 		/** {@inheritDoc} */
 		@Override
 		public void run() {
-			logger.error("receive exception", exception);
+			LOGGER.error("receive exception", exception);
 			try {
 				NettyTcpRequesterResponseHandler.this.scmpCallback.receive(exception);
 			} catch (Throwable th) {
-				logger.error("receive exception", th);
+				LOGGER.error("receive exception", th);
 			}
 		}
 	}

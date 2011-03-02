@@ -30,8 +30,8 @@ import org.serviceconnector.service.SubscriptionMask;
  */
 public class CscUnsubscribeCallbackActiveCascClient implements ISCMPMessageCallback {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CscUnsubscribeCallbackActiveCascClient.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(CscUnsubscribeCallbackActiveCascClient.class);
 	/** The cascaded client. */
 	private CascadedClient cascClient;
 	private ISubscriptionCallback commandCallback;
@@ -62,7 +62,7 @@ public class CscUnsubscribeCallbackActiveCascClient implements ISCMPMessageCallb
 
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		LOGGER.warn(ex);
 		// release permit
 		this.cascClient.getCascClientSemaphore().release();
 		// forward reply to client

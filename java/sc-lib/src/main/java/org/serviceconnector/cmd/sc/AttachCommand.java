@@ -36,8 +36,8 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class AttachCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(AttachCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(AttachCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -75,7 +75,7 @@ public class AttachCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException valExc = new SCMPValidatorException();
 			valExc.setMessageType(getKey());
 			valExc.setAttribute(SCMPHeaderAttributeKey.LOCAL_DATE_TIME, DateTimeUtility.getCurrentTimeZoneMillis());

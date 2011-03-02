@@ -21,8 +21,8 @@ import org.serviceconnector.TestConstants;
 
 public class TestServer {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(TestServer.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(TestServer.class);
 
 	/**
 	 * start server process
@@ -39,10 +39,10 @@ public class TestServer {
 	 *            [8] nics (comma separated list)<br>
 	 */
 	public static void main(String[] args) {
-		logger.log(Level.OFF, "TestServer starting ...");
+		LOGGER.log(Level.OFF, "TestServer starting ...");
 
 		for (int i = 0; i < args.length; i++) {
-			logger.log(Level.OFF, "args[" + i + "]:" + args[i]);
+			LOGGER.log(Level.OFF, "args[" + i + "]:" + args[i]);
 		}
 
 		TestStatefulServer server = null;

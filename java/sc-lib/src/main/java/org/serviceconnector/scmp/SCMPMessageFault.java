@@ -24,9 +24,9 @@ import org.serviceconnector.util.DateTimeUtility;
  */
 public class SCMPMessageFault extends SCMPMessage {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPMessageFault.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPMessageFault.class);
 
 	private Exception exception;
 

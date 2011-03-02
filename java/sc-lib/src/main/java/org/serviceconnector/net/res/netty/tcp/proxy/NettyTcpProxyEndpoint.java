@@ -34,8 +34,8 @@ import org.serviceconnector.net.res.IResponder;
  */
 public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(NettyTcpProxyEndpoint.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(NettyTcpProxyEndpoint.class);
 	/** The host. */
 	private String remoteHost;
 	/** The port. */
@@ -85,7 +85,7 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 			this.clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors
 					.newCachedThreadPool());
 		} catch (Exception e) {
-			logger.error("setResponder", e);
+			LOGGER.error("setResponder", e);
 		}
 	}
 }

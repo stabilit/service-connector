@@ -12,8 +12,8 @@ import org.serviceconnector.util.FileUtility;
 
 public abstract class TestStatefulServer extends Thread {
 
-	/** The Constant logger, must be initialized in subclass. */
-	protected static Logger logger = null;
+	/** The Constant LOGGER, must be initialized in subclass. */
+	protected static Logger LOGGER = null;
 	/** The Constant sessionLogger. */
 	protected static final String fs = System.getProperty("file.separator");
 	protected ThreadSafeCounter ctr;
@@ -85,12 +85,12 @@ public abstract class TestStatefulServer extends Thread {
 			try {
 				this.server.deregister();
 			} catch (Exception e) {
-				logger.error("deregister", e);
+				LOGGER.error("deregister", e);
 			}
 			try {
 				this.server.getSCServer().stopListener();
 			} catch (Exception e) {
-				logger.error("stopListener", e);
+				LOGGER.error("stopListener", e);
 			}
 			System.exit(0);
 		}
@@ -123,9 +123,9 @@ public abstract class TestStatefulServer extends Thread {
 			} catch (IOException e) {
 			}
 			FileUtility.deleteFile(this.pidFileNameFull);
-			logger.info("Delete PID-file=" + this.pidFileNameFull);
-			logger.log(Level.OFF, "TestServer exit");
-			logger.log(Level.OFF, "<<<");
+			LOGGER.info("Delete PID-file=" + this.pidFileNameFull);
+			LOGGER.log(Level.OFF, "TestServer exit");
+			LOGGER.log(Level.OFF, "<<<");
 		}
 	}
 }

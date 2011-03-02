@@ -60,9 +60,9 @@ public enum SCVersion {
 	/** The version to make tests - DO NOT CHANGE ! */
 	TEST(3, 2, 5);
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCVersion.class);
+	private final static Logger LOGGER = Logger.getLogger(SCVersion.class);
 
 	/** The Constant df. */
 	private static final DecimalFormat df = new DecimalFormat("000");

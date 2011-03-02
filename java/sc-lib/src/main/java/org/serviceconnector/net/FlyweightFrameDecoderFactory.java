@@ -32,8 +32,8 @@ import org.serviceconnector.Constants;
  */
 public final class FlyweightFrameDecoderFactory {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(FlyweightFrameDecoderFactory.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(FlyweightFrameDecoderFactory.class);
 	private static Map<String, IFrameDecoder> frameDecoders;
 
 	public FlyweightFrameDecoderFactory() {
@@ -54,7 +54,7 @@ public final class FlyweightFrameDecoderFactory {
 	public IFrameDecoder getFrameDecoder(String key) {
 		IFrameDecoder frameDecoder = FlyweightFrameDecoderFactory.frameDecoders.get(key);
 		if (frameDecoder == null) {
-			logger.fatal("key : " + key + " not found!");
+			LOGGER.fatal("key : " + key + " not found!");
 			throw new InvalidParameterException("key : " + key + " not found!");
 		}
 		return frameDecoder;

@@ -28,8 +28,8 @@ import org.serviceconnector.net.ConnectionType;
 
 public class TestPublishClientFilippe extends Thread {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(TestPublishClientFilippe.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(TestPublishClientFilippe.class);
 
 	private String methodName;
 
@@ -38,7 +38,7 @@ public class TestPublishClientFilippe extends Thread {
 			TestPublishClientFilippe client = new TestPublishClientFilippe(args[0]);
 			client.start();
 		} catch (Exception e) {
-			logger.error("incorrect parameters", e);
+			LOGGER.error("incorrect parameters", e);
 		}
 	}
 
@@ -125,12 +125,12 @@ public class TestPublishClientFilippe extends Thread {
 			}
 
 		} catch (Exception e) {
-			logger.error("run", e);
+			LOGGER.error("run", e);
 		} finally {
 			try {
 				sc.detach();
 			} catch (Exception e) {
-				logger.error("run", e);
+				LOGGER.error("run", e);
 			}
 		}
 	}

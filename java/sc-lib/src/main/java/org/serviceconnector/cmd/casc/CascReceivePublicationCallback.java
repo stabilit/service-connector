@@ -11,8 +11,8 @@ import org.serviceconnector.server.CascadedSC;
 
 public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CascReceivePublicationCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(CascReceivePublicationCallback.class);
 
 	private CascadedClient cascClient;
 
@@ -33,14 +33,14 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 			// got permit to continue
 			// 3. receiving reply and error handling
 			if (this.cascClient.isSubscribed() == false) {
-				logger.debug("receive publication for cascaded client which is not subscribed anymore service="
+				LOGGER.debug("receive publication for cascaded client which is not subscribed anymore service="
 						+ cascClient.getServiceName());
 				// cascaded client is not subscribed anymore - stop continuing
 				return;
 			}
 			if (reply.isFault()) {
 				// operation failed
-				logger.error("receive publication failed for cascaded client (set to be unsubscribed) service="
+				LOGGER.error("receive publication failed for cascaded client (set to be unsubscribed) service="
 						+ cascClient.getServiceName());
 				this.cascClient.getCascadedSC().unsubscribeCascadedClientInErrorCases(this.cascClient);
 				this.cascClient.destroy();
@@ -50,7 +50,7 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 			boolean noData = reply.getHeaderFlag(SCMPHeaderAttributeKey.NO_DATA);
 			if (noData == false) {
 				// message received,insert in queue
-				logger.debug("receive publication for cascaded client put message in queue service=" + cascClient.getServiceName());
+				LOGGER.debug("receive publication for cascaded client put message in queue service=" + cascClient.getServiceName());
 				PublishMessageQueue<SCMPMessage> publishMessageQueue = this.cascClient.getPublishService().getMessageQueue();
 				publishMessageQueue.insert(reply);
 			}
@@ -68,12 +68,12 @@ public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		LOGGER.warn(ex);
 		if (this.cascClient.isDestroyed() == true) {
 			// cascaded client already destroyed ignore exception
 			return;
 		}
-		logger.error(ex);
+		LOGGER.error(ex);
 		this.cascClient.getCascadedSC().unsubscribeCascadedClientInErrorCases(this.cascClient);
 		// destroy cascaded client, without having a permit!
 		this.cascClient.destroy();

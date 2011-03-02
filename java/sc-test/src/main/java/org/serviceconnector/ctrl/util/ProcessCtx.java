@@ -20,9 +20,9 @@ import org.serviceconnector.net.ConnectionType;
 
 public class ProcessCtx {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(ProcessCtx.class);
+	private final static Logger LOGGER = Logger.getLogger(ProcessCtx.class);
 
 	private Process process = null;
 	private String runableName = null;

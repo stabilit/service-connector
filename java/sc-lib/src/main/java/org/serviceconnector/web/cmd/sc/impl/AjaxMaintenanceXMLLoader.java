@@ -130,7 +130,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 				writer.writeStartElement("exception");
 				writer.writeCData(e.toString());
 				writer.writeEndElement();
-				DefaultXMLLoaderFactory.logger.error(e.toString());
+				DefaultXMLLoaderFactory.LOGGER.error(e.toString());
 			}
 		}
 		writer.writeEndElement(); // close service tag
@@ -209,7 +209,7 @@ public class AjaxMaintenanceXMLLoader extends AbstractXMLLoader {
 				writer.writeStartElement("exception");
 				writer.writeCData(e.toString());
 				writer.writeEndElement();
-				DefaultXMLLoaderFactory.logger.error(e.toString());
+				DefaultXMLLoaderFactory.LOGGER.error(e.toString());
 			}
 		}
 		writer.writeEndElement(); // close service tag

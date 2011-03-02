@@ -30,8 +30,8 @@ import org.serviceconnector.scmp.SCMPError;
  * @author Daniel Schmutz
  */
 public class BasicConfiguration {
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(BasicConfiguration.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(BasicConfiguration.class);
 	/** The write pid. */
 	private boolean writePID = Constants.DEFAULT_WRITE_PID_FLAG;
 	/** The Pid file path. */
@@ -91,7 +91,7 @@ public class BasicConfiguration {
 		if (localWritePID != null && this.writePID != localWritePID) {
 			this.writePID = localWritePID;
 		}
-		logger.info("writePID=" + this.writePID);
+		LOGGER.info("writePID=" + this.writePID);
 
 		// pidPath
 		String localPidPath = compositeConfiguration.getString(Constants.ROOT_PID_PATH, null);
@@ -107,7 +107,7 @@ public class BasicConfiguration {
 			}
 			this.pidPath = configFile.getAbsolutePath();
 		}
-		logger.info("pidPath=" + this.pidPath);
+		LOGGER.info("pidPath=" + this.pidPath);
 
 		// dumpPath
 		String localdumpPath = compositeConfiguration.getString(Constants.ROOT_DUMP_PATH, null);
@@ -123,29 +123,29 @@ public class BasicConfiguration {
 			}
 			this.dumpPath = dumpFile.getAbsolutePath();
 		}
-		logger.info("dumpPath=" + this.dumpPath);
+		LOGGER.info("dumpPath=" + this.dumpPath);
 
 		// maxMessageSize
 		Integer localMaxMessageSize = compositeConfiguration.getInteger(Constants.ROOT_MAX_MESSAGE_SIZE, null);
 		if (localMaxMessageSize != null && this.maxMessageSize != localMaxMessageSize) {
 			this.maxMessageSize = localMaxMessageSize;
-			logger.info("maxMessageSize set to " + localMaxMessageSize);
+			LOGGER.info("maxMessageSize set to " + localMaxMessageSize);
 		}
-		logger.info("maxMessageSize=" + this.maxMessageSize);
+		LOGGER.info("maxMessageSize=" + this.maxMessageSize);
 		
 		// operationTimeoutMultiplier
 		Double localOTIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_OPERATION_TIMEOUT_MULTIPLIER, null);
 		if (localOTIMultiplier != null && this.operationTimeoutMultiplier != localOTIMultiplier) {
 			this.operationTimeoutMultiplier = localOTIMultiplier;
 		}
-		logger.info("operationTimeoutMultiplier=" + this.operationTimeoutMultiplier);
+		LOGGER.info("operationTimeoutMultiplier=" + this.operationTimeoutMultiplier);
 		
 		// echoIntervalMultiplier
 		Double localECIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_ECHO_INTERVAL_MULTIPLIER, null);
 		if (localECIMultiplier != null && this.echoIntervalMultiplier != localECIMultiplier) {
 			this.echoIntervalMultiplier = localECIMultiplier;
 		}
-		logger.info("echoIntervalMultiplier=" + this.echoIntervalMultiplier);
+		LOGGER.info("echoIntervalMultiplier=" + this.echoIntervalMultiplier);
 
 		// connectionTimeoutMillis
 		Integer localConnectionTimeoutMultiplier = compositeConfiguration
@@ -153,36 +153,36 @@ public class BasicConfiguration {
 		if (localConnectionTimeoutMultiplier != null && this.connectionTimeoutMillis != localConnectionTimeoutMultiplier) {
 			this.connectionTimeoutMillis = localConnectionTimeoutMultiplier;
 		}
-		logger.info("connectionTimeoutMillis=" + this.connectionTimeoutMillis);
+		LOGGER.info("connectionTimeoutMillis=" + this.connectionTimeoutMillis);
 
 		// subscriptionTimeout
 		Integer localSubscriptionTimeout = compositeConfiguration.getInteger(Constants.ROOT_SUBSCRIPTION_TIMEOUT_MILLIS, null);
 		if (localSubscriptionTimeout != null && this.subscriptionTimeoutMillis != localSubscriptionTimeout) {
 			this.subscriptionTimeoutMillis = localSubscriptionTimeout;
 		}
-		logger.info("subscriptionTimeoutMillis=" + this.subscriptionTimeoutMillis);
+		LOGGER.info("subscriptionTimeoutMillis=" + this.subscriptionTimeoutMillis);
 
 		// commandValidation
 		Boolean localCMDValidation = compositeConfiguration.getBoolean(Constants.ROOT_COMMAND_VALIDATION_ENABLED, null);
 		if (localCMDValidation != null && this.commandValidation != localCMDValidation) {
 			this.commandValidation = localCMDValidation;
 		}
-		logger.info("commandValidation=" + this.commandValidation);
+		LOGGER.info("commandValidation=" + this.commandValidation);
 		
 		// keepAliveTimeout in milliseconds
 		Integer localKeepAliveOTIMillis = compositeConfiguration.getInteger(Constants.ROOT_KEEP_ALIVE_OTI_MILLIS, null);
 		if (localKeepAliveOTIMillis != null && this.keepAliveOTIMillis != localKeepAliveOTIMillis) {
 			this.keepAliveOTIMillis = localKeepAliveOTIMillis;
 		}
-		logger.info("keepAliveOTIMillis=" + this.keepAliveOTIMillis);
+		LOGGER.info("keepAliveOTIMillis=" + this.keepAliveOTIMillis);
 
 		// serverAbortTimeout
 		Integer localSrvAbortOTIMillis = compositeConfiguration.getInteger(Constants.ROOT_SERVER_ABORT_OTI_MILLIS, null);
 		if (localSrvAbortOTIMillis != null && this.srvAbortOTIMillis != localSrvAbortOTIMillis) {
 			this.srvAbortOTIMillis = localSrvAbortOTIMillis;
-			logger.info("srvAbortOTIMillis set to " + localSrvAbortOTIMillis);
+			LOGGER.info("srvAbortOTIMillis set to " + localSrvAbortOTIMillis);
 		}
-		logger.info("srvAbortOTIMillis=" + this.srvAbortOTIMillis);
+		LOGGER.info("srvAbortOTIMillis=" + this.srvAbortOTIMillis);
 	}
 
 	/**

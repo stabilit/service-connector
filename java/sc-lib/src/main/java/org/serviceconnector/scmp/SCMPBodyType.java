@@ -36,9 +36,9 @@ public enum SCMPBodyType implements IReversibleEnum<String, SCMPBodyType> {
 	/** undefined. */
 	UNDEFINED("undefined");
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPBodyType.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPBodyType.class);
 
 	/** The value. */
 	private String value;

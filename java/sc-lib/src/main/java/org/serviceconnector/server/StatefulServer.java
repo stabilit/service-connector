@@ -54,8 +54,8 @@ import org.serviceconnector.service.Subscription;
 
 public class StatefulServer extends Server implements IStatefulServer {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(StatefulServer.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(StatefulServer.class);
 
 	private static SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
@@ -349,10 +349,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 					// no exception has been thrown - get out of wait loop
 					break;
 				} catch (ConnectionPoolBusyException ex) {
-					logger.warn("ConnectionPoolBusyException caught in wait mec of session abort");
+					LOGGER.warn("ConnectionPoolBusyException caught in wait mec of session abort");
 					if (i >= (tries - 1)) {
 						// only one loop outstanding - don't continue throw current exception
-						logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + abortMessage.getServiceName()));
+						LOGGER.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + abortMessage.getServiceName()));
 						SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION,
 								"service=" + abortMessage.getServiceName());
 						throw scmpCommandException;
@@ -371,7 +371,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 				}
 			}
 		} catch (SCMPCommandException scmpCommandException) {
-			logger.warn("ConnectionPoolBusyException in aborting session wait mec");
+			LOGGER.warn("ConnectionPoolBusyException in aborting session wait mec");
 			// ConnectionPoolBusyException after wait mec - try opening a new connection
 
 			// RemoteNodeConfiguration remoteNodeConfiguration = this.requester.getRemoteNodeConfiguration();
@@ -381,7 +381,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 				this.serverAbortSessionWithExtraRequester(sasRequester, abortMessage, callback, oti);
 			} catch (ConnectionPoolBusyException e) {
 				sasRequester.destroy();
-				logger.warn("ConnectionPoolBusyException in aborting session wait mec over special connection");
+				LOGGER.warn("ConnectionPoolBusyException in aborting session wait mec over special connection");
 				if (this.service.getType() == ServiceType.SESSION_SERVICE) {
 					this.abortSessionsAndDestroy("Session abort over a new connection failed");
 				}
@@ -392,14 +392,14 @@ public class StatefulServer extends Server implements IStatefulServer {
 				// session server - validate reply of server
 				SCMPMessage reply = callback.getMessageSync(oti);
 				if (reply.isFault()) {
-					logger.warn("Fault in aborting session wait mec over special connection");
+					LOGGER.warn("Fault in aborting session wait mec over special connection");
 					// error in server abort session - destroy server
 					this.abortSessionsAndDestroy("Session abort over a new connection failed");
 				}
 			}
 		} catch (Exception e) {
 			if (this.service.getType() == ServiceType.SESSION_SERVICE) {
-				logger.error("Exceptiont in aborting session wait mec over special connection", e);
+				LOGGER.error("Exceptiont in aborting session wait mec over special connection", e);
 				// session server - destroy server in case of an error
 				this.abortSessionsAndDestroy("Session abort failed, abort reason: " + reason);
 			}
@@ -445,7 +445,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 				this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
 						.getSrvAbortOTIMillis());
 			} catch (ConnectionPoolBusyException e) {
-				logger.warn("aborting session failed because of busy connection pool");
+				LOGGER.warn("aborting session failed because of busy connection pool");
 			}
 			SessionLogger.logAbortSession(this.getClass().getName(), abortMessage.getSessionId());
 		}

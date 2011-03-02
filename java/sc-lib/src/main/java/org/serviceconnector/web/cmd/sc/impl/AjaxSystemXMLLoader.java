@@ -74,7 +74,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 		writer.writeEndElement(); // action
 		try {
 			if ("gc".equals(action)) {
-				DefaultXMLLoaderFactory.logger.debug("run gc");
+				DefaultXMLLoaderFactory.LOGGER.debug("run gc");
 				System.gc();
 				writer.writeStartElement("status");
 				writer.writeCharacters("success");
@@ -95,7 +95,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("dump".equals(action)) {
-				DefaultXMLLoaderFactory.logger.debug("SC dump by user interface");
+				DefaultXMLLoaderFactory.LOGGER.debug("SC dump by user interface");
 				try {
 					String dumpPath = AppContext.dump();
 					writer.writeStartElement("status");
@@ -122,7 +122,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("terminate".equals(action)) {
-				DefaultXMLLoaderFactory.logger.debug("SC terminated by user interface");
+				DefaultXMLLoaderFactory.LOGGER.debug("SC terminated by user interface");
 				writer.writeStartElement("status");
 				writer.writeCharacters("success");
 				writer.writeEndElement();
@@ -134,7 +134,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				System.exit(1);
 			}
 			if ("deleteDump".equals(action)) {
-				DefaultXMLLoaderFactory.logger.debug("delete dump by user interface");
+				DefaultXMLLoaderFactory.LOGGER.debug("delete dump by user interface");
 				String dumpPath = AppContext.getBasicConfiguration().getDumpPath();
 				DumpUtility.deleteAllDumpFiles(dumpPath);
 				writer.writeStartElement("status");
@@ -148,7 +148,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("clearCache".equals(action)) {
-				DefaultXMLLoaderFactory.logger.debug("clear cache by user interface");
+				DefaultXMLLoaderFactory.LOGGER.debug("clear cache by user interface");
 				CacheManager cacheManager = AppContext.getCacheManager();
 				cacheManager.clearAll();
 				writer.writeStartElement("status");
@@ -162,7 +162,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("resetTranslet".equals(action)) {
-				DefaultXMLLoaderFactory.logger.debug("reset translet by user interface");
+				DefaultXMLLoaderFactory.LOGGER.debug("reset translet by user interface");
 				XSLTTransformerFactory.getInstance().clearTranslet();
 				writer.writeStartElement("status");
 				writer.writeCharacters("success");
@@ -175,7 +175,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("downloadAndReplace".equals(action)) {
-				DefaultXMLLoaderFactory.logger.debug("download and replace configuration");
+				DefaultXMLLoaderFactory.LOGGER.debug("download and replace configuration");
 				downloadAndReplace(writer, request);
 				writer.writeStartElement("status");
 				writer.writeCharacters("success");
@@ -183,7 +183,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 				return;
 			}
 			if ("uploadLogFiles".equals(action)) {
-				DefaultXMLLoaderFactory.logger.debug("upload current log files");
+				DefaultXMLLoaderFactory.LOGGER.debug("upload current log files");
 				uploadCurrentLogFiles(writer, request);
 				return;
 			}
@@ -381,7 +381,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	 *             the exception
 	 */
 	private void enableService(XMLStreamWriter writer, IWebRequest request) throws Exception {
-		DefaultXMLLoaderFactory.logger.debug("run disable service");
+		DefaultXMLLoaderFactory.LOGGER.debug("run disable service");
 		String serviceName = request.getParameter("service");
 		if (serviceName == null) {
 			this.writeFailure(writer, "Missing service name!");
@@ -409,7 +409,7 @@ public class AjaxSystemXMLLoader extends AbstractXMLLoader {
 	 *             the exception
 	 */
 	private void disableService(XMLStreamWriter writer, IWebRequest request) throws Exception {
-		DefaultXMLLoaderFactory.logger.debug("run disable service");
+		DefaultXMLLoaderFactory.LOGGER.debug("run disable service");
 		String serviceName = request.getParameter("service");
 		if (serviceName == null) {
 			this.writeFailure(writer, "Missing service name!");

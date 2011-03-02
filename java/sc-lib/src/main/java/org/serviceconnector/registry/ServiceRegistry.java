@@ -29,8 +29,8 @@ import org.serviceconnector.service.Service;
  */
 public final class ServiceRegistry extends Registry<String, Service> {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ServiceRegistry.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ServiceRegistry.class);
 
 	/**
 	 * Adds the service.
@@ -71,7 +71,7 @@ public final class ServiceRegistry extends Registry<String, Service> {
 			}
 			return services;
 		} catch (Exception e) {
-			logger.error("getServices", e);
+			LOGGER.error("getServices", e);
 		}
 		return null;
 	}

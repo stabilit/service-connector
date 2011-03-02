@@ -44,8 +44,8 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class ManageCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ManageCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ManageCommand.class);
 
 	/**
 	 * Instantiates a new manage command.
@@ -82,7 +82,7 @@ public class ManageCommand extends CommandAdapter {
 		// kill command
 		if ((ipAddress.equals(localHost.getHostAddress())) && Constants.CC_CMD_KILL.equalsIgnoreCase(callKey)) {
 			// kill request is allowed from localhost only!
-			logger.info("SC stopped by kill console command");
+			LOGGER.info("SC stopped by kill console command");
 			response.setSCMP(scmpReply);
 			responderCallback.responseCallback(request, response);
 			// wait 300 milliseconds until the response has been sent
@@ -111,11 +111,11 @@ public class ManageCommand extends CommandAdapter {
 				// enable all services
 				this.modifyStateOfAllServices(true);
 			} else if (this.serviceRegistry.containsKey(serviceName) == false) {
-				logger.debug("service=" + serviceName + " not found");
+				LOGGER.debug("service=" + serviceName + " not found");
 				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			} else {
 				// enable service
-				logger.info("enable service=" + serviceName);
+				LOGGER.info("enable service=" + serviceName);
 				this.serviceRegistry.getService(serviceName).setEnabled(true);
 			}
 			response.setSCMP(scmpReply);
@@ -128,18 +128,18 @@ public class ManageCommand extends CommandAdapter {
 				// disable all services
 				this.modifyStateOfAllServices(false);
 			} else if (this.serviceRegistry.containsKey(serviceName) == false) {
-				logger.debug("service=" + serviceName + " not found");
+				LOGGER.debug("service=" + serviceName + " not found");
 				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			} else {
 				// disable service
-				logger.info("disable service=" + serviceName);
+				LOGGER.info("disable service=" + serviceName);
 				this.serviceRegistry.getService(serviceName).setEnabled(false);
 			}
 			response.setSCMP(scmpReply);
 			responderCallback.responseCallback(request, response);
 			return;
 		}
-		logger.error("wrong manage command body=" + bodyString); // body has bad syntax
+		LOGGER.error("wrong manage command body=" + bodyString); // body has bad syntax
 		scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_MANAGE_COMMAND, bodyString);
 		response.setSCMP(scmpReply);
 		// initiate responder to send reply
@@ -156,7 +156,7 @@ public class ManageCommand extends CommandAdapter {
 		Service[] services = this.serviceRegistry.getServices();
 
 		for (Service service : services) {
-			logger.info("set service=" + service.getName() + "state enable=" + enable);
+			LOGGER.info("set service=" + service.getName() + "state enable=" + enable);
 			service.setEnabled(enable);
 		}
 	}
@@ -174,7 +174,7 @@ public class ManageCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

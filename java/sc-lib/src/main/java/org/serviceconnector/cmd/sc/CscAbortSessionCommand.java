@@ -40,8 +40,8 @@ import org.serviceconnector.util.ValidatorUtility;
 
 public class CscAbortSessionCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CscAbortSessionCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(CscAbortSessionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -144,7 +144,7 @@ public class CscAbortSessionCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

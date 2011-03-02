@@ -33,8 +33,8 @@ import org.serviceconnector.service.InvalidMaskLengthException;
  * The Class ClnCommandCascCallback.
  */
 public class ClnCommandCascCallback implements ISCMPMessageCallback {
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ClnCommandCascCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ClnCommandCascCallback.class);
 	/** The callback. */
 	protected IResponderCallback responderCallback;
 	/** The request. */
@@ -77,7 +77,7 @@ public class ClnCommandCascCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		LOGGER.warn(ex);
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling

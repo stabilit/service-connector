@@ -38,8 +38,8 @@ import org.serviceconnector.scmp.SCMPMsgType;
  */
 public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SynchronousCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SynchronousCallback.class);
 
 	/** Queue to store the answer. */
 	protected final BlockingQueue<SCMPMessage> answer;
@@ -94,7 +94,7 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 	public SCMPMessage getMessageSync(int timeoutMillis) {
 		if (timeoutMillis <= 0) {
 			// timeoutMillis must be greater than 0
-			logger.error("timeoutMillis <= 0");
+			LOGGER.error("timeoutMillis <= 0");
 			return null;
 		}
 		// set synchronous mode
@@ -107,13 +107,13 @@ public abstract class SynchronousCallback implements ISCMPSynchronousCallback {
 			this.synchronous = false;
 		} catch (InterruptedException e) {
 			// finally clause handles exception too
-			logger.warn("InterruptedException when waiting for message " + e);
+			LOGGER.warn("InterruptedException when waiting for message " + e);
 		} finally {
 			if (reply == null) {
 				// time runs out before message got received
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.REQUEST_WAIT_ABORT, "");
 				fault.setMessageType(SCMPMsgType.UNDEFINED);
-				logger.error("Operation did not complete in time, aborting");
+				LOGGER.error("Operation did not complete in time, aborting");
 				return fault;
 			}
 		}

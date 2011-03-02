@@ -41,8 +41,8 @@ import org.serviceconnector.scmp.SCMPMsgType;
  */
 public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandlerAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(NettyTcpResponderRequestHandler.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(NettyTcpResponderRequestHandler.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -66,10 +66,10 @@ public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandle
 			return;
 		}
 		if (th instanceof java.io.IOException) {
-			logger.warn(th); // regular disconnect causes this expected exception
+			LOGGER.warn(th); // regular disconnect causes this expected exception
 			return;
 		} else {
-			logger.error("Response error", th);
+			LOGGER.error("Response error", th);
 		}
 		if (th instanceof HasFaultResponseException) {
 			((HasFaultResponseException) th).setFaultResponse(response);

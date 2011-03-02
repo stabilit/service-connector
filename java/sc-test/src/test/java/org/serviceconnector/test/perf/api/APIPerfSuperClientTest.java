@@ -85,8 +85,8 @@ public class APIPerfSuperClientTest extends APIPerfSuperTest {
 
 	protected class MsgCallback extends SCMessageCallback {
 
-		/** The Constant logger. */
-		private final Logger logger = Logger.getLogger(MsgCallback.class);
+		/** The Constant LOGGER. */
+		private final Logger LOGGER = Logger.getLogger(MsgCallback.class);
 
 		private SCMessage message;
 		private int messageCounter;
@@ -147,9 +147,9 @@ public class APIPerfSuperClientTest extends APIPerfSuperTest {
 
 		@Override
 		public void receive(Exception e) {
-			logger.error("receive error: " + e.getMessage());
+			LOGGER.error("receive error: " + e.getMessage());
 			if (e instanceof SCServiceException) {
-				logger.info("SC error received code:" + ((SCServiceException) e).getSCErrorCode() + " text:"
+				LOGGER.info("SC error received code:" + ((SCServiceException) e).getSCErrorCode() + " text:"
 						+ ((SCServiceException) e).getSCErrorText());
 			}
 			message = null;

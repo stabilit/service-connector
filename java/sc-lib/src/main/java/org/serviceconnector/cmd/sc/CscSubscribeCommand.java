@@ -44,8 +44,8 @@ import org.serviceconnector.util.ValidatorUtility;
 
 public class CscSubscribeCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CscSubscribeCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(CscSubscribeCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -132,16 +132,16 @@ public class CscSubscribeCommand extends CommandAdapter {
 				// no exception has been thrown - get out of wait loop
 				break;
 			} catch (NoFreeServerException ex) {
-				logger.debug("NoFreeServerException caught in wait mec of subscribe");
+				LOGGER.debug("NoFreeServerException caught in wait mec of subscribe");
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					throw ex;
 				}
 			} catch (ConnectionPoolBusyException ex) {
-				logger.debug("ConnectionPoolBusyException caught in wait mec of subscribe");
+				LOGGER.debug("ConnectionPoolBusyException caught in wait mec of subscribe");
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
-					logger.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
+					LOGGER.warn(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
 							+ reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
@@ -191,7 +191,7 @@ public class CscSubscribeCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

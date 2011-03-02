@@ -29,8 +29,8 @@ import org.serviceconnector.net.ConnectionType;
 @SuppressWarnings("unused")
 public class DemoSessionCacheClient extends Thread {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(DemoSessionCacheClient.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(DemoSessionCacheClient.class);
 
 	/** The pending request. */
 	private static boolean pendingRequest = false;
@@ -78,7 +78,7 @@ public class DemoSessionCacheClient extends Thread {
 
 			for (int i = 0; i < 10; i++) {
 				requestMsg.setData("body nr : " + i);
-				logger.info("Message sent: " + requestMsg.getData());
+				LOGGER.info("Message sent: " + requestMsg.getData());
 
 				// service.send(cbk, requestMsg); // regular asynchronous call
 				// service.send(cbk, requestMsg, 10); // alternative with operation timeout
@@ -90,14 +90,14 @@ public class DemoSessionCacheClient extends Thread {
 				responseMsg = service.execute(requestMsg); // regular synchronous call
 				// responseMsg = service.execute(requestMsg, 10); // alternative with operation timeout
 
-				logger.info("Message received: " + responseMsg.getData());
+				LOGGER.info("Message received: " + responseMsg.getData());
 				Thread.sleep(1000);
 			}
 			requestMsg.setData("kill server");
 			// service.send(cbk, requestMsg);
 
 		} catch (Exception e) {
-			logger.error("run", e);
+			LOGGER.error("run", e);
 		} finally {
 			try {
 				service.deleteSession(); // regular
@@ -108,7 +108,7 @@ public class DemoSessionCacheClient extends Thread {
 				// service.deleteSession(msg); // alternative with message
 				sc.detach();
 			} catch (Exception e) {
-				logger.error("cleanup", e);
+				LOGGER.error("cleanup", e);
 			}
 		}
 	}
@@ -168,7 +168,7 @@ public class DemoSessionCacheClient extends Thread {
 	// while (true) {
 	// SCMessage requestMsg = new SCMessage();
 	// requestMsg.setData("body nr : " + index++);
-	// logger.info("Message sent: " + requestMsg.getData());
+	// LOGGER.info("Message sent: " + requestMsg.getData());
 	// SCMessageCallback callback = new DemoSessionClientCallback(sessionService);
 	// DemoSessionClient.pendingRequest = true;
 	// sessionService.execute(requestMsg, callback);
@@ -177,13 +177,13 @@ public class DemoSessionCacheClient extends Thread {
 	// }
 	// }
 	// } catch (Exception e) {
-	// logger.error("run", e);
+	// LOGGER.error("run", e);
 	// } finally {
 	// try {
 	// sessionService.deleteSession();
 	// sc.detach();
 	// } catch (Exception e) {
-	// logger.error("cleanup", e);
+	// LOGGER.error("cleanup", e);
 	// }
 	// }
 	// }
@@ -195,7 +195,7 @@ public class DemoSessionCacheClient extends Thread {
 	//
 	// @Override
 	// public void receive(SCMessage reply) {
-	// logger.info("Message received: " + reply.getData());
+	// LOGGER.info("Message received: " + reply.getData());
 	// DemoSessionClient.pendingRequest = false;
 	// }
 	//

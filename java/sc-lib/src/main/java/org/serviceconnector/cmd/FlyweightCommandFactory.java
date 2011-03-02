@@ -31,8 +31,8 @@ import org.serviceconnector.scmp.SCMPMsgType;
  */
 public abstract class FlyweightCommandFactory {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(FlyweightCommandFactory.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(FlyweightCommandFactory.class);
 	/** The map stores base instances by a key. */
 	protected static Map<String, ICommand> commands = new HashMap<String, ICommand>();
 
@@ -61,7 +61,7 @@ public abstract class FlyweightCommandFactory {
 	public ICommand getCommand(SCMPMsgType key) {
 		ICommand command = FlyweightCommandFactory.commands.get(key.getValue());
 		if (command == null) {
-			logger.error("key : " + key + " not found!");
+			LOGGER.error("key : " + key + " not found!");
 			throw new InvalidParameterException("key : " + key + " not found!");
 		}
 		return command;

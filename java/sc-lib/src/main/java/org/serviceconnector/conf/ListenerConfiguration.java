@@ -39,8 +39,8 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class ListenerConfiguration {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ListenerConfiguration.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ListenerConfiguration.class);
 
 	/** The listener name. */
 	private String name;
@@ -103,7 +103,7 @@ public class ListenerConfiguration {
 					}
 				}
 			} catch (Exception e) {
-				logger.fatal("unable to detect network interface", e);
+				LOGGER.fatal("unable to detect network interface", e);
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "wrong interface");
 			}
 		}

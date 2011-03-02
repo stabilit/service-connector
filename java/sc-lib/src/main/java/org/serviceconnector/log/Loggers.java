@@ -17,7 +17,7 @@
 package org.serviceconnector.log;
 
 /**
- * The Enum Loggers. All available log4j Loggers beside class loggers in SCM.
+ * The Enum Loggers. All available log4j Loggers beside class LOGGERs in SCM.
  */
 public enum Loggers {
 
@@ -33,7 +33,7 @@ public enum Loggers {
 	private String value;
 
 	/**
-	 * Instantiates a new logger.
+	 * Instantiates a new LOGGER.
 	 * 
 	 * @param value
 	 *            the value

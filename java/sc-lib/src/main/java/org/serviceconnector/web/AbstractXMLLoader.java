@@ -60,8 +60,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	/** The Constant XMLSDF. */
 	public static final SimpleDateFormat XMLSDF = new SimpleDateFormat("yyyy-MM-dd");
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(AbstractXMLLoader.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(AbstractXMLLoader.class);
 
 	/** The meta map. */
 	private Map<String, String> metaMap;
@@ -467,7 +467,7 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 					writer.writeEndElement();
 				}
 			} catch (Exception e) {
-				logger.error("writeObject", e);
+				LOGGER.error("writeObject", e);
 			}
 		}
 	}

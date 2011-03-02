@@ -34,8 +34,8 @@ import org.serviceconnector.scmp.SCMPError;
  */
 public class ListenerListConfiguration {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ListenerListConfiguration.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ListenerListConfiguration.class);
 
 	private Map<String, ListenerConfiguration> listenerConfigurations;
 
@@ -65,7 +65,7 @@ public class ListenerListConfiguration {
 			// adding listener to the list
 			this.listenerConfigurations.put(listenerName, listenerConfig);
 			// show it
-			logger.info("Listener=" + listenerConfig.toString());
+			LOGGER.info("Listener=" + listenerConfig.toString());
 		}
 	}
 

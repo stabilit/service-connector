@@ -41,9 +41,9 @@ public class CacheId implements Serializable {
 	 */
 	private static final long serialVersionUID = 1147590394007400404L;
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(CacheId.class);
+	private final static Logger LOGGER = Logger.getLogger(CacheId.class);
 
 	private String cacheId = null;
 	private String sequenceNr = null;

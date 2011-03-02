@@ -30,8 +30,8 @@ import org.serviceconnector.net.ConnectionType;
 @SuppressWarnings("unused")
 public class DemoPublishClient extends Thread {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(DemoPublishClient.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(DemoPublishClient.class);
 
 	/**
 	 * The main method.
@@ -76,7 +76,7 @@ public class DemoPublishClient extends Thread {
 				Thread.sleep(1500);
 			}
 		} catch (Exception e) {
-			logger.error("run", e);
+			LOGGER.error("run", e);
 		} finally {
 			try {
 				SCSubscribeMessage msg = new SCSubscribeMessage();
@@ -84,7 +84,7 @@ public class DemoPublishClient extends Thread {
 				service.unsubscribe(5, msg);
 				sc.detach(2); // detaches from SC, stops communication
 			} catch (Exception e) {
-				logger.info("cleanup " + e.toString());
+				LOGGER.info("cleanup " + e.toString());
 			}
 		}
 	}

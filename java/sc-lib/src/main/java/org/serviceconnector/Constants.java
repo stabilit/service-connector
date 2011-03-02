@@ -25,9 +25,9 @@ import org.apache.log4j.Logger;
  */
 public final class Constants {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(Constants.class);
+	private final static Logger LOGGER = Logger.getLogger(Constants.class);
 
 	private Constants() {
 		// instantiating not allowed

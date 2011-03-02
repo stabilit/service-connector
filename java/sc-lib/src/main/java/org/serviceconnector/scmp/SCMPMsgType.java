@@ -90,9 +90,9 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 	/** The UNDEFINED. */
 	UNDEFINED("UND");
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPMsgType.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPMsgType.class);
 
 	/** The value. */
 	private String value;

@@ -29,9 +29,9 @@ import org.serviceconnector.scmp.SCMPMsgType;
  */
 public class SCMPSrvDeleteSessionCall extends SCMPCallAdapter {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPSrvDeleteSessionCall.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPSrvDeleteSessionCall.class);
 
 	/**
 	 * Instantiates a new SCMPSrvDeleteSessionCall.

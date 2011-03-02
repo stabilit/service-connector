@@ -32,9 +32,9 @@ import org.serviceconnector.scmp.SCMPKeepAlive;
  */
 public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(KeepAliveMessageEncoderDecoder.class);
+	private final static Logger LOGGER = Logger.getLogger(KeepAliveMessageEncoderDecoder.class);
 
 	/**
 	 * Instantiates a new default encoder decoder.

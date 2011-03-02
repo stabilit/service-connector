@@ -47,8 +47,8 @@ import org.serviceconnector.scmp.SCMPPart;
  */
 public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(MessageEncoderDecoderAdapter.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(MessageEncoderDecoderAdapter.class);
 
 	/** The df msg size. */
 	private DecimalFormat dfMsgSize = new DecimalFormat(Constants.SCMP_FORMAT_OF_MSG_SIZE);
@@ -184,7 +184,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 				return scmpMsg;
 			}
 		} catch (Exception ex) {
-			logger.error("decode", ex);
+			LOGGER.error("decode", ex);
 			throw new EncodingDecodingException("io error when decoding message", ex);
 		}
 		return scmpMsg;

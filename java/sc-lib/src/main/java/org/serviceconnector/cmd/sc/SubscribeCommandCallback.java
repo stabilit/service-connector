@@ -45,8 +45,8 @@ import org.serviceconnector.service.SubscriptionMask;
  */
 public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SubscribeCommandCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SubscribeCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -124,7 +124,7 @@ public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscrip
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		LOGGER.warn(ex);
 		// creation failed remove from server
 		this.tempSubscription.getServer().removeSession(tempSubscription);
 		SCMPMessage fault = null;

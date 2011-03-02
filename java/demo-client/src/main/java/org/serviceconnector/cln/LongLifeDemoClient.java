@@ -31,8 +31,8 @@ import org.serviceconnector.net.ConnectionType;
 @SuppressWarnings("unused")
 public class LongLifeDemoClient extends Thread {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(LongLifeDemoClient.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(LongLifeDemoClient.class);
 
 	/**
 	 * The main method.
@@ -88,12 +88,12 @@ public class LongLifeDemoClient extends Thread {
 			for (int i = 0; i < 500000; i++) {
 				requestMsg.setData("body nr : " + i);
 				session1.send(requestMsg); // regular asynchronous call
-				logger.info("Message sent async: " + requestMsg.getData());
+				LOGGER.info("Message sent async: " + requestMsg.getData());
 				Thread.sleep(2000);
 			}
 
 		} catch (Exception e) {
-			logger.error("run", e);
+			LOGGER.error("run", e);
 		} finally {
 			try {
 				SCSubscribeMessage msg = new SCSubscribeMessage();
@@ -101,7 +101,7 @@ public class LongLifeDemoClient extends Thread {
 				service.unsubscribe(5, msg);
 				sc.detach(2); // detaches from SC, stops communication
 			} catch (Exception e) {
-				logger.info("cleanup " + e.toString());
+				LOGGER.info("cleanup " + e.toString());
 			}
 		}
 	}

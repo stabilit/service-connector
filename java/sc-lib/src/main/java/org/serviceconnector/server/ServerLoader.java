@@ -35,9 +35,9 @@ import org.serviceconnector.scmp.SCMPError;
  */
 public class ServerLoader {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(ServerLoader.class);
+	private final static Logger LOGGER = Logger.getLogger(ServerLoader.class);
 
 	/**
 	 * Loads remote hosts from a file.

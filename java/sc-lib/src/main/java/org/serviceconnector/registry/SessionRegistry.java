@@ -38,8 +38,8 @@ import org.serviceconnector.util.TimeoutWrapper;
  */
 public class SessionRegistry extends Registry<String, Session> {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SessionRegistry.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SessionRegistry.class);
 
 	/** The timer. Timer instance is responsible to observe session timeouts. */
 	private ScheduledThreadPoolExecutor sessionScheduler;
@@ -119,7 +119,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			}
 			return sessions;
 		} catch (Exception e) {
-			logger.error("getSessions", e);
+			LOGGER.error("getSessions", e);
 		}
 		return null;
 	}
@@ -138,7 +138,7 @@ public class SessionRegistry extends Registry<String, Session> {
 		}
 		// always cancel old timeouter before setting up a new one
 		this.cancelSessionTimeout(session);
-		logger.debug("schedule session " + session.getId() + " timeout in seconds " + (long) session.getSessionTimeoutSeconds());
+		LOGGER.debug("schedule session " + session.getId() + " timeout in seconds " + (long) session.getSessionTimeoutSeconds());
 		// sets up session timeout
 		TimeoutWrapper sessionTimeouter = new TimeoutWrapper(new SessionTimeout(session));
 		// schedule sessionTimeouter in registry timer
@@ -163,7 +163,7 @@ public class SessionRegistry extends Registry<String, Session> {
 			// no session timeout has been set up for this session
 			return;
 		}
-		logger.debug("cancel session timeout " + session.getId());
+		LOGGER.debug("cancel session timeout " + session.getId());
 		boolean cancelSuccess = sessionTimeout.cancel(false);
 		if (cancelSuccess == false) {
 			SessionLogger.warn("cancel of session timeout failed :" + session.getId() + " delay millis: "

@@ -32,8 +32,8 @@ import org.serviceconnector.net.ConnectionType;
  */
 public class DemoFileClient extends Thread {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(DemoFileClient.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(DemoFileClient.class);
 
 	/**
 	 * The main method.
@@ -76,12 +76,12 @@ public class DemoFileClient extends Thread {
 			service.downloadFile(targetFileName, outStream); // regular download
 			outStream.close();
 		} catch (Exception e) {
-			logger.error("run", e);
+			LOGGER.error("run", e);
 		} finally {
 			try {
 				sc.detach(); // detaches from SC, stops communication
 			} catch (Exception e) {
-				logger.error("cleanup", e);
+				LOGGER.error("cleanup", e);
 			}
 		}
 	}

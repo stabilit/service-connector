@@ -36,9 +36,9 @@ import org.serviceconnector.scmp.SCMPMessage;
  */
 public class SCPublishServer extends SCSessionServer {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCPublishServer.class);
+	private final static Logger LOGGER = Logger.getLogger(SCPublishServer.class);
 
 	/**
 	 * Instantiates a new SC publish server.

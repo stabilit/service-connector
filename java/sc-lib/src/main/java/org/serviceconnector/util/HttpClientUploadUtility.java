@@ -33,8 +33,8 @@ import org.serviceconnector.ctx.AppContext;
 
 public class HttpClientUploadUtility {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(HttpClientUploadUtility.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(HttpClientUploadUtility.class);
 
 	private String uri;
 	private HttpClient client;
@@ -97,7 +97,7 @@ public class HttpClientUploadUtility {
 				Integer statusCode = HttpClientUploadUtility.this.httpMethod.getStatusCode();
 				return statusCode;
 			} catch (Exception e) {
-				logger.error(e.toString());
+				LOGGER.error(e.toString());
 				return -1;
 			} finally {
 				HttpClientUploadUtility.this.httpMethod.releaseConnection();

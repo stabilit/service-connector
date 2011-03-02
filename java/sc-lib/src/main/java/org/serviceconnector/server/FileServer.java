@@ -59,8 +59,8 @@ import org.serviceconnector.web.WebUtil;
 
 public class FileServer extends Server {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(FileServer.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(FileServer.class);
 
 	private static final SimpleDateFormat LOGS_FILE_SDF = new SimpleDateFormat(Constants.LOGS_FILE_NAME_FORMAT);
 
@@ -117,7 +117,7 @@ public class FileServer extends Server {
 			if (httpCon.getResponseCode() != HttpResponseStatus.OK.getCode()) {
 				// error handling
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.UPLOAD_FILE_FAILED, httpCon.getResponseMessage());
-				logger.warn("Upload file failed " + httpCon.getResponseMessage());
+				LOGGER.warn("Upload file failed " + httpCon.getResponseMessage());
 				return fault;
 			}
 			httpCon.disconnect();
@@ -150,7 +150,7 @@ public class FileServer extends Server {
 			} catch (Exception e) {
 				SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " "
 						+ e.getMessage());
-				logger.warn("Download file request failed " + httpCon.getResponseMessage());
+				LOGGER.warn("Download file request failed " + httpCon.getResponseMessage());
 				return fault;
 			}
 			// set session to streaming mode
@@ -196,7 +196,7 @@ public class FileServer extends Server {
 		} catch (Exception e) {
 			SCMPMessageFault fault = new SCMPMessageFault(SCMPError.SERVER_ERROR, httpCon.getResponseMessage() + " "
 					+ e.getMessage());
-			logger.warn("List file request failed " + httpCon.getResponseMessage());
+			LOGGER.warn("List file request failed " + httpCon.getResponseMessage());
 			return fault;
 		}
 		try {
@@ -218,7 +218,7 @@ public class FileServer extends Server {
 			return reply;
 		} catch (Exception e) {
 			SCMPMessageFault fault = new SCMPMessageFault(e);
-			logger.warn("List file failed " + httpCon.getResponseMessage());
+			LOGGER.warn("List file failed " + httpCon.getResponseMessage());
 			return fault;
 		}
 	}
@@ -330,7 +330,7 @@ public class FileServer extends Server {
 						try {
 							is.close();
 						} catch (Exception e) {
-							logger.error(e.toString());
+							LOGGER.error(e.toString());
 						}
 					}
 				}
@@ -374,17 +374,17 @@ public class FileServer extends Server {
 	}
 
 	/**
-	 * Adds the log files for given logger instance to the list. Any distinct file names will be ignored.
+	 * Adds the log files for given LOGGER instance to the list. Any distinct file names will be ignored.
 	 * 
-	 * @param logger
-	 *            the logger
+	 * @param LOGGER
+	 *            the LOGGER
 	 * @param logFileList
 	 *            the log file list
 	 * @param distinctLoggerSet
-	 *            the distinct logger set
+	 *            the distinct LOGGER set
 	 */
-	private void addLogFiles(Logger logger, List<String> logFileList, Set<String> distinctLoggerSet) {
-		Enumeration<?> appenders = logger.getAllAppenders();
+	private void addLogFiles(Logger LOGGER, List<String> logFileList, Set<String> distinctLoggerSet) {
+		Enumeration<?> appenders = LOGGER.getAllAppenders();
 		while (appenders.hasMoreElements()) {
 			Appender appender = (Appender) appenders.nextElement();
 			String appenderName = appender.getName();

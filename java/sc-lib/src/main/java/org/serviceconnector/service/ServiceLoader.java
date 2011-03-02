@@ -39,9 +39,9 @@ import org.serviceconnector.server.Server;
  */
 public class ServiceLoader {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(ServiceLoader.class);
+	private final static Logger LOGGER = Logger.getLogger(ServiceLoader.class);
 
 	/**
 	 * Loads services from a file.

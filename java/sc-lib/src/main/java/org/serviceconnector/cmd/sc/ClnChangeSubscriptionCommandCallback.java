@@ -27,8 +27,8 @@ import org.serviceconnector.service.SubscriptionMask;
  * The Class ClnChangeSubscriptionCommandCallback.
  */
 public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ClnChangeSubscriptionCommandCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ClnChangeSubscriptionCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -91,7 +91,7 @@ public class ClnChangeSubscriptionCommandCallback implements ISCMPMessageCallbac
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		LOGGER.warn(ex);
 		SCMPMessage fault = null;
 		SCMPMessage reqMessage = request.getMessage();
 		String serviceName = reqMessage.getServiceName();

@@ -31,8 +31,8 @@ import org.serviceconnector.util.SynchronousCallback;
  */
 public class CommandCallback extends SynchronousCallback {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CommandCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(CommandCallback.class);
 
 	public CommandCallback() {
 		super();
@@ -45,7 +45,7 @@ public class CommandCallback extends SynchronousCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		LOGGER.warn(ex);
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling

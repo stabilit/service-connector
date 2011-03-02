@@ -35,8 +35,8 @@ import org.serviceconnector.util.ValidatorUtility;
 
 public class SrvSubscribeCommand extends SrvCommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SrvSubscribeCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SrvSubscribeCommand.class);
 
 	public SrvSubscribeCommand() {
 	}
@@ -138,7 +138,7 @@ public class SrvSubscribeCommand extends SrvCommandAdapter {
 			ex.setMessageType(SrvSubscribeCommand.this.getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(SrvSubscribeCommand.this.getKey());
 			throw validatorException;

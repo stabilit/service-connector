@@ -26,9 +26,9 @@ import org.serviceconnector.scmp.SCMPMsgType;
  */
 public class SCMPCscAbortSessionCall extends SCMPCallAdapter {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPCscAbortSessionCall.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPCscAbortSessionCall.class);
 
 	/**
 	 * Instantiates a new SCMP csc abort session call.

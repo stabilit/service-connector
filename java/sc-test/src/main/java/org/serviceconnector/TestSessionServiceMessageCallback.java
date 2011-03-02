@@ -7,8 +7,8 @@ import org.serviceconnector.api.cln.SCSessionService;
 
 public class TestSessionServiceMessageCallback extends SCMessageCallback {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(TestSessionServiceMessageCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(TestSessionServiceMessageCallback.class);
 
 	public TestSessionServiceMessageCallback(SCSessionService service) {
 		super(service);
@@ -16,11 +16,11 @@ public class TestSessionServiceMessageCallback extends SCMessageCallback {
 
 	@Override
 	public void receive(SCMessage reply) {
-		logger.info("Session client received: " + reply.getData());
+		LOGGER.info("Session client received: " + reply.getData());
 	}
 
 	@Override
 	public void receive(Exception ex) {
-		logger.info("Session client received: " + ex);
+		LOGGER.info("Session client received: " + ex);
 	}
 }

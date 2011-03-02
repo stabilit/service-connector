@@ -41,8 +41,8 @@ import org.serviceconnector.scmp.SCMPMessage;
  */
 public class NettyTcpConnection extends NettyConnectionAdpater {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(NettyTcpConnection.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(NettyTcpConnection.class);
 
 	/**
 	 * Instantiates a new NettyTcpConnection.
@@ -69,7 +69,7 @@ public class NettyTcpConnection extends NettyConnectionAdpater {
 			// complete localSocketAdress
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
-			logger.error("connect failed to " + this.localSocketAddress.toString(), ex);
+			LOGGER.error("connect failed to " + this.localSocketAddress.toString(), ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP="
 					+ this.localSocketAddress.toString());
 		}

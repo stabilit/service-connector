@@ -37,8 +37,8 @@ import org.serviceconnector.util.ValidatorUtility;
 
 public class FileUploadCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(FileUploadCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(FileUploadCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -108,7 +108,7 @@ public class FileUploadCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

@@ -15,7 +15,7 @@ public class TestSessionClient extends TestAbstractClient {
 	private SCSessionService service;
 
 	static {
-		TestAbstractClient.logger = Logger.getLogger(TestSessionClient.class);
+		TestAbstractClient.LOGGER = Logger.getLogger(TestSessionClient.class);
 	}
 
 	/**
@@ -35,9 +35,9 @@ public class TestSessionClient extends TestAbstractClient {
 	 *            [10] methodsToInvoke
 	 */
 	public static void main(String[] args) throws Exception {
-		logger.log(Level.OFF, "TestSessionClient is starting ...");
+		LOGGER.log(Level.OFF, "TestSessionClient is starting ...");
 		for (int i = 0; i < args.length; i++) {
-			logger.log(Level.OFF, "args[" + i + "]:" + args[i]);
+			LOGGER.log(Level.OFF, "args[" + i + "]:" + args[i]);
 		}
 		TestSessionClient testClient = new TestSessionClient();
 		testClient.setClientName(args[0]);
@@ -71,7 +71,7 @@ public class TestSessionClient extends TestAbstractClient {
 		for (int i = 0; i < 100000; i++) {
 			service.execute(new SCMessage());
 			if (i % 10000 == 0) {
-				logger.log(Level.OFF, this.clientName + " sent message number " + i);
+				LOGGER.log(Level.OFF, this.clientName + " sent message number " + i);
 			}
 		}
 	}

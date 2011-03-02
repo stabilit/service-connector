@@ -31,9 +31,9 @@ import org.serviceconnector.net.req.IRequester;
  */
 public abstract class SrvService {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SrvService.class);
+	private final static Logger LOGGER = Logger.getLogger(SrvService.class);
 
 	/** The requester which connects to SC. */
 	private IRequester requester;

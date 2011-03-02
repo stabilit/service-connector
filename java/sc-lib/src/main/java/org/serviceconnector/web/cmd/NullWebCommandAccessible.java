@@ -31,9 +31,9 @@ import org.serviceconnector.web.LoginException;
  */
 public final class NullWebCommandAccessible implements IWebCommandAccessible {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(NullWebCommandAccessible.class);
+	private final static Logger LOGGER = Logger.getLogger(NullWebCommandAccessible.class);
 
 	/** The null command accessible. */
 	private static IWebCommandAccessible nullCommandAccessible = new NullWebCommandAccessible();

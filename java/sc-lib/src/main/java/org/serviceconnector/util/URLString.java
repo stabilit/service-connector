@@ -38,8 +38,8 @@ import org.serviceconnector.Constants;
  */
 public class URLString {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(URLString.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(URLString.class);
 	/** The parameters. */
 	private Map<String, String> map;
 	/** The call key. */
@@ -169,7 +169,7 @@ public class URLString {
 			}
 			return sb.toString();
 		} catch (UnsupportedEncodingException e) {
-			logger.error("unsupported url encoding format", e);
+			LOGGER.error("unsupported url encoding format", e);
 		}
 		return null;
 	}

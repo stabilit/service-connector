@@ -40,8 +40,8 @@ import org.serviceconnector.scmp.SCMPError;
  */
 public abstract class EndpointAdapter implements IEndpoint, Runnable {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(EndpointAdapter.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(EndpointAdapter.class);
 	/** The base conf. */
 	protected final BasicConfiguration baseConf = AppContext.getBasicConfiguration();
 
@@ -88,7 +88,7 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 		try {
 			this.startListenSync();
 		} catch (Exception ex) {
-			logger.error("start listening", ex);
+			LOGGER.error("start listening", ex);
 			this.destroy();
 		}
 	}
@@ -105,11 +105,11 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 		this.answer.add(Boolean.TRUE);
 		synchronized (this) {
 			try {
-				logger.info("Endpoint started host=" + host + ":" + port);
+				LOGGER.info("Endpoint started host=" + host + ":" + port);
 				wait();
 			} catch (InterruptedException e) {
 			}
-			logger.info("Endpoint stopped host=" + host + ":" + port);
+			LOGGER.info("Endpoint stopped host=" + host + ":" + port);
 		}
 	}
 
@@ -142,14 +142,14 @@ public abstract class EndpointAdapter implements IEndpoint, Runnable {
 				try {
 					operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 				} catch (CommunicationException ex) {
-					logger.error("disconnect", ex); // stopListening must continue
+					LOGGER.error("disconnect", ex); // stopListening must continue
 				}
 			}
 			if (this.serverThread != null) {
 				this.serverThread.interrupt();
 			}
 		} catch (Exception ex) {
-			logger.error("stop listening", ex); // stopListening must continue
+			LOGGER.error("stop listening", ex); // stopListening must continue
 			return;
 		}
 	}

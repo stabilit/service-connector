@@ -50,8 +50,8 @@ import org.serviceconnector.scmp.SCMPMessage;
  */
 public class NettyHttpConnection extends NettyConnectionAdpater {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(NettyHttpConnection.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(NettyHttpConnection.class);
 
 	/** The url. */
 	private URL url;
@@ -82,7 +82,7 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 			// complete localSocketAdress
 			this.localSocketAddress = (InetSocketAddress) this.channel.getLocalAddress();
 		} catch (CommunicationException ex) {
-			logger.error("connect", ex);
+			LOGGER.error("connect", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "connect to IP="
 					+ this.localSocketAddress.toString());
 		}
@@ -95,7 +95,7 @@ public class NettyHttpConnection extends NettyConnectionAdpater {
 	/** {@inheritDoc} */
 	@Override
 	public void send(SCMPMessage scmp, ISCMPMessageCallback callback) throws Exception {
-		// logger.info("send cache id = " + scmp.getCacheId());
+		// LOGGER.info("send cache id = " + scmp.getCacheId());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		encoderDecoder = AppContext.getEncoderDecoderFactory().createEncoderDecoder(scmp);
 		encoderDecoder.encode(baos, scmp);

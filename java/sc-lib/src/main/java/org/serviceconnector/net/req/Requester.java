@@ -39,8 +39,8 @@ import org.serviceconnector.util.TimeoutWrapper;
  */
 public class Requester implements IRequester {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(Requester.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(Requester.class);
 
 	private RemoteNodeConfiguration remoteNodeConfiguration;
 
@@ -153,7 +153,7 @@ public class Requester implements IRequester {
 			try {
 				Requester.this.connectionPool.freeConnection(connectionCtx.getConnection());
 			} catch (Exception ex) {
-				logger.error("freeConnection", ex);
+				LOGGER.error("freeConnection", ex);
 			}
 		}
 
@@ -165,7 +165,7 @@ public class Requester implements IRequester {
 			try {
 				Requester.this.connectionPool.forceClosingConnection(connectionCtx.getConnection());
 			} catch (Exception ex) {
-				logger.error("disconnect", ex);
+				LOGGER.error("disconnect", ex);
 			}
 		}
 
@@ -200,7 +200,7 @@ public class Requester implements IRequester {
 		 */
 		@Override
 		public void timeout() {
-			logger.warn("oti timeout expiration on SC oti=" + this.timeoutMillis);
+			LOGGER.warn("oti timeout expiration on SC oti=" + this.timeoutMillis);
 			this.disconnectConnection();
 			this.scmpCallback.receive(new IdleTimeoutException("idle timeout. operation - could not be completed."));
 		}

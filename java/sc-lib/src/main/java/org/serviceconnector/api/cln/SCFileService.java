@@ -40,8 +40,8 @@ import org.serviceconnector.scmp.SCMPMessage;
  */
 public class SCFileService extends SCService {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SCFileService.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SCFileService.class);
 
 	/**
 	 * Instantiates a new sC file service.
@@ -288,14 +288,14 @@ public class SCFileService extends SCService {
 				deleteSessionCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			} catch (Exception e) {
 				// only logging the failure no further action
-				logger.warn("deleting file session on SC failed sid=" + sessionId, e);
+				LOGGER.warn("deleting file session on SC failed sid=" + sessionId, e);
 				return;
 			}
 			// 3. receiving reply and error handling
 			SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 			if (reply.isFault()) {
 				// only logging the failure no further action
-				logger.warn("deleting file session on SC failed sid=" + sessionId);
+				LOGGER.warn("deleting file session on SC failed sid=" + sessionId);
 			}
 		} finally {
 			// 4. post process, reply to client

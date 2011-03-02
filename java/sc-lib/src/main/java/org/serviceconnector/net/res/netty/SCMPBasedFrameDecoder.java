@@ -35,8 +35,8 @@ import org.serviceconnector.scmp.SCMPError;
  */
 public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandler {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SCMPBasedFrameDecoder.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SCMPBasedFrameDecoder.class);
 
 	/** The decode state. */
 	private DecodeState decodeState;
@@ -71,7 +71,7 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 				}
 				this.decodeState = DecodeState.SIZE;
 			} catch (FrameDecoderException ex) {
-				logger.warn("decode "+ ex.getMessage());
+				LOGGER.warn("decode "+ ex.getMessage());
 				decodeState = DecodeState.EXC;
 				throw new SCMPFrameDecoderException(SCMPError.FRAME_DECODER);
 			}

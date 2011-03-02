@@ -30,9 +30,9 @@ public class ClientThreadController {
 
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(ClientThreadController.class);
+	private final static Logger LOGGER = Logger.getLogger(ClientThreadController.class);
 
 	private CountDownLatch beforeAttachSignal;
 	private CountDownLatch attachedSignal;

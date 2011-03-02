@@ -32,9 +32,9 @@ public enum SCMPVersion {
 	/** 3.2, the version to make tests - DO NOT CHANGE ! */
 	TEST(0x33, 0x32);
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPVersion.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPVersion.class);
 	
 	/** The release. */
 	private byte release;

@@ -20,8 +20,8 @@ import org.serviceconnector.service.Subscription;
  * The Class ClnUnsubscribeCommandCallback.
  */
 public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ClnUnsubscribeCommandCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ClnUnsubscribeCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -61,7 +61,7 @@ public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISub
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		LOGGER.warn(ex);
 		// free server from subscription
 		this.subscription.getServer().removeSession(subscription);
 		SCMPMessage fault = null;

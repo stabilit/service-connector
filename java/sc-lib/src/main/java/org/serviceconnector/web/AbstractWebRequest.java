@@ -26,9 +26,9 @@ import org.apache.log4j.Logger;
  */
 public abstract class AbstractWebRequest implements IWebRequest {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(AbstractWebRequest.class);
+	private final static Logger LOGGER = Logger.getLogger(AbstractWebRequest.class);
 
 	/** The attr map. */
 	private Map<String, Object> attrMap;

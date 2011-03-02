@@ -27,8 +27,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.CascadedSC;
 
 public class CascadedPublishService extends Service implements IPublishService {
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CascadedPublishService.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(CascadedPublishService.class);
 	/** The subscription queue. */
 	private PublishMessageQueue<SCMPMessage> publishMessageQueue;
 	/** The cascaded sc. */
@@ -78,7 +78,7 @@ public class CascadedPublishService extends Service implements IPublishService {
 	 *            the client subscription ids
 	 */
 	public synchronized void renewCascadedClient(Map<String, SubscriptionMask> clientSubscriptionIds) {
-		logger.warn("cascaded publish service renew cascaded client service=" + this.getName());
+		LOGGER.warn("cascaded publish service renew cascaded client service=" + this.getName());
 		this.cascClient = new CascadedClient(cascadedSC, this);
 		if (clientSubscriptionIds != null && clientSubscriptionIds.size() > 0) {
 			// need to hand over client subscription ID's to the new cascaded client

@@ -28,8 +28,8 @@ import org.serviceconnector.scmp.SCMPError;
  */
 public class WebConfiguration {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(WebConfiguration.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(WebConfiguration.class);
 
 	/**
 	 * The translet enabled flag.
@@ -88,13 +88,13 @@ public class WebConfiguration {
 		if (xslTransformationCacheEnabled != null) {
 			this.xslTransformationCacheEnabled = xslTransformationCacheEnabled;
 		}
-		logger.info(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED + "=" + this.xslTransformationCacheEnabled);
+		LOGGER.info(Constants.WEB_XSL_TRANSFORMATION_CACHE_ENABLED + "=" + this.xslTransformationCacheEnabled);
 
 		this.pageHeaderPrefix = compositeConfiguration.getString(Constants.WEB_PAGE_HEADER_PREFIX, "");
-		logger.info(Constants.WEB_PAGE_HEADER_PREFIX + "=" + this.pageHeaderPrefix);
+		LOGGER.info(Constants.WEB_PAGE_HEADER_PREFIX + "=" + this.pageHeaderPrefix);
 		
 		this.scDownloadService = compositeConfiguration.getString(Constants.WEB_SC_DOWNLOAD_SERVICE, null);
-		logger.info(Constants.WEB_SC_DOWNLOAD_SERVICE + "=" + this.scDownloadService);
+		LOGGER.info(Constants.WEB_SC_DOWNLOAD_SERVICE + "=" + this.scDownloadService);
 		if (this.scDownloadService != null) {
 			// service must exist if it was speciffied
 			if (AppContext.getServiceRegistry().getService(this.scDownloadService) == null) {
@@ -104,7 +104,7 @@ public class WebConfiguration {
 		}
 
 		this.scUploadService = compositeConfiguration.getString(Constants.WEB_SC_UPLOAD_SERVICE, null);
-		logger.info(Constants.WEB_SC_UPLOAD_SERVICE + "=" + this.scUploadService);
+		LOGGER.info(Constants.WEB_SC_UPLOAD_SERVICE + "=" + this.scUploadService);
 		if (this.scUploadService != null) {
 			// service must exist if it was speciffied
 			if (AppContext.getServiceRegistry().getService(this.scUploadService) == null) {

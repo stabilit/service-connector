@@ -10,8 +10,8 @@ public class TestPublishServiceMessageCallback extends SCMessageCallback {
 	public static int receivedMsg;
 	public static int lastNumber = -1;
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(TestPublishServiceMessageCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(TestPublishServiceMessageCallback.class);
 
 	public TestPublishServiceMessageCallback(SCPublishService service) {
 		super(service);
@@ -22,11 +22,11 @@ public class TestPublishServiceMessageCallback extends SCMessageCallback {
 		synchronized (this) {
 			receivedMsg++;
 			String responseString = ((String) reply.getData());
-			logger.info("Publish client sid=" + this.service.getSessionId() + " received: " + reply + " body=" + reply.getData());
+			LOGGER.info("Publish client sid=" + this.service.getSessionId() + " received: " + reply + " body=" + reply.getData());
 			String number = responseString.substring(responseString.indexOf(":") + 1);
 			int currentNumber = Integer.valueOf(number);
 			if (currentNumber != lastNumber + 1) {
-				logger.info("Publish client sid=" + this.service.getSessionId() + " received messages not in sequence wrong NR: "
+				LOGGER.info("Publish client sid=" + this.service.getSessionId() + " received messages not in sequence wrong NR: "
 						+ currentNumber);
 			}
 			lastNumber = currentNumber;
@@ -37,7 +37,7 @@ public class TestPublishServiceMessageCallback extends SCMessageCallback {
 	public void receive(Exception ex) {
 		synchronized (this) {
 			receivedMsg++;
-			logger.info("Publish client sid=" + this.service.getSessionId() + " received: " + ex);
+			LOGGER.info("Publish client sid=" + this.service.getSessionId() + " received: " + ex);
 		}
 	}
 }

@@ -29,9 +29,9 @@ import org.serviceconnector.scmp.SCMPMessageSequenceNr;
  */
 public class SCMPSessionCompositeItem {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPSessionCompositeItem.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPSessionCompositeItem.class);
 
 	/** The large response. */
 	private SCMPCompositeReceiver largeRequest;

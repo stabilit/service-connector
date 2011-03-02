@@ -24,8 +24,8 @@ import org.serviceconnector.scmp.SCMPMessage;
 
 public abstract class NettyConnectionAdpater implements IConnection {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(NettyConnectionAdpater.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(NettyConnectionAdpater.class);
 	/** The base conf. */
 	protected final BasicConfiguration baseConf = AppContext.getBasicConfiguration();
 
@@ -90,7 +90,7 @@ public abstract class NettyConnectionAdpater implements IConnection {
 		try {
 			this.operationListener.awaitUninterruptibly(Constants.TECH_LEVEL_OPERATION_TIMEOUT_MILLIS);
 		} catch (Exception ex) {
-			logger.error("destroy", ex);
+			LOGGER.error("destroy", ex);
 		}
 	}
 
@@ -102,7 +102,7 @@ public abstract class NettyConnectionAdpater implements IConnection {
 		try {
 			this.operationListener.awaitUninterruptibly(baseConf.getConnectionTimeoutMillis());
 		} catch (CommunicationException ex) {
-			logger.error("disconnect", ex);
+			LOGGER.error("disconnect", ex);
 			throw new SCMPCommunicationException(SCMPError.CONNECTION_EXCEPTION, "disconnect from IP="
 					+ this.localSocketAddress.toString());
 		}

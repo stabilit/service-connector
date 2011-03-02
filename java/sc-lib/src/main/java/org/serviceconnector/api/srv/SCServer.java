@@ -41,8 +41,8 @@ import org.serviceconnector.util.ValidatorUtility;
  * The Class SCServer. Server to a SC.
  */
 public class SCServer {
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SCServer.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SCServer.class);
 	/** The SC host. */
 	private String scHost;
 	/** The SC port. */
@@ -258,11 +258,11 @@ public class SCServer {
 							continue;
 						}
 						nics.add(inetAddress.getHostAddress());
-						logger.debug("SCServer listens on " + inetAddress.getHostAddress());
+						LOGGER.debug("SCServer listens on " + inetAddress.getHostAddress());
 					}
 				}
 			} catch (Exception e) {
-				logger.fatal("unable to detect network interface", e);
+				LOGGER.fatal("unable to detect network interface", e);
 				throw new SCMPValidatorException(SCMPError.V_WRONG_CONFIGURATION_FILE, "Wrong interface.");
 			}
 		}
@@ -278,7 +278,7 @@ public class SCServer {
 			responder.startListenAsync();
 		} catch (Exception ex) {
 			this.listening = false;
-			logger.error("unable to start listener :" + listenerConfig.getName(), ex);
+			LOGGER.error("unable to start listener :" + listenerConfig.getName(), ex);
 			throw new SCServiceException("Unable to start listener.", ex);
 		}
 		this.listening = true;

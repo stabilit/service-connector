@@ -21,8 +21,8 @@ import org.serviceconnector.api.srv.SCSessionServer;
 import org.serviceconnector.api.srv.SCSessionServerCallback;
 
 public class DemoLargeSessionServer extends DemoSessionServer {
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(DemoLargeSessionServer.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(DemoLargeSessionServer.class);
 	
 	/**
 	 * Main method if you like to start in debug mode.
@@ -45,18 +45,18 @@ public class DemoLargeSessionServer extends DemoSessionServer {
 
 		@Override
 		public SCMessage createSession(SCMessage request, int operationTimeoutMillis) {
-			logger.info("Session created");
+			LOGGER.info("Session created");
 			return request;
 		}
 
 		@Override
 		public void deleteSession(SCMessage request, int operationTimeoutMillis) {
-			logger.info("Session deleted");
+			LOGGER.info("Session deleted");
 		}
 
 		@Override
 		public void abortSession(SCMessage request, int operationTimeoutMillis) {
-			logger.info("Session aborted");
+			LOGGER.info("Session aborted");
 		}
 
 		@Override

@@ -40,8 +40,8 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class EchoCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(EchoCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(EchoCommand.class);
 
 	/**
 	 * Instantiates a new EchoCommand.
@@ -97,12 +97,12 @@ public class EchoCommand extends CommandAdapter {
 			String sessionId = message.getSessionId();
 			ValidatorUtility.validateStringLengthTrim(1, sessionId, 256, SCMPError.HV_WRONG_SESSION_ID);
 		} catch (HasFaultResponseException ex) {
-			logger.warn("validation error", ex);
+			LOGGER.warn("validation error", ex);
 			// needs to set message type at this point
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

@@ -48,7 +48,7 @@ public class TestPublishServer extends TestStatefulServer {
 	protected static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	static {
-		TestStatefulServer.logger = Logger.getLogger(TestPublishServer.class);
+		TestStatefulServer.LOGGER = Logger.getLogger(TestPublishServer.class);
 	}
 
 	/**
@@ -65,9 +65,9 @@ public class TestPublishServer extends TestStatefulServer {
 	 *            [7] nics (comma separated list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
-		logger.log(Level.OFF, "TestPublishServer is starting ...");
+		LOGGER.log(Level.OFF, "TestPublishServer is starting ...");
 		for (int i = 0; i < args.length; i++) {
-			logger.log(Level.OFF, "args[" + i + "]:" + args[i]);
+			LOGGER.log(Level.OFF, "args[" + i + "]:" + args[i]);
 		}
 		TestPublishServer server = new TestPublishServer();
 		server.setServerName(args[0]);
@@ -105,7 +105,7 @@ public class TestPublishServer extends TestStatefulServer {
 				try {
 					server.register(10, this.maxSessions, this.maxConnections, cbk);
 				} catch (Exception e) {
-					logger.error("runPublishServer", e);
+					LOGGER.error("runPublishServer", e);
 					server.deregister();
 				}
 			}
@@ -114,18 +114,18 @@ public class TestPublishServer extends TestStatefulServer {
 			try {
 				this.addExitHandler(FileUtility.getLogPath() + fs + this.serverName + ".pid", pidLock);
 			} catch (SCMPValidatorException e1) {
-				logger.fatal("unable to get path to pid file", e1);
+				LOGGER.fatal("unable to get path to pid file", e1);
 			}
 
-			logger.log(Level.OFF, "TestPublishServer is running ...");
+			LOGGER.log(Level.OFF, "TestPublishServer is running ...");
 		} catch (Exception e) {
-			logger.error("runPublishServer", e);
+			LOGGER.error("runPublishServer", e);
 		} finally {
 			try {
 				// publishSrv.deregisterServer();
 				// publishSrv.deregisterServer(10, serviceName);
 			} catch (Exception e1) {
-				logger.error("run", e1);
+				LOGGER.error("run", e1);
 			}
 			// sc.stopListener();
 		}
@@ -139,13 +139,13 @@ public class TestPublishServer extends TestStatefulServer {
 
 		@Override
 		public SCMessage subscribe(SCSubscribeMessage request, int operationTimeoutMillis) {
-			logger.log(Level.OFF, "Subscribe with sid=" + request.getSessionId() + " mask=" + request.getMask());
+			LOGGER.log(Level.OFF, "Subscribe with sid=" + request.getSessionId() + " mask=" + request.getMask());
 			SCMessage response = request;
 			String sessionInfo = request.getSessionInfo();
 			if (sessionInfo != null) {
 				// watch out for kill server message
 				if (sessionInfo.equals(TestConstants.killServerCmd)) {
-					logger.log(Level.OFF, "Kill request received, exiting ...");
+					LOGGER.log(Level.OFF, "Kill request received, exiting ...");
 					response.setReject(true);
 					KillThread<SCPublishServer> kill = new KillThread<SCPublishServer>(this.scPublishServer);
 					kill.start();
@@ -168,7 +168,7 @@ public class TestPublishServer extends TestStatefulServer {
 					try {
 						publishThread.start();
 					} catch (Exception e1) {
-						logger.error("cannot not invoke method:" + sessionInfo, e1);
+						LOGGER.error("cannot not invoke method:" + sessionInfo, e1);
 					}
 				}
 			}
@@ -201,7 +201,7 @@ public class TestPublishServer extends TestStatefulServer {
 					try {
 						publishThread.start();
 					} catch (Exception e1) {
-						logger.error("cannot not invoke method:" + sessionInfo, e1);
+						LOGGER.error("cannot not invoke method:" + sessionInfo, e1);
 					}
 				}
 			}
@@ -211,13 +211,13 @@ public class TestPublishServer extends TestStatefulServer {
 
 		@Override
 		public void unsubscribe(SCSubscribeMessage request, int operationTimeoutMillis) {
-			logger.log(Level.OFF, "Unsubscribe with sid=" + request.getSessionId() + " mask=" + request.getMask());
+			LOGGER.log(Level.OFF, "Unsubscribe with sid=" + request.getSessionId() + " mask=" + request.getMask());
 			SubscriptionLogger.logUnsubscribe("publish-1", request.getSessionId());
 		}
 
 		@Override
 		public void abortSubscription(SCSubscribeMessage request, int operationTimeoutMillis) {
-			logger.log(Level.OFF, "Abort subscription with sid=" + request.getSessionId() + " mask=" + request.getMask());
+			LOGGER.log(Level.OFF, "Abort subscription with sid=" + request.getSessionId() + " mask=" + request.getMask());
 		}
 	}
 
@@ -245,7 +245,7 @@ public class TestPublishServer extends TestStatefulServer {
 				Method method = this.getClass().getMethod(methodName, SCMessage.class, int.class);
 				method.invoke(this, request, operationTimeoutMillis);
 			} catch (Exception e1) {
-				logger.error("cannot not invoke method:" + methodName, e1);
+				LOGGER.error("cannot not invoke method:" + methodName, e1);
 				return;
 			}
 		}
@@ -272,7 +272,7 @@ public class TestPublishServer extends TestStatefulServer {
 						TestPublishServer.testLogger.info("Publishing message nr. " + (i + 1));
 					}
 				} catch (Exception e) {
-					logger.error("cannot publish", e);
+					LOGGER.error("cannot publish", e);
 					break;
 				}
 			}
@@ -293,7 +293,7 @@ public class TestPublishServer extends TestStatefulServer {
 						TestPublishServer.testLogger.info("Publishing message nr. " + (i + 1));
 					}
 				} catch (Exception e) {
-					logger.error("cannot publish", e);
+					LOGGER.error("cannot publish", e);
 					break;
 				}
 			}
@@ -316,7 +316,7 @@ public class TestPublishServer extends TestStatefulServer {
 						TestPublishServer.testLogger.info("Publishing message nr. " + (i + 1));
 					}
 				} catch (Exception e) {
-					logger.error("cannot publish", e);
+					LOGGER.error("cannot publish", e);
 					break;
 				}
 			}
@@ -334,7 +334,7 @@ public class TestPublishServer extends TestStatefulServer {
 				this.publishSrv.publish(pubMessage);
 				TestPublishServer.testLogger.info("publish message large message");
 			} catch (Exception e) {
-				logger.error("cannot publish", e);
+				LOGGER.error("cannot publish", e);
 			}
 		}
 
@@ -343,12 +343,12 @@ public class TestPublishServer extends TestStatefulServer {
 			String dataString = (String) request.getData();
 			int millis = Integer.parseInt(dataString);
 			try {
-				logger.info("Sleeping " + millis + "ms");
+				LOGGER.info("Sleeping " + millis + "ms");
 				Thread.sleep(millis);
 			} catch (InterruptedException e) {
-				logger.warn("sleep interrupted " + e.getMessage());
+				LOGGER.warn("sleep interrupted " + e.getMessage());
 			} catch (Exception e) {
-				logger.error("sleep error", e);
+				LOGGER.error("sleep error", e);
 			}
 			return request;
 		}

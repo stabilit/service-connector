@@ -47,8 +47,8 @@ import org.serviceconnector.scmp.SCMPPart;
  * More information about this issue: http://www.jboss.org/netty/community.html#nabble-td5441049
  */
 public class NettyResponderRequestHandlerTask implements IResponderCallback, Runnable {
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(NettyResponderRequestHandlerTask.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(NettyResponderRequestHandlerTask.class);
 	/** The Constant performanceLogger. */
 	private final static PerformanceLogger performanceLogger = PerformanceLogger.getInstance();
 	/** The composite registry. */
@@ -148,16 +148,16 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			performanceLogger.end(this.getClass().getName(), "run");
 		} catch (HasFaultResponseException ex) {
 			// exception carries response inside
-			logger.warn("run " + ex.toString());
+			LOGGER.warn("run " + ex.toString());
 			ex.setSessionIdAndServiceName(request);
 			ex.setFaultResponse(response);
 			try {
 				response.write();
 			} catch (Exception e) {
-				logger.error("Sending a response failed.", ex);
+				LOGGER.error("Sending a response failed.", ex);
 			}
 		} catch (Exception e2) {
-			logger.error("run ", e2);
+			LOGGER.error("run ", e2);
 			SCMPMessageFault scmpFault = new SCMPMessageFault(SCMPError.SERVER_ERROR, e2.getMessage());
 			scmpFault.setMessageType(SCMPMsgType.UNDEFINED);
 			scmpFault.setLocalDateTime();
@@ -165,7 +165,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			try {
 				response.write();
 			} catch (Exception ex) {
-				logger.error("Sending a response failed.", ex);
+				LOGGER.error("Sending a response failed.", ex);
 			}
 		}
 	}
@@ -241,7 +241,7 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			// reply to client
 			response.write();
 		} catch (Exception ex) {
-			logger.error("send response failed", ex);
+			LOGGER.error("send response failed", ex);
 		}
 	}
 

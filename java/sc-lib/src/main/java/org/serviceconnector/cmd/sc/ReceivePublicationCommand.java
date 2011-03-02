@@ -38,8 +38,8 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class ReceivePublicationCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ReceivePublicationCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ReceivePublicationCommand.class);
 
 	/**
 	 * Instantiates a new ReceivePublicationCommand.
@@ -71,7 +71,7 @@ public class ReceivePublicationCommand extends CommandAdapter {
 				return;
 			}
 		}
-		logger.debug("CRP message found in queue subscriptionId " + subscriptionId);
+		LOGGER.debug("CRP message found in queue subscriptionId " + subscriptionId);
 		// message found in subscription queue set up reply
 		SCMPMessage reply = new SCMPMessage();
 		if (message.isPart()) {
@@ -115,7 +115,7 @@ public class ReceivePublicationCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

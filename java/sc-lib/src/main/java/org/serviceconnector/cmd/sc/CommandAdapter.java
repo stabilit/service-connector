@@ -47,8 +47,8 @@ import org.serviceconnector.service.Subscription;
  */
 public abstract class CommandAdapter implements ICommand {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(CommandAdapter.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(CommandAdapter.class);
 
 	/** The session registry. */
 	protected SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
@@ -74,7 +74,7 @@ public abstract class CommandAdapter implements ICommand {
 		Session session = sessionRegistry.getSession(sessionId);
 		if (session == null) {
 			// session not found in registry
-			logger.info("session not found sid=" + sessionId);
+			LOGGER.info("session not found sid=" + sessionId);
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SESSION_NOT_FOUND, sessionId);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;
@@ -87,7 +87,7 @@ public abstract class CommandAdapter implements ICommand {
 
 		if (subscription == null) {
 			// subscription not found in registry
-			logger.info("subscription not found sid=" + subscriptionId);
+			LOGGER.info("subscription not found sid=" + subscriptionId);
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.SUBSCRIPTION_NOT_FOUND, subscriptionId);
 			scmpCommandException.setMessageType(getKey());
 			throw scmpCommandException;

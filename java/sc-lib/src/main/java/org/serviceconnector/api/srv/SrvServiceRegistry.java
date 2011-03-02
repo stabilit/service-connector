@@ -26,8 +26,8 @@ import org.serviceconnector.registry.Registry;
  */
 public class SrvServiceRegistry extends Registry<String, SrvService> {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SrvServiceRegistry.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SrvServiceRegistry.class);
 
 	/**
 	 * Adds the server service.
@@ -59,7 +59,7 @@ public class SrvServiceRegistry extends Registry<String, SrvService> {
 	 *            the key
 	 */
 	public SrvService removeSrvService(String key) {
-		logger.debug("remove SrvService " + key);
+		LOGGER.debug("remove SrvService " + key);
 		return super.remove(key);
 	}
 }

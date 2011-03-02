@@ -33,8 +33,8 @@ import org.serviceconnector.net.req.netty.tcp.NettyTcpConnection;
  */
 public class ConnectionFactory {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ConnectionFactory.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ConnectionFactory.class);
 
 	/**
 	 * NETTY stuff<br>
@@ -62,7 +62,7 @@ public class ConnectionFactory {
 		} else if (ConnectionType.NETTY_TCP.getValue().equalsIgnoreCase(key)) {
 			return new NettyTcpConnection(ConnectionFactory.channelFactory, ConnectionFactory.timer);
 		} else {
-			logger.fatal("key : " + key + " not found!");
+			LOGGER.fatal("key : " + key + " not found!");
 			throw new InvalidParameterException("key : " + key + " not found!");
 		}
 	}

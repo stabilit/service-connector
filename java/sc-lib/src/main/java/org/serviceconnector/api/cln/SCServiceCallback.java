@@ -36,9 +36,9 @@ import org.serviceconnector.util.SynchronousCallback;
  */
 class SCServiceCallback extends SynchronousCallback {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCServiceCallback.class);
+	private final static Logger LOGGER = Logger.getLogger(SCServiceCallback.class);
 
 	/** The message callback. */
 	protected SCMessageCallback messageCallback;

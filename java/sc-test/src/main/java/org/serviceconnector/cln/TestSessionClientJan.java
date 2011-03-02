@@ -21,9 +21,9 @@ import org.serviceconnector.ctrl.util.ThreadSafeCounter;
 @SuppressWarnings("unused")
 public class TestSessionClientJan extends Thread {
 	
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 
-	private final static Logger logger = Logger.getLogger(TestSessionClientJan.class);
+	private final static Logger LOGGER = Logger.getLogger(TestSessionClientJan.class);
 
 	private ThreadSafeCounter ctr;
 	private String scHost;
@@ -55,14 +55,14 @@ public class TestSessionClientJan extends Thread {
 		
 //	@Override
 //	public void run() {
-//		logger.log(Level.OFF, "TestSessionServer is running ...");
+//		LOGGER.log(Level.OFF, "TestSessionServer is running ...");
 //		ctr = new ThreadSafeCounter();
 //		SCClient sc = new SCClient(TestConstants.HOST, this.scPort);
 //		try {
 //			sc.setKeepAliveIntervalSeconds(this.keepAliveIntervalSeconds);
 //
 //<<<<<<< .mine		} catch (Exception e) {
-//			logger.error("runSessionServer", e);
+//			LOGGER.error("runSessionServer", e);
 //		} finally {
 //			try {
 //				sc.detach();
@@ -209,7 +209,7 @@ public class TestSessionClientJan extends Thread {
 //				this.server.getSCServer().stopListener();
 //				System.exit(0);
 //			} catch (Exception e) {
-//				logger.error("run", e);
+//				LOGGER.error("run", e);
 //			}
 //		}
 //	}
@@ -223,7 +223,7 @@ public class TestSessionClientJan extends Thread {
 //
 // @Override
 // public SCMessage createSession(SCMessage message, int operationTimeoutMillis) {
-// logger.info("SessionServer.SrvCallback.createSession()\n" + message.getData());
+// LOGGER.info("SessionServer.SrvCallback.createSession()\n" + message.getData());
 // if (message.getData() != null && message.getData() instanceof String) {
 // String dataString = (String) message.getData();
 // if (dataString.equals("reject")) {
@@ -235,9 +235,9 @@ public class TestSessionClientJan extends Thread {
 // response.setAppErrorCode(0);
 // response.setAppErrorText("\"This is the app error text\"");
 // } catch (SCMPValidatorException e) {
-// logger.error("rejecting create session", e);
+// LOGGER.error("rejecting create session", e);
 // }
-// logger.info("rejecting session");
+// LOGGER.info("rejecting session");
 // return response;
 // }
 // }
@@ -246,12 +246,12 @@ public class TestSessionClientJan extends Thread {
 //
 // @Override
 // public void deleteSession(SCMessage message, int operationTimeoutMillis) {
-// logger.trace("SessionServer.SrvCallback.deleteSession()");
+// LOGGER.trace("SessionServer.SrvCallback.deleteSession()");
 // }
 //
 // @Override
 // public void abortSession(SCMessage message, int operationTimeoutMillis) {
-// logger.trace("SessionServer.SrvCallback.abortSession()");
+// LOGGER.trace("SessionServer.SrvCallback.abortSession()");
 // }
 //
 // @Override
@@ -269,7 +269,7 @@ public class TestSessionClientJan extends Thread {
 // KillThread kill = new KillThread(this.outerContext.getServer());
 // kill.start();
 // } catch (Exception e) {
-// logger.error("execute", e);
+// LOGGER.error("execute", e);
 // }
 // } else if (dataString.equals("executed")) {
 // ctr.decrement();
@@ -277,10 +277,10 @@ public class TestSessionClientJan extends Thread {
 // } else if (dataString.startsWith("timeout")) {
 // int millis = Integer.parseInt(dataString.split(" ")[1]);
 // try {
-// logger.info("Sleeping " + dataString.split(" ")[1] + "ms in order to timeout.");
+// LOGGER.info("Sleeping " + dataString.split(" ")[1] + "ms in order to timeout.");
 // Thread.sleep(millis);
 // } catch (InterruptedException e) {
-// logger.error("sleep in execute", e);
+// LOGGER.error("sleep in execute", e);
 // }
 // } else if (dataString.startsWith("register")) {
 // String serviceName = dataString.split(" ")[1];
@@ -301,7 +301,7 @@ public class TestSessionClientJan extends Thread {
 // services[serviceNames.length] = serviceName;
 // serviceNames = services;
 // } catch (Exception e) {
-// logger.error("register server " + serviceName, e);
+// LOGGER.error("register server " + serviceName, e);
 // }
 // }
 // }
@@ -324,7 +324,7 @@ public class TestSessionClientJan extends Thread {
 // }
 // serviceNames = services;
 // } catch (Exception e) {
-// logger.error("deregister server " + serviceName, e);
+// LOGGER.error("deregister server " + serviceName, e);
 // }
 // }
 // }

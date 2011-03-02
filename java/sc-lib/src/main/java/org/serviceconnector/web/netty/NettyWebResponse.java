@@ -32,8 +32,8 @@ import org.serviceconnector.web.IWebResponse;
  */
 public class NettyWebResponse implements IWebResponse {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(NettyWebResponse.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(NettyWebResponse.class);
 
 	/** The response. */
 	private HttpResponse response;
@@ -87,7 +87,7 @@ public class NettyWebResponse implements IWebResponse {
 
 	/** {@inheritDoc} */
 	@Override
-	public void addCookie(Cookie cookie) {
+	public final void addCookie(Cookie cookie) {
 		if (this.ce == null) {
 			this.ce = new CookieEncoder(true);
 		}
@@ -96,7 +96,7 @@ public class NettyWebResponse implements IWebResponse {
 
 	@Override
 	public void redirect(String path) {
-		logger.debug("redirect location = " + path);
+		LOGGER.debug("redirect location = " + path);
 		response.setStatus(HttpResponseStatus.FOUND);
 		response.addHeader("Location", path);
 	}

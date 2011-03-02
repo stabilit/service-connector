@@ -44,8 +44,8 @@ import org.serviceconnector.service.Session;
  */
 public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ClnExecuteCommandCallback.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ClnExecuteCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */
@@ -100,7 +100,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 			try {
 				Cache scmpCache = cacheManager.getCache(this.requestServiceName);
 				if (scmpCache == null) {
-					ClnExecuteCommandCallback.logger.error("cache write failed, no cache, service name = "
+					ClnExecuteCommandCallback.LOGGER.error("cache write failed, no cache, service name = "
 							+ this.requestServiceName);
 				} else {
 					// check if reply is fault
@@ -176,7 +176,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 				}
 			} catch (Exception e) {
 				CacheLogger.debug("cache (" + reply.getCacheId() + ") message put did fail = " + e.toString());
-				ClnExecuteCommandCallback.logger.error(e.toString());
+				ClnExecuteCommandCallback.LOGGER.error(e.toString());
 			}
 		}
 		// forward server reply to client
@@ -196,7 +196,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 	/** {@inheritDoc} */
 	@Override
 	public void receive(Exception ex) {
-		logger.warn(ex);
+		LOGGER.warn(ex);
 		SCMPMessage fault = null;
 		if (ex instanceof IdleTimeoutException) {
 			// operation timeout handling
@@ -228,7 +228,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 			try {
 				Cache scmpCache = cacheManager.getCache(this.requestServiceName);
 				if (scmpCache == null) {
-					ClnExecuteCommandCallback.logger.error("cache write failed, no cache, service name = "
+					ClnExecuteCommandCallback.LOGGER.error("cache write failed, no cache, service name = "
 							+ this.requestServiceName);
 				} else {
 					// an exception did occur, remove those composite from cache
@@ -242,7 +242,7 @@ public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 				}
 			} catch (Exception e) {
 				CacheLogger.debug("cache (" + this.requestCacheId + ") message put did fail = " + e.toString());
-				ClnExecuteCommandCallback.logger.error(e.toString());
+				ClnExecuteCommandCallback.LOGGER.error(e.toString());
 			}
 		}
 		this.responderCallback.responseCallback(request, response);

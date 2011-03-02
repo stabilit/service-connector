@@ -31,9 +31,9 @@ import org.serviceconnector.scmp.SCMPMsgType;
  */
 public class SCMPInspectCall extends SCMPCallAdapter {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPInspectCall.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPInspectCall.class);
 
 	/**
 	 * Instantiates a new SCMPInspectCall.

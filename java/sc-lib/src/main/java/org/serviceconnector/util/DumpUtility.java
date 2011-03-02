@@ -30,9 +30,9 @@ import org.serviceconnector.Constants;
  */
 public class DumpUtility {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(DumpUtility.class);
+	private final static Logger LOGGER = Logger.getLogger(DumpUtility.class);
 
 	/**
 	 * Gets all dump files matching given criterias.

@@ -48,8 +48,8 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class ClnDeleteSessionCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ClnDeleteSessionCommand.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ClnDeleteSessionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -127,7 +127,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 				if (i >= (tries - 1)) {
 					// only one loop outstanding - don't continue throw current exception
 					statefulServer.abortSessionsAndDestroy("deleting session failed, connection pool to server busy");
-					logger.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
+					LOGGER.debug(SCMPError.NO_FREE_CONNECTION.getErrorText("service=" + reqMessage.getServiceName()));
 					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.NO_FREE_CONNECTION, "service="
 							+ reqMessage.getServiceName());
 					scmpCommandException.setMessageType(this.getKey());
@@ -164,7 +164,7 @@ public class ClnDeleteSessionCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;

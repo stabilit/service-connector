@@ -33,8 +33,8 @@ import org.apache.log4j.Logger;
  */
 public class SCMPCompositeReceiver extends SCMPMessage {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(SCMPCompositeReceiver.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(SCMPCompositeReceiver.class);
 
 	/** The list of message parts. */
 	private List<SCMPMessage> scmpList;
@@ -69,7 +69,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 		currentPart.setMessageType(request.getMessageType());
 		currentPart.setSessionId(request.getSessionId());
 		currentPart.setCacheId(request.getCacheId());
-		// logger.info("cache id = " + request.getCacheId());
+		// LOGGER.info("cache id = " + request.getCacheId());
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.OPERATION_TIMEOUT); // tries to set operation timeout
 		currentPart.setHeader(request, SCMPHeaderAttributeKey.SERVICE_NAME); // tries to set service name
 		currentPart.setHeader(messagePart, SCMPHeaderAttributeKey.BODY_TYPE); // tries to set bodyType
@@ -163,14 +163,14 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 					if (bodyLength > 0) {
 						Object body = message.getBody();
 						if (body == null) {
-							logger.warn("bodyLength > 0 but body == null");
+							LOGGER.warn("bodyLength > 0 but body == null");
 						}
 						this.outputStream.write((byte[]) body);
 						this.outputStream.flush();
 					}
 				}
 			} catch (Exception ex) {
-				logger.error("getBody " + ex.toString());
+				LOGGER.error("getBody " + ex.toString());
 				return null;
 			}
 			return this.outputStream.toByteArray();
@@ -187,7 +187,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 				}
 				this.writer.flush();
 			} catch (Exception ex) {
-				logger.error("getBody " + ex.toString());
+				LOGGER.error("getBody " + ex.toString());
 				return null;
 			}
 			return this.writer.toString();
@@ -211,14 +211,14 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 					if (bodyLength > 0) {
 						Object body = message.getBody();
 						if (body == null) {
-							logger.warn("bodyLength > 0 but body == null");
+							LOGGER.warn("bodyLength > 0 but body == null");
 						}
 						outStream.write((byte[]) body);
 						outStream.flush();
 					}
 				}
 			} catch (Exception ex) {
-				logger.error("getBodyAsStream " + ex.toString());
+				LOGGER.error("getBodyAsStream " + ex.toString());
 			}
 		}
 	}

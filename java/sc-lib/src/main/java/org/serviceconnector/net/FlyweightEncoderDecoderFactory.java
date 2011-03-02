@@ -30,8 +30,8 @@ import org.serviceconnector.scmp.SCMPMessage;
  */
 public final class FlyweightEncoderDecoderFactory {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(FlyweightEncoderDecoderFactory.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(FlyweightEncoderDecoderFactory.class);
 	/** The encoder decoders. */
 	private static Map<String, IEncoderDecoder> encoderDecoders;
 
@@ -125,7 +125,7 @@ public final class FlyweightEncoderDecoderFactory {
 	private IEncoderDecoder createEncoderDecoder(String key) {
 		IEncoderDecoder encoderDecoder = FlyweightEncoderDecoderFactory.encoderDecoders.get(key);
 		if (encoderDecoder == null) {
-			logger.fatal("key : " + key + " not found!");
+			LOGGER.fatal("key : " + key + " not found!");
 			throw new InvalidParameterException("key : " + key + " not found!");
 		}
 		return encoderDecoder;

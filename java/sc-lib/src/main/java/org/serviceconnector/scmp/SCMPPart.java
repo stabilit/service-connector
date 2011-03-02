@@ -28,9 +28,9 @@ import org.apache.log4j.Logger;
  */
 public class SCMPPart extends SCMPMessage {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPPart.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPPart.class);
 	private boolean pollRequest;
 
 	/**

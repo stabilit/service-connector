@@ -29,8 +29,8 @@ import org.serviceconnector.registry.Registry;
  */
 public final class ResponderRegistry extends Registry<Object, IResponder> {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(ResponderRegistry.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(ResponderRegistry.class);
 
 	/** The thread local. Space to store any data for a single thread. */
 	private ThreadLocal<Object> threadLocal;
@@ -102,7 +102,7 @@ public final class ResponderRegistry extends Registry<Object, IResponder> {
 			}
 			return responders;
 		} catch (Exception e) {
-			logger.error("getResponders", e);
+			LOGGER.error("getResponders", e);
 		}
 		return null;
 	}

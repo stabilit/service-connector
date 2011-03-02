@@ -37,7 +37,7 @@ import org.serviceconnector.util.FileUtility;
 public class TestSessionServer extends TestStatefulServer {
 
 	static {
-		TestStatefulServer.logger = Logger.getLogger(TestSessionServer.class);
+		TestStatefulServer.LOGGER = Logger.getLogger(TestSessionServer.class);
 	}
 
 	/**
@@ -54,9 +54,9 @@ public class TestSessionServer extends TestStatefulServer {
 	 *            [7] nics (comma separated list)<br>
 	 */
 	public static void main(String[] args) throws Exception {
-		logger.log(Level.OFF, "TestSessionServer is starting ...");
+		LOGGER.log(Level.OFF, "TestSessionServer is starting ...");
 		for (int i = 0; i < args.length; i++) {
-			logger.log(Level.OFF, "args[" + i + "]:" + args[i]);
+			LOGGER.log(Level.OFF, "args[" + i + "]:" + args[i]);
 		}
 		TestSessionServer server = new TestSessionServer();
 		server.setServerName(args[0]);
@@ -91,7 +91,7 @@ public class TestSessionServer extends TestStatefulServer {
 				try {
 					server.register(10, this.maxSessions, this.maxConnections, cbk);
 				} catch (Exception e) {
-					logger.error("runSessionServer", e);
+					LOGGER.error("runSessionServer", e);
 					server.deregister();
 				}
 			}
@@ -100,12 +100,12 @@ public class TestSessionServer extends TestStatefulServer {
 			try {
 				this.addExitHandler(FileUtility.getLogPath() + fs + this.serverName + ".pid", pidLock);
 			} catch (SCMPValidatorException e1) {
-				logger.fatal("unable to get path to pid file", e1);
+				LOGGER.fatal("unable to get path to pid file", e1);
 			}
-			logger.log(Level.OFF, "TestSessionServer is running ...");
+			LOGGER.log(Level.OFF, "TestSessionServer is running ...");
 			// server.destroy();
 		} catch (Exception e) {
-			logger.error("runSessionServer", e);
+			LOGGER.error("runSessionServer", e);
 		} finally {
 			// sc.stopListener();
 		}
@@ -129,7 +129,7 @@ public class TestSessionServer extends TestStatefulServer {
 			if (sessionInfo != null) {
 				// watch out for kill server message
 				if (sessionInfo.equals(TestConstants.killServerCmd)) {
-					logger.log(Level.OFF, "Kill request received, exiting ...");
+					LOGGER.log(Level.OFF, "Kill request received, exiting ...");
 					response.setReject(true);
 					KillThread<SCSessionServer> kill = new KillThread<SCSessionServer>(this.scSessionServer);
 					kill.start();
@@ -168,7 +168,7 @@ public class TestSessionServer extends TestStatefulServer {
 					response = (SCMessage) method.invoke(this, request, operationTimeoutMillis);
 					return response;
 				} catch (Exception e) {
-					logger.warn("method " + methodName + " not found on server");
+					LOGGER.warn("method " + methodName + " not found on server");
 				}
 			}
 			// return empty message
@@ -220,12 +220,12 @@ public class TestSessionServer extends TestStatefulServer {
 			String dataString = (String) request.getData();
 			int millis = Integer.parseInt(dataString);
 			try {
-				logger.info("Sleeping " + millis + "ms");
+				LOGGER.info("Sleeping " + millis + "ms");
 				Thread.sleep(millis);
 			} catch (InterruptedException e) {
-				logger.warn("sleep interrupted " + e.getMessage());
+				LOGGER.warn("sleep interrupted " + e.getMessage());
 			} catch (Exception e) {
-				logger.error("sleep error", e);
+				LOGGER.error("sleep error", e);
 			}
 			return request;
 		}
@@ -249,46 +249,46 @@ public class TestSessionServer extends TestStatefulServer {
 			Calendar time = Calendar.getInstance();
 			String dataString = (String) request.getData();
 
-			logger.info("cache call");
+			LOGGER.info("cache call");
 			if (dataString.equals("cidNoCed")) {
-				logger.info("cidNoCed");
+				LOGGER.info("cidNoCed");
 				// reply without setting CacheExpirationDateTime
 				return request;
 			} else if (dataString.startsWith("cacheFor2Sec")) {
-				logger.info("cacheFor2Sec");
+				LOGGER.info("cacheFor2Sec");
 				time.add(Calendar.SECOND, 2);
 				request.setCacheExpirationDateTime(time.getTime());
 			} else if (dataString.startsWith("cacheFor1Hour")) {
-				logger.info("cacheFor1Hour");
+				LOGGER.info("cacheFor1Hour");
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());
 			} else if (dataString.startsWith("cacheFor2Hour")) {
-				logger.info("cacheFor2Hour");
+				LOGGER.info("cacheFor2Hour");
 				time.add(Calendar.HOUR_OF_DAY, 2);
 				request.setCacheExpirationDateTime(time.getTime());
 			} else if (dataString.startsWith("refreshCache700")) {
-				logger.info("refreshCache700");
+				LOGGER.info("refreshCache700");
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());
 				request.setCacheId("700");
 			} else if (dataString.startsWith("cacheLargeMessageFor1Hour")) {
-				logger.info("cacheLargeMessageFor1Hour");
+				LOGGER.info("cacheLargeMessageFor1Hour");
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());
 				String largeMessage = TestUtil.getLargeString();
 				request.setData(largeMessage);
 			} else if (dataString.startsWith("cache10MBString1Hour")) {
-				logger.info("cache10MBMessageFor1Hour");
+				LOGGER.info("cache10MBMessageFor1Hour");
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());
 				String largeMessage = TestUtil.get10MBString();
 				request.setData(largeMessage);
 			} else if (dataString.startsWith("cacheExpired1Hour")) {
-				logger.info("cacheExpired1Hour");
+				LOGGER.info("cacheExpired1Hour");
 				time.add(Calendar.HOUR_OF_DAY, -1);
 				request.setCacheExpirationDateTime(time.getTime());
 			} else if (dataString.startsWith("cacheServerReplyOther")) {
-				logger.info("cacheServerReplyOther");
+				LOGGER.info("cacheServerReplyOther");
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());
 				String cacheId = request.getCacheId();
@@ -296,14 +296,14 @@ public class TestSessionServer extends TestStatefulServer {
 				iCacheId += 100;
 				request.setCacheId(String.valueOf(iCacheId));
 			} else if (dataString.startsWith("cacheTimeoutReply")) {
-				logger.info("cacheTimeoutReply");
+				LOGGER.info("cacheTimeoutReply");
 				try {
 					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 				}
 				request.setCacheExpirationDateTime(time.getTime());
 			} else {
-				logger.info("cache no special key");
+				LOGGER.info("cache no special key");
 				// no special key, we set default expiration time to 1 hour, otherwise SC will not accept the message for its cache
 				time.add(Calendar.HOUR_OF_DAY, 1);
 				request.setCacheExpirationDateTime(time.getTime());

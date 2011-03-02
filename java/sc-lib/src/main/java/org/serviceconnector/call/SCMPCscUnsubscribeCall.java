@@ -23,9 +23,9 @@ import org.serviceconnector.scmp.SCMPMsgType;
 
 public class SCMPCscUnsubscribeCall extends SCMPCallAdapter {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(SCMPCscUnsubscribeCall.class);
+	private final static Logger LOGGER = Logger.getLogger(SCMPCscUnsubscribeCall.class);
 
 	public SCMPCscUnsubscribeCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);

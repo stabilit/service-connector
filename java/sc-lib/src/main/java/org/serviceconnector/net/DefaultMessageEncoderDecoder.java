@@ -37,8 +37,8 @@ import org.serviceconnector.scmp.SCMPMessage;
  */
 public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(DefaultMessageEncoderDecoder.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(DefaultMessageEncoderDecoder.class);
 
 	/**
 	 * Instantiates a new default encoder decoder.
@@ -124,7 +124,7 @@ public class DefaultMessageEncoderDecoder extends MessageEncoderDecoderAdapter {
 				bw.flush();
 			}
 		} catch (IOException ex) {
-			logger.error("encode", ex);
+			LOGGER.error("encode", ex);
 			scmpMsg.setInternalStatus(SCMPInternalStatus.FAILED);
 			throw new EncodingDecodingException("io error when encoding message", ex);
 		}

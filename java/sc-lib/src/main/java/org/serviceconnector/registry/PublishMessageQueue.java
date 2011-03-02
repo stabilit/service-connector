@@ -45,8 +45,8 @@ import org.serviceconnector.util.LinkedQueue;
  */
 public class PublishMessageQueue<E> {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(PublishMessageQueue.class);
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(PublishMessageQueue.class);
 
 	private ScheduledThreadPoolExecutor timeoutScheduler;
 	/** The data queue. */
@@ -93,7 +93,7 @@ public class PublishMessageQueue<E> {
 			return;
 		}
 		this.dataQueue.insert(message);
-		logger.trace("insert - queue size: " + this.dataQueue.getSize());
+		LOGGER.trace("insert - queue size: " + this.dataQueue.getSize());
 		// inform new message arrived
 		this.fireNewDataArrived();
 		// delete unreferenced nodes in queue
@@ -133,7 +133,7 @@ public class PublishMessageQueue<E> {
 		// dereference node, pointer moves to next node
 		node.dereference();
 		ptr.moveNext();
-		logger.trace("getMessage - queue size:" + this.dataQueue.getSize());
+		LOGGER.trace("getMessage - queue size:" + this.dataQueue.getSize());
 		return message;
 
 	}
@@ -146,7 +146,7 @@ public class PublishMessageQueue<E> {
 	 * @return the e
 	 */
 	public synchronized E getMessageOrListen(String sessionId, IRequest request, IResponse response) {
-		logger.trace("getMessageOrListen");
+		LOGGER.trace("getMessageOrListen");
 		E message = this.getMessage(sessionId);
 		if (message == null) {
 			// message null - switch to listen mode
@@ -162,14 +162,14 @@ public class PublishMessageQueue<E> {
 	 * if necessary (mask matches & listening mode).
 	 */
 	private synchronized void fireNewDataArrived() {
-		logger.trace("fireNewDataArrived");
+		LOGGER.trace("fireNewDataArrived");
 
 		LinkedNode<E> newNode = dataQueue.getLast();
 		for (TimeAwareDataPointer ptr : this.pointerMap.values()) {
 			if (ptr.getNode() == null) {
 				// data pointer points to null - try pointing to new element
 				if (ptr.setNode(newNode) == true) {
-					logger.trace("data pointer points to null,setNode successful - data pointer interested in new node");
+					LOGGER.trace("data pointer points to null,setNode successful - data pointer interested in new node");
 					// setNode successful - data pointer interested in new node
 					if (ptr.listening()) {
 						// data pointer in listen mode needs to be informed about new data
@@ -193,7 +193,7 @@ public class PublishMessageQueue<E> {
 			}
 			// remove node
 			this.dataQueue.extract();
-			logger.trace("remove - queue size:" + this.dataQueue.getSize());
+			LOGGER.trace("remove - queue size:" + this.dataQueue.getSize());
 			// reads next node
 			node = this.dataQueue.getFirst();
 		}
@@ -217,7 +217,7 @@ public class PublishMessageQueue<E> {
 		// starts listening and schedules subscription timeout
 		dataPointer.startListen();
 		dataPointer.schedule();
-		logger.trace("PublishMessageQueue listen " + sessionId + " listen: " + dataPointer.listening);
+		LOGGER.trace("PublishMessageQueue listen " + sessionId + " listen: " + dataPointer.listening);
 	}
 
 	/**
@@ -231,7 +231,7 @@ public class PublishMessageQueue<E> {
 	 *            the timer run
 	 */
 	public synchronized void subscribe(String sessionId, SubscriptionMask mask, PublishTimeout publishTimeout) {
-		logger.trace("subscribe");
+		LOGGER.trace("subscribe");
 		TimeAwareDataPointer dataPointer = new TimeAwareDataPointer(mask, publishTimeout);
 		// Stores sessionId and dataPointer in map
 		this.pointerMap.put(sessionId, dataPointer);
@@ -246,7 +246,7 @@ public class PublishMessageQueue<E> {
 	 *            the mask
 	 */
 	public synchronized void changeSubscription(String sessionId, SubscriptionMask mask) {
-		logger.trace("changeSubscription");
+		LOGGER.trace("changeSubscription");
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		if (dataPointer != null) {
 			dataPointer.changeMask(mask);
@@ -260,7 +260,7 @@ public class PublishMessageQueue<E> {
 	 *            the session id
 	 */
 	public synchronized void unsubscribe(String sessionId) {
-		logger.trace("unsubscribe");
+		LOGGER.trace("unsubscribe");
 		TimeAwareDataPointer dataPointer = this.pointerMap.get(sessionId);
 		if (dataPointer != null && dataPointer.listening) {
 			// unsubscribe & pointer is in listen mode - run a timeout
@@ -428,14 +428,14 @@ public class PublishMessageQueue<E> {
 			// schedules timeoutTask on subscription queue executer
 			this.timeout = (ScheduledFuture<PublishTimeoutWrapper>) timeoutScheduler.schedule(timeoutWrapper, (long) timeoutMillis,
 					TimeUnit.MILLISECONDS);
-			logger.trace("schedule datapointer " + timeoutMillis);
+			LOGGER.trace("schedule datapointer " + timeoutMillis);
 		}
 
 		/**
 		 * Destroys data pointer and dereferences node in queue.
 		 */
 		private synchronized void destroy() {
-			logger.trace("destroy TimeAwareDataPointer");
+			LOGGER.trace("destroy TimeAwareDataPointer");
 			this.cancel();
 			if (node != null) {
 				this.node.dereference();
@@ -457,7 +457,7 @@ public class PublishMessageQueue<E> {
 			if (this.timeout != null) {
 				// cancel timeout even if its already running - timeout synchronize on queue
 				this.timeout.cancel(true);
-				logger.trace("cancel TimeAwareDataPointer");
+				LOGGER.trace("cancel TimeAwareDataPointer");
 				// important to set timeouter null - rescheduling of same instance not possible
 				this.timeout = null;
 				// removes canceled timeouts

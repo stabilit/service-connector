@@ -30,9 +30,9 @@ import org.serviceconnector.test.integration.api.APIIntegrationSuperServerTest;
 
 public class APIMultipleSCsServerTest extends APIIntegrationSuperServerTest {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(APIMultipleSCsServerTest.class);
+	private final static Logger LOGGER = Logger.getLogger(APIMultipleSCsServerTest.class);
 
 	private static ProcessCtx scCtx2;
 	private static ProcessCtx scCtx1;

@@ -39,19 +39,19 @@ public class AjaxContentXMLLoader extends AbstractXMLLoader {
 
 	/** {@inheritDoc} */
 	@Override
-	public IFactoryable newInstance() {
+	public final IFactoryable newInstance() {
 		return new AjaxContentXMLLoader();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean isText() {
+	public final boolean isText() {
 		return false;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
+	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		String id = request.getParameter("id");
 		if (id == null) {
 			throw new InvalidParameterException("id parameter missing");

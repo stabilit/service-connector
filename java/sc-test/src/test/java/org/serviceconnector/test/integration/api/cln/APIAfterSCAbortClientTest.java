@@ -11,9 +11,9 @@ import org.serviceconnector.test.integration.api.APIIntegrationSuperClientTest;
 
 public class APIAfterSCAbortClientTest extends APIIntegrationSuperClientTest  {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(APIAfterSCAbortClientTest.class);
+	private final static Logger LOGGER = Logger.getLogger(APIAfterSCAbortClientTest.class);
 
 	private SCMgmtClient client;
 	

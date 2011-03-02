@@ -32,9 +32,9 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class ValidatorUtilityTest extends SuperUnitTest {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(ValidatorUtilityTest.class);
+	private final static Logger LOGGER = Logger.getLogger(ValidatorUtilityTest.class);
 	/** The FOUR. */
 	private static final int FOUR = 4;
 	/** The SDF. */

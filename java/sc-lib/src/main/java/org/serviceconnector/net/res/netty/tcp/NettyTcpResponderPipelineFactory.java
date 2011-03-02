@@ -30,9 +30,9 @@ import org.serviceconnector.net.res.netty.SCMPBasedFrameDecoder;
  */
 public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory {
 
-	/** The Constant logger. */
+	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger logger = Logger.getLogger(NettyTcpResponderPipelineFactory.class);
+	private final static Logger LOGGER = Logger.getLogger(NettyTcpResponderPipelineFactory.class);
 
 	/** {@inheritDoc} */
 	@Override
@@ -41,7 +41,7 @@ public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory 
 		// responsible for reading until SCMP frame is complete
 		pipeline.addLast("framer", new SCMPBasedFrameDecoder());
 		// logging handler
-		pipeline.addLast("logger", new LoggingHandler());
+		pipeline.addLast("LOGGER", new LoggingHandler());
 		// responsible for handling request
 		pipeline.addLast("handler", new NettyTcpResponderRequestHandler());
 		return pipeline;
