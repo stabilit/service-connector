@@ -120,7 +120,7 @@ public final class Constants {
 	 */
 	/**
 	 * Technical operation timeout. <br>
-	 * It is the time a single WRITE/READ/CLOSE/OPEN can take. Must be reasonably sort.
+	 * It is the time a single WRITE/READ/CLOSE/OPEN can take. Must be reasonably short.
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
 

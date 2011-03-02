@@ -62,7 +62,7 @@ public class SCClient {
 	protected boolean attached;
 
 	/**
-	 * Instantiates a new SC client.
+	 * Instantiates a new SC client with defualt connection type.
 	 */
 	public SCClient(String host, int port) {
 		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE);
