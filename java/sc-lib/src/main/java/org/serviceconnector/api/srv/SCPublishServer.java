@@ -38,7 +38,7 @@ public class SCPublishServer extends SCSessionServer {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCPublishServer.class);
+	private static final Logger LOGGER = Logger.getLogger(SCPublishServer.class);
 
 	/**
 	 * Instantiates a new SC publish server.

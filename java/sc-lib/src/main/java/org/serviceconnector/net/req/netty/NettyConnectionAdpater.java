@@ -25,7 +25,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public abstract class NettyConnectionAdpater implements IConnection {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(NettyConnectionAdpater.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyConnectionAdpater.class);
 	/** The base conf. */
 	protected final BasicConfiguration baseConf = AppContext.getBasicConfiguration();
 

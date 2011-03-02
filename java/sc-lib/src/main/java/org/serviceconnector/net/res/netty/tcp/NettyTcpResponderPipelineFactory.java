@@ -32,7 +32,7 @@ public class NettyTcpResponderPipelineFactory implements ChannelPipelineFactory 
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(NettyTcpResponderPipelineFactory.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyTcpResponderPipelineFactory.class);
 
 	/** {@inheritDoc} */
 	@Override

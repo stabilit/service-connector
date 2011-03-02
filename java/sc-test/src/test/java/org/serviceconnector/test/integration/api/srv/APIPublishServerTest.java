@@ -30,7 +30,7 @@ public class APIPublishServerTest extends APIIntegrationSuperServerTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APIPublishServerTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APIPublishServerTest.class);
 
 	/**
 	 * Description: publish 1 message to the service "publish-1"<br>

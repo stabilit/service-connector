@@ -32,7 +32,7 @@ public abstract class Service {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(Service.class);
+	private static final Logger LOGGER = Logger.getLogger(Service.class);
 
 	/** The type. */
 	private ServiceType type;

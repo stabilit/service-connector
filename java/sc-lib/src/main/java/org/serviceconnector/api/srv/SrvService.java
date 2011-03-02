@@ -33,7 +33,7 @@ public abstract class SrvService {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SrvService.class);
+	private static final Logger LOGGER = Logger.getLogger(SrvService.class);
 
 	/** The requester which connects to SC. */
 	private IRequester requester;

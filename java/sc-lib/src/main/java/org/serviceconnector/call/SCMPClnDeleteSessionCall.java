@@ -31,7 +31,7 @@ public class SCMPClnDeleteSessionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPClnDeleteSessionCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPClnDeleteSessionCall.class);
 
 	/**
 	 * Instantiates a new SCMPClnDeleteSessionCall.

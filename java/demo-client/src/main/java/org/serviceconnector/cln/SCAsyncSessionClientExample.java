@@ -30,7 +30,7 @@ import org.serviceconnector.api.cln.SCSessionService;
 public class SCAsyncSessionClientExample {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(SCAsyncSessionClientExample.class);
+	private static final Logger LOGGER = Logger.getLogger(SCAsyncSessionClientExample.class);
 
 	/** The message received. */
 	private static boolean messageReceived = false;

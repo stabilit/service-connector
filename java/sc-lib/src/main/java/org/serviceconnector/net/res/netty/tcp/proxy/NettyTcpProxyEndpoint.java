@@ -35,7 +35,7 @@ import org.serviceconnector.net.res.IResponder;
 public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(NettyTcpProxyEndpoint.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyTcpProxyEndpoint.class);
 	/** The host. */
 	private String remoteHost;
 	/** The port. */

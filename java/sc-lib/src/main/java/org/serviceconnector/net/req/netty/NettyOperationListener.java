@@ -37,7 +37,7 @@ public class NettyOperationListener implements ChannelFutureListener {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(NettyOperationListener.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyOperationListener.class);
 	
 	/** Queue to store the answer. */
 	private final BlockingQueue<ChannelFuture> answer = new ArrayBlockingQueue<ChannelFuture>(1);

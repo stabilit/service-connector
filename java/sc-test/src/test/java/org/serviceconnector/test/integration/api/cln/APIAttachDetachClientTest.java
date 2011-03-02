@@ -30,7 +30,7 @@ public class APIAttachDetachClientTest extends APIIntegrationSuperClientTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APIAttachDetachClientTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APIAttachDetachClientTest.class);
 
 	/**
 	 * helper create the client with different parameters

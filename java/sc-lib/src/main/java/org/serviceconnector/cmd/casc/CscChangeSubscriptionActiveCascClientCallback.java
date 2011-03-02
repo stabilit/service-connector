@@ -28,7 +28,7 @@ import org.serviceconnector.service.SubscriptionMask;
 
 public class CscChangeSubscriptionActiveCascClientCallback implements ISCMPMessageCallback {
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(CscChangeSubscriptionActiveCascClientCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(CscChangeSubscriptionActiveCascClientCallback.class);
 
 	/** The request. */
 	protected IRequest request;

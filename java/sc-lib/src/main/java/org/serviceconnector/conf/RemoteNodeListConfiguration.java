@@ -35,7 +35,7 @@ import org.serviceconnector.scmp.SCMPError;
 public class RemoteNodeListConfiguration {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(RemoteNodeListConfiguration.class);
+	private static final Logger LOGGER = Logger.getLogger(RemoteNodeListConfiguration.class);
 
 	private Map<String, RemoteNodeConfiguration> remoteNodeConfigurations;
 

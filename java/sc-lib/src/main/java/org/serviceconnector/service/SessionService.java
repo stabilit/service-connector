@@ -35,7 +35,7 @@ public class SessionService extends StatefulService {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SessionService.class);
+	private static final Logger LOGGER = Logger.getLogger(SessionService.class);
 
 	/**
 	 * Instantiates a new session service.

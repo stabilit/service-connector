@@ -28,7 +28,7 @@ import org.serviceconnector.server.CascadedSC;
 
 public class CascadedPublishService extends Service implements IPublishService {
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(CascadedPublishService.class);
+	private static final Logger LOGGER = Logger.getLogger(CascadedPublishService.class);
 	/** The subscription queue. */
 	private PublishMessageQueue<SCMPMessage> publishMessageQueue;
 	/** The cascaded sc. */

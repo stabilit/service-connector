@@ -45,7 +45,7 @@ import org.serviceconnector.service.Session;
 public class ClnExecuteCommandCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(ClnExecuteCommandCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(ClnExecuteCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */

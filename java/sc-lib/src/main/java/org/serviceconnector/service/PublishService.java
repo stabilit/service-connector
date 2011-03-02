@@ -32,7 +32,7 @@ public class PublishService extends StatefulService implements IPublishService {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(PublishService.class);
+	private static final Logger LOGGER = Logger.getLogger(PublishService.class);
 
 	/** The subscription queue. */
 	private PublishMessageQueue<SCMPMessage> publishMessageQueue;

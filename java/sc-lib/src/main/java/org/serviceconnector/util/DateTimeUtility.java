@@ -32,7 +32,7 @@ public final class DateTimeUtility {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(DateTimeUtility.class);
+	private static final Logger LOGGER = Logger.getLogger(DateTimeUtility.class);
 
 	/** The Constant SDF. */
 	private static final SimpleDateFormat SDF = new SimpleDateFormat(Constants.SCMP_FORMAT_OF_DATE_TIME);

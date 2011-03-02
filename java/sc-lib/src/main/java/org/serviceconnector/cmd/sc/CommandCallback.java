@@ -32,7 +32,7 @@ import org.serviceconnector.util.SynchronousCallback;
 public class CommandCallback extends SynchronousCallback {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(CommandCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(CommandCallback.class);
 
 	public CommandCallback() {
 		super();

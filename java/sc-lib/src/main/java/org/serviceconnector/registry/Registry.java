@@ -38,7 +38,7 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(Registry.class);
+	private static final Logger LOGGER = Logger.getLogger(Registry.class);
 
 	/** The registry map. */
 	protected Map<K, V> registryMap;

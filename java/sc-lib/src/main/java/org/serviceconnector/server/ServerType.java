@@ -38,7 +38,7 @@ public enum ServerType implements IReversibleEnum<String, ServerType> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ServerType.class);
+	private static final Logger LOGGER = Logger.getLogger(ServerType.class);
 
 	/** The value. */
 	private String value;

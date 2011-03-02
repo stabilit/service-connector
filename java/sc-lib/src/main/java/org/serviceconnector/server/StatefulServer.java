@@ -55,7 +55,7 @@ import org.serviceconnector.service.Subscription;
 public class StatefulServer extends Server implements IStatefulServer {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(StatefulServer.class);
+	private static final Logger LOGGER = Logger.getLogger(StatefulServer.class);
 
 	private static SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
 	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();

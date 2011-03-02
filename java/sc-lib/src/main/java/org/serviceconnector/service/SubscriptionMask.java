@@ -27,7 +27,7 @@ public class SubscriptionMask {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SubscriptionMask.class);
+	private static final Logger LOGGER = Logger.getLogger(SubscriptionMask.class);
 	/** The mask in bytes. */
 	private byte[] mask;
 

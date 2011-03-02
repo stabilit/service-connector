@@ -46,7 +46,7 @@ public enum SCMPHeaderKey {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPHeaderKey.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPHeaderKey.class);
 
 	/**
 	 * Gets the msg header key by string.

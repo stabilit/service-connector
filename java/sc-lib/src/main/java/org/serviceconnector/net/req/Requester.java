@@ -40,7 +40,7 @@ import org.serviceconnector.util.TimeoutWrapper;
 public class Requester implements IRequester {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(Requester.class);
+	private static final Logger LOGGER = Logger.getLogger(Requester.class);
 
 	private RemoteNodeConfiguration remoteNodeConfiguration;
 

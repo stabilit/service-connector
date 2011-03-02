@@ -43,7 +43,7 @@ public class SCSessionServer {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCSessionServer.class);
+	private static final Logger LOGGER = Logger.getLogger(SCSessionServer.class);
 
 	/** The registered. Indicates if a server is already registered to an SC. */
 	protected boolean registered;

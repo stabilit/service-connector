@@ -24,7 +24,7 @@ import org.serviceconnector.service.Session;
 public class ClnCreateSessionCommandCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(ClnCreateSessionCommandCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(ClnCreateSessionCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */

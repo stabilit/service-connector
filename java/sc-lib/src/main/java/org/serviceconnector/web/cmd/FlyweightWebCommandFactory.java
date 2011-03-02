@@ -29,7 +29,7 @@ public abstract class FlyweightWebCommandFactory {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(FlyweightWebCommandFactory.class);
+	private static final Logger LOGGER = Logger.getLogger(FlyweightWebCommandFactory.class);
 
 	/** The command factory. */
 	protected static FlyweightWebCommandFactory webCommandFactory = null;

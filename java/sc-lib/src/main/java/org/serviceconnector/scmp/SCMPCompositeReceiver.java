@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
 public class SCMPCompositeReceiver extends SCMPMessage {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(SCMPCompositeReceiver.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPCompositeReceiver.class);
 
 	/** The list of message parts. */
 	private List<SCMPMessage> scmpList;

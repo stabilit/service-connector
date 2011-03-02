@@ -28,7 +28,7 @@ public abstract class SCMessageCallback {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMessageCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMessageCallback.class);
 
 	/** The service which is using the message callback. */
 	protected SCService service;

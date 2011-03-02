@@ -21,7 +21,7 @@ import org.serviceconnector.service.Session;
 public class ClnDeleteSessionCommandCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(ClnDeleteSessionCommandCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(ClnDeleteSessionCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */

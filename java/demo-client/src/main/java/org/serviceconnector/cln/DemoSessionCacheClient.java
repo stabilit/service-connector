@@ -30,7 +30,7 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoSessionCacheClient extends Thread {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(DemoSessionCacheClient.class);
+	private static final Logger LOGGER = Logger.getLogger(DemoSessionCacheClient.class);
 
 	/** The pending request. */
 	private static boolean pendingRequest = false;

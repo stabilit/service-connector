@@ -31,7 +31,7 @@ import org.serviceconnector.service.SubscriptionMask;
 public class CscUnsubscribeCallbackActiveCascClient implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(CscUnsubscribeCallbackActiveCascClient.class);
+	private static final Logger LOGGER = Logger.getLogger(CscUnsubscribeCallbackActiveCascClient.class);
 	/** The cascaded client. */
 	private CascadedClient cascClient;
 	private ISubscriptionCallback commandCallback;

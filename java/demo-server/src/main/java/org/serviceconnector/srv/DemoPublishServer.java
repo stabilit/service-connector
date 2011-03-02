@@ -30,7 +30,7 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoPublishServer extends Thread {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger
+	private static final Logger LOGGER = Logger
 			.getLogger(DemoPublishServer.class);
 
 	/**

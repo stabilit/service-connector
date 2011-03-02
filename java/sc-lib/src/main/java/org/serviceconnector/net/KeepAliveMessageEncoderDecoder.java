@@ -34,7 +34,7 @@ public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(KeepAliveMessageEncoderDecoder.class);
+	private static final Logger LOGGER = Logger.getLogger(KeepAliveMessageEncoderDecoder.class);
 
 	/**
 	 * Instantiates a new default encoder decoder.

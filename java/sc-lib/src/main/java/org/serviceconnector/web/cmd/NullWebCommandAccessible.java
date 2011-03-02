@@ -33,7 +33,7 @@ public final class NullWebCommandAccessible implements IWebCommandAccessible {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(NullWebCommandAccessible.class);
+	private static final Logger LOGGER = Logger.getLogger(NullWebCommandAccessible.class);
 
 	/** The null command accessible. */
 	private static IWebCommandAccessible nullCommandAccessible = new NullWebCommandAccessible();

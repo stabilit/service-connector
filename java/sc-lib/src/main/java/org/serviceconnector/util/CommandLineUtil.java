@@ -27,7 +27,7 @@ public class CommandLineUtil {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(CommandLineUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(CommandLineUtil.class);
 	
 	/**
 	 * Gets the arguments.

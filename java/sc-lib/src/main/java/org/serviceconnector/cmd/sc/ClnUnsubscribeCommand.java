@@ -45,7 +45,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class ClnUnsubscribeCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(ClnUnsubscribeCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(ClnUnsubscribeCommand.class);
 
 	/** {@inheritDoc} */
 	@Override

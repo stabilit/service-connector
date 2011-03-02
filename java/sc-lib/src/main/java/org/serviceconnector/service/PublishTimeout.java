@@ -36,7 +36,7 @@ import org.serviceconnector.util.ITimeout;
 public class PublishTimeout implements ITimeout {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(PublishTimeout.class);
+	private static final Logger LOGGER = Logger.getLogger(PublishTimeout.class);
 	/** The subscription registry. */
 	private SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 

@@ -30,7 +30,7 @@ public class SCMPRegisterServerCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPRegisterServerCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPRegisterServerCall.class);
 
 	/**
 	 * Instantiates a new SCMPRegisterServerCall.

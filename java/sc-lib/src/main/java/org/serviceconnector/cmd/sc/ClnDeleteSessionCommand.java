@@ -49,7 +49,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class ClnDeleteSessionCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(ClnDeleteSessionCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(ClnDeleteSessionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override

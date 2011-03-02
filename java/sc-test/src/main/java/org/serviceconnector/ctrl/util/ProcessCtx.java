@@ -22,7 +22,7 @@ public class ProcessCtx {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ProcessCtx.class);
+	private static final Logger LOGGER = Logger.getLogger(ProcessCtx.class);
 
 	private Process process = null;
 	private String runableName = null;

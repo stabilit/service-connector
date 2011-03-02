@@ -27,7 +27,7 @@ public class Session extends AbstractSession {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(Session.class);
+	private static final Logger LOGGER = Logger.getLogger(Session.class);
 
 	private double sessionTimeoutSeconds;
 	private boolean pendingRequest;

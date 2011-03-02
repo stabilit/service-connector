@@ -37,7 +37,7 @@ public class ServerLoader {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ServerLoader.class);
+	private static final Logger LOGGER = Logger.getLogger(ServerLoader.class);
 
 	/**
 	 * Loads remote hosts from a file.

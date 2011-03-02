@@ -55,7 +55,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class ClnExecuteCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(ClnExecuteCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(ClnExecuteCommand.class);
 
 	/** {@inheritDoc} */
 	@Override

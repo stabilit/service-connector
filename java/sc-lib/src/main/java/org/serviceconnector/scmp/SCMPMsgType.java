@@ -92,7 +92,7 @@ public enum SCMPMsgType implements IReversibleEnum<String, SCMPMsgType> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPMsgType.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPMsgType.class);
 
 	/** The value. */
 	private String value;

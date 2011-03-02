@@ -21,7 +21,7 @@ import org.serviceconnector.service.Subscription;
  */
 public class ClnUnsubscribeCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(ClnUnsubscribeCommandCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(ClnUnsubscribeCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */

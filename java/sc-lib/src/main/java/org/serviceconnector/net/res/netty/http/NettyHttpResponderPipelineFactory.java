@@ -36,7 +36,7 @@ public class NettyHttpResponderPipelineFactory implements ChannelPipelineFactory
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(NettyHttpResponderPipelineFactory.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyHttpResponderPipelineFactory.class);
 	
 	/** {@inheritDoc} */
 	public ChannelPipeline getPipeline() throws Exception {

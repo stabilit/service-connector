@@ -29,7 +29,7 @@ import org.serviceconnector.scmp.SCMPError;
 public class WebConfiguration {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(WebConfiguration.class);
+	private static final Logger LOGGER = Logger.getLogger(WebConfiguration.class);
 
 	/**
 	 * The translet enabled flag.

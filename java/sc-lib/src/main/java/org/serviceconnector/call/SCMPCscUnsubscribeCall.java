@@ -25,7 +25,7 @@ public class SCMPCscUnsubscribeCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPCscUnsubscribeCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPCscUnsubscribeCall.class);
 
 	public SCMPCscUnsubscribeCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);

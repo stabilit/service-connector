@@ -43,7 +43,7 @@ public class CacheId implements Serializable {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(CacheId.class);
+	private static final Logger LOGGER = Logger.getLogger(CacheId.class);
 
 	private String cacheId = null;
 	private String sequenceNr = null;

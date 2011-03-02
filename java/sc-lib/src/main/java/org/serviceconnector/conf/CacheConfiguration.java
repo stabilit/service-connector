@@ -34,7 +34,7 @@ import org.serviceconnector.scmp.SCMPError;
 public class CacheConfiguration implements ICacheConfiguration {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(CacheConfiguration.class);
+	private static final Logger LOGGER = Logger.getLogger(CacheConfiguration.class);
 
 	/** The cache enabled. */
 	protected boolean cacheEnabled;

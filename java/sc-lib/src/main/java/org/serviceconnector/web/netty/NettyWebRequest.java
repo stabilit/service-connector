@@ -38,7 +38,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 	
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(NettyWebRequest.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyWebRequest.class);
 
 	/** The request. */
 	private HttpRequest request;

@@ -31,7 +31,7 @@ import org.serviceconnector.scmp.SCMPError;
  */
 public class BasicConfiguration {
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(BasicConfiguration.class);
+	private static final Logger LOGGER = Logger.getLogger(BasicConfiguration.class);
 	/** The write pid. */
 	private boolean writePID = Constants.DEFAULT_WRITE_PID_FLAG;
 	/** The Pid file path. */

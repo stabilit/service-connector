@@ -29,7 +29,7 @@ public class APISCSubscribeMessageTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APISCSubscribeMessageTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APISCSubscribeMessageTest.class);
 
 	private SCSubscribeMessage message;
 

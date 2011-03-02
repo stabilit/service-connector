@@ -11,7 +11,7 @@ public class TestPublishServiceMessageCallback extends SCMessageCallback {
 	public static int lastNumber = -1;
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(TestPublishServiceMessageCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(TestPublishServiceMessageCallback.class);
 
 	public TestPublishServiceMessageCallback(SCPublishService service) {
 		super(service);

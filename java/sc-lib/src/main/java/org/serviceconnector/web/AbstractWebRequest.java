@@ -28,7 +28,7 @@ public abstract class AbstractWebRequest implements IWebRequest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(AbstractWebRequest.class);
+	private static final Logger LOGGER = Logger.getLogger(AbstractWebRequest.class);
 
 	/** The attr map. */
 	private Map<String, Object> attrMap;

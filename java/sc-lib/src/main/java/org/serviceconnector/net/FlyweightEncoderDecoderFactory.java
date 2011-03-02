@@ -31,7 +31,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public final class FlyweightEncoderDecoderFactory {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(FlyweightEncoderDecoderFactory.class);
+	private static final Logger LOGGER = Logger.getLogger(FlyweightEncoderDecoderFactory.class);
 	/** The encoder decoders. */
 	private static Map<String, IEncoderDecoder> encoderDecoders;
 

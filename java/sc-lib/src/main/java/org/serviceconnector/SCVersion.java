@@ -62,7 +62,7 @@ public enum SCVersion {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCVersion.class);
+	private static final Logger LOGGER = Logger.getLogger(SCVersion.class);
 
 	/** The Constant df. */
 	private static final DecimalFormat df = new DecimalFormat("000");

@@ -31,7 +31,7 @@ import org.serviceconnector.web.ctx.WebContext;
 public class WebSessionRegistry extends Registry<String, IWebSession> {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(WebSessionRegistry.class);
+	private static final Logger LOGGER = Logger.getLogger(WebSessionRegistry.class);
 
 	/** The instance. */
 	private static WebSessionRegistry instance = new WebSessionRegistry();

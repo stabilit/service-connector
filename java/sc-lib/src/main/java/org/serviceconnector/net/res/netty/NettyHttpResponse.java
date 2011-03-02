@@ -37,7 +37,7 @@ public class NettyHttpResponse extends ResponseAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(NettyHttpResponse.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyHttpResponse.class);
 
 	/**
 	 * Instantiates a new netty http response.

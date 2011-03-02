@@ -34,7 +34,7 @@ import org.serviceconnector.cache.CacheId;
 public class SCMPMessage {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(SCMPMessage.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPMessage.class);
 
 	/** The Constant SCMP_VERSION. */
 	public static final SCMPVersion SCMP_VERSION = SCMPVersion.CURRENT;

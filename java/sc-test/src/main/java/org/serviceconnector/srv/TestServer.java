@@ -22,7 +22,7 @@ import org.serviceconnector.TestConstants;
 public class TestServer {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(TestServer.class);
+	private static final Logger LOGGER = Logger.getLogger(TestServer.class);
 
 	/**
 	 * start server process

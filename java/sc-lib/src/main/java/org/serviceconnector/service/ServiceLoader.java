@@ -41,7 +41,7 @@ public class ServiceLoader {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ServiceLoader.class);
+	private static final Logger LOGGER = Logger.getLogger(ServiceLoader.class);
 
 	/**
 	 * Loads services from a file.

@@ -96,7 +96,7 @@ public enum SCMPHeaderAttributeKey {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPHeaderAttributeKey.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPHeaderAttributeKey.class);
 
 	/** The value. */
 	private String value;

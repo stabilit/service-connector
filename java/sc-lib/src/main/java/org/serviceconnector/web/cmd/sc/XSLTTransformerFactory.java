@@ -40,7 +40,7 @@ public class XSLTTransformerFactory {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(XSLTTransformerFactory.class);
+	private static final Logger LOGGER = Logger.getLogger(XSLTTransformerFactory.class);
 
 	/** The transformer factory. */
 	protected static XSLTTransformerFactory transformerFactory = new XSLTTransformerFactory();

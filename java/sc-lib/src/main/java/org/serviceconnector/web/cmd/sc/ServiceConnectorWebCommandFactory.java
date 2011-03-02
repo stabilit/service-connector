@@ -43,7 +43,7 @@ public class ServiceConnectorWebCommandFactory extends FlyweightWebCommandFactor
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ServiceConnectorWebCommandFactory.class);
+	private static final Logger LOGGER = Logger.getLogger(ServiceConnectorWebCommandFactory.class);
 
 	/**
 	 * Instantiates a new service connector command factory.

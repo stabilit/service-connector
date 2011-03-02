@@ -46,7 +46,7 @@ import org.serviceconnector.service.SubscriptionMask;
 public class SubscribeCommandCallback implements ISCMPMessageCallback, ISubscriptionCallback {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(SubscribeCommandCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(SubscribeCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */

@@ -28,7 +28,7 @@ public class LinkedNode<T> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(LinkedNode.class);
+	private static final Logger LOGGER = Logger.getLogger(LinkedNode.class);
 	
 	/** The value of the node. */
 	public T value;

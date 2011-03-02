@@ -35,7 +35,7 @@ public class DetachCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(DetachCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(DetachCommand.class);
 	
 	/** {@inheritDoc} */
 	@Override

@@ -19,7 +19,7 @@ import org.serviceconnector.service.Subscription;
 public class CscUnsubscribeCommandCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(CscUnsubscribeCommandCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(CscUnsubscribeCommandCallback.class);
 	/** The callback. */
 	private IResponderCallback responderCallback;
 	/** The request. */

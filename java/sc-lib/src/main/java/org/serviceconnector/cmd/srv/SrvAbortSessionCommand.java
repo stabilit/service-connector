@@ -45,7 +45,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SrvAbortSessionCommand extends SrvCommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(SrvAbortSessionCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(SrvAbortSessionCommand.class);
 
 	/**
 	 * Instantiates a new SrvAbortSessionCommand.

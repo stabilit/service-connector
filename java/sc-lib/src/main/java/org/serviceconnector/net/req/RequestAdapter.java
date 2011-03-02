@@ -31,7 +31,7 @@ public abstract class RequestAdapter implements IRequest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(RequestAdapter.class);
+	private static final Logger LOGGER = Logger.getLogger(RequestAdapter.class);
 
 	/** The scmp message. */
 	private SCMPMessage message;

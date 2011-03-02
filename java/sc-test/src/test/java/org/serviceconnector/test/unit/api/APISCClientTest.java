@@ -37,7 +37,7 @@ public class APISCClientTest extends SuperUnitTest{
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APISCClientTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APISCClientTest.class);
 	
 	private SCClient client;
 

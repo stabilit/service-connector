@@ -29,7 +29,7 @@ public class RegistryEntryWrapperJMX implements IRegistryEntryWrapperMXBean {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(RegistryEntryWrapperJMX.class);
+	private static final Logger LOGGER = Logger.getLogger(RegistryEntryWrapperJMX.class);
 	
 	/** The map bean. */
 	Object obj;

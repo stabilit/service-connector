@@ -30,7 +30,7 @@ public class APIMultipleSCsClientTest extends APIIntegrationSuperClientTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APIMultipleSCsClientTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APIMultipleSCsClientTest.class);
 
 	private static ProcessCtx scCtx2;
 	private static ProcessCtx scCtx1;

@@ -65,7 +65,7 @@ import org.serviceconnector.service.SubscriptionMask;
 public class CascadedSC extends Server implements IStatefulServer {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(CascadedSC.class);
+	private static final Logger LOGGER = Logger.getLogger(CascadedSC.class);
 
 	/** The subscriptions, list of subscriptions allocated on cascaded SC. */
 	private List<AbstractSession> subscriptions;

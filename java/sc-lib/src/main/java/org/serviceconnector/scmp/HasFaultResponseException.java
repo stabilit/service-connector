@@ -29,7 +29,7 @@ import org.serviceconnector.net.res.IResponse;
 public abstract class HasFaultResponseException extends Exception {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(HasFaultResponseException.class);
+	private static final Logger LOGGER = Logger.getLogger(HasFaultResponseException.class);
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3781800906847958120L;
 	/** The fault message. */

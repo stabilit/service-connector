@@ -36,7 +36,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SrvSubscribeCommand extends SrvCommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(SrvSubscribeCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(SrvSubscribeCommand.class);
 
 	public SrvSubscribeCommand() {
 	}

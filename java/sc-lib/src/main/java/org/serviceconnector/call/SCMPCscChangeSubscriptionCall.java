@@ -33,7 +33,7 @@ public class SCMPCscChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPCscChangeSubscriptionCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPCscChangeSubscriptionCall.class);
 
 	public SCMPCscChangeSubscriptionCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);

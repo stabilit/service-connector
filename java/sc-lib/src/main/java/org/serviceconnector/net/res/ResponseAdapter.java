@@ -35,7 +35,7 @@ public abstract class ResponseAdapter implements IResponse {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ResponseAdapter.class);
+	private static final Logger LOGGER = Logger.getLogger(ResponseAdapter.class);
 	
 	/** The encoder decoder. */
 	protected IEncoderDecoder encoderDecoder;

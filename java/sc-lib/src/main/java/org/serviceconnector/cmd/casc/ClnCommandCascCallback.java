@@ -34,7 +34,7 @@ import org.serviceconnector.service.InvalidMaskLengthException;
  */
 public class ClnCommandCascCallback implements ISCMPMessageCallback {
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(ClnCommandCascCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(ClnCommandCascCallback.class);
 	/** The callback. */
 	protected IResponderCallback responderCallback;
 	/** The request. */

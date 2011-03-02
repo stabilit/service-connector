@@ -27,7 +27,7 @@ public class APIAfterSCRestartClientTest extends APIIntegrationSuperClientTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger
+	private static final Logger LOGGER = Logger
 			.getLogger(APIAfterSCRestartClientTest.class);
 
 	private SCMgmtClient client;

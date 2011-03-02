@@ -34,7 +34,7 @@ public class SCMPReceivePublicationCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPReceivePublicationCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPReceivePublicationCall.class);
 
 	/**
 	 * Instantiates a new SCMP receive publication call.

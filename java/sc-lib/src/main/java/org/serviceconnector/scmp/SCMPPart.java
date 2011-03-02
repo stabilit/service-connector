@@ -30,7 +30,7 @@ public class SCMPPart extends SCMPMessage {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPPart.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPPart.class);
 	private boolean pollRequest;
 
 	/**

@@ -39,7 +39,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class ReceivePublicationCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(ReceivePublicationCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(ReceivePublicationCommand.class);
 
 	/**
 	 * Instantiates a new ReceivePublicationCommand.

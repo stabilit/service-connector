@@ -31,7 +31,7 @@ public class APINewServerTest extends SuperUnitTest{
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APINewServerTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APINewServerTest.class);
 	
 	private SCServer server;
 	

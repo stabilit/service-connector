@@ -29,7 +29,7 @@ public class TimerTaskWrapper extends TimerTask {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(TimerTaskWrapper.class);
+	private static final Logger LOGGER = Logger.getLogger(TimerTaskWrapper.class);
 	
 	/** The target to run when time is out. */
 	private ITimeout target;

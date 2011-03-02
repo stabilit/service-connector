@@ -29,7 +29,7 @@ public class DefaultFrameDecoder implements IFrameDecoder {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(DefaultFrameDecoder.class);
+	private static final Logger LOGGER = Logger.getLogger(DefaultFrameDecoder.class);
 
 	/**
 	 * Instantiates a new default frame decoder.

@@ -31,7 +31,7 @@ public class APIRegisterSessionServerTest extends APIIntegrationSuperServerTest 
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APIRegisterSessionServerTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APIRegisterSessionServerTest.class);
 
 	/**
 	 * Description:	register session server on port SC is not listening<br>

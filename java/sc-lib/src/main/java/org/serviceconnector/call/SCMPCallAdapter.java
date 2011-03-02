@@ -33,7 +33,7 @@ import org.serviceconnector.scmp.SCMPPart;
 public abstract class SCMPCallAdapter implements ISCMPCall {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(SCMPCallAdapter.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPCallAdapter.class);
 
 	/** The client to used to invoke the call. */
 	protected IRequester requester;

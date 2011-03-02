@@ -29,7 +29,7 @@ public class HttpFrameDecoder extends DefaultFrameDecoder {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(HttpFrameDecoder.class);
+	private static final Logger LOGGER = Logger.getLogger(HttpFrameDecoder.class);
 	
 	/**
 	 * Instantiates a new http frame decoder.

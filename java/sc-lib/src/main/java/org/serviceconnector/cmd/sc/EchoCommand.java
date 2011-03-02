@@ -41,7 +41,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class EchoCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(EchoCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(EchoCommand.class);
 
 	/**
 	 * Instantiates a new EchoCommand.

@@ -30,7 +30,7 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoSessionClient {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(DemoSessionClient.class);
+	private static final Logger LOGGER = Logger.getLogger(DemoSessionClient.class);
 
 	/**
 	 * The main method.

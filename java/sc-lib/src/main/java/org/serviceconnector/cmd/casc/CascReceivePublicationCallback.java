@@ -12,7 +12,7 @@ import org.serviceconnector.server.CascadedSC;
 public class CascReceivePublicationCallback implements ISCMPMessageCallback {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(CascReceivePublicationCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(CascReceivePublicationCallback.class);
 
 	private CascadedClient cascClient;
 

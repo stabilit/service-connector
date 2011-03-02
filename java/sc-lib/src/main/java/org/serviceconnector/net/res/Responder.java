@@ -34,7 +34,7 @@ public class Responder implements IResponder {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(Responder.class);
+	private static final Logger LOGGER = Logger.getLogger(Responder.class);
 
 	/** The listener configuration. */
 	private ListenerConfiguration listenerConfig;

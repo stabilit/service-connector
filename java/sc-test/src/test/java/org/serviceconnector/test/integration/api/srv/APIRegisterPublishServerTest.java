@@ -31,7 +31,7 @@ public class APIRegisterPublishServerTest extends APIIntegrationSuperServerTest 
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APIRegisterPublishServerTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APIRegisterPublishServerTest.class);
 
 
 	/**

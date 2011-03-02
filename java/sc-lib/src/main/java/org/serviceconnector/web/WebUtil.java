@@ -37,7 +37,7 @@ public abstract class WebUtil {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(WebUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(WebUtil.class);
 
 	/**
 	 * Load resource.

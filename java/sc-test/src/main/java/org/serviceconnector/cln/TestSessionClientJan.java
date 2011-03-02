@@ -23,7 +23,7 @@ public class TestSessionClientJan extends Thread {
 	
 	/** The Constant LOGGER. */
 
-	private final static Logger LOGGER = Logger.getLogger(TestSessionClientJan.class);
+	private static final Logger LOGGER = Logger.getLogger(TestSessionClientJan.class);
 
 	private ThreadSafeCounter ctr;
 	private String scHost;

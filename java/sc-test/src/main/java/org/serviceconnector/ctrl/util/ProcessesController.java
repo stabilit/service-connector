@@ -47,7 +47,7 @@ public class ProcessesController {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ProcessesController.class);
+	private static final Logger LOGGER = Logger.getLogger(ProcessesController.class);
 	private static final Logger testLogger = Logger.getLogger(Loggers.TEST.getValue());
 
 	private String fs;

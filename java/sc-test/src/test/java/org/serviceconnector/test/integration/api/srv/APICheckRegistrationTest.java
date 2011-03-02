@@ -29,7 +29,7 @@ public class APICheckRegistrationTest extends APIIntegrationSuperServerTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APICheckRegistrationTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APICheckRegistrationTest.class);
 
 	/**
 	 * Description:	check session server registration<br>

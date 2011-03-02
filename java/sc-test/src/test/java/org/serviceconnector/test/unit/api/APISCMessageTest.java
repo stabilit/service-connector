@@ -35,7 +35,7 @@ public class APISCMessageTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APISCMessageTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APISCMessageTest.class);
 
 	private SCMessage message;
 

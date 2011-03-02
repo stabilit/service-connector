@@ -27,7 +27,7 @@ public class ConnectionContext {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ConnectionContext.class);
+	private static final Logger LOGGER = Logger.getLogger(ConnectionContext.class);
 	
 	/** The connection. */
 	private IConnection connection;

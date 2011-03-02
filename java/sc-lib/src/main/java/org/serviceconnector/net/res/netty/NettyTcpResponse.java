@@ -32,7 +32,7 @@ public class NettyTcpResponse extends ResponseAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(NettyTcpResponse.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyTcpResponse.class);
 
 	/**
 	 * Instantiates a new netty tcp response.

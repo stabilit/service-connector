@@ -45,7 +45,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class ManageCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(ManageCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(ManageCommand.class);
 
 	/**
 	 * Instantiates a new manage command.

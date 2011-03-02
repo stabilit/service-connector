@@ -40,7 +40,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class ListenerConfiguration {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(ListenerConfiguration.class);
+	private static final Logger LOGGER = Logger.getLogger(ListenerConfiguration.class);
 
 	/** The listener name. */
 	private String name;

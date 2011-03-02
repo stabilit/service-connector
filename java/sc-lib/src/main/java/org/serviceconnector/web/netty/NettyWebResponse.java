@@ -33,7 +33,7 @@ import org.serviceconnector.web.IWebResponse;
 public class NettyWebResponse implements IWebResponse {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(NettyWebResponse.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyWebResponse.class);
 
 	/** The response. */
 	private HttpResponse response;

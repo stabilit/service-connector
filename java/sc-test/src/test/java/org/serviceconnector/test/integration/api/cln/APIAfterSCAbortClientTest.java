@@ -13,7 +13,7 @@ public class APIAfterSCAbortClientTest extends APIIntegrationSuperClientTest  {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APIAfterSCAbortClientTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APIAfterSCAbortClientTest.class);
 
 	private SCMgmtClient client;
 	

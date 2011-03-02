@@ -8,7 +8,7 @@ import org.serviceconnector.api.cln.SCSessionService;
 public class TestSessionServiceMessageCallback extends SCMessageCallback {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(TestSessionServiceMessageCallback.class);
+	private static final Logger LOGGER = Logger.getLogger(TestSessionServiceMessageCallback.class);
 
 	public TestSessionServiceMessageCallback(SCSessionService service) {
 		super(service);

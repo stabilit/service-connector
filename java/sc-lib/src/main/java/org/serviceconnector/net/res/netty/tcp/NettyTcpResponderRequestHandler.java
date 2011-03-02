@@ -42,7 +42,7 @@ import org.serviceconnector.scmp.SCMPMsgType;
 public class NettyTcpResponderRequestHandler extends NettyResponderRequestHandlerAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(NettyTcpResponderRequestHandler.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyTcpResponderRequestHandler.class);
 
 	/** {@inheritDoc} */
 	@Override

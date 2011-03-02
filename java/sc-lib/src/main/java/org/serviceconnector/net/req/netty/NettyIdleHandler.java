@@ -38,7 +38,7 @@ public class NettyIdleHandler extends IdleStateHandler {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(NettyIdleHandler.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyIdleHandler.class);
 
 	private ConnectionContext connectionContext;
 

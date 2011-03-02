@@ -49,7 +49,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class CscUnsubscribeCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(CscUnsubscribeCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(CscUnsubscribeCommand.class);
 
 	/** {@inheritDoc} */
 	@Override

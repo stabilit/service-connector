@@ -48,7 +48,7 @@ import org.serviceconnector.scmp.SCMPPart;
  */
 public class NettyResponderRequestHandlerTask implements IResponderCallback, Runnable {
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(NettyResponderRequestHandlerTask.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyResponderRequestHandlerTask.class);
 	/** The Constant performanceLogger. */
 	private final static PerformanceLogger performanceLogger = PerformanceLogger.getInstance();
 	/** The composite registry. */

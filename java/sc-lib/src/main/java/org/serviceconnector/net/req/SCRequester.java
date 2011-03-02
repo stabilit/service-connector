@@ -47,7 +47,7 @@ import org.serviceconnector.util.TimeoutWrapper;
 public class SCRequester implements IRequester {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(SCRequester.class);
+	private static final Logger LOGGER = Logger.getLogger(SCRequester.class);
 	/** The context. */
 	private RemoteNodeConfiguration remoteNodeConfiguration;
 	private SCMPMessageSequenceNr msgSequenceNr;

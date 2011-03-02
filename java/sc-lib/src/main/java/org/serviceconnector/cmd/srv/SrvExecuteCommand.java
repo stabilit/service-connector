@@ -41,7 +41,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SrvExecuteCommand extends SrvCommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(SrvExecuteCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(SrvExecuteCommand.class);
 
 	/**
 	 * Instantiates a new SrvExecuteCommand.

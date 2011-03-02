@@ -31,7 +31,7 @@ public class SCMPClnExecuteCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPClnExecuteCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPClnExecuteCall.class);
 
 	/**
 	 * Instantiates a new SCMPClnExecuteCall.

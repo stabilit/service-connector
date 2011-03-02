@@ -29,7 +29,7 @@ public class APIAfterSCRestartServerTest extends APIIntegrationSuperServerTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APIAfterSCRestartServerTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APIAfterSCRestartServerTest.class);
 
 
 	/**

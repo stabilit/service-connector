@@ -31,7 +31,7 @@ public class APIIntegrationSuperServerTest extends IntegrationSuperTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APIIntegrationSuperServerTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APIIntegrationSuperServerTest.class);
 	
 	protected SCServer server;
 	protected SCSessionServer sessionServer = null;

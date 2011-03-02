@@ -51,7 +51,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public class NettyHttpConnection extends NettyConnectionAdpater {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(NettyHttpConnection.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyHttpConnection.class);
 
 	/** The url. */
 	private URL url;

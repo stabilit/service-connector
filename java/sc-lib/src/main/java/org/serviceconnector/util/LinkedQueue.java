@@ -30,7 +30,7 @@ public class LinkedQueue<E> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(LinkedQueue.class);
+	private static final Logger LOGGER = Logger.getLogger(LinkedQueue.class);
 
 	/**
 	 * The first actual node, if it exists, is always at this.head.next. After

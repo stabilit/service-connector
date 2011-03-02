@@ -31,7 +31,7 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoPublishClient extends Thread {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(DemoPublishClient.class);
+	private static final Logger LOGGER = Logger.getLogger(DemoPublishClient.class);
 
 	/**
 	 * The main method.

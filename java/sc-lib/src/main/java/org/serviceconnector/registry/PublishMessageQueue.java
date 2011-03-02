@@ -46,7 +46,7 @@ import org.serviceconnector.util.LinkedQueue;
 public class PublishMessageQueue<E> {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(PublishMessageQueue.class);
+	private static final Logger LOGGER = Logger.getLogger(PublishMessageQueue.class);
 
 	private ScheduledThreadPoolExecutor timeoutScheduler;
 	/** The data queue. */

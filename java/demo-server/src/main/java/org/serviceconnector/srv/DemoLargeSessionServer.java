@@ -22,7 +22,7 @@ import org.serviceconnector.api.srv.SCSessionServerCallback;
 
 public class DemoLargeSessionServer extends DemoSessionServer {
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(DemoLargeSessionServer.class);
+	private static final Logger LOGGER = Logger.getLogger(DemoLargeSessionServer.class);
 	
 	/**
 	 * Main method if you like to start in debug mode.

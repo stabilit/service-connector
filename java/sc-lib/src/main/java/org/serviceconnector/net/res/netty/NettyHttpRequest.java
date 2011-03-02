@@ -37,7 +37,7 @@ public class NettyHttpRequest extends RequestAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(NettyHttpRequest.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyHttpRequest.class);
 
 	/** The request. */
 	private HttpRequest request;

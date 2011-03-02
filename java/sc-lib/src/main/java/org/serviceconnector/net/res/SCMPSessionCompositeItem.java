@@ -31,7 +31,7 @@ public class SCMPSessionCompositeItem {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPSessionCompositeItem.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPSessionCompositeItem.class);
 
 	/** The large response. */
 	private SCMPCompositeReceiver largeRequest;

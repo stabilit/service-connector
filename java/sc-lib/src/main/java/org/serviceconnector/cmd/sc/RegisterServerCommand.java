@@ -51,7 +51,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class RegisterServerCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(RegisterServerCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(RegisterServerCommand.class);
 
 	/**
 	 * Instantiates a new RegisterServerCommand.

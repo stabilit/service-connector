@@ -18,7 +18,7 @@ import org.serviceconnector.server.StatefulServer;
 public abstract class NettyResponderRequestHandlerAdapter extends SimpleChannelUpstreamHandler {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(NettyResponderRequestHandlerAdapter.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyResponderRequestHandlerAdapter.class);
 
 	/**
 	 * Message received.

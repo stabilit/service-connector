@@ -32,7 +32,7 @@ public class ClientThreadController {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ClientThreadController.class);
+	private static final Logger LOGGER = Logger.getLogger(ClientThreadController.class);
 
 	private CountDownLatch beforeAttachSignal;
 	private CountDownLatch attachedSignal;

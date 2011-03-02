@@ -37,7 +37,7 @@ public class NettyTcpRequest extends RequestAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(NettyTcpRequest.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyTcpRequest.class);
 	/** The request. */
 	private ChannelBuffer request;
 

@@ -41,7 +41,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class CscAbortSessionCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(CscAbortSessionCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(CscAbortSessionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override

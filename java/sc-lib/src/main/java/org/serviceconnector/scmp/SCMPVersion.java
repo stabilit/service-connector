@@ -34,7 +34,7 @@ public enum SCMPVersion {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPVersion.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPVersion.class);
 	
 	/** The release. */
 	private byte release;

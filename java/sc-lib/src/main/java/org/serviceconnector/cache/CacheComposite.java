@@ -36,7 +36,7 @@ public class CacheComposite implements Serializable {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(CacheComposite.class);
+	private static final Logger LOGGER = Logger.getLogger(CacheComposite.class);
 
 	/**
 	 * The Enum CACHE_STATE.

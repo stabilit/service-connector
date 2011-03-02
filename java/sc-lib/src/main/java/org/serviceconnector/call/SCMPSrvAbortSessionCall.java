@@ -31,7 +31,7 @@ public class SCMPSrvAbortSessionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPSrvAbortSessionCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPSrvAbortSessionCall.class);
 
 	/**
 	 * Instantiates a new SCMP srv abort session call.

@@ -28,7 +28,7 @@ public class SCMPMessageSequenceNr {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPMessageSequenceNr.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPMessageSequenceNr.class);
 
 	/** The message sequence number. */
 	private long msgSequenceNr;

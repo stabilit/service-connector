@@ -40,7 +40,7 @@ public class SCMPSrvSubscribeCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPSrvSubscribeCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPSrvSubscribeCall.class);
 
 	/**
 	 * Instantiates a new SCMPSrvSubscribeCall.

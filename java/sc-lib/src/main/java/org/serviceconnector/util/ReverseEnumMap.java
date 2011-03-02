@@ -34,7 +34,7 @@ public class ReverseEnumMap<K, V extends IReversibleEnum<K, V>> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ReverseEnumMap.class);
+	private static final Logger LOGGER = Logger.getLogger(ReverseEnumMap.class);
 
 	/** The reverse map. */
 	private final Map<K, V> reverseMap = new HashMap<K, V>();

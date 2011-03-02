@@ -34,7 +34,7 @@ import org.serviceconnector.ctx.AppContext;
 public class HttpClientUploadUtility {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(HttpClientUploadUtility.class);
+	private static final Logger LOGGER = Logger.getLogger(HttpClientUploadUtility.class);
 
 	private String uri;
 	private HttpClient client;

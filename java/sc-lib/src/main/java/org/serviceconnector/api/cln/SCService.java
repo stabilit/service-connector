@@ -26,7 +26,7 @@ public abstract class SCService {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCService.class);
+	private static final Logger LOGGER = Logger.getLogger(SCService.class);
 
 	/**
 	 * The service name. The service name is an abstract name and represents the logical address of the service. In order to allow

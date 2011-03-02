@@ -30,7 +30,7 @@ public class SCMPDetachCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPDetachCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPDetachCall.class);
 
 	/**
 	 * Instantiates a new SCMPDetachCall.

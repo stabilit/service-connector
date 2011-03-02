@@ -28,7 +28,7 @@ public class APISCPublishMessageTest extends SuperUnitTest {
 	
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APISCPublishMessageTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APISCPublishMessageTest.class);
 	
 	private SCPublishMessage message;
 

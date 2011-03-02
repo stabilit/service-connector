@@ -158,7 +158,7 @@ public enum SCMPError implements IReversibleEnum<String, SCMPError> {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPError.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPError.class);
 
 	/** The error code. Should not be integer because it is transmitted over the line */
 	private String errorCode;

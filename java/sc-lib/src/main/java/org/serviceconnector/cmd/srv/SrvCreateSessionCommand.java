@@ -41,7 +41,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class SrvCreateSessionCommand extends SrvCommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(SrvCreateSessionCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(SrvCreateSessionCommand.class);
 
 	/**
 	 * Instantiates a new SrvCreateSessionCommand.

@@ -26,7 +26,7 @@ public class SCMPFileListCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPFileListCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPFileListCall.class);
 
 	public SCMPFileListCall(IRequester requester, String serviceName) {
 		super(requester, serviceName);

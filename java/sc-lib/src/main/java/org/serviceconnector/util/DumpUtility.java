@@ -32,7 +32,7 @@ public class DumpUtility {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(DumpUtility.class);
+	private static final Logger LOGGER = Logger.getLogger(DumpUtility.class);
 
 	/**
 	 * Gets all dump files matching given criterias.

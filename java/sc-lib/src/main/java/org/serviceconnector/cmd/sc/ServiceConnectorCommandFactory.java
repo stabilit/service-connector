@@ -29,7 +29,7 @@ public class ServiceConnectorCommandFactory extends FlyweightCommandFactory {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ServiceConnectorCommandFactory.class);
+	private static final Logger LOGGER = Logger.getLogger(ServiceConnectorCommandFactory.class);
 
 	public ServiceConnectorCommandFactory() {
 		ICommand attachCommand = new AttachCommand();

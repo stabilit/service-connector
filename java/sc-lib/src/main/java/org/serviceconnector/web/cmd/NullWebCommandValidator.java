@@ -30,7 +30,7 @@ public final class NullWebCommandValidator implements IWebCommandValidator {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(NullWebCommandValidator.class);
+	private static final Logger LOGGER = Logger.getLogger(NullWebCommandValidator.class);
 
 	/** The null command validator. */
 	private static IWebCommandValidator nullCommandValidator = new NullWebCommandValidator();

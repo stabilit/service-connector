@@ -34,7 +34,7 @@ public class ValidatorUtilityTest extends SuperUnitTest {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ValidatorUtilityTest.class);
+	private static final Logger LOGGER = Logger.getLogger(ValidatorUtilityTest.class);
 	/** The FOUR. */
 	private static final int FOUR = 4;
 	/** The SDF. */

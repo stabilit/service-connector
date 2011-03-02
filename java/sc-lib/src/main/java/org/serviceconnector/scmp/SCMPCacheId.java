@@ -28,7 +28,7 @@ public class SCMPCacheId {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPCacheId.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPCacheId.class);
 	
 	private String cacheId;
 	private String sequenceNr;

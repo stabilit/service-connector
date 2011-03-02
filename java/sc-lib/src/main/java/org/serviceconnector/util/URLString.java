@@ -39,7 +39,7 @@ import org.serviceconnector.Constants;
 public class URLString {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(URLString.class);
+	private static final Logger LOGGER = Logger.getLogger(URLString.class);
 	/** The parameters. */
 	private Map<String, String> map;
 	/** The call key. */

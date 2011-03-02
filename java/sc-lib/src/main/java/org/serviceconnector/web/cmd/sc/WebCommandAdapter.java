@@ -36,7 +36,7 @@ public abstract class WebCommandAdapter implements IWebCommand {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(WebCommandAdapter.class);
+	private static final Logger LOGGER = Logger.getLogger(WebCommandAdapter.class);
 
 	/** The web command accessible. */
 	protected IWebCommandAccessible webCommandAccessible;

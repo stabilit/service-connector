@@ -33,7 +33,7 @@ import org.serviceconnector.Constants;
 public final class FlyweightFrameDecoderFactory {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(FlyweightFrameDecoderFactory.class);
+	private static final Logger LOGGER = Logger.getLogger(FlyweightFrameDecoderFactory.class);
 	private static Map<String, IFrameDecoder> frameDecoders;
 
 	public FlyweightFrameDecoderFactory() {

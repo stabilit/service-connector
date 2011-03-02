@@ -36,7 +36,7 @@ public class NettyTcpRequesterPipelineFactory implements ChannelPipelineFactory 
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(NettyTcpRequesterPipelineFactory.class);
+	private static final Logger LOGGER = Logger.getLogger(NettyTcpRequesterPipelineFactory.class);
 	
 	/** The timer to observe timeouts. */
 	private Timer timer;

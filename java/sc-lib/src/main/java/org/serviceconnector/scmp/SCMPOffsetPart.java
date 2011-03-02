@@ -32,7 +32,7 @@ public class SCMPOffsetPart extends SCMPPart {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPOffsetPart.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPOffsetPart.class);
 
 	/** The offset where body starts. */
 	private int offset;

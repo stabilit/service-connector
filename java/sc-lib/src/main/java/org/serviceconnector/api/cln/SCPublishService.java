@@ -39,7 +39,7 @@ public class SCPublishService extends SCService {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCPublishService.class);
+	private static final Logger LOGGER = Logger.getLogger(SCPublishService.class);
 	/**
 	 * The no data interval seconds.Interval in seconds the SC will wait to deliver RECEIVE_PUBLICATION response with noData flag
 	 * set. Default = 0.
@@ -80,7 +80,7 @@ public class SCPublishService extends SCService {
 	 *             error message received from SC <br>
 	 */
 	public synchronized SCSubscribeMessage subscribe(SCSubscribeMessage scSubscribeMessage, SCMessageCallback scMessageCallback)
-			throws Exception {
+			throws SCServiceException, SCMPValidatorException {
 		return this.subscribe(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage, scMessageCallback);
 	}
 
@@ -173,7 +173,8 @@ public class SCPublishService extends SCService {
 	 *             change subscription to host failed<br>
 	 *             error message received from SC <br>
 	 */
-	public synchronized SCSubscribeMessage changeSubscription(SCSubscribeMessage scSubscribeMessage) throws Exception {
+	public synchronized SCSubscribeMessage changeSubscription(SCSubscribeMessage scSubscribeMessage) throws SCServiceException,
+			SCMPValidatorException {
 		return this.changeSubscription(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, scSubscribeMessage);
 	}
 
@@ -194,7 +195,7 @@ public class SCPublishService extends SCService {
 	 *             error message received from SC <br>
 	 */
 	public synchronized SCSubscribeMessage changeSubscription(int operationTimeoutSeconds, SCSubscribeMessage scSubscribeMessage)
-			throws Exception {
+			throws SCServiceException, SCMPValidatorException {
 		// 1. checking preconditions and initialize
 		if (this.sessionActive == false) {
 			throw new SCServiceException("ChangeSubscription not possible - not subscribed.");
@@ -312,6 +313,8 @@ public class SCPublishService extends SCService {
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
+	 * @param scSubscribeMessage
+	 *            the sc subscribe message
 	 * @throws SCServiceException
 	 *             unsubscribe from SC failed<br>
 	 *             error message received from SC <br>

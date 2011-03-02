@@ -32,7 +32,7 @@ public final class SCMPSessionCompositeRegistry extends Registry<String, SCMPSes
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPSessionCompositeRegistry.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPSessionCompositeRegistry.class);
 
 	/**
 	 * Adds the session.

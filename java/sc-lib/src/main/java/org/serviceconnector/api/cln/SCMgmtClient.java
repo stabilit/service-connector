@@ -38,7 +38,7 @@ public class SCMgmtClient extends SCClient {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMgmtClient.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMgmtClient.class);
 
 	/**
 	 * Instantiates a new SC management client.
@@ -70,6 +70,7 @@ public class SCMgmtClient extends SCClient {
 	 * Disable service on SC with default operation timeout.
 	 * 
 	 * @param serviceName
+	 *            the service name
 	 * @throws SCServiceException
 	 *             client not attached<br>
 	 *             manage call to SC failed<br>
@@ -85,13 +86,14 @@ public class SCMgmtClient extends SCClient {
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
 	 * @param serviceName
+	 *            the service name
 	 * @throws SCServiceException
 	 *             client not attached<br>
 	 *             encoding of request URL failed<br>
 	 *             manage call to SC failed<br>
 	 *             body not null after manage call<br>
 	 */
-	public void disableService(int operationTimeout, String serviceName) throws SCServiceException {
+	public void disableService(int operationTimeoutSeconds, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			// disableService not possible - client not attached
 			throw new SCServiceException("Client not attached - disableService not possible.");
@@ -102,7 +104,7 @@ public class SCMgmtClient extends SCClient {
 		} catch (Exception e) {
 			throw new SCServiceException("Disable service failed, encoding of request URL failed.");
 		}
-		String body = this.manageCall(operationTimeout, urlString);
+		String body = this.manageCall(operationTimeoutSeconds, urlString);
 		if (body != null) {
 			throw new SCServiceException(body);
 		}
@@ -135,7 +137,7 @@ public class SCMgmtClient extends SCClient {
 	 *             manage call to SC failed<br>
 	 *             body not null after manage call<br>
 	 */
-	public void enableService(int operationTimeout, String serviceName) throws SCServiceException {
+	public void enableService(int operationTimeoutSeconds, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			// enableService not possible - client not attached
 			throw new SCServiceException("Client not attached - enableService not possible.");
@@ -146,7 +148,7 @@ public class SCMgmtClient extends SCClient {
 		} catch (Exception e) {
 			throw new SCServiceException("Enable service failed, encoding of request URL failed. ");
 		}
-		String body = this.manageCall(operationTimeout, urlString);
+		String body = this.manageCall(operationTimeoutSeconds, urlString);
 		if (body != null) {
 			throw new SCServiceException(body);
 		}
@@ -230,7 +232,7 @@ public class SCMgmtClient extends SCClient {
 	 *             the inspect call failed<br>
 	 *             error message received from SC<br>
 	 */
-	public URLString getWorkload(int operationTimeout, String serviceName) throws SCServiceException {
+	public URLString getWorkload(int operationTimeoutSeconds, String serviceName) throws SCServiceException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - isServiceEnabled not possible.");
 		}
@@ -240,7 +242,7 @@ public class SCMgmtClient extends SCClient {
 		} catch (Exception e) {
 			throw new SCServiceException("Requesting sessions of service failed, encoding of request URL failed.");
 		}
-		String body = this.inspectCall(operationTimeout, urlString);
+		String body = this.inspectCall(operationTimeoutSeconds, urlString);
 		try {
 			URLString urlResponse = new URLString();
 			urlResponse.parseResponseURLString(body);
@@ -258,6 +260,7 @@ public class SCMgmtClient extends SCClient {
 	 *            the service name
 	 * @param cacheId
 	 *            the cache id
+	 * @return the uRL string
 	 * @throws SCServiceException
 	 *             client not attached<br>
 	 *             the inspect call failed<br>
@@ -276,23 +279,25 @@ public class SCMgmtClient extends SCClient {
 	 *            the service name
 	 * @param cacheId
 	 *            the cache id
+	 * @return the uRL string
 	 * @throws SCServiceException
 	 *             client not attached<br>
 	 *             encoding of request URL failed<br>
 	 *             the inspect call failed<br>
 	 *             error message received from SC<br>
 	 */
-	public URLString inspectCache(int operationTimeout, String serviceName, String cacheId) throws SCServiceException {
+	public URLString inspectCache(int operationTimeoutSeconds, String serviceName, String cacheId) throws SCServiceException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - inspectCache not possible.");
 		}
 		String urlString = null;
 		try {
-			urlString = URLString.toURLRequestString(Constants.CC_CMD_INSPECT_CACHE, Constants.SERVICE_NAME, serviceName, Constants.CACHE_ID, cacheId);
+			urlString = URLString.toURLRequestString(Constants.CC_CMD_INSPECT_CACHE, Constants.SERVICE_NAME, serviceName,
+					Constants.CACHE_ID, cacheId);
 		} catch (Exception e) {
 			throw new SCServiceException("Inspecting cache failed, encoding of request URL failed.");
 		}
-		String body = this.inspectCall(operationTimeout, urlString);
+		String body = this.inspectCall(operationTimeoutSeconds, urlString);
 		try {
 			URLString urlResponse = new URLString();
 			urlResponse.parseResponseURLString(body);
@@ -325,7 +330,7 @@ public class SCMgmtClient extends SCClient {
 	 *             body not null after manage call<br>
 	 *             manage call to SC failed<br>
 	 */
-	public void clearCache(int operationTimeout) throws SCServiceException {
+	public void clearCache(int operationTimeoutSeconds) throws SCServiceException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - clearCache not possible.");
 		}
@@ -335,7 +340,7 @@ public class SCMgmtClient extends SCClient {
 		} catch (Exception e) {
 			throw new SCServiceException("Clear cache failed, encoding of request URL failed.");
 		}
-		String body = this.manageCall(operationTimeout, urlString);
+		String body = this.manageCall(operationTimeoutSeconds, urlString);
 		if (body != null) {
 			throw new SCServiceException(body);
 		}
@@ -362,7 +367,7 @@ public class SCMgmtClient extends SCClient {
 	 *             encoding of request URL failed
 	 *             manage call to SC failed<br>
 	 */
-	public void dump(int operationTimeout) throws SCServiceException {
+	public void dump(int operationTimeoutSeconds) throws SCServiceException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - dump not possible.");
 		}
@@ -372,7 +377,7 @@ public class SCMgmtClient extends SCClient {
 		} catch (Exception e) {
 			throw new SCServiceException("Clear cache failed, encoding of request URL failed.");
 		}
-		this.manageCall(operationTimeout, urlString);
+		this.manageCall(operationTimeoutSeconds, urlString);
 	}
 
 	/**
@@ -399,6 +404,7 @@ public class SCMgmtClient extends SCClient {
 			Thread.sleep(1000);
 		} catch (Exception e) {
 			// ignore exception
+			LOGGER.trace("Kill SC failed.", e);
 		}
 		this.attached = false;
 		// destroy connection pool
@@ -422,12 +428,12 @@ public class SCMgmtClient extends SCClient {
 	 *             the inspect call to SC failed<br>
 	 *             error message received from SC<br>
 	 */
-	private String inspectCall(int operationTimeout, String instruction) throws SCServiceException {
+	private String inspectCall(int operationTimeoutSeconds, String instruction) throws SCServiceException {
 		SCMPInspectCall inspectCall = new SCMPInspectCall(this.requester);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			inspectCall.setRequestBody(instruction);
-			inspectCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
+			inspectCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.requester.destroy();
 			throw new SCServiceException("Inspect request failed. ", e);
@@ -436,7 +442,7 @@ public class SCMgmtClient extends SCClient {
 			// on KILL SC cannot reply a message
 			return null;
 		}
-		SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
+		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("Inspect failed.");
 			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));
@@ -458,12 +464,12 @@ public class SCMgmtClient extends SCClient {
 	 *             manage call to SC failed<br>
 	 *             error message received from SC<br>
 	 */
-	private String manageCall(int operationTimeout, String instruction) throws SCServiceException {
+	private String manageCall(int operationTimeoutSeconds, String instruction) throws SCServiceException {
 		SCMPManageCall manageCall = new SCMPManageCall(this.requester);
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
 			manageCall.setRequestBody(instruction);
-			manageCall.invoke(callback, operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
+			manageCall.invoke(callback, operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		} catch (Exception e) {
 			this.requester.destroy();
 			throw new SCServiceException(instruction + " SC failed.", e);
@@ -472,7 +478,7 @@ public class SCMgmtClient extends SCClient {
 			// kill SC doesn't reply a message
 			return null;
 		}
-		SCMPMessage reply = callback.getMessageSync(operationTimeout * Constants.SEC_TO_MILLISEC_FACTOR);
+		SCMPMessage reply = callback.getMessageSync(operationTimeoutSeconds * Constants.SEC_TO_MILLISEC_FACTOR);
 		if (reply.isFault()) {
 			SCServiceException ex = new SCServiceException("Manage failed.");
 			ex.setSCErrorCode(reply.getHeader(SCMPHeaderAttributeKey.SC_ERROR_CODE));

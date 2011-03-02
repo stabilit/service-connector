@@ -32,7 +32,7 @@ public class SCMPSrvExecuteCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPSrvExecuteCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPSrvExecuteCall.class);
 
 	/**
 	 * Instantiates a new SCMPSrvExecuteCall.

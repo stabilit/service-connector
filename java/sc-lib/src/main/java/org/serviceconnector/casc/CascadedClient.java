@@ -16,7 +16,7 @@ import org.serviceconnector.service.SubscriptionMask;
 public class CascadedClient {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(CascadedClient.class);
+	private static final Logger LOGGER = Logger.getLogger(CascadedClient.class);
 
 	private boolean subscribed;
 	private String subscriptionId;

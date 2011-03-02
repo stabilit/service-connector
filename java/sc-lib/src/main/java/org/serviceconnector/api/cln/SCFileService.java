@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.api.cln;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ import org.serviceconnector.scmp.SCMPMessage;
 public class SCFileService extends SCService {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(SCFileService.class);
+	private static final Logger LOGGER = Logger.getLogger(SCFileService.class);
 
 	/**
 	 * Instantiates a new sC file service.
@@ -192,8 +193,9 @@ public class SCFileService extends SCService {
 	 * List files with default operation timeout.
 	 * 
 	 * @return the list of files on the remote server
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             list files from Server failed<br>
+	 *             error message received from SC<br>
 	 */
 	public synchronized List<String> listFiles() throws SCServiceException {
 		return this.listFiles(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -272,9 +274,6 @@ public class SCFileService extends SCService {
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
-	 * @throws SCServiceException
-	 *             delete file session on SC failed<br>
-	 *             error message received from SC<br>
 	 */
 	private synchronized void deleteFileSession(int operationTimeoutSeconds) {
 		// 1. checking preconditions and initialize

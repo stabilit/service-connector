@@ -29,7 +29,7 @@ public class ServerCommandFactory extends FlyweightCommandFactory {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(ServerCommandFactory.class);
+	private static final Logger LOGGER = Logger.getLogger(ServerCommandFactory.class);
 
 	public ServerCommandFactory() {
 		ICommand srvCreateSessionCommand = new SrvCreateSessionCommand();

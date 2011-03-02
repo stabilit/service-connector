@@ -29,7 +29,7 @@ public class FileService extends Service {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(FileService.class);
+	private static final Logger LOGGER = Logger.getLogger(FileService.class);
 	private FileServer server;
 	private String path;
 

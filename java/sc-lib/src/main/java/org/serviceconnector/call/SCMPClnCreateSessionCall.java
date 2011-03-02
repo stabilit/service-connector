@@ -34,7 +34,7 @@ public class SCMPClnCreateSessionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCMPClnCreateSessionCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPClnCreateSessionCall.class);
 
 	/**
 	 * Instantiates a new SCMPClnCreateSessionCall.

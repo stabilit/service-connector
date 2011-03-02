@@ -408,6 +408,8 @@ public class SCSessionService extends SCService {
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
+	 * @param scMessage
+	 *            the sc message
 	 * @throws SCServiceException
 	 *             pending request, no second request allowed<br>
 	 *             delete session on SC failed<br>
@@ -469,8 +471,8 @@ public class SCSessionService extends SCService {
 	 */
 	@SuppressWarnings("unchecked")
 	private void triggerSessionTimeout() {
-		SCSessionTimeout sessionTimeout = new SCSessionTimeout();
-		TimeoutWrapper timeoutWrapper = new TimeoutWrapper(sessionTimeout);
+		SCSessionTimeout sessTimeout = new SCSessionTimeout();
+		TimeoutWrapper timeoutWrapper = new TimeoutWrapper(sessTimeout);
 		this.sessionTimeout = (ScheduledFuture<TimeoutWrapper>) AppContext.eciScheduler.schedule(timeoutWrapper,
 				(int) (echoIntervalSeconds * Constants.SEC_TO_MILLISEC_FACTOR), TimeUnit.MILLISECONDS);
 	}

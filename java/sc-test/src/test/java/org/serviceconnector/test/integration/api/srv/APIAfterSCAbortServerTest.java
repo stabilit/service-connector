@@ -29,7 +29,7 @@ public class APIAfterSCAbortServerTest extends APIIntegrationSuperServerTest  {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(APIAfterSCAbortServerTest.class);
+	private static final Logger LOGGER = Logger.getLogger(APIAfterSCAbortServerTest.class);
 
 	/**
 	 * Description: start listener after SC was aborted<br> 

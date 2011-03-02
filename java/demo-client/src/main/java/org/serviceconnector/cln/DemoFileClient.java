@@ -33,7 +33,7 @@ import org.serviceconnector.net.ConnectionType;
 public class DemoFileClient extends Thread {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(DemoFileClient.class);
+	private static final Logger LOGGER = Logger.getLogger(DemoFileClient.class);
 
 	/**
 	 * The main method.

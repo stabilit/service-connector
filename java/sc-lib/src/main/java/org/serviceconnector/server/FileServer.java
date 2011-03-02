@@ -60,7 +60,7 @@ import org.serviceconnector.web.WebUtil;
 public class FileServer extends Server {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(FileServer.class);
+	private static final Logger LOGGER = Logger.getLogger(FileServer.class);
 
 	private static final SimpleDateFormat LOGS_FILE_SDF = new SimpleDateFormat(Constants.LOGS_FILE_NAME_FORMAT);
 

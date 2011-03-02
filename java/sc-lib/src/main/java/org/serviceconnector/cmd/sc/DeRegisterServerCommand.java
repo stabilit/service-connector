@@ -43,7 +43,7 @@ import org.serviceconnector.util.ValidatorUtility;
 public class DeRegisterServerCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private final static Logger LOGGER = Logger.getLogger(DeRegisterServerCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(DeRegisterServerCommand.class);
 
 	/**
 	 * Instantiates a new DeRegisterServerCommand.
