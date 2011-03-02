@@ -88,6 +88,7 @@ public class SCConsole {
 		} else {
 			ValidatorUtility.validateInt(1, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		}
+		System.out.println("bodyString" + bodyString);
 		int status = SCConsole.run(host, port, bodyString);
 		System.exit(status);
 	}
@@ -177,7 +178,14 @@ public class SCConsole {
 				client.detach();
 			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_INSPECT_CACHE)) {
 				try {
-					String cacheId = urlRequestString.getParamValue("cacheId");
+
+					String cacheId = urlRequestString.getParamValue(Constants.CACHE_ID);
+					if (cacheId == null) {
+						SCConsole.showError("Error in request string, parsing failed.");
+						status = 5;
+						return status;
+					}
+					System.out.println(cacheId);
 					client.inspectCache(serviceName, cacheId);
 					System.out.println("Service [" + serviceName + ", " + cacheId + "] has been inscpected");
 				} catch (SCServiceException e) {

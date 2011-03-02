@@ -126,6 +126,8 @@ public class URLString {
 		}
 		try {
 			int posQuestionMark = encodedString.indexOf(Constants.QUESTION_MARK);
+			LOGGER.trace("position if question mark " + posQuestionMark);
+			LOGGER.trace("encodedString=" + encodedString);
 			if (posQuestionMark != -1) {
 				this.callKey = encodedString.substring(0, posQuestionMark);
 			} else {
@@ -133,12 +135,14 @@ public class URLString {
 				return;
 			}
 			String params = encodedString.substring(posQuestionMark + 1);
-			String[] keyValuePairs = params.split(Constants.AMPERSAND_SIGN);
+			LOGGER.trace("params found: params=" + params);
+			String[] keyValuePairs = params.split("\\" + Constants.AMPERSAND_SIGN);
 			for (int i = 0; i < keyValuePairs.length; i++) {
 				String keyValuePair = keyValuePairs[i];
 				String[] keyValue = keyValuePair.split(Constants.EQUAL_SIGN);
 				String key = URLDecoder.decode(keyValue[0], Constants.URL_ENCODING);
 				String value = URLDecoder.decode(keyValue[1], Constants.URL_ENCODING);
+				LOGGER.trace("parameter parsed: key=" + key + " value=" + value);
 				this.map.put(key, value);
 			}
 		} catch (Exception e) {
