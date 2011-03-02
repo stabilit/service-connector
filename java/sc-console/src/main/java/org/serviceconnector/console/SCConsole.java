@@ -126,12 +126,8 @@ public class SCConsole {
 					client.enableService(serviceName);
 					System.out.println("Service [" + serviceName + "] has been enabled");
 				} catch (SCServiceException e) {
-					if (String.valueOf(e.getAppErrorCode()).equals(SCMPError.SERVICE_NOT_FOUND.getErrorCode())) {
-						System.out.println("Service [" + serviceName + "] does not exist!");
-						status = 4;
-					} else {
-						throw e;
-					}
+					System.out.println("Service [" + serviceName + "] does not exist!");
+					status = 4;
 				}
 				client.detach();
 			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_DISABLE)) {
@@ -139,12 +135,8 @@ public class SCConsole {
 					client.disableService(serviceName);
 					System.out.println("Service [" + serviceName + "] has been disabled");
 				} catch (SCServiceException e) {
-					if (String.valueOf(e.getAppErrorCode()).equals(SCMPError.SERVICE_NOT_FOUND.getErrorCode())) {
-						System.out.println("Service [" + serviceName + "] does not exist!");
-						status = 4;
-					} else {
-						throw e;
-					}
+					System.out.println("Service [" + serviceName + "] does not exist!");
+					status = 4;
 				}
 				client.detach();
 			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_STATE)) {
@@ -161,12 +153,8 @@ public class SCConsole {
 					}
 					System.out.println(sb.toString());
 				} catch (SCServiceException e) {
-					if (String.valueOf(e.getAppErrorCode()).equals(SCMPError.SERVICE_NOT_FOUND.getErrorCode())) {
-						System.out.println("Service [" + serviceName + "] does not exist!");
-						status = 4;
-					} else {
-						throw e;
-					}
+					System.out.println("Service [" + serviceName + "] does not exist!");
+					status = 4;
 				}
 				client.detach();
 			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_SESSIONS)) {
@@ -183,12 +171,8 @@ public class SCConsole {
 					}
 					System.out.println(sb.toString());
 				} catch (SCServiceException e) {
-					if (String.valueOf(e.getAppErrorCode()).equals(SCMPError.SERVICE_NOT_FOUND.getErrorCode())) {
-						System.out.println("Service [" + serviceName + "] does not exist!");
-						status = 4;
-					} else {
-						throw e;
-					}
+					System.out.println("Service [" + serviceName + "] does not exist!");
+					status = 4;
 				}
 				client.detach();
 			} else {
