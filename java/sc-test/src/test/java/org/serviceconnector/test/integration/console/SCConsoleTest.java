@@ -440,6 +440,20 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	}
 
 	/**
+	 * Description: start console with "-h 127.0.0.1 -p 9000 state?serviceName=*" parameters<br>
+	 * Expectation: passes with exitCode = 0 "Success" <br>
+	 */
+	@Test
+	public void t27_state_wildCard() throws Exception {
+		try {
+			SCConsole.main(new String[] { "-h", "127.0.0.1", "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+					Constants.CC_CMD_STATE + "?serviceName=*" });
+		} catch (ExitException e) {
+			Assert.assertEquals(0, e.status);
+		}
+	}
+
+	/**
 	 * Description: disable and re-enable the session service "session-1"<br>
 	 * Expectation: passes with exitCode = 0 "Success".<br>
 	 * Post-condition: session service "session-1" is enabled again
@@ -480,14 +494,14 @@ public class SCConsoleTest extends IntegrationSuperTest {
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
-		Assert.assertEquals(false, client.isServiceEnabled("session-1").getParamValue("session-1"));
+		Assert.assertEquals(Boolean.FALSE.toString(), client.isServiceEnabled("session-1").getParamValue(Constants.SERVICE_NAME));
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
 					Constants.CC_CMD_ENABLE + "?serviceName=*" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
-		Assert.assertEquals(true, client.isServiceEnabled("session-1").getParamValue("session-1"));
+		Assert.assertEquals(Boolean.TRUE.toString(), client.isServiceEnabled("session-1").getParamValue(Constants.SERVICE_NAME));
 		client.detach();
 	}
 
