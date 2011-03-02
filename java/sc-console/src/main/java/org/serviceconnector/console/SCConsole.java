@@ -31,14 +31,17 @@ public class SCConsole {
 	/**
 	 * @param args
 	 *            usage : java -jar scconsole.jar -h <host> -p <port>
-	 *            <<<enable|disable|state|sessions>=service>dump|clearCache|kill><br>
-	 *            samples: java -jar scconsole.jar -h localhost -p 7000 enable=abc<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 disable=abc<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 state=abc<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 sessions=abc<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 clearCache<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 dump<br>
-	 *            java -jar scconsole.jar -h localhost -p 7000 kill<br>
+	 *            
+	 *            <<<enable|disable|state|sessions>?serviceName=[serviceName]>|<inspectCache?serviceName=[serviceName]&cacheId=[cacheId
+	 *            ]>|clearCache|dump|kill>");
+	 *            java -jar scconsole.jar -h localhost -p 7000 enable?serviceName=abc
+	 *            java -jar scconsole.jar -h localhost -p 7000 disable?serviceName=abc
+	 *            java -jar scconsole.jar -h localhost -p 7000 state?serviceName=abc
+	 *            java -jar scconsole.jar -h localhost -p 7000 sessions?serviceName=abc
+	 *            java -jar scconsole.jar -h localhost -p 7000 inspectCache?serviceName=abc&cacheId=700
+	 *            java -jar scconsole.jar -h localhost -p 7000 clearCache
+	 *            java -jar scconsole.jar -h localhost -p 7000 dump
+	 *            java -jar scconsole.jar -h localhost -p 7000 kill
 	 *            system exit status<br>
 	 *            0 = success
 	 *            1 = error parsing arguments
@@ -95,12 +98,13 @@ public class SCConsole {
 	 */
 	private static int run(String arg0, String arg1, String bodyString) throws Exception {
 
-		URLString urlRequestString = new URLString();
-		urlRequestString.parseRequestURLString(bodyString);
-		String callKey = urlRequestString.getCallKey();
-		String serviceName = urlRequestString.getParamValue("serviceName");
 		int status = 0;
 		try {
+			URLString urlRequestString = new URLString();
+			urlRequestString.parseRequestURLString(bodyString);
+			String callKey = urlRequestString.getCallKey();
+			String serviceName = urlRequestString.getParamValue("serviceName");
+
 			SCMgmtClient client = new SCMgmtClient(arg0, Integer.parseInt(arg1), ConnectionType.NETTY_TCP);
 			client.attach();
 
@@ -163,11 +167,12 @@ public class SCConsole {
 	private static void showError(String msg) {
 		System.err.println("\nerror: " + msg);
 		System.out
-				.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>=service>clearCache|dump|kill>");
-		System.out.println("\nsamples: java -jar scconsole.jar -h localhost -p 7000 enable=abc");
-		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 disable=abc");
-		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 state=abc");
-		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 sessions=abc");
+				.println("\nusage  : java -jar scconsole.jar -h <host> -p <port> <<<enable|disable|state|sessions>?serviceName=[serviceName]>|<inspectCache?serviceName=[serviceName]&cacheId=[cacheId]>|clearCache|dump|kill>");
+		System.out.println("\nsamples: java -jar scconsole.jar -h localhost -p 7000 enable?serviceName=abc");
+		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 disable?serviceName=abc");
+		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 state?serviceName=abc");
+		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 sessions?serviceName=abc");
+		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 inspectCache?serviceName=abc&cacheId=700");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 clearCache");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 dump");
 		System.out.println("         java -jar scconsole.jar -h localhost -p 7000 kill");
