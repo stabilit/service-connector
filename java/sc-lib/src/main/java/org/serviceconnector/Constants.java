@@ -207,7 +207,6 @@ public final class Constants {
 	public static final String EQUAL_SIGN = "=";
 	public static final String AMPERSAND_SIGN = "&";
 	public static final String QUESTION_MARK = "?";
-	public static final String WILD_CARD_SIGN = "*";
 	public static final String URL_ENCODING = "UTF-8";
 	public static final String SERVICE_NAME = "serviceName";
 	public static final String CACHE_ID = "cacheId";
