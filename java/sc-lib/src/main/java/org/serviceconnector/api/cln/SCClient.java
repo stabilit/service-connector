@@ -40,7 +40,7 @@ public class SCClient {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCClient.class);
+	private static final Logger LOGGER = Logger.getLogger(SCClient.class);
 
 	/** The host of the SC. */
 	private String host;
@@ -62,7 +62,12 @@ public class SCClient {
 	protected boolean attached;
 
 	/**
-	 * Instantiates a new SC client with defualt connection type.
+	 * Instantiates a new SC client with default connection type.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
 	 */
 	public SCClient(String host, int port) {
 		this(host, port, ConnectionType.DEFAULT_CLIENT_CONNECTION_TYPE);
@@ -70,6 +75,13 @@ public class SCClient {
 
 	/**
 	 * Instantiates a new SC client.
+	 * 
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param connectionType
+	 *            the connection type
 	 */
 	public SCClient(String host, int port, ConnectionType connectionType) {
 		this.host = host;

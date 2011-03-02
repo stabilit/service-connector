@@ -47,7 +47,7 @@ public class SCSessionService extends SCService {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private final static Logger LOGGER = Logger.getLogger(SCSessionService.class);
+	private static final Logger LOGGER = Logger.getLogger(SCSessionService.class);
 	/** The sessionTimeout, timeout runs when session need to be refreshed. */
 	private ScheduledFuture<TimeoutWrapper> sessionTimeout;
 	/** The echo timeout in seconds. Time to wait for the reply of SC in case of an echo until the session is marked as dead. */
@@ -182,7 +182,7 @@ public class SCSessionService extends SCService {
 	 * @throws SCMPValidatorException
 	 *             execute message is null<br>
 	 */
-	public synchronized SCMessage execute(SCMessage requestMsg) throws Exception {
+	public synchronized SCMessage execute(SCMessage requestMsg) throws SCServiceException, SCMPValidatorException {
 		return this.execute(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, requestMsg);
 	}
 

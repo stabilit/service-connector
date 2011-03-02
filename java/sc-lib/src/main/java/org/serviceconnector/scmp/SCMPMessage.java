@@ -120,8 +120,9 @@ public class SCMPMessage {
 
 	/**
 	 * Sets the full cache id.
-	 *
-	 * @param cacheId the new full cache id
+	 * 
+	 * @param cacheId
+	 *            the new full cache id
 	 */
 	public void setFullCacheId(CacheId cacheId) {
 		this.setHeader(SCMPHeaderAttributeKey.CACHE_ID, cacheId.getCacheId());
@@ -634,17 +635,16 @@ public class SCMPMessage {
 	 */
 	public int getBodyLength() {
 		// gets body in case of composite component
-		Object body = this.getBody();
-		if (body == null) {
+		if (this.body == null) {
 			return 0;
 		}
-		if (byte[].class == body.getClass()) {
-			return ((byte[]) body).length;
+		if (byte[].class == this.body.getClass()) {
+			return ((byte[]) this.body).length;
 		}
-		if (String.class == body.getClass()) {
-			return ((String) body).length();
+		if (String.class == this.body.getClass()) {
+			return ((String) this.body).length();
 		}
-		if (body instanceof InputStream) {
+		if (this.body instanceof InputStream) {
 			/*
 			 * needs to be different in case of INPUT_STREAM body length is always unknown for streams. Set it on Integer.MAX_VALUE
 			 * 2^31-1 (2048 MB). Never rely on bodyLength for body type INPUT_STREAM.
