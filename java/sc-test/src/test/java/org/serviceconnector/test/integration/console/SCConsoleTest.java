@@ -468,7 +468,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
-		Assert.assertEquals(Boolean.FALSE.toString(), client.isServiceEnabled(TestConstants.sesServiceName1).getParamValue(
+		Assert.assertEquals("disabled", client.isServiceEnabled(TestConstants.sesServiceName1).getParamValue(
 				TestConstants.sesServiceName1));
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
@@ -476,7 +476,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
-		Assert.assertEquals(Boolean.TRUE.toString(), client.isServiceEnabled("" + TestConstants.sesServiceName1).getParamValue(
+		Assert.assertEquals("enabled", client.isServiceEnabled("" + TestConstants.sesServiceName1).getParamValue(
 				TestConstants.sesServiceName1));
 		client.detach();
 	}
@@ -496,7 +496,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
-		Assert.assertEquals(Boolean.FALSE.toString(), client.isServiceEnabled("" + TestConstants.sesServiceName1).getParamValue(
+		Assert.assertEquals("disabled", client.isServiceEnabled("" + TestConstants.sesServiceName1).getParamValue(
 				TestConstants.sesServiceName1));
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
@@ -504,7 +504,7 @@ public class SCConsoleTest extends IntegrationSuperTest {
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
-		Assert.assertEquals(Boolean.TRUE.toString(), client.isServiceEnabled("" + TestConstants.sesServiceName1).getParamValue(
+		Assert.assertEquals("enabled", client.isServiceEnabled("" + TestConstants.sesServiceName1).getParamValue(
 				TestConstants.sesServiceName1));
 		client.detach();
 	}
