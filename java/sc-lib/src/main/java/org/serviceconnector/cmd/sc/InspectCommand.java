@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,8 +54,8 @@ import org.serviceconnector.util.ValidatorUtility;
  */
 public class InspectCommand extends CommandAdapter {
 
-	/** The Constant logger. */
-	private final static Logger logger = Logger.getLogger(InspectCommand.class);
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getLogger(InspectCommand.class);
 
 	/**
 	 * Instantiates a new InspectCommand.
@@ -64,13 +65,14 @@ public class InspectCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public SCMPMsgType getKey() {
+	public final SCMPMsgType getKey() {
 		return SCMPMsgType.INSPECT;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void run(IRequest request, IResponse response, IResponderCallback responderCallback) throws Exception {
+	public final void run(final IRequest request, final IResponse response, final IResponderCallback responderCallback)
+			throws Exception {
 		SCMPMessage reqMsg = request.getMessage();
 		String bodyString = (String) reqMsg.getBody();
 
@@ -87,7 +89,7 @@ public class InspectCommand extends CommandAdapter {
 
 		if (Constants.CC_CMD_STATE.equalsIgnoreCase(callKey)) {
 			// state for service requested
-			logger.debug("state request for service:" + serviceName);
+			LOGGER.debug("state request for service:" + serviceName);
 
 			if (serviceName.equalsIgnoreCase(Constants.WILD_CARD_SIGN)) {
 				// get state of all services
@@ -95,13 +97,13 @@ public class InspectCommand extends CommandAdapter {
 			} else if (this.serviceRegistry.containsKey(serviceName)) {
 				if (this.serviceRegistry.getService(serviceName).isEnabled() == true) {
 					scmpReply.setBody(serviceName + Constants.EQUAL_SIGN + Boolean.TRUE);
-					logger.debug("service:" + serviceName + "is enabled");
+					LOGGER.debug("service:" + serviceName + "is enabled");
 				} else {
 					scmpReply.setBody(serviceName + Constants.EQUAL_SIGN + Boolean.FALSE);
-					logger.debug("service:" + serviceName + "is disabled");
+					LOGGER.debug("service:" + serviceName + "is disabled");
 				}
 			} else {
-				logger.debug("service=" + serviceName + " not found");
+				LOGGER.debug("service=" + serviceName + " not found");
 				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			}
 			response.setSCMP(scmpReply);
@@ -111,7 +113,7 @@ public class InspectCommand extends CommandAdapter {
 		}
 		if (Constants.CC_CMD_SESSIONS.equalsIgnoreCase(callKey)) {
 			// state for service requested
-			logger.debug("sessions request for service: " + serviceName);
+			LOGGER.debug("sessions request for service: " + serviceName);
 			if (serviceName.equalsIgnoreCase(Constants.WILD_CARD_SIGN)) {
 				// get sessions of all services
 				scmpReply.setBody(this.getSessionsOfServicesString());
@@ -137,7 +139,7 @@ public class InspectCommand extends CommandAdapter {
 		}
 		if (Constants.CC_CMD_INSPECT_CACHE.equalsIgnoreCase(callKey)) {
 			String cacheId = urlRequestString.getParamValue("cacheId");
-			logger.debug("cache inspect for serviceName: " + serviceName + ", cacheId:" + cacheId);
+			LOGGER.debug("cache inspect for serviceName: " + serviceName + ", cacheId:" + cacheId);
 			String cacheInspectString = getCacheInspectString(serviceName, cacheId);
 			scmpReply.setBody(cacheInspectString);
 			response.setSCMP(scmpReply);
@@ -145,7 +147,7 @@ public class InspectCommand extends CommandAdapter {
 			responderCallback.responseCallback(request, response);
 			return;
 		}
-		logger.error("wrong inspect command body=" + bodyString); // body has bad syntax
+		LOGGER.error("wrong inspect command body=" + bodyString); // body has bad syntax
 		scmpReply = new SCMPMessageFault(SCMPError.V_WRONG_INSPECT_COMMAND, bodyString);
 		response.setSCMP(scmpReply);
 		// initiate responder to send reply
@@ -154,7 +156,7 @@ public class InspectCommand extends CommandAdapter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void validate(IRequest request) throws Exception {
+	public final void validate(final IRequest request) throws Exception {
 		try {
 			SCMPMessage message = request.getMessage();
 			// ipAddressList mandatory
@@ -165,7 +167,7 @@ public class InspectCommand extends CommandAdapter {
 			ex.setMessageType(getKey());
 			throw ex;
 		} catch (Throwable th) {
-			logger.error("validation error", th);
+			LOGGER.error("validation error", th);
 			SCMPValidatorException validatorException = new SCMPValidatorException();
 			validatorException.setMessageType(getKey());
 			throw validatorException;
@@ -182,8 +184,11 @@ public class InspectCommand extends CommandAdapter {
 	 * @return the cache inspect string
 	 * @throws SCMPCommandException
 	 *             the SCMP command exception
+	 * @throws UnsupportedEncodingException
+	 *             encoding response string failed
 	 */
-	private String getCacheInspectString(String serviceName, String cacheId) throws Exception {
+	private String getCacheInspectString(final String serviceName, final String cacheId) throws SCMPCommandException,
+			UnsupportedEncodingException {
 		CacheManager cacheManager = AppContext.getCacheManager();
 		if (cacheManager == null) {
 			SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_MANAGER_ERROR,
@@ -221,6 +226,11 @@ public class InspectCommand extends CommandAdapter {
 		}
 	}
 
+	/**
+	 * Gets the sessions of services string.
+	 * 
+	 * @return the sessions of services string
+	 */
 	private String getSessionsOfServicesString() {
 		StringBuilder sb = new StringBuilder();
 
@@ -247,6 +257,11 @@ public class InspectCommand extends CommandAdapter {
 		return sb.toString();
 	}
 
+	/**
+	 * Gets the state of services string.
+	 * 
+	 * @return the state of services string
+	 */
 	private String getStateOfServicesString() {
 		StringBuilder sb = new StringBuilder();
 
