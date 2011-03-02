@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.serviceconnector.Constants;
+import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
 import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.scmp.SCMPError;
@@ -121,12 +122,22 @@ public class SCConsole {
 				System.out.println("Cache has been cleared");
 				client.detach();
 			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_ENABLE)) {
-				client.enableService(serviceName);
-				System.out.println("Service [" + serviceName + "] has been enabled");
+				try {
+					client.enableService(serviceName);
+					System.out.println("Service [" + serviceName + "] has been enabled");
+				} catch (SCServiceException e) {
+					System.out.println("Service [" + serviceName + "] does not exist!");
+					status = 4;
+				}
 				client.detach();
 			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_DISABLE)) {
-				client.disableService(serviceName);
-				System.out.println("Service [" + serviceName + "] has been disabled");
+				try {
+					client.disableService(serviceName);
+					System.out.println("Service [" + serviceName + "] has been disabled");
+				} catch (SCServiceException e) {
+					System.out.println("Service [" + serviceName + "] does not exist!");
+					status = 4;
+				}
 				client.detach();
 			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_STATE)) {
 				try {
@@ -141,7 +152,7 @@ public class SCConsole {
 						sb.append("\n");
 					}
 					System.out.println(sb.toString());
-				} catch (Exception e) {
+				} catch (SCServiceException e) {
 					System.out.println("Service [" + serviceName + "] does not exist!");
 					status = 4;
 				}
@@ -159,7 +170,7 @@ public class SCConsole {
 						sb.append(" sessions\n");
 					}
 					System.out.println(sb.toString());
-				} catch (Exception e) {
+				} catch (SCServiceException e) {
 					System.out.println("Service [" + serviceName + "] does not exist!");
 					status = 4;
 				}
@@ -169,7 +180,7 @@ public class SCConsole {
 				status = 3;
 			}
 		} catch (UnsupportedEncodingException e) {
-			SCConsole.showError("Error in request string, encoding failed.");
+			SCConsole.showError("Error in request string, parsing failed.");
 			status = 5;
 		} catch (Exception e) {
 			e.printStackTrace();

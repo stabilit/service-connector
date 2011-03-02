@@ -115,7 +115,7 @@ public class URLString {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.warn(e);
+			LOGGER.debug(e);
 			throw new UnsupportedEncodingException("unsupported url response string");
 		}
 	}
@@ -145,7 +145,7 @@ public class URLString {
 				this.map.put(key, value);
 			}
 		} catch (Exception e) {
-			LOGGER.warn(e);
+			LOGGER.debug(e);
 			throw new UnsupportedEncodingException("unsupported url encoding format");
 		}
 	}
@@ -178,8 +178,8 @@ public class URLString {
 			}
 			return sb.toString();
 		} catch (Exception e) {
-			LOGGER.warn(e);
-			LOGGER.error("unsupported url encoding format", e);
+			LOGGER.debug(e);
+			LOGGER.debug("unsupported url encoding format", e);
 		}
 		return null;
 	}
@@ -205,7 +205,7 @@ public class URLString {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.warn(e);
+			LOGGER.debug(e);
 			throw new UnsupportedEncodingException("unsupported response parameters");
 		}
 		return sb.toString();
@@ -242,7 +242,7 @@ public class URLString {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.warn(e);
+			LOGGER.debug(e);
 			throw new UnsupportedEncodingException("unsupported response parameters");
 		}
 		return sb.toString();
@@ -264,7 +264,7 @@ public class URLString {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.warn(e);
+			LOGGER.debug(e);
 			throw new UnsupportedEncodingException("unsupported request parameters");
 		}
 		return sb.toString();
