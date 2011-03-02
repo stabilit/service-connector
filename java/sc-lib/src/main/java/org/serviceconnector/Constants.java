@@ -82,8 +82,7 @@ public final class Constants {
 	/**
 	 * Defines the time to wait in receive publication on cascaded client to get permit to proceed.
 	 */
-	// TODO JOT/JAN.. reduce to 2000, 200000 for testing purpose
-	public static final int WAIT_FOR_PERMIT_IN_RECEIVE_PUBLICATION_MILLIS = 2000000;
+	public static final int WAIT_FOR_PERMIT_IN_RECEIVE_PUBLICATION_MILLIS = 2000;
 
 	/** The default keep alive interval, 0 = not active. */
 	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 60;
@@ -209,7 +208,7 @@ public final class Constants {
 	public static final String AMPERSAND_SIGN = "&";
 	public static final String QUESTION_MARK = "?";
 	public static final String WILD_CARD_SIGN = "*";
-	public static final String URL_ENCODING = "UTF-8"; // TODO SC default is "ISO-8859-1" does it match?
+	public static final String URL_ENCODING = "UTF-8";
 	public static final String SERVICE_NAME = "serviceName";
 	public static final String CACHE_ID = "cacheId";
 

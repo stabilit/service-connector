@@ -62,7 +62,7 @@ public class NettyWebRequest extends AbstractWebRequest {
 		this.url = null;
 		if (this.request != null) {
 			// extract any encoded session in url
-			String sid = this.parseEncodedSessionId(); 
+			this.parseEncodedSessionId(); 
 			// http get
 			this.parameters = new HashMap<String, List<String>>();
 			QueryStringDecoder qsd = new QueryStringDecoder(this.getURL());

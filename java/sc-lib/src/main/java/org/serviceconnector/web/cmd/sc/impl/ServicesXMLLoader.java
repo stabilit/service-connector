@@ -53,7 +53,7 @@ public class ServicesXMLLoader extends AbstractXMLLoader {
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		writer.writeStartElement("services");
 		String serviceParameter = request.getParameter("service");
-		String showSessionsParameter = request.getParameter("showsessions");
+		// String showSessionsParameter = request.getParameter("showsessions");
 		Service[] services = serviceRegistry.getServices();
 		for (Service service : services) {
 			writer.writeStartElement("service");

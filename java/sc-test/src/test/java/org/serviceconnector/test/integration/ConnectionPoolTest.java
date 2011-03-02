@@ -213,7 +213,7 @@ public class ConnectionPoolTest extends IntegrationSuperTest {
 		for (int i = 0; i < 10000; i++) {
 			ConnectionPool cp = new ConnectionPool(TestConstants.HOST, this.port, this.connectionType.getValue(),
 					this.keepAlivSeconds);
-			IConnection connection = cp.getConnection(); // TODO JOT ##testing läuft bei mir, mit Anzahl spielen auf VM 10000Times
+			IConnection connection = cp.getConnection();
 			TestCallback cbk = new TestCallback();
 			connection.send(message, cbk);
 			cbk.getMessageSync(1000);

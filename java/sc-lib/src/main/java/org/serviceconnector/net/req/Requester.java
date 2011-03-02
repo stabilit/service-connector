@@ -20,6 +20,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.connection.ConnectionContext;
@@ -210,6 +211,6 @@ public class Requester implements IRequester {
 		this.connectionPool.setMinConnections(this.connectionPool.getMaxConnections());
 		this.connectionPool.initMinConnections();
 		// initial done - set it back to 1
-		this.connectionPool.setMinConnections(1);
+		this.connectionPool.setMinConnections(Constants.DEFAULT_MIN_CONNECTION_POOL_SIZE);
 	}
 }

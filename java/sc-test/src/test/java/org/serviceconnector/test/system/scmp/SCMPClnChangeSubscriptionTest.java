@@ -71,7 +71,7 @@ public class SCMPClnChangeSubscriptionTest extends SCMPClnChangeSubscriptionCasc
 		TestUtil.checkReply(cbk.getMessageSync(4000));
 		reply = cbk1.getMessageSync(1300);
 		Assert.assertTrue(reply.isFault());
-		TestUtil.verifyError(reply, SCMPError.NO_FREE_CONNECTION, SCMPMsgType.CLN_CHANGE_SUBSCRIPTION); // TODO JOT ##testing läuft
+		TestUtil.verifyError(reply, SCMPError.NO_FREE_CONNECTION, SCMPMsgType.CLN_CHANGE_SUBSCRIPTION);
 
 		SCMPClnUnsubscribeCall unSubscribeCall = new SCMPClnUnsubscribeCall(this.requester, TestConstants.pubServerName1, sessionId);
 		cbk = new TestCallback(true);

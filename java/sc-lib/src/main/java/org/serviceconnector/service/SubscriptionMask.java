@@ -56,7 +56,6 @@ public class SubscriptionMask {
 			return false;
 		}
 		for (int byteIndex = 0; byteIndex < mask.length; byteIndex++) {
-			// TODO JAN/JOT verify with Jan: added "mask[byteIndex] == 0x25" to the condition
 			if (msgMaskByte[byteIndex] == 0x25 || mask[byteIndex] == 0x25) {
 				continue;
 			}

@@ -149,40 +149,40 @@ public abstract class AbstractWebRequest implements IWebRequest {
 			if (webSession != null) {
 				// check if web session belongs to same local port, client and user agent
 				if (this.isMySession(webSession)) {
-				    return webSession;
+					return webSession;
 				}
 			}
 		}
-// cookie replaced by url encoding		
-//		// try to get JSESSIONID from cookie request
-//		Cookie jsessionidCookie = this.getCookie("JSESSIONID");
-//		if (jsessionidCookie != null) {
-//			String sessionId = jsessionidCookie.getValue();
-//			if (sessionId != null) {
-//				IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
-//				if (webSession != null) {
-//					// check if web session belongs to same port
-//					String webSessionHost = webSession.getHost();
-//					String myHost = this.getHost();
-//					if (webSessionHost != null && webSessionHost.equals(myHost)) {
-//						int webSessionPort = webSession.getPort();
-//						int myPort = this.getPort();
-//						if (webSessionPort == myPort) {
-//							return webSession;
-//						}
-//					}
-//				}
-//			}
-//			// session is no more valid
-//		}
-//		// check for jsessionid in request attribute
-//		String sessionId = (String) this.getAttribute("JSESSIONID");
-//		if (sessionId != null) {
-//			IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
-//			if (webSession != null) {
-//				return webSession;
-//			}
-//		}
+		// cookie replaced by url encoding
+		// // try to get JSESSIONID from cookie request
+		// Cookie jsessionidCookie = this.getCookie("JSESSIONID");
+		// if (jsessionidCookie != null) {
+		// String sessionId = jsessionidCookie.getValue();
+		// if (sessionId != null) {
+		// IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
+		// if (webSession != null) {
+		// // check if web session belongs to same port
+		// String webSessionHost = webSession.getHost();
+		// String myHost = this.getHost();
+		// if (webSessionHost != null && webSessionHost.equals(myHost)) {
+		// int webSessionPort = webSession.getPort();
+		// int myPort = this.getPort();
+		// if (webSessionPort == myPort) {
+		// return webSession;
+		// }
+		// }
+		// }
+		// }
+		// // session is no more valid
+		// }
+		// // check for jsessionid in request attribute
+		// String sessionId = (String) this.getAttribute("JSESSIONID");
+		// if (sessionId != null) {
+		// IWebSession webSession = WebSessionRegistry.getCurrentInstance().getSession(sessionId);
+		// if (webSession != null) {
+		// return webSession;
+		// }
+		// }
 		if (create == true) {
 			return WebSessionRegistry.getCurrentInstance().newSession();
 		}
@@ -191,10 +191,10 @@ public abstract class AbstractWebRequest implements IWebRequest {
 
 	private boolean isMySession(IWebSession webSession) {
 		String userAgent = webSession.getUserAgent();
-		String webLocalHost = webSession.getHost();		
+		String webLocalHost = webSession.getHost();
 		String webRemoteHost = webSession.getRemoteHost();
 		int webLocalPort = webSession.getPort();
-		int webRemotePort = webSession.getRemotePort();
+		// int webRemotePort = webSession.getRemotePort();
 		if (userAgent == null) {
 			return false;
 		}
