@@ -88,7 +88,6 @@ public class SCConsole {
 		} else {
 			ValidatorUtility.validateInt(1, port, 0xFFFF, SCMPError.HV_WRONG_PORTNR);
 		}
-		System.out.println("bodyString" + bodyString);
 		int status = SCConsole.run(host, port, bodyString);
 		System.exit(status);
 	}
