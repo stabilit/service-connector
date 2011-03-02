@@ -107,16 +107,11 @@ public class ManageCommand extends CommandAdapter {
 		}
 
 		if (Constants.CC_CMD_ENABLE.equalsIgnoreCase(callKey)) {
-			if (serviceName.equalsIgnoreCase(Constants.WILD_CARD_SIGN)) {
-				// enable all services
-				this.modifyStateOfAllServices(true);
-			} else if (this.serviceRegistry.containsKey(serviceName) == false) {
+			// enable services
+			boolean success = this.modifyStateOfServices(true, serviceName);
+			if (success == false) {
 				LOGGER.debug("service=" + serviceName + " not found");
 				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
-			} else {
-				// enable service
-				LOGGER.info("enable service=" + serviceName);
-				this.serviceRegistry.getService(serviceName).setEnabled(true);
 			}
 			response.setSCMP(scmpReply);
 			responderCallback.responseCallback(request, response);
@@ -124,16 +119,11 @@ public class ManageCommand extends CommandAdapter {
 		}
 
 		if (Constants.CC_CMD_DISABLE.equalsIgnoreCase(callKey)) {
-			if (serviceName.equalsIgnoreCase(Constants.WILD_CARD_SIGN)) {
-				// disable all services
-				this.modifyStateOfAllServices(false);
-			} else if (this.serviceRegistry.containsKey(serviceName) == false) {
+			// enable services
+			boolean success = this.modifyStateOfServices(false, serviceName);
+			if (success == false) {
 				LOGGER.debug("service=" + serviceName + " not found");
 				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
-			} else {
-				// disable service
-				LOGGER.info("disable service=" + serviceName);
-				this.serviceRegistry.getService(serviceName).setEnabled(false);
 			}
 			response.setSCMP(scmpReply);
 			responderCallback.responseCallback(request, response);
@@ -152,13 +142,18 @@ public class ManageCommand extends CommandAdapter {
 	 * @param enable
 	 *            the enable
 	 */
-	private void modifyStateOfAllServices(boolean enable) {
+	private boolean modifyStateOfServices(boolean enable, String serviceNameRegex) {
+		boolean ret = false;
 		Service[] services = this.serviceRegistry.getServices();
 
 		for (Service service : services) {
-			LOGGER.info("set service=" + service.getName() + " state enable=" + enable);
-			service.setEnabled(enable);
+			if (service.getName().matches(serviceNameRegex)) {
+				LOGGER.info("set service=" + service.getName() + "state enable=" + enable);
+				service.setEnabled(enable);
+				ret = true;
+			}
 		}
+		return ret;
 	}
 
 	/** {@inheritDoc} */

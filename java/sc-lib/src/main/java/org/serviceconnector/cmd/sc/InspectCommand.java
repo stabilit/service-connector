@@ -45,6 +45,7 @@ import org.serviceconnector.service.ServiceType;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.util.URLString;
 import org.serviceconnector.util.ValidatorUtility;
+import org.serviceconnector.web.NotFoundException;
 
 /**
  * The Class InspectCommand. Responsible for validation and execution of inspect command. Inspect command is used for
@@ -90,19 +91,10 @@ public class InspectCommand extends CommandAdapter {
 		if (Constants.CC_CMD_STATE.equalsIgnoreCase(callKey)) {
 			// state for service requested
 			LOGGER.debug("state request for service:" + serviceName);
-
-			if (serviceName.equalsIgnoreCase(Constants.WILD_CARD_SIGN)) {
+			try {
 				// get state of all services
-				scmpReply.setBody(this.getStateOfServicesString());
-			} else if (this.serviceRegistry.containsKey(serviceName)) {
-				if (this.serviceRegistry.getService(serviceName).isEnabled() == true) {
-					scmpReply.setBody(serviceName + Constants.EQUAL_SIGN + "enabled");
-					LOGGER.debug("service:" + serviceName + "is enabled");
-				} else {
-					scmpReply.setBody(serviceName + Constants.EQUAL_SIGN + "disabled");
-					LOGGER.debug("service:" + serviceName + "is disabled");
-				}
-			} else {
+				scmpReply.setBody(this.getStateOfServicesString(serviceName));
+			} catch (NotFoundException e) {
 				LOGGER.debug("service=" + serviceName + " not found");
 				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			}
@@ -114,24 +106,13 @@ public class InspectCommand extends CommandAdapter {
 		if (Constants.CC_CMD_SESSIONS.equalsIgnoreCase(callKey)) {
 			// state for service requested
 			LOGGER.debug("sessions request for service: " + serviceName);
-			if (serviceName.equalsIgnoreCase(Constants.WILD_CARD_SIGN)) {
+			try {
 				// get sessions of all services
-				scmpReply.setBody(this.getSessionsOfServicesString());
-				response.setSCMP(scmpReply);
-				// initiate responder to send reply
-				responderCallback.responseCallback(request, response);
-				return;
+				scmpReply.setBody(this.getSessionsOfServicesString(serviceName));
+			} catch (NotFoundException e) {
+				LOGGER.debug("service=" + serviceName + " not found");
+				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
 			}
-			Service service = this.getService(serviceName);
-			if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE) {
-				// wrong service type
-				SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.V_WRONG_SERVICE_TYPE, serviceName);
-				scmpCommandException.setMessageType(getKey());
-				throw scmpCommandException;
-			}
-			StatefulService statefulService = (StatefulService) service;
-			scmpReply.setBody(statefulService.getName() + Constants.EQUAL_SIGN + statefulService.getCountAvailableSessions() + "/"
-					+ statefulService.getCountAllocatedSessions());
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
@@ -230,29 +211,43 @@ public class InspectCommand extends CommandAdapter {
 	 * Gets the sessions of services string.
 	 * 
 	 * @return the sessions of services string
+	 * @throws NotFoundException
 	 */
-	private String getSessionsOfServicesString() {
+	private String getSessionsOfServicesString(String serviceNameRegex) throws NotFoundException {
+		boolean found = false;
 		StringBuilder sb = new StringBuilder();
 
 		Service[] services = this.serviceRegistry.getServices();
 		int counter = 0;
 		for (Service service : services) {
+			if (service.getType() != ServiceType.PUBLISH_SERVICE && service.getType() != ServiceType.SESSION_SERVICE) {
+				continue;
+			}
+			if (service.getName().matches(serviceNameRegex) == false) {
+				// pattern does not match
+				continue;
+			}
 			switch (service.getType()) {
 			case SESSION_SERVICE:
 			case PUBLISH_SERVICE:
+				if (counter != 0) {
+					sb.append(Constants.AMPERSAND_SIGN);
+				}
+				counter++;
 				StatefulService statefulService = (StatefulService) service;
 				sb.append(statefulService.getName());
 				sb.append(Constants.EQUAL_SIGN);
 				sb.append(statefulService.getCountAllocatedSessions());
 				sb.append("/");
 				sb.append(statefulService.getCountAvailableSessions());
-				if (counter != services.length) {
-					sb.append(Constants.AMPERSAND_SIGN);
-				}
+				found = true;
 				break;
 			default:
 				continue;
 			}
+		}
+		if (found == false) {
+			throw new NotFoundException("no service found pattern=" + serviceNameRegex);
 		}
 		return sb.toString();
 	}
@@ -261,16 +256,26 @@ public class InspectCommand extends CommandAdapter {
 	 * Gets the state of services string.
 	 * 
 	 * @return the state of services string
+	 * @throws NotFoundException
 	 */
-	private String getStateOfServicesString() {
+	private String getStateOfServicesString(String serviceNameRegex) throws NotFoundException {
+		boolean found = false;
 		StringBuilder sb = new StringBuilder();
 
 		Service[] services = this.serviceRegistry.getServices();
 		int counter = 0;
 		for (Service service : services) {
+			if (service.getName().matches(serviceNameRegex) == false) {
+				// pattern does not match
+				continue;
+			}
 			switch (service.getType()) {
 			case SESSION_SERVICE:
 			case PUBLISH_SERVICE:
+				if (counter != 0) {
+					sb.append(Constants.AMPERSAND_SIGN);
+				}
+				counter++;
 				StatefulService statefulService = (StatefulService) service;
 				sb.append(statefulService.getName());
 				sb.append(Constants.EQUAL_SIGN);
@@ -279,13 +284,14 @@ public class InspectCommand extends CommandAdapter {
 				} else {
 					sb.append("disabled");
 				}
-				if (counter != services.length) {
-					sb.append(Constants.AMPERSAND_SIGN);
-				}
+				found = true;
 				break;
 			default:
 				continue;
 			}
+		}
+		if (found == false) {
+			throw new NotFoundException("no service found pattern=" + serviceNameRegex);
 		}
 		return sb.toString();
 	}
