@@ -272,14 +272,14 @@ public class InspectCommand extends CommandAdapter {
 			switch (service.getType()) {
 			case SESSION_SERVICE:
 			case PUBLISH_SERVICE:
+			case FILE_SERVICE:
 				if (counter != 0) {
 					sb.append(Constants.AMPERSAND_SIGN);
 				}
 				counter++;
-				StatefulService statefulService = (StatefulService) service;
-				sb.append(statefulService.getName());
+				sb.append(service.getName());
 				sb.append(Constants.EQUAL_SIGN);
-				if (statefulService.isEnabled() == true) {
+				if (service.isEnabled() == true) {
 					sb.append("enabled");
 				} else {
 					sb.append("disabled");
