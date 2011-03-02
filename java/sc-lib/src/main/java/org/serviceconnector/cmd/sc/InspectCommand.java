@@ -96,10 +96,10 @@ public class InspectCommand extends CommandAdapter {
 				scmpReply.setBody(this.getStateOfServicesString());
 			} else if (this.serviceRegistry.containsKey(serviceName)) {
 				if (this.serviceRegistry.getService(serviceName).isEnabled() == true) {
-					scmpReply.setBody(serviceName + Constants.EQUAL_SIGN + Boolean.TRUE);
+					scmpReply.setBody(serviceName + Constants.EQUAL_SIGN + "enabled");
 					LOGGER.debug("service:" + serviceName + "is enabled");
 				} else {
-					scmpReply.setBody(serviceName + Constants.EQUAL_SIGN + Boolean.FALSE);
+					scmpReply.setBody(serviceName + Constants.EQUAL_SIGN + "disabled");
 					LOGGER.debug("service:" + serviceName + "is disabled");
 				}
 			} else {
@@ -275,9 +275,9 @@ public class InspectCommand extends CommandAdapter {
 				sb.append(statefulService.getName());
 				sb.append(Constants.EQUAL_SIGN);
 				if (statefulService.isEnabled() == true) {
-					sb.append(Boolean.TRUE);
+					sb.append("enabled");
 				} else {
-					sb.append(Boolean.FALSE);
+					sb.append("disabled");
 				}
 				if (counter != services.length) {
 					sb.append(Constants.AMPERSAND_SIGN);
