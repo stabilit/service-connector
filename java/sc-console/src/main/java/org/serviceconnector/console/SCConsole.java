@@ -155,7 +155,7 @@ public class SCConsole {
 						sb.append(param.getKey());
 						sb.append("] has ");
 						sb.append(param.getValue());
-						sb.append("sessions\n");
+						sb.append(" sessions\n");
 					}
 					System.out.println(sb.toString());
 				} catch (Exception e) {
