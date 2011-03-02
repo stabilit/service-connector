@@ -90,7 +90,7 @@ public class InspectCommand extends CommandAdapter {
 
 		if (Constants.CC_CMD_STATE.equalsIgnoreCase(callKey)) {
 			// state for service requested
-			LOGGER.debug("state request for service:" + serviceName);
+			LOGGER.debug("state request for service=" + serviceName);
 			try {
 				// get state of all services
 				scmpReply.setBody(this.getStateOfServicesString(serviceName));
@@ -120,7 +120,7 @@ public class InspectCommand extends CommandAdapter {
 		}
 		if (Constants.CC_CMD_INSPECT_CACHE.equalsIgnoreCase(callKey)) {
 			String cacheId = urlRequestString.getParamValue("cacheId");
-			LOGGER.debug("cache inspect for serviceName: " + serviceName + ", cacheId:" + cacheId);
+			LOGGER.debug("cache inspect for serviceName=" + serviceName + ", cacheId=" + cacheId);
 			String cacheInspectString = getCacheInspectString(serviceName, cacheId);
 			scmpReply.setBody(cacheInspectString);
 			response.setSCMP(scmpReply);

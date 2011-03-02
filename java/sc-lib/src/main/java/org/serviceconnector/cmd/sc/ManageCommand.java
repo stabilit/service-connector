@@ -148,7 +148,7 @@ public class ManageCommand extends CommandAdapter {
 		try {
 			for (Service service : services) {
 				if (service.getName().matches(serviceNameRegex)) {
-					LOGGER.info("set service=" + service.getName() + "state enable=" + enable);
+					LOGGER.info("set service=" + service.getName() + " state enable=" + enable);
 					service.setEnabled(enable);
 					ret = true;
 				}
