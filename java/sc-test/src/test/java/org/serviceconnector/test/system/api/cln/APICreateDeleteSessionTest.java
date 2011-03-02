@@ -186,6 +186,18 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 	}
 
 	/**
+	 * Description: creates a session - deletes the session - tries creating session on same sessionService instance<br>
+	 * Expectation: passes, reuse of sessionService instances is allowed
+	 */
+	public void t25_reuseOfSession() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setSessionInfo(TestConstants.stringLength257);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		response = sessionService1.createSession(request, msgCallback1);
+	}
+
+	/**
 	 * Description: Create session with echo interval = 1<br>
 	 * Expectation: throws SCServiceException
 	 */

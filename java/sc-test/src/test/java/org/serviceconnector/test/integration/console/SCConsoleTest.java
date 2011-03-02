@@ -462,33 +462,32 @@ public class SCConsoleTest extends IntegrationSuperTest {
 		Assert.assertEquals(true, client.isServiceEnabled("session-1"));
 		client.detach();
 	}
-
+	
 	/**
-	 * Description: start console with "-h localhost -p 9000 sessions=session-1" parameters<br>
-	 * Expectation: passes with exitCode = 0 "Success" <br>
+	 * Description: disable and re-enable the session service "session-1"<br>
+	 * Expectation: passes with exitCode = 0 "Success".<br>
+	 * Post-condition: session service "session-1" is enabled again
 	 */
 	@Test
-	public void t52_sessions_command() throws Exception {
+	public void t51_enable_wildCard_command() throws Exception {
+		SCMgmtClient client = new SCMgmtClient(TestConstants.HOST, TestConstants.PORT_SC_TCP,
+				ConnectionType.NETTY_TCP);
+		client.attach();
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
-					Constants.CC_CMD_SESSIONS + "=session-1" });
+					Constants.CC_CMD_DISABLE + "?serviceName=*" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
-	}
-
-	/**
-	 * Description: start console with "-h localhost -p 9000 sessions=publish-1<br>
-	 * Expectation: passes with exitCode = 0 "Success" <br>
-	 */
-	@Test
-	public void t53_sessions_command() throws Exception {
+		Assert.assertEquals(false, client.isServiceEnabled("session-1"));
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
-					Constants.CC_CMD_SESSIONS + "=publish-1" });
+					Constants.CC_CMD_ENABLE + "=session-1" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
+		Assert.assertEquals(true, client.isServiceEnabled("session-1"));
+		client.detach();
 	}
 
 	/**
@@ -507,12 +506,40 @@ public class SCConsoleTest extends IntegrationSuperTest {
 	}
 	
 	/**
+	 * Description: start console with "-h localhost -p 9000 sessions=session-1" parameters<br>
+	 * Expectation: passes with exitCode = 0 "Success" <br>
+	 */
+	@Test
+	public void t55_sessions_command() throws Exception {
+		try {
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+					Constants.CC_CMD_SESSIONS + "=session-1" });
+		} catch (ExitException e) {
+			Assert.assertEquals(0, e.status);
+		}
+	}
+
+	/**
+	 * Description: start console with "-h localhost -p 9000 sessions=publish-1<br>
+	 * Expectation: passes with exitCode = 0 "Success" <br>
+	 */
+	@Test
+	public void t56_sessions_command() throws Exception {
+		try {
+			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
+					Constants.CC_CMD_SESSIONS + "=publish-1" });
+		} catch (ExitException e) {
+			Assert.assertEquals(0, e.status);
+		}
+	}
+
+	/**
 	 * Description: start console with "-h localhost -p 9000 sessions=*<br>
 	 * (unknown service name)<br>
 	 * Expectation: passes with exitCode = 0 "Success"<br>
 	 */
 	@Test
-	public void t55_sessions_command_wildCard() throws Exception {
+	public void t57_sessions_command_wildCard() throws Exception {
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
 					Constants.CC_CMD_SESSIONS + "=*" });
