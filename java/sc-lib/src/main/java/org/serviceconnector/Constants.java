@@ -34,11 +34,86 @@ public final class Constants {
 	}
 
 	/*
+	 * Various Constants *********
+	 */
+	/**
+	 * Technical operation timeout. <br>
+	 * It is the time a single WRITE/READ/CLOSE/OPEN can take. Must be reasonably short.
+	 */
+	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
+
+	/** Empty application error code. */
+	public static final int EMPTY_APP_ERROR_CODE = -9999;
+
+	/** The wait time in a loop waiting for a free connection. */
+	public static final int WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS = 200;
+
+	/** Maximum size of a message. Larger data must be broken into parts*/
+	public static final int MAX_MESSAGE_SIZE = 60 << 10; // 64K;
+
+	/** Maximum port nummber */
+	public static final int MAX_PORT_NR = 65535;
+
+	/** The default SC character set (encoding). */
+	public static final String SC_CHARACTER_SET = "ISO-8859-1";
+
+	/** Seconds to milliseconds calculation factor */
+	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
+
+	/** flag to enable / disable command validation. */
+	public static final boolean COMMAND_VALIDATION_ENABLED = true;
+
+	/** File qualifier for Http requests. */
+	public static final String HTTP_FILE_QUALIFIER = "/";
+
+	/** HttpHeaders.Names.ACCEPT parameter used when http data is sent */
+	public static final String HTTP_ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
+
+	/** Protocol literal. */
+	public static final String HTTP = "http";
+
+	/** Protocol literal. */
+	public static final String TCP = "tcp";
+
+	/** File qualifier for command line argument configuration file. */
+	public static final String CLI_CONFIG_ARG = "-config";
+
+	/**
+	 * File containing the SC process PID. Created at startup and deleted on
+	 * exit or error. Used to check if SC is running.
+	 */
+	public static final String PID_FILE_NAME = "sc.pid";
+
+	/** File containing the SC dump. Created with the console command or WEB-GUI */
+	public static final String DUMP_FILE_NAME = "scDump_";
+
+	/** The dump file name format */
+	public static final String DUMP_FILE_NAME_FORMAT = "yyyyMMddHHmmssSSS";
+
+	/** The dump file extension */
+	public static final String DUMP_FILE_EXTENSION = ".xml";
+
+	/** File containing the SC logs (zipped). Created with the console command or WEB-GUI */
+	public static final String LOGS_FILE_NAME = "scLogs_";
+
+	/** The SC logs file name format */
+	public static final String LOGS_FILE_NAME_FORMAT = "yyyyMMddHHmmssSSS";
+
+	/** The SC logs file extension */
+	public static final String LOGS_FILE_EXTENSION = ".zip";
+
+	/** The Constant IPV6_LOOPBACK_NIC. */
+	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
+
+	/** FILE_LIST_DELIMITER, separates file names in file list SCFileService. */
+	public static final String FILE_LIST_DELIMITER = "\\|";
+
+	/** The Constant LINE_BREAK_SIGN. */
+	public static final String LINE_BREAK_SIGN = "\n";
+
+	/*
 	 * Defaults ********
 	 */
-	/** The default SC character set (encoding). */
-	public static final String DEFAULT_ENCODING = "ISO-8859-1";
-
 	/** Default value used if no ECHO_TIMEOUT_MULTIPLIER is configured */
 	public static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
 
@@ -109,89 +184,11 @@ public final class Constants {
 	/** The write PID */
 	public static final boolean DEFAULT_WRITE_PID_FLAG = false;
 
-	/** Default max message size */
-	public static final int DEFAULT_MAX_MESSAGE_SIZE = 60 << 10; // 64K
+	/** Default message part size */
+	public static final int DEFAULT_MESSAGE_PART_SIZE = MAX_MESSAGE_SIZE;
 
 	/** Default service state. */
 	public static final boolean DEFAULT_SERVICE_ENABLED = true;
-
-	/*
-	 * Various Constants *********
-	 */
-	/**
-	 * Technical operation timeout. <br>
-	 * It is the time a single WRITE/READ/CLOSE/OPEN can take. Must be reasonably short.
-	 */
-	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
-
-	/** Empty application error code. */
-	public static final int EMPTY_APP_ERROR_CODE = -9999;
-
-	/** The wait time in a loop waiting for a free connection. */
-	public static final int WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS = 200;
-
-	/** Maximum size of a message. Larger data is treated as large message */
-	public static final int MAX_MESSAGE_SIZE = DEFAULT_MAX_MESSAGE_SIZE;
-
-	/** Maximum port nummber */
-	public static final int MAX_PORT_NR = 65535;
-
-	/** Seconds to milliseconds calculation factor */
-	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
-
-	/** flag to enable / disable command validation. */
-	public static final boolean COMMAND_VALIDATION_ENABLED = true;
-
-	/** File qualifier for Http requests. */
-	public static final String HTTP_FILE_QUALIFIER = "/";
-
-	/** HttpHeaders.Names.ACCEPT parameter used when http data is sent */
-	public static final String HTTP_ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
-
-	/** Protocol literal. */
-	public static final String HTTP = "http";
-
-	/** Protocol literal. */
-	public static final String TCP = "tcp";
-
-	/** File qualifier for command line argument configuration file. */
-	public static final String CLI_CONFIG_ARG = "-config";
-
-	/**
-	 * File containing the SC process PID. Created at startup and deleted on
-	 * exit or error. Used to check if SC is running.
-	 */
-	public static final String PID_FILE_NAME = "sc.pid";
-
-	/** File containing the SC dump. Created with the console command or WEB-GUI */
-	public static final String DUMP_FILE_NAME = "scDump_";
-
-	/** The dump file name format */
-	public static final String DUMP_FILE_NAME_FORMAT = "yyyyMMddHHmmssSSS";
-
-	/** The dump file extension */
-	public static final String DUMP_FILE_EXTENSION = ".xml";
-
-	/** The dump file encoding */
-	public static final String DUMP_FILE_ENCODING = "ISO-8859-1";
-
-	/** File containing the SC logs (zipped). Created with the console command or WEB-GUI */
-	public static final String LOGS_FILE_NAME = "scLogs_";
-
-	/** The dump file name format */
-	public static final String LOGS_FILE_NAME_FORMAT = "yyyyMMddHHmmssSSS";
-
-	/** The dump file extension */
-	public static final String LOGS_FILE_EXTENSION = ".zip";
-
-	/** The Constant IPV6_LOOPBACK_NIC. */
-	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
-
-	/** FILE_LIST_DELIMITER, separates file names in file list SCFileService. */
-	public static final String FILE_LIST_DELIMITER = "\\|";
-
-	/** The Constant LINE_BREAK_SIGN. */
-	public static final String LINE_BREAK_SIGN = "\n";
 
 	/*
 	 * console command constants *************************
@@ -207,7 +204,6 @@ public final class Constants {
 	public static final String EQUAL_SIGN = "=";
 	public static final String AMPERSAND_SIGN = "&";
 	public static final String QUESTION_MARK = "?";
-	public static final String URL_ENCODING = "UTF-8";
 	public static final String SERVICE_NAME = "serviceName";
 	public static final String CACHE_ID = "cacheId";
 
@@ -215,7 +211,6 @@ public final class Constants {
 	 * Constants for syntax in sc.properies ************************************
 	 */
 	public static final String ROOT_WRITEPID = "root.writePID";
-	public static final String ROOT_MAX_MESSAGE_SIZE = "root.maxMessageSize";
 	public static final String ROOT_OPERATION_TIMEOUT_MULTIPLIER = "root.operationTimeoutMultiplier";
 	public static final String ROOT_ECHO_INTERVAL_MULTIPLIER = "root.echoIntervalMultiplier";
 	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
@@ -263,8 +258,8 @@ public final class Constants {
 	public static final String CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = "cache.expirationCheckIntervalSeconds";
 
 	// file server upload values
-	public static final String DEFAULT_UPLOAD_FILE_PARAM_NAME = "filename";
-	public static final String DEFAULT_UPLOAD_SERVICE_PARAM_NAME = "servicename";
+	public static final String UPLOAD_FILE_PARAM_NAME = "filename";
+	public static final String UPLOAD_SERVICE_PARAM_NAME = "servicename";
 
 	// web default values
 	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;
@@ -284,10 +279,8 @@ public final class Constants {
 	/*
 	 * SCMP protocol constants ***********************
 	 */
-	/** Carriage return character. */
-	public static final byte SCMP_CR = 0x0D;
-	/** Line feed character. */
-	public static final byte SCMP_LF = 0x0A;
+	public static final byte SCMP_CR = 0x0D;	// Carriage return character.
+	public static final byte SCMP_LF = 0x0A;	// Line feed character
 	public static final int SCMP_HEADLINE_SIZE = 22;
 	public static final int SCMP_HEADLINE_SIZE_WITHOUT_VERSION = 18;
 	public static final int SCMP_MSG_SIZE_START = 4;

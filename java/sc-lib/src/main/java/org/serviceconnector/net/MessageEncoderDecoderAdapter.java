@@ -115,8 +115,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 					// looping until <LF> got found
 					if (buffer[inLoopIndex] == 0x0A) {
 						// <LF> found
-						metaMap.put(new String(buffer, keyOff, (index - keyOff), Constants.DEFAULT_ENCODING), new String(buffer, index + 1,
-								(inLoopIndex - 1) - index, Constants.DEFAULT_ENCODING));
+						metaMap.put(new String(buffer, keyOff, (index - keyOff), Constants.SC_CHARACTER_SET), new String(buffer, index + 1,
+								(inLoopIndex - 1) - index, Constants.SC_CHARACTER_SET));
 						// updating outer loop index
 						index = inLoopIndex;
 						// updating offset for next key, +1 for <LF>
@@ -131,7 +131,7 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 			// looping until <LF> found, looking for header flag
 			if (buffer[index] == 0x0A) {
 				// <LF> found
-				metaMap.put(new String(buffer, keyOff, (index - keyOff), Constants.DEFAULT_ENCODING), null);
+				metaMap.put(new String(buffer, keyOff, (index - keyOff), Constants.SC_CHARACTER_SET), null);
 				// updating offset for next key, +1 for <LF>
 				keyOff = index + 1;
 			}

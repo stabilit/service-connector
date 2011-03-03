@@ -15,9 +15,10 @@
  */
 package org.serviceconnector.cache;
 
-import java.io.OutputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.xml.stream.XMLStreamWriter;
 
 import org.serviceconnector.cache.impl.CacheImplFactory;
 import org.serviceconnector.conf.CacheConfiguration;
@@ -48,7 +49,9 @@ public class CacheManager {
 
 	/** The expiration timeout run. */
 	private ExpirationTimeoutRun expirationTimeoutRun;
-
+	
+	private XMLStreamWriter writer;
+	
 	/**
 	 * Instantiates a new cache manager.
 	 */
@@ -107,11 +110,7 @@ public class CacheManager {
 		CacheImplFactory.clearAll();
 	}
 
-	public void dumpAll(OutputStream os) throws Exception {
-		XMLCacheDump cacheDump = new XMLCacheDump(os);
-		cacheDump.dumpAll(this);
-	}
-
+	
 	/**
 	 * Destroy all caches controlled by this cache manager.
 	 */
@@ -192,6 +191,17 @@ public class CacheManager {
 	}
 
 	/**
+	 * Dump the cache manager into the xml writer
+	 * @param writer
+	 * @throws Exception
+	 */
+	public void dump(XMLStreamWriter writer) throws Exception {
+		XMLCacheDump cacheDump = new XMLCacheDump(writer);
+		cacheDump.dumpAll(this);
+	}		
+
+	
+	/**
 	 * The Class ExpirationTimeoutThread.
 	 * This class control within a thread any cache instance for expiration or other state failures.
 	 */
@@ -247,6 +257,5 @@ public class CacheManager {
 			CacheLogger.debug("terminate expiration thread (killed)");
 			return;
 		}
-
 	}
 }

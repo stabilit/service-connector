@@ -27,7 +27,7 @@
                    <td id="sc_file_service_download_{name}" style="float:left"><input class="sc_form_button" style="margin:10px;" name="File Service" type="button" value="Property File Download - {name}" onclick="javascript:maintenanceCall('{$urlencoded}', 'sc_property_download', '{name}')"></input></td>
                 </xsl:if>                
                 <xsl:if test="scUploadService = 'true'">
-                   <td id="sc_file_service_upload_{name}" style="float:left"><input class="sc_form_button" style="margin:10px;" name="File Service" type="button" value="Logile Upload - {name}" onclick="javascript:maintenanceCall('{$urlencoded}', 'sc_logs_upload', '{name}')"></input></td>
+                   <td id="sc_file_service_upload_{name}" style="float:left"><input class="sc_form_button" style="margin:10px;" name="File Service" type="button" value="Logfile Upload - {name}" onclick="javascript:maintenanceCall('{$urlencoded}', 'sc_logs_upload', '{name}')"></input></td>
                 </xsl:if> 
               </xsl:for-each>              
             </tr>

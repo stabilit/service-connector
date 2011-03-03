@@ -60,8 +60,8 @@ public enum SCMPVersion {
 	/**
 	 * Checks if is supported.
 	 *
-	 * @param buffer the buffer
-	 * @throws SCMPValidatorException the sCMP validator exception
+	 * @param buffer the buffer containing the version number
+	 * @throws SCMPValidatorException
 	 */
 	public void isSupported(byte[] buffer) throws SCMPValidatorException {
 

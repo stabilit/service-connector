@@ -45,7 +45,7 @@ public class KeepAliveMessageEncoderDecoder extends MessageEncoderDecoderAdapter
 	/** {@inheritDoc} */
 	@Override
 	public void encode(OutputStream os, Object obj) throws Exception {
-		OutputStreamWriter osw = new OutputStreamWriter(os, Constants.DEFAULT_ENCODING);
+		OutputStreamWriter osw = new OutputStreamWriter(os, Constants.SC_CHARACTER_SET);
 		BufferedWriter bw = new BufferedWriter(osw);
 		SCMPKeepAlive keepAlive = (SCMPKeepAlive) obj;
 		if (keepAlive.isReply()) {

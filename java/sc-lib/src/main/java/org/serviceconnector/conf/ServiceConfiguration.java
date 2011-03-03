@@ -147,9 +147,11 @@ public class ServiceConfiguration {
 		builder.append(this.name);
 		builder.append(" type=");
 		builder.append(this.type);
-		builder.append(" [");
-		builder.append(this.enabled);
-		builder.append(" ] ");
+		if (this.enabled) {
+			builder.append(" [enabled] ");
+		} else {
+			builder.append(" [disabled] ");
+		}
 		if (this.remoteNodeConfiguration != null) {
 			builder.append("/remote=");
 			builder.append(this.remoteNodeConfiguration.getHost());

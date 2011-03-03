@@ -68,10 +68,6 @@ public class BasicConfiguration {
 	 * If server does not reply within this time, the server will be cleaned up.
 	 */
 	private int srvAbortOTIMillis = Constants.DEFAULT_SERVER_ABORT_OTI_MILLIS;
-	/**
-	 * the maximum size of a message (part) Larger messages will be splitted . <br>
-	 */
-	private int maxMessageSize = Constants.DEFAULT_MAX_MESSAGE_SIZE;
 
 	/**
 	 * Instantiates a new basic configuration.
@@ -124,15 +120,7 @@ public class BasicConfiguration {
 			this.dumpPath = dumpFile.getAbsolutePath();
 		}
 		LOGGER.info("dumpPath=" + this.dumpPath);
-
-		// maxMessageSize
-		Integer localMaxMessageSize = compositeConfiguration.getInteger(Constants.ROOT_MAX_MESSAGE_SIZE, null);
-		if (localMaxMessageSize != null && this.maxMessageSize != localMaxMessageSize) {
-			this.maxMessageSize = localMaxMessageSize;
-			LOGGER.info("maxMessageSize set to " + localMaxMessageSize);
-		}
-		LOGGER.info("maxMessageSize=" + this.maxMessageSize);
-		
+	
 		// operationTimeoutMultiplier
 		Double localOTIMultiplier = compositeConfiguration.getDouble(Constants.ROOT_OPERATION_TIMEOUT_MULTIPLIER, null);
 		if (localOTIMultiplier != null && this.operationTimeoutMultiplier != localOTIMultiplier) {
@@ -273,15 +261,6 @@ public class BasicConfiguration {
 	 */
 	public String getDumpPath() {
 		return dumpPath;
-	}
-
-	/**
-	 * Gets the maximum message size
-	 * 
-	 * @return the maximum message size
-	 */
-	public int getMaxMessageSize() {
-		return maxMessageSize;
 	}
 
 }

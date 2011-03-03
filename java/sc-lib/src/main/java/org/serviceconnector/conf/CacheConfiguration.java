@@ -61,21 +61,17 @@ public class CacheConfiguration implements ICacheConfiguration {
 	 * Loads cache parameters from properties file.</br>
 	 * Service Connector cache parameters: </br>
 	 * cache.enabled=true</br>
-	 * cache.name=scCache</br>
-	 * cache.diskPersistent=true </br>
 	 * cache.diskPath=../../dev/cache </br>
-	 * cache.timeIdleSeconds=60 </br>
-	 * cache.timeToLiveSeconds=120</br>
 	 * cache.maxElementsInMemory=10000 </br>
-	 * cache.maxElementsOnDisk=1000000
+	 * cache.maxElementsOnDisk=1000000 </br>
+	 * cache.expirationCheckIntervalSeconds=60 </br>
 	 * 
 	 * @param compositeConfiguration
 	 *            the composite configuration
 	 * @throws SCMPValidatorException
 	 *             the sCMP validator exception
 	 */
-	public synchronized void load(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException {
-		// enabled
+	public synchronized void load(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException {	//TODO JOT why is this synchronized?
 		Boolean cacheEnabled = compositeConfiguration.getBoolean(Constants.CACHE_ENABLED, null);
 		if (cacheEnabled != null && this.cacheEnabled != cacheEnabled) {
 			this.cacheEnabled = cacheEnabled;

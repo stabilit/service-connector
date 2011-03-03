@@ -15,13 +15,7 @@
  */ 
 package org.serviceconnector.cache;
 
-import java.io.OutputStream;
-
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
-
-import org.serviceconnector.SCVersion;
-import org.serviceconnector.util.DateTimeUtility;
 
 /**
  * The Class XMLCacheDump.
@@ -32,12 +26,11 @@ public class XMLCacheDump {
 	/**
 	 * Instantiates a new XML cache dump.
 	 *
-	 * @param os the os
+	 * @param writer the xml writer
 	 * @throws Exception the exception
 	 */
-	public XMLCacheDump(OutputStream os) throws Exception {
-		XMLOutputFactory factory = XMLOutputFactory.newInstance();
-		this.writer = factory.createXMLStreamWriter(os);
+	public XMLCacheDump(XMLStreamWriter writer) throws Exception {
+		this.writer = writer;
 	}
 
 	/**
@@ -47,115 +40,99 @@ public class XMLCacheDump {
 	 * @throws Exception the exception
 	 */
 	public void dumpAll(CacheManager cacheManager) throws Exception {
-		this.writer.writeStartDocument();
-		this.writer.writeStartElement("cache-manager-dump");
-		this.writer.writeStartElement("head");
-		writer.writeStartElement("meta");
-		writer.writeAttribute("creation", DateTimeUtility.getCurrentTimeZoneMillis());
-		// write sc version
-		writer.writeEndElement(); // close meta tag
-		writer.writeStartElement("meta");
-		writer.writeAttribute("scversion", SCVersion.CURRENT.toString());
-		writer.writeEndElement(); // close meta tag
-		this.writer.writeEndElement(); // end of head
+		writer.writeStartElement("cache-manager");
+		writer.writeAttribute("enabled", String.valueOf(cacheManager.isCacheEnabled()));
+		writer.writeAttribute("diskPath", cacheManager.getCacheConfiguration().getDiskPath());
+		writer.writeAttribute("maxElementsInMemory", String.valueOf(cacheManager.getCacheConfiguration().getMaxElementsInMemory()));
+		writer.writeAttribute("maxElementsOnDisk", String.valueOf(cacheManager.getCacheConfiguration().getMaxElementsOnDisk()));	
+		writer.writeStartElement("cache-list");
 		Object[] caches = cacheManager.getAllCaches();
 		if (caches == null) {
-			this.writeElement("information", "no caches found");
-			this.writer.writeEndElement(); // end of cache-manager-dump
-			this.writer.writeEndDocument();
-			this.writer.flush();
-			return;
-		}
-		for (int i = 0; i < caches.length; i++) {
+			writer.writeAttribute("information", "no caches found");
+		} else {
 			for (Object obj : caches) {
 				Cache cache = (Cache) obj;
 				dumpCache(cache);
 			}
 		}
-		this.writer.writeEndElement(); // end of cache-manager-dump
-		this.writer.writeEndDocument();
-		this.writer.flush();
+		writer.writeEndElement(); // end of cache-list
+		writer.writeEndElement(); // end of cache-manager
 	}
 
 	/**
-	 * Dump cache instance into xml stream.
-	 *
-	 * @param cache the cache
-	 * @throws Exception the exception
+	 * Dump the cache into the xml writer
+	 * 
+	 * @param writer
+	 * @param cache
+	 * @throws Exception
 	 */
 	private void dumpCache(Cache cache) throws Exception {
-		this.writer.writeStartElement("cache-dump");
-		this.writeElement("name", cache.getCacheName());
-		this.writeElement("service", cache.getServiceName());
-		this.writeElement("diskStoreSize", cache.getDiskStoreSize());
-		this.writeElement("elementSize", cache.getElementSize());
-		this.writeElement("memoryStoreSize", cache.getMemoryStoreSize());
-		this.writeElement("elementSize", cache.getElementSize());
+		writer.writeStartElement("cache");
+		writer.writeAttribute("service", cache.getServiceName());
+		writer.writeAttribute("name", cache.getCacheName());
+		writer.writeAttribute("elementSize", String.valueOf(cache.getElementSize()));
+		writer.writeAttribute("diskStoreSize", String.valueOf(cache.getDiskStoreSize()));
+		writer.writeAttribute("memoryStoreSize", String.valueOf(cache.getMemoryStoreSize()));
 		Object[] compositeKeys = cache.getCompositeKeys();
-		if (compositeKeys == null) {
-			this.writeElement("information", "cache is empty, no composite keys found.");
-			this.writer.writeEndElement(); // end of cache-dump
-			return;
+		if (compositeKeys != null) {
+			writer.writeStartElement("messages");
+			for (Object key : compositeKeys) {
+				CacheKey cacheKey = (CacheKey) key;
+				this.dumpMessage(cache, cacheKey);
+			}
+			writer.writeEndElement(); // end of messages
 		}
-		for (Object key : compositeKeys) {
-			CacheKey cacheKey = (CacheKey) key;
-			this.dumpComposite(cache, cacheKey);
-		}
-		this.writer.writeEndElement(); // end of cache-dump
+		writer.writeEndElement(); // end of cache
 	}
 
+
 	/**
-	 * Dump composite into xml stream.
-	 *
-	 * @param cache the cache
-	 * @param cacheKey the cache key
-	 * @throws Exception the exception
+	 * Dump the composite into the xml writer 
+	 * @param writer
+	 * @param cache
+	 * @param cacheKey
+	 * @throws Exception
 	 */
-	private void dumpComposite(Cache cache, CacheKey cacheKey) throws Exception {
-		this.writer.writeStartElement("composite-dump");
+	private void dumpMessage(Cache cache, CacheKey cacheKey) throws Exception {
+		writer.writeStartElement("message");
 		String cacheId = cacheKey.getCacheId();
-		this.writeElement("cacheId", cacheId);
+		writer.writeAttribute("cacheId", cacheId);
 		CacheComposite cacheComposite = cache.getComposite(cacheId);
 		if (cacheComposite == null) {
-			this.writeElement("exception", "invalid cache key (not found) but stored in cache registry.");
-			this.writer.writeEndElement(); // end of composite-dump
-			return;
-		}
-		this.writeElement("cacheState", cacheComposite.getCacheState().toString());
-		this.writeElement("expiration", cacheComposite.getExpiration());
-		this.writeElement("expirationTimestamp", cacheComposite.getExpirationTimestamp());
-		this.writeElement("creationTime", cacheComposite.getCreationTime().toString());
-		this.writeElement("lastModifiedTime", cacheComposite.getLastModifiedTime().toString());
-		this.writeElement("lastModifiedTimeMillis", cacheComposite.getLastModifiedTimeMillis());
-		this.writeElement("loadingTimeout", cacheComposite.getLoadingTimeout());
-		int size = cacheComposite.getSize();
-		this.writeElement("size", size);
-		this.writeElement("isExpired", cacheComposite.isExpired());
-		this.writeElement("isLoaded", cacheComposite.isLoaded());
-		this.writeElement("isLoading", cacheComposite.isLoading());
-		this.writeElement("isLoadingExpired", cacheComposite.isLoadingExpired());
-		if ((size < 0) || (size > (1 << 16))) {
-			this.writeElement("exception", "invalid cache composite size (" + size + ").");
-		}
-		// dump all messages
-		CacheId localCacheId = new CacheId(cacheId);
-		for (int i = 1; i <= size; i++) {
-			localCacheId.setSequenceNr(String.valueOf(i));
-			CacheMessage cacheMessage = cache.getMessage(localCacheId);
-			this.writer.writeStartElement("cache-message");
-			this.writeElement("cacheId", localCacheId.getFullCacheId());
-			if (cacheMessage == null) {
-				this.writeElement("exception", "cache message " + localCacheId.getFullCacheId() + " does not exists.");
-				this.writer.writeEndElement(); // end of cache-message
-				continue;
+			writer.writeAttribute("exception", "invalid cacheId (not found) but stored in cache registry.");
+		} else {
+			this.writeElement("state", cacheComposite.getCacheState().toString());
+			this.writeElement("expiration", cacheComposite.getExpiration());
+			this.writeElement("expirationTimestamp", cacheComposite.getExpirationTimestamp());
+			this.writeElement("creationTime", cacheComposite.getCreationTime().toString());
+			this.writeElement("lastModifiedTime", cacheComposite.getLastModifiedTime().toString());
+			this.writeElement("lastModifiedTimeMillis", cacheComposite.getLastModifiedTimeMillis());
+			this.writeElement("loadingTimeout", cacheComposite.getLoadingTimeout());
+			int size = cacheComposite.getSize();
+			this.writeElement("size", size);
+			this.writeElement("isExpired", cacheComposite.isExpired());
+			this.writeElement("isLoaded", cacheComposite.isLoaded());
+			this.writeElement("isLoading", cacheComposite.isLoading());
+			this.writeElement("isLoadingExpired", cacheComposite.isLoadingExpired());
+			// dump all messages
+			writer.writeStartElement("message-parts");
+			CacheId localCacheId = new CacheId(cacheId);
+			for (int i = 1; i <= size; i++) {
+				localCacheId.setSequenceNr(String.valueOf(i));
+				CacheMessage cacheMessage = cache.getMessage(localCacheId);
+				writer.writeStartElement("part");
+				this.writeElement("cacheId", localCacheId.getFullCacheId());
+				if (cacheMessage == null) {
+					this.writeElement("exception", "cache message " + localCacheId.getFullCacheId() + " does not exists.");
+				} else {
+					this.writeElement("messageType", cacheMessage.getMessageType());
+					this.writeElement("isCompressed", cacheMessage.isCompressed());
+				}
+				writer.writeEndElement(); // end of part
 			}
-			this.writeElement("messageType", cacheMessage.getMessageType());
-			this.writeElement("isCompressed", cacheMessage.isCompressed());
-			this.writeElement("isCompressed", cacheMessage.isCompressed());		
-			this.writer.writeEndElement(); // end of cache-message
+			writer.writeEndElement(); // end of message-parts
 		}
-		this.writer.writeEndElement(); // end of composite-dump
-
+		writer.writeEndElement(); // end of message
 	}
 
 	/**
@@ -166,11 +143,11 @@ public class XMLCacheDump {
 	 * @throws Exception the exception
 	 */
 	private void writeElement(String name, String value) throws Exception {
-		this.writer.writeStartElement(name);
+		writer.writeStartElement(name);
 		if (value != null) {
-		   this.writer.writeCData(value);
+		   writer.writeCData(value);
 		}
-		this.writer.writeEndElement();
+		writer.writeEndElement();
 	}
 
 	/**
@@ -181,9 +158,9 @@ public class XMLCacheDump {
 	 * @throws Exception the exception
 	 */
 	private void writeElement(String name, int value) throws Exception {
-		this.writer.writeStartElement(name);
-		this.writer.writeCData(String.valueOf(value));
-		this.writer.writeEndElement();
+		writer.writeStartElement(name);
+		writer.writeCData(String.valueOf(value));
+		writer.writeEndElement();
 	}
 
 	/**
@@ -194,9 +171,9 @@ public class XMLCacheDump {
 	 * @throws Exception the exception
 	 */
 	private void writeElement(String name, long value) throws Exception {
-		this.writer.writeStartElement(name);
-		this.writer.writeCData(String.valueOf(value));
-		this.writer.writeEndElement();
+		writer.writeStartElement(name);
+		writer.writeCData(String.valueOf(value));
+		writer.writeEndElement();
 	}
 
 	/**
@@ -207,9 +184,8 @@ public class XMLCacheDump {
 	 * @throws Exception the exception
 	 */
 	private void writeElement(String name, boolean value) throws Exception {
-		this.writer.writeStartElement(name);
-		this.writer.writeCData(String.valueOf(value));
-		this.writer.writeEndElement();
+		writer.writeStartElement(name);
+		writer.writeCData(String.valueOf(value));
+		writer.writeEndElement();
 	}
-
 }

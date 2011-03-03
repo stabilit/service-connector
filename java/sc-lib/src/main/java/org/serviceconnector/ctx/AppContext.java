@@ -26,6 +26,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.EnvironmentConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -33,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.logging.InternalLoggerFactory;
 import org.jboss.netty.logging.Log4JLoggerFactory;
 import org.serviceconnector.Constants;
+import org.serviceconnector.SCVersion;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
 import org.serviceconnector.cache.CacheManager;
 import org.serviceconnector.cmd.FlyweightCommandFactory;
@@ -53,6 +57,7 @@ import org.serviceconnector.registry.ServiceRegistry;
 import org.serviceconnector.registry.SessionRegistry;
 import org.serviceconnector.registry.SubscriptionRegistry;
 import org.serviceconnector.scmp.SCMPError;
+import org.serviceconnector.util.DateTimeUtility;
 
 /**
  * The Class AppContext. The AppContext is singelton and holds all factories and registries. Its the top context in a service
@@ -122,7 +127,7 @@ public final class AppContext {
 	/** The Constant cacheManager. */
 	private static final CacheManager cacheManager = new CacheManager();
 	/** The executor to submit runnable objects. */
-	private static ExecutorService executor;
+	private static ExecutorService executor; // TODO JOT which runnable objects are managed by this executor?
 
 	// initialize configurations in every case
 	static {
@@ -429,8 +434,9 @@ public final class AppContext {
 		Date now = cal.getTime();
 		String fs = System.getProperty("file.separator");
 		String dumpFileName = null;
+		String dateTimeString = null;
 		synchronized (DUMP_FILE_SDF) { // DUMP_FILE_SDF is not thread safe
-			String dateTimeString = DUMP_FILE_SDF.format(now);
+			dateTimeString = DUMP_FILE_SDF.format(now);
 			dumpFileName = Constants.DUMP_FILE_NAME + dateTimeString + Constants.DUMP_FILE_EXTENSION;
 		}
 		File dumpDir = new File(dumpPath);
@@ -439,8 +445,18 @@ public final class AppContext {
 			if (dumpDir.exists() == true || dumpDir.mkdirs()) {
 				CacheManager cacheManager = AppContext.getCacheManager();
 				String dumpCacheFile = dumpDir + fs + dumpFileName;
+				// create file
 				FileOutputStream fos = new FileOutputStream(dumpDir + fs + dumpFileName);
-				cacheManager.dumpAll(fos);
+				// create xml writer
+				XMLOutputFactory factory = XMLOutputFactory.newInstance();
+				XMLStreamWriter writer = factory.createXMLStreamWriter(fos);
+				writer.writeStartDocument();
+				writer.writeComment("SC version=" + SCVersion.CURRENT.toString());
+				writer.writeComment("Dump created at=" + DateTimeUtility.getCurrentTimeZoneMillis());
+				// dump the cache manager
+				cacheManager.dump(writer);
+				writer.writeEndDocument();
+				writer.flush();
 				fos.close();
 				LOGGER.info("SC dump created into file=" + dumpCacheFile);
 				return dumpFileName;

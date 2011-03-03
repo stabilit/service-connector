@@ -42,6 +42,8 @@ public class SCMPMessage {
 	public static final SCVersion SC_VERSION = SCVersion.CURRENT;
 	/** The is reply. */
 	private boolean isReply;
+	/** The message part size. */
+	private int partSize;					// TODO to be discussed with JOT
 	/** The message header. */
 	protected Map<String, String> header;
 	/** The internal status. */
@@ -56,6 +58,7 @@ public class SCMPMessage {
 		this.internalStatus = SCMPInternalStatus.NONE;
 		this.header = new HashMap<String, String>();
 		this.isReply = false;
+		this.partSize = Constants.MAX_MESSAGE_SIZE;
 	}
 
 	/**
@@ -711,4 +714,23 @@ public class SCMPMessage {
 	public void setIsReply(boolean isReply) {
 		this.isReply = isReply;
 	}
+
+	/**
+	 * @return the size of the parts in which message will be broken when it is large
+	 */
+	public int getPartSize() {
+		return partSize;
+	}
+
+	/**
+	 * @param partSize the size in which message will be broken when it is large
+	 */
+	public void setPartSize(int partSize) {
+		// only value smaller then MAX_MESSAGE_SIZE is allowed
+		if (partSize < Constants.MAX_MESSAGE_SIZE) {
+			this.partSize = partSize;
+		}
+	}
+	
+	
 }

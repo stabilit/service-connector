@@ -32,8 +32,8 @@ import org.serviceconnector.Constants;
 /**
  * The Class URLString supports the following format:
  * key1=value1&key2=value2&...
- * All keys and values url encoded (see {@link java.net.URLEncoder}) using UTF-8
- * The parse Method decodes a given string using url decoding (see {@link java.net.URLDecoder} using UTF-8
+ * All keys and values url encoded (see {@link java.net.URLEncoder}) using default encoding
+ * The parse Method decodes a given string using url decoding (see {@link java.net.URLDecoder} using default encoding
  * This class is not synchronized.
  */
 public class URLString {
@@ -109,8 +109,8 @@ public class URLString {
 			for (int i = 0; i < parameterStringArray.length; i++) {
 				String[] splitted = parameterStringArray[i].split(Constants.EQUAL_SIGN);
 				if (splitted.length == 2) {
-					String key = URLDecoder.decode(splitted[0], Constants.URL_ENCODING);
-					String value = URLDecoder.decode(splitted[1], Constants.URL_ENCODING);
+					String key = URLDecoder.decode(splitted[0], Constants.SC_CHARACTER_SET);
+					String value = URLDecoder.decode(splitted[1], Constants.SC_CHARACTER_SET);
 					this.map.put(key, value);
 				}
 			}
@@ -140,8 +140,8 @@ public class URLString {
 			for (int i = 0; i < keyValuePairs.length; i++) {
 				String keyValuePair = keyValuePairs[i];
 				String[] keyValue = keyValuePair.split(Constants.EQUAL_SIGN);
-				String key = URLDecoder.decode(keyValue[0], Constants.URL_ENCODING);
-				String value = URLDecoder.decode(keyValue[1], Constants.URL_ENCODING);
+				String key = URLDecoder.decode(keyValue[0], Constants.SC_CHARACTER_SET);
+				String value = URLDecoder.decode(keyValue[1], Constants.SC_CHARACTER_SET);
 				LOGGER.trace("parameter parsed: key=" + key + " value=" + value);
 				this.map.put(key, value);
 			}
@@ -169,12 +169,12 @@ public class URLString {
 				Entry<String, String> entry = entryIter.next();
 				String key = entry.getKey();
 				String value = entry.getValue();
-				sb.append(URLEncoder.encode(key, Constants.URL_ENCODING));
+				sb.append(URLEncoder.encode(key, Constants.SC_CHARACTER_SET));
 				sb.append(Constants.EQUAL_SIGN);
 				if (value != null) {
-					sb.append(URLEncoder.encode(value, Constants.URL_ENCODING));
+					sb.append(URLEncoder.encode(value, Constants.SC_CHARACTER_SET));
 				} else {
-					sb.append(URLEncoder.encode("", Constants.URL_ENCODING));
+					sb.append(URLEncoder.encode("", Constants.SC_CHARACTER_SET));
 				}
 			}
 			return sb.toString();
@@ -198,9 +198,9 @@ public class URLString {
 		StringBuilder sb = new StringBuilder();
 		try {
 			for (int i = 0; i < parameters.length - 1; i += 2) {
-				sb.append(URLEncoder.encode(parameters[i], Constants.URL_ENCODING));
+				sb.append(URLEncoder.encode(parameters[i], Constants.SC_CHARACTER_SET));
 				sb.append(Constants.EQUAL_SIGN);
-				sb.append(URLEncoder.encode(parameters[i + 1], Constants.URL_ENCODING));
+				sb.append(URLEncoder.encode(parameters[i + 1], Constants.SC_CHARACTER_SET));
 				if (i != parameters.length - 1) {
 					sb.append(Constants.AMPERSAND_SIGN);
 				}
@@ -234,12 +234,12 @@ public class URLString {
 				String key = entry.getKey();
 				String value = entry.getValue();
 
-				sb.append(URLEncoder.encode(key, Constants.URL_ENCODING));
+				sb.append(URLEncoder.encode(key, Constants.SC_CHARACTER_SET));
 				sb.append(Constants.EQUAL_SIGN);
 				if (value != null) {
-					sb.append(URLEncoder.encode(value, Constants.URL_ENCODING));
+					sb.append(URLEncoder.encode(value, Constants.SC_CHARACTER_SET));
 				} else {
-					sb.append(URLEncoder.encode("", Constants.URL_ENCODING));
+					sb.append(URLEncoder.encode("", Constants.SC_CHARACTER_SET));
 				}
 			}
 		} catch (Exception e) {
@@ -252,14 +252,14 @@ public class URLString {
 	public static String toURLRequestString(String... parameters) throws UnsupportedEncodingException {
 		StringBuilder sb = new StringBuilder();
 		try {
-			sb.append(URLEncoder.encode(parameters[0], Constants.URL_ENCODING));
+			sb.append(URLEncoder.encode(parameters[0], Constants.SC_CHARACTER_SET));
 			if (parameters.length > 1) {
 				sb.append(Constants.QUESTION_MARK);
 			}
 			for (int i = 1; i < parameters.length - 1; i += 2) {
-				sb.append(URLEncoder.encode(parameters[i], Constants.URL_ENCODING));
+				sb.append(URLEncoder.encode(parameters[i], Constants.SC_CHARACTER_SET));
 				sb.append(Constants.EQUAL_SIGN);
-				sb.append(URLEncoder.encode(parameters[i + 1], Constants.URL_ENCODING));
+				sb.append(URLEncoder.encode(parameters[i + 1], Constants.SC_CHARACTER_SET));
 				if (i != parameters.length - 2) {
 					sb.append(Constants.AMPERSAND_SIGN);
 				}

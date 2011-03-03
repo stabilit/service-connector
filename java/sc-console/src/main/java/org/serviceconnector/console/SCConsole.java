@@ -177,7 +177,6 @@ public class SCConsole {
 				client.detach();
 			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_INSPECT_CACHE)) {
 				try {
-
 					String cacheId = urlRequestString.getParamValue(Constants.CACHE_ID);
 					if (cacheId == null) {
 						SCConsole.showError("Error in request string, parsing failed.");
