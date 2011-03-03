@@ -453,6 +453,8 @@ public final class AppContext {
 				writer.writeStartDocument();
 				writer.writeComment("SC version=" + SCVersion.CURRENT.toString());
 				writer.writeComment("Dump created at=" + DateTimeUtility.getCurrentTimeZoneMillis());
+				// dump the 
+				
 				// dump the cache manager
 				cacheManager.dump(writer);
 				writer.writeEndDocument();
