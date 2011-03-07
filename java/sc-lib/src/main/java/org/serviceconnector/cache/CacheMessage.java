@@ -91,6 +91,25 @@ public class CacheMessage implements Serializable {
 	}
 
 	/**
+	 * Sets the message sequence nr.
+	 * 
+	 * @param messageSequenceNr
+	 *            the new message sequence nr
+	 */
+	public void setMessageSequenceNr(String messageSequenceNr) {
+		this.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, messageSequenceNr);
+	}
+
+	/**
+	 * Gets the message sequence nr.
+	 * 
+	 * @return the message message sequence nr
+	 */
+	public String getMessageSequenceNr() {
+		return this.getHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR);
+	}
+
+	/**
 	 * Sets the compressed.
 	 * 
 	 * @param compressed

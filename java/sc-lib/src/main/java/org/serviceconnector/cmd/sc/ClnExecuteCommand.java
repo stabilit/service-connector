@@ -139,11 +139,15 @@ public class ClnExecuteCommand extends CommandAdapter {
 
 	/**
 	 * Execute cascaded service.
-	 *
-	 * @param request the request
-	 * @param response the response
-	 * @param responderCallback the responder callback
-	 * @throws Exception the exception
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @param responderCallback
+	 *            the responder callback
+	 * @throws Exception
+	 *             the exception
 	 */
 	private void executeCascadedService(IRequest request, IResponse response, IResponderCallback responderCallback)
 			throws Exception {
@@ -350,6 +354,8 @@ public class ClnExecuteCommand extends CommandAdapter {
 				} else {
 					scmpReply = new SCMPPart();
 				}
+				scmpReply.setServiceName(message.getServiceName());
+				scmpReply.setSessionId(message.getSessionId());
 				scmpReply.setMessageType(getKey());
 				cacheId = cacheMessage.getCacheId();
 				if (cacheId == null) {
@@ -360,6 +366,18 @@ public class ClnExecuteCommand extends CommandAdapter {
 					throw scmpCommandException;
 				}
 				scmpReply.setFullCacheId(cacheId);
+				scmpReply.setHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME, cacheComposite.getExpiration());
+				// give message sequence nr back to requester
+				String messageSequenceNr = cacheMessage.getMessageSequenceNr();
+				if (messageSequenceNr == null) {
+					CacheLogger.error("cache message has illegal state, messageSequenceNr=null");
+					SCMPCommandException scmpCommandException = new SCMPCommandException(SCMPError.CACHE_ERROR,
+							"cache message has illegal state, messageSequenceNr=null");
+					scmpCommandException.setMessageType(this.getKey());
+					throw scmpCommandException;
+				}
+				scmpReply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, cacheMessage.getMessageSequenceNr());
+				CacheLogger.debug("cache reply, cacheId=" + cacheId + ", messageSequenceNr=" + messageSequenceNr + ", expirationDateTime=" + cacheComposite.getExpiration());
 				if (cacheMessage.isCompressed()) {
 					scmpReply.setHeaderFlag(SCMPHeaderAttributeKey.COMPRESSION);
 				}
@@ -374,7 +392,7 @@ public class ClnExecuteCommand extends CommandAdapter {
 					session.setPendingRequest(false);
 				}
 				responderCallback.responseCallback(request, response);
-				CacheLogger.debug("Sent a cache message to the client cacheId=" + cacheId);
+				CacheLogger.debug("Sent a cache message to the client cacheId=" + cacheId + ", messageSequenceNr=" + messageSequenceNr + ", expirationDateTime=" + cacheComposite.getExpiration());
 				return true; // message loaded from cache
 			}
 		}

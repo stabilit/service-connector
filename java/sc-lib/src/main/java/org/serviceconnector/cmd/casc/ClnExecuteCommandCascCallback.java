@@ -58,7 +58,7 @@ public class ClnExecuteCommandCascCallback extends ClnCommandCascCallback {
 		}
 		if (cacheManager != null && cacheManager.isCacheEnabled()) {
 			try {
-				CacheLogger.debug("cache casc callback, sc replied cacheId=" + cacheId);
+				CacheLogger.debug("cache casc callback, sc replied cacheId=" + cacheId + ", messageSequenceNr=" + reply.getMessageSequenceNr() + ", expirationDateTime=" + reply.getHeader(SCMPHeaderAttributeKey.CACHE_EXPIRATION_DATETIME));
 				Cache scmpCache = cacheManager.getCache(serviceName);
 				if (scmpCache == null) {
 					ClnExecuteCommandCascCallback.LOGGER.error("cache write failed, no cache, service name = " + serviceName);
