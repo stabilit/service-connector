@@ -40,6 +40,8 @@ public class ServerCommandFactory extends FlyweightCommandFactory {
 		this.addCommand(srvExecuteCommand.getKey(), srvExecuteCommand);
 		ICommand srvAbortSessionCommand = new SrvAbortSessionCommand();
 		this.addCommand(srvAbortSessionCommand.getKey(), srvAbortSessionCommand);
+		ICommand srvAbortSubscriptionCommand = new SrvAbortSubscriptionCommand();
+		this.addCommand(srvAbortSubscriptionCommand.getKey(), srvAbortSubscriptionCommand);
 
 		ICommand srvSubscribeCommand = new SrvSubscribeCommand();
 		this.addCommand(srvSubscribeCommand.getKey(), srvSubscribeCommand);

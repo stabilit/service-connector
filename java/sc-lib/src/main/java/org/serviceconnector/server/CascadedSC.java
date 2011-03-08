@@ -29,7 +29,7 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPClnCreateSessionCall;
 import org.serviceconnector.call.SCMPClnDeleteSessionCall;
 import org.serviceconnector.call.SCMPClnExecuteCall;
-import org.serviceconnector.call.SCMPCscAbortSessionCall;
+import org.serviceconnector.call.SCMPCscAbortSubscriptionCall;
 import org.serviceconnector.call.SCMPCscChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPCscSubscribeCall;
 import org.serviceconnector.call.SCMPCscUnsubscribeCall;
@@ -318,18 +318,13 @@ public class CascadedSC extends Server implements IStatefulServer {
 				String cascadedMask = cascClient.evalSubscriptionMaskFromClientSubscriptions();
 				msgToForward.setHeader(SCMPHeaderAttributeKey.CASCADED_MASK, cascadedMask);
 				cascClient.setSubscriptionMask(new SubscriptionMask(cascadedMask));
-				SCMPCscAbortSessionCall cscAbortCall = new SCMPCscAbortSessionCall(this.requester, msgToForward);
+				SCMPCscAbortSubscriptionCall cscAbortCall = new SCMPCscAbortSubscriptionCall(this.requester, msgToForward);
 				cscAbortCall.invoke(callback, oti);
 				return;
 			}
-			try {
-				// no client subscription left - destroy client after XAS
-				SCMPCscAbortSessionCall cscAbortCall = new SCMPCscAbortSessionCall(this.requester, msgToForward);
-				cscAbortCall.invoke(callback, oti);
-			} finally {
-				// destroy cascaded client in any case
-				cascClient.destroy();
-			}
+			// no client subscription left - destroy client after XAS
+			SCMPCscAbortSubscriptionCall cscAbortCall = new SCMPCscAbortSubscriptionCall(this.requester, msgToForward);
+			cscAbortCall.invoke(callback, oti);
 		} catch (Exception e) {
 			callback.receive(e);
 		} finally {

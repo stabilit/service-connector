@@ -45,7 +45,7 @@ public abstract class Server implements IServer {
 	/** The server key. */
 	protected String serverKey;
 
-	/** The operation timeout mulitplier. */
+	/** The operation timeout multiplier. */
 	protected final double operationTimeoutMultiplier = AppContext.getBasicConfiguration().getOperationTimeoutMultiplier();
 
 	public Server(RemoteNodeConfiguration remoteNodeConfiguration, InetSocketAddress socketAddress) {

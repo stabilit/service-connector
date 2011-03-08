@@ -18,9 +18,9 @@ package org.serviceconnector.cmd.srv;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.api.SCSubscribeMessage;
+import org.serviceconnector.api.srv.SrvPublishService;
 import org.serviceconnector.api.srv.SrvService;
 import org.serviceconnector.api.srv.SrvServiceRegistry;
-import org.serviceconnector.api.srv.SrvSessionService;
 import org.serviceconnector.cmd.SCMPCommandException;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.ctx.AppContext;
@@ -36,26 +36,27 @@ import org.serviceconnector.scmp.SCMPMsgType;
 import org.serviceconnector.util.ValidatorUtility;
 
 /**
- * The Class SrvAbortSessionCommand. Responsible for validation and execution of abort session command. Aborts an active session on
+ * The Class SrvAbortSubscriptionCommand. Responsible for validation and execution of abort subscription command. Aborts an active
+ * subscription on
  * server.
  * 
  * @author JTraber
  */
-public class SrvAbortSessionCommand extends SrvCommandAdapter {
+public class SrvAbortSubscriptionCommand extends SrvCommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(SrvAbortSessionCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(SrvAbortSubscriptionCommand.class);
 
 	/**
-	 * Instantiates a new SrvAbortSessionCommand.
+	 * Instantiates a new SrvAbortSubscriptionCommand.
 	 */
-	public SrvAbortSessionCommand() {
+	public SrvAbortSubscriptionCommand() {
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.SRV_ABORT_SESSION;
+		return SCMPMsgType.SRV_ABORT_SUBSCRIPTION;
 	}
 
 	/** {@inheritDoc} */
@@ -95,9 +96,8 @@ public class SrvAbortSessionCommand extends SrvCommandAdapter {
 
 		int oti = Integer.parseInt(reqMessage.getHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT));
 
-		// inform callback with scMessagesF
-		((SrvSessionService) srvService).getCallback().abortSession(scMessage, oti);
-
+		// inform callback with scMessages
+		((SrvPublishService) srvService).getCallback().abortSubscription(scMessage, oti);
 		// set up reply
 		SCMPMessage reply = new SCMPMessage();
 		reply.setServiceName(serviceName);

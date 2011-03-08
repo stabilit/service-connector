@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.call.SCMPSrvAbortSessionCall;
+import org.serviceconnector.call.SCMPSrvAbortSubscriptionCall;
 import org.serviceconnector.call.SCMPSrvChangeSubscriptionCall;
 import org.serviceconnector.call.SCMPSrvCreateSessionCall;
 import org.serviceconnector.call.SCMPSrvDeleteSessionCall;
@@ -36,6 +37,7 @@ import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.log.SessionLogger;
+import org.serviceconnector.log.SubscriptionLogger;
 import org.serviceconnector.net.connection.ConnectionPoolBusyException;
 import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.registry.PublishMessageQueue;
@@ -301,6 +303,46 @@ public class StatefulServer extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Server abort subscription.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param callback
+	 *            the callback
+	 * @throws ConnectionPoolBusyException
+	 */
+	public void serverAbortSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
+			throws ConnectionPoolBusyException {
+		this.serverAbortSubscriptionWithExtraRequester(this.requester, message, callback, timeoutMillis);
+	}
+
+	/**
+	 * Server abort subscription with extra requester.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param message
+	 *            the message
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout milliseconds
+	 * @throws ConnectionPoolBusyException
+	 *             the connection pool busy exception
+	 */
+	void serverAbortSubscriptionWithExtraRequester(Requester requester, SCMPMessage message, ISCMPMessageCallback callback,
+			int timeoutMillis) throws ConnectionPoolBusyException {
+		SCMPSrvAbortSubscriptionCall srvAbortSubscriptionCall = new SCMPSrvAbortSubscriptionCall(this.requester, message);
+		try {
+			srvAbortSubscriptionCall.invoke(callback, timeoutMillis);
+		} catch (ConnectionPoolBusyException ex) {
+			throw ex;
+		} catch (Exception th) {
+			callback.receive(th);
+		}
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public void abortSession(AbstractSession session, String reason) {
@@ -331,10 +373,14 @@ public class StatefulServer extends Server implements IStatefulServer {
 		abortMessage.setServiceName(this.getServiceName());
 		abortMessage.setSessionId(session.getId());
 		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
-		this.abortSessionAndWaitMech(oti, abortMessage, reason);
+		if (session instanceof Subscription) {
+			this.abortSessionAndWaitMech(oti, abortMessage, reason, true);
+		} else {
+			this.abortSessionAndWaitMech(oti, abortMessage, reason, false);
+		}
 	}
 
-	public void abortSessionAndWaitMech(int oti, SCMPMessage abortMessage, String reason) {
+	public void abortSessionAndWaitMech(int oti, SCMPMessage abortMessage, String reason, boolean abortSubscription) {
 		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
 		CommandCallback callback = null;
@@ -345,7 +391,11 @@ public class StatefulServer extends Server implements IStatefulServer {
 				callback = new CommandCallback(true);
 				try {
 					otiOnServerMillis = oti - (i * Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
-					this.serverAbortSession(abortMessage, callback, otiOnServerMillis);
+					if (abortSubscription == true) {
+						this.serverAbortSubscription(abortMessage, callback, otiOnServerMillis);
+					} else {
+						this.serverAbortSession(abortMessage, callback, otiOnServerMillis);
+					}
 					// no exception has been thrown - get out of wait loop
 					break;
 				} catch (ConnectionPoolBusyException ex) {
@@ -419,6 +469,8 @@ public class StatefulServer extends Server implements IStatefulServer {
 		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, AppContext.getBasicConfiguration().getSrvAbortOTIMillis());
 
 		for (AbstractSession session : this.sessions) {
+			abortMessage.setSessionId(session.getId());
+			abortMessage.setServiceName(this.getServiceName());
 			// delete session in global registries
 			if (session instanceof Subscription) {
 				StatefulServer.subscriptionRegistry.removeSubscription(session.getId());
@@ -432,22 +484,31 @@ public class StatefulServer extends Server implements IStatefulServer {
 				publishMessageQueue.unsubscribe(session.getId());
 				// remove non referenced nodes
 				publishMessageQueue.removeNonreferencedNodes();
+				if (session.isCascaded() == true) {
+					// session is of type cascaded - do not forward to server
+					return;
+				}
+				try {
+					this.serverAbortSubscription(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
+							.getSrvAbortOTIMillis());
+				} catch (ConnectionPoolBusyException e) {
+					LOGGER.warn("aborting subscription failed because of busy connection pool");
+				}
+				SubscriptionLogger.logAbortSubscription(abortMessage.getSessionId());
 			} else {
 				StatefulServer.sessionRegistry.removeSession((Session) session);
+				if (session.isCascaded() == true) {
+					// session is of type cascaded - do not forward to server
+					return;
+				}
+				try {
+					this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
+							.getSrvAbortOTIMillis());
+				} catch (ConnectionPoolBusyException e) {
+					LOGGER.warn("aborting session failed because of busy connection pool");
+				}
+				SessionLogger.logAbortSession(this.getClass().getName(), abortMessage.getSessionId());
 			}
-			if (session.isCascaded() == true) {
-				// session is of type cascaded - do not forward to server
-				return;
-			}
-			abortMessage.setSessionId(session.getId());
-			abortMessage.setServiceName(this.getServiceName());
-			try {
-				this.serverAbortSession(abortMessage, new CommandCallback(false), AppContext.getBasicConfiguration()
-						.getSrvAbortOTIMillis());
-			} catch (ConnectionPoolBusyException e) {
-				LOGGER.warn("aborting session failed because of busy connection pool");
-			}
-			SessionLogger.logAbortSession(this.getClass().getName(), abortMessage.getSessionId());
 		}
 		this.destroy();
 		this.sessions = null;

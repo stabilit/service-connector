@@ -38,15 +38,15 @@ import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 import org.serviceconnector.util.ValidatorUtility;
 
-public class CscAbortSessionCommand extends CommandAdapter {
+public class CscAbortSubscriptionCommand extends CommandAdapter {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CscAbortSessionCommand.class);
+	private static final Logger LOGGER = Logger.getLogger(CscAbortSubscriptionCommand.class);
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getKey() {
-		return SCMPMsgType.CSC_ABORT_SESSION;
+		return SCMPMsgType.CSC_ABORT_SUBSCRIPTION;
 	}
 
 	/** {@inheritDoc} */
@@ -110,7 +110,7 @@ public class CscAbortSessionCommand extends CommandAdapter {
 		abortMessage.setServiceName(serviceName);
 		abortMessage.setSessionId(reqMessage.getSessionId());
 		abortMessage.setHeader(SCMPHeaderAttributeKey.OPERATION_TIMEOUT, oti);
-		server.abortSessionAndWaitMech(oti, abortMessage, "Cascaded subscription abort received");
+		server.abortSessionAndWaitMech(oti, abortMessage, "Cascaded subscription abort received", true);
 		// reply to client
 		reqMessage.setIsReply(true);
 		response.setSCMP(reqMessage);

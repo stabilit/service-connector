@@ -482,7 +482,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		}
 		// get response from sessionService1 request
 		msgCallback1.waitForMessage(60);
-		response = msgCallback1.getResponse();		
+		response = msgCallback1.getResponse();
 		SCMessage response2 = sessionService2.execute(request);
 		Assert.assertEquals(response.getData(), response2.getData());
 	}
@@ -588,4 +588,29 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		sessionService1.deleteSession();
 	}
 
+	/**
+	 * Description: exchange message with cacheId, server replies with cacheExpirationTime - 1 Hour<br>
+	 * In a second step clear the cache and get the message. In a cascaded mode the message will come from a cascaded SC cache<br/>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t25_cacheAMessageClearCacheAndGetMessage() throws Exception {
+		SCMessage request = new SCMessage();
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(request, msgCallback1);
+		// request expired server message, cache should still be empty
+		request.setData("cacheFor1Hour");
+		request.setCacheId("700");
+		request.setMessageInfo(TestConstants.cacheCmd);
+		response = sessionService1.execute(request);
+		Assert.assertEquals("cacheFor1Hour", response.getData());
+		mgmtClient.clearCache();
+
+		response = sessionService1.execute(request);
+		Assert.assertEquals("cacheFor1Hour", response.getData());
+		sessionService1.deleteSession();
+	}
 }

@@ -289,7 +289,7 @@ public class SCMPClnSubscribeCasc1Test extends SystemSuperTest {
 		subscribeCall2.setRequestBody("5");
 		TestCallback cbk2 = new TestCallback(true);
 		subscribeCall2.invoke(cbk2, 2000);
-		SCMPMessage reply2 = cbk2.getMessageSync(1000);
+		SCMPMessage reply2 = cbk2.getMessageSync(2000);
 		TestUtil.checkReply(reply2);
 		String sessionId2 = reply2.getSessionId();
 

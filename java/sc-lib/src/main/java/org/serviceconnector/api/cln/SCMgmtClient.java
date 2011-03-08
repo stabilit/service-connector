@@ -21,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.api.SCServiceException;
-import org.serviceconnector.call.SCMPInspectCall;
 import org.serviceconnector.call.SCMPManageCall;
 import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.net.ConnectionType;

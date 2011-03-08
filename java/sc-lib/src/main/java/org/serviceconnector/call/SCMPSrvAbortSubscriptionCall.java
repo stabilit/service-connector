@@ -22,29 +22,31 @@ import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
 /**
- * The Class SCMPCscAbortSessionCall. Call aborts a session from a cascaded client.
+ * The Class SCMPSrvAbortSubscriptionCall. Call aborts a subscription on a backend server.
+ * 
+ * @author JTraber
  */
-public class SCMPCscAbortSessionCall extends SCMPCallAdapter {
+public class SCMPSrvAbortSubscriptionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(SCMPCscAbortSessionCall.class);
+	private static final Logger LOGGER = Logger.getLogger(SCMPSrvAbortSubscriptionCall.class);
 
 	/**
-	 * Instantiates a new SCMP csc abort session call.
+	 * Instantiates a new SCMP server abort subscription call.
 	 * 
 	 * @param req
 	 *            the requester
 	 * @param receivedMessage
 	 *            the received message
 	 */
-	public SCMPCscAbortSessionCall(IRequester req, SCMPMessage receivedMessage) {
+	public SCMPSrvAbortSubscriptionCall(IRequester req, SCMPMessage receivedMessage) {
 		super(req, receivedMessage);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SCMPMsgType getMessageType() {
-		return SCMPMsgType.CSC_ABORT_SESSION;
+		return SCMPMsgType.SRV_ABORT_SUBSCRIPTION;
 	}
 }

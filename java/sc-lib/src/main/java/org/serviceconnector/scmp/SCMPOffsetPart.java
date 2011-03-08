@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.log4j.Logger;
-import org.serviceconnector.Constants;
 
 /**
  * The Class SCMPOffsetPart. Represents an outgoing part SCMP of a large message. Extends SCMPPart and adds information of current
