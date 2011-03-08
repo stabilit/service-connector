@@ -4,7 +4,9 @@ import java.util.Arrays;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.serviceconnector.TestConstants;
 import org.serviceconnector.TestSessionServiceMessageCallback;
+import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.cln.SCSessionService;
 
@@ -49,7 +51,7 @@ public class TestSessionClient extends TestAbstractClient {
 		testClient.setServiceName(args[6]);
 		testClient.setEchoIntervalSeconds(Integer.parseInt(args[7]));
 		testClient.setEchoTimeoutSeconds(Integer.parseInt(args[8]));
-		//args[9] can be ignored in session client (noDataIntervalSeconds)
+		// args[9] can be ignored in session client (noDataIntervalSeconds)
 		testClient.setMethodsToInvoke(Arrays.asList(args[10].split("\\|")));
 		testClient.run();
 	}
@@ -64,6 +66,18 @@ public class TestSessionClient extends TestAbstractClient {
 	public void p_execute1000() throws Exception {
 		for (int i = 0; i < 1000; i++) {
 			service.execute(new SCMessage());
+		}
+	}
+
+	public void p_execute10MBMessage() throws Exception {
+		SCMessage message = new SCMessage();
+		String string10MB = TestUtil.get10MBString();
+		message.setData(string10MB);
+		message.setCompressed(false);
+		message.setMessageInfo(TestConstants.echoCmd);
+		SCMessage response = service.execute(message);
+		if (response.getData().equals(string10MB) == false) {
+			LOGGER.error("response body not equal request body");
 		}
 	}
 
@@ -93,6 +107,15 @@ public class TestSessionClient extends TestAbstractClient {
 		this.p_initAttach();
 		this.p_createSession();
 		this.p_execute100000();
+		this.p_deleteSession();
+		this.p_detach();
+		this.p_exit();
+	}
+
+	public void f_execute10MBMessageAndExit() throws Exception {
+		this.p_initAttach();
+		this.p_createSession();
+		this.p_execute10MBMessage();
 		this.p_deleteSession();
 		this.p_detach();
 		this.p_exit();
