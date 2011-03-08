@@ -3,7 +3,7 @@ Service Connector - open source messaging middleware
 
  Kit structure:
  --------------
- sc-bin_V9.9-999.zip - kit containing only binaries binaries
+ sc-bin_V9.9-999.zip - kit containing only binaries 
  --/bin					(binaries a scripts to manage sc)
    /bin/unix		(script to run sc as deamon on unix/linux. see the readme.txt)
    /bin/win32		(script and runables to run sc as Windows service on win32 platform)
@@ -27,19 +27,39 @@ Service Connector - open source messaging middleware
   PHP 4.0 or later (on node running file services)
 
 
- Installation:
- -------------
+ Installation and verification:
+ ------------------------------
  0. Make sure you have installed all required products
- 1. Extract the kit into directory of your choice, preserve the its structure
+ 1. Extract the kit into directory of your choice, preserve its structure
  2. Make sure no other application is using ports 7000, 9000, 81, 8080
- 3. Invoke bin/start-sc.bat (or .sh on unix/linux platform)
- 4. Invoke bin/start-demo-server.bat (or .sh on unix/linux platform)
- 5. Invoke bin/start-demo-client.bat (or .sh on unix/linux platform)
+ 3. Invoke bin/start-sc.bat (or .sh on unix/linux platforms)
+ 4. Invoke bin/start-demo-server.bat (or .sh on unix/linux platforms)
+ 5. Invoke bin/start-demo-client.bat (or .sh on unix/linux platforms)
  6. Avait the termination of all started components.
- 7. Verify the created log files in logs/ 
+ 7. Verify the created log files: 
+ 				logs/demo-client/client.log
+ 				logs/demo-server/server.log
+ 				logs/sc/sc.log
  		"ERROR" or "FATAL" must not appear here, "WARN" are possible.
  8. Congratulation, you have successfully installed the sc!
 
+ Software upgrade
+ ----------------
+ If you made changes to the SC configurations, then preserve these files before upgrade. 
+ The upgrade is simply done by extracting the kit file into a directory of the 
+ previous installation. 
+ For compatibility issues see SC_0_SCMP_E.PDF Chapter 9.30 (scVersion)
+
+ Software removal
+ ----------------
+ 1. Stop the running SC
+ 2. If you made changes to the SC configuration check where you have defined:
+ 			- the log directory
+ 			- the root.pidPath
+ 			- the root.dumpPath
+ 			- the cache.diskPath
+		Delete these directories
+ 3. Delete the directory where you have extracted the SC kit file.
 
  Release notes:
  --------------
