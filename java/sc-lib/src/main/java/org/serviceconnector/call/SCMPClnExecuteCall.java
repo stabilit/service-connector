@@ -83,6 +83,16 @@ public class SCMPClnExecuteCall extends SCMPCallAdapter {
 	}
 
 	/**
+	 * Sets the part size.
+	 * 
+	 * @param partSize
+	 *            the size of the message parts
+	 */
+	public void setPartSize(int partSize) {
+		this.requestMessage.setPartSize(partSize);
+	}
+	
+	/**
 	 * Sets the cache id.
 	 * 
 	 * @param cacheId

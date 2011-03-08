@@ -223,6 +223,7 @@ public class SCSessionService extends SCService {
 		clnExecuteCall.setMessageInfo(scMessage.getMessageInfo());
 		clnExecuteCall.setCacheId(scMessage.getCacheId());
 		clnExecuteCall.setCompressed(scMessage.isCompressed());
+		clnExecuteCall.setPartSize(scMessage.getPartSize());
 		clnExecuteCall.setRequestBody(scMessage.getData());
 		SCServiceCallback callback = new SCServiceCallback(true);
 		try {
@@ -308,6 +309,7 @@ public class SCSessionService extends SCService {
 		clnExecuteCall.setMessageInfo(scMessage.getMessageInfo());
 		clnExecuteCall.setCacheId(scMessage.getCacheId());
 		clnExecuteCall.setCompressed(scMessage.isCompressed());
+		clnExecuteCall.setPartSize(scMessage.getPartSize());
 		clnExecuteCall.setRequestBody(scMessage.getData());
 		SCServiceCallback scmpCallback = new SCServiceCallback(this, this.messageCallback);
 		try {

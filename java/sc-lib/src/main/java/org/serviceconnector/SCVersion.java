@@ -23,7 +23,8 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
- * Provides actual SC version method to check compatibility. The SC versioning schema follows this philosophy </br>
+ * Provides actual SC version and method to check compatibility. 
+ * The SC versioning schema follows this philosophy </br>
  * 
  * <pre>
  * 	A99.99-999 (Ex. V2.4-265)</br>
@@ -45,11 +46,13 @@ import org.serviceconnector.scmp.SCMPError;
  * usually a complete rewrite. V(i+1).xx-zzz is not compatible with V(i).xx-zzz
  *<p>
  * Version number designates the interface signature. It starts at 0 and is incremented by 1. New versions are compatible, but may
- * contain additional features. V2.(x+1)-zzz is compatible with V2.(x)-zzz but needs recompilation and review of the application code
- * where the product is used. 
+ * contain additional features. V2.(x+1)-zzz is compatible with V2.(x)-zzz but not the other way round. 
+ * It is recommended to recompilate and review of the application code.
  *<p>
  * Revision number designates the actual development stage. It starts at 1 and is incremented by 1. New
- * versions are fully compatible. V2.4-(z+1) is compatible with V2.4-z
+ * versions are fully compatible. V2.4-(z+1) is compatible with V2.4-z but not the other way round.</br>
+ * </br>
+ * See the SC_0_SCMP_E.PDF for more details.
  * 
  * @author JTraber
  */

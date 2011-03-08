@@ -82,6 +82,16 @@ public class SCMPPublishCall extends SCMPCallAdapter {
 	}
 
 	/**
+	 * Sets the part size.
+	 * 
+	 * @param partSize
+	 *            the size of the message parts
+	 */
+	public void setPartSize(int partSize) {
+		this.requestMessage.setPartSize(partSize);
+	}
+	
+	/**
 	 * Sets the message info.
 	 * 
 	 * @param messageInfo

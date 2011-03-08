@@ -152,6 +152,7 @@ public class SCPublishServer extends SCSessionServer {
 			SCMPPublishCall publishCall = new SCMPPublishCall(this.requester, serviceName);
 			publishCall.setRequestBody(publishMessage.getData());
 			publishCall.setMask(publishMessage.getMask());
+			publishCall.setPartSize(publishMessage.getPartSize());
 			publishCall.setMessageInfo(publishMessage.getMessageInfo());
 			SCServerCallback callback = new SCServerCallback(true);
 			try {

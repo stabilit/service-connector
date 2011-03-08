@@ -44,6 +44,8 @@ public class SCMessage {
 	private int dataLength;
 	/** The session id - identifies session context of communication. */
 	private String sessionId;
+	/** The message part size. */
+	private int partSize;
 	/**
 	 * The cache id. Identification agreed by the communicating applications to uniquely identify the cached content. The cacheId is
 	 * unique per service.
@@ -93,6 +95,7 @@ public class SCMessage {
 		this.appErrorCode = Constants.EMPTY_APP_ERROR_CODE;
 		this.appErrorText = null;
 		this.reject = false;
+		this.partSize = Constants.DEFAULT_MESSAGE_PART_SIZE;
 	}
 
 	/**
@@ -352,6 +355,25 @@ public class SCMessage {
 		this.reject = reject;
 	}
 
+	/**
+	 * @return the size of the parts in which message will be broken when it is large
+	 */
+	public int getPartSize() {
+		return partSize;
+	}
+
+	/**
+	 * @param partSize the size in which message will be broken when it is large
+	 */
+	public void setPartSize(int partSize) {
+		// only value smaller then MAX_MESSAGE_SIZE is allowed
+		if (partSize < Constants.MAX_MESSAGE_SIZE) {
+			this.partSize = partSize;
+		} else {
+			this.partSize = Constants.MAX_MESSAGE_SIZE;
+		}
+	}
+	
 	/**
 	 * Gets the cache expiration date time.
 	 * 

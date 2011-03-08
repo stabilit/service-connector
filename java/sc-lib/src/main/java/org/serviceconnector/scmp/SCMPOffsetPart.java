@@ -53,10 +53,10 @@ public class SCMPOffsetPart extends SCMPPart {
 		this.offset = offset;
 		this.callLength = largeMessageLength;
 		// evaluates the size of this part
-		if (this.callLength - this.offset < Constants.MAX_MESSAGE_SIZE) {
+		if (this.callLength - this.offset < message.getPartSize()) {
 			this.size = this.callLength - this.offset;
 		} else {
-			this.size = Constants.MAX_MESSAGE_SIZE;
+			this.size = message.getPartSize();
 		}
 		this.setHeader(message);
 		this.setInternalStatus(message.getInternalStatus());

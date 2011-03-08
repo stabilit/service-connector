@@ -43,7 +43,7 @@ public class SCMPMessage {
 	/** The is reply. */
 	private boolean isReply;
 	/** The message part size. */
-	private int partSize;					// TODO to be discussed with JOT
+	private int partSize;
 	/** The message header. */
 	protected Map<String, String> header;
 	/** The internal status. */
@@ -58,7 +58,7 @@ public class SCMPMessage {
 		this.internalStatus = SCMPInternalStatus.NONE;
 		this.header = new HashMap<String, String>();
 		this.isReply = false;
-		this.partSize = Constants.MAX_MESSAGE_SIZE;
+		this.partSize = Constants.DEFAULT_MESSAGE_PART_SIZE;
 	}
 
 	/**
@@ -289,7 +289,7 @@ public class SCMPMessage {
 			return false;
 		}
 		int bodyLength = this.getBodyLength();
-		return bodyLength > Constants.MAX_MESSAGE_SIZE;
+		return bodyLength > this.partSize;
 	}
 
 	public boolean isCompressed() {
@@ -724,13 +724,9 @@ public class SCMPMessage {
 
 	/**
 	 * @param partSize the size in which message will be broken when it is large
+	 * check done in SCMessage
 	 */
 	public void setPartSize(int partSize) {
-		// only value smaller then MAX_MESSAGE_SIZE is allowed
-		if (partSize < Constants.MAX_MESSAGE_SIZE) {
-			this.partSize = partSize;
-		}
+		this.partSize = partSize;
 	}
-	
-	
 }

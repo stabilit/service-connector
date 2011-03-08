@@ -107,6 +107,7 @@ public class SrvExecuteCommand extends SrvCommandAdapter {
 			if (scReply.getAppErrorText() != null) {
 				reply.setHeader(SCMPHeaderAttributeKey.APP_ERROR_TEXT, scReply.getAppErrorText());
 			}
+			reply.setPartSize(scReply.getPartSize());
 		}
 		response.setSCMP(reply);
 		responderCallback.responseCallback(request, response);

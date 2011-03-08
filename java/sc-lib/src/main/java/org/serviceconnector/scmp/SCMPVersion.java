@@ -19,9 +19,26 @@ package org.serviceconnector.scmp;
 import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
 
-
 /**
- * The Enum SCMPVersion. Responsible to provide SCMPVersion and compatibility checks.
+ * Provides actual SCMP version and method to check compatibility. 
+ * The SCMP versioning schema follows this philosophy </br>
+ * 
+ * <pre>
+ * 	9.9 (Ex. 2.4)</br>
+ *  | | </br>
+ *  | +-- version number</br>
+ *  +-- release number</br>
+ * </pre>
+ * 
+ *<p>
+ * Release number designates the major release (design) of the protocol. It starts at 1 and is incremented by 1. 
+ * New protocol is by definition not compatible with the old one. E.g. if the release numver is not the same an error occurs.
+ *<p>
+ * Version number designates the minor improvements of the protocol. It starts at 0 and is incremented by 1. 
+ * New versions may contain additional features and are compatible.
+ * E.g. 2.(x+1) is compatible with V2.(x) but not the other way round.</br>
+ * </br>
+ * See the SC_0_SCMP_E.PDF for more details.
  * 
  * @author JTraber
  */
