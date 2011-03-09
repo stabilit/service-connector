@@ -49,9 +49,8 @@ public class TestUtil {
 		}
 		int messageSize = headerSize + bodySize;
 
-		String scmpString = headKey.name() + TestUtil.dfMsg.format(messageSize) + TestUtil.dfHeader.format(headerSize)
-				+ SCMPVersion.CURRENT.toString() + " \n"
-				+ msgString;
+		String scmpString = headKey.name() + TestUtil.dfMsg.format(messageSize) + TestUtil.dfHeader.format(headerSize) + " "
+				+ SCMPVersion.CURRENT + "\n" + msgString;
 		return scmpString;
 	}
 
