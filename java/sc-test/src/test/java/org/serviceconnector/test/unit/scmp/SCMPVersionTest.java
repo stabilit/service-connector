@@ -38,9 +38,9 @@ public class SCMPVersionTest {
 
 	/**
 	 * Description: Version compatibility test<br>
-	 * Expectation: passes
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test
+	@Test (expected = SCMPValidatorException.class)
 	public void t02_versionCompatibilityTest1() throws SCMPValidatorException {
 		String version = "3.2";
 		SCMPVersion.TEST.isSupported(version.getBytes()); // TEST = 3.2
@@ -48,9 +48,9 @@ public class SCMPVersionTest {
 
 	/**
 	 * Description: Version compatibility test<br>
-	 * Expectation: passes
+	 * Expectation: throws SCMPValidatorException
 	 */
-	@Test
+	@Test (expected = SCMPValidatorException.class)
 	public void t03_versionCompatibilityTest2() throws SCMPValidatorException {
 		String version = "3.1";
 		SCMPVersion.TEST.isSupported(version.getBytes());

@@ -22,6 +22,7 @@ import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
 import org.serviceconnector.scmp.SCMPMsgType;
+import org.serviceconnector.scmp.SCMPVersion;
 
 public class TestUtil {
 	private static final String EXC_REGEX = ".*<-EXC.*";
@@ -48,7 +49,8 @@ public class TestUtil {
 		}
 		int messageSize = headerSize + bodySize;
 
-		String scmpString = headKey.name() + TestUtil.dfMsg.format(messageSize) + TestUtil.dfHeader.format(headerSize) + " 1.0\n"
+		String scmpString = headKey.name() + TestUtil.dfMsg.format(messageSize) + TestUtil.dfHeader.format(headerSize)
+				+ SCMPVersion.CURRENT.toString() + " \n"
 				+ msgString;
 		return scmpString;
 	}
