@@ -43,9 +43,9 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 public enum SCMPVersion {
 
 	/** 1.0, the current version. */
-	CURRENT(0x31, 0x30),
+	CURRENT('1', '1'),
 	/** 3.2, the version to make tests - DO NOT CHANGE ! */
-	TEST(0x33, 0x32);
+	TEST('3', '2');
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
@@ -67,9 +67,9 @@ public enum SCMPVersion {
 	 * @param version
 	 *            the version number
 	 */
-	private SCMPVersion(Integer release, Integer version) {
-		this.version = version.byteValue();
-		this.release = release.byteValue();
+	private SCMPVersion(char release, char version) {
+		this.version = (byte) version;
+		this.release = (byte) release;
 	}
 
 	/**
@@ -97,6 +97,10 @@ public enum SCMPVersion {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return new String(new byte[] { this.release, SCMPVersion.DOT_HEX, this.version });
+		StringBuilder sb = new StringBuilder();
+		sb.append((char)this.release);
+		sb.append((char)SCMPVersion.DOT_HEX);
+		sb.append((char)this.version);
+		return sb.toString();
 	}
 }
