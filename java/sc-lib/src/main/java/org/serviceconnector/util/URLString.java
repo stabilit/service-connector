@@ -68,8 +68,17 @@ public class URLString {
 	 * 
 	 * @return the entries
 	 */
-	public Set<Entry<String, String>> getParameters() {
+	public Set<Entry<String, String>> getParameterSet() {
 		return this.map.entrySet();
+	}
+
+	/**
+	 * Gets the parameter map.
+	 * 
+	 * @return the parameter map
+	 */
+	public Map<String, String> getParameterMap() {
+		return this.map;
 	}
 
 	/**

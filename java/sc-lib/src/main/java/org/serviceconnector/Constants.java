@@ -181,6 +181,13 @@ public final class Constants {
 	public static final String SERVICE_NAME = "serviceName";
 	/** The Constant CACHE_ID. */
 	public static final String CACHE_ID = "cacheId";
+	/** The Constant STATE_DISABLE. */
+	public static final String STATE_DISABLED = "disabled";
+	/** The Constant STATE_ENABLE. */
+	public static final String STATE_ENABLED = "enabled";
+	/** The Constant NOT_FOUND. */
+	public static final String NOT_FOUND = "notfound";
+
 
 	/*
 	 * Constants for syntax in sc.properies ************************************

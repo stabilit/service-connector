@@ -91,13 +91,8 @@ public class InspectCommand extends CommandAdapter {
 		if (Constants.CC_CMD_STATE.equalsIgnoreCase(callKey)) {
 			// state for service requested
 			LOGGER.debug("state request for service=" + serviceName);
-			try {
-				// get state of all services
-				scmpReply.setBody(this.getStateOfServicesString(serviceName));
-			} catch (Exception e) {
-				LOGGER.debug("service=" + serviceName + " not found");
-				scmpReply = new SCMPMessageFault(SCMPError.SERVICE_NOT_FOUND, serviceName);
-			}
+			// get state of all services
+			scmpReply.setBody(this.getStateOfServicesString(serviceName));
 			response.setSCMP(scmpReply);
 			// initiate responder to send reply
 			responderCallback.responseCallback(request, response);
@@ -256,9 +251,8 @@ public class InspectCommand extends CommandAdapter {
 	 * Gets the state of services string.
 	 * 
 	 * @return the state of services string
-	 * @throws NotFoundException
 	 */
-	private String getStateOfServicesString(String serviceNameRegex) throws NotFoundException {
+	private String getStateOfServicesString(String serviceNameRegex) {
 		boolean found = false;
 		StringBuilder sb = new StringBuilder();
 
@@ -280,9 +274,9 @@ public class InspectCommand extends CommandAdapter {
 				sb.append(service.getName());
 				sb.append(Constants.EQUAL_SIGN);
 				if (service.isEnabled() == true) {
-					sb.append("enabled");
+					sb.append(Constants.STATE_ENABLED);
 				} else {
-					sb.append("disabled");
+					sb.append(Constants.STATE_DISABLED);
 				}
 				found = true;
 				break;
@@ -291,7 +285,10 @@ public class InspectCommand extends CommandAdapter {
 			}
 		}
 		if (found == false) {
-			throw new NotFoundException("no service found pattern=" + serviceNameRegex);
+			LOGGER.debug("service=" + serviceNameRegex + " not found");
+			sb.append(serviceNameRegex);
+			sb.append(Constants.EQUAL_SIGN);
+			sb.append(Constants.NOT_FOUND);
 		}
 		return sb.toString();
 	}

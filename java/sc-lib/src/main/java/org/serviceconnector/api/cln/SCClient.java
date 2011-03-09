@@ -17,6 +17,7 @@
 package org.serviceconnector.api.cln;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
@@ -299,7 +300,7 @@ public class SCClient {
 	 * 
 	 * @param serviceName
 	 *            the service name
-	 * @return the URL response string
+	 * @return true, if is service enabled
 	 * @throws SCServiceException
 	 *             client not attached<br>
 	 *             the inspect call failed<br>
@@ -307,7 +308,7 @@ public class SCClient {
 	 * @throws UnsupportedEncodingException
 	 *             encoding of request URL failed<br>
 	 */
-	public URLString isServiceEnabled(String serviceName) throws SCServiceException, UnsupportedEncodingException {
+	public boolean isServiceEnabled(String serviceName) throws SCServiceException, UnsupportedEncodingException {
 		return this.isServiceEnabled(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
 	}
 
@@ -318,7 +319,7 @@ public class SCClient {
 	 *            the operation timeout
 	 * @param serviceName
 	 *            the service name
-	 * @return the URL response string
+	 * @return true, if is service enabled
 	 * @throws SCServiceException
 	 *             client not attached<br>
 	 *             the inspect call failed<br>
@@ -326,7 +327,7 @@ public class SCClient {
 	 * @throws UnsupportedEncodingException
 	 *             encoding of request URL failed<br>
 	 */
-	public URLString isServiceEnabled(int operationTimeout, String serviceName) throws SCServiceException,
+	public boolean isServiceEnabled(int operationTimeout, String serviceName) throws SCServiceException,
 			UnsupportedEncodingException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - isServiceEnabled not possible.");
@@ -336,20 +337,22 @@ public class SCClient {
 		try {
 			URLString urlResponse = new URLString();
 			urlResponse.parseResponseURLString(body);
-			return urlResponse;
+			String value = urlResponse.getParamValue(serviceName);
+			if (value != null && value.equals(Constants.STATE_ENABLED)) {
+				return true;
+			}
+			return false;
 		} catch (UnsupportedEncodingException e) {
 			throw new SCServiceException(e.toString());
 		}
 	}
 
-	
 	/**
-	 * Returns the number of available and allocated sessions for given service name. Uses default operation timeout to complete
-	 * operation.
+	 * Gets the state of services with default operation timeout.
 	 * 
-	 * @param serviceName
-	 *            the service name
-	 * @return string containing the available and allocated sessions, e.g. "4/2".
+	 * @param serviceNamePattern
+	 *            the service name pattern
+	 * @return map containing serviceName and state enabled/disabled.
 	 * @throws SCServiceException
 	 *             client not attached<br>
 	 *             the inspect call failed<br>
@@ -357,7 +360,57 @@ public class SCClient {
 	 * @throws UnsupportedEncodingException
 	 *             encoding of request URL failed<br>
 	 */
-	public URLString getWorkload(String serviceName) throws SCServiceException, UnsupportedEncodingException {
+	public Map<String, String> getStateOfServices(String serviceNamePattern) throws SCServiceException,
+			UnsupportedEncodingException {
+		return this.getStateOfServices(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceNamePattern);
+	}
+
+	/**
+	 * Gets the state of services.
+	 * 
+	 * @param operationTimeout
+	 *            the operation timeout
+	 * @param serviceNamePattern
+	 *            the service name pattern
+	 * @return map containing serviceName and state enabled/disabled.
+	 * @throws SCServiceException
+	 *             client not attached<br>
+	 *             the inspect call failed<br>
+	 *             error message received from SC<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
+	 */
+	public Map<String, String> getStateOfServices(int operationTimeout, String serviceNamePattern) throws SCServiceException,
+			UnsupportedEncodingException {
+		if (this.attached == false) {
+			throw new SCServiceException("Client not attached - getStateOfServices not possible.");
+		}
+		String urlString = URLString.toURLRequestString(Constants.CC_CMD_STATE, Constants.SERVICE_NAME, serviceNamePattern);
+		String body = this.inspectCall(operationTimeout, urlString);
+		try {
+			URLString urlResponse = new URLString();
+			urlResponse.parseResponseURLString(body);
+			return urlResponse.getParameterMap();
+		} catch (UnsupportedEncodingException e) {
+			throw new SCServiceException(e.toString());
+		}
+	}
+
+	/**
+	 * Returns the number of available and allocated sessions for given service name. Uses default operation timeout to complete
+	 * operation.
+	 * 
+	 * @param serviceName
+	 *            the service name
+	 * @return map containing serviceName and the available/allocated sessions, e.g. "4/2".
+	 * @throws SCServiceException
+	 *             client not attached<br>
+	 *             the inspect call failed<br>
+	 *             error message received from SC<br>
+	 * @throws UnsupportedEncodingException
+	 *             encoding of request URL failed<br>
+	 */
+	public Map<String, String> getWorkload(String serviceName) throws SCServiceException, UnsupportedEncodingException {
 		return this.getWorkload(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName);
 	}
 
@@ -368,7 +421,7 @@ public class SCClient {
 	 *            the allowed time in seconds to complete the operation
 	 * @param serviceName
 	 *            the service name
-	 * @return string containing the available and allocated sessions, e.g. "4/2".
+	 * @return map containing serviceName and the available/allocated sessions, e.g. "4/2".
 	 * @throws SCServiceException
 	 *             client not attached<br>
 	 *             the inspect call failed<br>
@@ -376,7 +429,7 @@ public class SCClient {
 	 * @throws UnsupportedEncodingException
 	 *             encoding of request URL failed<br>
 	 */
-	public URLString getWorkload(int operationTimeoutSeconds, String serviceName) throws SCServiceException,
+	public Map<String, String> getWorkload(int operationTimeoutSeconds, String serviceName) throws SCServiceException,
 			UnsupportedEncodingException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - isServiceEnabled not possible.");
@@ -386,7 +439,7 @@ public class SCClient {
 		try {
 			URLString urlResponse = new URLString();
 			urlResponse.parseResponseURLString(body);
-			return urlResponse;
+			return urlResponse.getParameterMap();
 		} catch (UnsupportedEncodingException e) {
 			throw new SCServiceException(e.toString());
 		}
@@ -400,7 +453,8 @@ public class SCClient {
 	 *            the service name
 	 * @param cacheId
 	 *            the cache id
-	 * @return the uRL string
+	 * @return map containing ("return", "success|notfound"), (Constants.CACHE_ID, cacheId), ("cacheState", cacheState),
+	 *         ("cacheSize", size), ("cacheExpiration", expirationDateTime)
 	 * @throws SCServiceException
 	 *             client not attached<br>
 	 *             the inspect call failed<br>
@@ -408,7 +462,8 @@ public class SCClient {
 	 * @throws UnsupportedEncodingException
 	 *             encoding of request URL failed<br>
 	 */
-	public URLString inspectCache(String serviceName, String cacheId) throws SCServiceException, UnsupportedEncodingException {
+	public Map<String, String> inspectCache(String serviceName, String cacheId) throws SCServiceException,
+			UnsupportedEncodingException {
 		return this.inspectCache(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS, serviceName, cacheId);
 	}
 
@@ -421,7 +476,8 @@ public class SCClient {
 	 *            the service name
 	 * @param cacheId
 	 *            the cache id
-	 * @return the uRL string
+	 * @return map containing ("return", "success|notfound"), (Constants.CACHE_ID, cacheId), ("cacheState", cacheState),
+	 *         ("cacheSize", size), ("cacheExpiration", expirationDateTime)
 	 * @throws SCServiceException
 	 *             client not attached<br>
 	 *             the inspect call failed<br>
@@ -429,8 +485,8 @@ public class SCClient {
 	 * @throws UnsupportedEncodingException
 	 *             encoding of request URL failed<br>
 	 */
-	public URLString inspectCache(int operationTimeoutSeconds, String serviceName, String cacheId) throws SCServiceException,
-			UnsupportedEncodingException {
+	public Map<String, String> inspectCache(int operationTimeoutSeconds, String serviceName, String cacheId)
+			throws SCServiceException, UnsupportedEncodingException {
 		if (this.attached == false) {
 			throw new SCServiceException("Client not attached - inspectCache not possible.");
 		}
@@ -440,7 +496,7 @@ public class SCClient {
 		try {
 			URLString urlResponse = new URLString();
 			urlResponse.parseResponseURLString(body);
-			return urlResponse;
+			return urlResponse.getParameterMap();
 		} catch (UnsupportedEncodingException e) {
 			throw new SCServiceException(e.toString());
 		}

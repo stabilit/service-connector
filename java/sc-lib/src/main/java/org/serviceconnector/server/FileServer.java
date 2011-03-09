@@ -42,9 +42,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.serviceconnector.Constants;
-import org.serviceconnector.conf.BasicConfiguration;
 import org.serviceconnector.conf.RemoteNodeConfiguration;
-import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMessageFault;
@@ -68,9 +66,6 @@ public class FileServer extends Server {
 
 	/** The Constant LOGS_FILE_SDF. */
 	private static final SimpleDateFormat LOGS_FILE_SDF = new SimpleDateFormat(Constants.LOGS_FILE_NAME_FORMAT);
-
-	/** The bas configuration. */
-	private BasicConfiguration basConf = AppContext.getBasicConfiguration();
 	/** The sessions, list of sessions allocated to the server. */
 	private List<FileSession> sessions;
 	/** The max sessions. */

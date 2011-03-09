@@ -243,16 +243,11 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	 */
 	public void writeSystem(XMLStreamWriter writer) throws XMLStreamException {
 		// write system info
-		SystemInfo systemInfo = null;
-		try {
-			systemInfo = SystemInfo.class.newInstance();
-			writer.writeStartElement("system");
-			writer.writeStartElement("info");
-			this.writeBean(writer, systemInfo);
-			writer.writeEndElement(); // close info tag
-		} catch (Exception e) {
-			LOGGER.warn("Could not get access to SystemInfo instance", e);
-		}
+		SystemInfo systemInfo = new SystemInfo();
+		writer.writeStartElement("system");
+		writer.writeStartElement("info");
+		this.writeBean(writer, systemInfo);
+		writer.writeEndElement(); // close info tag
 		// write web info
 		writer.writeStartElement("webinfo");
 		this.writeWebInfo(writer);

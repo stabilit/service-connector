@@ -38,7 +38,7 @@ public final class SystemInfo {
 	/**
 	 * Instantiates a new system info.
 	 */
-	private SystemInfo() {
+	public SystemInfo() {
 	}
 
 	/** The Constant log. */
