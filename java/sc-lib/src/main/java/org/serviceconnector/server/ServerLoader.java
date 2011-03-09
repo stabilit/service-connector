@@ -33,17 +33,23 @@ import org.serviceconnector.scmp.SCMPError;
 /**
  * @author JTraber
  */
-public class ServerLoader {
+public final class ServerLoader {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(ServerLoader.class);
 
 	/**
+	 * Instantiates a new server loader.
+	 */
+	private ServerLoader() {
+	}
+
+	/**
 	 * Loads remote hosts from a file.
 	 * 
-	 * @param config
-	 *            the config
+	 * @param remoteNodeListConfigurations
+	 *            the remote node list configurations
 	 * @throws Exception
 	 *             the exception
 	 */

@@ -37,17 +37,23 @@ import org.serviceconnector.server.Server;
 /**
  * @author JTraber
  */
-public class ServiceLoader {
+public final class ServiceLoader {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(ServiceLoader.class);
 
 	/**
+	 * Instantiates a new service loader.
+	 */
+	private ServiceLoader() {
+	}
+
+	/**
 	 * Loads services from a file.
 	 * 
-	 * @param config
-	 *            the configuration
+	 * @param serviceListConfiguration
+	 *            the service list configuration
 	 * @throws Exception
 	 *             the exception
 	 */

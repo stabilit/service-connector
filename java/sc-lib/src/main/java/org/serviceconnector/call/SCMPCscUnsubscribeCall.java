@@ -21,17 +21,32 @@ import org.serviceconnector.net.req.Requester;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
+/**
+ * The Class SCMPCscUnsubscribeCall.
+ */
 public class SCMPCscUnsubscribeCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCMPCscUnsubscribeCall.class);
 
+	/**
+	 * Instantiates a new sCMP csc unsubscribe call.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param msgToSend
+	 *            the msg to send
+	 */
 	public SCMPCscUnsubscribeCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the message type.
+	 * 
+	 * @return the message type {@inheritDoc}
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CSC_UNSUBSCRIBE;

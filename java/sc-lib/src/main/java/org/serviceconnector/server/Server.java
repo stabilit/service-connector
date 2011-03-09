@@ -36,6 +36,7 @@ public abstract class Server implements IServer {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(Server.class);
 
+	/** The remote node configuration. */
 	protected RemoteNodeConfiguration remoteNodeConfiguration;
 
 	/** The socket address. */
@@ -48,6 +49,14 @@ public abstract class Server implements IServer {
 	/** The operation timeout multiplier. */
 	protected final double operationTimeoutMultiplier = AppContext.getBasicConfiguration().getOperationTimeoutMultiplier();
 
+	/**
+	 * Instantiates a new server.
+	 * 
+	 * @param remoteNodeConfiguration
+	 *            the remote node configuration
+	 * @param socketAddress
+	 *            the socket address
+	 */
 	public Server(RemoteNodeConfiguration remoteNodeConfiguration, InetSocketAddress socketAddress) {
 		this.requester = new Requester(remoteNodeConfiguration);
 		this.remoteNodeConfiguration = remoteNodeConfiguration;

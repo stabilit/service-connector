@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web;
 
 import java.io.OutputStream;
@@ -242,11 +243,16 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	 */
 	public void writeSystem(XMLStreamWriter writer) throws XMLStreamException {
 		// write system info
-		SystemInfo systemInfo = new SystemInfo();
-		writer.writeStartElement("system");
-		writer.writeStartElement("info");
-		this.writeBean(writer, systemInfo);
-		writer.writeEndElement(); // close info tag
+		SystemInfo systemInfo = null;
+		try {
+			systemInfo = SystemInfo.class.newInstance();
+			writer.writeStartElement("system");
+			writer.writeStartElement("info");
+			this.writeBean(writer, systemInfo);
+			writer.writeEndElement(); // close info tag
+		} catch (Exception e) {
+			LOGGER.warn("Could not get access to SystemInfo instance", e);
+		}
 		// write web info
 		writer.writeStartElement("webinfo");
 		this.writeWebInfo(writer);
@@ -287,23 +293,6 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 		if (obj == null) {
 			return;
 		}
-		// Field[] fields = obj.getClass().getDeclaredFields();
-		// for (Field field : fields) {
-		// String name = field.getName();
-		// try {
-		// writer.writeStartElement(name);
-		// try {
-		// Object value = BeanUtils.getProperty(obj, name);
-		// if (value != null) {
-		// writer.writeCData(value.toString());
-		// }
-		// } catch (Exception e) {
-		// // we ignore this exception
-		// }
-		// writer.writeEndElement();
-		// } catch (Exception e) {
-		// }
-		// }
 		Method[] methods = obj.getClass().getMethods();
 		Set<String> methodSet = new HashSet<String>();
 		for (Method method : methods) {
@@ -527,6 +516,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	 *            the writer
 	 * @param msg
 	 *            the msg
+	 * @throws Exception
+	 *             the exception
 	 */
 	public void writeSuccess(XMLStreamWriter writer, String msg) throws Exception {
 		writer.writeStartElement("status");
@@ -547,6 +538,8 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	 *            the writer
 	 * @param msg
 	 *            the msg
+	 * @throws Exception
+	 *             the exception
 	 */
 	public void writeFailure(XMLStreamWriter writer, String msg) throws Exception {
 		writer.writeStartElement("status");

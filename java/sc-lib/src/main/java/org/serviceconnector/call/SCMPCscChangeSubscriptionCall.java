@@ -29,12 +29,23 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
+/**
+ * The Class SCMPCscChangeSubscriptionCall.
+ */
 public class SCMPCscChangeSubscriptionCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCMPCscChangeSubscriptionCall.class);
 
+	/**
+	 * Instantiates a new sCMP csc change subscription call.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param msgToSend
+	 *            the msg to send
+	 */
 	public SCMPCscChangeSubscriptionCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);
 	}

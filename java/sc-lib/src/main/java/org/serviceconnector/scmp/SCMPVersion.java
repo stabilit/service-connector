@@ -20,31 +20,29 @@ import org.apache.log4j.Logger;
 import org.serviceconnector.cmd.SCMPValidatorException;
 
 /**
- * Provides actual SCMP version and method to check compatibility. 
- * The SCMP versioning schema follows this philosophy </br>
+ * Provides actual SCMP version and method to check compatibility.
+ * The SCMP versioning schema follows this philosophy <br />
  * 
  * <pre>
- * 	9.9 (Ex. 2.4)</br>
- *  | | </br>
- *  | +-- version number</br>
- *  +-- release number</br>
+ * 	9.9 (Ex. 2.4)<br />
+ *  | | <br />
+ *  | +-- version number<br />
+ *  +-- release number<br />
  * </pre>
- * 
+ * <p>
+ * Release number designates the major release (design) of the protocol. It starts at 1 and is incremented by 1. New protocol is by
+ * definition not compatible with the old one. E.g. if the release numver is not the same an error occurs.
  *<p>
- * Release number designates the major release (design) of the protocol. It starts at 1 and is incremented by 1. 
- * New protocol is by definition not compatible with the old one. E.g. if the release numver is not the same an error occurs.
- *<p>
- * Version number designates the minor improvements of the protocol. It starts at 0 and is incremented by 1. 
- * New versions may contain additional features and are compatible.
- * E.g. 2.(x+1) is compatible with V2.(x) but not the other way round.</br>
- * </br>
+ * Version number designates the minor improvements of the protocol. It starts at 0 and is incremented by 1. New versions may
+ * contain additional features and are compatible. E.g. 2.(x+1) is compatible with V2.(x) but not the other way round.<br />
+ * <br />
  * See the SC_0_SCMP_E.PDF for more details.
  * 
  * @author JTraber
  */
 public enum SCMPVersion {
 
-	/** 1.0, the current version */
+	/** 1.0, the current version. */
 	CURRENT(0x31, 0x30),
 	/** 3.2, the version to make tests - DO NOT CHANGE ! */
 	TEST(0x33, 0x32);
@@ -52,7 +50,7 @@ public enum SCMPVersion {
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCMPVersion.class);
-	
+
 	/** The release. */
 	private byte release;
 	/** The version. */
@@ -76,9 +74,11 @@ public enum SCMPVersion {
 
 	/**
 	 * Checks if is supported.
-	 *
-	 * @param buffer the buffer containing the version number
+	 * 
+	 * @param buffer
+	 *            the buffer containing the version number
 	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
 	 */
 	public void isSupported(byte[] buffer) throws SCMPValidatorException {
 
@@ -94,6 +94,7 @@ public enum SCMPVersion {
 		return;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return new String(new byte[] { this.release, SCMPVersion.DOT_HEX, this.version });

@@ -1,17 +1,17 @@
 /*
- *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
- *                                                                             *
- *  Licensed under the Apache License, Version 2.0 (the "License");            *
- *  you may not use this file except in compliance with the License.           *
- *  You may obtain a copy of the License at                                    *
- *                                                                             *
- *  http://www.apache.org/licenses/LICENSE-2.0                                 *
- *                                                                             *
- *  Unless required by applicable law or agreed to in writing, software        *
- *  distributed under the License is distributed on an "AS IS" BASIS,          *
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
- *  See the License for the specific language governing permissions and        *
- *  limitations under the License.                                             *
+ * Copyright © 2010 STABILIT Informatik AG, Switzerland *
+ * *
+ * Licensed under the Apache License, Version 2.0 (the "License"); *
+ * you may not use this file except in compliance with the License. *
+ * You may obtain a copy of the License at *
+ * *
+ * http://www.apache.org/licenses/LICENSE-2.0 *
+ * *
+ * Unless required by applicable law or agreed to in writing, software *
+ * distributed under the License is distributed on an "AS IS" BASIS, *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+ * See the License for the specific language governing permissions and *
+ * limitations under the License. *
  */
 package org.serviceconnector.cache;
 
@@ -19,10 +19,9 @@ import java.io.Serializable;
 
 /**
  * The CacheKey class is a hash key identifying any instance located in the cache (e.g. Composite or Message).
- * The class the wrapper class for any given cacheId String of the format <CacheId>/<SequenceNr> (@see {@link CacheId}
- * 
- * The only purpose of this class is support for hashCode generation and equality check. The main usage for this class is 
- * inside the @link Cache class.   
+ * The class the wrapper class for any given cacheId String of the format <CacheId>/<SequenceNr> (@see {@link CacheId} The only
+ * purpose of this class is support for hashCode generation and equality check. The main usage for this class is
+ * inside the @link Cache class.
  */
 public class CacheKey implements Serializable {
 
@@ -30,7 +29,7 @@ public class CacheKey implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -4264046172213809960L;
-	
+
 	/** The cache id. */
 	private String cacheId;
 
@@ -53,8 +52,11 @@ public class CacheKey implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((cacheId == null) ? 0 : cacheId.hashCode());
+		if (cacheId == null) {
+			result = prime * result + 0;
+		} else {
+			result = prime * result + cacheId.hashCode();
+		}
 		return result;
 	}
 
@@ -65,18 +67,23 @@ public class CacheKey implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		CacheKey other = (CacheKey) obj;
 		if (cacheId == null) {
-			if (other.cacheId != null)
+			if (other.cacheId != null) {
 				return false;
-		} else if (!cacheId.equals(other.cacheId))
+			}
+		} else if (!cacheId.equals(other.cacheId)) {
 			return false;
+		}
 		return true;
 	}
 
@@ -88,11 +95,12 @@ public class CacheKey implements Serializable {
 	public String getCacheId() {
 		return cacheId;
 	}
-	
+
 	/**
 	 * Sets the cache id.
-	 *
-	 * @param cacheId the new cache id
+	 * 
+	 * @param cacheId
+	 *            the new cache id
 	 */
 	public void setCacheId(String cacheId) {
 		this.cacheId = cacheId;

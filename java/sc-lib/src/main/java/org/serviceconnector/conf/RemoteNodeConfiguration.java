@@ -24,6 +24,9 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.server.ServerType;
 import org.serviceconnector.util.ValidatorUtility;
 
+/**
+ * The Class RemoteNodeConfiguration.
+ */
 public class RemoteNodeConfiguration {
 
 	/** The serverType. */
@@ -54,6 +57,26 @@ public class RemoteNodeConfiguration {
 				Constants.DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS, 0);
 	}
 
+	/**
+	 * Instantiates a new remote node configuration.
+	 * 
+	 * @param serverType
+	 *            the server type
+	 * @param name
+	 *            the name
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param connectionType
+	 *            the connection type
+	 * @param keepAliveIntervalSeconds
+	 *            the keep alive interval seconds
+	 * @param maxConnections
+	 *            the max connections
+	 * @param maxSessions
+	 *            the max sessions
+	 */
 	public RemoteNodeConfiguration(ServerType serverType, String name, String host, int port, String connectionType,
 			int keepAliveIntervalSeconds, int maxConnections, int maxSessions) {
 		this.name = name;
@@ -66,16 +89,34 @@ public class RemoteNodeConfiguration {
 		this.serverType = serverType;
 	}
 
+	/**
+	 * Instantiates a new remote node configuration.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param connectionType
+	 *            the connection type
+	 * @param keepAliveIntervalSeconds
+	 *            the keep alive interval seconds
+	 * @param maxConnections
+	 *            the max connections
+	 */
 	public RemoteNodeConfiguration(String name, String host, int port, String connectionType, int keepAliveIntervalSeconds,
 			int maxConnections) {
 		this(ServerType.UNDEFINED, name, host, port, connectionType, keepAliveIntervalSeconds, maxConnections, 0);
 	}
 
 	/**
-	 * Load the configurated items
+	 * Load the configurated items.
 	 * 
 	 * @param compositeConfig
+	 *            the composite config
 	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
 	 */
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 		// get host
@@ -154,7 +195,9 @@ public class RemoteNodeConfiguration {
 	}
 
 	/**
-	 * @return
+	 * Gets the name.
+	 * 
+	 * @return the name
 	 */
 	public String getName() {
 		return name;
@@ -209,6 +252,8 @@ public class RemoteNodeConfiguration {
 		return maxSessions;
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.name);

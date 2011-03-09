@@ -141,6 +141,9 @@ public class ManageCommand extends CommandAdapter {
 	 * 
 	 * @param enable
 	 *            the enable
+	 * @param serviceNameRegex
+	 *            the service name regex
+	 * @return true, if successful
 	 */
 	private boolean modifyStateOfServices(boolean enable, String serviceNameRegex) {
 		boolean ret = false;

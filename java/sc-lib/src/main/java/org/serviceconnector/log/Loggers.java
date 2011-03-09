@@ -21,12 +21,19 @@ package org.serviceconnector.log;
  */
 public enum Loggers {
 
+	/** The CONNECTION. */
 	CONNECTION("ConnectionLogger"), //
+	/** The SESSION. */
 	SESSION("SessionLogger"), //
+	/** The CACHE. */
 	CACHE("CacheLogger"), //
+	/** The SUBSCRIPTION. */
 	SUBSCRIPTION("SubscriptionLogger"), //
+	/** The MESSAGE. */
 	MESSAGE("MessageLogger"), //
+	/** The PERFORMANCE. */
 	PERFORMANCE("PerformanceLogger"),
+	/** The TEST. */
 	TEST("TestLogger");
 
 	/** The value. */

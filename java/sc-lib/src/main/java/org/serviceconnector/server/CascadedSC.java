@@ -62,6 +62,9 @@ import org.serviceconnector.service.CascadedPublishService;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
+/**
+ * The Class CascadedSC.
+ */
 public class CascadedSC extends Server implements IStatefulServer {
 
 	/** The Constant LOGGER. */
@@ -69,14 +72,34 @@ public class CascadedSC extends Server implements IStatefulServer {
 
 	/** The subscriptions, list of subscriptions allocated on cascaded SC. */
 	private List<AbstractSession> subscriptions;
+	
+	/** The subscription registry. */
 	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 
+	/**
+	 * Instantiates a new cascaded sc.
+	 * 
+	 * @param remoteNodeConfiguration
+	 *            the remote node configuration
+	 * @param socketAddress
+	 *            the socket address
+	 */
 	public CascadedSC(RemoteNodeConfiguration remoteNodeConfiguration, InetSocketAddress socketAddress) {
 		super(remoteNodeConfiguration, socketAddress);
 		this.serverKey = remoteNodeConfiguration.getName();
 		this.subscriptions = Collections.synchronizedList(new ArrayList<AbstractSession>());
 	}
 
+	/**
+	 * Creates the session.
+	 * 
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 */
 	public void createSession(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
 		SCMPClnCreateSessionCall createSessionCall = new SCMPClnCreateSessionCall(this.requester, msgToForward);
 		try {
@@ -87,6 +110,16 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Delete session.
+	 * 
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 */
 	public void deleteSession(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
 		SCMPClnDeleteSessionCall deleteSessionCall = new SCMPClnDeleteSessionCall(this.requester, msgToForward);
 		try {
@@ -97,6 +130,16 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Execute.
+	 * 
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 */
 	public void execute(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
 		SCMPClnExecuteCall executeCall = new SCMPClnExecuteCall(this.requester, msgToForward);
 		try {
@@ -107,6 +150,16 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Echo.
+	 * 
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 */
 	public void echo(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis) {
 		SCMPEchoCall echoCall = new SCMPEchoCall(this.requester, msgToForward);
 		try {
@@ -117,6 +170,16 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Server download file.
+	 * 
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 */
 	public void serverDownloadFile(SCMPMessage msgToForward, ClnCommandCascCallback callback, int timeoutMillis) {
 		SCMPFileDownloadCall fileDownloadCall = new SCMPFileDownloadCall(this.requester, msgToForward);
 
@@ -128,6 +191,16 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Server get file list.
+	 * 
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 */
 	public void serverGetFileList(SCMPMessage msgToForward, ClnCommandCascCallback callback, int timeoutMillis) {
 		SCMPFileListCall fileListCall = new SCMPFileListCall(this.requester, msgToForward);
 
@@ -139,6 +212,16 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Server upload file.
+	 * 
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 */
 	public void serverUploadFile(SCMPMessage msgToForward, ClnCommandCascCallback callback, int timeoutMillis) {
 		SCMPFileUploadCall fileUploadCall = new SCMPFileUploadCall(this.requester, msgToForward);
 
@@ -193,6 +276,18 @@ public class CascadedSC extends Server implements IStatefulServer {
 		return permit;
 	}
 
+	/**
+	 * Cascaded sc subscribe.
+	 * 
+	 * @param cascClient
+	 *            the casc client
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 */
 	public void cascadedSCSubscribe(CascadedClient cascClient, SCMPMessage msgToForward, ISubscriptionCallback callback,
 			int timeoutMillis) {
 		int oti = (int) (this.operationTimeoutMultiplier * timeoutMillis);
@@ -221,6 +316,18 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Cascaded sc change subscription.
+	 * 
+	 * @param cascClient
+	 *            the casc client
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 */
 	public void cascadedSCChangeSubscription(CascadedClient cascClient, SCMPMessage msgToForward, ISubscriptionCallback callback,
 			int timeoutMillis) {
 		int oti = (int) (this.operationTimeoutMultiplier * timeoutMillis);
@@ -249,6 +356,18 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Cascaded sc unsubscribe.
+	 * 
+	 * @param cascClient
+	 *            the casc client
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 */
 	public void cascadedSCUnsubscribe(CascadedClient cascClient, SCMPMessage msgToForward, ISubscriptionCallback callback,
 			int timeoutMillis) {
 		int oti = (int) (this.operationTimeoutMultiplier * timeoutMillis);
@@ -291,6 +410,18 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Cascaded sc abort subscription.
+	 * 
+	 * @param cascClient
+	 *            the casc client
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 */
 	public void cascadedSCAbortSubscription(CascadedClient cascClient, SCMPMessage msgToForward, ISubscriptionCallback callback,
 			int timeoutMillis) {
 		int oti = (int) (this.operationTimeoutMultiplier * timeoutMillis);
@@ -333,6 +464,12 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Unsubscribe cascaded client in error cases.
+	 * 
+	 * @param cascClient
+	 *            the casc client
+	 */
 	public void unsubscribeCascadedClientInErrorCases(CascadedClient cascClient) {
 		try {
 			SCMPMessage msg = new SCMPMessage();
@@ -348,6 +485,16 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Receive publication.
+	 * 
+	 * @param cascClient
+	 *            the casc client
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 */
 	public void receivePublication(CascadedClient cascClient, ISCMPMessageCallback callback, int timeoutMillis) {
 		SCMPReceivePublicationCall receivePublicationCall = new SCMPReceivePublicationCall(this.requester, cascClient
 				.getServiceName(), cascClient.getSubscriptionId());
@@ -362,6 +509,20 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Subscribe cascaded sc with in active cascaded client.
+	 * 
+	 * @param cascClient
+	 *            the casc client
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param oti
+	 *            the oti
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void subscribeCascadedSCWithInActiveCascadedClient(CascadedClient cascClient, SCMPMessage msgToForward,
 			ISubscriptionCallback callback, int oti) throws Exception {
 		// cascaded client not subscribed - subscribe
@@ -387,6 +548,20 @@ public class CascadedSC extends Server implements IStatefulServer {
 		cscSubscribeCall.invoke(cscCallback, oti);
 	}
 
+	/**
+	 * Subscribe cascaded sc with active cascaded client.
+	 * 
+	 * @param cascClient
+	 *            the casc client
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param oti
+	 *            the oti
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void subscribeCascadedSCWithActiveCascadedClient(CascadedClient cascClient, SCMPMessage msgToForward,
 			ISCMPMessageCallback callback, int oti) throws Exception {
 		// set cascaded subscriptonId and cascadedMask
@@ -399,6 +574,20 @@ public class CascadedSC extends Server implements IStatefulServer {
 		subscribeCall.invoke(callback, oti);
 	}
 
+	/**
+	 * Change subscription cascaded sc with active cascaded client.
+	 * 
+	 * @param cascClient
+	 *            the casc client
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param oti
+	 *            the oti
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void changeSubscriptionCascadedSCWithActiveCascadedClient(CascadedClient cascClient, SCMPMessage msgToForward,
 			ISCMPMessageCallback callback, int oti) throws Exception {
 		// set cascaded subscriptonId and cascadedMask
@@ -411,6 +600,20 @@ public class CascadedSC extends Server implements IStatefulServer {
 		cscChangeSubscriptionCall.invoke(callback, oti);
 	}
 
+	/**
+	 * Unsubscribe cascaded sc with active cascaded client.
+	 * 
+	 * @param cascClient
+	 *            the casc client
+	 * @param msgToForward
+	 *            the msg to forward
+	 * @param callback
+	 *            the callback
+	 * @param oti
+	 *            the oti
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void unsubscribeCascadedSCWithActiveCascadedClient(CascadedClient cascClient, SCMPMessage msgToForward,
 			ISCMPMessageCallback callback, int oti) throws Exception {
 		// change mask of cascaded client in callback or keep it in case of an error
@@ -422,7 +625,14 @@ public class CascadedSC extends Server implements IStatefulServer {
 		cscUnsubscribeCall.invoke(callback, oti);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Abort session.
+	 * 
+	 * @param session
+	 *            the session
+	 * @param reason
+	 *            the reason {@inheritDoc}
+	 */
 	@Override
 	public void abortSession(AbstractSession session, String reason) {
 		if (session instanceof Subscription) {
@@ -451,13 +661,23 @@ public class CascadedSC extends Server implements IStatefulServer {
 		}
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Adds the session.
+	 * 
+	 * @param subscription
+	 *            the subscription {@inheritDoc}
+	 */
 	@Override
 	public void addSession(AbstractSession subscription) {
 		this.subscriptions.add(subscription);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Removes the session.
+	 * 
+	 * @param subscription
+	 *            the subscription {@inheritDoc}
+	 */
 	@Override
 	public void removeSession(AbstractSession subscription) {
 		if (this.subscriptions == null) {
@@ -467,24 +687,42 @@ public class CascadedSC extends Server implements IStatefulServer {
 		this.subscriptions.remove(subscription);
 	}
 
+	/**
+	 * Removes the session.
+	 * 
+	 * @param subscriptionId
+	 *            the subscription id
+	 */
 	public void removeSession(String subscriptionId) {
 		Subscription subscription = CascadedSC.subscriptionRegistry.getSubscription(subscriptionId);
 		this.removeSession(subscription);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the sessions.
+	 * 
+	 * @return the sessions {@inheritDoc}
+	 */
 	@Override
 	public List<AbstractSession> getSessions() {
 		return this.subscriptions;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Checks for free session.
+	 * 
+	 * @return true, if successful {@inheritDoc}
+	 */
 	@Override
 	public boolean hasFreeSession() {
 		return true;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the max sessions.
+	 * 
+	 * @return the max sessions {@inheritDoc}
+	 */
 	@Override
 	public int getMaxSessions() {
 		return Integer.MAX_VALUE;

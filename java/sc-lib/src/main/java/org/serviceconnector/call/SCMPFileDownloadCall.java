@@ -23,26 +23,57 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
+/**
+ * The Class SCMPFileDownloadCall.
+ */
 public class SCMPFileDownloadCall extends SCMPCallAdapter {
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCMPFileDownloadCall.class);
 
+	/**
+	 * Instantiates a new sCMP file download call.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param serviceName
+	 *            the service name
+	 * @param sessionId
+	 *            the session id
+	 */
 	public SCMPFileDownloadCall(IRequester requester, String serviceName, String sessionId) {
 		super(requester, serviceName, sessionId);
 	}
 
+	/**
+	 * Instantiates a new sCMP file download call.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param msgToForward
+	 *            the msg to forward
+	 */
 	public SCMPFileDownloadCall(Requester requester, SCMPMessage msgToForward) {
 		super(requester, msgToForward);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the message type.
+	 * 
+	 * @return the message type {@inheritDoc}
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.FILE_DOWNLOAD;
 	}
 
+	/**
+	 * Sets the remote file name.
+	 * 
+	 * @param remoteFileName
+	 *            the new remote file name
+	 */
 	public void setRemoteFileName(String remoteFileName) {
 		if (remoteFileName == null) {
 			return;

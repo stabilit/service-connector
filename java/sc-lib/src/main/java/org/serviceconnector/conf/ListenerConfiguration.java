@@ -74,11 +74,14 @@ public class ListenerConfiguration {
 	}
 
 	/**
-	 * Load the configurated items
+	 * Load the configurated items.
 	 * 
 	 * @param compositeConfig
+	 *            the composite config
 	 * @param remoteNodeListConfiguration
+	 *            the remote node list configuration
 	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
 	 */
 
 	@SuppressWarnings("unchecked")
@@ -163,6 +166,8 @@ public class ListenerConfiguration {
 		}
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.name);
@@ -242,18 +247,41 @@ public class ListenerConfiguration {
 		return password;
 	}
 
+	/**
+	 * Gets the network interfaces.
+	 * 
+	 * @return the network interfaces
+	 */
 	public List<String> getNetworkInterfaces() {
 		return networkInterfaces;
 	}
 
+	/**
+	 * Sets the network interfaces.
+	 * 
+	 * @param networkInterfaces
+	 *            the new network interfaces
+	 */
 	public void setNetworkInterfaces(List<String> networkInterfaces) {
 		this.networkInterfaces = networkInterfaces;
 	}
 
+	/**
+	 * Sets the port.
+	 * 
+	 * @param port
+	 *            the new port
+	 */
 	public void setPort(int port) {
 		this.port = port;
 	}
 
+	/**
+	 * Sets the connection type.
+	 * 
+	 * @param connectionType
+	 *            the new connection type
+	 */
 	public void setConnectionType(String connectionType) {
 		this.connectionType = connectionType;
 	}

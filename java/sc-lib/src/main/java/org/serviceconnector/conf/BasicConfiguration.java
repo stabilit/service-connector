@@ -25,9 +25,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
 /**
- * root.writePID=true root.operationTimeoutMultiplier=0.8 root.echoIntervalMultiplier=1.2 root.connectionTimeoutMillis=10000
- * 
- * @author Daniel Schmutz
+ * The Class BasicConfiguration.
  */
 public class BasicConfiguration {
 	/** The Constant LOGGER. */
@@ -80,6 +78,8 @@ public class BasicConfiguration {
 	 * 
 	 * @param compositeConfiguration
 	 *            the composite configuration
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
 	 */
 	public void load(CompositeConfiguration compositeConfiguration) throws SCMPValidatorException {
 		// writePID
@@ -246,7 +246,7 @@ public class BasicConfiguration {
 	}
 
 	/**
-	 * Gets the path to the directory where pid file should be written to
+	 * Gets the path to the directory where pid file should be written to.
 	 * 
 	 * @return the pid path
 	 */
@@ -255,7 +255,7 @@ public class BasicConfiguration {
 	}
 
 	/**
-	 * Gets the path to the directory where dump file should be written to
+	 * Gets the path to the directory where dump file should be written to.
 	 * 
 	 * @return the dump path
 	 */

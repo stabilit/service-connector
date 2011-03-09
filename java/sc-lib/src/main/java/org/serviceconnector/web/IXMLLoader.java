@@ -1,4 +1,5 @@
-/*
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
  *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
  *                                                                             *
  *  Licensed under the Apache License, Version 2.0 (the "License");            *
@@ -12,7 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
  *  See the License for the specific language governing permissions and        *
  *  limitations under the License.                                             *
- */
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web;
 
 import java.io.OutputStream;
@@ -30,7 +31,7 @@ import org.serviceconnector.factory.IFactoryable;
 public interface IXMLLoader extends IFactoryable {
 
 	/**
-	 * Checks if this loader returns raw text instead of xml
+	 * Checks if this loader returns raw text instead of xml.
 	 * 
 	 * @return true, if is raw
 	 */
@@ -44,6 +45,7 @@ public interface IXMLLoader extends IFactoryable {
 	 * @param os
 	 *            the os
 	 * @throws Exception
+	 *             the exception
 	 */
 	public abstract void load(IWebRequest request, OutputStream os) throws Exception;
 

@@ -57,6 +57,7 @@ public class SrvServiceRegistry extends Registry<String, SrvService> {
 	 * 
 	 * @param key
 	 *            the key
+	 * @return the srv service
 	 */
 	public SrvService removeSrvService(String key) {
 		LOGGER.debug("remove SrvService " + key);

@@ -54,12 +54,18 @@ import org.serviceconnector.service.Session;
 import org.serviceconnector.service.StatefulService;
 import org.serviceconnector.service.Subscription;
 
+/**
+ * The Class StatefulServer.
+ */
 public class StatefulServer extends Server implements IStatefulServer {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(StatefulServer.class);
 
+	/** The session registry. */
 	private static SessionRegistry sessionRegistry = AppContext.getSessionRegistry();
+
+	/** The subscription registry. */
 	private static SubscriptionRegistry subscriptionRegistry = AppContext.getSubscriptionRegistry();
 	/** The basic configuration. */
 	protected BasicConfiguration basicConf = AppContext.getBasicConfiguration();
@@ -67,10 +73,26 @@ public class StatefulServer extends Server implements IStatefulServer {
 	private List<AbstractSession> sessions;
 	/** The max sessions. */
 	private int maxSessions;
+
+	/** The service. */
 	private StatefulService service;
+
+	/** The service name. */
 	private String serviceName;
+
+	/** The sas remote node configuration. */
 	private RemoteNodeConfiguration sasRemoteNodeConfiguration;
 
+	/**
+	 * Instantiates a new stateful server.
+	 * 
+	 * @param remoteNodeConfiguration
+	 *            the remote node configuration
+	 * @param serviceName
+	 *            the service name
+	 * @param socketAddress
+	 *            the socket address
+	 */
 	public StatefulServer(RemoteNodeConfiguration remoteNodeConfiguration, String serviceName, InetSocketAddress socketAddress) {
 		super(remoteNodeConfiguration, socketAddress);
 		this.sessions = Collections.synchronizedList(new ArrayList<AbstractSession>());
@@ -84,13 +106,23 @@ public class StatefulServer extends Server implements IStatefulServer {
 				0, 1, 1);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Adds the session.
+	 * 
+	 * @param session
+	 *            the session {@inheritDoc}
+	 */
 	@Override
 	public void addSession(AbstractSession session) {
 		this.sessions.add(session);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Removes the session.
+	 * 
+	 * @param session
+	 *            the session {@inheritDoc}
+	 */
 	@Override
 	public void removeSession(AbstractSession session) {
 		if (this.sessions == null) {
@@ -100,19 +132,31 @@ public class StatefulServer extends Server implements IStatefulServer {
 		this.sessions.remove(session);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the sessions.
+	 * 
+	 * @return the sessions {@inheritDoc}
+	 */
 	@Override
 	public List<AbstractSession> getSessions() {
 		return this.sessions;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Checks for free session.
+	 * 
+	 * @return true, if successful {@inheritDoc}
+	 */
 	@Override
 	public boolean hasFreeSession() {
 		return this.sessions.size() < this.maxSessions;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the max sessions.
+	 * 
+	 * @return the max sessions {@inheritDoc}
+	 */
 	@Override
 	public int getMaxSessions() {
 		return this.maxSessions;
@@ -132,9 +176,12 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 * 
 	 * @param msgToForward
 	 *            the message to forward
+	 * @param callback
+	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
 	 * @throws ConnectionPoolBusyException
-	 * @throws Exception
-	 *             the exception
+	 *             the connection pool busy exception
 	 */
 	public void createSession(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
@@ -156,7 +203,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 *            the message
 	 * @param callback
 	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
 	 * @throws ConnectionPoolBusyException
+	 *             the connection pool busy exception
 	 */
 	public void deleteSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
@@ -179,7 +229,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 *            the message to forward
 	 * @param callback
 	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
 	 * @throws ConnectionPoolBusyException
+	 *             the connection pool busy exception
 	 */
 	public void subscribe(SCMPMessage msgToForward, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
@@ -201,7 +254,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 *            the message
 	 * @param callback
 	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
 	 * @throws ConnectionPoolBusyException
+	 *             the connection pool busy exception
 	 */
 	public void unsubscribe(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
@@ -227,6 +283,7 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 * @param timeoutMillis
 	 *            the timeout milliseconds
 	 * @throws ConnectionPoolBusyException
+	 *             the connection pool busy exception
 	 */
 	public void changeSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
@@ -249,7 +306,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 *            the message
 	 * @param callback
 	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
 	 * @throws ConnectionPoolBusyException
+	 *             the connection pool busy exception
 	 */
 	public void execute(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis) throws ConnectionPoolBusyException {
 		SCMPSrvExecuteCall srvExecuteCall = new SCMPSrvExecuteCall(this.requester, message);
@@ -270,7 +330,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 *            the message
 	 * @param callback
 	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
 	 * @throws ConnectionPoolBusyException
+	 *             the connection pool busy exception
 	 */
 	public void serverAbortSession(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
@@ -310,7 +373,10 @@ public class StatefulServer extends Server implements IStatefulServer {
 	 *            the message
 	 * @param callback
 	 *            the callback
+	 * @param timeoutMillis
+	 *            the timeout millis
 	 * @throws ConnectionPoolBusyException
+	 *             the connection pool busy exception
 	 */
 	public void serverAbortSubscription(SCMPMessage message, ISCMPMessageCallback callback, int timeoutMillis)
 			throws ConnectionPoolBusyException {
@@ -343,7 +409,14 @@ public class StatefulServer extends Server implements IStatefulServer {
 		}
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Abort session.
+	 * 
+	 * @param session
+	 *            the session
+	 * @param reason
+	 *            the reason {@inheritDoc}
+	 */
 	@Override
 	public void abortSession(AbstractSession session, String reason) {
 		// delete session in global registries
@@ -380,6 +453,18 @@ public class StatefulServer extends Server implements IStatefulServer {
 		}
 	}
 
+	/**
+	 * Abort session and wait mech.
+	 * 
+	 * @param oti
+	 *            the oti
+	 * @param abortMessage
+	 *            the abort message
+	 * @param reason
+	 *            the reason
+	 * @param abortSubscription
+	 *            the abort subscription
+	 */
 	public void abortSessionAndWaitMech(int oti, SCMPMessage abortMessage, String reason, boolean abortSubscription) {
 		int tries = (int) ((oti * basicConf.getOperationTimeoutMultiplier()) / Constants.WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS);
 		int i = 0;
@@ -458,6 +543,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 
 	/**
 	 * Abort sessions and destroy. All sessions are aborted and server gets destroyed.
+	 * 
+	 * @param reason
+	 *            the reason
 	 */
 	public void abortSessionsAndDestroy(String reason) {
 		// deregister server from service
@@ -533,7 +621,9 @@ public class StatefulServer extends Server implements IStatefulServer {
 		this.service = service;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Destroy. {@inheritDoc}
+	 */
 	@Override
 	public void destroy() {
 		super.destroy();
@@ -541,7 +631,11 @@ public class StatefulServer extends Server implements IStatefulServer {
 		this.service = null;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * To string.
+	 * 
+	 * @return the string {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return super.getServerKey() + ":" + this.remoteNodeConfiguration.getPort() + " : " + maxSessions;

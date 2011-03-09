@@ -61,6 +61,13 @@ public class SCSessionServer {
 
 	/**
 	 * Instantiates a new SCSessionServer.
+	 * 
+	 * @param scServer
+	 *            the sc server
+	 * @param serviceName
+	 *            the service name
+	 * @param requester
+	 *            the requester
 	 */
 	public SCSessionServer(SCServer scServer, String serviceName, SCRequester requester) {
 		this.requester = requester;
@@ -107,8 +114,13 @@ public class SCSessionServer {
 	 *            the max connections pool uses to connect to SC
 	 * @param scCallback
 	 *            the SC callback
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             listener not started yet<br>
+	 *             server already registered for service<br>
+	 *             register server on SC failed<br>
+	 *             error message received from SC <br>
+	 * @throws SCMPValidatorException
+	 *             callback is not set<br>
 	 */
 	public synchronized void register(int maxSessions, int maxConnections, SCSessionServerCallback scCallback)
 			throws SCServiceException, SCMPValidatorException {
@@ -210,23 +222,26 @@ public class SCSessionServer {
 
 	/**
 	 * Check registration with default operation timeout. This message can be sent from the registered server to SC in order to
-	 * check
-	 * its registration
+	 * check its registration.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             server is not registered for a service<br>
+	 *             check registration failed<br>
+	 *             error message received from SC <br>
 	 */
 	public synchronized void checkRegistration() throws SCServiceException {
 		this.checkRegistration(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
 	}
 
 	/**
-	 * Check registration. This message can be sent from the registered server to SC in order to check its registration
+	 * Check registration. This message can be sent from the registered server to SC in order to check its registration.
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             server is not registered for a service<br>
+	 *             check registration failed<br>
+	 *             error message received from SC <br>
 	 */
 	public synchronized void checkRegistration(int operationTimeoutSeconds) throws SCServiceException {
 		if (this.registered == false) {
@@ -254,8 +269,9 @@ public class SCSessionServer {
 	/**
 	 * Deregister server with default operation timeout.
 	 * 
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             deregister failed<br>
+	 *             error message received from SC<br>
 	 */
 	public synchronized void deregister() throws SCServiceException {
 		this.deregister(Constants.DEFAULT_OPERATION_TIMEOUT_SECONDS);
@@ -266,8 +282,9 @@ public class SCSessionServer {
 	 * 
 	 * @param operationTimeoutSeconds
 	 *            the allowed time in seconds to complete the operation
-	 * @throws Exception
-	 *             the exception
+	 * @throws SCServiceException
+	 *             deregister failed<br>
+	 *             error message received from SC<br>
 	 */
 	public synchronized void deregister(int operationTimeoutSeconds) throws SCServiceException {
 		SrvServiceRegistry srvServiceRegistry = AppContext.getSrvServiceRegistry();

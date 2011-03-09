@@ -19,8 +19,12 @@ package org.serviceconnector.log;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+/**
+ * The Class CacheLogger.
+ */
 public class CacheLogger {
 
+	/** The Constant cacheLogger. */
 	private static final Logger cacheLogger = Logger.getLogger(Loggers.CACHE.getValue());
 
 	/**
@@ -38,30 +42,62 @@ public class CacheLogger {
 		return cacheLogger.isTraceEnabled();
 	}
 
+	/**
+	 * Debug.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public static void debug(String message) {
 		if (cacheLogger.isDebugEnabled()) {
 			cacheLogger.debug(message);
 		}
 	}
 
+	/**
+	 * Warn.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public static void warn(String message) {
 		if (cacheLogger.isEnabledFor(Level.WARN)) {
 			cacheLogger.warn(message);
 		}
 	}
 
+	/**
+	 * Info.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public static void info(String message) {
 		if (cacheLogger.isEnabledFor(Level.INFO)) {
 			cacheLogger.info(message);
 		}
 	}
 
+	/**
+	 * Error.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public static void error(String message) {
 		if (cacheLogger.isEnabledFor(Level.ERROR)) {
 			cacheLogger.error(message);
 		}
 	}
 
+	/**
+	 * Error.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param e
+	 *            the e
+	 */
 	public static void error(String message, Exception e) {
 		if (cacheLogger.isEnabledFor(Level.ERROR)) {
 			cacheLogger.error(message, e);

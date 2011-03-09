@@ -41,16 +41,16 @@ public class Requester implements IRequester {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(Requester.class);
-
+	/** The remote node configuration. */
 	private RemoteNodeConfiguration remoteNodeConfiguration;
-
+	/** The connection pool. */
 	private ConnectionPool connectionPool = null;
 
 	/**
 	 * Instantiates a new requester.
 	 * 
-	 * @param reqContext
-	 *            the reqContext
+	 * @param remoteNodeConfiguration
+	 *            the remote node configuration
 	 */
 	public Requester(RemoteNodeConfiguration remoteNodeConfiguration) {
 		this.remoteNodeConfiguration = remoteNodeConfiguration;

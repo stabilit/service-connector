@@ -206,8 +206,6 @@ public class ConnectionPool {
 	 * 
 	 * @param connection
 	 *            the connection
-	 * @throws Exception
-	 *             the exception
 	 */
 	public synchronized void freeConnection(IConnection connection) {
 		if (this.usedConnections.remove(connection) == false) {
@@ -294,8 +292,6 @@ public class ConnectionPool {
 	 * 
 	 * @param connection
 	 *            the connection
-	 * @throws Exception
-	 *             the exception
 	 */
 	public synchronized void forceClosingConnection(IConnection connection) {
 		// make sure connection is not registered
@@ -399,8 +395,6 @@ public class ConnectionPool {
 	 * 
 	 * @param connection
 	 *            the connection
-	 * @throws Exception
-	 *             the exception
 	 */
 	public synchronized void connectionIdle(IConnection connection) {
 		if (this.freeConnections.remove(connection) == false) {
@@ -491,6 +485,12 @@ public class ConnectionPool {
 	 */
 	private class ConnectionPoolCallback extends SynchronousCallback {
 
+		/**
+		 * Instantiates a new connection pool callback.
+		 * 
+		 * @param synchronous
+		 *            the synchronous
+		 */
 		public ConnectionPoolCallback(boolean synchronous) {
 			this.synchronous = synchronous;
 		}

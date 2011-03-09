@@ -43,6 +43,7 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 	/** The max connection pool size. */
 	private int maxConnectionPoolSize;
 
+	/** The client channel factory. */
 	private NioClientSocketChannelFactory clientChannelFactory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
 			Executors.newCachedThreadPool());
 
@@ -72,7 +73,8 @@ public class NettyTcpProxyEndpoint extends EndpointAdapter implements Runnable {
 		ListenerConfiguration listenerConfig = resp.getListenerConfig();
 		RemoteNodeConfiguration remoteNodeConfig = listenerConfig.getRemoteNodeConfiguration();
 		if (remoteNodeConfig == null) {
-			throw new InvalidConfigurationException("remote host configuration is missing for responder="+resp.getListenerConfig().getName());
+			throw new InvalidConfigurationException("remote host configuration is missing for responder="
+					+ resp.getListenerConfig().getName());
 		}
 		this.remoteHost = remoteNodeConfig.getHost();
 		this.remotePort = remoteNodeConfig.getPort();

@@ -41,24 +41,36 @@ import org.serviceconnector.scmp.SCMPError;
 /**
  * The Class FileUtility.
  */
-public class FileUtility {
+public final class FileUtility {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(FileUtility.class);
 
 	/**
+	 * Instantiates a new file utility.
+	 */
+	private FileUtility() {
+	}
+
+	/**
+	 * Exists.
+	 * 
 	 * @param filename
+	 *            the filename
 	 * @return true if the given file exists
 	 */
 	public static boolean exists(String filename) {
 		File file = new File(filename);
-		if (file.exists()) {
-			return true;
-		} else {
-			return false;
-		}
+		return file.exists();
 	}
 
+	/**
+	 * Checks if is file locked.
+	 * 
+	 * @param filename
+	 *            the filename
+	 * @return true, if is file locked
+	 */
 	public static boolean isFileLocked(String filename) {
 		File file = new File(filename);
 		if (file.exists()) {
@@ -76,6 +88,7 @@ public class FileUtility {
 				}
 				lock.release();
 			} catch (Exception e) {
+				LOGGER.debug(e);
 			}
 			return false;
 		} else {
@@ -83,6 +96,13 @@ public class FileUtility {
 		}
 	}
 
+	/**
+	 * Locate.
+	 * 
+	 * @param resourceName
+	 *            the resource name
+	 * @return the uRL
+	 */
 	public static URL locate(String resourceName) {
 		URL url = FileUtility.locateFromAbsolutePath(resourceName);
 		if (url == null) {
@@ -91,13 +111,19 @@ public class FileUtility {
 		return url;
 	}
 
+	/**
+	 * Locate from absolute path.
+	 * 
+	 * @param resourceName
+	 *            the resource name
+	 * @return the uRL
+	 */
 	public static URL locateFromAbsolutePath(String resourceName) {
 		URL url = null;
 		// attempt to load from an absolute path
 		if (url == null) {
 			File file = new File(resourceName);
-			if (file.isAbsolute() && file.exists()) // already absolute?
-			{
+			if (file.isAbsolute() && file.exists()) { // already absolute?
 				try {
 					url = toURL(file);
 				} catch (MalformedURLException e) {
@@ -108,6 +134,13 @@ public class FileUtility {
 		return url;
 	}
 
+	/**
+	 * Locate from current classpath.
+	 * 
+	 * @param resourceName
+	 *            the resource name
+	 * @return the uRL
+	 */
 	public static URL locateFromCurrentClasspath(String resourceName) {
 		URL url = null;
 		// attempt to load from the context classpath
@@ -118,6 +151,15 @@ public class FileUtility {
 		return url;
 	}
 
+	/**
+	 * To url.
+	 * 
+	 * @param file
+	 *            the file
+	 * @return the uRL
+	 * @throws MalformedURLException
+	 *             the malformed url exception
+	 */
 	static URL toURL(File file) throws MalformedURLException {
 		try {
 			Method toURI = file.getClass().getMethod("toURI", (Class[]) null);
@@ -132,7 +174,10 @@ public class FileUtility {
 	}
 
 	/**
+	 * Not exists.
+	 * 
 	 * @param filename
+	 *            the filename
 	 * @return true if the given file does not exist
 	 */
 	public static boolean notExists(String filename) {
@@ -140,7 +185,10 @@ public class FileUtility {
 	}
 
 	/**
+	 * Not exists or unlocked.
+	 * 
 	 * @param filename
+	 *            the filename
 	 * @return true if the given file does not exist
 	 */
 	public static boolean notExistsOrUnlocked(String filename) {
@@ -159,8 +207,9 @@ public class FileUtility {
 	 *             if the file does not exist after the given time
 	 */
 	public static void waitExists(String filename, int nrSeconds) throws Exception {
-		if (exists(filename))
+		if (exists(filename)) {
 			return;
+		}
 		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (exists(filename)) {
 				return;
@@ -179,8 +228,9 @@ public class FileUtility {
 	 *             if the file does not exist after the given time
 	 */
 	public static void waitExistsAndLocked(String filename, int nrSeconds) throws Exception {
-		if (exists(filename) && isFileLocked(filename))
+		if (exists(filename) && isFileLocked(filename)) {
 			return;
+		}
 		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (exists(filename) && isFileLocked(filename)) {
 				return;
@@ -199,8 +249,9 @@ public class FileUtility {
 	 *             if the file still exists after the given time
 	 */
 	public static void waitNotExistsOrUnlocked(String filename, int nrSeconds) throws Exception {
-		if (notExistsOrUnlocked(filename))
+		if (notExistsOrUnlocked(filename)) {
 			return;
+		}
 		for (int i = 0; i < (nrSeconds * 10); i++) {
 			if (notExistsOrUnlocked(filename)) {
 				return;
@@ -250,6 +301,9 @@ public class FileUtility {
 
 	/**
 	 * Delete file. Catch all possible errors
+	 * 
+	 * @param fileNameFull
+	 *            the file name full
 	 */
 	public static void deleteFile(String fileNameFull) {
 		try {
@@ -258,12 +312,17 @@ public class FileUtility {
 				pidFile.delete();
 			}
 		} catch (Exception e) {
+			LOGGER.debug(e);
 			// ignore any error
 		}
 	}
 
 	/**
+	 * Gets the log path.
+	 * 
 	 * @return directory configured for appender in the current log4j configuration file
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
 	 */
 	public static String getLogPath() throws SCMPValidatorException {
 		Category rootLogger = LOGGER.getParent();

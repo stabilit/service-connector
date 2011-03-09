@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 
 package org.serviceconnector.web.cmd.sc.impl;
 
@@ -51,6 +52,16 @@ public class MaintenanceXMLLoader extends AbstractXMLLoader {
 		writer.writeEndElement(); // close maintenance tag
 	}
 
+	/**
+	 * Load web configuration.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void loadWebConfiguration(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		WebConfiguration webConfiguration = WebContext.getWebConfiguration();
 		writer.writeStartElement("web-config");
@@ -69,6 +80,16 @@ public class MaintenanceXMLLoader extends AbstractXMLLoader {
 		writer.writeEndElement(); // end of web-config
 	}
 
+	/**
+	 * Load file services.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void loadFileServices(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
 		writer.writeStartElement("services");
@@ -99,6 +120,7 @@ public class MaintenanceXMLLoader extends AbstractXMLLoader {
 		writer.writeEndElement(); // close services tag
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return new MaintenanceXMLLoader();

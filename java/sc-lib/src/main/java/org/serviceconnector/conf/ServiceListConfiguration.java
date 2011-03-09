@@ -26,13 +26,25 @@ import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 import org.serviceconnector.scmp.SCMPError;
 
+/**
+ * The Class ServiceListConfiguration.
+ */
 public class ServiceListConfiguration {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(ServiceListConfiguration.class);
 
+	/** The service configurations. */
 	private Map<String, ServiceConfiguration> serviceConfigurations;
 
+	/**
+	 * Load.
+	 * 
+	 * @param config
+	 *            the config
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
 	public void load(CompositeConfiguration config) throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")
 		List<String> serviceNames = config.getList(Constants.PROPERTY_SERVICE_NAMES);
@@ -59,6 +71,11 @@ public class ServiceListConfiguration {
 		}
 	}
 
+	/**
+	 * Gets the service configurations.
+	 * 
+	 * @return the service configurations
+	 */
 	public Map<String, ServiceConfiguration> getServiceConfigurations() {
 		return this.serviceConfigurations;
 	}

@@ -122,8 +122,10 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 	}
 
 	/**
-	 * Gets all subscriptions for given service name
+	 * Gets all subscriptions for given service name.
 	 * 
+	 * @param serviceName
+	 *            the service name
 	 * @return the subscriptions
 	 */
 	public Subscription[] getSubscriptions(String serviceName) {
@@ -217,6 +219,12 @@ public class SubscriptionRegistry extends Registry<String, Subscription> {
 		subscription.setTimeout(null);
 	}
 
+	/**
+	 * Cancel subscription timeout.
+	 * 
+	 * @param key
+	 *            the key
+	 */
 	public void cancelSubscriptionTimeout(String key) {
 		Subscription subscription = this.get(key);
 		this.cancelSubscriptionTimeout(subscription);

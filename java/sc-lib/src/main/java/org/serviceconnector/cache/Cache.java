@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cache;
 
 import java.util.Iterator;
@@ -30,19 +31,14 @@ import org.serviceconnector.util.ValidatorUtility;
 /**
  * The is the main Cache class which represents an active cache instance. For each service instance
  * we have a cache instance assigned.
- * 
  * Inside each cache we have composite and message instances.
  * Each composite is identified by its unique {@link CacheId}.
  * Each message is identified by <CacheId>/<SequenceNr> and MUST belong to a cache composite instance.
- * 
  * The central cache methods are {@link Cache#putMessage(SCMPMessage)}, {@link Cache#getMessage(CacheId)},
  * {@link Cache#getComposite(CacheId)} and {@link Cache#removeComposite(CacheKey)}.
- * 
  * This class is synchronized and thread safe for each instance.
- * 
  * This class uses the Bridge Design Pattern delegating the Cache implementation, see {@link ICacheImpl}.
  * The default cache implementation uses the EHCache <a href="http://www.ehcache.org">http://www.ehcache.org</a> library.
- * 
  * Inside each cache a {@link CacheCompositeRegistry} instance keeps control over all cache keys. This registry
  * instance is for internal use only.
  */
@@ -220,14 +216,10 @@ public class Cache {
 	 * This method puts a new scmp message instance into the cache. The scmp message will be wrapped
 	 * by a {@link CacheMessage} instance. Only the body and the {@link SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR} are
 	 * kept in the cache message.
-	 * 
 	 * Each message requires a composite instance. If no composite instance exists, then a composite instance will be
 	 * created and stored in the cache. In an second step the message instance will be added to the cache setting sequence nr to 1.
-	 * 
 	 * If a composite instance already exists, the message is stored in the cache setting next free sequence nr.
-	 * 
 	 * If the cache composite is expired, an exception is thrown.
-	 * 
 	 * If the cache has been loaded an exception is thrown.
 	 * 
 	 * @param message
@@ -348,6 +340,8 @@ public class Cache {
 	/**
 	 * Removes the cache composite and all its children for given cache id.
 	 * 
+	 * @param sessionId
+	 *            the session id
 	 * @param cacheId
 	 *            the cache id
 	 */
@@ -358,6 +352,8 @@ public class Cache {
 	/**
 	 * Removes the cache composite and all its children for given cache key.
 	 * 
+	 * @param sessionId
+	 *            the session id
 	 * @param cacheKey
 	 *            the cache key as String
 	 */
@@ -379,7 +375,7 @@ public class Cache {
 	}
 
 	/**
-	 * Removes the composite immediate
+	 * Removes the composite immediate.
 	 * 
 	 * @param cacheKey
 	 *            the cache key
@@ -545,7 +541,6 @@ public class Cache {
 
 	/**
 	 * The Class CacheIterator represents an iterator instance.
-	 * 
 	 * This class is for internal use only.
 	 */
 	private class CacheIterator implements Iterator<CacheMessage> {
@@ -604,8 +599,8 @@ public class Cache {
 				this.index++;
 				return cacheMessage;
 			} catch (CacheException e) {
+				throw new IllegalStateException("invalid iterator");
 			}
-			throw new IllegalStateException("invalid iterator");
 		}
 
 		/*
@@ -622,7 +617,6 @@ public class Cache {
 
 	/**
 	 * Put given CacheKey into the cache composite registry.
-	 * 
 	 * If no registry is part of this cache, then create a new one.
 	 * 
 	 * @param cacheKey
@@ -641,7 +635,6 @@ public class Cache {
 
 	/**
 	 * Removes given CacheKey from cache composite registry.
-	 * 
 	 * If no registry exists for cache key then no action required.
 	 * 
 	 * @param cacheKey
@@ -658,7 +651,6 @@ public class Cache {
 
 	/**
 	 * Checks if this cache composite has loading state.
-	 * 
 	 * If no composite exists in the cache for given cacheId, then false is returned.
 	 * 
 	 * @param cacheId
@@ -696,7 +688,6 @@ public class Cache {
 
 	/**
 	 * Checks if this cache composite has loaded state.
-	 * 
 	 * If no composite exists in the cache for given cacheId, then false is returned.
 	 * 
 	 * @param cacheId
@@ -722,11 +713,12 @@ public class Cache {
 	/**
 	 * This start loading method create a new composite instance and stores them into the cache
 	 * setting {@link CACHE_STATE.LOADING} state.
-	 * 
 	 * If another composite instance exists for given cacheId, those instance will be replaced.
 	 * 
-	 * @param cacheId
-	 *            the cache id
+	 * @param message
+	 *            the message
+	 * @param loadingTimeout
+	 *            the loading timeout
 	 */
 	public void startLoading(SCMPMessage message, int loadingTimeout) {
 		try {

@@ -81,6 +81,7 @@ public abstract class Registry<K, V> implements IRegistryMXBean {
 	 * 
 	 * @param key
 	 *            the key
+	 * @return the v
 	 */
 	protected V remove(K key) {
 		if (key == null) {

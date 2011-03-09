@@ -29,12 +29,31 @@ import org.serviceconnector.service.IPublishService;
 import org.serviceconnector.service.Subscription;
 import org.serviceconnector.service.SubscriptionMask;
 
+/**
+ * The Class CscChangeSubscriptionCallbackForCasc.
+ */
 public class CscChangeSubscriptionCallbackForCasc extends ClnCommandCascCallback implements ISubscriptionCallback {
 
 	/** The subscription. */
 	private Subscription cascSCSubscription;
+	
+	/** The casc sc mask string. */
 	private String cascSCMaskString;
 
+	/**
+	 * Instantiates a new csc change subscription callback for casc.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @param callback
+	 *            the callback
+	 * @param cascSCSubscription
+	 *            the casc sc subscription
+	 * @param cascSCMaksString
+	 *            the casc sc maks string
+	 */
 	public CscChangeSubscriptionCallbackForCasc(IRequest request, IResponse response, IResponderCallback callback,
 			Subscription cascSCSubscription, String cascSCMaksString) {
 		super(request, response, callback);
@@ -42,7 +61,12 @@ public class CscChangeSubscriptionCallbackForCasc extends ClnCommandCascCallback
 		this.cascSCMaskString = cascSCMaksString;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Receive.
+	 * 
+	 * @param reply
+	 *            the reply {@inheritDoc}
+	 */
 	@Override
 	public void receive(SCMPMessage reply) {
 		SCMPMessage reqMessage = request.getMessage();
@@ -64,12 +88,17 @@ public class CscChangeSubscriptionCallbackForCasc extends ClnCommandCascCallback
 		this.responderCallback.responseCallback(request, response);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the subscription.
+	 * 
+	 * @return the subscription {@inheritDoc}
+	 */
 	@Override
 	public Subscription getSubscription() {
 		return this.cascSCSubscription;
 	}
 
+	/** {@inheritDoc} */
 	public IRequest getRequest() {
 		return this.request;
 	}

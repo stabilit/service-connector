@@ -22,10 +22,26 @@ import org.serviceconnector.net.res.IResponse;
 import org.serviceconnector.scmp.ISubscriptionCallback;
 import org.serviceconnector.service.Subscription;
 
+/**
+ * The Class CscUnsubscribeCallbackForCasc.
+ */
 public class CscUnsubscribeCallbackForCasc extends ClnCommandCascCallback implements ISubscriptionCallback {
 
+	/** The subscription. */
 	private Subscription subscription;
 
+	/**
+	 * Instantiates a new csc unsubscribe callback for casc.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @param callback
+	 *            the callback
+	 * @param subscription
+	 *            the subscription
+	 */
 	public CscUnsubscribeCallbackForCasc(IRequest request, IResponse response, IResponderCallback callback,
 			Subscription subscription) {
 		super(request, response, callback);

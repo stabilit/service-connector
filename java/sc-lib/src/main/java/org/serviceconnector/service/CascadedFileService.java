@@ -18,15 +18,32 @@ package org.serviceconnector.service;
 
 import org.serviceconnector.server.CascadedSC;
 
+/**
+ * The Class CascadedFileService.
+ */
 public class CascadedFileService extends Service {
 
+	/** The cascaded sc. */
 	protected CascadedSC cascadedSC;
 
+	/**
+	 * Instantiates a new cascaded file service.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param cascadedSC
+	 *            the cascaded sc
+	 */
 	public CascadedFileService(String name, CascadedSC cascadedSC) {
 		super(name, ServiceType.CASCADED_FILE_SERVICE);
 		this.cascadedSC = cascadedSC;
 	}
 
+	/**
+	 * Gets the cascaded sc.
+	 * 
+	 * @return the cascaded sc
+	 */
 	public CascadedSC getCascadedSC() {
 		return this.cascadedSC;
 	}

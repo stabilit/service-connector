@@ -23,23 +23,45 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 import org.jboss.netty.handler.logging.LoggingHandler;
 
+/**
+ * A factory for creating NettyTcpProxyResponderPipeline objects.
+ */
 public class NettyTcpProxyResponderPipelineFactory implements ChannelPipelineFactory {
 
+	/** The cf. */
 	private final ClientSocketChannelFactory cf;
+	/** The remote host. */
 	private final String remoteHost;
+	/** The remote port. */
 	private final int remotePort;
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(NettyTcpProxyResponderPipelineFactory.class);
 
+	/**
+	 * Instantiates a new netty tcp proxy responder pipeline factory.
+	 * 
+	 * @param cf
+	 *            the cf
+	 * @param remoteHost
+	 *            the remote host
+	 * @param remotePort
+	 *            the remote port
+	 */
 	public NettyTcpProxyResponderPipelineFactory(ClientSocketChannelFactory cf, String remoteHost, int remotePort) {
 		this.cf = cf;
 		this.remoteHost = remoteHost;
 		this.remotePort = remotePort;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the pipeline.
+	 * 
+	 * @return the pipeline
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = Channels.pipeline();
 		// logging handler

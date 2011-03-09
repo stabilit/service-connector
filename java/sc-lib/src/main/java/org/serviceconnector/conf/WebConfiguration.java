@@ -33,9 +33,7 @@ public class WebConfiguration {
 
 	/**
 	 * The translet enabled flag.
-	 * 
 	 * If this flag is true then all xsl transformations will be cached internal otherwise not.
-	 * 
 	 */
 	private boolean xslTransformationCacheEnabled;
 
@@ -46,21 +44,21 @@ public class WebConfiguration {
 	private String pageHeaderPrefix;
 
 	/**
-	 * Name of the service used by GUI to upload log files
+	 * Name of the service used by GUI to upload log files.
 	 */
 	private String scUploadService;
-	
+
 	/**
-	 * Name of the service used by GUI to download configuration files
+	 * Name of the service used by GUI to download configuration files.
 	 */
 	private String scDownloadService;
-	
+
 	/** The web session schedule timeout seconds. Defines the interval checking for any invalid web sessions. */
 	private int webSessionScheduleTimeoutSeconds;
-	
+
 	/** The web session timeout minutes. Defines how long a session is valid after inactivity. */
 	private int webSessionTimeoutMinutes;
-	
+
 	/**
 	 * Instantiates a new SCMP cache configuration.
 	 */
@@ -74,8 +72,9 @@ public class WebConfiguration {
 	}
 
 	/**
-	 * Loads web parameters from properties file.</br> Service Connector web parameters: </br>
-	 * web.xslTransformationCache.enabled=true</br>
+	 * Loads web parameters from properties file.<br />
+	 * Service Connector web parameters: <br />
+	 * web.xslTransformationCache.enabled=true<br >
 	 * 
 	 * @param compositeConfiguration
 	 *            the composite configuration
@@ -92,7 +91,7 @@ public class WebConfiguration {
 
 		this.pageHeaderPrefix = compositeConfiguration.getString(Constants.WEB_PAGE_HEADER_PREFIX, "");
 		LOGGER.info(Constants.WEB_PAGE_HEADER_PREFIX + "=" + this.pageHeaderPrefix);
-		
+
 		this.scDownloadService = compositeConfiguration.getString(Constants.WEB_SC_DOWNLOAD_SERVICE, null);
 		LOGGER.info(Constants.WEB_SC_DOWNLOAD_SERVICE + "=" + this.scDownloadService);
 		if (this.scDownloadService != null) {
@@ -125,43 +124,43 @@ public class WebConfiguration {
 
 	/**
 	 * Gets the web session schedule timeout seconds.
-	 *
+	 * 
 	 * @return the web session schedule timeout seconds
 	 */
 	public int getWebSessionScheduleTimeoutSeconds() {
 		return webSessionScheduleTimeoutSeconds;
 	}
-	
+
 	/**
 	 * Gets the web session timeout minutes.
-	 *
+	 * 
 	 * @return the web session timeout minutes
 	 */
 	public int getWebSessionTimeoutMinutes() {
 		return webSessionTimeoutMinutes;
 	}
-	
+
 	/**
 	 * Gets the page header prefix.
-	 *
+	 * 
 	 * @return the page header prefix
 	 */
 	public String getPageHeaderPrefix() {
 		return pageHeaderPrefix;
 	}
-	
+
 	/**
 	 * Gets the sc download service.
-	 *
+	 * 
 	 * @return the sc download service
 	 */
 	public String getScDownloadService() {
 		return scDownloadService;
 	}
-	
+
 	/**
 	 * Gets the sc upload service.
-	 *
+	 * 
 	 * @return the sc upload service
 	 */
 	public String getScUploadService() {

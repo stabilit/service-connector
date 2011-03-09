@@ -86,7 +86,7 @@ public interface IWebRequest {
 	public abstract Cookie getCookie(String key);
 
 	/**
-	 * Gets the http header for given key if any otherwise null
+	 * Gets the http header for given key if any otherwise null.
 	 *
 	 * @param key the key
 	 * @return the header

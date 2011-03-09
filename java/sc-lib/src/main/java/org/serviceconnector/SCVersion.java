@@ -24,18 +24,18 @@ import org.serviceconnector.scmp.SCMPError;
 
 /**
  * Provides actual SC version and method to check compatibility. 
- * The SC versioning schema follows this philosophy </br>
+ * The SC versioning schema follows this philosophy <br />
  * 
  * <pre>
- * 	A99.99-999 (Ex. V2.4-265)</br>
- *    | |  |   |</br>
- *    | |  |   +-- revision number</br>
- *    | |  +-- version number</br>
- *    | +-- release number</br>
- *    +-- version type</br>
+ * 	A99.99-999 (Ex. V2.4-265)<br />
+ *    | |  |   |<br />
+ *    | |  |   +-- revision number<br />
+ *    | |  +-- version number<br />
+ *    | +-- release number<br />
+ *    +-- version type<br />
  * </pre>
  * 
- * Version type designates the target and scope and can be: </br>
+ * Version type designates the target and scope and can be: <br />
  * <ul>
  * <li>X – experimental, usually not distributed</li>
  * <li>T – field test, deployed to selected customers</li>
@@ -50,8 +50,8 @@ import org.serviceconnector.scmp.SCMPError;
  * It is recommended to recompilate and review of the application code.
  *<p>
  * Revision number designates the actual development stage. It starts at 1 and is incremented by 1. New
- * versions are fully compatible. V2.4-(z+1) is compatible with V2.4-z but not the other way round.</br>
- * </br>
+ * versions are fully compatible. V2.4-(z+1) is compatible with V2.4-z but not the other way round.<br />
+ * <br />
  * See the SC_0_SCMP_E.PDF for more details.
  * 
  * @author JTraber

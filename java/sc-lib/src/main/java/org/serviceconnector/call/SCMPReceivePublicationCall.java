@@ -50,6 +50,14 @@ public class SCMPReceivePublicationCall extends SCMPCallAdapter {
 		super(requester, serviceName, sessionId);
 	}
 	
+	/**
+	 * Instantiates a new sCMP receive publication call.
+	 * 
+	 * @param req
+	 *            the req
+	 * @param msgToSend
+	 *            the msg to send
+	 */
 	public SCMPReceivePublicationCall(IRequester req, SCMPMessage msgToSend) {
 		super(req, msgToSend);
 	}

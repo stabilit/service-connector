@@ -39,8 +39,6 @@ public interface IRequest {
 	 * Gets the message.
 	 * 
 	 * @return the message
-	 * @throws Exception
-	 *             the exception
 	 */
 	public SCMPMessage getMessage();
 

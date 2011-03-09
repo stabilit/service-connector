@@ -50,14 +50,27 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(NettyResponderRequestHandlerTask.class);
 	/** The Constant performanceLogger. */
-	private final static PerformanceLogger performanceLogger = PerformanceLogger.getInstance();
+	private static final PerformanceLogger PERFORMANCE_LOGGER = PerformanceLogger.getInstance();
 	/** The composite registry. */
 	private static SCMPSessionCompositeRegistry compositeRegistry = AppContext.getSCMPSessionCompositeRegistry();
 
+	/** The request. */
 	private IRequest request;
+	/** The response. */
 	private IResponse response;
+	/** The channel. */
 	private Channel channel;
 
+	/**
+	 * Instantiates a new netty responder request handler task.
+	 * 
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @param channel
+	 *            the channel
+	 */
 	public NettyResponderRequestHandlerTask(IRequest request, IResponse response, Channel channel) {
 		this.request = request;
 		this.response = response;
@@ -143,9 +156,9 @@ public class NettyResponderRequestHandlerTask implements IResponderCallback, Run
 			if (Constants.COMMAND_VALIDATION_ENABLED) {
 				command.validate(request);
 			}
-			performanceLogger.begin(this.getClass().getName(), "run");
+			PERFORMANCE_LOGGER.begin(this.getClass().getName(), "run");
 			command.run(request, response, this);
-			performanceLogger.end(this.getClass().getName(), "run");
+			PERFORMANCE_LOGGER.end(this.getClass().getName(), "run");
 		} catch (HasFaultResponseException ex) {
 			// exception carries response inside
 			LOGGER.warn("run " + ex.toString());

@@ -30,10 +30,14 @@ public class FileService extends Service {
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(FileService.class);
+	
+	/** The server. */
 	private FileServer server;
+	/** The path. */
 	private String path;
-
+	/** The sc upload script. */
 	private String scUploadScript;
+	/** The sc get file list script. */
 	private String scGetFileListScript;
 
 	/**
@@ -58,22 +62,51 @@ public class FileService extends Service {
 		this.server = server;
 	}
 
+	/**
+	 * Gets the path.
+	 * 
+	 * @return the path
+	 */
 	public String getPath() {
 		return path;
 	}
 
+	/**
+	 * Gets the server.
+	 * 
+	 * @return the server
+	 */
 	public FileServer getServer() {
 		return this.server;
 	}
 
+	/**
+	 * Gets the upload file script name.
+	 * 
+	 * @return the upload file script name
+	 */
 	public String getUploadFileScriptName() {
 		return this.scUploadScript;
 	}
 
+	/**
+	 * Gets the gets the file list script name.
+	 * 
+	 * @return the gets the file list script name
+	 */
 	public String getGetFileListScriptName() {
 		return this.scGetFileListScript;
 	}
 
+	/**
+	 * Allocate file server and create session.
+	 * 
+	 * @param session
+	 *            the session
+	 * @return the file server
+	 * @throws Exception
+	 *             the exception
+	 */
 	public synchronized FileServer allocateFileServerAndCreateSession(FileSession session) throws Exception {
 		if (this.server.hasFreeSession()) {
 			this.server.addSession(session);

@@ -21,13 +21,21 @@ import java.util.Formatter;
 import org.apache.log4j.Logger;
 
 
+/**
+ * The Class PerformanceLogger.
+ */
 public class PerformanceLogger {
 
+	/** The Constant performanceLogger. */
 	private static final Logger performanceLogger = Logger.getLogger(Loggers.PERFORMANCE.getValue());
+	
+	/** The Constant instance. */
 	private static final PerformanceLogger instance = new PerformanceLogger();
 
 	/** The thread local is needed to save time in running thread. */
 	private ThreadLocal<PerformanceItem> threadLocal = new ThreadLocal<PerformanceItem>();
+	
+	/** The EN d_ str. */
 	private static String END_STR = "begin:%s.%s() end:%s.%s() time:%s.%s(ms)";
 
 	/**
@@ -36,10 +44,23 @@ public class PerformanceLogger {
 	private PerformanceLogger() {
 	}
 
+	/**
+	 * Gets the single instance of PerformanceLogger.
+	 * 
+	 * @return single instance of PerformanceLogger
+	 */
 	public static PerformanceLogger getInstance() {
 		return PerformanceLogger.instance;
 	}
 
+	/**
+	 * Begin.
+	 * 
+	 * @param className
+	 *            the class name
+	 * @param methodName
+	 *            the method name
+	 */
 	public synchronized void begin(String className, String methodName) {
 		if (performanceLogger.isTraceEnabled()) {
 			this.threadLocal.set(new PerformanceItem(className, methodName, System.nanoTime()));
@@ -47,8 +68,12 @@ public class PerformanceLogger {
 	}
 
 	/**
+	 * End.
+	 * 
 	 * @param className
+	 *            the class name
 	 * @param methodName
+	 *            the method name
 	 */
 	public synchronized void end(String className, String methodName) {
 		if (performanceLogger.isTraceEnabled()) {
@@ -79,11 +104,30 @@ public class PerformanceLogger {
 		return performanceLogger.isTraceEnabled();
 	}
 
+	/**
+	 * The Class PerformanceItem.
+	 */
 	private class PerformanceItem {
+		
+		/** The class name. */
 		private String className;
+		
+		/** The method name. */
 		private String methodName;
+		
+		/** The time. */
 		private long time;
 
+		/**
+		 * Instantiates a new performance item.
+		 * 
+		 * @param className
+		 *            the class name
+		 * @param methodName
+		 *            the method name
+		 * @param time
+		 *            the time
+		 */
 		public PerformanceItem(String className, String methodName, long time) {
 			super();
 			this.className = className;
@@ -91,14 +135,29 @@ public class PerformanceLogger {
 			this.time = time;
 		}
 
+		/**
+		 * Gets the class name.
+		 * 
+		 * @return the class name
+		 */
 		public String getClassName() {
 			return className;
 		}
 
+		/**
+		 * Gets the method name.
+		 * 
+		 * @return the method name
+		 */
 		public String getMethodName() {
 			return methodName;
 		}
 
+		/**
+		 * Gets the time.
+		 * 
+		 * @return the time
+		 */
 		public long getTime() {
 			return time;
 		}

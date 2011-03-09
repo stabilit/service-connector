@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */ 
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cache;
 
 import javax.xml.stream.XMLStreamWriter;
@@ -21,13 +22,17 @@ import javax.xml.stream.XMLStreamWriter;
  * The Class XMLCacheDump.
  */
 public class XMLCacheDump {
+
+	/** The writer. */
 	private XMLStreamWriter writer;
 
 	/**
 	 * Instantiates a new XML cache dump.
-	 *
-	 * @param writer the xml writer
-	 * @throws Exception the exception
+	 * 
+	 * @param writer
+	 *            the xml writer
+	 * @throws Exception
+	 *             the exception
 	 */
 	public XMLCacheDump(XMLStreamWriter writer) throws Exception {
 		this.writer = writer;
@@ -35,16 +40,18 @@ public class XMLCacheDump {
 
 	/**
 	 * Dump all cache instances into xml stream.
-	 *
-	 * @param cacheManager the cache manager
-	 * @throws Exception the exception
+	 * 
+	 * @param cacheManager
+	 *            the cache manager
+	 * @throws Exception
+	 *             the exception
 	 */
 	public void dumpAll(CacheManager cacheManager) throws Exception {
 		writer.writeStartElement("cache-manager");
 		writer.writeAttribute("enabled", String.valueOf(cacheManager.isCacheEnabled()));
 		writer.writeAttribute("diskPath", cacheManager.getCacheConfiguration().getDiskPath());
 		writer.writeAttribute("maxElementsInMemory", String.valueOf(cacheManager.getCacheConfiguration().getMaxElementsInMemory()));
-		writer.writeAttribute("maxElementsOnDisk", String.valueOf(cacheManager.getCacheConfiguration().getMaxElementsOnDisk()));	
+		writer.writeAttribute("maxElementsOnDisk", String.valueOf(cacheManager.getCacheConfiguration().getMaxElementsOnDisk()));
 		writer.writeStartElement("cache-list");
 		Object[] caches = cacheManager.getAllCaches();
 		if (caches == null) {
@@ -60,11 +67,12 @@ public class XMLCacheDump {
 	}
 
 	/**
-	 * Dump the cache into the xml writer
+	 * Dump the cache into the xml writer.
 	 * 
-	 * @param writer
 	 * @param cache
+	 *            the cache
 	 * @throws Exception
+	 *             the exception
 	 */
 	private void dumpCache(Cache cache) throws Exception {
 		writer.writeStartElement("cache");
@@ -85,13 +93,15 @@ public class XMLCacheDump {
 		writer.writeEndElement(); // end of cache
 	}
 
-
 	/**
-	 * Dump the composite into the xml writer 
-	 * @param writer
+	 * Dump the composite into the xml writer.
+	 * 
 	 * @param cache
+	 *            the cache
 	 * @param cacheKey
+	 *            the cache key
 	 * @throws Exception
+	 *             the exception
 	 */
 	private void dumpMessage(Cache cache, CacheKey cacheKey) throws Exception {
 		writer.writeStartElement("message");
@@ -137,25 +147,31 @@ public class XMLCacheDump {
 
 	/**
 	 * Write element.
-	 *
-	 * @param name the name
-	 * @param value the value
-	 * @throws Exception the exception
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
+	 * @throws Exception
+	 *             the exception
 	 */
 	private void writeElement(String name, String value) throws Exception {
 		writer.writeStartElement(name);
 		if (value != null) {
-		   writer.writeCData(value);
+			writer.writeCData(value);
 		}
 		writer.writeEndElement();
 	}
 
 	/**
-	 * Write element converting int value to String
-	 *
-	 * @param name the name
-	 * @param value the value
-	 * @throws Exception the exception
+	 * Write element converting int value to String.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
+	 * @throws Exception
+	 *             the exception
 	 */
 	private void writeElement(String name, int value) throws Exception {
 		writer.writeStartElement(name);
@@ -164,11 +180,14 @@ public class XMLCacheDump {
 	}
 
 	/**
-	 * Write element converting long value to String
-	 *
-	 * @param name the name
-	 * @param value the value
-	 * @throws Exception the exception
+	 * Write element converting long value to String.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
+	 * @throws Exception
+	 *             the exception
 	 */
 	private void writeElement(String name, long value) throws Exception {
 		writer.writeStartElement(name);
@@ -177,11 +196,14 @@ public class XMLCacheDump {
 	}
 
 	/**
-	 * Write element converting boolean value to String
-	 *
-	 * @param name the name
-	 * @param value the value
-	 * @throws Exception the exception
+	 * Write element converting boolean value to String.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
+	 * @throws Exception
+	 *             the exception
 	 */
 	private void writeElement(String name, boolean value) throws Exception {
 		writer.writeStartElement(name);

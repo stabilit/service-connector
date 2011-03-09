@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 
 package org.serviceconnector.web.cmd.sc.impl;
 
@@ -44,7 +45,16 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	public CacheXMLLoader() {
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Load body.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	@Override
 	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		writer.writeStartElement("cache");
@@ -58,6 +68,16 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeEndElement(); // close caches tag
 	}
 
+	/**
+	 * Write cache configuration.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param cacheConfiguration
+	 *            the cache configuration
+	 * @throws XMLStreamException
+	 *             the xML stream exception
+	 */
 	private void writeCacheConfiguration(XMLStreamWriter writer, ICacheConfiguration cacheConfiguration)
 			throws XMLStreamException {
 		writer.writeStartElement("config");
@@ -76,6 +96,18 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeEndElement(); // close config tag
 	}
 
+	/**
+	 * Write caches.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param caches
+	 *            the caches
+	 * @param request
+	 *            the request
+	 * @throws XMLStreamException
+	 *             the xML stream exception
+	 */
 	private void writeCaches(XMLStreamWriter writer, Object[] caches, IWebRequest request) throws XMLStreamException {
 		String cacheParam = request.getParameter("cache");
 		for (Object obj : caches) {
@@ -106,6 +138,18 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		}
 	}
 
+	/**
+	 * Write cache details.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param cache
+	 *            the cache
+	 * @param request
+	 *            the request
+	 * @throws XMLStreamException
+	 *             the xML stream exception
+	 */
 	private void writeCacheDetails(XMLStreamWriter writer, Cache cache, IWebRequest request) throws XMLStreamException {
 		writer.writeStartElement("details");
 		Object[] compositeKeys = cache.getCompositeKeys();
@@ -126,6 +170,22 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeEndElement(); // end of details
 	}
 
+	/**
+	 * Write cache composite.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param cache
+	 *            the cache
+	 * @param cacheKey
+	 *            the cache key
+	 * @param cacheComposite
+	 *            the cache composite
+	 * @param request
+	 *            the request
+	 * @throws XMLStreamException
+	 *             the xML stream exception
+	 */
 	private void writeCacheComposite(XMLStreamWriter writer, Cache cache, CacheKey cacheKey, CacheComposite cacheComposite,
 			IWebRequest request) throws XMLStreamException {
 		String compositeParam = request.getParameter("composite");
@@ -177,9 +237,12 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 	/**
 	 * Write cache message.
 	 * 
+	 * @param writer
+	 *            the writer
 	 * @param cacheMessage
 	 *            the cache message
 	 * @throws XMLStreamException
+	 *             the xML stream exception
 	 */
 	private void writeCacheMessage(XMLStreamWriter writer, CacheMessage cacheMessage) throws XMLStreamException {
 		if (cacheMessage == null) {
@@ -210,6 +273,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return new CacheXMLLoader();

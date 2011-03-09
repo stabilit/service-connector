@@ -16,10 +16,13 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.web;
 
+/**
+ * The Interface IWebSession.
+ */
 public interface IWebSession {
 
 	/**
-	 * Update access timestamp
+	 * Update access timestamp.
 	 */
 	public abstract void access();
 
@@ -61,6 +64,9 @@ public interface IWebSession {
 
 	/**
 	 * Sets the host.
+	 * 
+	 * @param host
+	 *            the new host
 	 */
 	public abstract void setHost(String host);
 	
@@ -73,6 +79,9 @@ public interface IWebSession {
 
 	/**
 	 * Sets the remote host host.
+	 * 
+	 * @param host
+	 *            the new remote host
 	 */
 	public abstract void setRemoteHost(String host);
 

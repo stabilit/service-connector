@@ -21,13 +21,24 @@ import java.util.Formatter;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+/**
+ * The Class SessionLogger.
+ */
 public class SessionLogger {
 
+	/** The Constant sessionLogger. */
 	private static final Logger sessionLogger = Logger.getLogger(Loggers.SESSION.getValue());
 
+	/** The CREAT e_ sessio n_ str. */
 	private static String CREATE_SESSION_STR = "create session sid=%s eci=%s";
+	
+	/** The DELET e_ sessio n_ str. */
 	private static String DELETE_SESSION_STR = "delete session:%s";
+	
+	/** The ABOR t_ sessio n_ str. */
 	private static String ABORT_SESSION_STR = "abort session:%s";
+	
+	/** The TIMEOU t_ sessio n_ str. */
 	private static String TIMEOUT_SESSION_STR = "timeout session:%s";
 
 	/**
@@ -37,8 +48,14 @@ public class SessionLogger {
 	}
 
 	/**
+	 * Log create session.
+	 * 
 	 * @param className
+	 *            the class name
 	 * @param sessionId
+	 *            the session id
+	 * @param eci
+	 *            the eci
 	 */
 	public static synchronized void logCreateSession(String className, String sessionId, double eci) {
 		if (sessionLogger.isTraceEnabled()) {
@@ -50,8 +67,12 @@ public class SessionLogger {
 	}
 
 	/**
+	 * Log delete session.
+	 * 
 	 * @param className
+	 *            the class name
 	 * @param sessionId
+	 *            the session id
 	 */
 	public static synchronized void logDeleteSession(String className, String sessionId) {
 		if (sessionLogger.isTraceEnabled()) {
@@ -63,8 +84,12 @@ public class SessionLogger {
 	}
 
 	/**
+	 * Log timeout session.
+	 * 
 	 * @param className
+	 *            the class name
 	 * @param sessionId
+	 *            the session id
 	 */
 	public static synchronized void logTimeoutSession(String className, String sessionId) {
 		if (sessionLogger.isTraceEnabled()) {
@@ -76,8 +101,12 @@ public class SessionLogger {
 	}
 
 	/**
+	 * Log abort session.
+	 * 
 	 * @param className
+	 *            the class name
 	 * @param sessionId
+	 *            the session id
 	 */
 	public static synchronized void logAbortSession(String className, String sessionId) {
 		if (sessionLogger.isTraceEnabled()) {
@@ -88,28 +117,57 @@ public class SessionLogger {
 		}
 	}
 
+	/**
+	 * Checks if is enabled.
+	 * 
+	 * @return true, if is enabled
+	 */
 	public static boolean isEnabled() {
 		return sessionLogger.isTraceEnabled();
 	}
 
+	/**
+	 * Warn.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public static void warn(String message) {
 		if (sessionLogger.isEnabledFor(Level.WARN)) {
 			sessionLogger.warn(message);
 		}
 	}
 
+	/**
+	 * Fatal.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public static void fatal(String message) {
 		if (sessionLogger.isEnabledFor(Level.FATAL)) {
 			sessionLogger.fatal(message);
 		}
 	}
 
+	/**
+	 * Error.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public static void error(String message) {
 		if (sessionLogger.isEnabledFor(Level.ERROR)) {
 			sessionLogger.error(message);
 		}
 	}
 
+	/**
+	 * Debug.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	public static void debug(String message) {
 		if (sessionLogger.isEnabledFor(Level.DEBUG)) {
 			sessionLogger.debug(message);

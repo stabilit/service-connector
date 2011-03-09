@@ -111,7 +111,7 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * Gets the full cache id (CacheId/PartNr)
+	 * Gets the full cache id (CacheId/PartNr).
 	 * 
 	 * @return the full cache id
 	 */
@@ -166,8 +166,8 @@ public class SCMPMessage {
 	/**
 	 * Sets the cache part number.
 	 * 
-	 * @param cacheId
-	 *            the new cache part number
+	 * @param cachePartNr
+	 *            the new cache part nr
 	 */
 	public void setCachePartNr(String cachePartNr) {
 		if (cachePartNr == null) {
@@ -292,6 +292,11 @@ public class SCMPMessage {
 		return bodyLength > this.partSize;
 	}
 
+	/**
+	 * Checks if is compressed.
+	 * 
+	 * @return true, if is compressed
+	 */
 	public boolean isCompressed() {
 		if (this.header.keySet().contains(SCMPHeaderAttributeKey.COMPRESSION.getValue())) {
 			return true;
@@ -723,8 +728,9 @@ public class SCMPMessage {
 	}
 
 	/**
-	 * @param partSize the size in which message will be broken when it is large
-	 * check done in SCMessage
+	 * @param partSize
+	 *            the size in which message will be broken when it is large
+	 *            check done in SCMessage
 	 */
 	public void setPartSize(int partSize) {
 		this.partSize = partSize;

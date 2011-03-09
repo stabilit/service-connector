@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.server;
 
 import java.io.File;
@@ -57,20 +58,32 @@ import org.serviceconnector.util.URLUtility;
 import org.serviceconnector.util.HttpClientUploadUtility.UploadRunnable;
 import org.serviceconnector.web.WebUtil;
 
+/**
+ * The Class FileServer.
+ */
 public class FileServer extends Server {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(FileServer.class);
 
+	/** The Constant LOGS_FILE_SDF. */
 	private static final SimpleDateFormat LOGS_FILE_SDF = new SimpleDateFormat(Constants.LOGS_FILE_NAME_FORMAT);
 
 	/** The bas configuration. */
-	BasicConfiguration basConf = AppContext.getBasicConfiguration();
+	private BasicConfiguration basConf = AppContext.getBasicConfiguration();
 	/** The sessions, list of sessions allocated to the server. */
 	private List<FileSession> sessions;
 	/** The max sessions. */
 	private int maxSessions;
 
+	/**
+	 * Instantiates a new file server.
+	 * 
+	 * @param remoteNodeConfiguration
+	 *            the remote node configuration
+	 * @param socketAddress
+	 *            the socket address
+	 */
 	public FileServer(RemoteNodeConfiguration remoteNodeConfiguration, InetSocketAddress socketAddress) {
 		super(remoteNodeConfiguration, socketAddress);
 		this.sessions = Collections.synchronizedList(new ArrayList<FileSession>());
@@ -78,6 +91,21 @@ public class FileServer extends Server {
 		this.serverKey = remoteNodeConfiguration.getName();
 	}
 
+	/**
+	 * Server upload file.
+	 * 
+	 * @param session
+	 *            the session
+	 * @param message
+	 *            the message
+	 * @param remoteFileName
+	 *            the remote file name
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 * @return the sCMP message
+	 * @throws Exception
+	 *             the exception
+	 */
 	public SCMPMessage serverUploadFile(FileSession session, SCMPMessage message, String remoteFileName, int timeoutMillis)
 			throws Exception {
 		OutputStream out = null;
@@ -130,6 +158,21 @@ public class FileServer extends Server {
 		return reply;
 	}
 
+	/**
+	 * Server download file.
+	 * 
+	 * @param session
+	 *            the session
+	 * @param message
+	 *            the message
+	 * @param remoteFileName
+	 *            the remote file name
+	 * @param timeoutSeconds
+	 *            the timeout seconds
+	 * @return the sCMP message
+	 * @throws Exception
+	 *             the exception
+	 */
 	public SCMPMessage serverDownloadFile(FileSession session, SCMPMessage message, String remoteFileName, int timeoutSeconds)
 			throws Exception {
 		InputStream in = null;
@@ -177,6 +220,21 @@ public class FileServer extends Server {
 		return reply;
 	}
 
+	/**
+	 * Server get file list.
+	 * 
+	 * @param path
+	 *            the path
+	 * @param listScriptName
+	 *            the list script name
+	 * @param serviceName
+	 *            the service name
+	 * @param timeoutSeconds
+	 *            the timeout seconds
+	 * @return the sCMP message
+	 * @throws Exception
+	 *             the exception
+	 */
 	public SCMPMessage serverGetFileList(String path, String listScriptName, String serviceName, int timeoutSeconds)
 			throws Exception {
 		HttpURLConnection httpCon = null;
@@ -223,7 +281,14 @@ public class FileServer extends Server {
 		}
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Abort session.
+	 * 
+	 * @param session
+	 *            the session
+	 * @param reason
+	 *            the reason {@inheritDoc}
+	 */
 	@Override
 	public void abortSession(AbstractSession session, String reason) {
 		FileSession fileSession = (FileSession) session;
@@ -234,14 +299,31 @@ public class FileServer extends Server {
 		this.sessions.remove(session);
 	}
 
+	/**
+	 * Checks for free session.
+	 * 
+	 * @return true, if successful
+	 */
 	public boolean hasFreeSession() {
 		return this.sessions.size() < this.maxSessions;
 	}
 
+	/**
+	 * Adds the session.
+	 * 
+	 * @param session
+	 *            the session
+	 */
 	public void addSession(FileSession session) {
 		this.sessions.add(session);
 	}
 
+	/**
+	 * Removes the session.
+	 * 
+	 * @param session
+	 *            the session
+	 */
 	public void removeSession(Session session) {
 		if (this.sessions == null) {
 			// might be the case if server got already destroyed
@@ -376,15 +458,15 @@ public class FileServer extends Server {
 	/**
 	 * Adds the log files for given LOGGER instance to the list. Any distinct file names will be ignored.
 	 * 
-	 * @param LOGGER
+	 * @param logger
 	 *            the LOGGER
 	 * @param logFileList
 	 *            the log file list
 	 * @param distinctLoggerSet
 	 *            the distinct LOGGER set
 	 */
-	private void addLogFiles(Logger LOGGER, List<String> logFileList, Set<String> distinctLoggerSet) {
-		Enumeration<?> appenders = LOGGER.getAllAppenders();
+	private void addLogFiles(Logger logger, List<String> logFileList, Set<String> distinctLoggerSet) {
+		Enumeration<?> appenders = logger.getAllAppenders();
 		while (appenders.hasMoreElements()) {
 			Appender appender = (Appender) appenders.nextElement();
 			String appenderName = appender.getName();

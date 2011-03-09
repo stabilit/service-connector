@@ -41,7 +41,6 @@ import org.serviceconnector.web.WebUtil;
 import org.serviceconnector.web.cmd.IWebCommandAccessibleContext;
 import org.serviceconnector.web.ctx.WebContext;
 
-
 /**
  * The Class DefaultWebCommand. Responsible for validation and execution of any pure http web command. This Class uses a xml based
  * model and the view is built using xsl transformation.
@@ -71,7 +70,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		// check if session is available
 		String url = request.getURL();
 		if (url != null) {
-			//LOGGER.debug(url);
+			LOGGER.trace(url);
 		} else {
 			LOGGER.warn("url is null");
 		}
@@ -86,14 +85,14 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			return;
 		}
 		IWebSession webSession = request.getSession(false);
-// cookie replaced by url encoding
-//		if (webSession == null) {
-//			Cookie jsessionidCookie = request.getCookie("JSESSIONID");
-//			if (jsessionidCookie != null) {
-//				jsessionidCookie.setMaxAge(0);
-//				response.addCookie(jsessionidCookie);			
-//			}
-//		}
+		// cookie replaced by url encoding
+		// if (webSession == null) {
+		// Cookie jsessionidCookie = request.getCookie("JSESSIONID");
+		// if (jsessionidCookie != null) {
+		// jsessionidCookie.setMaxAge(0);
+		// response.addCookie(jsessionidCookie);
+		// }
+		// }
 		// load xml model as stream
 		ByteArrayOutputStream xmlOS = new ByteArrayOutputStream();
 		XMLDocument xmlDocument = new XMLDocument(request);
@@ -101,9 +100,9 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			try {
 				webSession = this.webCommandAccessible.login(request, response);
 				if (webSession != null) {
-				    response.redirect("/;sid=" + webSession.getSessionId());
+					response.redirect("/;sid=" + webSession.getSessionId());
 				} else {
-				    response.redirect("/;");				
+					response.redirect("/;");
 				}
 				return;
 			} catch (LoginException e) {
@@ -321,6 +320,11 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			this.loader = WebContext.getXMLLoader(this.request.getURL());
 		}
 
+		/**
+		 * Checks if is text.
+		 * 
+		 * @return true, if is text
+		 */
 		public boolean isText() {
 			return this.loader.isText();
 		}
@@ -336,7 +340,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		}
 
 		/**
-		 * Adds the exception which will be render into xml meta tag
+		 * Adds the exception which will be render into xml meta tag.
 		 * 
 		 * @param ex
 		 *            the ex
@@ -394,6 +398,7 @@ public class DefaultWebCommand extends WebCommandAdapter {
 		 */
 		private class Message {
 
+			/** The map. */
 			private Map<String, String> map;
 
 			/**
@@ -487,6 +492,13 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			return rootPath + "main.xsl";
 		}
 
+		/**
+		 * Checks if is ajax.
+		 * 
+		 * @param url
+		 *            the url
+		 * @return true, if is ajax
+		 */
 		private boolean isAjax(String url) {
 			if (url == null) {
 				return false;
@@ -508,12 +520,12 @@ public class DefaultWebCommand extends WebCommandAdapter {
 			String xslPath = this.getXSLPath(null);
 			Transformer transformer = XSLTTransformerFactory.getInstance().newTransformer(xslPath);
 			if (transformer == null) {
-				transformer = XSLTTransformerFactory.getInstance().newTransformer(this.getXSLPath(""));				
+				transformer = XSLTTransformerFactory.getInstance().newTransformer(this.getXSLPath(""));
 			} else {
-				//LOGGER.debug("transform using xslt " + xslPath);
+				LOGGER.trace("transform using xslt " + xslPath);
 			}
 			if (transformer == null) {
-                throw new NotFoundException("xslt resource " + xslPath + " not found");
+				throw new NotFoundException("xslt resource " + xslPath + " not found");
 			}
 			StreamSource xmlSourceStream = new StreamSource(xmlInputStream);
 			StreamResult resultStream = new StreamResult(resultOutputStream);

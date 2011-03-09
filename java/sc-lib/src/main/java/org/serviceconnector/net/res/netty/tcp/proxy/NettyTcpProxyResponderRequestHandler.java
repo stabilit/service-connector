@@ -32,22 +32,43 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.channel.socket.ClientSocketChannelFactory;
 
+/**
+ * The Class NettyTcpProxyResponderRequestHandler.
+ */
 public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamHandler {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(NettyTcpProxyResponderRequestHandler.class);
 
+	/** The cf. */
 	private final ClientSocketChannelFactory cf;
+	
+	/** The remote host. */
 	private final String remoteHost;
+	
+	/** The remote port. */
 	private final int remotePort;
+	
+	/** The outbound channel. */
 	private volatile Channel outboundChannel;
 
+	/**
+	 * Instantiates a new netty tcp proxy responder request handler.
+	 * 
+	 * @param cf
+	 *            the cf
+	 * @param remoteHost
+	 *            the remote host
+	 * @param remotePort
+	 *            the remote port
+	 */
 	public NettyTcpProxyResponderRequestHandler(ClientSocketChannelFactory cf, String remoteHost, int remotePort) {
 		this.cf = cf;
 		this.remoteHost = remoteHost;
 		this.remotePort = remotePort;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
 		// Suspend incoming traffic until connected to the remote host.
@@ -75,7 +96,16 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 		});
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Message received.
+	 * 
+	 * @param ctx
+	 *            the ctx
+	 * @param event
+	 *            the event
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) throws Exception {
 		// needs to set a key in thread local to identify thread later and get
@@ -84,32 +114,54 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 		outboundChannel.write(msg);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Exception caught.
+	 * 
+	 * @param ctx
+	 *            the ctx
+	 * @param e
+	 *            the e
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
 		LOGGER.warn(th.toString());
 	}
 
+	/**
+	 * The Class OutboundHandler.
+	 */
 	private static class OutboundHandler extends SimpleChannelUpstreamHandler {
 
+		/** The inbound channel. */
 		private final Channel inboundChannel;
 
+		/**
+		 * Instantiates a new outbound handler.
+		 * 
+		 * @param inboundChannel
+		 *            the inbound channel
+		 */
 		OutboundHandler(Channel inboundChannel) {
 			this.inboundChannel = inboundChannel;
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 			ChannelBuffer msg = (ChannelBuffer) e.getMessage();
 			inboundChannel.write(msg);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
 			closeOnFlush(inboundChannel);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 			e.getCause().printStackTrace();
@@ -118,6 +170,9 @@ public class NettyTcpProxyResponderRequestHandler extends SimpleChannelUpstreamH
 
 		/**
 		 * Closes the specified channel after all queued write requests are flushed.
+		 * 
+		 * @param ch
+		 *            the ch
 		 */
 		static void closeOnFlush(Channel ch) {
 			if (ch.isConnected()) {

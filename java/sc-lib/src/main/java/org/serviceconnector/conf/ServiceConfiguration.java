@@ -24,6 +24,9 @@ import org.serviceconnector.scmp.SCMPError;
 import org.serviceconnector.server.ServerType;
 import org.serviceconnector.service.ServiceType;
 
+/**
+ * The Class ServiceConfiguration.
+ */
 public class ServiceConfiguration {
 
 	/** The name. */
@@ -61,10 +64,12 @@ public class ServiceConfiguration {
 	}
 
 	/**
-	 * Load the configured items
+	 * Load the configured items.
 	 * 
 	 * @param compositeConfig
+	 *            the composite config
 	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
 	 */
 	public void load(CompositeConfiguration compositeConfig) throws SCMPValidatorException {
 
@@ -142,6 +147,12 @@ public class ServiceConfiguration {
 
 	}
 
+	/**
+	 * To string.
+	 * 
+	 * @return the string {@inheritDoc}
+	 */
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.name);
@@ -167,34 +178,74 @@ public class ServiceConfiguration {
 		return builder.toString();
 	}
 
+	/**
+	 * Gets the name.
+	 * 
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Gets the type.
+	 * 
+	 * @return the type
+	 */
 	public String getType() {
 		return type;
 	}
 
+	/**
+	 * Gets the enabled.
+	 * 
+	 * @return the enabled
+	 */
 	public Boolean getEnabled() {
 		return enabled;
 	}
 
+	/**
+	 * Gets the path.
+	 * 
+	 * @return the path
+	 */
 	public String getPath() {
 		return path;
 	}
 
+	/**
+	 * Gets the upload script.
+	 * 
+	 * @return the upload script
+	 */
 	public String getUploadScript() {
 		return uploadScript;
 	}
 
+	/**
+	 * Gets the list script.
+	 * 
+	 * @return the list script
+	 */
 	public String getListScript() {
 		return listScript;
 	}
 
+	/**
+	 * Gets the remote node configuration.
+	 * 
+	 * @return the remote node configuration
+	 */
 	public RemoteNodeConfiguration getRemoteNodeConfiguration() {
 		return remoteNodeConfiguration;
 	}
 
+	/**
+	 * Gets the no data interval seconds.
+	 * 
+	 * @return the no data interval seconds
+	 */
 	public int getNoDataIntervalSeconds() {
 		return this.nodDataIntervalSeconds;
 	}
@@ -228,8 +279,9 @@ public class ServiceConfiguration {
 				}
 				return serviceType;
 			}
+		default:
+			break;
 		}
 		return serviceType;
 	}
-
 }

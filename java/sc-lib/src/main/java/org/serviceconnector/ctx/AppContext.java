@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.ctx;
 
 import java.io.File;
@@ -68,6 +69,7 @@ public final class AppContext {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(AppContext.class);
 
+	/** The Constant DUMP_FILE_SDF. */
 	private static final SimpleDateFormat DUMP_FILE_SDF = new SimpleDateFormat(Constants.DUMP_FILE_NAME_FORMAT);
 	/** The SC environment. Indicates that AppContext is running in a SC environment */
 	private static boolean scEnvironment = false;
@@ -99,13 +101,13 @@ public final class AppContext {
 	/** The command factory. */
 	private static FlyweightCommandFactory commandFactory;
 	/** The Constant responderRegistry. */
-	private static final ResponderRegistry responderRegistry = new ResponderRegistry();
+	private static final ResponderRegistry RESPONDER_REGISTRY = new ResponderRegistry();
 	/** The Constant connectionFactory. */
-	private static final ConnectionFactory connectionFactory = new ConnectionFactory();
+	private static final ConnectionFactory CONNECTION_FACTORY = new ConnectionFactory();
 	/** The Constant endpointFactory. */
-	private static final EndpointFactory endpointFactory = new EndpointFactory();
+	private static final EndpointFactory ENDPOINT_FACTORY = new EndpointFactory();
 	/** The Constant frameDecoderFactory. */
-	private static final FlyweightFrameDecoderFactory frameDecoderFactory = new FlyweightFrameDecoderFactory();
+	private static final FlyweightFrameDecoderFactory FRAME_DECODER_FACTORY = new FlyweightFrameDecoderFactory();
 	/** The Constant encoderDecoderFactory. */
 	private static final FlyweightEncoderDecoderFactory encoderDecoderFactory = new FlyweightEncoderDecoderFactory();
 
@@ -121,11 +123,10 @@ public final class AppContext {
 	/** The srv service registry. */
 	private static SrvServiceRegistry srvServiceRegistry = new SrvServiceRegistry();
 	/** The Constant scmpSessionCompositeRegistry. */
-	private static final SCMPSessionCompositeRegistry scmpSessionCompositeRegistry = new SCMPSessionCompositeRegistry();
+	private static final SCMPSessionCompositeRegistry SCMP_COMPOSITE_REGISTRY = new SCMPSessionCompositeRegistry();
 
-	// scmp cache
 	/** The Constant cacheManager. */
-	private static final CacheManager cacheManager = new CacheManager();
+	private static final CacheManager CACHE_MANAGER = new CacheManager();
 	/** The executor to submit runnable objects. */
 	private static ExecutorService executor; // TODO JOT which runnable objects are managed by this executor?
 
@@ -175,7 +176,7 @@ public final class AppContext {
 	 * @return the connection factory
 	 */
 	public static ConnectionFactory getConnectionFactory() {
-		return AppContext.connectionFactory;
+		return AppContext.CONNECTION_FACTORY;
 	}
 
 	/**
@@ -193,7 +194,7 @@ public final class AppContext {
 	 * @return the frame decoder factory
 	 */
 	public static FlyweightFrameDecoderFactory getFrameDecoderFactory() {
-		return AppContext.frameDecoderFactory;
+		return AppContext.FRAME_DECODER_FACTORY;
 	}
 
 	/**
@@ -202,7 +203,7 @@ public final class AppContext {
 	 * @return the endpoint factory
 	 */
 	public static EndpointFactory getEndpointFactory() {
-		return AppContext.endpointFactory;
+		return AppContext.ENDPOINT_FACTORY;
 	}
 
 	/**
@@ -211,7 +212,7 @@ public final class AppContext {
 	 * @return the responder registry
 	 */
 	public static ResponderRegistry getResponderRegistry() {
-		return AppContext.responderRegistry;
+		return AppContext.RESPONDER_REGISTRY;
 	}
 
 	/**
@@ -265,7 +266,7 @@ public final class AppContext {
 	 * @return the SCMP session composite registry
 	 */
 	public static SCMPSessionCompositeRegistry getSCMPSessionCompositeRegistry() {
-		return AppContext.scmpSessionCompositeRegistry;
+		return AppContext.SCMP_COMPOSITE_REGISTRY;
 	}
 
 	/**
@@ -274,7 +275,7 @@ public final class AppContext {
 	 * @return the cache manager
 	 */
 	public static CacheManager getCacheManager() {
-		return AppContext.cacheManager;
+		return AppContext.CACHE_MANAGER;
 	}
 
 	/**
@@ -343,6 +344,11 @@ public final class AppContext {
 		return requesterConfiguration;
 	}
 
+	/**
+	 * Gets the service configuration.
+	 * 
+	 * @return the service configuration
+	 */
 	public static ServiceListConfiguration getServiceConfiguration() {
 		return serviceConfiguration;
 	}
@@ -427,6 +433,10 @@ public final class AppContext {
 
 	/**
 	 * dumps the entire application context.
+	 * 
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
 	 */
 	public static String dump() throws Exception {
 		String dumpPath = AppContext.getBasicConfiguration().getDumpPath();

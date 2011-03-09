@@ -67,7 +67,16 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		this.pendingRequest = true;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Message received.
+	 * 
+	 * @param ctx
+	 *            the ctx
+	 * @param e
+	 *            the e
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		if (this.pendingRequest) {
@@ -82,7 +91,16 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		LOGGER.error("unsolicited input, message not expected, no reply was outstanding!");
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Exception caught.
+	 * 
+	 * @param ctx
+	 *            the ctx
+	 * @param e
+	 *            the e
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		Throwable th = e.getCause();
@@ -115,13 +133,22 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 	 */
 	private class NettyHttpRequesterResponseHandlerTask implements Runnable {
 
+		/** The http response. */
 		private HttpResponse httpResponse;
 
+		/**
+		 * Instantiates a new netty http requester response handler task.
+		 * 
+		 * @param httpResponse
+		 *            the http response
+		 */
 		public NettyHttpRequesterResponseHandlerTask(HttpResponse httpResponse) {
 			this.httpResponse = httpResponse;
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Run. {@inheritDoc}
+		 */
 		@Override
 		public void run() {
 			SCMPMessage ret = null;
@@ -151,15 +178,27 @@ public class NettyHttpRequesterResponseHandler extends SimpleChannelUpstreamHand
 		}
 	}
 
+	/**
+	 * The Class NettyHttpRequesterErrorHandlerTask.
+	 */
 	private class NettyHttpRequesterErrorHandlerTask implements Runnable {
 
+		/** The exception. */
 		private Exception exception;
 
+		/**
+		 * Instantiates a new netty http requester error handler task.
+		 * 
+		 * @param exception
+		 *            the exception
+		 */
 		public NettyHttpRequesterErrorHandlerTask(Exception exception) {
 			this.exception = exception;
 		}
 
-		/** {@inheritDoc} */
+		/**
+		 * Run. {@inheritDoc}
+		 */
 		@Override
 		public void run() {
 			LOGGER.error("receive exception", exception);

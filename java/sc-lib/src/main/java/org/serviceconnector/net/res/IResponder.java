@@ -58,9 +58,6 @@ public interface IResponder {
 
 	/**
 	 * Destroys responder.
-	 * 
-	 * @throws Exception
-	 *             the exception
 	 */
 	public void destroy();
 

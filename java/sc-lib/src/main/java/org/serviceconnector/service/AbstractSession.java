@@ -57,6 +57,16 @@ public abstract class AbstractSession {
 		this(sessionInfo, ipAddressList, false);
 	}
 
+	/**
+	 * Instantiates a new abstract session.
+	 * 
+	 * @param sessionInfo
+	 *            the session info
+	 * @param ipAddressList
+	 *            the ip address list
+	 * @param cascaded
+	 *            the cascaded
+	 */
 	public AbstractSession(String sessionInfo, String ipAddressList, boolean cascaded) {
 		UUID uuid = UUID.randomUUID();
 		this.id = uuid.toString();
@@ -95,10 +105,21 @@ public abstract class AbstractSession {
 		return this.server;
 	}
 
+	/**
+	 * Sets the service.
+	 * 
+	 * @param service
+	 *            the new service
+	 */
 	public void setService(Service service) {
 		this.service = service;
 	}
 
+	/**
+	 * Gets the service.
+	 * 
+	 * @return the service
+	 */
 	public Service getService() {
 		return service;
 	}

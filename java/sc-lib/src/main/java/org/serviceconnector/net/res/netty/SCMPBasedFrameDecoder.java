@@ -55,7 +55,19 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 		this.scmpFrameDecoder = AppContext.getFrameDecoderFactory().getFrameDecoder(Constants.TCP);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Decode.
+	 * 
+	 * @param ctx
+	 *            the ctx
+	 * @param channel
+	 *            the channel
+	 * @param buffer
+	 *            the buffer
+	 * @return the object
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	@Override
 	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer) throws Exception {
 		switch (this.decodeState) {
@@ -71,7 +83,7 @@ public class SCMPBasedFrameDecoder extends FrameDecoder implements ChannelHandle
 				}
 				this.decodeState = DecodeState.SIZE;
 			} catch (FrameDecoderException ex) {
-				LOGGER.warn("decode "+ ex.getMessage());
+				LOGGER.warn("decode " + ex.getMessage());
 				decodeState = DecodeState.EXC;
 				throw new SCMPFrameDecoderException(SCMPError.FRAME_DECODER);
 			}

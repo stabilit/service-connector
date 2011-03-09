@@ -36,17 +36,18 @@ import org.apache.log4j.Logger;
  */
 public class CacheId implements Serializable {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1147590394007400404L;
 
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(CacheId.class);
 
+	/** The cache id. */
 	private String cacheId = null;
+	/** The sequence nr. */
 	private String sequenceNr = null;
+	/** The full cache id. */
 	private StringBuilder fullCacheId = null;
 
 	/**
@@ -230,11 +231,7 @@ public class CacheId implements Serializable {
 		this.fullCacheId = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

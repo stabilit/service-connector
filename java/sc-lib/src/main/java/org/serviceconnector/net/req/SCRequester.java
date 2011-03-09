@@ -50,15 +50,18 @@ public class SCRequester implements IRequester {
 	private static final Logger LOGGER = Logger.getLogger(SCRequester.class);
 	/** The context. */
 	private RemoteNodeConfiguration remoteNodeConfiguration;
+	
+	/** The msg sequence nr. */
 	private SCMPMessageSequenceNr msgSequenceNr;
 
+	/** The connection pool. */
 	private ConnectionPool connectionPool = null;
 
 	/**
 	 * Instantiates a new requester.
 	 * 
-	 * @param reqContext
-	 *            the reqContext
+	 * @param remoteNodeConfiguration
+	 *            the remote node configuration
 	 */
 	public SCRequester(RemoteNodeConfiguration remoteNodeConfiguration) {
 		this.remoteNodeConfiguration = remoteNodeConfiguration;
@@ -156,11 +159,37 @@ public class SCRequester implements IRequester {
 		/** The timeout in milliseconds. */
 		private int timeoutMillis;
 
+		/**
+		 * Instantiates a new sC requester scmp callback.
+		 * 
+		 * @param reqMsg
+		 *            the req msg
+		 * @param scmpCallback
+		 *            the scmp callback
+		 * @param conCtx
+		 *            the con ctx
+		 * @param msgSequenceNr
+		 *            the msg sequence nr
+		 */
 		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPMessageCallback scmpCallback, ConnectionContext conCtx,
 				SCMPMessageSequenceNr msgSequenceNr) {
 			this(reqMsg, scmpCallback, conCtx, null, msgSequenceNr);
 		}
 
+		/**
+		 * Instantiates a new sC requester scmp callback.
+		 * 
+		 * @param reqMsg
+		 *            the req msg
+		 * @param scmpCallback
+		 *            the scmp callback
+		 * @param conCtx
+		 *            the con ctx
+		 * @param largeRequest
+		 *            the large request
+		 * @param msgSequenceNr
+		 *            the msg sequence nr
+		 */
 		public SCRequesterSCMPCallback(SCMPMessage reqMsg, ISCMPMessageCallback scmpCallback, ConnectionContext conCtx,
 				SCMPCompositeSender largeRequest, SCMPMessageSequenceNr msgSequenceNr) {
 			this.scmpCallback = scmpCallback;

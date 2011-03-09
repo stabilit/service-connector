@@ -53,7 +53,7 @@ public class URLString {
 	}
 
 	/**
-	 * Gets the value for given key if found or null
+	 * Gets the value for given key if found or null.
 	 * 
 	 * @param key
 	 *            the key
@@ -84,20 +84,32 @@ public class URLString {
 		this.map.put(key, value);
 	}
 
+	/**
+	 * Gets the call key.
+	 * 
+	 * @return the call key
+	 */
 	public String getCallKey() {
 		return this.callKey;
 	}
 
+	/**
+	 * Sets the call key.
+	 * 
+	 * @param callKey
+	 *            the new call key
+	 */
 	public void setCallKey(String callKey) {
 		this.callKey = callKey;
 	}
 
 	/**
-	 * Parses the url encoded parameter string into this instance
+	 * Parses the url encoded parameter string into this instance.
 	 * 
 	 * @param encodedString
 	 *            the encoded string
 	 * @throws UnsupportedEncodingException
+	 *             the unsupported encoding exception
 	 */
 	public void parseResponseURLString(String encodedString) throws UnsupportedEncodingException {
 		if (encodedString == null) {
@@ -120,6 +132,14 @@ public class URLString {
 		}
 	}
 
+	/**
+	 * Parses the request url string.
+	 * 
+	 * @param encodedString
+	 *            the encoded string
+	 * @throws UnsupportedEncodingException
+	 *             the unsupported encoding exception
+	 */
 	public void parseRequestURLString(String encodedString) throws UnsupportedEncodingException {
 		if (encodedString == null) {
 			return;
@@ -249,6 +269,15 @@ public class URLString {
 		return sb.toString();
 	}
 
+	/**
+	 * To url request string.
+	 * 
+	 * @param parameters
+	 *            the parameters
+	 * @return the string
+	 * @throws UnsupportedEncodingException
+	 *             the unsupported encoding exception
+	 */
 	public static String toURLRequestString(String... parameters) throws UnsupportedEncodingException {
 		StringBuilder sb = new StringBuilder();
 		try {

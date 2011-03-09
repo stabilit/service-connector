@@ -29,8 +29,10 @@ public class SCMPCacheId {
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(SCMPCacheId.class);
-	
+
+	/** The cache id. */
 	private String cacheId;
+	/** The sequence nr. */
 	private String sequenceNr;
 	/** The string builder. */
 	private StringBuilder fullCacheId;
@@ -39,9 +41,15 @@ public class SCMPCacheId {
 	 * Instantiates a new cache id.
 	 */
 	public SCMPCacheId() {
-		this(null,null);
+		this(null, null);
 	}
 
+	/**
+	 * Instantiates a new sCMP cache id.
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 */
 	public SCMPCacheId(String cacheId) {
 		String[] splitted = cacheId.split("/");
 		if (splitted.length == 2) {
@@ -52,15 +60,35 @@ public class SCMPCacheId {
 			this.sequenceNr = null;
 		}
 	}
+
+	/**
+	 * Instantiates a new sCMP cache id.
+	 * 
+	 * @param cacheId
+	 *            the cache id
+	 * @param sequenceNr
+	 *            the sequence nr
+	 */
 	public SCMPCacheId(String cacheId, String sequenceNr) {
 		this.cacheId = cacheId;
 		this.sequenceNr = sequenceNr;
 		this.fullCacheId = null;
 	}
+
+	/**
+	 * Gets the cache id.
+	 * 
+	 * @return the cache id
+	 */
 	public String getCacheId() {
 		return cacheId;
 	}
-	
+
+	/**
+	 * Gets the full cache id.
+	 * 
+	 * @return the full cache id
+	 */
 	public String getFullCacheId() {
 		if (this.fullCacheId != null) {
 			return this.fullCacheId.toString();
@@ -77,10 +105,21 @@ public class SCMPCacheId {
 		return this.fullCacheId.toString();
 	}
 
+	/**
+	 * Gets the sequence nr.
+	 * 
+	 * @return the sequence nr
+	 */
 	public String getSequenceNr() {
 		return this.sequenceNr;
 	}
 
+	/**
+	 * Sets the sequence nr.
+	 * 
+	 * @param sequenceNr
+	 *            the new sequence nr
+	 */
 	public void setSequenceNr(String sequenceNr) {
 		this.sequenceNr = sequenceNr;
 		if (this.fullCacheId == null) {
@@ -91,13 +130,17 @@ public class SCMPCacheId {
 		this.fullCacheId.append("/");
 		this.fullCacheId.append(this.sequenceNr);
 	}
-	
+
+	/**
+	 * Reset.
+	 */
 	public void reset() {
 		this.cacheId = null;
 		this.sequenceNr = null;
 		this.fullCacheId = null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -111,5 +154,4 @@ public class SCMPCacheId {
 		return builder.toString();
 	}
 
-	
 }

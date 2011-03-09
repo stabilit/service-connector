@@ -28,13 +28,33 @@ import org.serviceconnector.scmp.SCMPHeaderAttributeKey;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.scmp.SCMPMsgType;
 
+/**
+ * The Class SCMPCscSubscribeCall.
+ */
 public class SCMPCscSubscribeCall extends SCMPCallAdapter {
 
+	/**
+	 * Instantiates a new sCMP csc subscribe call.
+	 * 
+	 * @param requester
+	 *            the requester
+	 * @param msgToSend
+	 *            the msg to send
+	 */
 	public SCMPCscSubscribeCall(Requester requester, SCMPMessage msgToSend) {
 		super(requester, msgToSend);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Invoke.
+	 * 
+	 * @param scmpCallback
+	 *            the scmp callback
+	 * @param timeoutMillis
+	 *            the timeout millis
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	@Override
 	public void invoke(ISCMPMessageCallback scmpCallback, int timeoutMillis) throws Exception {
 		InetAddress localHost = InetAddress.getLocalHost();
@@ -42,7 +62,11 @@ public class SCMPCscSubscribeCall extends SCMPCallAdapter {
 		super.invoke(scmpCallback, timeoutMillis);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Gets the message type.
+	 * 
+	 * @return the message type {@inheritDoc}
+	 */
 	@Override
 	public SCMPMsgType getMessageType() {
 		return SCMPMsgType.CSC_SUBSCRIBE;

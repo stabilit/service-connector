@@ -37,11 +37,25 @@ public class ListenerListConfiguration {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(ListenerListConfiguration.class);
 
+	/** The listener configurations. */
 	private Map<String, ListenerConfiguration> listenerConfigurations;
 
+	/**
+	 * Instantiates a new listener list configuration.
+	 */
 	public ListenerListConfiguration() {
 	}
 
+	/**
+	 * Load.
+	 * 
+	 * @param compositeConfig
+	 *            the composite config
+	 * @param remoteNodeListConfiguration
+	 *            the remote node list configuration
+	 * @throws SCMPValidatorException
+	 *             the sCMP validator exception
+	 */
 	public void load(CompositeConfiguration compositeConfig, RemoteNodeListConfiguration remoteNodeListConfiguration)
 			throws SCMPValidatorException {
 		@SuppressWarnings("unchecked")

@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.util;
 
 import java.io.File;
@@ -32,10 +33,16 @@ import org.apache.log4j.Logger;
  * 
  * @author JTraber
  */
-public class SystemInfo {
+public final class SystemInfo {
+
+	/**
+	 * Instantiates a new system info.
+	 */
+	private SystemInfo() {
+	}
 
 	/** The Constant log. */
-	private final static Logger log = Logger.getLogger(SystemInfo.class);
+	private static final Logger LOGGER = Logger.getLogger(SystemInfo.class);
 
 	/** The Constant JAVA_VERSION. */
 	private static final String JAVA_VERSION = "java.version";
@@ -91,7 +98,8 @@ public class SystemInfo {
 	/** The available processors. */
 	private static int availableProcessors;
 
-	private static final ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+	/** The Constant threadMXBean. */
+	private static final ThreadMXBean THREAD_MX_BEAN = ManagementFactory.getThreadMXBean();
 
 	static {
 		loadInfos();
@@ -132,7 +140,7 @@ public class SystemInfo {
 		try {
 			localHostId = InetAddress.getLocalHost().toString();
 		} catch (UnknownHostException e) {
-			log.error("Local Host Identification could not be detected: " + e.getMessage());
+			LOGGER.error("Local Host Identification could not be detected: " + e.getMessage());
 		}
 	}
 
@@ -311,8 +319,13 @@ public class SystemInfo {
 		return availableDiskSpace;
 	}
 
+	/**
+	 * Gets the thread count.
+	 * 
+	 * @return the thread count
+	 */
 	public static int getThreadCount() {
-		return threadMXBean.getThreadCount();
+		return THREAD_MX_BEAN.getThreadCount();
 	}
 
 	/**
@@ -321,7 +334,7 @@ public class SystemInfo {
 	 * @return the daemon thread count
 	 */
 	public static int getDaemonThreadCount() {
-		return threadMXBean.getDaemonThreadCount();
+		return THREAD_MX_BEAN.getDaemonThreadCount();
 	}
 
 	/**
@@ -330,6 +343,6 @@ public class SystemInfo {
 	 * @return the peak thread count
 	 */
 	public static int getPeakThreadCount() {
-		return threadMXBean.getPeakThreadCount();
+		return THREAD_MX_BEAN.getPeakThreadCount();
 	}
 }

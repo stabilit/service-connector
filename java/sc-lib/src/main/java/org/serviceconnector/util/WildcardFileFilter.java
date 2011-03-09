@@ -21,18 +21,21 @@ import java.io.FileFilter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.serviceconnector.Constants;
+
 /**
  * The Class WildcardFileFilter.
  */
 public final class WildcardFileFilter implements FileFilter {
-	
+
 	/** The pattern. */
 	private final Pattern pattern;
 
 	/**
 	 * Instantiates a new wildcard file filter.
-	 *
-	 * @param path the path
+	 * 
+	 * @param path
+	 *            the path
 	 */
 	public WildcardFileFilter(String path) {
 		final String slashPrefix = "(?<=^|/)";
@@ -57,10 +60,11 @@ public final class WildcardFileFilter implements FileFilter {
 				assert (matcher.group(2).equals("*"));
 				escaped.append("[^/]*");
 			} else if (matcher.group(3) != null) {
-				assert (matcher.group(3).equals("?"));
+				assert (matcher.group(3).equals(Constants.QUESTION_MARK));
 				escaped.append(".");
-			} else
+			} else {
 				throw new AssertionError("No groups matched: " + matcher);
+			}
 			endOfLastMatch = matcher.end();
 		}
 		escaped.append(path.substring(endOfLastMatch));

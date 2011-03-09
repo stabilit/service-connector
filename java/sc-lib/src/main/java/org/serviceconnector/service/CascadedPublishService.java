@@ -26,6 +26,9 @@ import org.serviceconnector.registry.PublishMessageQueue;
 import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.server.CascadedSC;
 
+/**
+ * The Class CascadedPublishService.
+ */
 public class CascadedPublishService extends Service implements IPublishService {
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(CascadedPublishService.class);
@@ -38,6 +41,16 @@ public class CascadedPublishService extends Service implements IPublishService {
 	/** The no data interval seconds. */
 	private int noDataIntervalSeconds = 0;
 
+	/**
+	 * Instantiates a new cascaded publish service.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param cascadedSC
+	 *            the cascaded sc
+	 * @param noDataIntervalSeconds
+	 *            the no data interval seconds
+	 */
 	public CascadedPublishService(String name, CascadedSC cascadedSC, int noDataIntervalSeconds) {
 		super(name, ServiceType.CASCADED_PUBLISH_SERVICE);
 		this.cascadedSC = cascadedSC;
@@ -46,14 +59,26 @@ public class CascadedPublishService extends Service implements IPublishService {
 		this.publishMessageQueue = new PublishMessageQueue<SCMPMessage>();
 	}
 
+	/** {@inheritDoc} */
 	public PublishMessageQueue<SCMPMessage> getMessageQueue() {
 		return this.publishMessageQueue;
 	}
 
+	/**
+	 * Sets the cascaded sc.
+	 * 
+	 * @param cascadedSC
+	 *            the new cascaded sc
+	 */
 	public void setCascadedSC(CascadedSC cascadedSC) {
 		this.cascadedSC = cascadedSC;
 	}
 
+	/**
+	 * Gets the cascaded sc.
+	 * 
+	 * @return the cascaded sc
+	 */
 	public CascadedSC getCascadedSC() {
 		return cascadedSC;
 	}
@@ -67,6 +92,11 @@ public class CascadedPublishService extends Service implements IPublishService {
 		return this.cascClient;
 	}
 
+	/**
+	 * Gets the no data interval seconds.
+	 * 
+	 * @return the no data interval seconds
+	 */
 	public int getNoDataIntervalSeconds() {
 		return noDataIntervalSeconds;
 	}

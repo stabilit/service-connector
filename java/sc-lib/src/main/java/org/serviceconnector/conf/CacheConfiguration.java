@@ -58,13 +58,13 @@ public class CacheConfiguration implements ICacheConfiguration {
 	}
 
 	/**
-	 * Loads cache parameters from properties file.</br>
-	 * Service Connector cache parameters: </br>
-	 * cache.enabled=true</br>
-	 * cache.diskPath=../../dev/cache </br>
-	 * cache.maxElementsInMemory=10000 </br>
-	 * cache.maxElementsOnDisk=1000000 </br>
-	 * cache.expirationCheckIntervalSeconds=60 </br>
+	 * Loads cache parameters from properties file.<br />
+	 * Service Connector cache parameters: <br />
+	 * cache.enabled=true<br />
+	 * cache.diskPath=../../dev/cache <br />
+	 * cache.maxElementsInMemory=10000 <br />
+	 * cache.maxElementsOnDisk=1000000 <br />
+	 * cache.expirationCheckIntervalSeconds=60 <br />
 	 * 
 	 * @param compositeConfiguration
 	 *            the composite configuration

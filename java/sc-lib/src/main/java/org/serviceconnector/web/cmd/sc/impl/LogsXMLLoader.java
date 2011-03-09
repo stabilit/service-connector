@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 
 package org.serviceconnector.web.cmd.sc.impl;
 
@@ -52,7 +53,16 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		distinctLoggerSet = new HashSet<String>();
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * Load body.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param request
+	 *            the request
+	 * @throws Exception
+	 *             the exception {@inheritDoc}
+	 */
 	@Override
 	public final void loadBody(XMLStreamWriter writer, IWebRequest request) throws Exception {
 		writer.writeStartElement("logs");
@@ -92,6 +102,20 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		writer.writeEndElement(); // close logs tag
 	}
 
+	/**
+	 * Write logger.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param logger
+	 *            the logger
+	 * @param today
+	 *            the today
+	 * @param current
+	 *            the current
+	 * @throws XMLStreamException
+	 *             the xML stream exception
+	 */
 	public void writeLogger(XMLStreamWriter writer, Logger logger, Date today, Date current) throws XMLStreamException {
 		writer.writeStartElement("logger");
 		writer.writeAttribute("name", logger.getName());
@@ -128,11 +152,17 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		writer.writeEndElement(); // close logger tag
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public IFactoryable newInstance() {
 		return new LogsXMLLoader();
 	}
 
+	/**
+	 * Gets the current log files.
+	 * 
+	 * @return the current log files
+	 */
 	protected List<String> getCurrentLogFiles() {
 		distinctLoggerSet.clear();
 		List<String> logFileList = new ArrayList<String>();
@@ -149,6 +179,14 @@ public class LogsXMLLoader extends AbstractXMLLoader {
 		return logFileList;
 	}
 
+	/**
+	 * Adds the log files.
+	 * 
+	 * @param logger
+	 *            the logger
+	 * @param logFileList
+	 *            the log file list
+	 */
 	protected void addLogFiles(Logger logger, List<String> logFileList) {
 		Enumeration<?> appenders = logger.getAllAppenders();
 		while (appenders.hasMoreElements()) {

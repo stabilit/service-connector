@@ -29,6 +29,9 @@ public final class Constants {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(Constants.class);
 
+	/**
+	 * Instantiates a new constants.
+	 */
 	private Constants() {
 		// instantiating not allowed
 	}
@@ -41,257 +44,285 @@ public final class Constants {
 	 * It is the time a single WRITE/READ/CLOSE/OPEN can take. Must be reasonably short.
 	 */
 	public static final int TECH_LEVEL_OPERATION_TIMEOUT_MILLIS = 2000;
-
 	/** Empty application error code. */
 	public static final int EMPTY_APP_ERROR_CODE = -9999;
-
 	/** The wait time in a loop waiting for a free connection. */
 	public static final int WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS = 200;
-
-	/** Maximum size of a message. Larger data must be broken into parts*/
+	/** Maximum size of a message. Larger data must be broken into parts */
 	public static final int MAX_MESSAGE_SIZE = 60 << 10; // 64K;
-
-	/** Maximum port nummber */
+	/** Maximum port number. */
 	public static final int MAX_PORT_NR = 65535;
-
 	/** The default SC character set (encoding). */
 	public static final String SC_CHARACTER_SET = "ISO-8859-1";
-
-	/** Seconds to milliseconds calculation factor */
+	/** Seconds to milliseconds calculation factor. */
 	public static final int SEC_TO_MILLISEC_FACTOR = 1000;
-
 	/** flag to enable / disable command validation. */
 	public static final boolean COMMAND_VALIDATION_ENABLED = true;
-
 	/** File qualifier for Http requests. */
 	public static final String HTTP_FILE_QUALIFIER = "/";
-
-	/** HttpHeaders.Names.ACCEPT parameter used when http data is sent */
+	/** HttpHeaders.Names.ACCEPT parameter used when http data is sent. */
 	public static final String HTTP_ACCEPT_PARAMS = "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2";
-
 	/** Protocol literal. */
 	public static final String HTTP = "http";
-
 	/** Protocol literal. */
 	public static final String TCP = "tcp";
-
 	/** File qualifier for command line argument configuration file. */
 	public static final String CLI_CONFIG_ARG = "-config";
-
 	/**
 	 * File containing the SC process PID. Created at startup and deleted on
 	 * exit or error. Used to check if SC is running.
 	 */
 	public static final String PID_FILE_NAME = "sc.pid";
-
 	/** File containing the SC dump. Created with the console command or WEB-GUI */
 	public static final String DUMP_FILE_NAME = "scDump_";
-
-	/** The dump file name format */
+	/** The dump file name format. */
 	public static final String DUMP_FILE_NAME_FORMAT = "yyyyMMddHHmmssSSS";
-
-	/** The dump file extension */
+	/** The dump file extension. */
 	public static final String DUMP_FILE_EXTENSION = ".xml";
-
 	/** File containing the SC logs (zipped). Created with the console command or WEB-GUI */
 	public static final String LOGS_FILE_NAME = "scLogs_";
-
-	/** The SC logs file name format */
+	/** The SC logs file name format. */
 	public static final String LOGS_FILE_NAME_FORMAT = "yyyyMMddHHmmssSSS";
-
-	/** The SC logs file extension */
+	/** The SC logs file extension. */
 	public static final String LOGS_FILE_EXTENSION = ".zip";
-
 	/** The Constant IPV6_LOOPBACK_NIC. */
 	public static final String IPV6_LOOPBACK_NIC = "0:0:0:0:0:0:0:1";
-
 	/** FILE_LIST_DELIMITER, separates file names in file list SCFileService. */
 	public static final String FILE_LIST_DELIMITER = "\\|";
-
 	/** The Constant LINE_BREAK_SIGN. */
 	public static final String LINE_BREAK_SIGN = "\n";
 
 	/*
 	 * Defaults ********
 	 */
-	/** Default value used if no ECHO_TIMEOUT_MULTIPLIER is configured */
+	/** Default value used if no ECHO_TIMEOUT_MULTIPLIER is configured. */
 	public static final double DEFAULT_ECHO_INTERVAL_MULTIPLIER = 1.2;
-
-	/** Default value used if no interval is passed in the API */
+	/** Default value used if no interval is passed in the API. */
 	public static final int DEFAULT_ECHO_INTERVAL_SECONDS = 60;
-
 	/** Default value if no OPERATION_TIMEOUT_MULTIPLIER is configured. */
 	public static final double DEFAULT_OPERATION_TIMEOUT_MULTIPLIER = 0.8;
-
 	/** Default value used if no timeout for operation is passed in the API. */
 	public static final int DEFAULT_OPERATION_TIMEOUT_SECONDS = 60;
-
 	/** Default value used if no ABORT_SERVER_OTI_MILLIS is configured. */
 	public static final int DEFAULT_SERVER_ABORT_OTI_MILLIS = 10000;
-
 	/** Default timeout for file session creation. */
 	public static final int DEFAULT_FILE_SESSION_TIMEOUT_SECONDS = 15;
-
 	/** Default timeout for creation of a connection to peer. */
 	public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 5000;
-
 	/**
 	 * Maximal time between subsequent receive publication.
 	 * After this time subscription is marked as dead.
 	 * This is analogous to echoInterval in session services
 	 */
 	public static final int DEFAULT_SUBSCRIPTION_TIMEOUT_MILLIS = 60000;
-
 	/**
 	 * Default interval used for publishing services if the NO_DATA_INTERVAL was
 	 * not set by API.
 	 */
 	public static final int DEFAULT_NO_DATA_INTERVAL_SECONDS = 300;
-
 	/**
 	 * Default value to wait in a receive publication call.
 	 * Careful: For the total OTI of RCP noDataInterval will be added.
 	 */
 	public static final int DEFAULT_RECEIVE_PUBLICATION_OTI_MILLIS = 2000;
-
 	/**
 	 * Defines the time to wait in receive publication on cascaded client to get permit to proceed.
 	 */
 	public static final int WAIT_FOR_PERMIT_IN_RECEIVE_PUBLICATION_MILLIS = 2000;
-
 	/** The default keep alive interval, 0 = not active. */
 	public static final int DEFAULT_KEEP_ALIVE_INTERVAL_SECONDS = 60;
-
 	/** The default number of subsequent keep alive messages before the connection is closed. */
 	public static final int DEFAULT_NR_OF_KEEP_ALIVES_TO_CLOSE = 10;
-
 	/** Default operation timeout used if ROOT_KEEP_ALIVE_OTI_MILLIS is not configured. */
 	public static final int DEFAULT_KEEP_ALIVE_OTI_MILLIS = 2000;
-
-	/** The default maximal connection pool size */
+	/** The default maximal connection pool size. */
 	public static final int DEFAULT_MAX_CONNECTION_POOL_SIZE = 100;
 
 	// ** ATTENTION ** SIX Exchange C-Servers depend on minimum = 1 !!
-	/** The default minimal connection pool size, 1 - means there is always one connection active */
+	/** The default minimal connection pool size, 1 - means there is always one connection active. */
 	public static final int DEFAULT_MIN_CONNECTION_POOL_SIZE = 1;
-
-	/** The default maximal file sessions */
+	/** The default maximal file sessions. */
 	public static final int DEFAULT_MAX_FILE_SESSIONS = 10;
-
-	/** The message compression */
+	/** The message compression. */
 	public static final boolean DEFAULT_COMPRESSION_FLAG = true;
-
-	/** The write PID */
+	/** The write PID. */
 	public static final boolean DEFAULT_WRITE_PID_FLAG = false;
-
-	/** Default message part size */
+	/** Default message part size. */
 	public static final int DEFAULT_MESSAGE_PART_SIZE = MAX_MESSAGE_SIZE;
-
 	/** Default service state. */
 	public static final boolean DEFAULT_SERVICE_ENABLED = true;
 
 	/*
 	 * console command constants *************************
 	 */
+	/** The Constant CC_CMD_DISABLE. */
 	public static final String CC_CMD_DISABLE = "disable";
+	/** The Constant CC_CMD_ENABLE. */
 	public static final String CC_CMD_ENABLE = "enable";
+	/** The Constant CC_CMD_STATE. */
 	public static final String CC_CMD_STATE = "state";
+	/** The Constant CC_CMD_SESSIONS. */
 	public static final String CC_CMD_SESSIONS = "sessions";
+	/** The Constant CC_CMD_CLEAR_CACHE. */
 	public static final String CC_CMD_CLEAR_CACHE = "clearCache";
+	/** The Constant CC_CMD_INSPECT_CACHE. */
 	public static final String CC_CMD_INSPECT_CACHE = "inspectCache";
+	/** The Constant CC_CMD_KILL. */
 	public static final String CC_CMD_KILL = "kill";
+	/** The Constant CC_CMD_DUMP. */
 	public static final String CC_CMD_DUMP = "dump";
+	/** The Constant EQUAL_SIGN. */
 	public static final String EQUAL_SIGN = "=";
+	/** The Constant AMPERSAND_SIGN. */
 	public static final String AMPERSAND_SIGN = "&";
+	/** The Constant QUESTION_MARK. */
 	public static final String QUESTION_MARK = "?";
+	/** The Constant SERVICE_NAME. */
 	public static final String SERVICE_NAME = "serviceName";
+	/** The Constant CACHE_ID. */
 	public static final String CACHE_ID = "cacheId";
 
 	/*
 	 * Constants for syntax in sc.properies ************************************
 	 */
+	/** The Constant ROOT_WRITEPID. */
 	public static final String ROOT_WRITEPID = "root.writePID";
+	/** The Constant ROOT_OPERATION_TIMEOUT_MULTIPLIER. */
 	public static final String ROOT_OPERATION_TIMEOUT_MULTIPLIER = "root.operationTimeoutMultiplier";
+	/** The Constant ROOT_ECHO_INTERVAL_MULTIPLIER. */
 	public static final String ROOT_ECHO_INTERVAL_MULTIPLIER = "root.echoIntervalMultiplier";
+	/** The Constant ROOT_COMMAND_VALIDATION_ENABLED. */
 	public static final String ROOT_COMMAND_VALIDATION_ENABLED = "root.commandValidationEnabled";
+	/** The Constant ROOT_CONNECTION_TIMEOUT_MILLIS. */
 	public static final String ROOT_CONNECTION_TIMEOUT_MILLIS = "root.connectionTimeoutMillis";
+	/** The Constant ROOT_SUBSCRIPTION_TIMEOUT_MILLIS. */
 	public static final String ROOT_SUBSCRIPTION_TIMEOUT_MILLIS = "root.subscriptionTimeoutMillis";
+	/** The Constant ROOT_SERVER_ABORT_OTI_MILLIS. */
 	public static final String ROOT_SERVER_ABORT_OTI_MILLIS = "root.serverAbortOTIMillis";
+	/** The Constant ROOT_KEEP_ALIVE_OTI_MILLIS. */
 	public static final String ROOT_KEEP_ALIVE_OTI_MILLIS = "root.keepAliveOTIMillis";
+	/** The Constant ROOT_PID_PATH. */
 	public static final String ROOT_PID_PATH = "root.pidPath";
+	/** The Constant ROOT_DUMP_PATH. */
 	public static final String ROOT_DUMP_PATH = "root.dumpPath";
-
+	/** The Constant PROPERTY_LISTENERS. */
 	public static final String PROPERTY_LISTENERS = "listeners";
+	/** The Constant PROPERTY_SERVICE_NAMES. */
 	public static final String PROPERTY_SERVICE_NAMES = "serviceNames";
+	/** The Constant PROPERTY_REMOTE_NODES. */
 	public static final String PROPERTY_REMOTE_NODES = "remoteNodes";
-
+	/** The Constant PROPERTY_QUALIFIER_CONNECTION_TYPE. */
 	public static final String PROPERTY_QUALIFIER_CONNECTION_TYPE = ".connectionType";
+	/** The Constant PROPERTY_QUALIFIER_USERNAME. */
 	public static final String PROPERTY_QUALIFIER_USERNAME = ".username";
+	/** The Constant PROPERTY_QUALIFIER_PASSWORD. */
 	public static final String PROPERTY_QUALIFIER_PASSWORD = ".password";
+	/** The Constant PROPERTY_QUALIFIER_UPLOAD_SCRIPT_NAME. */
 	public static final String PROPERTY_QUALIFIER_UPLOAD_SCRIPT_NAME = ".uploadScriptName";
+	/** The Constant PROPERTY_QUALIFIER_REMOTE_NODE. */
 	public static final String PROPERTY_QUALIFIER_REMOTE_NODE = ".remoteNode";
+	/** The Constant PROPERTY_QUALIFIER_NOI. */
 	public static final String PROPERTY_QUALIFIER_NOI = ".noDataIntervalSeconds";
+	/** The Constant PROPERTY_QUALIFIER_INTERFACES. */
 	public static final String PROPERTY_QUALIFIER_INTERFACES = ".interfaces";
+	/** The Constant PROPERTY_QUALIFIER_HOST. */
 	public static final String PROPERTY_QUALIFIER_HOST = ".host";
+	/** The Constant PROPERTY_QUALIFIER_PORT. */
 	public static final String PROPERTY_QUALIFIER_PORT = ".port";
+	/** The Constant PROPERTY_QUALIFIER_TYPE. */
 	public static final String PROPERTY_QUALIFIER_TYPE = ".type";
+	/** The Constant PROPERTY_QUALIFIER_ENABLED. */
 	public static final String PROPERTY_QUALIFIER_ENABLED = ".enabled";
+	/** The Constant PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE. */
 	public static final String PROPERTY_QALIFIER_MAX_CONNECTION_POOL_SIZE = ".maxConnectionPoolSize";
+	/** The Constant PROPERTY_QALIFIER_MAX_SESSIONS. */
 	public static final String PROPERTY_QALIFIER_MAX_SESSIONS = ".maxSessions";
+	/** The Constant PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS. */
 	public static final String PROPERTY_QUALIFIER_KEEP_ALIVE_INTERVAL_SECONDS = ".keepAliveIntervalSeconds";
+	/** The Constant PROPERTY_QUALIFIER_PATH. */
 	public static final String PROPERTY_QUALIFIER_PATH = ".path";
+	/** The Constant PROPERTY_QUALIFIER_LIST_SCRIPT. */
 	public static final String PROPERTY_QUALIFIER_LIST_SCRIPT = ".listScript";
+	/** The Constant PROPERTY_QUALIFIER_UPLOAD_SCRIPT. */
 	public static final String PROPERTY_QUALIFIER_UPLOAD_SCRIPT = ".uploadScript";
 
 	// default cache values
+	/** The Constant DEFAULT_CACHE_ENABLED. */
 	public static final boolean DEFAULT_CACHE_ENABLED = true;
+	/** The Constant DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY. */
 	public static final int DEFAULT_CACHE_MAX_ELEMENTS_IN_MEMORY = 10000;
+	/** The Constant DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK. */
 	public static final int DEFAULT_CACHE_MAX_ELEMENTS_ON_DISK = 100000;
+	/** The Constant DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS. */
 	public static final int DEFAULT_CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = 300;
 	// for internal use in class Cache
+	/** The Constant DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS. */
 	public static final int DEFAULT_CACHE_RESPONSE_TIMEOUT_MILLIS = 60000;
-	// cache property keys
+	/** The Constant CACHE_ENABLED. cache property keys */
 	public static final String CACHE_ENABLED = "cache.enabled";
+	/** The Constant CACHE_DISK_PATH. */
 	public static final String CACHE_DISK_PATH = "cache.diskPath";
+	/** The Constant CACHE_MAX_ELEMENTS_IN_MEMORY. */
 	public static final String CACHE_MAX_ELEMENTS_IN_MEMORY = "cache.maxElementsInMemory";
+	/** The Constant CACHE_MAX_ELEMENTS_ON_DISK. */
 	public static final String CACHE_MAX_ELEMENTS_ON_DISK = "cache.maxElementsOnDisk";
+	/** The Constant CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS. */
 	public static final String CACHE_EXPIRATION_CHECK_INTERVAL_SECONDS = "cache.expirationCheckIntervalSeconds";
-
-	// file server upload values
+	/** The Constant UPLOAD_FILE_PARAM_NAME. File server upload values */
 	public static final String UPLOAD_FILE_PARAM_NAME = "filename";
+	/** The Constant UPLOAD_SERVICE_PARAM_NAME. */
 	public static final String UPLOAD_SERVICE_PARAM_NAME = "servicename";
-
-	// web default values
+	/** The Constant DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED. web default values */
 	public static final boolean DEFAULT_WEB_XSL_TRANSFORMATION_CACHE_ENABLED = true;
-	public static final int DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS = 180; // default session inactivity control schedule
-																				// timeout (3 minutes)
-	public static final int DEFAULT_WEB_SESSION_TIMEOUT_MINUTES = 30; // default session inactivty timeout 30 minutes
-	// web property keys
-	/** XSL transformation cache enebled = transformation will be done every cycle */
+	/**
+	 * The Constant DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS.
+	 * default session inactivity control schedule timeout (3 minutes)
+	 */
+	public static final int DEFAULT_WEB_SESSION_SCHEDULE_TIMEOUT_SECONDS = 180;
+	/**
+	 * The Constant DEFAULT_WEB_SESSION_TIMEOUT_MINUTES.
+	 * default session inactivity timeout 30 minutes web property keys
+	 */
+	public static final int DEFAULT_WEB_SESSION_TIMEOUT_MINUTES = 30;
+	/** XSL transformation cache enabled = transformation will be done every cycle. */
 	public static final String WEB_XSL_TRANSFORMATION_CACHE_ENABLED = "web.xslTransformationCache.enabled";
-	/** Prefix displayed in header and title to identify the SC instance */
+	/** Prefix displayed in header and title to identify the SC instance. */
 	public static final String WEB_PAGE_HEADER_PREFIX = "web.pageHeaderPrefix";
-	/** file service used for upload via GUI */
+	/** file service used for upload via GUI. */
 	public static final String WEB_SC_UPLOAD_SERVICE = "web.scUploadService";
-	/** file service used for download via GUI */
+	/** file service used for download via GUI. */
 	public static final String WEB_SC_DOWNLOAD_SERVICE = "web.scDownloadService";
 
 	/*
 	 * SCMP protocol constants ***********************
 	 */
-	public static final byte SCMP_CR = 0x0D;	// Carriage return character.
-	public static final byte SCMP_LF = 0x0A;	// Line feed character
+	/** The Constant SCMP_CR. */
+	public static final byte SCMP_CR = 0x0D; // Carriage return character.
+	/** The Constant SCMP_LF. */
+	public static final byte SCMP_LF = 0x0A; // Line feed character
+	/** The Constant SCMP_HEADLINE_SIZE. */
 	public static final int SCMP_HEADLINE_SIZE = 22;
+	/** The Constant SCMP_HEADLINE_SIZE_WITHOUT_VERSION. */
 	public static final int SCMP_HEADLINE_SIZE_WITHOUT_VERSION = 18;
+	/** The Constant SCMP_MSG_SIZE_START. */
 	public static final int SCMP_MSG_SIZE_START = 4;
+	/** The Constant SCMP_MSG_SIZE_END. */
 	public static final int SCMP_MSG_SIZE_END = 10;
+	/** The Constant SCMP_HEADER_SIZE_START. */
 	public static final int SCMP_HEADER_SIZE_START = 12;
+	/** The Constant SCMP_HEADER_SIZE_END. */
 	public static final int SCMP_HEADER_SIZE_END = 16;
+	/** The Constant SCMP_VERSION_LENGTH_IN_HEADLINE. */
 	public static final int SCMP_VERSION_LENGTH_IN_HEADLINE = 3;
+	/** The Constant SCMP_FORMAT_OF_MSG_SIZE. */
 	public static final String SCMP_FORMAT_OF_MSG_SIZE = " 0000000";
+	/** The Constant SCMP_FORMAT_OF_HEADER_SIZE. */
 	public static final String SCMP_FORMAT_OF_HEADER_SIZE = " 00000";
+	/** The Constant SCMP_FORMAT_OF_DATE_TIME. */
 	public static final String SCMP_FORMAT_OF_DATE_TIME = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	/** The Constant SCMP_FORMAT_OF_DATE_TIME_UTC. */
 	public static final String SCMP_FORMAT_OF_DATE_TIME_UTC = "yyyy-MM-dd'T'HH:mm:ss";
+	/** The Constant MAX_HTTP_CONTENT_LENGTH. */
 	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
 
 }

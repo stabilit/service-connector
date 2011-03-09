@@ -44,7 +44,7 @@ public abstract class SCPublishServerCallback {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param operationTimeoutSeconds
+	 * @param operationTimeoutMillis
 	 *            the allowed time in milliseconds to complete the operation, observed by SC
 	 * @return the sC message
 	 */
@@ -57,7 +57,7 @@ public abstract class SCPublishServerCallback {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param operationTimeoutSeconds
+	 * @param operationTimeoutMillis
 	 *            the allowed time in milliseconds to complete the operation, observed by SC
 	 * @return the sC message
 	 */
@@ -70,7 +70,7 @@ public abstract class SCPublishServerCallback {
 	 * 
 	 * @param message
 	 *            the message
-	 * @param operationTimeoutSeconds
+	 * @param operationTimeoutMillis
 	 *            the allowed time in milliseconds to complete the operation, observed by SC
 	 */
 	public void unsubscribe(SCSubscribeMessage message, int operationTimeoutMillis) {
@@ -81,7 +81,7 @@ public abstract class SCPublishServerCallback {
 	 * 
 	 * @param scMessage
 	 *            the sc message
-	 * @param operationTimeoutSeconds
+	 * @param operationTimeoutMillis
 	 *            the allowed time in milliseconds to complete the operation, observed by SC
 	 */
 	public void abortSubscription(SCSubscribeMessage scMessage, int operationTimeoutMillis) {

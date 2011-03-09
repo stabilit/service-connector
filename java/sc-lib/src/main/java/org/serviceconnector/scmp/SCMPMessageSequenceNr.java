@@ -52,6 +52,8 @@ public class SCMPMessageSequenceNr {
 
 	/**
 	 * Increment message sequence number.
+	 * 
+	 * @return the long
 	 */
 	public long incrementAndGetMsgSequenceNr() {
 		try {

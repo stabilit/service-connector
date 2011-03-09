@@ -33,7 +33,9 @@ public interface IWebCommandAccessible {
 	 * 
 	 * @param request
 	 *            the request
-	 * @return 
+	 * @param response
+	 *            the response
+	 * @return the i web session
 	 * @throws Exception
 	 *             the exception
 	 */

@@ -1,18 +1,19 @@
-/*
- * Copyright © 2010 STABILIT Informatik AG, Switzerland *
- * *
- * Licensed under the Apache License, Version 2.0 (the "License"); *
- * you may not use this file except in compliance with the License. *
- * You may obtain a copy of the License at *
- * *
- * http://www.apache.org/licenses/LICENSE-2.0 *
- * *
- * Unless required by applicable law or agreed to in writing, software *
- * distributed under the License is distributed on an "AS IS" BASIS, *
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
- * See the License for the specific language governing permissions and *
- * limitations under the License. *
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cache;
 
 import java.util.Map;
@@ -40,18 +41,13 @@ public class CacheManager {
 
 	/** The cache map. */
 	private Map<String, Cache> cacheMap;
-
 	/** The cache configuration. */
 	private CacheConfiguration cacheConfiguration;
-
 	/** The expiration thread. */
 	private Thread expirationThread;
-
 	/** The expiration timeout run. */
 	private ExpirationTimeoutRun expirationTimeoutRun;
-	
-	private XMLStreamWriter writer;
-	
+
 	/**
 	 * Instantiates a new cache manager.
 	 */
@@ -80,7 +76,7 @@ public class CacheManager {
 			return;
 		}
 		ServiceRegistry serviceRegistry = AppContext.getServiceRegistry();
-		Service services[] = serviceRegistry.getServices();
+		Service[] services = serviceRegistry.getServices();
 		for (int i = 0; i < services.length; i++) {
 			Service service = services[i];
 			String serviceName = service.getName();
@@ -110,7 +106,6 @@ public class CacheManager {
 		CacheImplFactory.clearAll();
 	}
 
-	
 	/**
 	 * Destroy all caches controlled by this cache manager.
 	 */
@@ -191,23 +186,27 @@ public class CacheManager {
 	}
 
 	/**
-	 * Dump the cache manager into the xml writer
+	 * Dump the cache manager into the xml writer.
+	 * 
 	 * @param writer
+	 *            the writer
 	 * @throws Exception
+	 *             the exception
 	 */
 	public void dump(XMLStreamWriter writer) throws Exception {
 		XMLCacheDump cacheDump = new XMLCacheDump(writer);
 		cacheDump.dumpAll(this);
-	}		
+	}
 
-	
 	/**
 	 * The Class ExpirationTimeoutThread.
 	 * This class control within a thread any cache instance for expiration or other state failures.
 	 */
 	private class ExpirationTimeoutRun implements Runnable {
 
+		/** The killed. */
 		private boolean killed;
+		/** The timeout seconds. */
 		private int timeoutSeconds;
 
 		/**
@@ -252,6 +251,7 @@ public class CacheManager {
 					}
 					CacheManager.this.removeExpiredCaches();
 				} catch (InterruptedException e) {
+					CacheLogger.debug(e.getMessage());
 				}
 			}
 			CacheLogger.debug("terminate expiration thread (killed)");

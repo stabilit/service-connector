@@ -1,24 +1,26 @@
-/*
- * Circular Byte Buffer
- * Copyright (C) 2002 Stephen Ostermiller
- * http://ostermiller.org/contact.pl?regarding=Java+Utilities
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- * 
- * See COPYING.TXT for details.
- */
+/*-----------------------------------------------------------------------------*
+ *                                                                             *
+ *       Copyright © 2010 STABILIT Informatik AG, Switzerland                  *
+ *                                                                             *
+ *  Licensed under the Apache License, Version 2.0 (the "License");            *
+ *  you may not use this file except in compliance with the License.           *
+ *  You may obtain a copy of the License at                                    *
+ *                                                                             *
+ *  http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                             *
+ *  Unless required by applicable law or agreed to in writing, software        *
+ *  distributed under the License is distributed on an "AS IS" BASIS,          *
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ *  See the License for the specific language governing permissions and        *
+ *  limitations under the License.                                             *
+ *-----------------------------------------------------------------------------*/
 
 package org.serviceconnector.util;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.BufferOverflowException;
 
 /**
  * Implements the Circular Buffer producer/consumer model for bytes.
@@ -44,14 +46,14 @@ public class CircularByteBuffer {
 	 * 
 	 * @since ostermillerutils 1.00.00
 	 */
-	private final static int DEFAULT_SIZE = 1024;
+	private static final int DEFAULT_SIZE = 1024;
 
 	/**
 	 * A buffer that will grow as things are added.
 	 * 
 	 * @since ostermillerutils 1.00.00
 	 */
-	public final static int INFINITE_SIZE = -1;
+	public static final int INFINITE_SIZE = -1;
 
 	/**
 	 * The circular buffer.
@@ -96,14 +98,14 @@ public class CircularByteBuffer {
 	 */
 	protected volatile int markSize = 0;
 	/**
-	 * If this buffer is infinite (should resize itself when full)
+	 * If this buffer is infinite (should resize itself when full).
 	 * 
 	 * @since ostermillerutils 1.00.00
 	 */
 	protected volatile boolean infinite = false;
 	/**
 	 * True if a write to a full buffer should block until the buffer
-	 * has room, false if the write method should throw an IOException
+	 * has room, false if the write method should throw an IOException.
 	 * 
 	 * @since ostermillerutils 1.00.00
 	 */
@@ -115,7 +117,7 @@ public class CircularByteBuffer {
 	 */
 	protected InputStream in = new CircularByteBufferInputStream();
 	/**
-	 * true if the close() method has been called on the InputStream
+	 * true if the close() method has been called on the InputStream.
 	 * 
 	 * @since ostermillerutils 1.00.00
 	 */
@@ -127,7 +129,7 @@ public class CircularByteBuffer {
 	 */
 	protected OutputStream out = new CircularByteBufferOutputStream();
 	/**
-	 * true if the close() method has been called on the OutputStream
+	 * true if the close() method has been called on the OutputStream.
 	 * 
 	 * @since ostermillerutils 1.00.00
 	 */
@@ -231,7 +233,7 @@ public class CircularByteBuffer {
 	}
 
 	/**
-	 * double the size of the buffer
+	 * double the size of the buffer.
 	 * 
 	 * @since ostermillerutils 1.00.00
 	 */
@@ -260,6 +262,7 @@ public class CircularByteBuffer {
 	/**
 	 * Space available in the buffer which can be written.
 	 * 
+	 * @return the int
 	 * @since ostermillerutils 1.00.00
 	 */
 	private int spaceLeft() {
@@ -276,6 +279,7 @@ public class CircularByteBuffer {
 	/**
 	 * Bytes available for reading.
 	 * 
+	 * @return the int
 	 * @since ostermillerutils 1.00.00
 	 */
 	private int available() {
@@ -292,6 +296,7 @@ public class CircularByteBuffer {
 	/**
 	 * Bytes saved for supporting marks.
 	 * 
+	 * @return the int
 	 * @since ostermillerutils 1.00.00
 	 */
 	private int marked() {
@@ -413,8 +418,9 @@ public class CircularByteBuffer {
 		@Override
 		public int available() throws IOException {
 			synchronized (CircularByteBuffer.this) {
-				if (inputStreamClosed)
+				if (inputStreamClosed) {
 					throw new IOException("InputStream has been closed, it is not ready.");
+				}
 				return (CircularByteBuffer.this.available());
 			}
 		}
@@ -488,8 +494,9 @@ public class CircularByteBuffer {
 		public int read() throws IOException {
 			while (true) {
 				synchronized (CircularByteBuffer.this) {
-					if (inputStreamClosed)
+					if (inputStreamClosed) {
 						throw new IOException("InputStream has been closed; cannot read from a closed InputStream.");
+					}
 					int available = CircularByteBuffer.this.available();
 					if (available > 0) {
 						int result = buffer[readPosition] & 0xff;
@@ -552,8 +559,9 @@ public class CircularByteBuffer {
 		public int read(byte[] cbuf, int off, int len) throws IOException {
 			while (true) {
 				synchronized (CircularByteBuffer.this) {
-					if (inputStreamClosed)
+					if (inputStreamClosed) {
 						throw new IOException("InputStream has been closed; cannot read from a closed InputStream.");
+					}
 					int available = CircularByteBuffer.this.available();
 					if (available > 0) {
 						int length = Math.min(len, available);
@@ -597,8 +605,9 @@ public class CircularByteBuffer {
 		@Override
 		public void reset() throws IOException {
 			synchronized (CircularByteBuffer.this) {
-				if (inputStreamClosed)
+				if (inputStreamClosed) {
 					throw new IOException("InputStream has been closed; cannot reset a closed InputStream.");
+				}
 				readPosition = markPosition;
 			}
 		}
@@ -622,8 +631,9 @@ public class CircularByteBuffer {
 		public long skip(long n) throws IOException, IllegalArgumentException {
 			while (true) {
 				synchronized (CircularByteBuffer.this) {
-					if (inputStreamClosed)
+					if (inputStreamClosed) {
 						throw new IOException("InputStream has been closed; cannot skip bytes on a closed InputStream.");
+					}
 					int available = CircularByteBuffer.this.available();
 					if (available > 0) {
 						int length = Math.min((int) n, available);
@@ -695,11 +705,13 @@ public class CircularByteBuffer {
 		 */
 		@Override
 		public void flush() throws IOException {
-			if (outputStreamClosed)
+			if (outputStreamClosed) {
 				throw new IOException("OutputStream has been closed; cannot flush a closed OutputStream.");
-			if (inputStreamClosed)
+			}
+			if (inputStreamClosed) {
 				throw new IOException("Buffer closed by inputStream; cannot flush.");
 			// this method needs to do nothing
+			}
 		}
 
 		/**
@@ -719,7 +731,7 @@ public class CircularByteBuffer {
 		 * @since ostermillerutils 1.00.00
 		 */
 		@Override
-		public void write(byte[] cbuf) throws IOException {
+		public void write(byte[] cbuf) throws IOException, BufferOverflowException {
 			write(cbuf, 0, cbuf.length);
 		}
 
@@ -744,20 +756,23 @@ public class CircularByteBuffer {
 		 * @since ostermillerutils 1.00.00
 		 */
 		@Override
-		public void write(byte[] cbuf, int off, int len) throws IOException {
+		public void write(byte[] cbuf, int off, int len) throws IOException, BufferOverflowException {
 			while (len > 0) {
 				synchronized (CircularByteBuffer.this) {
-					if (outputStreamClosed)
+					if (outputStreamClosed) {
 						throw new IOException("OutputStream has been closed; cannot write to a closed OutputStream.");
-					if (inputStreamClosed)
+					}
+					if (inputStreamClosed) {
 						throw new IOException("Buffer closed by InputStream; cannot write to a closed buffer.");
+					}
 					int spaceLeft = spaceLeft();
 					while (infinite && spaceLeft < len) {
 						resize();
 						spaceLeft = spaceLeft();
 					}
-					if (!blockingWrite && spaceLeft < len)
+					if (!blockingWrite && spaceLeft < len) {
 						throw new IOException("CircularByteBuffer is full; cannot write " + len + " bytes");
+					}
 					int realLen = Math.min(len, spaceLeft);
 					int firstLen = Math.min(realLen, buffer.length - writePosition);
 					int secondLen = Math.min(realLen - firstLen, buffer.length - markPosition - 1);
@@ -796,8 +811,6 @@ public class CircularByteBuffer {
 		 * 
 		 * @param c
 		 *            number of bytes to be written
-		 * @throws BufferOverflowException
-		 *             if buffer does not allow blocking writes
 		 *             and the buffer is full.
 		 * @throws IOException
 		 *             if the stream is closed, or the write is interrupted.
@@ -809,17 +822,20 @@ public class CircularByteBuffer {
 			boolean written = false;
 			while (!written) {
 				synchronized (CircularByteBuffer.this) {
-					if (outputStreamClosed)
+					if (outputStreamClosed) {
 						throw new IOException("OutputStream has been closed; cannot write to a closed OutputStream.");
-					if (inputStreamClosed)
+					}
+					if (inputStreamClosed) {
 						throw new IOException("Buffer closed by InputStream; cannot write to a closed buffer.");
+					}
 					int spaceLeft = spaceLeft();
 					while (infinite && spaceLeft < 1) {
 						resize();
 						spaceLeft = spaceLeft();
 					}
-					if (!blockingWrite && spaceLeft < 1)
+					if (!blockingWrite && spaceLeft < 1) {
 						throw new IOException("CircularByteBuffer is full; cannot write 1 byte");
+					}
 					if (spaceLeft > 0) {
 						buffer[writePosition] = (byte) (c & 0xff);
 						writePosition++;

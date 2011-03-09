@@ -31,15 +31,29 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 import org.serviceconnector.ctx.AppContext;
 
+/**
+ * The Class HttpClientUploadUtility.
+ */
 public class HttpClientUploadUtility {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(HttpClientUploadUtility.class);
 
+	/** The uri. */
 	private String uri;
+	
+	/** The client. */
 	private HttpClient client;
+	
+	/** The http method. */
 	private PostMethod httpMethod;
 
+	/**
+	 * Instantiates a new http client upload utility.
+	 * 
+	 * @param uri
+	 *            the uri
+	 */
 	public HttpClientUploadUtility(String uri) {
 		this.uri = uri;
 		this.client = new HttpClient();
@@ -47,6 +61,14 @@ public class HttpClientUploadUtility {
 		this.httpMethod.setContentChunked(true);
 	}
 
+	/**
+	 * Upload.
+	 * 
+	 * @param is
+	 *            the is
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void upload(InputStream is) throws IOException {
 		try {
 			this.httpMethod.setRequestEntity(new InputStreamRequestEntity(is));
@@ -59,6 +81,13 @@ public class HttpClientUploadUtility {
 		}
 	}
 
+	/**
+	 * Start upload.
+	 * 
+	 * @return the upload runnable
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public UploadRunnable startUpload() throws IOException {
 		CircularByteBuffer cbb = new CircularByteBuffer();
 		this.httpMethod.setRequestEntity(new InputStreamRequestEntity(cbb.getInputStream()));
@@ -72,23 +101,46 @@ public class HttpClientUploadUtility {
 	 * The Class UploadRunnable. Needs to be a separate thread if UI wants show a progress bar.
 	 */
 	public class UploadRunnable implements Callable<Integer> {
+		
+		/** The cbb. */
 		private CircularByteBuffer cbb;
+		
+		/** The future. */
 		private Future<Integer> future;
 
+		/**
+		 * Instantiates a new upload runnable.
+		 * 
+		 * @param cbb
+		 *            the cbb
+		 */
 		private UploadRunnable(CircularByteBuffer cbb) {
 			this.cbb = cbb;
 			this.future = null;
 		}
 
+		/**
+		 * Gets the output stream.
+		 * 
+		 * @return the output stream
+		 */
 		public OutputStream getOutputStream() {
 			return this.cbb.getOutputStream();
 		}
 
+		/**
+		 * Close.
+		 * 
+		 * @return the integer
+		 * @throws Exception
+		 *             the exception
+		 */
 		public Integer close() throws Exception {
 			this.cbb.getOutputStream().close();
 			return this.future.get(5, TimeUnit.SECONDS);
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public Integer call() {
 			try {
