@@ -67,6 +67,7 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 		SCMessage request = null;
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(0, request, msgCallback1);
 	}
 
@@ -79,6 +80,7 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 		SCMessage request = null;
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(-1, request, msgCallback1);
 	}
 
@@ -91,97 +93,108 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 		SCMessage request = null;
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(3601, request, msgCallback1);
 	}
 
 	/**
 	 * Description: Create session with message = new Object<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test(expected = SCServiceException.class)
 	public void t13_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setData(new Object());
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
 	}
 
 	/**
 	 * Description: Create session with messageInfo = ""<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test(expected = SCServiceException.class)
 	public void t14_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setMessageInfo("");
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
+		sessionService1.execute(request);
 	}
 
 	/**
 	 * Description: Create session with messageInfo = " "<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test(expected = SCServiceException.class)
 	public void t15_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setMessageInfo(" ");
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
+		sessionService1.execute(request);
 	}
 
 	/**
 	 * Description: Create session with messageInfo = 257chars<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test(expected = SCServiceException.class)
 	public void t16_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setMessageInfo(TestConstants.stringLength257);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
+		sessionService1.execute(request);
 	}
 
 	/**
 	 * Description: Create session with sessionInfo = ""<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test(expected = SCServiceException.class)
 	public void t17_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setSessionInfo("");
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
 	}
 
 	/**
 	 * Description: Create session with sessionInfo = " "<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test(expected = SCServiceException.class)
 	public void t18_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setSessionInfo(" ");
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
 	}
 
 	/**
 	 * Description: Create session with sessionInfo = 257char<br>
-	 * Expectation: throws SCMPValidatorException
+	 * Expectation: throws SCServiceException
 	 */
-	@Test(expected = SCMPValidatorException.class)
+	@Test(expected = SCServiceException.class)
 	public void t19_createSession() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setSessionInfo(TestConstants.stringLength257);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
 	}
 
@@ -189,12 +202,19 @@ public class APICreateDeleteSessionTest extends APICreateDeleteSessionCasc1Test 
 	 * Description: creates a session - deletes the session - tries creating session on same sessionService instance<br>
 	 * Expectation: passes, reuse of sessionService instances is allowed
 	 */
+	@Test
 	public void t25_reuseOfSession() throws Exception {
 		SCMessage request = new SCMessage();
-		request.setSessionInfo(TestConstants.stringLength257);
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
+		sessionService1.execute(request);
+		sessionService1.deleteSession();
+		// reuse of service instance
+		sessionService1.createSession(request, msgCallback1);
+		sessionService1.execute(request);
+		sessionService1.deleteSession();
 	}
 
 	/**
