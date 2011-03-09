@@ -30,6 +30,7 @@ import org.serviceconnector.net.IEncoderDecoder;
 import org.serviceconnector.scmp.SCMPHeaderKey;
 import org.serviceconnector.scmp.SCMPKeepAlive;
 import org.serviceconnector.scmp.SCMPMessage;
+import org.serviceconnector.scmp.SCMPVersion;
 
 /**
  * The Class LargeMessageEncoderDecoderTest.
@@ -98,7 +99,7 @@ public class KeepAliveMessageEncoderDecoderTest extends SuperUnitTest {
 		this.encodeScmp = new SCMPKeepAlive();
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
 
-		String expectedString = this.headKey.name() + " 0000000 00000 1.0\n";
+		String expectedString = this.headKey.name() + " 0000000 00000 " + SCMPVersion.CURRENT + "\n";
 
 		OutputStream os = new ByteArrayOutputStream();
 		try {
@@ -119,7 +120,7 @@ public class KeepAliveMessageEncoderDecoderTest extends SuperUnitTest {
 		this.encodeScmp = new SCMPKeepAlive();
 		IEncoderDecoder coder = coderFactory.createEncoderDecoder(new SCMPKeepAlive());
 
-		String expectedString = this.headKey.name() + " 0000000 00000 1.0\n";
+		String expectedString = this.headKey.name() + " 0000000 00000 " + SCMPVersion.CURRENT + "\n";
 
 		OutputStream os = new ByteArrayOutputStream();
 		try {

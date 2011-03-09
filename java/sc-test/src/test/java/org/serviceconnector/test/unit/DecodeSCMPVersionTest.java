@@ -56,8 +56,8 @@ public class DecodeSCMPVersionTest extends SuperUnitTest {
 	 * Expectation: passes
 	 */
 	@Test
-	public void t02_InvalidSCMPVersion1_1Test() {
-		String requestString = "REQ 0000053 00053 1.1\nldt=2010-08-02T11:24:52.093+0200\nver=1.0-000\nmty=ATT";
+	public void t02_InvalidSCMPVersion9_9Test() {
+		String requestString = "REQ 0000053 00053 9.9\nldt=2010-08-02T11:24:52.093+0200\nver=1.0-000\nmty=ATT";
 
 		byte[] buffer = requestString.getBytes();
 		InputStream is = new ByteArrayInputStream(buffer);
@@ -67,7 +67,7 @@ public class DecodeSCMPVersionTest extends SuperUnitTest {
 			coder.decode(is);
 			Assert.fail("Should throw exception");
 		} catch (Exception e) {
-			Assert.assertEquals("Incompatible SCMP version nr. [1.1]", e.getMessage());
+			Assert.assertEquals("Incompatible SCMP release nr. [9.9]", e.getMessage());
 		}
 	}
 
