@@ -16,6 +16,7 @@
 package org.serviceconnector.console;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -33,14 +34,11 @@ public class SCConsole {
 	/**
 	 * @param args
 	 *            usage : java -jar sc-console.jar -h <host> -p <port>
-	 *            
-	 *            <<<enable|disable|state|sessions>?serviceName=[serviceName]>|<inspectCache?serviceName=[serviceName]&cacheId=[cacheId
-	 *            ]>|clearCache|dump|kill>");
+	 *            <<<enable|disable|state|sessions>?serviceName=[serviceName]>|clearCache|dump|kill>");
 	 *            java -jar sc-console.jar -h localhost -p 7000 enable?serviceName=abc
 	 *            java -jar sc-console.jar -h localhost -p 7000 disable?serviceName=abc
 	 *            java -jar sc-console.jar -h localhost -p 7000 state?serviceName=abc
 	 *            java -jar sc-console.jar -h localhost -p 7000 sessions?serviceName=abc
-	 *            java -jar sc-console.jar -h localhost -p 7000 inspectCache?serviceName=abc&cacheId=700
 	 *            java -jar sc-console.jar -h localhost -p 7000 clearCache
 	 *            java -jar sc-console.jar -h localhost -p 7000 dump
 	 *            java -jar sc-console.jar -h localhost -p 7000 kill
@@ -140,29 +138,31 @@ public class SCConsole {
 				}
 				client.detach();
 			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_STATE)) {
-				try {
-					URLString responseString = client.isServiceEnabled(serviceName);
-					Set<Entry<String, String>> parameters = responseString.getParameters();
-					StringBuilder sb = new StringBuilder();
-					for (Entry<String, String> param : parameters) {
-						sb.append("Service [");
-						sb.append(param.getKey());
-						sb.append("] is ");
-						sb.append(param.getValue());
-						sb.append("\n");
+				Map<String, String> stateMap = client.getStateOfServices(serviceName);
+				Set<Entry<String, String>> parameters = stateMap.entrySet();
+				StringBuilder sb = new StringBuilder();
+				for (Entry<String, String> param : parameters) {
+					if (parameters.size() == 1 && param.getValue().equals(Constants.NOT_FOUND)) {
+						System.out.println("Service [" + serviceName + "] does not exist!");
+						status = 4;
+						break;
 					}
+					sb.append("Service [");
+					sb.append(param.getKey());
+					sb.append("] is ");
+					sb.append(param.getValue());
+					sb.append("\n");
+				}
+				if (sb.length() > 0) {
 					System.out.println(sb.toString());
-				} catch (SCServiceException e) {
-					System.out.println("Service [" + serviceName + "] does not exist!");
-					status = 4;
 				}
 				client.detach();
 			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_SESSIONS)) {
 				try {
-					URLString responseString = client.getWorkload(serviceName);
-					Set<Entry<String, String>> parameters = responseString.getParameters();
+					Map<String, String> workloadMap = client.getWorkload(serviceName);
+					Set<Entry<String, String>> workloads = workloadMap.entrySet();
 					StringBuilder sb = new StringBuilder();
-					for (Entry<String, String> param : parameters) {
+					for (Entry<String, String> param : workloads) {
 						sb.append("Service [");
 						sb.append(param.getKey());
 						sb.append("] has ");
@@ -175,21 +175,6 @@ public class SCConsole {
 					status = 4;
 				}
 				client.detach();
-			} else if (callKey.equalsIgnoreCase(Constants.CC_CMD_INSPECT_CACHE)) {
-				try {
-					String cacheId = urlRequestString.getParamValue(Constants.CACHE_ID);
-					if (cacheId == null) {
-						SCConsole.showError("Error in request string, parsing failed.");
-						status = 5;
-						return status;
-					}
-					System.out.println(cacheId);
-					client.inspectCache(serviceName, cacheId);
-					System.out.println("Service [" + serviceName + ", " + cacheId + "] has been inscpected");
-				} catch (SCServiceException e) {
-					System.out.println("Service [" + serviceName + "] does not exist!");
-					status = 4;
-				}
 			} else {
 				SCConsole.showError("Error - wrong call key in request string.");
 				status = 3;
@@ -207,12 +192,11 @@ public class SCConsole {
 	private static void showError(String msg) {
 		System.err.println("\nerror: " + msg);
 		System.out
-				.println("\nusage  : java -jar sc-console.jar -h <host> -p <port> <<<enable|disable|state|sessions>?serviceName=[serviceName]>|<inspectCache?serviceName=[serviceName]&cacheId=[cacheId]>|clearCache|dump|kill>");
+				.println("\nusage  : java -jar sc-console.jar -h <host> -p <port> <<<enable|disable|state|sessions>?serviceName=[serviceName]>|clearCache|dump|kill>");
 		System.out.println("\nsamples: java -jar sc-console.jar -h localhost -p 7000 enable?serviceName=abc");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 disable?serviceName=abc");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 state?serviceName=abc");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 sessions?serviceName=abc");
-		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 inspectCache?serviceName=abc&cacheId=700");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 clearCache");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 dump");
 		System.out.println("         java -jar sc-console.jar -h localhost -p 7000 kill");
