@@ -468,16 +468,14 @@ public class SCConsoleTest extends IntegrationSuperTest {
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
-		Assert.assertEquals("disabled", client.isServiceEnabled(TestConstants.sesServiceName1).getParamValue(
-				TestConstants.sesServiceName1));
+		Assert.assertFalse(client.isServiceEnabled(TestConstants.sesServiceName1));
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
 					Constants.CC_CMD_ENABLE + "?serviceName=" + TestConstants.sesServiceName1 });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
-		Assert.assertEquals("enabled", client.isServiceEnabled("" + TestConstants.sesServiceName1).getParamValue(
-				TestConstants.sesServiceName1));
+		Assert.assertTrue(client.isServiceEnabled(TestConstants.sesServiceName1));
 		client.detach();
 	}
 
@@ -496,16 +494,14 @@ public class SCConsoleTest extends IntegrationSuperTest {
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
-		Assert.assertEquals("disabled", client.isServiceEnabled("" + TestConstants.sesServiceName1).getParamValue(
-				TestConstants.sesServiceName1));
+		Assert.assertFalse(client.isServiceEnabled(TestConstants.sesServiceName1));
 		try {
 			SCConsole.main(new String[] { "-h", TestConstants.HOST, "-p", String.valueOf(TestConstants.PORT_SC_TCP),
 					Constants.CC_CMD_ENABLE + "?serviceName=.*" });
 		} catch (ExitException e) {
 			Assert.assertEquals(0, e.status);
 		}
-		Assert.assertEquals("enabled", client.isServiceEnabled("" + TestConstants.sesServiceName1).getParamValue(
-				TestConstants.sesServiceName1));
+		Assert.assertTrue(client.isServiceEnabled(TestConstants.sesServiceName1));
 		client.detach();
 	}
 
