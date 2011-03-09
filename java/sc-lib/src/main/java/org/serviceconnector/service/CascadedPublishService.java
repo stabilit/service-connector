@@ -16,10 +16,6 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.service;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-
 import org.apache.log4j.Logger;
 import org.serviceconnector.casc.CascadedClient;
 import org.serviceconnector.registry.PublishMessageQueue;
@@ -103,25 +99,9 @@ public class CascadedPublishService extends Service implements IPublishService {
 
 	/**
 	 * Renew cascaded client. Synchronization avoids returning the client in renew process.
-	 * 
-	 * @param clientSubscriptionIds
-	 *            the client subscription ids
 	 */
-	public synchronized void renewCascadedClient(Map<String, SubscriptionMask> clientSubscriptionIds) {
+	public synchronized void renewCascadedClient() {
 		LOGGER.warn("cascaded publish service renew cascaded client service=" + this.getName());
 		this.cascClient = new CascadedClient(cascadedSC, this);
-		if (clientSubscriptionIds != null && clientSubscriptionIds.size() > 0) {
-			// need to hand over client subscription ID's to the new cascaded client
-			Set<Entry<String, SubscriptionMask>> subscriptionSet = clientSubscriptionIds.entrySet();
-			for (Entry<String, SubscriptionMask> entry : subscriptionSet) {
-				try {
-					this.cascClient.addClientSubscriptionId(entry.getKey(), entry.getValue());
-				} catch (InvalidMaskLengthException e) {
-					// ignore exception not possible to occur
-				}
-			}
-			SubscriptionMask mask = new SubscriptionMask(this.cascClient.evalSubscriptionMaskFromClientSubscriptions());
-			this.cascClient.setSubscriptionMask(mask);
-		}
 	}
 }

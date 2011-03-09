@@ -91,6 +91,8 @@ public final class Constants {
 	public static final String FILE_LIST_DELIMITER = "\\|";
 	/** The Constant LINE_BREAK_SIGN. */
 	public static final String LINE_BREAK_SIGN = "\n";
+	/** The Constant BLANK_SIGN. */
+	public static final String BLANK_SIGN = " ";
 
 	/*
 	 * Defaults ********
@@ -331,5 +333,6 @@ public final class Constants {
 	public static final String SCMP_FORMAT_OF_DATE_TIME_UTC = "yyyy-MM-dd'T'HH:mm:ss";
 	/** The Constant MAX_HTTP_CONTENT_LENGTH. */
 	public static final int MAX_HTTP_CONTENT_LENGTH = Integer.MAX_VALUE; // 2^31-1 => 2147483647, 2GB
-
+	/** The Constant DOT_HEX. */
+	public static final byte DOT_HEX = 0x2E;
 }

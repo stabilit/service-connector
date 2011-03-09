@@ -115,8 +115,8 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 					// looping until <LF> got found
 					if (buffer[inLoopIndex] == 0x0A) {
 						// <LF> found
-						metaMap.put(new String(buffer, keyOff, (index - keyOff), Constants.SC_CHARACTER_SET), new String(buffer, index + 1,
-								(inLoopIndex - 1) - index, Constants.SC_CHARACTER_SET));
+						metaMap.put(new String(buffer, keyOff, (index - keyOff), Constants.SC_CHARACTER_SET), new String(buffer,
+								index + 1, (inLoopIndex - 1) - index, Constants.SC_CHARACTER_SET));
 						// updating outer loop index
 						index = inLoopIndex;
 						// updating offset for next key, +1 for <LF>
@@ -208,8 +208,10 @@ public abstract class MessageEncoderDecoderAdapter implements IEncoderDecoder {
 		bw.write(headerKey.toString());
 		bw.write(dfMsgSize.format(messageSize));
 		bw.write(dfHeaderSize.format(headerSize));
-		bw.write(" ");
-		bw.write(SCMPMessage.SCMP_VERSION.toString());
+		bw.write(Constants.BLANK_SIGN);
+		bw.write(SCMPMessage.SCMP_VERSION.getReleaseNumber());
+		bw.write(Constants.DOT_HEX);
+		bw.write(SCMPMessage.SCMP_VERSION.getVersionNumber());
 		bw.write(Constants.LINE_BREAK_SIGN);
 		bw.flush();
 	}

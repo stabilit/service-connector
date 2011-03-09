@@ -17,6 +17,7 @@
 package org.serviceconnector.scmp;
 
 import org.apache.log4j.Logger;
+import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.SCMPValidatorException;
 
 /**
@@ -31,7 +32,7 @@ import org.serviceconnector.cmd.SCMPValidatorException;
  * </pre>
  * <p>
  * Release number designates the major release (design) of the protocol. It starts at 1 and is incremented by 1. New protocol is by
- * definition not compatible with the old one. E.g. if the release numver is not the same an error occurs.
+ * definition not compatible with the old one. E.g. if the release number is not the same an error occurs.
  *<p>
  * Version number designates the minor improvements of the protocol. It starts at 0 and is incremented by 1. New versions may
  * contain additional features and are compatible. E.g. 2.(x+1) is compatible with V2.(x) but not the other way round.<br />
@@ -55,9 +56,6 @@ public enum SCMPVersion {
 	private byte release;
 	/** The version. */
 	private byte version;
-
-	/** The Constant DOT_HEX. */
-	private static final byte DOT_HEX = 0x2E;
 
 	/**
 	 * Instantiates a new SCMP version.
@@ -85,7 +83,7 @@ public enum SCMPVersion {
 		if (this.release != buffer[0]) {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_SCMP_RELEASE_NR, new String(buffer));
 		}
-		if (buffer[1] != SCMPVersion.DOT_HEX) {
+		if (buffer[1] != Constants.DOT_HEX) {
 			throw new SCMPValidatorException(SCMPError.HV_WRONG_SCMP_VERSION_FORMAT, new String(buffer));
 		}
 		if (this.version < buffer[2]) {
@@ -93,13 +91,31 @@ public enum SCMPVersion {
 		}
 		return;
 	}
+	
+	/**
+	 * Gets the version number.
+	 * 
+	 * @return the version number
+	 */
+	public byte getVersionNumber() {
+		return this.version;
+	}
+	
+	/**
+	 * Gets the release number.
+	 * 
+	 * @return the release number
+	 */
+	public byte getReleaseNumber() {
+		return this.release;
+	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append((char)this.release);
-		sb.append((char)SCMPVersion.DOT_HEX);
+		sb.append((char)Constants.DOT_HEX);
 		sb.append((char)this.version);
 		return sb.toString();
 	}

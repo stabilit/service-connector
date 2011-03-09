@@ -23,6 +23,7 @@ import java.util.concurrent.Semaphore;
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cmd.casc.CascReceivePublicationCallback;
+import org.serviceconnector.ctx.AppContext;
 import org.serviceconnector.scmp.SCMPMessageSequenceNr;
 import org.serviceconnector.server.CascadedSC;
 import org.serviceconnector.service.CascadedPublishService;
@@ -39,7 +40,7 @@ public class CascadedClient {
 
 	/** The subscribed. */
 	private boolean subscribed;
-	
+
 	/** The subscription id. */
 	private String subscriptionId;
 	/** The cascaded client semaphore. */
@@ -300,9 +301,16 @@ public class CascadedClient {
 		LOGGER.warn("cascadedClient gets destroyed service=" + this.getServiceName());
 		this.destroyed = true;
 		this.subscribed = false;
+		for (String clientSubscriptionId : this.clientSubscriptionIds.keySet()) {
+			// unsubscribe from queue
+			this.publishService.getMessageQueue().unsubscribe(clientSubscriptionId);
+			// delete all client subscriptions
+			AppContext.getSubscriptionRegistry().removeSubscription(clientSubscriptionId);
+		}
+		this.publishService.getMessageQueue().removeNonreferencedNodes();
 		// release threads waiting for permits, just allow any thread to continue
 		this.cascClientSemaphore.release(Integer.MAX_VALUE);
-		this.publishService.renewCascadedClient(this.clientSubscriptionIds);
+		this.publishService.renewCascadedClient();
 		this.clientSubscriptionIds.clear();
 		this.publishService = null;
 	}
