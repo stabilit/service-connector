@@ -128,6 +128,8 @@ public class SCSessionService extends SCService {
 		if (scMessage == null) {
 			throw new SCMPValidatorException("Message (scMessage) must be set.");
 		}
+		// reset pendingRequest - necessary if service instances reused
+		this.pendingRequest = false;
 		this.messageCallback = messageCallback;
 		this.requester.getSCMPMsgSequenceNr().reset();
 		// 2. initialize call & invoke
