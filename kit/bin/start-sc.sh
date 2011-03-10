@@ -5,5 +5,9 @@
 #     -DlogDirectory=c:/temp
 # and use them in the sc.properties files as ${sys:logDirectory} and in log4j.properties as ${logDirectory}
 #
+# Adapt this script to optimize JVM parameters for SC
+#  -Xmx1024M  allow 1GB memory
+#  -server    enables server JVM
+#
 # start sc
-java -Dlog4j.configuration=file:../conf/log4j-sc.properties -jar sc.jar -config ../conf/sc.properties
+java -Xmx1024M -Dlog4j.configuration=file:../conf/log4j-sc.properties -jar sc.jar -config ../conf/sc.properties

@@ -7,5 +7,9 @@ rem or OS Environment variables like
 rem			-DlogDirectory=%OS_VARIABLE%
 rem and use them in the sc.properties files as ${sys:logDirectory} and in log4j.properties as ${logDirectory}
 rem
+rem Adapt this script to optimize JVM parameters for SC
+rem  -Xmx1024M  allow 1GB memory
+rem  -server    enables server JVM
+rem
 rem# start sc
-java -Dlog4j.configuration=file:../conf/log4j-sc.properties -jar sc.jar -config ../conf/sc.properties
+java -Xmx1024M  -Dlog4j.configuration=file:../conf/log4j-sc.properties -jar sc.jar -config ../conf/sc.properties
