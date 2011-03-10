@@ -27,15 +27,17 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.handler.codec.http.Cookie;
 import org.jboss.netty.handler.codec.http.CookieDecoder;
+import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.QueryStringDecoder;
+import org.serviceconnector.Constants;
 import org.serviceconnector.web.AbstractWebRequest;
 
 /**
  * The Class NettyWebRequest.
  */
 public class NettyWebRequest extends AbstractWebRequest {
-	
+
 	/** The Constant LOGGER. */
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(NettyWebRequest.class);
@@ -75,7 +77,20 @@ public class NettyWebRequest extends AbstractWebRequest {
 			// http post
 			ChannelBuffer content = request.getContent();
 			if (content.readable()) {
-				String param = content.toString(Charset.forName("UTF-8"));
+				String charsetName = Constants.SC_CHARACTER_SET;
+				if (request.containsHeader(HttpHeaders.Names.ACCEPT_CHARSET)) {
+					String contentType = request.getHeader(HttpHeaders.Names.ACCEPT_CHARSET);
+					charsetName = contentType.indexOf("charset=") > -1 ? contentType.substring(contentType.indexOf("charset=") + 8)
+							: charsetName;
+				}
+				Charset charset = null;
+				try {
+					charset = Charset.forName(charsetName);
+				} catch (Exception e) {
+					charset = Charset.forName(Constants.SC_CHARACTER_SET);
+					LOGGER.error("invalid charset name = " + charsetName, e);
+				}
+				String param = content.toString(charset);
 				QueryStringDecoder queryStringDecoder = new QueryStringDecoder("/?" + param);
 				Map<String, List<String>> postParams = queryStringDecoder.getParameters();
 				this.parameters.putAll(postParams);

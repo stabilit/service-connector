@@ -16,6 +16,7 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cache;
 
+import java.util.AbstractCollection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,6 +40,10 @@ import org.serviceconnector.util.TimeMillis;
  */
 public class CacheManager {
 
+	/**
+	 * this array is only used to run the generics method version {@link AbstractCollection#toArray(Object[])} inside {@link #getAllCaches} method.
+	 */
+	private static final Cache[] genericsArrayTemplate = new Cache[0];
 	/** The cache map. */
 	private Map<String, Cache> cacheMap;
 	/** The cache configuration. */
@@ -145,8 +150,8 @@ public class CacheManager {
 	 * 
 	 * @return the all caches
 	 */
-	public Object[] getAllCaches() {
-		return (Object[]) this.cacheMap.values().toArray();
+	public Cache[] getAllCaches() {
+		return (Cache[]) this.cacheMap.values().toArray(CacheManager.genericsArrayTemplate);
 	}
 
 	/**
@@ -166,12 +171,11 @@ public class CacheManager {
 	 */
 	public void removeExpiredCaches() {
 		CacheLogger.debug("check for expired messages in cache");
-		Object[] caches = this.getAllCaches();
+		Cache[] caches = this.getAllCaches();
 		if (caches == null) {
 			return;
 		}
-		for (Object obj : caches) {
-			Cache cache = (Cache) obj;
+		for (Cache cache : caches) {
 			cache.removeExpired();
 		}
 	}

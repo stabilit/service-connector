@@ -53,12 +53,11 @@ public class XMLCacheDump {
 		writer.writeAttribute("maxElementsInMemory", String.valueOf(cacheManager.getCacheConfiguration().getMaxElementsInMemory()));
 		writer.writeAttribute("maxElementsOnDisk", String.valueOf(cacheManager.getCacheConfiguration().getMaxElementsOnDisk()));
 		writer.writeStartElement("cache-list");
-		Object[] caches = cacheManager.getAllCaches();
+		Cache[] caches = cacheManager.getAllCaches();
 		if (caches == null) {
 			writer.writeAttribute("information", "no caches found");
 		} else {
-			for (Object obj : caches) {
-				Cache cache = (Cache) obj;
+			for (Cache cache : caches) {
 				dumpCache(cache);
 			}
 		}

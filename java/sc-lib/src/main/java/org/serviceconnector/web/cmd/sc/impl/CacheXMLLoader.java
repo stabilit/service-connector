@@ -63,7 +63,7 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		this.writeCacheConfiguration(writer, cacheConfiguration);
 		writer.writeEndElement(); // close cache tag
 		writer.writeStartElement("caches");
-		Object[] caches = cacheManager.getAllCaches();
+		Cache[] caches = cacheManager.getAllCaches();
 		this.writeCaches(writer, caches, request);
 		writer.writeEndElement(); // close caches tag
 	}
