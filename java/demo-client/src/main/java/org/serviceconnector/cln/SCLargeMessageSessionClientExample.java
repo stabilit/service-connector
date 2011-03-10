@@ -63,7 +63,7 @@ public class SCLargeMessageSessionClientExample {
 				buffer[i] = (byte) i;
 			}
 			requestMsg.setData(buffer);
-			requestMsg.setPartSize(60 << 10); // 64KB
+			requestMsg.setPartSize(1 << 16); // 64KB
 			requestMsg.setCompressed(false);
 			SCMessage responseMsg = sessionServiceA.execute(requestMsg);
 
