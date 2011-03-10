@@ -16,6 +16,8 @@
  *-----------------------------------------------------------------------------*/
 package org.serviceconnector.cmd.sc;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.cache.Cache;
@@ -317,7 +319,9 @@ public class ClnExecuteCommand extends CommandAdapter {
 							+ ", poll is " + message.isPollRequest() + ", expiration time is " + cacheComposite.getExpiration());
 					SCMPPart scmpReply = null;
 					scmpReply = new SCMPPart(true);
-					scmpReply.setHeader(message);
+					scmpReply.setServiceName(message.getServiceName());
+					scmpReply.setMessageType(message.getMessageType());
+					scmpReply.setHeader(SCMPHeaderAttributeKey.MESSAGE_SEQUENCE_NR, message.getMessageSequenceNr());
 					// scmpReply.setBody(message.getBody());
 					response.setSCMP(scmpReply);
 					responderCallback.responseCallback(request, response);
@@ -356,9 +360,11 @@ public class ClnExecuteCommand extends CommandAdapter {
 				} else {
 					scmpReply = new SCMPPart();
 				}
-				scmpReply.setServiceName(message.getServiceName());
-				scmpReply.setSessionId(message.getSessionId());
-				scmpReply.setMessageType(getKey());
+				// write cache composite header to scmp message, reply sessionId later		
+				cacheComposite.writeHeaderToMessage(scmpReply);
+//				scmpReply.setServiceName(message.getServiceName()); not necessary, take service name from cache composite
+				scmpReply.setSessionId(message.getSessionId());  // replace session id
+//				scmpReply.setMessageType(getKey()); not necessary, take message type from cache composite
 				cacheId = cacheMessage.getCacheId();
 				if (cacheId == null) {
 					CacheLogger.error("cache message has illegal state, cacheId=null");

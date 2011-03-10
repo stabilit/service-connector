@@ -17,6 +17,8 @@
 
 package org.serviceconnector.web.cmd.sc.impl;
 
+import java.util.Map;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -216,6 +218,10 @@ public class CacheXMLLoader extends AbstractXMLLoader {
 		writer.writeStartElement("lastModified");
 		writer.writeCharacters(DateTimeUtility.getDateTimeAsString(cacheComposite.getLastModifiedTime()));
 		writer.writeEndElement(); // end of lastModified
+		writer.writeStartElement("header");
+		Map<String, String> compositeHeaderHeader = cacheComposite.getHeader();
+		this.writeHeaderMap(writer, compositeHeaderHeader);
+		writer.writeEndElement(); // end of header
 		if (compositeParam != null && compositeParam.equals(cacheKey.getCacheId())) {
 			// get all messages
 			CacheId cacheId = new CacheId(cacheKey.getCacheId());

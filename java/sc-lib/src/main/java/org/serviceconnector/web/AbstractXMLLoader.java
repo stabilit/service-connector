@@ -457,6 +457,27 @@ public abstract class AbstractXMLLoader implements IXMLLoader {
 	}
 
 	/**
+	 * Write header map.
+	 *
+	 * @param writer the writer
+	 * @param map the map
+	 * @throws XMLStreamException the XML stream exception
+	 */
+	public void writeHeaderMap(XMLStreamWriter writer, Map<String, String> map) throws XMLStreamException {
+		if (map == null) {
+			return;
+		}
+		for (Entry<String, String> entry : map.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+			writer.writeStartElement("item");
+			writer.writeAttribute("name", key);
+			writer.writeCData(value);
+			writer.writeEndElement(); // end of item
+		}
+	}
+
+	/**
 	 * Write web info.
 	 * 
 	 * @param writer

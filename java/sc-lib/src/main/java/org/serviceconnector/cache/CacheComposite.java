@@ -18,11 +18,16 @@ package org.serviceconnector.cache;
 
 import java.io.Serializable;
 import java.text.ParseException;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.serviceconnector.Constants;
 import org.serviceconnector.log.CacheLogger;
+import org.serviceconnector.scmp.SCMPMessage;
 import org.serviceconnector.util.DateTimeUtility;
 
 /**
@@ -87,6 +92,9 @@ public class CacheComposite implements Serializable {
 	/** The loading timeout (ms). This timeout tells, how long we can wait in the loading state. */
 	private long loadingTimeout;
 
+	/** The header containing any header attributes of initial (first) scmp message. */
+	private Map<String, String> header; 
+	
 	/**
 	 * Instantiates a new SCMP cache root.
 	 */
@@ -110,6 +118,7 @@ public class CacheComposite implements Serializable {
 		this.lastModifiedTimeMillis = this.creationTimeMillis;
 		this.loadingSessionId = null;
 		this.loadingTimeout = -1L;
+		this.header = new ConcurrentHashMap<String, String>(); // is Serializable
 	}
 
 	/**
@@ -320,6 +329,52 @@ public class CacheComposite implements Serializable {
 		this.loadingTimeout = loadingTimeout;
 	}
 
+	/**
+	 * Gets the header as an instance of unmodifiable map.
+	 *
+	 * @return the header
+	 */
+	public Map<String, String> getHeader() {
+		return Collections.unmodifiableMap(this.header);
+	}
+	
+	/**
+	 * Clear the actual header and puts all header attributes from parameter instance.
+	 *
+	 * @param header the header
+	 */
+	public void setHeader(Map<String, String> header) {
+		if (header == null) {
+			return;
+		}
+		this.header.clear();
+		synchronized (this.header) {
+			// putAll, but don't use hashMap putAll method, which throws NullPointerException if value is not set
+			for(Entry<String, String> entry : header.entrySet()) {
+				String key = entry.getKey();
+				String value = entry.getValue();
+				if (value == null) {
+					CacheLogger.debug("CacheComposite setHeader value is null for key " + key);
+					value = "";
+				}
+				this.header.put(key, value);
+			}		
+		}
+	}
+	
+    /**
+     * Write composite header to scmp message instance (header)
+     * Note: Do not assign the header instance, assign each attribute, otherwise
+     * the header instance will be changed by the scmp message
+     *
+     * @param message the message
+     */
+    public synchronized void writeHeaderToMessage(SCMPMessage message) {
+    	for(Entry<String, String> entry : this.header.entrySet()) {
+    		message.setHeader(entry.getKey(), entry.getValue());
+    	}
+    }
+	
 	/**
 	 * Checks if is expired.
 	 * 

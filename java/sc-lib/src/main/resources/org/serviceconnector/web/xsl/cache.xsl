@@ -3,9 +3,10 @@
     <xsl:import href="template.xsl"/>
     <xsl:variable name="body" select="/sc-web/body"/>
     <xsl:variable name="head" select="/sc-web/head"/>
+    <xsl:variable name="type" select="$head/query/param/@type"/>
     <xsl:template name="sc_script">
       setInterval('infoCall()', 5000);	    
-      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'cache', 'cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;composite=<xsl:value-of select="$head/query/param/@composite"/>')", 10000);      
+      setInterval("contentCall('<xsl:value-of select="$urlencoded"/>', 'cache', 'cache=<xsl:value-of select="$head/query/param/@cache"/>&amp;composite=<xsl:value-of select="$head/query/param/@composite"/>&amp;type=<xsl:value-of select="$type"/>')", 10000);      
     </xsl:template>
     <xsl:template name="sc_content">
         <div class="sc_table max_width">
@@ -86,6 +87,7 @@
 	          <tr class="sc_table_header">
 	            <th class="sc_table">ID</th>
 	            <th class="sc_table">Status</th>
+	            <th class="sc_table">Headers</th>
 	            <th class="sc_table">Messages</th>
 	            <th class="sc_table">Expiration</th>
 	            <th class="sc_table">Loading Timeout (ms)</th>            
@@ -111,9 +113,16 @@
 	          <xsl:with-param name="class">sc_table_odd</xsl:with-param>
 	        </xsl:call-template>
 	     </tr>	    
-         <xsl:if test="message">
+         <xsl:if test="message and $type='message'">
            <tr>
              <xsl:call-template name="cache_message_details">
+               <xsl:with-param name="serviceName" select="key"/>
+             </xsl:call-template>
+           </tr>
+        </xsl:if>
+         <xsl:if test="message and $type='header'">
+           <tr>
+             <xsl:call-template name="cache_header_details">
                <xsl:with-param name="serviceName" select="key"/>
              </xsl:call-template>
            </tr>
@@ -131,8 +140,18 @@
 	    </td>
 	    <td class="{$class}">
 	      <xsl:choose>
+	        <xsl:when test="count(header/item) &gt; 0">
+	         <a class="sc_table" href="cache{$urlencoded}?cache={$head/query/param/@cache}&amp;composite={key}&amp;type=header"><xsl:value-of select="count(header/item)"/></a>
+            </xsl:when>
+            <xsl:otherwise>	       
+	         <xsl:value-of select="count(header/item)"/>
+	        </xsl:otherwise>
+          </xsl:choose>       	    
+	    </td>
+	    <td class="{$class}">
+	      <xsl:choose>
 	        <xsl:when test="size &gt; 0">
-	         <a class="sc_table" href="cache{$urlencoded}?cache={$head/query/param/@cache}&amp;composite={key}"><xsl:value-of select="size"/></a>
+	         <a class="sc_table" href="cache{$urlencoded}?cache={$head/query/param/@cache}&amp;composite={key}&amp;type=message"><xsl:value-of select="size"/></a>
             </xsl:when>
             <xsl:otherwise>	       
 	         <xsl:value-of select="size"/>
@@ -168,7 +187,7 @@
 	</xsl:template>
 	<xsl:template name="cache_message_details">
 	  <xsl:param name="serviceName"/>
-	  <td colspan="7">
+	  <td colspan="8">
 	    <div class="sc_table_details">
 	        <div class="sc_table_title">
 	           List of cache messages [<xsl:value-of select="$serviceName"/>]
@@ -209,5 +228,27 @@
       <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="messageType"/></xsl:call-template></td>
       <td class="{$class}"><xsl:value-of select="compressed"/></td>
       <td class="{$class}"><xsl:call-template name="fieldValue"><xsl:with-param name="value" select="bodyLength"/></xsl:call-template></td>
+	</xsl:template>
+	<xsl:template name="cache_header_details">
+	  <xsl:param name="serviceName"/>
+	  <td colspan="8">
+	    <div class="sc_table_details">
+	        <div class="sc_table_title">
+	           Composite headers [<xsl:value-of select="$serviceName"/>]
+	        </div>             
+	        <table border="0" class="sc_table" cellspacing="0" cellpadding="0">
+	          <tr class="sc_table_header">
+	            <xsl:for-each select="header/item">
+	               <th class="sc_table"><xsl:value-of select="@name"/></th>
+	            </xsl:for-each>
+	          </tr>          
+		      <tr class="sc_table_header">
+		         <xsl:for-each select="header/item">
+		           <td class="sc_table_odd"><xsl:value-of select="."/></td>
+		         </xsl:for-each>
+		      </tr>          
+	        </table>
+        </div>
+	  </td>
 	</xsl:template>
 </xsl:stylesheet>

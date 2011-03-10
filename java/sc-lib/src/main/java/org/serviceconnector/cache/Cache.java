@@ -278,11 +278,12 @@ public class Cache {
 				}
 				cacheComposite = new CacheComposite();
 				// insert cache composite
+				cacheComposite.setHeader(message.getHeader());  // save all header attributes
 				cacheComposite.setLoadingSessionId(message.getSessionId());
 				cacheComposite.setSize(0);
 				cacheComposite.setCacheState(CACHE_STATE.LOADING);
 				this.putRegistry(cacheKey);
-				Statistics.getInstance().incrementCachedMessages(0);
+				Statistics.getInstance().incrementCachedMessages(0);				
 				this.cacheImpl.put(cacheKey, cacheComposite);
 				value = this.cacheImpl.get(cacheKey);
 				if (value == null) {
@@ -731,6 +732,7 @@ public class Cache {
 				this.removeCompositeImmediate(cacheKey, cacheComposite);
 			}
 			cacheComposite = new CacheComposite();
+			cacheComposite.setHeader(message.getHeader());  // save all header attributes
 			cacheComposite.setLoadingSessionId(sessionId);
 			cacheComposite.setSize(0);
 			cacheComposite.setLoadingTimeout(loadingTimeout);
