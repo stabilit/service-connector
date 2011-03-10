@@ -73,7 +73,7 @@ public class TestUtil {
 	public static String getLargeString() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Integer.MAX_VALUE; i++) {
-			if (sb.length() > Constants.MAX_MESSAGE_SIZE) {
+			if (sb.length() > Constants.DEFAULT_MESSAGE_PART_SIZE) {
 				break;
 			}
 			sb.append(i);

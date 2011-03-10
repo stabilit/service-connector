@@ -120,7 +120,7 @@ public class SCMPCompositeReceiver extends SCMPMessage {
 			return this.outputStream.toByteArray().length;
 		}
 		if (this.writer != null) {
-			return this.writer.toString().length();
+			return this.writer.getBuffer().length();
 		}
 		return 0;
 	}

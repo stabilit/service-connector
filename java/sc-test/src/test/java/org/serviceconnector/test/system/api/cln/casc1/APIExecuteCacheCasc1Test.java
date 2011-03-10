@@ -172,13 +172,14 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
-	 * Description: exchange large message with cacheId, server reply with cacheExpirationTime<br>
+	 * Description: exchange large message with cacheId, server reply with cacheExpirationTime, part size 64KB<br>
 	 * Expectation: get large message from cache
 	 */
 	@Test
 	public void t07_cacheLargeMessage() throws Exception {
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);
+		request.setPartSize(60 << 10); // 64KB
 		SCMessage response = null;
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback1 = new MsgCallback(sessionService1);
@@ -201,7 +202,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
-	 * Description: exchange large message with cacheId repeating times<br>
+	 * Description: exchange large message with cacheId repeating times, part size 64KB<br>
 	 * The first large client call loads the cache and accesses the server.<br>
 	 * The following client calls (also large message) MUST read the reply from the cache, NO ACCESS
 	 * to the server is allowed.
@@ -215,6 +216,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
+		request.setPartSize(60 << 10); // 64KB
 		Thread.sleep(1000);
 		{ // first time
 			String largeMessage = TestUtil.getLargeString();
@@ -245,7 +247,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 	}
 
 	/**
-	 * Description: exchange 10mb large message with cacheId, server reply with cacheExpirationTime<br>
+	 * Description: exchange 10MB large message with cacheId, server reply with cacheExpirationTime, part size 64KB<br>
 	 * Expectation: get large message from cache
 	 */
 	@Test
@@ -253,6 +255,7 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 		SCMessage request = new SCMessage();
 		request.setCompressed(false);
 		SCMessage response = null;
+		request.setPartSize(60 << 10); // 64KB
 		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(request, msgCallback1);
@@ -490,13 +493,14 @@ public class APIExecuteCacheCasc1Test extends APISystemSuperSessionClientTest {
 
 	/**
 	 * Description: sessionService exchange a large message, sessionService1 exchange a message, with same cacheId's on two service
-	 * instances, sessionService two gets message from cache<br>
+	 * instances, sessionService two gets message from cache, part size 64KB<br>
 	 * Expectation: get messages from cache
 	 */
 	@Test
 	public void t14_2ClientsLargeMessage() throws Exception {
 		String largeMessage = TestUtil.getLargeString();
 		SCMessage request = new SCMessage();
+		request.setPartSize(60 << 10); // 64KB
 		request.setCompressed(false);
 		SCMessage response = null;
 		// session service starts storing large message with cacheId 700

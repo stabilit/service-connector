@@ -55,7 +55,7 @@ public class SCMessage {
 	 * The cache part nr.
 	 */
 	private String cachePartNr;
-	
+
 	/**
 	 * The service name. The service name is an abstract name and represents the logical address of the service. In order to allow
 	 * message routing the name must be unique in scope of the entire SC network. Service names must be agreed at the application
@@ -245,10 +245,10 @@ public class SCMessage {
 	public String getCacheId() {
 		return cacheId;
 	}
-	
+
 	/**
 	 * Gets the cache part nr.
-	 *
+	 * 
 	 * @return the cache part nr
 	 */
 	public String getCachePartNr() {
@@ -284,11 +284,12 @@ public class SCMessage {
 	public void setCacheId(String cacheId) {
 		this.cacheId = cacheId;
 	}
-	
+
 	/**
 	 * Sets the cache part nr.
-	 *
-	 * @param cachePartNr the new cache part nr
+	 * 
+	 * @param cachePartNr
+	 *            the new cache part nr
 	 */
 	public void setCachePartNr(String cachePartNr) {
 		this.cachePartNr = cachePartNr;
@@ -363,7 +364,8 @@ public class SCMessage {
 	}
 
 	/**
-	 * @param partSize the size in which message will be broken when it is large
+	 * @param partSize
+	 *            the size in which message will be broken when it is large
 	 */
 	public void setPartSize(int partSize) {
 		// only value smaller then MAX_MESSAGE_SIZE is allowed
@@ -373,7 +375,7 @@ public class SCMessage {
 			this.partSize = Constants.MAX_MESSAGE_SIZE;
 		}
 	}
-	
+
 	/**
 	 * Gets the cache expiration date time.
 	 * 

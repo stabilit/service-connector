@@ -70,17 +70,17 @@ public class APIStressExecutionCasc1Test extends SystemSuperTest {
 	
 
 	/**
-	 * Description: Create session (regular)<br>
+	 * Description: Exchanges a 10MB message with the server<br>
 	 * Expectation: passes
 	 */
-//	@Test
-//	public void t160_MaxMessageSize() throws Exception {
-//		ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client", TestConstants.HOST,
-//				TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
-//				"f_execute10MBMessageAndExit");
-//
-//		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtx);
-//		// dont't check message.log might be an EXC because of broken CRP
-//		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
-//	}
+	@Test
+	public void t160_10MBMessageExchange() throws Exception {
+		ProcessCtx clientCtx = ctrl.startSessionClient(TestConstants.log4jClnProperties, "client", TestConstants.HOST,
+				TestConstants.PORT_SC_TCP, ConnectionType.NETTY_TCP, 10, 0, TestConstants.sesServerName1, 50, 60,
+				"f_execute10MBMessageAndExit");
+
+		APIMultipleClientSubscribeCasc1Test.ctrl.waitForClientTermination(clientCtx);
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "client.log");
+		TestUtil.checkLogFile(TestConstants.log4jClnProperties, "message.log");
+	}
 }

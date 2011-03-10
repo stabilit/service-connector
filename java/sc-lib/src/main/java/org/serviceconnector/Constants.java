@@ -49,7 +49,7 @@ public final class Constants {
 	/** The wait time in a loop waiting for a free connection. */
 	public static final int WAIT_FOR_FREE_CONNECTION_INTERVAL_MILLIS = 200;
 	/** Maximum size of a message. Larger data must be broken into parts */
-	public static final int MAX_MESSAGE_SIZE = 60 << 10; // 64K;
+	public static final int MAX_MESSAGE_SIZE = 7 << 20; // 7MB;
 	/** Maximum port number. */
 	public static final int MAX_PORT_NR = 65535;
 	/** The default SC character set (encoding). */
@@ -150,7 +150,7 @@ public final class Constants {
 	/** The write PID. */
 	public static final boolean DEFAULT_WRITE_PID_FLAG = false;
 	/** Default message part size. */
-	public static final int DEFAULT_MESSAGE_PART_SIZE = MAX_MESSAGE_SIZE;
+	public static final int DEFAULT_MESSAGE_PART_SIZE = 200 << 10;;
 	/** Default service state. */
 	public static final boolean DEFAULT_SERVICE_ENABLED = true;
 
@@ -189,7 +189,6 @@ public final class Constants {
 	public static final String STATE_ENABLED = "enabled";
 	/** The Constant NOT_FOUND. */
 	public static final String NOT_FOUND = "notfound";
-
 
 	/*
 	 * Constants for syntax in sc.properies ************************************

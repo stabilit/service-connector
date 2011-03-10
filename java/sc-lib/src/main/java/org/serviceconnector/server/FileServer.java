@@ -198,7 +198,7 @@ public class FileServer extends Server {
 		}
 		// write the data to the client
 		SCMPMessage reply = null;
-		byte[] fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
+		byte[] fullBuffer = new byte[Constants.DEFAULT_MESSAGE_PART_SIZE];
 		int readBytes = in.read(fullBuffer);
 		if (readBytes < 0) {
 			// this is the end
@@ -255,7 +255,7 @@ public class FileServer extends Server {
 		try {
 			// write the data to the client
 			SCMPMessage reply = null;
-			byte[] fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
+			byte[] fullBuffer = new byte[Constants.DEFAULT_MESSAGE_PART_SIZE];
 			int readBytes = in.read(fullBuffer);
 			if (readBytes < 0) {
 				// this is the end
@@ -500,7 +500,7 @@ public class FileServer extends Server {
 		HttpURLConnection httpCon = (HttpURLConnection) downloadURL.openConnection();
 		httpCon.connect();
 		InputStream in = httpCon.getInputStream();
-		byte[] fullBuffer = new byte[Constants.MAX_MESSAGE_SIZE];
+		byte[] fullBuffer = new byte[Constants.DEFAULT_MESSAGE_PART_SIZE];
 		int readBytes = -1;
 		while ((readBytes = in.read(fullBuffer)) > 0) {
 			fos.write(fullBuffer, 0, readBytes);

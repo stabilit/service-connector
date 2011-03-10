@@ -23,8 +23,6 @@ import org.serviceconnector.TestUtil;
 import org.serviceconnector.api.SCMessage;
 import org.serviceconnector.api.SCServiceException;
 import org.serviceconnector.api.cln.SCMgmtClient;
-import org.serviceconnector.ctrl.util.ProcessCtx;
-import org.serviceconnector.net.ConnectionType;
 import org.serviceconnector.test.system.api.APISystemSuperSessionClientTest;
 
 @SuppressWarnings("unused")
@@ -87,7 +85,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 	}
 
 	/**
-	 * Description: exchange one 1MB uncompressed message<br>
+	 * Description: exchange one 1MB uncompressed message, part size 64KB<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -100,6 +98,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(new SCMessage(), msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
+		request.setPartSize(60 << 10); // 64KB
 		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -113,7 +112,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 	}
 
 	/**
-	 * Description: exchange one 1MB compressed message<br>
+	 * Description: exchange one 1MB compressed message, part size 64KB<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -126,6 +125,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		msgCallback1 = new MsgCallback(sessionService1);
 		response = sessionService1.createSession(new SCMessage(), msgCallback1);
 		request.setMessageInfo(TestConstants.echoCmd);
+		request.setPartSize(60 << 10); // 64KB
 		response = sessionService1.execute(request);
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("message info is not the same", request.getMessageInfo(), response.getMessageInfo());
@@ -587,7 +587,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 	}
 
 	/**
-	 * Description: send 1 uncompressed 10MB message<br>
+	 * Description: send 1 uncompressed 1MB message<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -613,7 +613,7 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 	}
 
 	/**
-	 * Description: send 1 compressed 10MB message<br>
+	 * Description: send 1 compressed 1MB message<br>
 	 * Expectation: passes
 	 */
 	@Test
@@ -812,6 +812,118 @@ public class APIExecuteAndSendCasc1Test extends APISystemSuperSessionClientTest 
 		Assert.assertEquals("message body is not the same length", request.getDataLength(), response.getDataLength());
 		Assert.assertEquals("messageInfo is not the same", request.getMessageInfo(), response.getMessageInfo());
 		Assert.assertEquals("compression is not the same", request.isCompressed(), response.isCompressed());
+		sessionService1.deleteSession();
+	}
+
+	/**
+	 * Description: send 1 uncompressed 20MB message with Constants.MAX_MESSAGE_SIZE parts<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t155_sendMessageMaxPartSize() throws Exception {
+		SCMessage request = new SCMessage();
+
+		String string10MB = TestUtil.get10MBString();
+		StringBuilder sb = new StringBuilder();
+		sb.append(string10MB);
+		sb.append(string10MB);
+
+		request.setData(sb.toString());
+		request.setPartSize(Constants.MAX_MESSAGE_SIZE);
+		request.setDataLength(sb.length());
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(new SCMessage(), msgCallback1);
+		long startTime = System.currentTimeMillis();
+		sessionService1.execute(request);
+		System.out.println("Sent string " + sb.length() + " bytes long in " + (System.currentTimeMillis() - startTime) + " millis");
+		response = msgCallback1.getResponse();
+		sessionService1.deleteSession();
+	}
+	
+	/**
+	 * Description: send 1 uncompressed 20MB message 1MB parts<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t156_sendMessage1MBPartSize() throws Exception {
+		SCMessage request = new SCMessage();
+
+		String string10MB = TestUtil.get10MBString();
+		StringBuilder sb = new StringBuilder();
+		sb.append(string10MB);
+		sb.append(string10MB);
+
+		request.setData(sb.toString());
+		request.setPartSize(1048576);
+		request.setDataLength(sb.length());
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(new SCMessage(), msgCallback1);
+		long startTime = System.currentTimeMillis();
+		sessionService1.execute(request);
+		System.out.println("Sent string " + sb.length() + " bytes long in " + (System.currentTimeMillis() - startTime) + " millis");
+		response = msgCallback1.getResponse();
+		sessionService1.deleteSession();
+	}
+	
+	/**
+	 * Description: send 1 uncompressed 20MB message 100KB parts<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t157_sendMessage100KBPartSize() throws Exception {
+		SCMessage request = new SCMessage();
+
+		String string10MB = TestUtil.get10MBString();
+		StringBuilder sb = new StringBuilder();
+		sb.append(string10MB);
+		sb.append(string10MB);
+
+		request.setData(sb.toString());
+		request.setPartSize(102400);
+		request.setDataLength(sb.length());
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(new SCMessage(), msgCallback1);
+		long startTime = System.currentTimeMillis();
+		sessionService1.execute(request);
+		System.out.println("Sent string " + sb.length() + " bytes long in " + (System.currentTimeMillis() - startTime) + " millis");
+		response = msgCallback1.getResponse();
+		sessionService1.deleteSession();
+	}
+	
+	/**
+	 * Description: send 1 uncompressed 20MB message 200KB parts<br>
+	 * Expectation: passes
+	 */
+	@Test
+	public void t157_sendMessage200KBPartSize() throws Exception {
+		SCMessage request = new SCMessage();
+
+		String string10MB = TestUtil.get10MBString();
+		StringBuilder sb = new StringBuilder();
+		sb.append(string10MB);
+		sb.append(string10MB);
+
+		request.setData(sb.toString());
+		request.setPartSize(204800);
+		request.setDataLength(sb.length());
+		request.setCompressed(false);
+		SCMessage response = null;
+		sessionService1 = client.newSessionService(TestConstants.sesServiceName1);
+		msgCallback1 = new MsgCallback(sessionService1);
+		response = sessionService1.createSession(new SCMessage(), msgCallback1);
+		long startTime = System.currentTimeMillis();
+		sessionService1.execute(request);
+		System.out.println("Sent string " + sb.length() + " bytes long in " + (System.currentTimeMillis() - startTime) + " millis");
+		response = msgCallback1.getResponse();
 		sessionService1.deleteSession();
 	}
 }
