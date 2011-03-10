@@ -84,7 +84,7 @@ public class TestUtil {
 	public static String get10MBString() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Integer.MAX_VALUE; i++) {
-			if (sb.length() > 10000000) {
+			if (sb.length() > 10485760) {
 				break;
 			}
 			sb.append(i);
